@@ -1,0 +1,23 @@
+#
+# Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru)
+# Name: .htaccess
+# Description: admin directory // mod_rewrite htaccess file 
+# Author: NGCMS project team
+#
+
+DirectoryIndex index.html
+
+<files .htaccess>
+order allow,deny 
+deny from all
+</files>
+
+<files core.php>
+Order Deny,Allow
+Deny From All
+</files>
+
+<files *.txt>
+Order Deny,Allow
+Deny From All
+</files>

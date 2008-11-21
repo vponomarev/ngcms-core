@@ -1,0 +1,14 @@
+#
+# Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru)
+# Name: .htaccess
+# Description: mod_rewrite htaccess file
+# Author: NGCMS project team
+#
+
+Order Deny,Allow
+Deny From All
+
+<files captcha.php>
+Order Allow,Deny
+Allow From All
+</files>
