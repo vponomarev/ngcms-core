@@ -1,0 +1,4 @@
+# Lock access
+<FilesMatch .*>
+Deny from all
+</FilesMatch>

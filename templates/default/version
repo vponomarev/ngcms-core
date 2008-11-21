@@ -1,0 +1,22 @@
+;
+; Version file for template
+;
+
+; UNIQ template ID
+ID: madworks.default
+; Author name
+Author: Mad works
+; Author site page
+Author_URI: http://mad-works.com/
+; Version number
+Version: 01
+; Release date
+RelDate: 2008-10-07
+; Template title
+Title: Default template
+; List of built in templates for plugins
+Plugins: archive, calendar, favorites, popular
+; Size: 256 x 192, format: PNG
+ImagePreview: images/tpl_preview.png
+; Size: 512 x 384, format: PNG
+Image: images/tpl_image.png

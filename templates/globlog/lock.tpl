@@ -1,0 +1,1 @@
+<center><br />{lock_reason}</center>

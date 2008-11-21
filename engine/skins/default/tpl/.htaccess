@@ -1,0 +1,8 @@
+#-------------------------------------------#
+#	2z project | http://2z-project.com
+#-------------------------------------------#
+
+<files *.tpl>
+order allow,deny 
+deny from all
+</files>

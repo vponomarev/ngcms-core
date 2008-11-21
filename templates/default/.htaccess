@@ -1,0 +1,8 @@
+#-------------------------------------------#
+#	Next generation CMS                 #
+#-------------------------------------------#
+
+<files *.tpl>
+order allow,deny 
+deny from all
+</files>
