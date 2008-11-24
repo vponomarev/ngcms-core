@@ -242,7 +242,13 @@ background-color: #fff;
 }
 
 #tags {
-margin: 0px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 5px;
+margin-bottom: 0px;
+background: #f9fafb;
+padding-bottom: 5px;
+padding-top: 5px;
 }
 
 #tags A {
