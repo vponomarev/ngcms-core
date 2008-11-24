@@ -283,6 +283,11 @@ function QuickTags($area = false, $template = false) {
 		$tpl -> template('quicktags', tpl_site);
 		$tpl -> vars('quicktags', $tvars);
 		return $tpl -> show('quicktags');
+	}
+	elseif ($template == "bbnews") {
+		$tpl -> template('bbnews', tpl_actions);
+		$tpl -> vars('bbnews', $tvars);
+		return $tpl -> show('bbnews');
 	} else {
 		$tpl -> template('quicktags', tpl_actions);
 		$tpl -> vars('quicktags', $tvars);
@@ -490,22 +495,25 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null) {
 
 // makeCategoryList - make <SELECT> list of categories
 // Params: set via named array
-// * name     - name field of <SELECT>
-// * selected - ID of category to be selected
-// * skip     - ID of category to skip or array of IDs to skip
-// * doempty  - add empty category to the beginning ("no category"), value = 0
-// * doall    - all category named "ALL" to the beginning, value is empty
-// * nameval  - use DB field "name" instead of ID in HTML option value
-// * resync   - flag, if set - we make additional lookup into database for new category list
+// * name      - name field of <SELECT>
+// * selected  - ID of category to be selected or array of IDs to select (in list mode)
+// * skip      - ID of category to skip or array of IDs to skip
+// * doempty   - add empty category to the beginning ("no category"), value = 0
+// * doall     - all category named "ALL" to the beginning, value is empty
+// * nameval   - use DB field "name" instead of ID in HTML option value
+// * resync    - flag, if set - we make additional lookup into database for new category list
+// * checkarea - flag, if set - generate a list of checkboxes instead of <SELECT>
 function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $name='category'*/){
 	global $catz, $lang, $mysql;
 
 	if (!is_array($params['skip'])) { $params['skip'] = $params['skip']?array($params['skip']):array(); }
 	$name = array_key_exists('name', $params)?$params['name']:'category';
 
-	$out = "<select name=\"$name\" id=\"catmenu\"".($params['class']?' class="'.$params['class'].'"':'').">\n";
-	if ($params['doempty'])	{ $out.= "<option value=\"0\">".$lang['no_cat']."</option>\n"; }
-	if ($params['doall'])	{ $out.= "<option value=\"\">".$lang['sh_all']."</option>\n"; }
+	if (!$params['checkarea']) {
+	 $out = "<select name=\"$name\" id=\"catmenu\"".($params['class']?' class="'.$params['class'].'"':'').">\n";
+	 if ($params['doempty'])	{ $out.= "<option value=\"0\">".$lang['no_cat']."</option>\n"; }
+	 if ($params['doall'])	{ $out.= "<option value=\"\">".$lang['sh_all']."</option>\n"; }
+	}
 	if ($params['resync'])  {
 		$catz = array();
 		foreach ($mysql->select("select * from `".prefix."_category` order by posorder asc", 1) as $row) {
@@ -516,9 +524,15 @@ function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $na
 
 	foreach($catz as $k => $v){
 		if (in_array($v['id'], $params['skip'])) { continue; }
-		$out.="<option value=\"".($params['nameval']?$v['name']:$v['id'])."\"".(($v['id']==$params['selected'])?' selected="selected"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
+		if ($params['checkarea']) {
+			$out .= str_repeat('&#8212; ', $v['poslevel']).'<label><input type="checkbox" name="'.$name.'_'.$v['id'].'" value="1"'.((is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').'/> '.$v['name']."</label><br/>\n";
+		} else {
+			$out.="<option value=\"".($params['nameval']?$v['name']:$v['id'])."\"".(($v['id']==$params['selected'])?' selected="selected"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
+		}
 	}
-	$out.="</select>";
+	if (!$params['checkarea']) {
+		$out.="</select>";
+	}	
 	return $out;
 }
 

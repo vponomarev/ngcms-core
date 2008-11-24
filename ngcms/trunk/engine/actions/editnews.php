@@ -102,7 +102,7 @@ function editNews() {
 	$SQL['alt_name']  = $alt_name;
 	$SQL['editdate']  = time();
 	$SQL['catid']     = $cats;
-	
+
 	// Change this parameters if user have enough access level
 	if ($userROW['status'] < 3) {
 		$SQL['mainpage']  = intval($_REQUEST['mainpage']);
@@ -113,7 +113,7 @@ function editNews() {
 		if ($_REQUEST['setViews'])
 			$SQL['views'] = intval($_REQUEST['views']);
 	}
-		
+
 	exec_acts('editnews', $id);
 
 	$pluginNoError = 1;
@@ -204,7 +204,8 @@ function editNewsForm() {
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
 		'changedate'		=>	ChangeDate($row['postdate']),
-		'catlist'			=>	makeCategoryList(array('skip' => $cats, 'nameval' => 1)),
+		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 1,   'selected' => count($cats)?$cats[0]:0)),
+		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array())),
 		'allcats'			=>	@GetAllCategories($cats),
 		'comments'			=>	$parse->smilies($comments),
 		'id'				=>	$row['id'],
@@ -227,8 +228,8 @@ function editNewsForm() {
 	}
 
 	if ($config['use_bbcodes']) {
-		$tvars['vars']['quicktags_short'] = QuickTags("short");
-		$tvars['vars']['quicktags_full']  = QuickTags("full");
+		$tvars['vars']['quicktags'] = QuickTags('', 'bbnews');
+	//	$tvars['vars']['quicktags_full']  = QuickTags("full", 'bbnews');
 	} else {
 		$tvars['vars']['quicktags_short'] = '';
 		$tvars['vars']['quicktags_full']  = '';

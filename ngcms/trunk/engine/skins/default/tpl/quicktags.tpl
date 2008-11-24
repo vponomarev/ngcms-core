@@ -10,8 +10,6 @@
 <a onclick="try{document.forms['DATA_tmp_storage'].area.value='{area}';} catch(err){;} window.open('{php_self}?mod=images&amp;area={area}', '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" title='{l_qt_image}'><img src="{skins_url}/tags/image.gif" hspace="5" vspace="5" alt="{l_qt_image}" /></a>
 <a onclick="try{document.forms['DATA_tmp_storage'].area.value='{area}';} catch(err){;} window.open('{php_self}?mod=files&amp;area={area}', '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" title='{l_qt_file}'><img src="{skins_url}/tags/file.gif" hspace="5" vspace="5" alt="{l_qt_file}" /></a>
 <a onclick="insertext('[code]','[/code]', '{area}')" title='{l_qt_code}'><img src="{skins_url}/tags/code.gif" hspace="5" vspace="5" alt="{l_qt_code}" /></a>
-<a onclick="document.form.content{area}.rows += 5;" title='{l_qt_rowadd}'><img src="{skins_url}/tags/rowadd.gif" hspace="5" vspace="5" alt="{l_qt_rowadd}" /></a>
-<a onclick="document.form.content{area}.cols += 5;" title='{l_qt_coladd}'><img src="{skins_url}/tags/coladd.gif" hspace="5" vspace="5" alt="{l_qt_coladd}" /></a>
 <a onclick="insertext('[spoiler]','[/spoiler]', '{area}')" title='{l_qt_spoiler}'><img src="{skins_url}/tags/spoiler.gif" hspace="5" vspace="5" alt="{l_qt_spoiler}" /></a>
 <br />
 <a onclick="insertext('[s]','[/s]', '{area}')" title='{l_qt_crossline}'><img src="{skins_url}/tags/crossline.gif" hspace="5" vspace="5" alt="{l_qt_crossline}" /></a>
@@ -24,6 +22,4 @@
 <a onclick="insertext('[img]','[/img]', '{area}')" title='{l_qt_imagelink}'><img src="{skins_url}/tags/imagelink.gif" hspace="5" vspace="5" alt="{l_qt_imagelink}" /></a>
 <a onclick="insertext('[quote]','[/quote]', '{area}')" title='{l_qt_comment}'><img src="{skins_url}/tags/comment.gif" hspace="5" vspace="5" alt="{l_qt_comment}" /></a>
 <a onclick="insertext('[acronym=]','[/acronym]', '{area}')" title='{l_qt_acronym}'><img src="{skins_url}/tags/acronym.gif" hspace="5" vspace="5" alt="{l_qt_acronym}" /></a>
-<a onclick="document.form.content{area}.rows -= 5;" title='{l_qt_rowdel}'><img src="{skins_url}/tags/rowdel.gif" hspace="5" vspace="5" alt="{l_qt_rowdel}" /></a>
-<a onclick="document.form.content{area}.cols -= 5;" title='{l_qt_coldel}'><img src="{skins_url}/tags/coldel.gif" hspace="5" vspace="5" alt="{l_qt_coldel}" /></a>
 </span><br />
