@@ -53,7 +53,7 @@ function preview(){
   </tr>
   <tr>
    <td valign="top" colspan=3>{quicktags}<!--<br /> {smilies_short}<br /> -->
-   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" rows="16" tabindex="2">{short}</textarea></td>
+   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" rows="16" tabindex="2">{content}</textarea></td>
   </tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
@@ -77,29 +77,21 @@ function preview(){
 
 <!-- ADDITIONAL -->
 <div id="additional" style="display: none;">
-<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
+<table border="1" cellspacing="0" cellpadding="0" class="content" align="center">
+
 <tr>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" />{l_alt_name}</td>
 <td width="50%" class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
+<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" />{l_alt_name}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1"><input type="text" name="alt_name" value="{alt_name}" size="40" tabindex="2" /></td>
 <td width="50%" class="contentEntry1">{changedate}</td>
+<td width="50%" class="contentEntry1"><input type="text" name="alt_name" value="{alt_name}" size="40" tabindex="2" /></td>
 </tr>
-[meta]
-<tr>
-<td width="50%" class="contentEntry1"><input type="text" name="description" value="{description}" maxlength="255" size="40" /></td>
-<td width="50%" class="contentEntry1"><input type="text" name="keywords" value="{keywords}" maxlength="255" size="40" /></td>
-</tr>
-[/meta]
 [isplugin xfields]{plugin_xfields}[/isplugin]
 [isplugin nsched]{nsched}[/isplugin]
 [isplugin finance]{finance}[/isplugin]
 [isplugin tags]{plugin_tags}[/isplugin]
 [options]
-<tr>
-<td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" />{l_additional}</td>
-</tr>
 </table>
 </div>
 
@@ -109,9 +101,9 @@ function preview(){
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr><td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td><td>Общая информация</td></tr>
-  <tr><td></td><td>Автор: <b>vitaly</b></td></tr>
-  <tr><td></td><td>Создано: <b>15.11.2008 14:56</b></td></tr>
-  <tr><td></td><td>Отредактировано: <b>15.11.2008 14:56</b></td></tr>
+  <tr><td></td><td>Автор: <b>{author}</b></td></tr>
+  <tr><td></td><td>Создано: <b>{createdate}</b></td></tr>
+  <tr><td></td><td>Отредактировано: <b>{editdate}</b></td></tr>
   <tr>
    <td width="20"><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
    <td>{l_category}</td>

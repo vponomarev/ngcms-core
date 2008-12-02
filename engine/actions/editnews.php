@@ -20,7 +20,7 @@ $SQL = array();
 //
 function editNews() {
 	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW;
-	global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute, $description, $keywords;
+	global $c_day, $c_month, $c_year, $c_hour, $c_minute, $description, $keywords;
 
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
@@ -48,15 +48,19 @@ function editNews() {
 			break;
 	}
 
+	$id			= $_REQUEST['id'];
+	$title		= $_REQUEST['title'];
+	$content	= $_REQUEST['content'];
+	$alt_name	= $_REQUEST['alt_name'];
 
 	// Try to find news that we're trying to edit
-	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id)))) {
+	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):'')))) {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
 	$oldcat = $row['catid'];
 
-	if ((!strlen(trim($title))) || (!strlen(trim($contentshort)))) {
+	if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
 		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
 		return;
 	}
@@ -87,15 +91,13 @@ function editNews() {
 	$cats = implode(",", $catids);
 
 	if ($config['meta'] == "1") {
-		$SQL['description'] = $description;
-		$SQL['keywords']    = $keywords;
+		$SQL['description'] = $_REQUEST['description'];
+		$SQL['keywords']    = $_REQUEST['keywords'];
 	}
 
 
-	$content = $contentshort.(trim($contentfull)?'<!--more-->'.$contentfull:'');
-	$content = str_replace("\r\n", "\n", $content);
+	$content = str_replace("\r\n", "\n", $_REQUEST['content']);
 
-	//$SQL['postdate']  = $_REQUEST['customdate']?strtotime("$c_day "."$c_month "."$c_year "."$c_hour:$c_minute") + ($config['date_adjust'] * 60):$row['postdate'];
 	$SQL['postdate']  = $_REQUEST['customdate']?mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60):$row['postdate'];
 	$SQL['title']     = $title;
 	$SQL['content']   = $content;
@@ -157,13 +159,13 @@ function editNewsForm() {
 	global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute;
 
 	// Try to find news that we're trying to edit
-	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id)))) {
+	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):'')))) {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
 
 	$cats = explode(",", $row['catid']);
-	$story = explode("<!--more-->", $row['content']);
+	$content = $row['content'];
 
 	// Load comments
 	$tpl -> template('comments', tpl_actions.$mod);
@@ -210,13 +212,15 @@ function editNewsForm() {
 		'comments'			=>	$parse->smilies($comments),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
-		'short'				=>	secure_html($story[0]),
-		'full'				=>	secure_html($story[1]),
+		'content'			=>  secure_html($row['content']),
 		'alt_name'			=>	$row['alt_name'],
 		'avatar'			=>	$row['avatar'],
 		'description'		=>	secure_html($row['description']),
 		'keywords'			=>	secure_html($row['keywords']),
-		'views'				=>	$row['views']
+		'views'				=>	$row['views'],
+		'author'			=>  $row['author'],
+		'createdate'		=>  strftime('%d.%m.%Y %H:%M', $row['postdate']),
+		'editdate'			=>  ($row['editdate'] > $row['postdate'])?strftime('%d.%m.%Y %H:%M', $row['editdate']):'-',
 	);
 
 	if ($config['use_smilies']) {

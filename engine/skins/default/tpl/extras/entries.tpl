@@ -3,7 +3,7 @@
 <td>{url}</td>
 <td>{type}</td>
 <td>{version}</td>
-<td>{readme}{history}&nbsp;</td>
+<td nowrap>{readme} {history}</td>
 <td>{description}</td>
 <td>{author_url}</td>
 <td>{link} {install}</td>
