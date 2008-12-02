@@ -77,8 +77,8 @@ foreach($extras as $id => $extra) {
 		'author'		=>	$extra['author'],
 		'id'			=>	$extra['id'],
 		'style'			=>	status($id)?'contRow1':'contRow2',
-		'readme'		=>	file_exists(root.'extras/'.$id.'/readme')&&filesize(root.'extras/'.$id.'/readme')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=readme&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>'):'',
-		'history'		=>	file_exists(root.'extras/'.$id.'/history')&&filesize(root.'extras/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=history&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
+		'readme'		=>	file_exists(extras_dir.'/'.$id.'/readme')&&filesize(extras_dir.'/'.$id.'/readme')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=readme&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>'):'',
+		'history'		=>	file_exists(extras_dir.'/'.$id.'/history')&&filesize(extras_dir.'/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=history&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
 	);
 
 	if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] != $extra['version'])) {
