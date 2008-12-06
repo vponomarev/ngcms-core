@@ -33,5 +33,8 @@
 <img src="{skins_url}/tags/sep.gif" width="1" height="16" alt="" />
 
 <a onclick="insertext('<!--nextpage-->','', '{area}')" title='{l_tags.nextpage}'><img src="{skins_url}/tags/nextpage.gif" width="16" height="16" alt="{l_tags.nextpage}" /></a>
+<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt="" />
+<span class="more">
 <a onclick="insertext('<!--more-->','', '{area}')" title='{l_tags.more}'><img src="{skins_url}/tags/more.gif" width="16" height="16" alt="{l_tags.more}" /></a>
+</span>
 </div>
