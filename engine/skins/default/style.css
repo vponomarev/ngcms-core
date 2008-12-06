@@ -251,6 +251,15 @@ padding-bottom: 5px;
 padding-top: 5px;
 }
 
+#tags .more {
+ align: right;
+ padding-left: 20px;
+ padding-right: 20px;
+ background: #FFFFFF;
+ padding-top: -5px;
+ padding-bottom: 5px;
+}
+
 #tags A {
 cursor: pointer;
 }

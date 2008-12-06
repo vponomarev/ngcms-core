@@ -77,15 +77,13 @@ function preview(){
 
 <!-- ADDITIONAL -->
 <div id="additional" style="display: none;">
-<table border="1" cellspacing="0" cellpadding="0" class="content" align="center">
+<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 
 <tr>
 <td width="50%" class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" />{l_alt_name}</td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{changedate}</td>
-<td width="50%" class="contentEntry1"><input type="text" name="alt_name" value="{alt_name}" size="40" tabindex="2" /></td>
 </tr>
 [isplugin xfields]{plugin_xfields}[/isplugin]
 [isplugin nsched]{nsched}[/isplugin]
