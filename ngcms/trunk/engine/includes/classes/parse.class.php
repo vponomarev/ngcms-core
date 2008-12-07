@@ -171,7 +171,7 @@ class parse {
 				// Init variables
 				list ($line, $null, $paramLine, $alt) = $catch;
 				array_push($rsrc, $line);
-
+				 
 				// Check for possible error in case of using "]" within params/url
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
 				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
@@ -199,8 +199,7 @@ class parse {
 				// Make a parametric line with url
 				if (trim($paramLine)) {
 					// Parse params
-					$paramLine = "src=".$paramLine;
-					$keys = $this->parseBBCodeParams($paramLine);
+					$keys = $this->parseBBCodeParams((($null=='=')?'src=':'').$paramLine);
 				} else {
 					// No params to scan
 					$keys = array();
@@ -263,7 +262,7 @@ class parse {
 				// Init variables
 				list ($line, $null, $paramLine, $alt) = $catch;
 				array_push($rsrc, $line);
-
+				 
 				// Check for possible error in case of using "]" within params/url
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
 				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
@@ -291,8 +290,7 @@ class parse {
 				// Make a parametric line with url
 				if (trim($paramLine)) {
 					// Parse params
-					$paramLine = "href=".$paramLine;
-					$keys = $this->parseBBCodeParams($paramLine);
+					$keys = $this->parseBBCodeParams((($null=='=')?'href=':'').$paramLine);
 				} else {
 					// No params to scan
 					$keys = array();
