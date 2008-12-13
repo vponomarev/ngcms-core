@@ -656,9 +656,9 @@ function doInstall() {
 
 		// 1.4. Создаём таблицы
 		for ($i=0; $i<count($dbsql);$i++) {
-			$dbCreateString = str_replace('XPREFIX_',$_POST['reg_dbprefix'].'_',$dbsql[$i]);
+			$dbCreateString = str_replace('XPREFIX_',$_POST['reg_dbprefix'].'_',$dbsql[$i]).$charset;
 
-			if ($SUPRESS_CHARSET) { $dbCreateString = str_replace('DEFAULT CHARSET=cp1251','',$dbCreateString); }
+			if ($SUPRESS_CHARSET) { $dbCreateString = str_replace('default charset=cp1251','',$dbCreateString); }
 			if ($SUPRESS_ENGINE) { $dbCreateString = str_replace('ENGINE=MyISAM','',$dbCreateString); }
 
 			if (preg_match('/CREATE TABLE `(.+?)`/',$dbCreateString,$match)) {
