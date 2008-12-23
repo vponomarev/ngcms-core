@@ -107,6 +107,7 @@ function sack(file) {
 	this.resetFunctions = function() {
 		this.onError = function() { };
 		this.onFail = function() { };
+		this.onComplete = function() { };
 		this.onShow = function() {
 			this.centerdiv         = new center_div();
 			this.centerdiv.divname = 'loading-layer';
@@ -274,6 +275,7 @@ function sack(file) {
 							else {
 								self.onError();
 							}
+							self.onComplete();
 							self.URLString = "";
 						break;
 					}
