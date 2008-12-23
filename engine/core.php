@@ -18,6 +18,7 @@ $EXTRA_ACTIVE			= array();				// list of active modules (for each action)
 $EXTRA_ACTIVE_loaded	= 0;					// flag is active module list is loaded
 $EXTRA_ACTIVATED		= array();				// list of already loaded modules [ flag is set if one or more files for this plugin are loaded ]
 $EXTRA_FILES_LOADED		= array();				// a list of files [parts of plugins] that are loaded
+$EXTRA_HTML_VARS		= array();			// a list of added HTML vars in <head> block
 $EXTRA_CSS				= array();
 
 $AUTH_METHOD = array();

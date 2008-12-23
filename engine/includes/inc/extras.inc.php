@@ -65,11 +65,15 @@ class NewsFilter {
 	function showNews($newsID, $SQLnews, &$tvars, $mode = array()) { return 1; }
 
 	// Behaviour before/after starting showing any news template
-	// $num        - number in order
-	// $countLimit - number of news to be showed
-	function onBeforeNewsShow($num, $countLimit, $fullMode, $style) { return 1; }
-	function onAfterNewsShow($num, $countLimit, $fullMode, $style) { return 1; }
-
+	// $newsID	- ID of the news to show
+	// $SQLnews	- SQL row of the news
+	// $mode	- array with config params
+	//  style	- working mode ( 'short' / 'full' / 'export' )
+	//  num		- number in order (for short list)
+	//  limit	- show limit in order (for short list)
+	function onBeforeNewsShow($newsID, $SQLnews, $mode = array()) { return 1; }
+	function onAfterNewsShow ($newsID, $SQLnews, $mode = array()) { return 1; }
+	                                                   
 	// Behaviour before/after showing news template
 	// $mode	- calling mode (may be 'short' or 'full')
 	function onBeforeShow($mode) { return 1; }
@@ -433,13 +437,23 @@ function register_plugin_page($pname, $mode, $func_name, $show_template = 1) {
 	$PPAGES[$pname][$mode] = array('func' => $func_name, 'mode' => $show_mode);
 }
 
+//
+// Add item into list of additional HTML meta tags
+//
+function register_htmlvar($type, $data) {
+	global $EXTRA_HTML_VARS;
+
+	// Check for duplicate
+
+	$EXTRA_HTML_VARS[] = array('type' => $type, 'data' => $data);
+}
 
 //
 // Add new stylesheet into template
 //
 function register_stylesheet($url) {
 	global $EXTRA_CSS;
-	$EXTRA_CSS[$url]=1;
+	register_htmlvar('css', $url);
 }
 
 //

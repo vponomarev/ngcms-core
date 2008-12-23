@@ -5,9 +5,8 @@
 <meta http-equiv="Content-language" content="{l_langcode}" />
 <meta name="Generator" content="{what} {version}" />
 <meta name="Document-State" content="dynamic" />
-{metatags}
+{htmlvars}
 <link href="{tpl_url}/style.css" rel="stylesheet" type="text/css" media="screen" />
-{extracss}
 <link href="{home}/rss.xml" rel="alternate" type="application/rss+xml" title="RSS" />
 <script type="text/javascript" src="{admin_url}/includes/js/functions.js"></script>
 <script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
