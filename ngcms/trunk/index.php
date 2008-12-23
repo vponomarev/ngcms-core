@@ -43,6 +43,7 @@ if ($config['lock'] && (!is_array($userROW) || ($userROW['status'] != 1))) {
 		$template['regx']["'\[debug\].*?\[/debug\]'si"] = '';
 		$template['vars']['metatags'] = '';
 		$template['vars']['extracss'] = '';
+		$template['vars']['htmlvars'] = '';
 
 		$tpl -> template('main', tpl_site);
 		$tpl -> vars('main', $template);
@@ -103,9 +104,6 @@ $tpl -> template('search.form', tpl_site);
 $tpl -> vars('search.form', array('vars' => array()));
 $template['vars']['search_form'] = $tpl -> show('search.form');
 
-// Generate metatags
-$template['vars']['metatags'] = GetMetatags();
-
 // Save 'category' variable
 $template['vars']['category'] = $_REQUEST['category']?secure_html($_REQUEST['category']):'';
 
@@ -115,12 +113,37 @@ $template['vars']['category'] = $_REQUEST['category']?secure_html($_REQUEST['cat
 // parameters were generated
 exec_acts('index_post');
 
+// Make empty OLD STYLE variables
+$template['vars']['metatags'] = '';
+$template['vars']['extracss'] = '';
 
 // Fill extra CSS links
-$template['vars']['extracss'] = '';
 foreach ($EXTRA_CSS as $css => $null)
-	$template['vars']['extracss'] .= "<link href=\"".$css."\" rel=\"stylesheet\" type=\"text/css\" />\n";
+	$EXTRA_HTML_VARS[] = array('type' => 'css', 'data' => $css);
 
+// Generate metatags
+$EXTRA_HTML_VARS[] = array('type' => 'plain', 'data' => GetMetatags());
+
+// Fill additional HTML vars
+$htmlrow = array();
+$dupCheck = array();
+foreach ($EXTRA_HTML_VARS as $htmlvar) {
+	if (in_array($htmlvar['data'], $dupCheck))
+		continue;
+	$dupCheck[] = $htmlvar['data'];
+	switch ($htmlvar['type']) {
+		case 'css': 	$htmlrow[] = "<link href=\"".$htmlvar['data']."\" rel=\"stylesheet\" type=\"text/css\" />";
+			break;
+		case 'js' :	$htmlrow[] = "<script type=\"text/javascript\" src=\"".$htmlvar['data']."\"></script>";
+			break;
+		case 'rss' : $htmlrow[] = "<link href=\"".$htmlvar['data']."\" rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" />";
+			break;
+		case 'plain':$htmlrow[] = $htmlvar['data'];
+			break;	
+	}
+}
+if (count($htmlrow))
+	$template['vars']['htmlvars'] .= join("\n",$htmlrow);
 
 // ***** EXECUTION TIME CATCH POINT *****
 // Calculate script execution time
