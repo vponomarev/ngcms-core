@@ -37,7 +37,7 @@ class tpl {
 	}
 
 	function vars($nn, $vars = array()) {
-		global $lang, $member_db, $userROW, $config, $PHP_SELF;
+		global $lang, $userROW, $config, $PHP_SELF;
 
 		$data = $this -> data[$nn];
 

@@ -150,7 +150,6 @@ if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHO
 			$is_logged			= true;
 			$username			= $row['name'];
 			$userROW			= $row;
-			$member_db			= fill_member_db($row);
 		}
 	} else if ($action == 'dologin') {
 		$row = $auth->login();

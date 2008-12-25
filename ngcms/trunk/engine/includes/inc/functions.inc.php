@@ -158,30 +158,6 @@ function AutoBackup() {
 	}
 }
 
-
-function fill_member_db($row) {
-	global $config;
-	if (($config['register_type'] == "2")&&($row['activation'])) {
-		return false;
-	}
-
-	$member_db['id']			=	$row['id'];
-	$member_db['name']			=	$row['name'];
-	$member_db['mail']			=	$row['mail'];
-	$member_db['news']			=	$row['news'];
-	$member_db['com']			=	$row['com'];
-	$member_db['status']		=	$row['status'];
-	$member_db['last']			=	$row['last'];
-	$member_db['reg']			=	$row['reg'];
-	$member_db['site']			=	$row['site'];
-	$member_db['icq']			=	$row['icq'];
-	$member_db['where_from']	=	$row['where_from'];
-	$member_db['info']			=	$row['info'];
-	$member_db['avatar']		=	$row['avatar'];
-	$member_db['photo']			=	$row['photo'];
-	return $member_db;
-}
-
 function LangDate($format, $timestamp) {
 	global $lang;
 
@@ -1063,8 +1039,6 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		$tvars['regx']["'\\[full-link\\].*?\\[/full-link\\]'si"] = '';
 	}
 
-	$tvars['vars']['comments-num']	=	$row['com'];
-
 	$tvars['vars']['pinned']	=	($row['pinned']) ? "news_pinned" : "";
 	$tvars['vars']['category']	=	@GetCategories($row['catid']);
 
@@ -1079,12 +1053,6 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	$tvars['vars']['[print-link]']	=	"<a href=\"".GetLink('print', $row)."\">";
 	$tvars['vars']['[/print-link]']	=	"</a>";
 	$tvars['vars']['news_link']		=	$url;
-
-	$tvars['regx']['[\[comheader\](.*)\[/comheader\]]'] = ($row['com'])?'$1':'';
-
-	// Blocks [comments] .. [/comments] and [nocomments] .. [/nocomments]
-	$tvars['regx']['[\[comments\](.*)\[/comments\]]']     = ($row['com'])?'$1':'';
-	$tvars['regx']['[\[nocomments\](.*)\[/nocomments\]]'] = ($row['com'])?'':'$1';
 
 
 	$tvars['vars']['news-id']	=	$row['id'];
@@ -1223,7 +1191,8 @@ function GetMetatags() {
 	if (isset($SYSTEM_FLAGS['meta']['keywords']) && ($SYSTEM_FLAGS['meta']['keywords'] != ''))
 		$meta['keywords'] = $SYSTEM_FLAGS['meta']['keywords'];
 
-	$result = "<meta name=\"Description\" content=\"".$meta['description']."\" />\r\n<meta name=\"Keywords\" content=\"".$meta['keywords']."\" />\r\n";
+	$result  = ($meta['description'] != '')?"<meta name=\"description\" content=\"".secure_html($meta['description'])."\" />\r\n":'';
+	$result .= ($meta['keywords'] != '')?"<meta name=\"keywords\" content=\"".secure_html($meta['description'])."\" />\r\n":'';
 
 	return $result;
 }
