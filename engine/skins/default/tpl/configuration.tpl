@@ -233,6 +233,9 @@ function ChangeOption(selectedOption) {
 
 <tr id="comments" style="display: none;">
 <td width="100%" style="padding-right:10px;" valign="top">
+Comments now are moved away from engine. Please use plugin "comments".<br/>
+Комментарии убраны из ядра системы. Пожалуйста, используйте плагин "комментарии".
+<!--
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_com}</td>
@@ -245,7 +248,6 @@ function ChangeOption(selectedOption) {
 <td width="50%" class="contentEntry1">{l_reverse_comments}<br /><small>{l_reverse_comments_desc}</small></td>
 <td width="50%" class="contentEntry2" valign="middle">{reverse_comments}</td>
 </tr>
-<!--
 <tr>
 <td width="50%" class="contentEntry1">{l_comments_per_npage}<br /><small>{l_comments_per_npage_desc}</small></td>
 <td width="50%" class="contentEntry2" valign="middle"><input type="text" name='save_con[comments_per_npage]' value='{comments_per_npage}' size="6" /></td>
@@ -254,7 +256,6 @@ function ChangeOption(selectedOption) {
 <td width="50%" class="contentEntry1">{l_comments_per_1npage}<br /><small>{l_comments_per_1npage_desc}</small></td>
 <td width="50%" class="contentEntry2" valign="middle"><input type="text" name='save_con[comments_per_1npage]' value='{comments_per_1npage}' size="6" /></td>
 </tr>
--->
 <tr>
 <td width="50%" class="contentEntry1">{l_com_length}<br /><small>{l_com_length_desc}</small></td>
 <td width="50%" class="contentEntry2" valign="middle"><input type="text" name='save_con[com_length]' value='{c_com_length}' size="6" /></td>
@@ -288,6 +289,7 @@ function ChangeOption(selectedOption) {
 <td width="50%" class="contentEntry2" valign="middle"><input type="text" name='save_con[timestamp_comment]' value='{c_timestamp_comment}' size="40" /></td>
 </tr>
 </table>
+-->
 </td>
 </tr>
 
