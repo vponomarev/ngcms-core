@@ -1,6 +1,13 @@
 
 <script type="text/javascript">
 var cajax = new sack();
+function reload_captcha() {
+	var captc = document.getElementById('img_captcha');
+	if (captc != null) {
+		captc.src = "{captcha_url}?rand="+Math.random();
+	}
+}	
+
 function add_comment(){
 	var form = document.getElementById('comment');
 	cajax.whattodo = 'append';
@@ -11,9 +18,10 @@ function add_comment(){
 	cajax.setVar("vcode", form.vcode.value); [/captcha][/not-logged]
 	cajax.setVar("content", form.content.value);
 	cajax.setVar("newsid", form.newsid.value);
-	cajax.requestFile = "{admin_url}/includes/comments.add.php?rand="+Math.random();
+	cajax.requestFile = "{post_url}"+Math.random();
 	cajax.method = 'POST';
-	cajax.element = 'new_comments';
+	cajax.element = 'new_comments';[captcha]
+	cajax.onComplete = function() { reload_captcha(); }[/captcha]
 	cajax.runAJAX();
 }
 </script>
@@ -58,7 +66,7 @@ function add_comment(){
 </tr>
 [captcha]
 <tr>
-<td style="padding-left: 15px;"><img src="{admin_url}/captcha.php" alt="" /></td>
+<td style="padding-left: 15px;"><img id="img_captcha" onclick="reload_captcha();" src="{captcha_url}/captcha.php?rand={rand}" alt="captcha" /></td>
 <td style="padding: 5px;"><input class="important" type="text" name="vcode" maxlength="5" size="30" /></td>
 </tr>
 [/captcha]
