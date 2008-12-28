@@ -7,7 +7,7 @@
 <title>{l_preview}</title>
 <script type="text/javascript" src="{admin_url}/includes/js/functions.js"></script>
 <script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
-{extracss}
+{htmlvars}
 </head>
 <body>
 <fieldset style="border : 1px solid #333;"><legend> <span style="font-size: 10px; font-family: Verdana">{l_short}</span> </legend>
