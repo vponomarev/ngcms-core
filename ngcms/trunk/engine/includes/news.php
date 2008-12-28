@@ -217,7 +217,7 @@ function news_showlist($categoryList = array(), $callingParams = array()){
 		// Error - didn't find chosen categories
 		if (strlen($ctext) && !count($carray)) {
 			msg(array("type" => "info", "info" => $lang['msgi_cat_not_found']));
-			return;
+			return false;
 		}
 	}
 
@@ -521,6 +521,7 @@ function showNews() {
 
  	// Try to show news
 	if (($row = news_showone(id?id:0, !id?altname:'', $callingParams)) !== false) {
+/*
 		// Find first category
 		$fcat = array_shift(explode(",", $row['catid']));
 		// Check if there is a custom mapping
@@ -528,21 +529,21 @@ function showNews() {
 			// Check if directory exists
 			if (is_dir($templatePath.'/ncustom/'.$ctname))
 				$callingCommentsParams['overrideTemplatePath'] = $templatePath.'/ncustom/'.$ctname;
-
 		}
 		// If news is found, check if we need to show comments
 
 
-		@include root.'includes/comments.show.php';
+		@include_once root.'includes/comments.show.php';
 		comments_show($row['id'], 0, 0, $callingCommentsParams);
 		if ($row['allow_com'] && !$config['forbid_comments'] && (!$config['com_for_reg'] || is_array($userROW)))
 			comments_showform($row['id'], $callingCommentsParams);
-	}
-	// Execute filters [ onAfterShow ]
-	if (is_array($PFILTERS['news'])) {
-		foreach ($PFILTERS['news'] as $k => $v) { $v->onAfterShow('short'); }
-	}
- } else {
+*/
+		// Execute filters [ onAfterShow ]
+		if (is_array($PFILTERS['news'])) {
+			foreach ($PFILTERS['news'] as $k => $v) { $v->onAfterNewsShow($row['id'], $row, array('style' => 'full')); }
+		}
+	 }
+} else {
  	$callingParams['style'] = 'short';
 
 	// Execute filters [ onBeforeShow ]
