@@ -800,7 +800,7 @@ function generateAdminPagelist($param){
 	return $tpl -> show('pages');
 }
 
-function GetLink($what, $row = array()){
+function GetLink($what, $row = array(), $rawlink = 0){
 	global $config, $linkz, $catz, $catmap;
 
 	if (($what == 'category') && ($catz[$row['alt']]['alt_url'])) { return $catz[$row['alt']]['alt_url']; }
@@ -823,7 +823,7 @@ function GetLink($what, $row = array()){
 		$categories = "none";
 	}
 
-	$link = strtr($link, array(
+	$tr = 	array(
 		'&'			=>	'&amp;',
 		'{alt}'			=>	$row['alt'],
 		'{id}'			=>	$row['id'],
@@ -836,8 +836,11 @@ function GetLink($what, $row = array()){
 		'{page}'		=>	$row['page'],
 		'{userid}'		=>	$row['userid'],
 		'{code}'		=>	$row['code'],
-		'{plugin_name}'		=>	$row['plugin_name']
-	));
+		'{plugin_name}'		=>	$row['plugin_name']);
+	if ($rawlink)
+		array_shift($tr);
+
+	$link = strtr($link, $tr);
 
 	preg_match_all('/\((.*?)\)/i', $link, $array);
 
