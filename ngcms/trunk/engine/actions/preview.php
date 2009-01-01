@@ -16,7 +16,7 @@ $lang = LoadLang('preview', 'admin');
 include root.'includes/news.php';
 
 function showPreview() {
-	global $userROW, $EXTRA_CSS, $PFILTERS, $tpl, $parse, $mysql, $c_hour, $c_minute, $c_month, $c_day, $c_year, $config;
+	global $userROW, $EXTRA_CSS, $EXTRA_HTML_VARS, $PFILTERS, $tpl, $parse, $mysql, $c_hour, $c_minute, $c_month, $c_day, $c_year, $config;
 
 	$SQL = array( 'id' => -1 );
 	// Эмулируем работу всех штатных средств отвечающих за отображение новости.
@@ -87,7 +87,8 @@ function showPreview() {
 	$cshort	= $_REQUEST['contentshort'];
 	$cfull	= $_REQUEST['contentfull'];
 
-	$content = $cshort.(trim($cfull)?'<!--more-->'.$cfull:'');
+	// $content = $cshort.(trim($cfull)?'<!--more-->'.$cfull:'');
+	$content = $_REQUEST['content'];
 	$content = str_replace("\r\n", "\n", $content);
 	$SQL['content']		= $content;
 
@@ -100,9 +101,37 @@ function showPreview() {
 	$tvx['vars']['short'] = news_showone(-1, '', array('emulate' => $SQL, 'style' => 'short'));
 	$tvx['vars']['full']  = news_showone(-1, '', array('emulate' => $SQL, 'style' => 'full'));
 
-	$tvx['vars']['extracss'] = '';
+	// Fill extra CSS links
 	foreach ($EXTRA_CSS as $css => $null)
-		$tvx['vars']['extracss'] .= "<link href=\"".$css."\" rel=\"stylesheet\" type=\"text/css\" />\n";
+		$EXTRA_HTML_VARS[] = array('type' => 'css', 'data' => $css);
+
+	// Generate metatags
+	$EXTRA_HTML_VARS[] = array('type' => 'plain', 'data' => GetMetatags());
+
+	$txv['vars']['htmlvars'] = '';
+	// Fill additional HTML vars
+	$htmlrow = array();
+	$dupCheck = array();
+	foreach ($EXTRA_HTML_VARS as $htmlvar) {
+		if (in_array($htmlvar['data'], $dupCheck))
+			continue;
+		$dupCheck[] = $htmlvar['data'];
+		switch ($htmlvar['type']) {
+			case 'css'	: 	$htmlrow[] = "<link href=\"".$htmlvar['data']."\" rel=\"stylesheet\" type=\"text/css\" />";
+							break;
+			case 'js'	:	$htmlrow[] = "<script type=\"text/javascript\" src=\"".$htmlvar['data']."\"></script>";
+							break;
+			case 'rss'	:	$htmlrow[] = "<link href=\"".$htmlvar['data']."\" rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" />";
+							break;
+			case 'plain':	$htmlrow[] = $htmlvar['data'];
+				break;
+		}
+	}
+
+	if (count($htmlrow))
+		$tvx['vars']['htmlvars'] = join("\n",$htmlrow);
+
+	$tvx['vars']['extracss'] = '';
 
 	$tpl -> template('preview', tpl_actions);
 	$tpl -> vars('preview', $tvx);

@@ -51,7 +51,7 @@ $timer -> start();
 $rvars_arr = array('action', 'subaction', 'xfieldsaction', 'mod', 'id', 'pmid', 'category', 'altname', 'user', 'userid', 'code', 'vcode', 'story', 'rating', 'post_id', 'newsid', 'mail', 'name', 'url', 'regusername', 'regemail', 'regpassword', 'title', 'text', 'author', 'editsite', 'email', 'editicq', 'editlj', 'editfrom', 'editabout', 'icon', 'alt_url', 'orderby', 'contentshort', 'contentfull', 'alt_name', 'c_day', 'c_month', 'c_year', 'c_hour', 'c_minute', 'mainpage', 'allow_com', 'approve', 'favorite', 'pinned', 'description', 'keywords');
 $intvars_arr = array('start_from', 'news_per_page', 'per_page', 'cstart', 'page', 'year', 'month', 'day', 'raw', 'comid');
 
-$gvars_arr = array('root' => dirname(__FILE__).'/', 'HTTP_REFERER' => $_SERVER['HTTP_REFERER'], 'PHP_SELF' => $_SERVER['PHP_SELF'], 'QUERY_STRING' => $_SERVER['QUERY_STRING'], 'REQUEST_URI' => $_SERVER['REQUEST_URI'],'is_logged' => false, 'is_logged_cookie' => false, 'is_logged_session' => false, 'result' => false, 'stop' => false, 'is_member' => false, 'config' => array(), 'member_db' => array(), 'userz' => array(), 'catz' => array(), 'catmap' => array());
+$gvars_arr = array('root' => dirname(__FILE__).'/', 'HTTP_REFERER' => $_SERVER['HTTP_REFERER'], 'PHP_SELF' => $_SERVER['PHP_SELF'], 'QUERY_STRING' => $_SERVER['QUERY_STRING'], 'REQUEST_URI' => $_SERVER['REQUEST_URI'],'is_logged' => false, 'is_logged_cookie' => false, 'is_logged_session' => false, 'result' => false, 'stop' => false, 'is_member' => false, 'config' => array(), 'userz' => array(), 'catz' => array(), 'catmap' => array());
 
 foreach ($_REQUEST as $key => $value) {
 	if (in_array($key, $rvars_arr))   { $$key = $value; }
@@ -158,7 +158,6 @@ if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHO
 			$auth_db->save_auth($row);
 			$username			= $row['name'];
 			$userROW			= $row;
-			$member_db			= fill_member_db($row);
 			$is_logged_cookie	= true;
 			$is_logged			= true;
 
