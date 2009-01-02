@@ -320,16 +320,58 @@ function Padeg($n, $s) {
 }
 
 
-function Flooder($ip) {
-	global $config, $mysql;
+//
+// Perform BAN check
+// $ip		- IP address of user
+// $act		- action type ( 'comments', 'news',... )
+// $subact	- subaction type ( for comments this may be 'add' )
+// $userRec	- record of user (in case of logged in)
+// $name	- name entered by user (in case it was entered)
+function checkBanned($ip, $act, $subact, $userRec, $name) {
+	global $mysql;
+
+	// CURRENTLY WE WORK ONLY WITH IP_LOCK
+	if ($ban_row = $mysql->record("select * from ".prefix."_ipban where ip=".db_squote($ip))) {
+		$mysql->query("update ".prefix."_ipban set counter=counter+1 where ip=".db_squote($ip));
+		return 1;
+	}
+	return 0;
+}
+
+//
+// Perform FLOOD check
+// $mode	- WORKING MODE ( 0 - check only, 1 - update )
+// $ip		- IP address of user
+// $act		- action type ( 'comments', 'news',... )
+// $subact	- subaction type ( for comments this may be 'add' )
+// $userRec	- record of user (in case of logged in)
+// $name	- name entered by user (in case it was entered)
+function checkFlood($mode, $ip, $act, $subact, $userRec, $name){
+	global $mysql, $config;
+
+	// Return if flood protection is disabled
+	if (!$config['flood_time']) {
+		return 0;
+	}
 
 	$this_time = time() + ($config['date_adjust'] * 60) - $config['flood_time'];
+
+	// If UPDATE mode is used - update data
+	if ($mode) {
+		$this_time = time() + ($config['date_adjust'] * 60);
+		$mysql->query("insert into ".prefix."_flood (ip, id) values (".db_squote($ip).", ".db_squote($this_time).") on duplicate key update id=".db_squote($this_time));
+		return 0;
+	}
+
+	// Delete expired records
 	$mysql->query("DELETE FROM ".prefix."_flood WHERE id < ".db_squote($this_time));
 
+	// Check if we have record
 	if ($mysql->rows($mysql->query("SELECT * FROM ".prefix."_flood WHERE id > ".db_squote($this_time)." AND ip = ".db_squote($ip))) > "0") {
-		return true;
+		// Flood found
+		return 1;
 	}
-	return false;
+	return 0;
 }
 
 
@@ -446,7 +488,7 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null) {
 
    if (is_file($sd . '/' . $dfile[$level])) {
     // Check for black list
-    
+
     $size += filesize($sd . '/' . $dfile[$level]);
     $files []= ($wsd?$wsd.'/':'').$dfile[$level];
     $count ++;
@@ -508,7 +550,7 @@ function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $na
 	}
 	if (!$params['checkarea']) {
 		$out.="</select>";
-	}	
+	}
 	return $out;
 }
 
@@ -1021,7 +1063,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		// Make link for full news
 		$tvars['vars']['[full-link]']	=	"<a href=\"".$url."\">";
 		$tvars['vars']['[/full-link]']	=	"</a>";
-		
+
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
 		if (strlen($full)) {
 			// we have full news
