@@ -224,19 +224,15 @@ function editNewsForm() {
 	);
 
 	if ($config['use_smilies']) {
-		$tvars['vars']['smilies_short'] = InsertSmilies('contentshort', 20, "short");
-		$tvars['vars']['smilies_full'] = InsertSmilies('contentfull', 20, "full");
+		$tvars['vars']['smilies'] = InsertSmilies('content', 20);
 	} else {
-		$tvars['vars']['smilies_short'] = '';
-		$tvars['vars']['smilies_full'] = '';
+		$tvars['vars']['smilies'] = '';
 	}
 
 	if ($config['use_bbcodes']) {
 		$tvars['vars']['quicktags'] = QuickTags('', 'bbnews');
-	//	$tvars['vars']['quicktags_full']  = QuickTags("full", 'bbnews');
 	} else {
-		$tvars['vars']['quicktags_short'] = '';
-		$tvars['vars']['quicktags_full']  = '';
+		$tvars['vars']['quicktags'] = '';
 	}
 
 	if ($userROW['status'] < 3) {

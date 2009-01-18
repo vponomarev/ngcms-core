@@ -45,7 +45,7 @@ foreach (array('backup' => root.'backups', 'avatar' => avatars_dir, 'photo' => p
 $gd_version = gd_info();
 $mysql_size = 0;
 
-foreach ($mysql->select("SHOW TABLE STATUS FROM ".$config['dbname']) as $result) {
+foreach ($mysql->select("SHOW TABLE STATUS FROM `".$config['dbname']."`") as $result) {
 	$mysql_size += $result['Data_length'] + $result['Index_length'];
 }
 $mysql_size = Formatsize($mysql_size);
