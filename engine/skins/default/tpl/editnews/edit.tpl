@@ -52,7 +52,7 @@ function preview(){
    <td><input type="text" class="important" size="79" name="title" value="{title}" tabindex="1" /></td>
   </tr>
   <tr>
-   <td valign="top" colspan=3>{quicktags}<!--<br /> {smilies_short}<br /> -->
+   <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
    <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" rows="16" tabindex="2">{content}</textarea></td>
   </tr>
   <tr>
@@ -136,24 +136,6 @@ function preview(){
 </td>
 </tr>
 </table>
-
-<!--
-<tr>
-<td width=50% class="contentHead" colspan="2"><img src="{skins_url}/images/nav.png" hspace="8" alt="" />{l_contentshort}</td>
-</tr>
-<tr>
-<td width="100%" colspan="2" valign="top" class="contentEntry1">{quicktags_short}<br />{smilies_short}<br />
-<textarea name="contentshort" rows="15" cols="90">{short}</textarea></td>
-</tr>
-<tr>
-<td width=50% class="contentHead" colspan="2"><img src="{skins_url}/images/nav.png" hspace="8" alt="" />{l_contentfull}</td>
-</tr>
-<tr>
-<td width="100%" colspan="2" valign="top" class="contentEntry1">{quicktags_full}<br />{smilies_full}<br />
-<textarea name="contentfull" rows="15" cols="100">{full}</textarea></td>
-</tr>
-</table>
--->
 
 <br />
 

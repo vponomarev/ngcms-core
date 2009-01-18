@@ -58,7 +58,8 @@ class NewsFilter {
 	//   * full    - full news show
 	//   * export  - export news ( print / some plugins and so on )
 	// 'plugin'  => if is called from plugin - ID of plugin
-	// 'emulate' =>  flag if emulation mode is used [ for example, for preview ]
+	// 'emulate' => flag if emulation mode is used [ for example, for preview ]
+	// 'nCount'  => news if order (1,2,...) for SHORT news
 	function showNewsPre($newsID, &$SQLnews, $mode = array()) { return 1; }
 
 	// Show news call :: processor (call after all processing is finished and before show)
