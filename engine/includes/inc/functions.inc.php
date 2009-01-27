@@ -1253,6 +1253,63 @@ function getNavigations($tpldir) {
 
 
 //
+// Generate navigations panel ( like: 1.2.[3].4. ... 25 )
+// $current		- current page
+// $start		- first page in navigations
+// $end			- last page in navigations
+// $maxnav		- maximum number of navigtions to show
+// $link		- link to info page with text {page} that will be replaced by page number
+function generatePagination($current, $start, $end, $maxnav, $link, $navigations){
+	// Generate pagination block
+	function generatePaginationBlock($current, $start, $end, $link, $navigations){
+		$result = '';
+		for ($j=$start; $j<=$end; $j++) {
+			if ($j == $current) {
+				$result .= str_replace('%page%',$j,$navigations['current_page']);
+			} else {
+				$row['page'] = $j;
+				$result .= str_replace('%page%',$j,str_replace('%link%', str_replace('{page}', $j, $link), $navigations['link_page']));
+			}
+		}
+		return $result;
+	}
+
+
+	$pages_count = $end - $start + 1;
+
+	if ($pages_count > $maxnav) {
+		// We have more than 10 pages. Let's generate 3 parts
+		$sectionSize	= floor($maxnav / 3);
+
+		// Section size should be not less 1 item
+		if ($sectionSize < 1)
+			$sectionSize = 1;
+
+		// Situation #1: 1,2,3,4,[5],6 ... 128
+		if ($start < ($sectionSize * 2)) {
+			$pages .= generatePaginationBlock($current, 1, $sectionSize * 2, $link, $navigations);
+			$pages .= " ... ";
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $link, $navigations);
+		} elseif ($start > ($pages_count - $sectionSize * 2 + 1)) {
+			$pages .= generatePaginationBlock($current, 1, $sectionSize, $link, $navigations);
+			$pages .= " ... ";
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize*2 + 1, $pages_count, $link, $navigations);
+		} else {
+			$pages .= generatePaginationBlock($current, 1, $sectionSize, $link, $navigations);
+			$pages .= " ... ";
+			$pages .= generatePaginationBlock($current, $cstart-1, $cstart+1, $link, $navigations);
+			$pages .= " ... ";
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $link, $navigations);
+		}
+	} else {
+		// If we have less then 10 pages
+		$pages .= generatePaginationBlock($current, 1, $pages_count, $link, $navigations);
+	}
+	return $pages;
+}
+
+
+//
 // Return user record by login
 //
 function locateUser($login) {
