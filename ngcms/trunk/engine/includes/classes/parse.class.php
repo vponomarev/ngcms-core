@@ -302,8 +302,17 @@ class parse {
 					continue;
 				}
 
+				// Check for EMPTY URL
+				$urlREF = (!$keys['href'])?$alt:$keys['href'];
+
+				if (!trim($urlREF)) {
+				        // EMPTY, SKIP
+					array_push($rdest, $alt);
+					continue;
+				}
+					
 				// Now let's compose a resulting URL
-				$outkeys [] = 'href="'.((!$keys['href'])?$alt:$keys['href']).'"';
+				$outkeys [] = 'href="'.$urlREF.'"';
 
 				// Now parse allowed tags and add it into output line
 				foreach ($keys as $kn => $kv) {
