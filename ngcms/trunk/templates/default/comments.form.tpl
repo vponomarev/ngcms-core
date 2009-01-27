@@ -17,7 +17,8 @@ function add_comment(){
 	cajax.setVar("mail", form.mail.value);[captcha]
 	cajax.setVar("vcode", form.vcode.value); [/captcha][/not-logged]
 	cajax.setVar("content", form.content.value);
-	cajax.setVar("newsid", form.newsid.value);
+	cajax.setVar("newsid", form.newsid.value);[ajax]
+	cajax.setVar("ajax", "1");[/ajax]
 	cajax.requestFile = "{post_url}"+Math.random();
 	cajax.method = 'POST';
 	cajax.element = 'new_comments';[captcha]
@@ -27,8 +28,9 @@ function add_comment(){
 </script>
 
 <div id="new_comments"></div>
-<form id="comment" method="post" action="" name="form" onSubmit="add_comment(); return false;">
+<form id="comment" method="post" action="{post_url}" name="form" [ajax]onsubmit="add_comment(); return false;"[/ajax]>
 <input type="hidden" name="newsid" value="{newsid}" />
+<input type="hidden" name="referer" value="{request_uri}" />
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 	<tr>
