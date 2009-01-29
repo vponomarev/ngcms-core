@@ -742,20 +742,8 @@ function GetAllCategories($cats) {
 
 
 function MakeRandomPassword() {
-
-	$salt = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789';
-	$pass = '';
-	srand((double)microtime()*1000000);
-	$i = 0;
-
-	while ($i <= 10) {
-		$num = rand() % 33;
-		$tmp = substr($salt, $num, 1);
-		$pass = $pass.$tmp;
-		$i++;
-	}
-
-	return $pass;
+	global $config;
+	return substr(md5($config['crypto_salt'].uniqid(rand(),1)),0,10);
 }
 
 
