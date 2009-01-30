@@ -74,7 +74,7 @@ class NewsFilter {
 	//  limit	- show limit in order (for short list)
 	function onBeforeNewsShow($newsID, $SQLnews, $mode = array()) { return 1; }
 	function onAfterNewsShow ($newsID, $SQLnews, $mode = array()) { return 1; }
-	                                                   
+
 	// Behaviour before/after showing news template
 	// $mode	- calling mode (may be 'short' or 'full')
 	function onBeforeShow($mode) { return 1; }
@@ -206,7 +206,7 @@ function loadPluginLibrary($plugin, $libname = '') {
 		return true;
 	} else {
 		if (isset($list['libs'][$plugin][$libname])) {
-			include_once extras_dir.'/'.$list['active'][$plugin].'/'.$list[$libs][$plugin][$libname];
+			include_once extras_dir.'/'.$list['active'][$plugin].'/'.$list['libs'][$plugin][$libname];
 			return true;
 		}
 		return false;
@@ -416,7 +416,7 @@ function get_extras_list() {
 		$ver = plugins_load_version_file($edir.'/version');
 		if (!is_array($ver)) { continue; }
 
-		// fill fully file path (within 'extras' directory)
+		// fill fully file path (within 'plugins' directory)
 		$ver['dir'] = $dir;
 
 		// Good, version file is successfully loaded, add data into array
@@ -509,7 +509,7 @@ function get_plugcache_dir($plugin) {
 // $fname - file name to store
 // $data - what should be written into cache
 // $plugin - [optional] plugin name that stores data
-// $hugeMode - flag if plugin wants to store huge data 
+// $hugeMode - flag if plugin wants to store huge data
 //  [ data will be stored in binary tree 32 x 32 = 1024 different dirs ]
 //
 function cacheStoreFile($fname, $data, $plugin = '', $hugeMode = 0) {
