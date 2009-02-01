@@ -4,6 +4,7 @@ function ChangeOption(optn) {
 	document.getElementById('additional').style.display   = (optn == 'additional')?"block":"none";
 	document.getElementById('comments').style.display     = (optn == 'comments')?"block":"none";
 	document.getElementById('showEditNews').style.display = (optn == 'comments')?"none":"block";
+	document.getElementById('rightBar').style.display = (optn == 'comments')?"none":"";
 }
 function preview(){
 
@@ -77,25 +78,23 @@ function preview(){
 
 <!-- ADDITIONAL -->
 <div id="additional" style="display: none;">
-<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-
+<table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
+<td class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{changedate}</td>
+<td class="contentEntry1">{changedate}</td>
 </tr>
 [isplugin xfields]{plugin_xfields}[/isplugin]
 [isplugin nsched]{nsched}[/isplugin]
 [isplugin finance]{finance}[/isplugin]
 [isplugin tags]{plugin_tags}[/isplugin]
-[options]
 </table>
 </div>
 
 
 </td>
-<td width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
+<td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr><td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td><td>Общая информация</td></tr>
@@ -158,21 +157,21 @@ function preview(){
 <form method="post" name="commentsForm" id="commentsForm" action="{php_self}?mod=editnews">
 <!-- COMMENTS -->
 <div id="comments" style="display: none;">
-<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
+<table border="0" cellspacing="0" cellpadding="0" width="98%">
 <tr align="center">
-<td width="20%" class="contentHead">{l_author}</td>
-<td width="17%" class="contentHead">{l_date}</td>
-<td width="40%" class="contentHead">{l_comment}</td>
-<td width="10%" class="contentHead">{l_edit_comm}</td>
-<td width="15%" class="contentHead">{l_block_ip}</td>
-<td width="5%" class="contentHead"><input type="checkbox" name="master_box" value="all" onclick="javascript:check_uncheck_all(commentsForm)" class="check" /></td>
+<td class="contentHead">{l_author}</td>
+<td class="contentHead">{l_date}</td>
+<td class="contentHead">{l_comment}</td>
+<td class="contentHead">{l_edit_comm}</td>
+<td class="contentHead">{l_block_ip}</td>
+<td class="contentHead"><input type="checkbox" name="master_box" value="all" onclick="javascript:check_uncheck_all(commentsForm)" class="check" /></td>
 </tr>
 {comments}
 <tr>
 <td colspan="5">&nbsp;</td>
 </tr>
 <tr align="center">
-<td width="100%" colspan="5" class="contentEdit" align="center" valign="top">
+<td width="100%" colspan="6" class="contentEdit" align="center" valign="top">
 <input type="hidden" name="action" value="do_mass_com_delete" />
 <input type="hidden" name="id" value="{id}" />
 <input type="hidden" name="mod" value="editnews" />
