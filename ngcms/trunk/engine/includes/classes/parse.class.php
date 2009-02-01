@@ -356,6 +356,9 @@ class parse {
 			return false;
 
 		// Make replacement of dangerous symbols
+		if (preg_match('#^(http|https|ftp)://(.+)$#', $url, $mresult))
+			return $mresult[1].'://'.str_replace(array(':', "'", '"'), array('%3A', '%27', '%22'), $mresult[2]);
+
 		return str_replace(array(':', "'", '"'), array('%3A', '%27', '%22'), $url);
 	}
 
