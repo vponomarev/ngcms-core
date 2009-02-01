@@ -171,7 +171,7 @@ class parse {
 				// Init variables
 				list ($line, $null, $paramLine, $alt) = $catch;
 				array_push($rsrc, $line);
-				 
+
 				// Check for possible error in case of using "]" within params/url
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
 				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
@@ -205,15 +205,19 @@ class parse {
 					$keys = array();
 				}
 
+				// Get URL
+				$urlREF = $this->validateURL((!$keys['src'])?$alt:$keys['src']);
+
 				// Return an error if BB code is bad
-				if (!is_array($keys)) {
+				if ((!is_array($keys))||($urlREF === false)) {
 					array_push($rdest,'[INVALID IMG BB CODE]');
 					continue;
 				}
 
 				$keys['alt'] = $alt;
+
 				// Now let's compose a resulting URL
-				$outkeys [] = 'src="'.((!$keys['src'])?$alt:$keys['src']).'"';
+				$outkeys [] = 'src="'.$urlREF.'"';
 
 				// Now parse allowed tags and add it into output line
 				foreach ($keys as $kn => $kv) {
@@ -262,7 +266,7 @@ class parse {
 				// Init variables
 				list ($line, $null, $paramLine, $alt) = $catch;
 				array_push($rsrc, $line);
-				 
+
 				// Check for possible error in case of using "]" within params/url
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
 				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
@@ -303,14 +307,14 @@ class parse {
 				}
 
 				// Check for EMPTY URL
-				$urlREF = (!$keys['href'])?$alt:$keys['href'];
+				$urlREF = $this->validateURL((!$keys['href'])?$alt:$keys['href']);
 
-				if (!trim($urlREF)) {
-				        // EMPTY, SKIP
+				if ($urlREF === false) {
+					// EMPTY, SKIP
 					array_push($rdest, $alt);
 					continue;
 				}
-					
+
 				// Now let's compose a resulting URL
 				$outkeys [] = 'href="'.$urlREF.'"';
 
@@ -344,6 +348,15 @@ class parse {
 			$content = preg_replace("#\[color=([^\]]+)\](.+?)\[/color\]#ies"  , "\$this->color(array('style'=>'$1','text'=>'$2'))", $content);
 		}
 		return $content;
+	}
+
+	function validateURL ($url) {
+		// Check for empty url
+		if (trim($url) == '')
+			return false;
+
+		// Make replacement of dangerous symbols
+		return str_replace(array(':', "'", '"'), array('%3A', '%27', '%22'), $url);
 	}
 
 	function htmlformatter($content) {
