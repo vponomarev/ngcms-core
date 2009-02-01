@@ -1442,3 +1442,14 @@ function parseParams($paramLine){
 	}
 	return $keys;
 }
+
+//
+// Print output HTTP headers
+//
+function printHTTPheaders() {
+	global $SYSTEM_FLAGS;
+
+	foreach ($SYSTEM_FLAGS['http.headers'] as $hkey => $hvalue) {
+		@header($hkey.': '.$hvalue);
+	}
+}

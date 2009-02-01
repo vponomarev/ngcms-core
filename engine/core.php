@@ -46,7 +46,10 @@ $timer -> start();
 @include_once root.'includes/inc/fix_magic_quotes.php';
 
 @session_start();
-@header('Cache-control: private');
+
+// Define default HTTP flags
+$SYSTEM_FLAGS['http.headers']['Content-Type']	= 'text/html; charset=Windows-1251';
+$SYSTEM_FLAGS['http.headers']['Cache-control']	= 'private';
 
 $rvars_arr = array('action', 'subaction', 'xfieldsaction', 'mod', 'id', 'pmid', 'category', 'altname', 'user', 'userid', 'code', 'vcode', 'story', 'rating', 'post_id', 'newsid', 'mail', 'name', 'url', 'regusername', 'regemail', 'regpassword', 'title', 'text', 'author', 'editsite', 'email', 'editicq', 'editlj', 'editfrom', 'editabout', 'icon', 'alt_url', 'orderby', 'contentshort', 'contentfull', 'alt_name', 'c_day', 'c_month', 'c_year', 'c_hour', 'c_minute', 'mainpage', 'allow_com', 'approve', 'favorite', 'pinned', 'description', 'keywords');
 $intvars_arr = array('start_from', 'news_per_page', 'per_page', 'cstart', 'page', 'year', 'month', 'day', 'raw', 'comid');
@@ -78,8 +81,6 @@ multi_multidomains();
 @include_once root.'includes/inc/functions.inc.php';
 @include_once root.'includes/inc/extras.inc.php';
 @include_once confroot.'links.inc.php';
-
-if (!defined('root')) { die("Don't you figure you're so cool?"); }
 
 @include_once 'includes/classes/templates.class.php';
 @include_once 'includes/classes/parse.class.php';

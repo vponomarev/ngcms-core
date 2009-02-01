@@ -170,8 +170,10 @@ if ($config['debug']) {
 $tpl -> template('main', tpl_site);
 $tpl -> vars('main', $template);
 if (!$SUPRESS_TEMPLATE_SHOW) {
+	printHTTPheaders();
 	echo $tpl -> show('main');
 } else if (!$SUPRESS_MAINBLOCK_SHOW) {
+	printHTTPheaders();
 	echo $template['vars']['mainblock'];
 }
 

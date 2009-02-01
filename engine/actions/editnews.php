@@ -19,7 +19,7 @@ $SQL = array();
 // Выполнение редактирования новости
 //
 function editNews() {
-	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW;
+	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW, $catz, $catmap;
 	global $c_day, $c_month, $c_year, $c_hour, $c_minute, $description, $keywords;
 
 	// Variable FLAGS is a bit-variable:
@@ -58,7 +58,6 @@ function editNews() {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
-	$oldcat = $row['catid'];
 
 	if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
 		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
@@ -74,23 +73,24 @@ function editNews() {
 	}
 
 	// Generate SQL old cats list
-	$oldcatsql = array();
-	foreach(explode(",",$oldcat) as $key) { if ($key) $oldcatsql[] = "id = ".db_squote($key); }
+	$oldcatids = array();
+	foreach (explode(",", $row['catid']) as $cat)
+		if (preg_match('#^(\d+)$#', trim($cat), $cmatch))
+			$oldcatids[$cmatch[1]] = 1;
 
-	$categories = explode(",", secure_html($_POST['categories']));
-	$categories = array_diff($categories,array(''));
-	$catids = array();
-	$catsql = array();
-
-	foreach($categories as $key=>$keyword){
-		$keyword = trim($keyword);
-		$keywordid = $mysql->result("select id from ".prefix."_category where name = ".db_squote($keyword).(is_numeric($keyword)?(" or id=".db_squote($keyword)):''));
-		$catids[] = $keywordid;
-		$catsql[] = "id = ".db_squote($keywordid);
+	// Fetch MASTER provided categories
+	$catids = array ();
+	if (intval($_POST['category']) && isset($catmap[intval($_POST['category'])])) {
+		$catids[intval($_POST['category'])] = 1;
 	}
-	$cats = implode(",", $catids);
 
-	if ($config['meta'] == "1") {
+	// Fetch ADDITIONAL provided categories
+	foreach ($_POST as $k => $v) {
+		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($_POST['category'])]))
+			$catids[$match[1]] = 1;
+	}
+
+	if ($config['meta']) {
 		$SQL['description'] = $_REQUEST['description'];
 		$SQL['keywords']    = $_REQUEST['keywords'];
 	}
@@ -103,7 +103,7 @@ function editNews() {
 	$SQL['content']   = $content;
 	$SQL['alt_name']  = $alt_name;
 	$SQL['editdate']  = time();
-	$SQL['catid']     = $cats;
+	$SQL['catid']     = implode(",", array_keys($catids));
 
 	// Change this parameters if user have enough access level
 	if ($userROW['status'] < 3) {
@@ -137,11 +137,11 @@ function editNews() {
 	$mysql->query("update ".prefix."_news set ".implode(", ",$SQLparams)." where id = ".db_squote($id));
 
 	// Update category posts counters
-	if (sizeof($oldcatsql)) {
-		$mysql->query("update ".prefix."_category set posts=posts-1 where ".implode(" or ",$oldcatsql));
+	if (sizeof($oldcatids)) {
+		$mysql->query("update ".prefix."_category set posts=posts-1 where id in (".implode(",",array_keys($oldcatids)).")");
 	}
-	if (sizeof($catsql)) {
-		$mysql->query("update ".prefix."_category set posts=posts+1 where ".implode(" or ",$catsql));
+	if (sizeof($catids)) {
+		$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(",",array_keys($catids)).")");
 	}
 
 	if (is_array($PFILTERS['news']))
@@ -206,7 +206,7 @@ function editNewsForm() {
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
 		'changedate'		=>	ChangeDate($row['postdate']),
-		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 1,   'selected' => count($cats)?$cats[0]:0)),
+		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array())),
 		'allcats'			=>	@GetAllCategories($cats),
 		'comments'			=>	$parse->smilies($comments),
