@@ -899,6 +899,7 @@ function convert($content) {
 	return $content;
 }
 
+function utf2cp1251($text) { return convert($text); }
 
 function GetCategories($catid, $plain = false) {
 	global $catz, $catmap;
@@ -1225,7 +1226,7 @@ function GetMetatags() {
 		$meta['keywords'] = $SYSTEM_FLAGS['meta']['keywords'];
 
 	$result  = ($meta['description'] != '')?"<meta name=\"description\" content=\"".secure_html($meta['description'])."\" />\r\n":'';
-	$result .= ($meta['keywords'] != '')?"<meta name=\"keywords\" content=\"".secure_html($meta['description'])."\" />\r\n":'';
+	$result .= ($meta['keywords'] != '')?"<meta name=\"keywords\" content=\"".secure_html($meta['keywords'])."\" />\r\n":'';
 
 	return $result;
 }
