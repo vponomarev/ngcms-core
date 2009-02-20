@@ -54,9 +54,13 @@ class mysql {
 	}
 
 	function query($sql) {
+		global $timer;
+
+	        if ($this->queryTimer) { $tX = $timer->stop(4); }	
 		$this->queries++;
-		array_push ($this->query_list, $sql);
 		$query = @mysql_query($sql, $this->connect) or msg(array("type" => "error", "text" => "Error! Bad query! [$sql]"));
+		if ($this->queryTimer) { $tX = '[ '.($timer->stop(4) - $tX).' ] '; } else { $tX = ''; }	
+		array_push ($this->query_list, $tX.$sql);
 
 		return $query;
 	}
