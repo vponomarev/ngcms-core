@@ -21,13 +21,12 @@ function news_add(){
 
 
 	$title = $_REQUEST['title'];
-	$contentshort = $_REQUEST['contentshort'];
-	$contentfull  = $_REQUEST['contentfull'];
+	$content = $_REQUEST['content'];
 	$alt_name = $parse->translit( trim($_REQUEST['alt_name']), 1);
 
 
 	// Check title
-	if ( (!strlen(trim($title))) || (!strlen(trim($contentshort))) ) {
+	if ( (!strlen(trim($title))) || (!strlen(trim($content))) ) {
 		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
 		return 0;
 	}
@@ -127,7 +126,6 @@ function news_add(){
 		$SQL['pinned']		= intval($_REQUEST['pinned']);
 	}
 
-	$content = $contentshort.(trim($contentfull)?'<!--more-->'.$contentfull:'');
 	$content = str_replace("\r\n", "\n", $content);
 	$SQL['content']		= $content;
 
@@ -184,38 +182,26 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 	$tvars['vars'] = array(
 		'php_self'			=> $PHP_SELF,
 		'changedate'		=> ChangeDate(),
-		'catlist'			=> makeCategoryList(array('nameval' => 1)),
+		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0)),
+		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1)),
 		'JEV'			=> $JEV
 	);
 
-	if ($config['use_smilies']) {
-		$tvars['vars']['smilies_short'] = InsertSmilies('contentshort', 20, "short");
-		$tvars['vars']['smilies_full'] = InsertSmilies('contentfull', 20, "full");
-	} else {
-		$tvars['vars']['smilies_short'] = '';
-		$tvars['vars']['smilies_full'] = '';
-	}
+	$tvars['vars']['smilies']	= ($config['use_smilies'])?InsertSmilies('content', 20):'';
+	$tvars['vars']['quicktags']	= ($config['use_bbcodes'])?QuickTags('', 'bbnews'):'';
 
-	if ($config['use_bbcodes']) {
-		$tvars['vars']['quicktags_short'] = QuickTags("short", defined('ADMIN')?'':'siteaddnews');
-		$tvars['vars']['quicktags_full']  = QuickTags("full", defined('ADMIN')?'':'siteaddnews');
-	} else {
-		$tvars['vars']['quicktags_short'] = '';
-		$tvars['vars']['quicktags_full']  = '';
-	}
-
-	if ($userROW['status'] < "3") {
+	if ($userROW['status'] < 3) {
 		$tvars['vars']['[options]'] = "";
 		$tvars['vars']['[/options]'] = "";
 	} else {
-		$tvars['regx']["'\\[options\\].*?\\[/options\\]'si"] = "";
+		$tvars['regx']['#\[options\].*?\[/options\]#si'] = '';
 	}
 
-	if ($config['meta'] == "1") {
+	if ($config['meta']) {
 		$tvars['vars']['[meta]'] = "";
 		$tvars['vars']['[/meta]'] = "";
 	} else {
-		$tvars['regx']["'\\[meta\\].*?\\[/meta\\]'si"] = "";
+		$tvars['regx']['#\[meta\].*?\[/meta\]#si'] = '';
 	}
 
 	if ( is_array($userROW) && ($userROW['status']== "1" || $userROW['status']== "2") ) {
@@ -235,9 +221,13 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 	$tvars['vars']['disable_flag_raw'] = $flock?'disabled':'';
 	$tvars['vars']['disable_flag_html'] = $flock?'disabled':'';
 
-	exec_acts('addnews_form', '', true);
+	foreach (array('mainpage', 'approve', 'favorite', 'pinned') as $rp)
+		$tvars['vars']['flag_'.$rp] = (($userROW['status'] == 1)||($userROW['status'] == 2))?'checked="checked"':'disabled="disabled"';
+	$tvars['vars']['flag_allow_com'] = 'checked="checked"';
 
-	if (is_array($PFILTERS['news'])) foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsForm($tvars); }
+	// Run interceptors
+	if (is_array($PFILTERS['news']))
+		foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsForm($tvars); }
 
 	$tpl -> template('addnews', defined('ADMIN')?tpl_actions:tpl_site);
 	$tpl -> vars('addnews', $tvars);

@@ -8,7 +8,7 @@ function ChangeOption(optn) {
 function preview(){
 
  var form = document.getElementById("postForm");
- if (form.contentshort.value == '' || form.title.value == '') {
+ if (form.content.value == '' || form.title.value == '') {
   alert('{l_msge_preview}');
   return false;
  }
@@ -26,95 +26,112 @@ function preview(){
 <input type=hidden name="area" value="" />
 </form>
 <form id="postForm" name="form" method="post" action="{php_self}" target="_self">
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-<tr align="center">
-<td width="100%" class="contentNav" align="center" valign="top">
-<input type="button" onclick="ChangeOption('maincontent');" value="{l_maincontent}" class="navbutton" />
-<input type="button" onclick="ChangeOption('additional');" value="{l_additional}" class="navbutton" />
+<br/>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
+<tr>
+<td valign="top" >
+ <!-- Left edit column -->
+
+<table border="0" cellspacing="1" cellpadding="0" width="98%">
+<tr>
+<td style="background: #F0F0F0; padding: 3px;">
+<input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_maincontent}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_additional}" class="navbutton" />
 </td>
 </tr>
-</table>
-<br />
+<tr><td>
+
 <!-- MAIN CONTENT -->
 <div id="maincontent" style="display: block;">
-<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_title}</td>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_category}&nbsp;{catlist}&nbsp;<input type="button" id="catbutton" name="catbutton" value="{l_add}" class="button" onClick="addcat(); return false;" /></td>
-</tr>
-<tr>
-<td width="50%" class="contentEntry1"><input type="text" class="important" size="40" name="title" tabindex="1" /></td>
-<td width="50%" class="contentEntry1"><input type="text" name="categories" maxlength="255" id="categories" value="" size="40" /></td>
-</tr>
-<tr>
-<td width="50%" class="contentHead" colspan="2"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_contentshort}</td>
-</tr>
-<tr>
-<td width="100%" colspan="2" valign="top" class="contentEntry1">{quicktags_short}<br />{smilies_short}<br /><textarea name="contentshort" rows="15" cols="100"></textarea></td>
-</tr>
-</table>
-<table id="maincontent2" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr>
-<td width="100%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_contentfull} <a href="javascript:ShowOrHide('full');"><img src="{skins_url}/images/show_hide.gif" /></a></td>
-</tr>
-<tr id="full" style="display: none;">
-<td width="100%" valign="top" class="contentEntry1">{quicktags_full}<br />{smilies_full}<br /><textarea name="contentfull" rows="15" cols="100"></textarea></td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-</tr>
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+  <tr>
+   <td width="10"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
+   <td width="100">{l_title}:</td>
+   <td><input type="text" class="important" size="79" name="title" value="" tabindex="1" /></td>
+  </tr>
+  <tr>
+   <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
+   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" rows="16" tabindex="2"></textarea></td>
+  </tr>
+  <tr>
+   <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
+   <td>{l_alt_name}:</td>
+   <td><input type="text" name="alt_name" value="" size="60" tabindex="3" /></td>
+  </tr>
+[meta]
+  <tr>
+   <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
+   <td>{l_description}:</td>
+   <td><input type="text" name="description" value="" size="60" tabindex="4" /></td>
+  </tr>
+  <tr>
+   <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
+   <td>{l_keywords}:</td>
+   <td><input type="text" name="keywords" value="" size="60" tabindex="5" /></td>
+  </tr>
+[/meta]
 </table>
 </div>
 
+
 <!-- ADDITIONAL -->
 <div id="additional" style="display: none;">
-<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
+<table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
-<td colspan="2" width="100%" style="padding-left:10px;" valign="top">
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-<tr>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_alt_name}</td>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
+<td class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1"><input type="text" name="alt_name" size="40" tabindex="2" /></td>
-<td width="50%" class="contentEntry1">{changedate}</td>
+<td class="contentEntry1">{changedate}</td>
 </tr>
-[meta]
-<tr>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_description}</td>
-<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_keywords}</td>
-</tr>
-<tr>
-<td width="50%" class="contentEntry1"><input type="text" name="description" value="" maxlength="255" size="40" /></td>
-<td width="50%" class="contentEntry1"><input type="text" name="keywords" value="" maxlength="255" size="40" /></td>
-</tr>
-[/meta]
-{plugin_xfields}
+[isplugin xfields]{plugin_xfields}[/isplugin]
 [isplugin nsched]{nsched}[/isplugin]
 [isplugin finance]{finance}[/isplugin]
-{plugin_tags}
-<tr>
-<td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_additional}</td>
-</tr>
-<tr>
-<td width="100%" colspan="2" class="contentEntry1">
-[options]
-<input type="checkbox" name="approve" value="1" checked class="check" id="approve" /> <label for="approve">{l_approve}</label> 
-<br /><input type="checkbox" name="mainpage" value="1" checked class="check" id="mainpage" /> <label for="mainpage"> {l_mainpage}</label>
-<br /><input type="checkbox" name="allow_com" value="1" checked class="check" id="allow_com" /> <label for="allow_com"> {l_allow_com}</label>
-<br /><input type="checkbox" name="favorite" value="1" class="check" id="favorite" /> <label for="favorite">{l_add_favorite}</label>
-<br /><input type="checkbox" name="pinned" value="1" class="check" id="pinned" /> <label for="pinned">{l_add_pinned}</label>
-<br /><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {disable_flag_raw}/> <label for="flag_RAW">{l_flag_raw}</label>
-<br /><input type="checkbox" name="flag_HTML" value="1" class="check" id="flag_HTML" {disable_flag_html}/> <label for="flag_HTML">{l_flag_html}</label>
-[/options]
-</td>
-</tr>
-</table>
-</td>
-</tr>
+[isplugin tags]{plugin_tags}[/isplugin]
 </table>
 </div>
+</td></tr>
+</table>
+
+</td>
+<td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
+ <!-- Right edit column -->
+ <table width="100%" cellspacing="0" cellpadding="0" border="0">
+  <tr>
+   <td width="20"><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+   <td>{l_category}</td>
+  </tr>
+  <tr>
+   <td></td><td>{mastercat}</td>
+  </tr>
+  <tr><td colspan=2>&nbsp;</td></tr>
+  <tr>
+   <td></td>
+   <td>Дополнительные категории</td>
+  </tr>
+  <tr>
+   <td></td><td>
+   <div style="width: 95%; margin-top: 5px; overflow: auto; height: 102px; margin-left: 5px; padding: 3px; border: 1px solid #AABBCC;">{extcat}</div></td>
+  </tr>
+  <tr><td colspan=2>&nbsp;</td></tr>
+  <tr>
+   <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+   <td>Настройки</td>
+  </tr>
+  <tr><td></td><td><label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label></td></tr>
+  <tr><td></td><td><label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {flag_mainpage} /> {l_mainpage}</label></td></tr>
+  <tr><td></td><td><label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {flag_pinned} /> {l_add_pinned}</label></td></tr>
+  <tr><td></td><td><label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {flag_favorite} /> {l_add_favorite}</label></td></tr>
+  <tr><td></td><td><label><input type="checkbox" name="allow_com" value="1" class="check" id="allow_com" {flag_allow_com} /> {l_com_approve}</label></td></tr>
+  <tr><td></td><td><label><input type="checkbox" name="flag_HTML" value="1" class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label></td></tr>
+  <tr><td></td><td><label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label></td></tr>
+ </table>
+
+</td>
+</tr>
+</table>
+
+
 <br />
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr align="center">
