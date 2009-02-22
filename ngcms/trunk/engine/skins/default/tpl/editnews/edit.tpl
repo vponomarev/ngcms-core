@@ -61,6 +61,7 @@ function preview(){
    <td>{l_alt_name}:</td>
    <td><input type="text" name="alt_name" value="{alt_name}" size="60" tabindex="3" /></td>
   </tr>
+[meta]
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
    <td>{l_description}:</td>
@@ -71,6 +72,7 @@ function preview(){
    <td>{l_keywords}:</td>
    <td><input type="text" name="keywords" value="{keywords}" size="60" tabindex="5" /></td>
   </tr>
+[/meta]
  </table>
 </td></tr>
 </table>
@@ -91,7 +93,6 @@ function preview(){
 [isplugin tags]{plugin_tags}[/isplugin]
 </table>
 </div>
-
 
 </td>
 <td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
