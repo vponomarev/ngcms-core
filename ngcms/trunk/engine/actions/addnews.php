@@ -221,8 +221,11 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 	$tvars['vars']['disable_flag_raw'] = $flock?'disabled':'';
 	$tvars['vars']['disable_flag_html'] = $flock?'disabled':'';
 
-	foreach (array('mainpage', 'approve', 'favorite', 'pinned') as $rp)
-		$tvars['vars']['flag_'.$rp] = (($userROW['status'] == 1)||($userROW['status'] == 2))?'checked="checked"':'disabled="disabled"';
+	// Configure flags
+	$tvars['vars']['flag_mainpage']  = (($userROW['status'] == 1)||($userROW['status'] == 2))?'checked="checked"':'disabled="disabled"';
+	$tvars['vars']['flag_approve']   = (($userROW['status'] == 1)||($userROW['status'] == 2))?'checked="checked"':'disabled="disabled"';
+	$tvars['vars']['flag_favorite']  = (($userROW['status'] == 1)||($userROW['status'] == 2))?'':'disabled="disabled"';
+	$tvars['vars']['flag_pinned']    = (($userROW['status'] == 1)||($userROW['status'] == 2))?'':'disabled="disabled"';
 	$tvars['vars']['flag_allow_com'] = 'checked="checked"';
 
 	// Run interceptors
