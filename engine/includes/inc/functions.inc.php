@@ -1094,7 +1094,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 	if ($row['editdate']) {
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '$1';
-		$tvars['vars']['update'] = LangDate($config['timestamp_comment'], $row['editdate']);
+		$tvars['vars']['update'] = LangDate($config['timestamp_updated'], $row['editdate']);
 	} else {
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '';
 		$tvars['vars']['update'] = '';
