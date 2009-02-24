@@ -16,7 +16,7 @@ $lang = LoadLang('addnews', defined('ADMIN')?'admin':'site');
 $situation = "news";
 
 function news_add(){
-	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config;
+	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config, $catz, $catmap;
 	global $c_day, $c_month, $c_year, $c_hour, $c_minute;
 
 
