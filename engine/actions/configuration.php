@@ -43,7 +43,8 @@ foreach ($AUTH_CAPABILITIES as $k => $v) {
 
 $tvars['vars'] = array(
 	'php_self'						=>	$PHP_SELF,
-	'timestamp_now'					=>	LangDate($config['timestamp_active'], time()),
+	'timestamp_active_now'					=>	LangDate($config['timestamp_active'], time()),
+	'timestamp_updated_now'					=>	LangDate($config['timestamp_updated'], time()),
 	'lock'							=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[lock]", $config['lock']),
 	'language_selection'			=>	MakeDropDown(ListFiles("lang", ".."), "save_con[default_lang]", $config['default_lang']),
 	'wm_image'						=>	MakeDropDown(ListFiles("trash", "gif"), "save_con[wm_image]", $config['wm_image']),
