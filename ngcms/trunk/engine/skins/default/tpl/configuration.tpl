@@ -224,8 +224,12 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[date_adjust]' value='{c_date_adjust}' size="6" /></td>
 </tr>
 <tr>
-<td class="contentEntry1">{l_timestamp_active}<br /><small>{l_date_help}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[timestamp_active]' value='{c_timestamp_active}' size="20" /><br /><small>{l_date_now} {timestamp_now}</small></td>
+<td width="50%" class="contentEntry1">{l_timestamp_active}<br /><small>{l_date_help}</small></td>
+<td width="50%" class="contentEntry2" valign="middle"><input type="text" name='save_con[timestamp_active]' value='{c_timestamp_active}' size="20" /><br /><small>{l_date_now} {timestamp_active_now}</small></td>
+</tr>
+<tr>
+<td width="50%" class="contentEntry1">{l_timestamp_updated}<br /><small>{l_date_help}</small></td>
+<td width="50%" class="contentEntry2" valign="middle"><input type="text" name='save_con[timestamp_updated]' value='{c_timestamp_updated}' size="20" /><br /><small>{l_date_now} {timestamp_updated_now}</small></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_smilies}<br /><small>{l_smilies_desc} (<b>,</b>)</small></td>
