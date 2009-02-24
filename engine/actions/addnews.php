@@ -145,10 +145,12 @@ function news_add(){
 	$mysql->query("insert into ".prefix."_news (".implode(",",$vnames).") values (".implode(",",$vparams).")");
 	$id = $mysql->result("SELECT LAST_INSERT_ID() as id");
 
-	// Update category / user posts counter
-	if ($cats) { $mysql->query("update ".prefix."_category set posts=posts+1 where ".implode(" or ",$catsql)); }
-	$mysql->query("update ".uprefix."_users set news=news+1 where id=".$SQL['author_id']);
-
+	// Update category / user posts counter [ ONLY if news is approved ]
+	if ($SQL['approve']) {
+		if (count($catids)) { $mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(", ",array_keys($catids)).")"); }
+		$mysql->query("update ".uprefix."_users set news=news+1 where id=".$SQL['author_id']);
+	}
+		
 	if (is_array($PFILTERS['news']))
 	foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
 
