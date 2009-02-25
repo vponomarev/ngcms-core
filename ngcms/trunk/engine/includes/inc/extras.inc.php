@@ -166,7 +166,7 @@ function load_extras($action, $plugin = '') {
 				continue;
 
 			// Do only if we already loaded this file
-			if (!$EXTRA_FILES_LOADED[$value]) {
+			if (!isset($EXTRA_FILES_LOADED[$value])) {
 				// Try to load file. First check if it exists
 				if (is_file(extras_dir.'/'.$value)) {
 				        $tX = $timer->stop(4);
@@ -368,7 +368,7 @@ function plugins_load_version_file($filename) {
 
 	// Make some cleanup
 	$ver['acts'] = str_replace(' ','',$ver['acts']);
-	if ($ver['permanent'] == 'yes') { $ver['permanent'] = 1; } else { $ver['permanent'] = 0; }
+	if (isset($ver['permanent']) && ($ver['permanent'] == 'yes')) { $ver['permanent'] = 1; } else { $ver['permanent'] = 0; }
 
 	// check for filling required params
 	foreach ($required_params as $v) { if (!$ver[$v]) { return false; } }
@@ -518,6 +518,14 @@ function cacheStoreFile($fname, $data, $plugin = '', $hugeMode = 0) {
 	if (!($dir = get_plugcache_dir($plugin))) {
 		return false;
 	}
+
+	// In case of huge mode - try to access the tree
+	//if ($hugeMode) {
+	//	$fhash = md5($fname);
+	//	//$dp1   = 
+        //	//
+        //	//if (!
+	//}
 
 	// Try to create file
 	if (($fn = @fopen($dir.$fname, 'w')) == FALSE) {
