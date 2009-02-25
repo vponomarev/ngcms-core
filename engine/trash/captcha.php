@@ -7,7 +7,7 @@
 // Author: NGCMS project team
 //
 
-@require_once('../core.php');
+@require_once('core.php');
 @include_once root.'includes/classes/captcha.class.php';
 
 $now = mktime (date("H"),date("i"),date("s"),date("m"),date("d"),date("Y")); 
@@ -19,7 +19,9 @@ $last_modified_gmt  = gmdate('D, d M Y H:i:s', $now).' GMT';
 @header('Expires: '.$expires_gmt); 
 @header('last-modified: '.$last_modified_gmt);
 
+$cnumber = isset($_SESSION['captcha'])?$_SESSION['captcha']:1234;
+
 $captc = new captcha;
-$captc->makeimg($number);
+$captc->makeimg($cnumber);
 
 ?>

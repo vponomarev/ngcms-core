@@ -73,7 +73,7 @@ if ($_REQUEST['check']) {
 if ($_REQUEST['cat_recount']) {
 	// Обновляем счётчики в категориях
 	$ccount = array();
-	foreach ($mysql->select("select * from ".prefix."_news") as $row) {
+	foreach ($mysql->select("select catid from ".prefix."_news") as $row) {
 		foreach (explode(",",$row['catid']) as $key) {
 		        if (!$key) { continue; }
 			if (!$ccount[$key]) { $ccount[$key] = 1; } else { $ccount[$key]+=1; }

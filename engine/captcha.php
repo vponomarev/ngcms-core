@@ -19,7 +19,9 @@ $last_modified_gmt  = gmdate('D, d M Y H:i:s', $now).' GMT';
 @header('Expires: '.$expires_gmt); 
 @header('last-modified: '.$last_modified_gmt);
 
+$cnumber = isset($_SESSION['captcha'])?$_SESSION['captcha']:1234;
+
 $captc = new captcha;
-$captc->makeimg($number);
+$captc->makeimg($cnumber);
 
 ?>

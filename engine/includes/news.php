@@ -39,6 +39,7 @@ $situation = "news";
 //			news row - when news is found
 function news_showone($newsID, $alt_name, $callingParams = array()) {
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $template, $parse, $vars, $lang, $SYSTEM_FLAGS, $PFILTERS;
+	global $timer;
 	global $year, $month, $day, $SUPRESS_TEMPLATE_SHOW;
 
 	if (is_array($callingParams['emulate'])) {
@@ -69,11 +70,20 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	load_extras('news:show');
 	load_extras('news:show:one');
 
+	// Calculate exec time
+        $tX1 = $timer->stop(4);
+
 	// Execute filters
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->showNewsPre($row['id'], $row, $callingParams); }
 
+        $tX2 = $timer->stop(4);
+	
 	$tvars = newsFillVariables($row, 1, $_REQUEST['page'], (substr($callingParams['style'], 0, 6) == 'export')?1:0);
+
+        $tX3 = $timer->stop(4);
+	$timer->registerEvent('call showNewsPre() for [ '.($tX2 - $tX1).' ] sec');
+	$timer->registerEvent('call newsFillVariables() for [ '.($tX3 - $tX2).' ] sec');
 
 	$tvars['vars']['date']		=	LangDate(timestamp, $row['postdate']);
 	$tvars['vars']['views']		=	$row['views'];
@@ -107,9 +117,17 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 	exec_acts('news_full', '', $row, &$tvars);
 
+	// Calculate exec time
+        $tX1 = $timer->stop(4);
 	// Execute filters
 	if (is_array($PFILTERS['news']))
-		foreach ($PFILTERS['news'] as $k => $v) { $v->showNews($row['id'], $row, $tvars, $callingParams); }
+		foreach ($PFILTERS['news'] as $k => $v) { 
+			$timer->registerEvent('exec showNews // '.$k);
+			$v->showNews($row['id'], $row, $tvars, $callingParams); 
+		}
+
+        $tX2 = $timer->stop(4);
+	$timer->registerEvent('call showNews() for [ '.($tX2 - $tX1).' ] sec');
 
 	// Check if we need only to export body
 	if ($callingParams['style'] == 'export_body')

@@ -34,6 +34,7 @@ $SYSTEM_FLAGS = array();	// internal system global flags
 
 // Configure error display mode
 @error_reporting (E_ALL ^ E_NOTICE);
+//@error_reporting (E_ALL);
 
 define('root', dirname(__FILE__).'/');
 define('site_root', dirname(dirname(__FILE__)).'/');
@@ -98,20 +99,17 @@ if ( ( !file_exists(confroot.'config.php') ) || ( filesize(confroot.'config.php'
 	exit;
 }
 
-if (!$mysql->connect) {
-	@include_once root.'includes/classes/mysql.class.php';
-	$mysql = new mysql;
-	$mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
-	$timer->registerEvent('DB connection established');
+@include_once root.'includes/classes/mysql.class.php';
+$mysql = new mysql;
+$mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+$timer->registerEvent('DB connection established');
 
-	foreach ($mysql->select("select * from `".prefix."_category` order by posorder asc", 1) as $row) {
-		$catz[$row['alt']] = $row;
-		$catmap[$row['id']] = $row['alt'];
-	}
+foreach ($mysql->select("select * from `".prefix."_category` order by posorder asc", 1) as $row) {
+	$catz[$row['alt']] = $row;
+	$catmap[$row['id']] = $row['alt'];
 }
-$timer->registerEvent('DB category list is loaded');
 
-if ($config['use_captcha'] == "1") { $number = $_SESSION['captcha']; }
+$timer->registerEvent('DB category list is loaded');
 
 //
 // Make authentication
