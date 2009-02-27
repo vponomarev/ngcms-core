@@ -155,7 +155,14 @@ CREATE TABLE `XPREFIX_news` (
   KEY `news_title` (`title`),
   KEY `news_postdate` (`postdate`),
   KEY `news_catid` (`catid`),
-  KEY `news_view` (`views`)
+  KEY `news_view` (`views`),
+  KEY `news_archive` (`favorite`, `approve`),
+  KEY `news_main` (`pinned`,`postdate`,`approve`,`mainpage`),
+  KEY `news_mainid` (`pinned`,`id`,`approve`,`mainpage`),
+  KEY `news_altname` (`alt_name`),
+  KEY `news_mainpage` (`approve`,`pinned`,`id`),
+  KEY `alt_name` (`alt_name`),
+  KEY `news_mcount` (`mainpage`,`approve`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -176,6 +183,7 @@ CREATE TABLE `XPREFIX_static` (
   `flags` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `static_title` (`title`)
+  KEY `static_altname` (`alt_name`),
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
