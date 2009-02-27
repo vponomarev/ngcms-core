@@ -30,7 +30,7 @@ $plugin = $_REQUEST['plugin'];
 //
 // script type ( install / deinstall / config )
 //
-$stype = $_REQUEST['stype'];
+$stype = isset($_REQUEST['stype'])?$_REQUEST['stype']:'';
 
 if (!is_array($extras[$plugin])) {
 		print "There is no such plugin<br>\n";
