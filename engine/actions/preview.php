@@ -16,7 +16,7 @@ $lang = LoadLang('preview', 'admin');
 include root.'includes/news.php';
 
 function showPreview() {
-	global $userROW, $EXTRA_CSS, $EXTRA_HTML_VARS, $PFILTERS, $tpl, $parse, $mysql, $c_hour, $c_minute, $c_month, $c_day, $c_year, $config;
+	global $userROW, $EXTRA_CSS, $EXTRA_HTML_VARS, $PFILTERS, $tpl, $parse, $mysql, $c_hour, $c_minute, $c_month, $c_day, $c_year, $config, $catmap;
 
 	$SQL = array( 'id' => -1 );
 	// Эмулируем работу всех штатных средств отвечающих за отображение новости.
@@ -29,25 +29,22 @@ function showPreview() {
 	$SQL['title'] = $_REQUEST['title'];
 	$SQL['alt_name'] = $parse->translit( trim($_REQUEST['alt_name']?$_REQUEST['alt_name']:$_REQUEST['title']));
 
-	$categories = explode(",", secure_html($_REQUEST['categories']));
-	$categories = array_diff($categories, array(''));
-	$catids = array();
-	$catsql = array();
-
-	foreach ($categories as $key => $keyword) {
-		$keyword = trim($keyword);
-		$keywordid = $mysql->result("select id from ".prefix."_category where name = ".db_squote($keyword));
-
-		if ($keywordid) {
-			$catids[] = $keywordid;
-			$catsql[] = "id = ".db_squote($keywordid);
-		}
+	// Fetch MASTER provided categories
+	$catids = array ();
+	if (intval($_POST['category']) && isset($catmap[intval($_POST['category'])])) {
+		$catids[intval($_POST['category'])] = 1;
 	}
-	$cats = implode(",", $catids);
+
+	// Fetch ADDITIONAL provided categories
+	foreach ($_POST as $k => $v) {
+		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($_POST['category'])]))
+			$catids[$match[1]] = 1;
+	}
+
 
 	$SQL['author']		= $userROW['name'];
 	$SQL['author_id']	= $userROW['id'];
-	$SQL['catid']		= $cats;
+	$SQL['catid']		= implode(",", array_keys($catids));
 	$SQL['allow_com']	= $_REQUEST['allow_com'];
 
 	// Variable FLAGS is a bit-variable:
