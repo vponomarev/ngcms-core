@@ -71,15 +71,19 @@ if ($_REQUEST['check']) {
 }
 
 if ($_REQUEST['cat_recount']) {
-	// Ž¡­®¢«ï¥¬ áçñâç¨ª¨ ¢ ª â¥£®à¨ïå
+	// Îáíîâëÿåì ñ÷¸ò÷èêè â êàòåãîðèÿõ
 	$ccount = array();
-	foreach ($mysql->select("select catid from ".prefix."_news") as $row) {
+	$nmap = '';
+	foreach ($mysql->select("select id, catid from ".prefix."_news") as $row) {
 		foreach (explode(",",$row['catid']) as $key) {
 		        if (!$key) { continue; }
+		        $nmap .= '('.$row['id'].','.$key.'),';
 			if (!$ccount[$key]) { $ccount[$key] = 1; } else { $ccount[$key]+=1; }
 		}
 	}
 
+	$mysql->query("truncate table ".prefix."_news_map");
+	$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values ".substr($nmap,0,-1));
 	foreach ($catz as $key) {
 		$mysql->query("update ".prefix."_category set posts = ".intval($ccount[$key['id']])." where id = ".$key['id']);
 	}
@@ -88,7 +92,7 @@ if ($_REQUEST['cat_recount']) {
 		$mysql->query("update ".prefix."_news set com=".$row['cid']." where id = ".$row['id']);
   	}
 
-  	// Ž¡­®¢«ï¥¬ áç¥âç¨ª ¯®áâ®¢ ã î§¥à®¢
+  	// Îáíîâëÿåì ñ÷åò÷èê ïîñòîâ ó þçåðîâ
   	$mysql->query("update ".prefix."_users set news=0");
   	foreach ($mysql->select("select author_id, count(*) as cnt from ".prefix."_news group by author_id") as $row) {
   		$mysql->query("update ".uprefix."_users set news=".$row['cnt']." where id = ".$row['author_id']);
