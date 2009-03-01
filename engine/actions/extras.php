@@ -87,7 +87,7 @@ foreach($extras as $id => $extra) {
 		$tvars['vars']['new'] = '';
 	}
 
-	$tvars['vars']['type'] = in_array($extra['type'], array('plugin', 'module', 'filter', 'auth', 'widget'))?$lang[$extra['type']]:"Undefined";
+	$tvars['vars']['type'] = in_array($extra['type'], array('plugin', 'module', 'filter', 'auth', 'widget', 'maintanance'))?$lang[$extra['type']]:"Undefined";
 
 	//
 	// Check for permanent modules
@@ -140,7 +140,7 @@ function repoSync(){
 	global $extras;
 	if (($vms = cacheRetrieveFile('plugversion.dat', 3600)) === false) {
 		// Prepare request to repository
-		$paramList = array('_ver='.urlencode(version));
+		$paramList = array('_ver='.urlencode(engineVersion));
 		foreach ($extras as $id => $extra)
 			$paramList []= urlencode($extra['id'])."=".urlencode($extra['version']);
 
