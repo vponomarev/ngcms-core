@@ -195,7 +195,7 @@ CREATE TABLE `XPREFIX_static` (
   `flags` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `static_title` (`title`),
-  KEY `static_altname` (`alt_name`),
+  KEY `static_altname` (`alt_name`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
