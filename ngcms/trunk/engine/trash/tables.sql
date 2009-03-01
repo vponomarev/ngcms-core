@@ -161,7 +161,6 @@ CREATE TABLE `XPREFIX_news` (
   KEY `news_mainid` (`pinned`,`id`,`approve`,`mainpage`),
   KEY `news_altname` (`alt_name`),
   KEY `news_mainpage` (`approve`,`pinned`,`id`),
-  KEY `alt_name` (`alt_name`),
   KEY `news_mcount` (`mainpage`,`approve`)
 ) ENGINE=MyISAM;
 
