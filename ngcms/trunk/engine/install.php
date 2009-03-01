@@ -19,7 +19,7 @@ multi_multisites();
 
 // Check if config file already exists
 if ( ( @fopen(confroot.'config.php','r') ) && ( filesize(confroot.'config.php') ) ) {
-        printHeader();
+        //printHeader();
 	echo "<font color=red><b>Error: configuration file already exists!</b></font><br />Delete it and continue.<br />\n";
 	return;
 }
@@ -774,7 +774,8 @@ function doInstall() {
 			'files_ext' => 'zip, rar, gz, tgz, bz2',
 			'files_max_size' => '128',
 			'auth_module' => 'basic',
-			'auth_db' => 'basic'
+			'auth_db' => 'basic',
+			'crypto_salt' => substr(md5(uniqid(rand(),1)),0,8),
 		);
 
 		array_push($LOG,"Подготовка параметров конфигурационного файла ... OK");
