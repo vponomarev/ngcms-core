@@ -115,10 +115,18 @@ CREATE TABLE `XPREFIX_images` (
 -- 
 
 CREATE TABLE `XPREFIX_ipban` (
-  `ip` varchar(15) NOT NULL default '',
-  `descr` varchar(255) NOT NULL default '',
-  `counter` int(10) NOT NULL default '0',
-  PRIMARY KEY  (`ip`)
+  `id` int not null auto_increment,
+  `addr` char(20),
+  `atype` int default 0,
+  `addr_start` int default 0,
+  `addr_stop` int default 0,
+  `netlen` int default 0,
+  `flags` char(10) default '',
+  `createdate` datetime,
+  `reason` char(255),
+  `hitcount` int default 0,
+  PRIMARY KEY  (`id`),
+  KEY `ban_start` (`addr_start`),
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
