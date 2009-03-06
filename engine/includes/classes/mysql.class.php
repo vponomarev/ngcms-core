@@ -107,6 +107,10 @@ class mysql {
 		return $output;
 	}
 
+	function affected_rows() {
+		return mysql_affected_rows($this->connect);
+	}
+
 	function fieldname($result, $number) {
 		$fieldname = @mysql_field_name($result, $number);
 

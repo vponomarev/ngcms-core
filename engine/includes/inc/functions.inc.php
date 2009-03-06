@@ -323,17 +323,26 @@ function Padeg($n, $s) {
 //
 // Perform BAN check
 // $ip		- IP address of user
-// $act		- action type ( 'comments', 'news',... )
+// $act		- action type ( 'users', 'comments', 'news',... )
 // $subact	- subaction type ( for comments this may be 'add' )
 // $userRec	- record of user (in case of logged in)
 // $name	- name entered by user (in case it was entered)
 function checkBanned($ip, $act, $subact, $userRec, $name) {
 	global $mysql;
 
-	// CURRENTLY WE WORK ONLY WITH IP_LOCK
-	if ($ban_row = $mysql->record("select * from ".prefix."_ipban where ip=".db_squote($ip))) {
-		$mysql->query("update ".prefix."_ipban set counter=counter+1 where ip=".db_squote($ip));
-		return 1;
+	$check_ip = sprintf("%u", ip2long($ip));
+
+	// Currently we use limited mode. Try to find row
+	if ($ban_row = $mysql->record("select * from ".prefix."_ipban where addr_start <= ".db_squote($check_ip)." and addr_stop >= ".db_squote($check_ip)." order by netlen limit 1")) {
+		// Row is found. Let's check for event type. STATIC CONVERSION
+		$mode = 0;
+		if		(($act == 'users') &&		($subact == 'register'))	{ $mode = 1; }
+		else if	(($act == 'users') && 		($subact == 'auth'))		{ $mode = 2; }
+		else if	(($act == 'comments') &&	($subact == 'add'))			{ $mode = 3; }
+		if (($locktype = intval(substr($ban_row['flags'], $mode, 1))) > 0) {
+			$mysql->query("update ".prefix."_ipban set hitcount=hitcount+1 where id=".db_squote($ban_row['id']));
+			return $locktype;
+		}
 	}
 	return 0;
 }
