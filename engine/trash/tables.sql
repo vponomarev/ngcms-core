@@ -126,7 +126,7 @@ CREATE TABLE `XPREFIX_ipban` (
   `reason` char(255),
   `hitcount` int default 0,
   PRIMARY KEY  (`id`),
-  KEY `ban_start` (`addr_start`),
+  KEY `ban_start` (`addr_start`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------

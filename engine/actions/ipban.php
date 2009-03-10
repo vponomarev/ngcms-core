@@ -42,11 +42,18 @@ function ipban_add() {
 		$atype = 1;
 		$laddr = ip2long($m[1].".".$m[2].".".$m[3].".".$m[4]);
 		$lmask = ip2long($m[5].".".$m[6].".".$m[7].".".$m[8]);
+
+		// Check mask
+		$lbmask = decbin($lmask);
+		if (!preg_match('#^1+0+$#', $lbmask, $null)) {
+			msg(array("type" => "error", "text" => $lang['msge.fields'], "info" => $lang['msgi.fields']));
+			return;
+		}
+
 		$addr_start = $laddr & $lmask;
 		$addr_stop  = $laddr | (~$lmask);
 		$net_len	= $addr_stop-$addr_start;
 	}
-	print "Block from: ".long2ip($addr_start)." to ".long2ip($addr_stop)."<br/>\n";
 	if ($result) {
 			// OK. Check if record already exists
 			if (is_array($mysql->record("select addr from ".prefix."_ipban where addr_start=".db_squote(sprintf("%u", $addr_start))." and addr_stop=".db_squote(sprintf("%u", $addr_stop))))) {
