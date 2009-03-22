@@ -65,6 +65,7 @@ function multi_multidomains() {
  $newdomain = '';
 
  // Анализируем параметр конфига mydomains
+ $domlist = NULL;
  if ($config['mydomains']) {
 	$domlist = explode("\n",$config['mydomains']);
  	if (!is_array($domlist)) return 0;
