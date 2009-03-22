@@ -11,7 +11,6 @@
 define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO_EMPTY)));
 
 @define('NGCMS', true);
-//@define('version', '0.9.7.1');
 
 @define('engineName', 'NGCMS');
 @define('engineVersion', '0.9.0');
@@ -51,5 +50,3 @@ define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO
 
 @define('conf_pactive', confroot.'plugins.php', true);
 @define('conf_pconfig', confroot.'plugdata.php', true);
-
-?>

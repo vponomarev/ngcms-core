@@ -158,7 +158,7 @@ function load_extras($action, $plugin = '') {
 	$loadedCount = 0;
 	$array = get_active_array();
 	// Find extras for selected action
-	if (is_array($array['actions'][$action])) {
+	if (isset($array['actions'][$action]) && is_array($array['actions'][$action])) {
 		// There're some modules
 		foreach ($array['actions'][$action] as $key => $value) {
 			// Skip plugins in manual mode
@@ -241,7 +241,7 @@ function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $
 	$args			= array_slice(func_get_args(), 2);
 	$all_arguments	= array_merge(array($sth), $args);
 
-	if (!$acts[$item]) {
+	if (!isset($acts[$item]) || !$acts[$item]) {
 		return $sth;
 	} else {
 		uksort($acts[$item], "strnatcasecmp");
@@ -367,7 +367,7 @@ function plugins_load_version_file($filename) {
 	}
 
 	// Make some cleanup
-	$ver['acts'] = str_replace(' ','',$ver['acts']);
+	$ver['acts'] = isset($ver['acts'])?str_replace(' ','',$ver['acts']):'';
 	if (isset($ver['permanent']) && ($ver['permanent'] == 'yes')) { $ver['permanent'] = 1; } else { $ver['permanent'] = 0; }
 
 	// check for filling required params
@@ -432,10 +432,10 @@ function get_extras_list() {
 function register_plugin_page($pname, $mode, $func_name, $show_template = 1) {
 	global $PPAGES;
 
-	if (!is_array($PPAGES[$pname])) {
+	if (!isset($PPAGES[$pname]) || !is_array($PPAGES[$pname])) {
 		$PPAGES[$pname] = array();
 	}
-	$PPAGES[$pname][$mode] = array('func' => $func_name, 'mode' => $show_mode);
+	$PPAGES[$pname][$mode] = array('func' => $func_name, 'mode' => $mode);
 }
 
 //
