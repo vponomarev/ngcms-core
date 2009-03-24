@@ -59,7 +59,7 @@ if (!$type && $config['users_selfregister'] == "1" && !$is_logged) {
 
 // Registration page generation
 function generate_restorepw_page($params, $values = array(), $msg = '') {
-	global $tpl, $template, $PHP_SELF;
+	global $tpl, $template, $PHP_SELF, $config;
 	$tpl -> template('lostpassword.entries', tpl_site);
 	$tpl -> template('lostpassword.entry-full', tpl_site);
 
