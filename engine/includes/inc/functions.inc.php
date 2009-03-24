@@ -1062,6 +1062,11 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		$tvars['vars']['[full-link]']	=	"<a href=\"".$url."\">";
 		$tvars['vars']['[/full-link]']	=	"</a>";
 
+		$tvars['vars']['[link]']	=	"<a href=\"".$url."\">";
+		$tvars['vars']['[/link]']	=	"</a>";
+		
+		$tvars['vars']['full-link']	= $url;
+
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
 		if (strlen($full)) {
 			// we have full news
@@ -1080,18 +1085,11 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 	} else {
 		$tvars['regx']["'\\[full-link\\].*?\\[/full-link\\]'si"] = '';
+		$tvars['regx']["'\\[link\\].*?\\[/link\\]'si"] = '';
 	}
 
 	$tvars['vars']['pinned']	=	($row['pinned']) ? "news_pinned" : "";
 	$tvars['vars']['category']	=	@GetCategories($row['catid']);
-
-	if (!$fullMode) {
-		$tvars['vars']['[link]'] = "<a href=\"".$url."\">";
-		$tvars['vars']['[/link]'] = "</a>";
-	} else {
-		$tvars['vars']['[link]'] = '';
-		$tvars['vars']['[/link]'] = '';
-	}
 
 	$tvars['vars']['[print-link]']	=	"<a href=\"".GetLink('print', $row)."\">";
 	$tvars['vars']['[/print-link]']	=	"</a>";
