@@ -53,6 +53,7 @@ $tvars['vars'] = array(
 	'users_selfregister'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[users_selfregister]", $config['users_selfregister']),
 	'register_type'					=>	MakeDropDown(array("0"=>"$lang[register_extremly]", "1"=>"$lang[register_simple]", "2"=>"$lang[register_activation]", "3"=>"$lang[register_manual]"), "save_con[register_type]", $config['register_type']),
 	'blocks_for_reg'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[blocks_for_reg]", $config['blocks_for_reg']),
+	'extended_more'					=>	MakeDropDown(array("0"=>"$lang[noa]", "1"=>"$lang[yesa]"), "save_con[extended_more]", $config['extended_more']),
 	'meta'						=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[meta]", $config['meta']),
 	'auto_backup'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[auto_backup]", $config['auto_backup']),
 	'use_gzip'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_gzip]", $config['use_gzip']),
