@@ -240,6 +240,10 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle">{blocks_for_reg}</td>
 </tr>
 <tr>
+<td class="contentEntry1">{l_extended_more}<br /><small>{l_extended_more_desc}</small></td>
+<td class="contentEntry2" valign="middle">{extended_more}</td>
+</tr>
+<tr>
 <td class="contentEntry1">{l_use_smilies}<br /><small>{l_use_smilies_desc}</small></td>
 <td class="contentEntry2" valign="middle">{use_smilies}</td>
 </tr>

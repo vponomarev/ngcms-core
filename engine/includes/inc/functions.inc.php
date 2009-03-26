@@ -990,7 +990,20 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	$tvars['vars']['author'] = "<a href=\"".GetLink('user', $row)."\" target=\"_blank\">".$row['author']."</a>";
 
 	// Divide into short and full content
-	list ($short, $full) = explode('<!--more-->', $row['content'], 2);
+	if ($config['extended_more']) {
+		if (preg_match('#^(.+?)\<\!--more(?:\="(.+?)"){0,1}--\>(.+)$#is', $row['content'], $pres)) {
+			$short	= $pres[1];
+			$full	= $pres[3];
+			$more	= $pres[2];
+		} else {
+			$short	= $row['content'];
+			$full	= '';
+			$more	= '';
+		}
+	} else {
+		list ($short, $full) = explode('<!--more-->', $row['content'], 2);
+		$more = '';
+	}
 
 	// Check if long part is divided into several pages
 	if ($full && (!$disablePagination) && (strpos($full, "<!--nextpage-->") !== false)) {
@@ -1064,7 +1077,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 		$tvars['vars']['[link]']	=	"<a href=\"".$url."\">";
 		$tvars['vars']['[/link]']	=	"</a>";
-		
+
 		$tvars['vars']['full-link']	= $url;
 
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
@@ -1106,6 +1119,14 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '';
 		$tvars['vars']['update'] = '';
 	}
+
+	if ($more == '') {
+		$tvars['vars']['[more]']	= '';
+		$tvars['vars']['[/more]']	= '';
+	} else {
+		$tvars['regx']['#\[more\](.+?)\[/more\]#is'] = $more;
+	}
+
 
 	return $tvars;
 }
