@@ -74,7 +74,7 @@ if ($_REQUEST['cat_recount']) {
 	// Обновляем счётчики в категориях
 	$ccount = array();
 	$nmap = '';
-	foreach ($mysql->select("select id, catid from ".prefix."_news") as $row) {
+	foreach ($mysql->select("select id, catid from ".prefix."_news where approve=1") as $row) {
 		foreach (explode(",",$row['catid']) as $key) {
 		        if (!$key) { continue; }
 		        $nmap .= '('.$row['id'].','.$key.'),';
@@ -108,7 +108,7 @@ if ($_REQUEST['repair']) {
 		msg(array("text" => sprintf($lang['msgo_repair'], $table, $result['Msg_text'])));
 	} else {
 		msg(array("text" => sprintf($lang['msgi_noexist'], $table, $result['Msg_text'])));
-	}	
+	}
 }
 
 if ($_REQUEST['optimize']) {
@@ -123,7 +123,7 @@ if ($_REQUEST['optimize']) {
 		msg(array("text" => sprintf($lang['msgo_optimize'], $table, $result['Msg_text'])));
 	} else {
 		msg(array("text" => sprintf($lang['msgi_noexist'], $table, $result['Msg_text'])));
-	}	
+	}
 }
 
 if ($_REQUEST['delbackup']) {
@@ -152,7 +152,7 @@ if ($_REQUEST['masscheck']) {
 				msg(array("text" => sprintf($lang['msgo_check'], $tables[$i], $result['Msg_text'])));
 			} else {
 				msg(array("text" => sprintf($lang['msgi_noexist'], $tables[$i], $result['Msg_text'])));
-			}	
+			}
 		}
 	}
 }
@@ -169,7 +169,7 @@ if ($_REQUEST['massrepair']) {
 				msg(array("text" => sprintf($lang['msgo_repair'], $tables[$i], $result['Msg_text'])));
 			} else {
 				msg(array("text" => sprintf($lang['msgi_noexist'], $tables[$i], $result['Msg_text'])));
-			}	
+			}
 		}
 	}
 }
@@ -190,7 +190,7 @@ if ($_REQUEST['massoptimize']) {
 				msg(array("text" => sprintf($lang['msgo_optimize'], $tables[$i], $result['Msg_text'])));
 			} else {
 				msg(array("text" => sprintf($lang['msgi_noexist'], $tables[$i], $result['Msg_text'])));
-			}	
+			}
 		}
 	}
 }
@@ -207,7 +207,7 @@ if ($_REQUEST['massdelete']) {
 				msg(array("text" => sprintf($lang['msgo_delete'], $tables[$i])));
 			} else {
 				msg(array("text" => sprintf($lang['msgi_noexist'], $tables[$i], $result['Msg_text'])));
-			}	
+			}
 		}
 	}
 }
@@ -274,7 +274,7 @@ if ($_REQUEST['restore']) {
 	}
 }
 
-if (!$action) {	
+if (!$action) {
 	foreach($mysql->select("SHOW TABLES FROM `".$config['dbname']."` LIKE '".prefix."_%'") as $table) {
 		$info		=	$mysql->record("SHOW TABLE STATUS LIKE '".$table[0]."'");
 		$data		=	Formatsize($info['Data_length'] + $info['Index_length'] + $info['Data_free']);

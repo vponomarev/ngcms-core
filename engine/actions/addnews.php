@@ -73,7 +73,7 @@ function news_add(){
 
 	// Fetch ADDITIONAL provided categories
 	foreach ($_POST as $k => $v) {
-		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($_POST['category'])]))
+		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
 			$catids[$match[1]] = 1;
 	}
 
@@ -147,10 +147,15 @@ function news_add(){
 
 	// Update category / user posts counter [ ONLY if news is approved ]
 	if ($SQL['approve']) {
-		if (count($catids)) { $mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(", ",array_keys($catids)).")"); }
+		if (count($catids)) {
+			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(", ",array_keys($catids)).")");
+			foreach (array_keys($catids) as $catid) {
+				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".db_squote($id).", ".db_squote($catid).")");
+			}
+		}
 		$mysql->query("update ".uprefix."_users set news=news+1 where id=".$SQL['author_id']);
 	}
-		
+
 	if (is_array($PFILTERS['news']))
 	foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
 
