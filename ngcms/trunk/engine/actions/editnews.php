@@ -86,7 +86,7 @@ function editNews() {
 
 	// Fetch ADDITIONAL provided categories
 	foreach ($_POST as $k => $v) {
-		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($_POST['category'])]))
+		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
 			$catids[$match[1]] = 1;
 	}
 
@@ -140,10 +140,17 @@ function editNews() {
 	if (sizeof($oldcatids)) {
 		$mysql->query("update ".prefix."_category set posts=posts-1 where id in (".implode(",",array_keys($oldcatids)).")");
 	}
-	if (sizeof($catids)) {
-		$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(",",array_keys($catids)).")");
-	}
 
+	$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($id));
+
+	if ($SQL['approve']) {
+		if (sizeof($catids)) {
+			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(",",array_keys($catids)).")");
+			foreach (array_keys($catids) as $catid) {
+				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".db_squote($id).", ".db_squote($catid).")");
+			}
+		}
+	}
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsNotify($id, $row, $SQL, $tvars); }
 
@@ -318,7 +325,7 @@ function massCommentDelete(){
 // $tag       - tag param to send to plugins
 //
 function massNewsModify($setValue, $langParam, $tag ='') {
-	global $mysql, $lang, $PFILTERS;
+	global $mysql, $lang, $PFILTERS, $catmap;
 
 	$selected_news = $_REQUEST['selected_news'];
 
@@ -343,7 +350,7 @@ function massNewsModify($setValue, $langParam, $tag ='') {
 	$nList = array();
 	$nData = array();
 
-	foreach ($mysql->select("select id, ".join(", ", array_keys($setValue))." from ".prefix."_news where id in (".join(", ", $SNQ).")") as $nrow) {
+	foreach ($mysql->select("select id, catid, ".join(", ", array_keys($setValue))." from ".prefix."_news where id in (".join(", ", $SNQ).")") as $nrow) {
 		$nList [] = $nrow['id'];
 		$nData [$nrow['id']] = $nrow;
 	}
@@ -359,7 +366,36 @@ function massNewsModify($setValue, $langParam, $tag ='') {
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->massModifyNews($nList, $setValue, $nData); }
 
-	$mysql->query("UPDATE ".prefix."_news SET $sqlSET WHERE id in (".join(", ", $SNQ).")");
+	$mysql->query("UPDATE ".prefix."_news SET $sqlSET WHERE id in (".join(", ", $nList).")");
+
+	// Some activity if we change APPROVE flag for news
+	if (isset($setValue['approve'])) {
+		// DeApprove news
+		if (!$setValue['approve']) {
+			// Count categories & counters to decrease
+			foreach ($mysql->select("select categoryID, count(newsID) as cnt from ".prefix."_news_map where newsID in (".join(", ", $nList).") group by categoryID") as $crec) {
+				$mysql->query("update ".prefix."_category set posts=posts-".db_squote($crec['cnt'])." where id = ".db_squote($crec['id']));
+			}
+
+			// Delete news map
+			$mysql->query("delete from ".prefix."_news_map where newsID in (".join(", ", $nList).")");
+		} else {
+			// Approve news
+			$clist = array();
+			foreach ($nData as $nr) {
+				if ($nr['approve']) continue;
+				// Calculate list
+				foreach (explode(",", $nr['catid']) as $cid) {
+					if (!isset($catmap[$cid])) continue;
+					$clist[$cid]++;
+					$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".db_squote($nr['id']).", ".db_squote($cid).")");
+				}
+			}
+			foreach ($clist as $cid => $cv) {
+				$mysql->query("update ".prefix."_category set posts=posts+".db_squote($cv)." where id = ".db_squote($cid));
+			}
+		}
+	}
 
 	// Call plugin filters [ NOTIFY ABOUT MODIFICATION ]
 	if (is_array($PFILTERS['news']))
