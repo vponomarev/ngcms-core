@@ -178,7 +178,7 @@ CREATE TABLE `XPREFIX_news` (
 -- Table `PREFIX_news_map`
 -- 
 
-CREATE TABLE `PREFIX_news_map` (
+CREATE TABLE `XPREFIX_news_map` (
   `newsID` int(11) default NULL,
   `categoryID` int(11) default NULL,
   KEY `newsID` (`newsID`),
