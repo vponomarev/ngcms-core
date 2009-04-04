@@ -83,7 +83,10 @@ if ($_REQUEST['cat_recount']) {
 	}
 
 	$mysql->query("truncate table ".prefix."_news_map");
-	$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values ".substr($nmap,0,-1));
+
+	if (strlen($nmap))
+		$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values ".substr($nmap,0,-1));
+
 	foreach ($catz as $key) {
 		$mysql->query("update ".prefix."_category set posts = ".intval($ccount[$key['id']])." where id = ".$key['id']);
 	}
@@ -93,9 +96,14 @@ if ($_REQUEST['cat_recount']) {
   	}
 
   	// Обновляем счетчик постов у юзеров
-  	$mysql->query("update ".prefix."_users set news=0");
+  	$mysql->query("update ".prefix."_users set news = 0, com = 0");
   	foreach ($mysql->select("select author_id, count(*) as cnt from ".prefix."_news group by author_id") as $row) {
   		$mysql->query("update ".uprefix."_users set news=".$row['cnt']." where id = ".$row['author_id']);
+  	}
+
+  	// Обновляем счетчик комментариев у юзеров
+  	foreach ($mysql->select("select author_id, count(*) as cnt from ".prefix."_comments group by author_id") as $row) {
+  		$mysql->query("update ".uprefix."_users set com=".$row['cnt']." where id = ".$row['author_id']);
   	}
 
   	msg(array("text" => $lang['msgo_cat_recount']));
