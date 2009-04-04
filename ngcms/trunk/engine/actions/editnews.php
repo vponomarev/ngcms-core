@@ -174,49 +174,14 @@ function editNewsForm() {
 	$cats = explode(",", $row['catid']);
 	$content = $row['content'];
 
-	// Load comments
-	$tpl -> template('comments', tpl_actions.$mod);
-
-	foreach ($mysql->select("select * from ".prefix."_comments where post='".$row['id']."' order by id") as $crow) {
-
-		$text	= $crow['text'];
-
-		if ($config['blocks_for_reg'])		{ $text = $parse -> userblocks($text); }
-		if ($config['use_htmlformatter'])	{ $text = $parse -> htmlformatter($text); }
-		if ($config['use_bbcodes'])			{ $text = $parse -> bbcodes($text); }
-		if ($config['use_smilies'])			{ $text = $parse -> smilies($text); }
-
-		$tvars['vars'] = array(
-			'php_self'		=>	$PHP_SELF,
-			'com_author'		=>	$crow['author'],
-			'com_post'		=>	$crow['post'],
-			'com_url'		=>	($crow['url']) ? $crow['url'] : $PHP_SELF.'?mod=users&action=edituser&id='.$crow['author_id'],
-			'com_id'		=>	$crow['id'],
-			'com_ip'		=>	$crow['ip'],
-			'com_time'		=>	LangDate($config['timestamp_comment'], $crow['postdate']),
-			'com_part'		=>	$text
-		);
-
-		if ($crow['reg']) {
-			$tvars['vars']['[userlink]'] = '';
-			$tvars['vars']['[/userlink]'] = '';
-		} else {
-			$tvars['regx']["'\\[userlink\\].*?\\[/userlink\\]'si"] = $crow['author'];
-		}
-
-		$tpl -> vars('comments', $tvars);
-		$comments .= $tpl -> show('comments');
-	}
-
 	$tvars = array();
-
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
 		'changedate'		=>	ChangeDate($row['postdate']),
 		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array())),
 		'allcats'			=>	@GetAllCategories($cats),
-		'comments'			=>	$parse->smilies($comments),
+	//	'comments'			=>	$parse->smilies($comments),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
 		'content'			=>  secure_html($row['content']),
@@ -277,6 +242,7 @@ function editNewsForm() {
 	}
 
 	exec_acts('editnews_entry', $row['xfields'], '');
+	exec_acts('editnews_form');
 
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsForm($id, $row, $tvars); }
@@ -449,6 +415,7 @@ function massNewsDelete() {
 		}
 		$mysql->query("delete from ".prefix."_comments WHERE post=".db_squote($nrow['id']));
 		$mysql->query("delete from ".prefix."_news where id=".db_squote($nrow['id']));
+		$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($nrow['id']));
 
 		// Notify plugins about news deletion
 		if (is_array($PFILTERS['news']))
