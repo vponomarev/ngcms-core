@@ -984,7 +984,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	global $config, $parse, $lang;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
-
+	
 	$url = GetLink('full', $row);
 
 	$tvars['vars']['author'] = "<a href=\"".GetLink('user', $row)."\" target=\"_blank\">".$row['author']."</a>";
@@ -1098,7 +1098,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 	} else {
 		$tvars['regx']["'\\[full-link\\].*?\\[/full-link\\]'si"] = '';
-		$tvars['regx']["'\\[link\\].*?\\[/link\\]'si"] = '';
+		$tvars['regx']["'\\[link\\](.*?)\\[/link\\]'si"] = '$1';
 	}
 
 	$tvars['vars']['pinned']	=	($row['pinned']) ? "news_pinned" : "";
