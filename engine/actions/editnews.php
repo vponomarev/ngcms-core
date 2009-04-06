@@ -406,18 +406,22 @@ function massNewsDelete() {
 		if (is_array($PFILTERS['news']))
 			foreach ($PFILTERS['news'] as $k => $v) { $v->deleteNews($nrow['id'], $nrow); }
 
-		if ($nrow['catid']) {
-			$oldcatsql = array();
-			foreach(explode(",",$nrow['catid']) as $key) {
-				$oldcatsql[] = "id = ".db_squote($key);
+		// Update counters only if news is published
+		if ($nrow['approve']) {
+			if ($nrow['catid']) {
+				$oldcatsql = array();
+				foreach(explode(",",$nrow['catid']) as $key) {
+					$oldcatsql[] = "id = ".db_squote($key);
+				}
+				$mysql->query("update ".prefix."_category set posts=posts-1 where ".implode(" or ",$oldcatsql));
 			}
-			$mysql->query("update ".prefix."_category set posts=posts-1 where ".implode(" or ",$oldcatsql));
+
+			// Update user's posts counter
+			if ($nrow['author_id']) {
+				$mysql->query("update ".uprefix."_users set news=news-1 where id=".$nrow['author_id']);
+			}
 		}
 
-		// Update user's posts counter
-		if ($nrow['author_id']) {
-			$mysql->query("update ".uprefix."_users set news=news-1 where id=".$nrow['author_id']);
-		}
 		// Delete comments (with updating user's comment counter)
 		foreach ($mysql->select("select * from ".prefix."_comments where post=".$nrow['id']) as $crow) {
 			if ($nrow['author_id']) {
