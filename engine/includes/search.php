@@ -16,7 +16,7 @@ $lang = LoadLang('search', 'site');
 // Make search
 //
 function search_news(){
-	global $catz, $mysql, $config, $userROW, $tpl, $parse, $template, $lang, $PFILTERS, $SYSTEM_FLAGS;
+	global $catz, $catmap, $mysql, $config, $userROW, $tpl, $parse, $template, $lang, $PFILTERS, $SYSTEM_FLAGS;
 
 	// Configure plugin calling information
 	$plugCallMode = array('style' => 'short');
@@ -118,6 +118,26 @@ function search_news(){
 			}
 		} else {
 			$tvars['regx']["'\\[hide\\].*?\\[/hide\\]'si"] = '$1';
+		}
+
+		// Print icon if only one parent category
+		if ($row['catid'] && !stristr(",", $row['catid']) && ($catalt = $catmap[$row['catid']]) && $catz[$catalt]['icon']) {
+			$tvars['vars']['icon'] = $catz[$catalt]['icon'];
+			$tvars['vars']['[icon]'] = '';
+			$tvars['vars']['[/icon]'] = '';
+		} else {
+			$tvars['vars']['icon'] = '';
+			$tvars['regx']["'\\[icon\\].*?\\[/icon\\]'si"] = '';
+		}
+
+		if (is_array($userROW) && ($userROW['id'] == $row['author_id'] || ($userROW['status'] == 1 || $userROW['status'] == 2))) {
+			$tvars['vars']['[edit-news]'] = "<a href=\"".admin_url."/admin.php?mod=editnews&amp;action=editnews&amp;id=".$row['id']."\" target=\"_blank\">";
+			$tvars['vars']['[/edit-news]'] = "</a>";
+			$tvars['vars']['[del-news]'] = "<a onClick=\"confirmit('".admin_url."/admin.php?mod=editnews&amp;subaction=do_mass_delete&amp;selected_news[]=".$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
+			$tvars['vars']['[/del-news]'] = "</a>";
+		} else {
+			$tvars['regx']["'\[edit-news\].*?\[/edit-news\]'si"] = "";
+			$tvars['regx']["'\[del-news\].*?\[/del-news\]'si"] = "";
 		}
 		exec_acts('news_search', '', $row, &$tvars);
 

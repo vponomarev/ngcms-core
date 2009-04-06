@@ -19,7 +19,7 @@
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_49.gif" width="7" height="24"></td>
 				<td background="{tpl_url}/images/2z_50.gif" width="100%">
-				Категория: {category} | Автор: {author} | ({date})</td>
+				Категория: {category} | Автор: {author} | ({date}) [edit-news]Редактировать[/edit-news] [del-news]Удалить[/del-news]</td>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_51.gif" width="7" height="24"></td>
 			</tr>
