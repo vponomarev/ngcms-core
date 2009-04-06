@@ -151,16 +151,19 @@ function preview(){
 var jev = {JEV};
 var form = document.getElementById('postForm');
 for (i in jev) {
-// alert(i+' ('+typeof(jev[i])+')');
+ //try { alert(i+' ('+form[i].type+')'); } catch (err) {;}
  if (typeof(jev[i]) == 'object') {
- 	//alert('OBJ'); 
  	for (j in jev[i]) {
  		//alert(i+'['+j+'] = '+ jev[i][j]);
  		try { form[i+'['+j+']'].value = jev[i][j]; } catch (err) {;}
  	}	
  } else {
   try {
-   form[i].value = jev[i];
+   if ((form[i].type == 'text')||(form[i].type == 'textarea')||(form[i].type == 'select-one')) {
+    form[i].value = jev[i];
+   } else if (form[i].type == 'checkbox') {
+    form[i].checked = (jev[i]?true:false);
+   }
   } catch(err) {;}
  }
 }

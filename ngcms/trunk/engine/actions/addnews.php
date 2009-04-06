@@ -177,7 +177,16 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 	if ($subaction == "add") {
 	        // If we have an error - fill all variables again
 		if (!news_add()) {
-			$JEV = json_encode($_REQUEST);
+			$jarr = array();
+			foreach ($_POST as $k => $v)
+				if (is_array($v)) {
+					foreach ($v as $vk => $vv)
+						if (!is_array($vv))
+							$jarr[$k][$vk] = iconv('Windows-1251', 'UTF-8', $vv);
+				} else {
+					$jarr[$k] = iconv('Windows-1251', 'UTF-8', $v);
+				}
+			$JEV = json_encode($jarr);
 		}
 	}
 
