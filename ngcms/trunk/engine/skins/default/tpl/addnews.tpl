@@ -23,7 +23,7 @@ function preview(){
 }
 </script>
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
-<input type=hidden name="area" value="" />
+<input type="hidden" name="area" value="" />
 </form>
 <form id="postForm" name="form" method="post" action="{php_self}" target="_self">
 <br/>
@@ -139,7 +139,7 @@ function preview(){
 <input type="hidden" name="subaction" value="add" />
 <input type="hidden" name="mod" value="addnews" />
 <input type="hidden" name="save" value="" />
-<input type="button" value="{l_preview}" class="button" onClick="return preview();" />
+<input type="button" value="{l_preview}" class="button" onclick="return preview();" />
 <input type="submit" value="{l_addnews}" class="button" />
 </td>
 </tr>
