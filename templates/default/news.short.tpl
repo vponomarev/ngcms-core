@@ -37,7 +37,7 @@
 		<table border="0" width="100%" cellspacing="0" cellpadding="0">
 			<tr>
 				<td><img border="0" src="{tpl_url}/images/2z_63.gif" width="7" height="19" /></td>
-				<td style="background-image:url('{tpl_url}/images/2z_64.gif');" width="100%" class="mw_links">&nbsp;[comheader]Комментарии: {comments-num} |[/comheader]&nbsp;Просмотров: {views} | [link]<b>Подробнее</b>[/link]</td>
+				<td style="background-image:url('{tpl_url}/images/2z_64.gif');" width="100%" class="mw_links">&nbsp;[comheader]Комментарии: {comments-num} |[/comheader]&nbsp;Просмотров: {views} | [full-link]<b>Подробнее</b>[/full-link]</td>
 				<td><img border="0" src="{tpl_url}/images/2z_65.gif" width="7" height="19" /></td>
 			</tr>
 		</table>
