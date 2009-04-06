@@ -80,7 +80,7 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 			$tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.$param['value'].'</textarea>';
 		} else if ($param['type'] == 'input') {
 			$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.$param['value'].'"/>';
-		} else if (($param['type'] == 'input')||($param['type'] == 'password')||($param['type'] == 'hidden')) {
+		} else if (($param['type'] == 'password')||($param['type'] == 'hidden')) {
 			$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="'.$param['type'].'" title="'.$param['title'].'" '.$param['html_flags'].' value="'.$param['value'].'"/>';
 		} else if ($param['type'] == 'select') {
 			$tvars['vars']['input'] = '<select name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>';
