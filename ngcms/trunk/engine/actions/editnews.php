@@ -340,7 +340,7 @@ function massNewsModify($setValue, $langParam, $tag ='') {
 		if (!$setValue['approve']) {
 			// Count categories & counters to decrease
 			foreach ($mysql->select("select categoryID, count(newsID) as cnt from ".prefix."_news_map where newsID in (".join(", ", $nList).") group by categoryID") as $crec) {
-				$mysql->query("update ".prefix."_category set posts=posts-".db_squote($crec['cnt'])." where id = ".db_squote($crec['id']));
+				$mysql->query("update ".prefix."_category set posts=posts-".intval($crec['cnt'])." where id = ".intval($crec['categoryID']));
 			}
 
 			// Delete news map
@@ -354,11 +354,11 @@ function massNewsModify($setValue, $langParam, $tag ='') {
 				foreach (explode(",", $nr['catid']) as $cid) {
 					if (!isset($catmap[$cid])) continue;
 					$clist[$cid]++;
-					$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".db_squote($nr['id']).", ".db_squote($cid).")");
+					$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".intval($nr['id']).", ".intval($cid).")");
 				}
 			}
 			foreach ($clist as $cid => $cv) {
-				$mysql->query("update ".prefix."_category set posts=posts+".db_squote($cv)." where id = ".db_squote($cid));
+				$mysql->query("update ".prefix."_category set posts=posts+".intval($cv)." where id = ".intval($cid));
 			}
 		}
 	}
