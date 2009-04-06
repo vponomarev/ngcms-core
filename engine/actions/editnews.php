@@ -143,6 +143,11 @@ function editNews() {
 
 	$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($id));
 
+	// Check if we need to update user's counters
+	if ($row['approve'] != $SQL['approve']) {
+		$mysql->query("update ".uprefix."_users set news=news".($row['approve']?'-':'+')."1 where id=".$row['author_id']);
+	}
+
 	if ($SQL['approve']) {
 		if (sizeof($catids)) {
 			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(",",array_keys($catids)).")");
@@ -316,7 +321,7 @@ function massNewsModify($setValue, $langParam, $tag ='') {
 	$nList = array();
 	$nData = array();
 
-	foreach ($mysql->select("select id, catid, ".join(", ", array_keys($setValue))." from ".prefix."_news where id in (".join(", ", $SNQ).")") as $nrow) {
+	foreach ($mysql->select("select id, catid, author_id, ".join(", ", array_keys($setValue))." from ".prefix."_news where id in (".join(", ", $SNQ).")") as $nrow) {
 		$nList [] = $nrow['id'];
 		$nData [$nrow['id']] = $nrow;
 	}
@@ -336,6 +341,12 @@ function massNewsModify($setValue, $langParam, $tag ='') {
 
 	// Some activity if we change APPROVE flag for news
 	if (isset($setValue['approve'])) {
+		// Update user's news counters
+		foreach ($nData as $nid => $ndata) {
+			if ($ndata['approve'] != $setValue['approve'])
+				$mysql->query("update ".uprefix."_users set news=news".($ndata['approve']?'-':'+')."1 where id = ".intval($ndata['author_id']));
+		}
+
 		// DeApprove news
 		if (!$setValue['approve']) {
 			// Count categories & counters to decrease
