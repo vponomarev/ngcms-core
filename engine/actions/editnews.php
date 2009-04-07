@@ -207,7 +207,7 @@ function editNewsForm() {
 	}
 
 	if ($config['use_bbcodes']) {
-		$tvars['vars']['quicktags'] = QuickTags('', 'bbnews');
+		$tvars['vars']['quicktags'] = QuickTags('', 'news');
 	} else {
 		$tvars['vars']['quicktags'] = '';
 	}
