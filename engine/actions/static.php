@@ -219,9 +219,10 @@ function addStaticForm(){
 		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
 	}
 
-	$tvars['vars']['disable_flag_raw'] = $flock?'disabled':'';
+	$tvars['vars']['disable_flag_raw']	= $flock?'disabled':'';
 	$tvars['vars']['disable_flag_html'] = $flock?'disabled':'';
-
+	$tvars['vars']['flag_approve']		= 'checked="checked"';
+	$tvars['vars']['template']			= '';
 
 	exec_acts('addstatic');
 
