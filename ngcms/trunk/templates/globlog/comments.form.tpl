@@ -70,7 +70,7 @@ function add_comment(){
 </tr>
 <tr>
 <td colspan="2" style="padding: 15px;">
-<textarea name="content" style="width: 95%;" rows="8"></textarea>
+<textarea name="content" id="content" style="width: 95%;" rows="8"></textarea>
 </td>
 </tr>
 <tr>
