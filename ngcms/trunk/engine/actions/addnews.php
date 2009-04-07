@@ -199,7 +199,7 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 	);
 
 	$tvars['vars']['smilies']	= ($config['use_smilies'])?InsertSmilies('content', 20):'';
-	$tvars['vars']['quicktags']	= ($config['use_bbcodes'])?QuickTags('', 'bbnews'):'';
+	$tvars['vars']['quicktags']	= ($config['use_bbcodes'])?QuickTags('', 'news'):'';
 
 	if ($userROW['status'] < 3) {
 		$tvars['vars']['[options]'] = "";

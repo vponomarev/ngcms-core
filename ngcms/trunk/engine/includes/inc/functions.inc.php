@@ -255,15 +255,10 @@ function QuickTags($area = false, $template = false) {
 		$tpl -> vars('quicktags_editcom', $tvars);
 		return $tpl -> show('quicktags_editcom');
 	}
-	elseif ($template == "siteaddnews") {
-		$tpl -> template('quicktags', tpl_site);
-		$tpl -> vars('quicktags', $tvars);
-		return $tpl -> show('quicktags');
-	}
-	elseif ($template == "bbnews") {
-		$tpl -> template('bbnews', tpl_actions);
-		$tpl -> vars('bbnews', $tvars);
-		return $tpl -> show('bbnews');
+	elseif ($template == "news") {
+		$tpl -> template('qt_news', tpl_actions);
+		$tpl -> vars('qt_news', $tvars);
+		return $tpl -> show('qt_news');
 	} else {
 		$tpl -> template('quicktags', tpl_actions);
 		$tpl -> vars('quicktags', $tvars);
