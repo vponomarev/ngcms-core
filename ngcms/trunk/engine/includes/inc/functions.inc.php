@@ -245,25 +245,14 @@ function QuickTags($area = false, $template = false) {
 		'area'		=>	$area
 	);
 
-	if ($template == "pmmes") {
-		$tpl -> template('quicktags_pmmes', tpl_actions);
-		$tpl -> vars('quicktags_pmmes', $tvars);
-		return $tpl -> show('quicktags_pmmes');
-	}
-	elseif ($template == "editcom") {
-		$tpl -> template('quicktags_editcom', tpl_actions);
-		$tpl -> vars('quicktags_editcom', $tvars);
-		return $tpl -> show('quicktags_editcom');
-	}
-	elseif ($template == "news") {
-		$tpl -> template('qt_news', tpl_actions);
-		$tpl -> vars('qt_news', $tvars);
-		return $tpl -> show('qt_news');
-	} else {
-		$tpl -> template('quicktags', tpl_actions);
-		$tpl -> vars('quicktags', $tvars);
-		return $tpl -> show('quicktags');
-	}
+	if (!in_array($template, array('pmmes', 'editcom', 'news', 'static')))
+		return false;
+
+	$tplname = 'qt_'.$template;
+
+	$tpl->template($tplname, tpl_actions);
+	$tpl->vars($tplname, $tvars);
+	return $tpl->show($tplname);
 }
 
 
@@ -979,7 +968,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	global $config, $parse, $lang;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
-	
+
 	$url = GetLink('full', $row);
 
 	$tvars['vars']['author'] = "<a href=\"".GetLink('user', $row)."\" target=\"_blank\">".$row['author']."</a>";
