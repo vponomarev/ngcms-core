@@ -26,7 +26,7 @@
   </tr>
   <tr>
    <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
-   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" rows="16" tabindex="2"></textarea></td>
+   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" id="content" rows="16" tabindex="2"></textarea></td>
   </tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
@@ -67,7 +67,9 @@
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
    <td>Шаблон</td>
   </tr>
-  <tr><td></td><td><input type="text" name="template" value="" size="30" tabindex="5" /></td></tr>
+  <tr><td></td><td>
+  	<select name="template" style="width: 200px;" value="{template}">{templateopts}</select>
+  </td></tr>
  </table>
 </td>
 </tr>

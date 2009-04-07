@@ -52,7 +52,7 @@ function preview(){
   </tr>
   <tr>
    <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
-   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" rows="16" tabindex="2"></textarea></td>
+   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" id="content" rows="16" tabindex="2"></textarea></td>
   </tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>

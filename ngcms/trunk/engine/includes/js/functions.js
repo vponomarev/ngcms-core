@@ -82,15 +82,13 @@ document.images[name].src = "skins/images/blank.gif";
 }
 }
 
-function insertext(open, close, area){
-	if (area == "short"){
-		msgfield = document.form.contentshort
-	} else if (area == "full") {
-		msgfield = document.form.contentfull
-	} else if (area == "" || !area) {
-		msgfield = document.form.content
-	}
-
+function insertext(open, close, field){
+        try {
+        	msgfield = document.getElementById((field=='')?'content':field);
+        } catch (err) {
+        	return false;
+        }	
+		
 	// IE support
 	if (document.selection && document.selection.createRange){
 		msgfield.focus();

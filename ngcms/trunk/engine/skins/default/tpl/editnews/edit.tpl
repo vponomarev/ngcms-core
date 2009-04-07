@@ -14,11 +14,11 @@ function preview(){
   return false;
  }
 
- form.mod.value = "preview";
+ form['mod'].value = "preview";
  form.target = "_blank";
  form.submit();
 
- form.mod.value = "editnews";
+ form['mod'].value = "editnews";
  form.target = "_self";
  return true;
 }
@@ -26,7 +26,9 @@ function preview(){
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type=hidden name="area" value="" />
 </form>
-<form name="form" method="post" action="{php_self}?mod=editnews&amp;action=editnews" id="form">
+<form name="form" method="post" action="{php_self}?" id="form">
+<input type="hidden" name="mod" value="editnews"/>
+<input type="hidden" name="action" value="editnews"/>
 <br />
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
@@ -39,7 +41,7 @@ function preview(){
 <td style="background: #F0F0F0; padding: 3px;">
 <input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_maincontent}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_additional}" class="navbutton" />
-<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_comments}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_comments} ({comnum})" class="navbutton" />
 </td>
 </tr>
 <tr><td>
@@ -54,7 +56,7 @@ function preview(){
   </tr>
   <tr>
    <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
-   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" rows="16" tabindex="2">{content}</textarea></td>
+   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" id="content" rows="16" tabindex="2">{content}</textarea></td>
   </tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
@@ -145,7 +147,6 @@ function preview(){
 <td width="100%" class="contentEdit" align="center" valign="top">
 <input type="hidden" name="id" value="{id}" />
 <input type="hidden" name="subaction" value="doeditnews" />
-<input type="hidden" name="mod" value="editnews" />
 <input type="button" value="{l_preview}" class="button" onClick="preview()" />
 <input type="submit" value="{l_do_editnews}" accesskey="s" class="button" />&nbsp;
 <input type="button" value="{l_delete}" onClick="confirmit('{php_self}?mod=editnews&amp;subaction=do_mass_delete&amp;selected_news[]={id}', '{l_sure_del}')" class="button" />

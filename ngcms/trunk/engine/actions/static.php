@@ -21,8 +21,6 @@ $subaction	=	$_REQUEST['subaction'];
 
 
 
-
-
 if ($action == "add") {
 	if ($subaction == "doadd") {
 		addStatic();
@@ -53,16 +51,6 @@ if ($action == "add") {
 	if ($pageNo < 1)	$pageNo = 1;
 	if (!$start_from)	$start_from = ($pageNo - 1)* $per_page;
 
-
-	//$cstart		= abs(intval($_REQUEST['page'])?intval($_REQUEST['page']):0);
-	//$start_from	= abs(intval($_REQUEST['start_from'])?intval($_REQUEST['start_from']):0);
-
-	//if (!$cstart) { $cstart = 1; }
-	//$per_page = intval($_REQUEST['per_page']);
-	//if (($per_page < 1)||($per_page > 500))
-	//	$per_page = 20;
-
-	//if (!$start_from) $start_from = ($cstart - 1)*$per_page;
 
 	$query['sql']		= "select * from ".prefix."_static order by id desc limit ".$start_from.", ".$per_page;
 	$query['count']		= "select count(*) as cnt from ".prefix."_static ";
@@ -176,6 +164,22 @@ function massStaticDelete() {
 
 
 //
+// List available templates
+//
+function staticListTemplates($default = ''){
+	global $config;
+
+	$list = ListFiles(tpl_dir.$config['theme']."/static", "tpl");
+	$output = '<option value=""></option>';
+
+	foreach ($list as $fn) {
+		$output .= '<option value="'.$fn.'"'.(($fn==$default)?' selected="selected"':'').'>'.$fn.'</option>';
+	}
+	return $output;
+}
+
+
+//
 // Add static page form
 //
 function addStaticForm(){
@@ -184,7 +188,8 @@ function addStaticForm(){
 
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
-		'quicktags'			=>	QuickTags()
+		'quicktags'			=>	QuickTags('', 'static'),
+		'templateopts'		=> staticListTemplates(''),
 	);
 
 	if ($config['use_smilies']) {
@@ -328,12 +333,13 @@ function editStaticForm(){
 
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
-		'quicktags'			=>	QuickTags(),
+		'quicktags'			=>	QuickTags('', 'static'),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
 		'content'			=>	secure_html($row['content']),
 		'alt_name'			=>	$row['alt_name'],
 		'template'			=>	$row['template'],
+		'templateopts'		=> staticListTemplates($row['template']),
 		'description'		=>	$row['description'],
 		'keywords'			=>	$row['keywords']
 	);

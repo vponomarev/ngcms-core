@@ -590,7 +590,7 @@ function ListFiles($path, $ext) {
 	$file_list = array();
 
 	if (!$handle = opendir("$path")) {
-		echo "<p>Can not open directory</p> ";
+		echo "<p>Can not open directory $path</p> ";
 	}
 
 	while (false !== ($file = readdir($handle))) {
