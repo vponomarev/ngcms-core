@@ -76,8 +76,10 @@ function showStaticPage($params) {
 	exec_acts('static', $row);
 
 	if (!$row['template']) {
-		$row['template'] = "static";
-	}
+		$row['template'] = "static/default";
+	} else {
+		$row['template'] = 'static/'.$row['template'];
+	}	
 
 	$tpl -> template($row['template'], tpl_dir.$config['theme']);
 	$tpl -> vars($row['template'], $tvars);

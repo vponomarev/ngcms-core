@@ -12,6 +12,14 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('editcomments', 'admin');
 
+
+// List comments
+function commentsList($newsID){
+	global $mysql;
+
+
+}
+
 if ($subaction == "doeditcomment") {
 	if (!trim($_REQUEST['poster'])) {
 		msg(array("type" => "error", "text" => $lang['msge_namefield']));
@@ -66,18 +74,18 @@ if ($subaction != "deletecomment") {
 
 		if ($userROW['status'] < "3"){
 			$tvars['vars']['[answer]']	=	'';
-			$tvars['vars']['[/answer]']	=	''; 
+			$tvars['vars']['[/answer]']	=	'';
 		} else {
 			$tvars['regx']['[\[answer\](.*)\[/answer\]]'] = '';
 		}
 
 		if ($row['text'] != '') {
 			$tpl -> template('editcomments', tpl_actions);
-			$tpl -> vars('editcomments', $tvars); 
+			$tpl -> vars('editcomments', $tvars);
 			echo $tpl -> show('editcomments');
 		}
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 	}
-}	
+}
 ?>

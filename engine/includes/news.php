@@ -78,7 +78,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 		foreach ($PFILTERS['news'] as $k => $v) { $v->showNewsPre($row['id'], $row, $callingParams); }
 
         $tX2 = $timer->stop(4);
-	
+
 	$tvars = newsFillVariables($row, 1, $_REQUEST['page'], (substr($callingParams['style'], 0, 6) == 'export')?1:0);
 
         $tX3 = $timer->stop(4);
@@ -121,9 +121,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
         $tX1 = $timer->stop(4);
 	// Execute filters
 	if (is_array($PFILTERS['news']))
-		foreach ($PFILTERS['news'] as $k => $v) { 
+		foreach ($PFILTERS['news'] as $k => $v) {
 			$timer->registerEvent('exec showNews // '.$k);
-			$v->showNews($row['id'], $row, $tvars, $callingParams); 
+			$v->showNews($row['id'], $row, $tvars, $callingParams);
 		}
 
         $tX2 = $timer->stop(4);
@@ -217,6 +217,8 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 //		'customCategoryTemplate' => flag automatically override custom category templates
 //		'customCategoryNumber'	=> flag automatically override number of news per page
 //			[!!!] USES CUSTOM TEMPLATE FOR FIRST CATEGORY FROM NEWS [!!!]
+//		'overrideSQLquery' => array - sets if PLUGIN wants to run it's own query
+//
 function news_showlist($categoryList = array(), $callingParams = array()){
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
 	global $year, $month, $day;
