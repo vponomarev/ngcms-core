@@ -49,23 +49,55 @@ $timer -> start();
 @session_start();
 
 // Define default HTTP flags
-$SYSTEM_FLAGS['http.headers']['Content-Type']	= 'text/html; charset=Windows-1251';
-$SYSTEM_FLAGS['http.headers']['Cache-control']	= 'private';
+$SYSTEM_FLAGS['http.headers']['content-type']	= 'text/html; charset=Windows-1251';
+$SYSTEM_FLAGS['http.headers']['cache-control']	= 'private';
 
-$rvars_arr = array('action', 'subaction', 'xfieldsaction', 'mod', 'id', 'pmid', 'category', 'altname', 'user', 'userid', 'code', 'vcode', 'story', 'rating', 'post_id', 'newsid', 'mail', 'name', 'url', 'regusername', 'regemail', 'regpassword', 'title', 'text', 'author', 'editsite', 'email', 'editicq', 'editlj', 'editfrom', 'editabout', 'icon', 'alt_url', 'orderby', 'contentshort', 'contentfull', 'alt_name', 'c_day', 'c_month', 'c_year', 'c_hour', 'c_minute', 'mainpage', 'allow_com', 'approve', 'favorite', 'pinned', 'description', 'keywords');
-$intvars_arr = array('start_from', 'news_per_page', 'per_page', 'cstart', 'page', 'year', 'month', 'day', 'raw', 'comid');
+//
+// Global variables configuration arrays
+//
 
-$gvars_arr = array('root' => dirname(__FILE__).'/', 'HTTP_REFERER' => $_SERVER['HTTP_REFERER'], 'PHP_SELF' => $_SERVER['PHP_SELF'], 'QUERY_STRING' => $_SERVER['QUERY_STRING'], 'REQUEST_URI' => $_SERVER['REQUEST_URI'],'is_logged' => false, 'is_logged_cookie' => false, 'is_logged_session' => false, 'result' => false, 'stop' => false, 'is_member' => false, 'config' => array(), 'userz' => array(), 'catz' => array(), 'catmap' => array());
+// Configuration array
+$confArray = array (
+	// Pre-defined init values
+	'predefined' => array(
+		'HTTP_REFERER'	=> isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'',
+		'PHP_SELF'		=> isset($_SERVER['PHP_SELF'])?$_SERVER['PHP_SELF']:'',
+		'REQUEST_URI'	=> isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'',
+		'config'	=> array(),
+		'catz'		=> array(),
+		'catmap'	=> array(),
+		'is_logged'	=> false,
+		'result'	=> false,
+	),
 
-foreach ($_REQUEST as $key => $value) {
-	if (in_array($key, $rvars_arr))   { $$key = $value; }
-	if (in_array($key, $intvars_arr)) { $$key = intval($value); }
-}
+	// HTTP GET/POST variables
+	'htvars' => array('action', 'subaction', 'mod', 'id', 'pmid', 'category', 'altname', 'user', 'userid', 'code', 'vcode', 'story', 'rating', 'post_id', 'newsid', 'mail', 'name', 'url', 'regusername', 'regemail', 'regpassword', 'title', 'text', 'author', 'editsite', 'email', 'editicq', 'editlj', 'editfrom', 'editabout', 'icon', 'alt_url', 'orderby', 'contentshort', 'contentfull', 'alt_name', 'c_day', 'c_month', 'c_year', 'c_hour', 'c_minute', 'mainpage', 'allow_com', 'approve', 'favorite', 'pinned', 'description', 'keywords'),
 
-foreach ($gvars_arr as $key => $value) {
+	// HTTP GET/POST values that are integer ( intval() )
+	'htvars.int' => array('start_from', 'news_per_page', 'per_page', 'cstart', 'page', 'year', 'month', 'day', 'raw', 'comid'),
+);
+
+// Load pre-defined variables
+foreach ($confArray['predefined'] as $key => $value) {
 	unset($_GET[$key], $_POST[$key], $_SESSION[$key], $_COOKIE[$key], $_ENV[$key]);
 	$$key = $value;
+
+	//print "INIT (".$key."): ".$$key."<br/>\n";
 }
+
+// Load HTTP GET/POST variables
+foreach ($confArray['htvars'] as $vname) {
+	$$vname	= isset($_REQUEST[$vname])?$_REQUEST[$vname]:'';
+	//print "INIT.VAR (".$vname."): ".$$vname."<br/>\n";
+}
+
+// Load HTTP GET/POST integer variables
+foreach ($confArray['htvars.int'] as $vname) {
+	$$vname	= isset($_REQUEST[$vname])?intval($_REQUEST[$vname]):'';
+	//print "INIT.VAR.INT (".$vname."): ".$$vname."<br/>\n";
+}
+
+//print "GLOBAL SET VARIABLE (id): ".$id."<br/>\n";
 
 @include_once root.'includes/inc/multimaster.php';
 
@@ -119,10 +151,11 @@ load_extras('auth');
 $timer->registerEvent('Auth plugins are loaded');
 
 // Set prefix for users DB
-if (!$config['uprefix']) { $config['uprefix'] = $config['prefix']; }
+if (!isset($config['uprefix'])) { $config['uprefix'] = $config['prefix']; }
 @define('uprefix',$config['uprefix']);
 
-$is_logged = false;
+//
+// Authentication process
 
 // System protection
 if (!$AUTH_CAPABILITIES[$config['auth_module']]['login']) { $config['auth_module'] = 'basic'; }
@@ -131,7 +164,7 @@ if (!$AUTH_CAPABILITIES[$config['auth_db']]['db']) { $config['auth_db'] = 'basic
 if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD[$config['auth_db']])) ) {
 	// Auth subsystem is activated
 	// * choose default or user defined auth module
-	if ($_REQUEST['auth_module'] && $AUTH_CAPABILITIES[$_REQUEST['auth_module']]['login'] && is_object($AUTH_METHOD[$_REQUEST['auth_module']]))
+	if (isset($_REQUEST['auth_module']) && $AUTH_CAPABILITIES[$_REQUEST['auth_module']]['login'] && is_object($AUTH_METHOD[$_REQUEST['auth_module']]))
 		$auth = &$AUTH_METHOD[$_REQUEST['auth_module']];
 	else
 		$auth = &$AUTH_METHOD[$config['auth_module']];

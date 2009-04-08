@@ -384,10 +384,10 @@ function zzMail($to, $subject, $message, $filename = false, $mail_from = false) 
 	$headers	.=	'X-MSMail-Priority: Normal'."\n";
 	$headers	.=	'X-Mailer: '.engineName.' : '.engineVersion."\n";
 	$headers	.=	'X-MimeOLE: '.engineName.' : '.engineVersion."\n";
-	$headers	.=	'Content-Type: multipart/mixed;boundary="----------'.$uniqid.'"'."\n\n";
+	$headers	.=	'content-type: multipart/mixed;boundary="----------'.$uniqid.'"'."\n\n";
 	$headers	.=	'------------'.$uniqid."\n";
-	$headers	.=	'Content-Type: text/html;charset='.$lang['encoding'].''."\n";
-	$headers	.=	'Content-Transfer-Encoding: 8bit';
+	$headers	.=	'content-type: text/html;charset='.$lang['encoding'].''."\n";
+	$headers	.=	'content-transfer-Encoding: 8bit';
 
 	if (is_file($filename)){
 		$file		=	fopen($filename, 'rb');
