@@ -124,7 +124,7 @@ function ipban_list() {
 	}
 
 	$tpl -> template('table', tpl_actions.$mod);
-	$tvars['vars'] = array('php_self' => $PHP_SELF, 'entries' => $entries);
+	$tvars['vars'] = array('php_self' => $PHP_SELF, 'entries' => $entries, 'iplock' => $_REQUEST['iplock']);
 	$tpl -> vars('table', $tvars);
 	echo $tpl -> show('table');
 }

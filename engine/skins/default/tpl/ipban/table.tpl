@@ -24,7 +24,7 @@
 <tr>
 <td width=100% colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_hdr.block}</td>
 </tr>
-<tr><td class="contentEntry2">{l_add.ip}:</td><td><input type="text" name="ip" size="31" /></td></tr>
+<tr><td class="contentEntry2">{l_add.ip}:</td><td><input type="text" name="ip" value="{iplock}" size="31" /></td></tr>
 <tr><td class="contentEntry2">{l_add.block.open}:</td><td><select disabled="disabled" name="lock:open"><option value="0">--</option><option value="1" style="color: blue;">{l_lock.block}</option><option value="2" style="color: red;">{l_lock.silent}</option></select></tr>
 <tr><td class="contentEntry2">{l_add.block.reg}:</td><td><select name="lock:reg"><option value="0">--</option><option value="1" style="color: blue;">{l_lock.block}</option><option value="2" style="color: red;">{l_lock.silent}</option></select></tr>
 <tr><td class="contentEntry2">{l_add.block.login}:</td><td><select name="lock:login"><option value="0">--</option><option value="1" style="color: blue;">{l_lock.block}</option><option value="2" style="color: red;">{l_lock.silent}</option></select></tr>
