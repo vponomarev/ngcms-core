@@ -58,7 +58,7 @@ if(selectedOption == 'additional') {document.getElementById('additional').style.
 <td width="100%" class="contentEdit">
 <input type=submit value="{l_save}" accesskey="s" class="button" tabindex="5">
 <input type=button value="{l_delete}" onClick="confirmit('{php_self}?mod=editcomments&subaction=deletecomment&newsid={newsid}&comid={comid}&poster={author}', '{l_sure_del}')" class="button" tabindex="6">
-<input type="button" value="{l_block_ip}" onClick="document.location='{php_self}?mod=ipban&action=add&add_ip={ip}'" class="button" />
+<input type="button" value="{l_block_ip}" onClick="document.location='{php_self}?mod=ipban&iplock={ip}'" class="button" />
 <input type=hidden name=mod value="editcomments">
 <input type=hidden name=newsid value="{newsid}">
 <input type=hidden name=comid value="{comid}">
