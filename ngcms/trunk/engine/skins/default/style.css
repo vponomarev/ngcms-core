@@ -252,7 +252,7 @@ padding-top: 5px;
 }
 
 #tags .more {
- align: right;
+ text-align: right;
  padding-left: 20px;
  padding-right: 20px;
  background: #FFFFFF;
