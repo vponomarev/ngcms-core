@@ -558,13 +558,21 @@ class image_managment{
 
 		$newimg = imagecreatetruecolor($newX, $newY);
 
-		// Prepare for transparency
+		// Prepare for transparency // NON-ALPHA transparency
 		$oTColor = imagecolortransparent($img);
 		if ($oTColor >= 0 && $oTColor < imagecolorstotal($img)) {
 			$TColor = imagecolorsforindex($img, $oTColor);
 			$nTColor = imagecolorallocate($newimg, $TColor['red'], $TColor['green'], $TColor['blue']);
 			imagefill($newimg, 0, 0, $nTColor);
 			imagecolortransparent($newimg, $nTColor);
+		} else {
+			// Check for ALPHA transparency in PNG
+			if ($origType == 3) {
+				imagealphablending($newimg, false);
+				$nTColor = imagecolorallocatealpha($newimg, 0,0,0, 127);
+				imagefill($newimg, 0, 0, $nTColor);
+				imagesavealpha($newimg, true);
+			}
 		}
 
 		// Resize image
