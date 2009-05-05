@@ -558,9 +558,17 @@ class image_managment{
 
 		$newimg = imagecreatetruecolor($newX, $newY);
 
+		// Prepare for transparency
+		$oTColor = imagecolortransparent($img);
+		if ($oTColor >= 0 && $oTColor < imagecolorstotal($img)) {
+			$TColor = imagecolorsforindex($img, $oTColor);
+			$nTColor = imagecolorallocate($newimg, $TColor['red'], $TColor['green'], $TColor['blue']);
+			imagefill($newimg, 0, 0, $nTColor);
+			imagecolortransparent($newimg, $nTColor);
+		}
+
 		// Resize image
-		imagefill($newimg,0,0,'0xFFFFFF');
-		imagecopyresized($newimg, $img, 0,0,0,0,$newX, $newY, $origX, $origY);
+		imagecopyresampled($newimg, $img, 0,0,0,0,$newX, $newY, $origX, $origY);
 
 		// Try to write resized image
 		switch ($origType) {
