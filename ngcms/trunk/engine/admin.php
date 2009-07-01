@@ -12,12 +12,6 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
-// Not all of users are welcome here
-if ($userROW['status'] > 3) {
-	@header("Location: ".home);
-	exit;
-}
-
 @header("Cache-Control: no-store, no-cache, must-revalidate");
 @header("Cache-Control: post-check=0, pre-check=0", false);
 @header("Pragma: no-cache");
@@ -33,13 +27,33 @@ $PHP_SELF = "admin.php";
 // We have only one admin panel skin
 @require_once("./skins/default/index.php");
 
-if (!is_array($userROW)) {
 
+//
+// Handle LOGIN
+//
+if ($_REQUEST['action'] == 'login') {
+	include_once root.'cmodules.php';
+	coreLogin();
+}
+
+//
+// Handle LOGOUT
+//
+if ($_REQUEST['action'] == 'logout') {
+	include_once root.'cmodules.php';
+	coreLogout();
+}
+
+
+//
+// Show LOGIN screen if user is not logged in
+//
+if (!is_array($userROW)) {
 	$tvars['vars'] = array(
-		'php_self'	=>	$PHP_SELF,
-		'request_uri'	=>	$REQUEST_URI,
+		'php_self'		=>	$PHP_SELF,
+		'redirect'		=>	$REQUEST_URI,
 		'home_title'	=>	home_title,
-		'error'		=>	($SYSTEM_FLAGS['auth_fail'])?$lang['msge_login']:'',
+		'error'			=>	($SYSTEM_FLAGS['auth_fail'])?$lang['msge_login']:'',
 	);
 
 	$tpl -> template('login', tpl_actions);
@@ -47,6 +61,14 @@ if (!is_array($userROW)) {
 	echo $tpl -> show('login');
 	exit;
 }
+
+
+// Not all of users are welcome here
+if ($userROW['status'] > 3) {
+	@header("Location: ".home);
+	exit;
+}
+
 
 
 //

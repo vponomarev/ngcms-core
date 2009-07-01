@@ -275,6 +275,3 @@ function generateSearchNavigations($current, $start, $stop, $url, $navigations){
 	return $result;
 }
 
-
-search_news();
-

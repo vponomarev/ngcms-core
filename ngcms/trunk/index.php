@@ -18,7 +18,7 @@ $SYSTEM_FLAGS['info']['title']['header'] = home_title;
 
 $template['vars'] = array(
 	'what'			=>	engineName,
-	'version'		=>	version,
+	'version'		=>	engineVersion,
 	'home'			=>	home,
 	'titles'		=>	home_title,
 	'home_title'	=>	home_title
@@ -60,38 +60,36 @@ if ($config['lock'] && (!is_array($userROW) || ($userROW['status'] != 1))) {
 // ===================================================================
 
 // External call: before executing activity
-exec_acts("index");
+exec_acts('index_pre');
 
 // Deactivate block [sitelock] ... [/sitelock]
 $template['vars']["[sitelock]"] = "";
 $template['vars']["[/sitelock]"] = "";
 
 
-// MASTER SWITCH - select desired action
-switch ($action) {
-	case 'static':			include root.'includes/static.php'; break;
-	case 'plugin':			include root.'includes/plugin.php'; break;
+//
+// Core URL processing block
+//
+//print "<pre>".var_export($_SERVER, true)."</pre><br/>\n";
+//print "<pre>".var_export($_REQUEST, true)."</pre><br/>\n";
+$UHANDLER->run($_SERVER['REDIRECT_URL'], false);
+//$link = generateLink('core', 'plugin', array('plugin' => 'rss_export'));
+//print "URL ForWArd: ".var_export($link, true);
+//print "Config status: ".$UHANDLER->configLoaded."</br>\n";
+//print "<pre>".var_export($UHANDLER->hList, true)."</pre><br/>\n";
 
-	case 'search':			include root.'includes/search.php'; break;
-	case 'addnews':			include root.'actions/addnews.php'; break;
-	case 'profile':			include root.'profile.php'; break;
-	case 'registration':	include root.'registration.php'; break;
-	case 'lostpassword':	include root.'lostpassword.php'; break;
-	case 'activation':		include root.'activation.php'; break;
-	case 'users':			include root.'includes/users.php'; break;
+// Run plugins
+exec_acts('index');
 
-	default:
-		include_once root.'includes/news.php';
-		showNews();
-
-}
 
 // ===================================================================
 // Generate additional informational blocks
 // ===================================================================
+$timer->registerEvent('Master activity finished');
 
 // Generate category menu
 $template['vars']['categories'] = generateCategoryMenu();
+$timer->registerEvent('Category menu created');
 
 // Generate page title
 $template['vars']['titles'] = join(" : ", array_values($SYSTEM_FLAGS['info']['title']));
@@ -128,9 +126,15 @@ $EXTRA_HTML_VARS[] = array('type' => 'plain', 'data' => GetMetatags());
 $htmlrow = array();
 $dupCheck = array();
 foreach ($EXTRA_HTML_VARS as $htmlvar) {
+	// Skip empty
+	if (!$htmlvar['data'])
+		continue;
+
+	// Check for duplicated rows
 	if (in_array($htmlvar['data'], $dupCheck))
 		continue;
 	$dupCheck[] = $htmlvar['data'];
+
 	switch ($htmlvar['type']) {
 		case 'css': 	$htmlrow[] = "<link href=\"".$htmlvar['data']."\" rel=\"stylesheet\" type=\"text/css\" />";
 			break;
@@ -139,7 +143,7 @@ foreach ($EXTRA_HTML_VARS as $htmlvar) {
 		case 'rss' : $htmlrow[] = "<link href=\"".$htmlvar['data']."\" rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" />";
 			break;
 		case 'plain':$htmlrow[] = $htmlvar['data'];
-			break;	
+			break;
 	}
 }
 if (count($htmlrow))
@@ -152,6 +156,7 @@ $template['vars']['exectime'] = $timer -> stop();
 
 // Fill debug information (if it is requested)
 if ($config['debug']) {
+	$timer->registerEvent('Generate DEBUG output');
 	if (is_array($userROW) && ($userROW['status'] == 1)) {
 		$template['vars']['debug_queries'] = ($config['debug_queries'])?('<b><u>SQL queries:</u></b><br>'.implode("<br />\n",$mysql->query_list)."<br />"):'';
 		$template['vars']['debug_profiler'] = ($config['debug_profiler'])?('<b><u>Time profiler:</u></b>'.$timer->printEvents(1)."<br />"):'';

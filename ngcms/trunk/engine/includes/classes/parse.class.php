@@ -146,6 +146,7 @@ class parse {
 		$content	=	preg_replace("#\[left\](.*?)\[/left\]#is","<p style=\"text-align: left\">$1</p>", $content);
 		$content	=	preg_replace("#\[right\](.*?)\[/right\]#is","<p style=\"text-align: right\">$1</p>", $content);
 		$content	=	preg_replace("#\[center\](.*?)\[/center\]#is","<p style=\"text-align: center\">$1</p>", $content);
+		$content	=	preg_replace("#\[br\]#is", "<br/>", $content);
 
 		// Process spoilers
 		$content	=	preg_replace("#\[spoiler\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>'.$lang['bb_spoiler'].'</div><div class="sp-body">$1</div></div>', $content);

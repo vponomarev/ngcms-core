@@ -132,6 +132,12 @@ function get_active_array() {
 	return $EXTRA_ACTIVE;
 }
 
+function plugin_is_active($name) {
+	$array = get_active_array();
+	if ($array['active'][$name]) { return true; }
+	return false;
+}
+
 function status($module) {
 	$array = get_active_array();
 	if ($array['active'][$module]) { return true; }
@@ -185,6 +191,47 @@ function load_extras($action, $plugin = '') {
 	return $loadedCount;
 }
 
+
+//
+// Load plugin [ Same behaviour as for load_extras ]
+//
+function loadPlugin($pluginName, $actionList = '*') {
+	global $EXTRA_ACTIVATED, $EXTRA_FILES_LOADED, $timer;
+
+	$plugList = get_active_array();
+
+	// Don't load if plugin is not activated
+	if (!$plugList['active'][$pluginName])
+		return false;
+
+	// Scan all available actions and preload plugin's file if needed
+	foreach ($plugList['actions'] as $aName => $pList) {
+		if (isset($pList[$pluginName]) &&
+			((is_array($actionList) && in_array($aName, $actionList)) ||
+			(!is_array($actionList) && (($actionList == '*')||($actionList == $aName))))
+		   ) {
+			// Yes, we should load this file. If it's not loaded earlier
+			$pluginFileName = $pList[$pluginName];
+
+			if (!isset($EXTRA_FILES_LOADED[$pluginFileName])) {
+				// Try to load file. First check if it exists
+				if (is_file(extras_dir.'/'.$pluginFileName)) {
+				        $tX = $timer->stop(4);
+					include_once extras_dir.'/'.$pluginFileName;
+					$timer->registerEvent('func loadPlugin ('.$pluginName.'): preloaded file "'.$pluginFileName.'" for '.($timer->stop(4) - $tX)." sec");
+					$EXTRA_FILES_LOADED[$value] = 1;
+					$loadedCount ++;
+				} else {
+					$timer->registerEvent('func loadPlugin ('.$pluginName.'): CAN\'t preload file that doesn\'t exists: "'.$pluginFileName.'"');
+				}
+			}
+		}
+	}
+
+	$EXTRA_ACTIVATED[$key] = 1;
+	return true;
+}
+
 //
 // Load plugin's library
 //
@@ -212,6 +259,7 @@ function loadPluginLibrary($plugin, $libname = '') {
 		return false;
 	}
 }
+
 
 function add_act($item, $function, $arguments = 1, $priority = 0) {
 	global $acts;
@@ -522,7 +570,7 @@ function cacheStoreFile($fname, $data, $plugin = '', $hugeMode = 0) {
 	// In case of huge mode - try to access the tree
 	//if ($hugeMode) {
 	//	$fhash = md5($fname);
-	//	//$dp1   = 
+	//	//$dp1   =
         //	//
         //	//if (!
 	//}
@@ -631,5 +679,197 @@ function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '') {
 function register_filter($group, $name, $instance) {
  global $PFILTERS;
  $PFILTERS[$group][$name] = $instance;
+}
+
+
+//
+// Check if we have handler for specified action
+//
+function checkLinkAvailable($pluginName, $handlerName) {
+	global $UHANDLER;
+
+	return isset($UHANDLER->hPrimary[$pluginName][$handlerName]);
+}
+
+
+//
+// Generate link
+//
+function generateLink($pluginName, $handlerName, $params = array(), $xparams = array()){
+	global $UHANDLER;
+
+	$flagCommon = false;
+
+	// Check if we have handler for requested plugin
+	if (!isset($UHANDLER->hPrimary[$pluginName][$handlerName])) {
+		// No handler. Let's use "COMMON WAN"
+		$params['plugin'] = $pluginName;
+		$params['handler'] = $handlerName;
+
+		$pluginName = 'core';
+		$handlerName = 'plugin';
+		$flagCommon = true;
+	}
+
+	// Fetch identity [ array( recNo, primaryFlagStatus ) ]
+	$hId = $UHANDLER->hPrimary[$pluginName][$handlerName];
+	// Fetch record
+	$hRec = $UHANDLER->hList[$hId[0]];
+
+	// Check integrity
+	if (!is_array($hRec) || !is_array($hRec['rstyle']['genrMAP']))
+		return false;
+
+	// First: find block dependency
+	$depMAP = array();
+	foreach ($hRec['rstyle']['genrMAP'] as $rec) {
+		// If dependent block & this is variable & no rec in $depMAP - save
+		if ($rec[2] && $rec[0] && !isset($depMAP[$rec[2]]))
+			$depMAP[$rec[2]] = $rec[1];
+	}
+
+
+	// Now we can generate URL
+	$url = array();
+	foreach ($hRec['rstyle']['genrMAP'] as $rec) {
+		if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
+			$url[] = $rec[0]?$params[$rec[1]]:$rec[1];
+		}
+	}
+
+	// Add params in case of common mode
+	$uparams = array();
+	if ($flagCommon) {
+		unset($params['plugin']);
+		unset($params['handler']);
+		$xparams = array_merge($params, $xparams);
+	}
+
+	foreach ($xparams as $k => $v) {
+		if (($k != 'plugin') && ($k != 'handler'))
+			$uparams[]= $k.'='.urlencode($v);
+	}
+
+	return join('', $url).(count($uparams)?'?'.join('&', $uparams):'');
+}
+
+
+//
+// Generate link to page
+//
+function generatePageLink($paginationParams, $page) {
+	//print "generatePageLink(".var_export($paginationParams, true).";".$page.")<br/>\n";
+	// Generate link
+	$lparams = $paginationParams['params'];
+	$lxparams = $paginationParams['xparams'];
+
+	if ($paginationParams['paginator'][2] || ($page > 1)) {
+		if ($paginationParams['paginator'][1]) {
+			$lxparams[$paginationParams['paginator'][0]] = $page;
+		} else {
+			$lparams[$paginationParams['paginator'][0]] = $page;
+		}
+	}
+	return generateLink($paginationParams['pluginName'], $paginationParams['pluginHandler'], $lparams, $lxparams);
+}
+
+
+//
+//
+//
+function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params) {
+	global $PPAGES, $lang, $CurrentHandler;
+
+	function defaultRUN($pluginName, $handlerName, $params) {
+		global $PPAGES, $lang, $SYSTEM_FLAGS, $CurrentHandler;
+		// Preload requested plugin
+		loadPlugin($pluginName, 'ppages');
+
+		$pcall = $PPAGES[$pluginName][$handlerName];
+
+		if (is_array($pcall) && function_exists($pcall['func'])) {
+			// Make page title
+			$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_plugin'];
+
+			// Report current handler config
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			call_user_func($pcall['func'], $params);
+		} else {
+			msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array($handlerName, $pluginName), $lang['plugins.nohadler'])));
+		}
+	}
+
+	//print "## PLUGIN CALL: <b> (".$pluginName.")</b><br/>\n";
+	//print "<pre>".var_export($params, tru)."</pre><br/>\n";
+
+	// Check for predefined plugins call
+	switch ($pluginName) {
+		case 'news':
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			switch ($handlerName) {
+				default:
+					include_once root.'includes/news.php';
+					showNews($handlerName, $params);
+			}
+			break;
+
+		case 'static':
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			switch ($handlerName) {
+				default:
+					include_once root.'includes/static.php';
+					showStaticPage(array('id' => intval($params['id']), 'altname' => $params['altname']));
+			}
+			break;
+
+		case 'search':
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			switch ($handlerName) {
+				default:
+					include_once root.'includes/search.php';
+					search_news();
+			}
+			break;
+
+
+		case 'core':
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			switch ($handlerName) {
+				case 'plugin':
+					// Set our own params $pluginName and $handlerName and pass it to default handler
+					defaultRUN($params['plugin'], $params['handler'], $params);
+					break;
+
+				case 'registration':
+					include_once root.'cmodules.php';
+					coreRegisterUser();
+					break;
+
+				case 'activation':
+					include_once root.'cmodules.php';
+					coreActivateUser();
+					break;
+
+				case 'lostpassword':
+					include_once root.'cmodules.php';
+					coreRestorePassword();
+					break;
+
+				case 'login':
+					include_once root.'cmodules.php';
+					coreLogin();
+					break;
+
+				case 'logout':
+					include_once root.'cmodules.php';
+					coreLogout();
+					break;
+
+				default:
+			}
+			break;
+		default:
+			defaultRUN($pluginName, $handlerName, $params);
+	}
 }
 

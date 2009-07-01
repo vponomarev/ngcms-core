@@ -1,4 +1,4 @@
-<tr align="left" class="{style}">
+<tr align="left" class="{style}" id="{id}">
 <td>{id} {new}</td>
 <td>{url}</td>
 <td>{type}</td>

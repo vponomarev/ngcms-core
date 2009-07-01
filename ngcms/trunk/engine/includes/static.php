@@ -90,9 +90,3 @@ function showStaticPage($params) {
 	$SYSTEM_FLAGS['meta']['keywords']    = $row['keywords'];
 }
 
-
-// ================================================================= //
-// Module code                                                       //
-// ================================================================= //
-
-showStaticPage(array('id' => intval($_REQUEST['id']), 'altname' => $_REQUEST['altname']));

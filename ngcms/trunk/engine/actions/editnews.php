@@ -137,7 +137,7 @@ function editNews() {
 	$mysql->query("update ".prefix."_news set ".implode(", ",$SQLparams)." where id = ".db_squote($id));
 
 	// Update category posts counters
-	if (sizeof($oldcatids)) {
+	if ($row['approve'] && sizeof($oldcatids)) {
 		$mysql->query("update ".prefix."_category set posts=posts-1 where id in (".implode(",",array_keys($oldcatids)).")");
 	}
 
@@ -293,9 +293,9 @@ function massCommentDelete(){
 // Mass news flags modifier
 // $setValue  - what to change in table (array with field => value)
 // $langParam - name of variable in lang file to show on success
-// $tag       - tag param to send to plugins
+// $auto      - flag: automatic mode is used, nothing should be printed
 //
-function massNewsModify($setValue, $langParam, $tag ='') {
+function massNewsModify($setValue, $langParam, $auto = false) {
 	global $mysql, $lang, $PFILTERS, $catmap;
 
 	$selected_news = $_REQUEST['selected_news'];

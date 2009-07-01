@@ -901,7 +901,7 @@ function GetCategories($catid, $plain = false) {
 	foreach ($cats as $v) {
 		if (isset($catmap[$v])) {
 			$row = $catz[$catmap[$v]];
-			$catline[] = ($plain) ? $row['name'] : "<a href=\"".GetLink('category', $row)."\">".$row['name']."</a>";
+			$catline[] = ($plain) ? $row['name'] : "<a href=\"".generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id']))."\">".$row['name']."</a>";
 		}
 	}
 
@@ -920,7 +920,7 @@ function generateCategoryMenu(){
 
 		$tvars['vars'] = array(
 			'if_active'	=>	(category && category == $v['alt'])?'active_cat':'',
-			'link'		=>	GetLink('category', array ('alt' => $v['alt'])),
+			'link'		=>	generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])),
 			'mark'		=>	str_repeat('&#8212;', $v['poslevel']),
 			'cat'		=>	$v['name'],
 			'counter'	=>	($config['category_counters'] && $v['posts'])?('['.$v['posts'].']'):'',
@@ -959,19 +959,52 @@ function generateCategoryFilter(){
 
 }
 
+
+//
+// Generate link to news
+//
+function newsGenerateLink($row) {
+	global $catmap;
+
+	// Prepare category listing
+	$clist = 'none';
+	$ilist = 0;
+	if ($row['catid']) {
+		$ccats = array();
+		$icats = array();
+		foreach (explode(',', $row['catid']) as $ccatid) {
+			if ($catmap[$ccatid] != '') {
+				$ccats[] = $catmap[$ccatid];
+				$icats[] = $ccatid;
+			}
+		}
+		$clist = implode("-", $ccats);
+		$ilist = implode("-", $icats);
+	}
+
+
+	// Get full news link
+	return generateLink('news', 'news', array('category' => $clist, 'catid' => $ilist, 'altname' => $row['alt_name'], 'id' => $row['id']));
+
+}
+
 // Fill variables for news:
 // * $row - SQL row
 // * $fullMode - flag if desired mode is full
 // * $page - page No to show in full mode
 //function Prepare($row, $page) {
 function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
-	global $config, $parse, $lang;
+	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
 
-	$url = GetLink('full', $row);
+	$alink = checkLinkAvailable('uprofile', 'show')?
+				generateLink('uprofile', 'show', array('name' => $row['author'], 'id' => $row['author_id'])):
+				generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['author'], 'id' => $row['author_id']));
 
-	$tvars['vars']['author'] = "<a href=\"".GetLink('user', $row)."\" target=\"_blank\">".$row['author']."</a>";
+	$tvars['vars']['author'] = "<a href=\"".$alink."\" target=\"_blank\">".$row['author']."</a>";
+
+	$nlink = newsGenerateLink($row);
 
 	// Divide into short and full content
 	if ($config['extended_more']) {
@@ -991,39 +1024,34 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 	// Check if long part is divided into several pages
 	if ($full && (!$disablePagination) && (strpos($full, "<!--nextpage-->") !== false)) {
-		if (!is_numeric($page) || ($page <1)) $page = 1;
+		$page = intval( isset($CurrentHandler['params']['page'])?$CurrentHandler['params']['page']:$_REQUEST['page'] );
+		if ($page < 1) $page = 1;
 
 		$pagination		=	'';
 		$pages			=	explode("<!--nextpage-->", $full);
 
 		if (($pcnt = count($pages)) > 1) {
+			// Prepare VARS for pagination
+			$catid = array_shift(explode(',', $row['catid']));
+			$cname = $catmap[$catid];
+
+			// Generate pagination within news
+		    $paginationParams = checkLinkAvailable('news', 'news')?
+		    			array('pluginName' => 'news', 'pluginHandler' => 'news', 'params' => array('category' => $cname, 'catid' => $catid, 'altname' => $row['alt_name'], 'id' => $row['id']), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'news'), 'xparams' => array('category' => $cname, 'catid' => $catid, 'altname' => $row['alt_name'], 'id' => $row['id']), 'paginator' => array('page', 1, false));
+
+			$navigations = getNavigations(tpl_dir.$config['theme']);
+
+			// Show pagination bar
+			$tvars['vars']['pagination'] = generatePagination($page, 1, $pcnt, 10, $paginationParams, $navigations);
+
 			if ($page > 1) {
-				$row['page']	=	$page - 1;
-				$pagination		.=	" <a href=\"".GetLink('full_page', $row)."\">".$lang['prevpage']."</a>&nbsp;\n";
 				$tvars['vars']['short-story'] = '';
 			}
-
-			for ($i = 1; $i <= $pcnt; $i++) {
-				if ($i == $page) {
-					$pagination		.=	"[<b>".$i."</b>]\n";
-				} else {
-					$row['page'] = $i;
-					$pagination		.=	"<a href=\"".GetLink('full_page', $row)."\">$i</a>\n";
-				}
-			}
-
-			if ($page != $pcnt) {
-				$row['page']	=	$page + 1;
-				$pagination		.=	"&nbsp;<a href=\"".GetLink('full_page', $row)."\">".$lang['nextpage']."</a>\n";
-			}
-			$tvars['vars']['pagination']	= $pagination;
 			$full							= $pages[$page-1];
+			$tvars['vars']['[pagination]'] = '';
+			$tvars['vars']['[/pagination]'] = '';
 		}
-	}
-
-	if ($pagination) {
-		$tvars['vars']['[pagination]'] = '';
-		$tvars['vars']['[/pagination]'] = '';
 	} else {
 			$tvars['regx']["'\[pagination\].*?\[/pagination\]'si"] = '';
 	}
@@ -1056,13 +1084,13 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	// Activities for short mode
 	if (!$fullMode) {
 		// Make link for full news
-		$tvars['vars']['[full-link]']	=	"<a href=\"".$url."\">";
+		$tvars['vars']['[full-link]']	=	"<a href=\"".$nlink."\">";
 		$tvars['vars']['[/full-link]']	=	"</a>";
 
-		$tvars['vars']['[link]']	=	"<a href=\"".$url."\">";
+		$tvars['vars']['[link]']	=	"<a href=\"".$nlink."\">";
 		$tvars['vars']['[/link]']	=	"</a>";
 
-		$tvars['vars']['full-link']	= $url;
+		$tvars['vars']['full-link']	= $nlink;
 
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
 		if (strlen($full)) {
@@ -1090,7 +1118,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 	$tvars['vars']['[print-link]']	=	"<a href=\"".GetLink('print', $row)."\">";
 	$tvars['vars']['[/print-link]']	=	"</a>";
-	$tvars['vars']['news_link']		=	$url;
+	$tvars['vars']['news_link']		=	$nlink;
 
 
 	$tvars['vars']['news-id']	=	$row['id'];
@@ -1115,121 +1143,15 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	return $tvars;
 }
 
-
-//
-// Navigation line generator for news / static pages
-//
-function generateNavigations($current, $start, $stop, $which_link, $row, $navigations){
-	$result = '';
-	for ($j=$start; $j<=$stop; $j++) {
-		if ($j == $current) {
-			$result .= str_replace('%page%',$j,$navigations['current_page']);
-		} else {
-			$row['page'] = $j;
-			$result .= str_replace('%page%',$j,str_replace('%link%',GetLink($which_link, $row), $navigations['link_page']));
-		}
-	}
-	return $result;
-}
-
-
-
-function GetNewsTitle($sep, $name) {
-	global $config, $lang, $mysql, $catz;
-
-	if ($config['lock']) {
-		return $sep.$lang['lock'];
-	}
-
-	if (altname) {
-		if ($config["category_link"] == "0") {
-			$where['catid']		=	"";
-			$where['date']		=	" postdate > '".mktime(0, 0, 0, month, day, year)."' AND postdate < '".mktime(23, 59, 59, month, day, year)."'";
-		} else {
-			if (category == "none") {
-				$where['catid']		=	" catid = ''";
-				$where['date']		=	"";
-			} else {
-				$category = explode("-", category);
-
-				foreach ($category as $cat) {
-					$catids[] = $catz[$cat]['id'];
-				}
-				$categories = implode(",", $catids);
-				$where['catid']		=	" catid regexp '[[:<:]]($categories)[[:>:]]'";
-				$where['date']		=	"";
-			}
-		}
-
-		$title = $mysql->result("SELECT title FROM ".prefix."_news WHERE".$where['catid'].$where['date']." AND alt_name = ".db_squote($name));
-
-		if ($config["category_link"] == "1") {
-			$echo_name = $sep.($categories ? GetCategories($categories, true) : "Uncategorized").$sep.secure_html($title);
-		} else {
-			$echo_name = $sep.LangDate(timestamp, mktime("0", "0", "0", month, day, year)).$sep.secure_html($title);
-		}
-	}
-	elseif (id) {
-		$row = $mysql->record("SELECT title, catid, month(from_unixtime(postdate)) as mm, year(from_unixtime(postdate)) as yy, day(from_unixtime(postdate)) as dd FROM ".prefix."_news WHERE id = ".db_squote(id));
-
-		if ($config["category_link"] == "0") {
-			if ($row['catid']) {
-				foreach ($row['catid'] as $cat) {
-					$catids[] = $catz[$cat]['id'];
-				}
-			} else {
-				$catids = array();
-			}
-
-			$categories = implode(",", $catids);
-			$echo_name = $sep.($categories ? GetCategories($categories, true) : "Uncategorized").$sep.secure_html($row['title']);
-		} else {
-			$echo_name = $sep.LangDate(timestamp, mktime("0", "0", "0", $row['mm'], $row['dd'], $row['yy'])).$sep.secure_html($row['title']);
-		}
-	} else {
-		if (category && !altname) {
-			$cat_name	=	$catz[category]['name'];
-			$echo_name	=	$sep.$cat_name;
-		}
-		if (year && (!month && !altname)) {
-			$echo_name = $sep.LangDate("Y", mktime(0, 0, 0, 12, 7, year));
-		}
-		if (month && (!category && !altname)) {
-			$echo_name = $sep.LangDate("F Y", mktime(0, 0, 0, month, 7, year));
-		}
-		if (month && day && (!category && !altname)) {
-			$echo_name = $sep.LangDate("j Q Y", mktime("0", "0", "0", month, day, year));
-		}
-		if (!category && !day && !month && !year && !altname && !id) {
-			if ($_POST['action'] == "search") {
-				$echo_name = $sep.$lang['search'];
-			} else {
-				$echo_name = $sep.$lang['mainpage'];
-			}
-		}
-	}
-
-	return(stripslashes($echo_name));
-}
-
-
+// Fetch metatags rows
 function GetMetatags() {
-	global $config, $mysql, $catz, $category, $SYSTEM_FLAGS;
+	global $config, $SYSTEM_FLAGS;
 
 	if (!$config['meta'])
 		return;
 
 	$meta['description']	=	$config['description'];
 	$meta['keywords']		=	$config['keywords'];
-
-	if ($category) {
-		if ($catz[$category]['description']) {
-			$meta['description'] = $catz[$category]['description'];
-		}
-		if ($catz[$category]['keywords']) {
-			$meta['keywords'] = $catz[$category]['keywords'];
-		}
-	}
 
 	if (isset($SYSTEM_FLAGS['meta']['description']) && ($SYSTEM_FLAGS['meta']['description'] != ''))
 		$meta['description'] = $SYSTEM_FLAGS['meta']['description'];
@@ -1253,29 +1175,27 @@ function getNavigations($tpldir) {
 }
 
 
+// Generate pagination block
+function generatePaginationBlock($current, $start, $end, $paginationParams, $navigations){
+	$result = '';
+	for ($j=$start; $j<=$end; $j++) {
+		if ($j == $current) {
+			$result .= str_replace('%page%',$j,$navigations['current_page']);
+		} else {
+			$result .= str_replace('%page%',$j,str_replace('%link%',generatePageLink($paginationParams, $j), $navigations['link_page']));
+		}
+	}
+	return $result;
+}
+
 //
 // Generate navigations panel ( like: 1.2.[3].4. ... 25 )
-// $current		- current page
-// $start		- first page in navigations
-// $end			- last page in navigations
-// $maxnav		- maximum number of navigtions to show
-// $link		- link to info page with text {page} that will be replaced by page number
-function generatePagination($current, $start, $end, $maxnav, $link, $navigations){
-	// Generate pagination block
-	function generatePaginationBlock($current, $start, $end, $link, $navigations){
-		$result = '';
-		for ($j=$start; $j<=$end; $j++) {
-			if ($j == $current) {
-				$result .= str_replace('%page%',$j,$navigations['current_page']);
-			} else {
-				$row['page'] = $j;
-				$result .= str_replace('%page%',$j,str_replace('%link%', str_replace('{page}', $j, $link), $navigations['link_page']));
-			}
-		}
-		return $result;
-	}
-
-
+// $current				- current page
+// $start				- first page in navigations
+// $end					- last page in navigations
+// $maxnav				- maximum number of navigtions to show
+// $paginationParams	- pagination params [ for function generatePageLink() ]
+function generatePagination($current, $start, $end, $maxnav, $paginationParams, $navigations){
 	$pages_count = $end - $start + 1;
 
 	if ($pages_count > $maxnav) {
@@ -1288,23 +1208,23 @@ function generatePagination($current, $start, $end, $maxnav, $link, $navigations
 
 		// Situation #1: 1,2,3,4,[5],6 ... 128
 		if ($start < ($sectionSize * 2)) {
-			$pages .= generatePaginationBlock($current, 1, $sectionSize * 2, $link, $navigations);
+			$pages .= generatePaginationBlock($current, 1, $sectionSize * 2, $paginationParams, $navigations);
 			$pages .= " ... ";
-			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $link, $navigations);
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations);
 		} elseif ($start > ($pages_count - $sectionSize * 2 + 1)) {
-			$pages .= generatePaginationBlock($current, 1, $sectionSize, $link, $navigations);
+			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations);
 			$pages .= " ... ";
-			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize*2 + 1, $pages_count, $link, $navigations);
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize*2 + 1, $pages_count, $paginationParams, $navigations);
 		} else {
-			$pages .= generatePaginationBlock($current, 1, $sectionSize, $link, $navigations);
+			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations);
 			$pages .= " ... ";
-			$pages .= generatePaginationBlock($current, $cstart-1, $cstart+1, $link, $navigations);
+			$pages .= generatePaginationBlock($current, $cstart-1, $cstart+1, $paginationParams, $navigations);
 			$pages .= " ... ";
-			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $link, $navigations);
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations);
 		}
 	} else {
-		// If we have less then 10 pages
-		$pages .= generatePaginationBlock($current, 1, $pages_count, $link, $navigations);
+		// If we have less then $maxnav pages
+		$pages .= generatePaginationBlock($current, 1, $pages_count, $paginationParams, $navigations);
 	}
 	return $pages;
 }
@@ -1336,6 +1256,17 @@ function GetCategoryById($id) {
 
 if (!function_exists('json_encode'))
 {
+  function utf8_to_html ($data) {
+    return preg_replace("/([\\xC0-\\xF7]{1,1}[\\x80-\\xBF]+)/e", '_utf8_to_html("\\1")', $data);
+  }
+
+  function _utf8_to_html ($data) {
+    $ret = 0;
+    foreach((str_split(strrev(chr((ord($data{0}) % 252 % 248 % 240 % 224 % 192) + 128) . substr($data, 1)))) as $k => $v)
+        $ret += (ord($v) % 128) * pow(64, $k);
+    // return "&#$ret;";
+    return sprintf("\u%04x", $ret);
+  }
   function json_encode($a=false)
   {
     if (is_null($a)) return 'null';
@@ -1352,7 +1283,7 @@ if (!function_exists('json_encode'))
       if (is_string($a))
       {
         static $jsonReplaces = array(array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
-        return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $a) . '"';
+        return '"' . utf8_to_html(str_replace($jsonReplaces[0], $jsonReplaces[1], $a)) . '"';
       }
       else
         return $a;

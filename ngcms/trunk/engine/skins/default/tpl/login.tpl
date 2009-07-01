@@ -20,8 +20,8 @@
 <tr>
 <td>&nbsp;</td>
 <td><input type="submit" class="button" value="{l_login}" />
-<input type="hidden" name="referer" value="{request_uri}" />
-<input type="hidden" name="action" value="dologin" /></td>
+<input type="hidden" name="redirect" value="{redirect}" />
+<input type="hidden" name="action" value="login" /></td>
 </tr>
 </table>
 </form>
