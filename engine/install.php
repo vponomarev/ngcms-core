@@ -77,12 +77,47 @@ switch ($_POST['action']) {
 
 // If we made installations and have some pending changes
 if ($flagPendingChanges) {
-	include_once root."core.php";
-	include_once root."includes/inc/extraconf.inc.php";
 
-	foreach ($pluginInstallList as $k) {
+include_once root."core.php";
+include_once root."includes/inc/extraconf.inc.php";
+include_once root."includes/inc/extrainst.inc.php";
+
+	$LOG = array();
+	$ERROR = array();
+	$error = 0;
+
+	// Now let's install plugins
+	// First: Load informational `version` files
+	$list = get_extras_list();
+	foreach ($pluginInstallList as $pName) {
+		if ($list[$pName]['install']) {
+			include_once root."plugins/".$pName."/".$list[$pName]['install'];
+			$res = call_user_func('plugin_'.$pName.'_install', 'autoapply');
+
+			if ($res) {
+				array_push($LOG, "Установка плагина <b>".$pName."</b> ... OK");
+			} else {
+				array_push($ERROR, "Установка плагина <b>".$pName."</b> ... ERROR");
+				$error = 1;
+				break;
+			}
+		}
 		switch_on($k);
+		array_push($LOG, "Активация плагина <b>".$pName."</b> ... OK");
 	}
+
+	print '<p style="width: 99%;">';
+	foreach ($LOG as $line) { print $line."<br />\n"; }
+	if ($error) {
+		foreach ($ERROR as $errText) {
+			print '<div class="errorDiv"><b><u>Ошибка</u>!</b><br/>'.$errText.'</div>';
+		}
+
+		print '<div class="warningDiv">Неожиданная ошибка установки. Пожалуйста, обратитесь к разработчикам</div>';
+	} else {
+		print '<br/><br/><b>Установка успешно заверешена!</b><br/>Для проведения дальнейших настроек перейдите, пожалуйста, <a href="'.$homeURL.$adminDirName.'/">по этой ссылке</a>.';
+	}
+	print '</p>';
 }
 
 
@@ -362,7 +397,7 @@ function doConfig_plugins() {
 				while (!feof($vf)) {
 					$line = fgets($vf);
 					if (preg_match("/^(.+?) *\: *(.+?) *$/i", trim($line), $m)) {
-						if (in_array(strtolower($m[1]), array('id', 'title', 'information', 'preinstall', 'preinstall_vars', 'preinstall_script')))
+						if (in_array(strtolower($m[1]), array('id', 'title', 'information', 'preinstall', 'preinstall_vars', 'install')))
 							$pluginRec[strtolower($m[1])] = $m[2];
 					}
 			        }
@@ -749,13 +784,8 @@ function doInstall() {
 			'use_htmlformatter' => '1',
 			'forbid_comments' => '0',
 			'reverse_comments' => '0',
-			'com_length' => '2000',
-			'com_wrap' => '0',
 			'auto_wrap' => '50',
 			'flood_time' => '20',
-			'block_many_com' => '0',
-			'com_for_reg' => '0',
-			'send_notice' => '0',
 			'timestamp_comment' => 'j.m.Y - H:i',
 			'users_selfregister' => '1',
 			'register_type' => '3',
@@ -776,6 +806,7 @@ function doInstall() {
 			'auth_module' => 'basic',
 			'auth_db' => 'basic',
 			'crypto_salt' => substr(md5(uniqid(rand(),1)),0,8),
+			'UUID' => md5(mt_rand().mt_rand()).md5(mt_rand().mt_rand()),
 		);
 
 		array_push($LOG,"Подготовка параметров конфигурационного файла ... OK");
@@ -822,6 +853,21 @@ function doInstall() {
 
 		array_push($LOG,'Сохранение конфигурационного файла ... OK');
 
+		// А теперь - включаем необходимые плагины
+		include_once root."core.php";
+		include_once root."includes/inc/extraconf.inc.php";
+		include_once root."includes/inc/extrainst.inc.php";
+
+		// Now let's install plugins
+		// First: Load informational `version` files
+		$list = get_extras_list();
+		// Подготавливаем список плагинов для установки
+		$pluginInstallList = array();
+		foreach ($_POST as $k => $v) {
+			if (preg_match('/^plugin\:(.+?)$/', $k, $m) && ($v == 1)) {
+				array_push($pluginInstallList, $m[1]);
+			}
+		}
 	} while (0);
 
 	$output = '';
@@ -838,8 +884,6 @@ function doInstall() {
 		$output .= '<input type="button" style="width: 230px;" value="Вернуться к настройке БД" onclick="document.getElementById(\'stage\').value=\'0\'; form.submit();"/> - если Вы что-то неверно ввели в настройках БД, то Вы можете исправить ошибку.<br/>';
 		$output .= '<input type="button" style="width: 230px;" value="Попробовать ещё раз"/> - если Вы самостоятельно устранили ошибку, то нажмите сюда.';
 		$output .= '</div>';
-	} else {
-		$output .= '<br/><br/><b>Установка успешно заверешена!</b><br/>Для проведения дальнейших настроек перейдите, пожалуйста, <a href="'.$homeURL.'/'.$adminDirName.'/">по этой ссылке</a>.';
 	}
 
 	$tvars['vars']['actions'] = $output;

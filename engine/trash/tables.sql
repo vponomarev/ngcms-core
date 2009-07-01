@@ -28,27 +28,28 @@ CREATE TABLE `XPREFIX_category` (
 
 -- --------------------------------------------------------
 
+-- -- 
+-- -- Table 'PREFIX_comments'
+-- -- 
 -- 
--- Table 'PREFIX_comments'
+-- CREATE TABLE `XPREFIX_comments` (
+--   `id` int(11) NOT NULL auto_increment,
+--   `postdate` int(10) NOT NULL default '0',
+--   `post` int(10) NOT NULL default '0',
+--   `author` varchar(100) NOT NULL default '',
+--   `author_id` int(11) NOT NULL default '0',
+--   `mail` varchar(100) NOT NULL default '',
+--   `text` text NOT NULL,
+--   `ip` varchar(50) NOT NULL default '',
+--   `reg` tinyint(1) default '0',
+--   `answer` text,
+--   `name` varchar(100) NOT NULL default '',
+--   PRIMARY KEY  (`id`),
+--   KEY `c_post` (`post`)
+-- ) ENGINE=MyISAM;
 -- 
+-- -- --------------------------------------------------------
 
-CREATE TABLE `XPREFIX_comments` (
-  `id` int(11) NOT NULL auto_increment,
-  `postdate` int(10) NOT NULL default '0',
-  `post` int(10) NOT NULL default '0',
-  `author` varchar(100) NOT NULL default '',
-  `author_id` int(11) NOT NULL default '0',
-  `mail` varchar(100) NOT NULL default '',
-  `text` text NOT NULL,
-  `ip` varchar(50) NOT NULL default '',
-  `reg` tinyint(1) default '0',
-  `answer` text,
-  `name` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `c_post` (`post`)
-) ENGINE=MyISAM;
-
--- --------------------------------------------------------
 
 -- 
 -- Tabel 'PREFIX_FILES'
@@ -143,9 +144,9 @@ CREATE TABLE `XPREFIX_news` (
   `title` varchar(255) NOT NULL default '',
   `content` text NOT NULL,
   `alt_name` varchar(255) default NULL,
-  `com` int(10) default '0',
+--  `com` int(10) default '0',
   `mainpage` tinyint(1) default '1',
-  `allow_com` tinyint(1) default '1',
+--  `allow_com` tinyint(1) default '1',
   `approve` tinyint(1) default '0',
   `views` int(10) default '0',
   `favorite` tinyint(1) default '0',
@@ -218,7 +219,7 @@ CREATE TABLE `XPREFIX_users` (
   `mail` varchar(80) default NULL,
   `pass` varchar(32) default NULL,
   `news` int(10) default '0',
-  `com` int(10) default '0',
+--  `com` int(10) default '0',
   `status` tinyint(1) default '4',
   `last` int(10) NOT NULL default '0',
   `reg` int(10) NOT NULL default '0',

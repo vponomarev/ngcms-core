@@ -6,7 +6,7 @@ class tpl {
 	var $root	=	'.';
 	var $ext	=	'.tpl';
 	var $da_vr	=	array();
-	
+
 	function template($name, $dir, $file = '') {
 		global $lang;
 
@@ -16,7 +16,7 @@ class tpl {
 		else {
 			die(sprintf($lang['msge_no_tpldir'], $dir));
 		}
-		
+
 		$nn		=	$name;
 		$ext	=	$this -> ext;
 		$name	=	$dir.'/'.$name.$ext;
@@ -36,10 +36,10 @@ class tpl {
 		$this -> data[$nn] = $data;
 	}
 
-	function vars($nn, $vars = array()) {
+	function vars($nn, $vars = array(), $codeExec = false) {
 		global $lang, $userROW, $config, $PHP_SELF;
 
-		$data = $this -> data[$nn];
+		$data = ($codeExec)?(eval(' ?>'.$this->data[$nn].'<?php ')):$this -> data[$nn];
 
 		preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr);
 
@@ -65,9 +65,9 @@ class tpl {
 			$name_parr = substr($v, 7);
 			if (preg_match('/^(.+)\_/', $name_parr, $match))
 				$name_parr = $match[1];
-				
+
 			if (!status($name_parr)) {
-				$data = str_replace('{'.$v.'}', '', $data);	
+				$data = str_replace('{'.$v.'}', '', $data);
 			}
 		}
 
@@ -90,7 +90,7 @@ class tpl {
 				}
 			}
 		}
-		
+
 		if ($vars['regx']) {
 			foreach ($vars['regx'] as $id => $var) {
 				$data = preg_replace($id, $var, $data);

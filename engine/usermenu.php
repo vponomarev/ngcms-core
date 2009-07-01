@@ -16,8 +16,9 @@ $lang = LoadLang('usermenu', 'site');
 if (!$is_logged) {
 	$tvars['vars'] = array(
 		'request_uri'	=>	$_SERVER['REQUEST_URI'],
-		'reg_link'		=>	GetLink('registration'),
-		'lost_link'		=>	GetLink('lostpassword'),
+		'reg_link'		=>	generateLink('core', 'registration'),
+		'lost_link'		=>	generateLink('core', 'lostpassword'),
+		'form_action'	=>  generateLink('core', 'login'),
 		'result'		=>	($result) ? '<div style="color : #fff; padding : 5px;">'.$lang['msge_login'].'</div>' : ''
 	);
 	$tvars['regx']["'\[login\](.*?)\[/login\]'si"] = '$1';
@@ -28,17 +29,32 @@ if (!$is_logged) {
 } else {
 	// User is logged in
 	$tvars['vars'] = array(
-		'profile_link'	=>	GetLink('profile'),
+		'profile_link'	=>	generateLink('uprofile', 'edit'),
 		'addnews_link'	=>	GetLink('addnews'),
-		'name'			=>	name,
-		'avatars_url'	=>	avatars_url,
-		'avatar'		=>	($userROW['avatar']) ? $userROW['avatar'] : 'noavatar.gif',
-		'avatar_url'		=> 	avatars_url.'/'.(($userROW['avatar'])?$userROW['avatar']:'noavatar.gif'),
+		'logout_link'	=>  generateLink('core', 'logout'),
+		'name'			=>	$userROW['name'],
 		'phtumb_url'		=>	photos_url.'/'.(($userROW['photo'] != "")?'thumb/'.$userROW['photo']:'nophoto.gif'),
 		'pm_new'		=>	($newpm != "0") ? '<strong>'.$newpm.'</strong>' : '0',
 		'result'		=>	($result) ? '<div style="color : #fff; padding:5px;">'.$lang['msge_login'].'</div>' : '',
 		'home_url'		=>	home,
 	);
+
+	// Generate avatar link
+	if ($config['use_avatars']) {
+		if ($row['avatar']) {
+			$tvars['vars']['avatar_url'] = avatars_url."/".$row['avatar'];
+		} else {
+			// If gravatar integration is active, show avatar from GRAVATAR.COM
+			if ($config['avatars_gravatar']) {
+				$tvars['vars']['avatar_url'] = 'http://www.gravatar.com/avatar/'.md5(strtolower($row['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode(avatars_url."/noavatar.gif");
+			} else {
+				$tvars['vars']['avatar_url'] = avatars_url."/noavatar.gif";
+			}
+		}
+	} else {
+		$tvars['vars']['avatar_url'] = '';
+	}
+
 	$tvars['regx']["'\[login\](.*?)\[/login\]'si"] = '';
 	$tvars['regx']["'\[is-logged\](.*?)\[/is-logged\]'si"] = '$1';
 	$tvars['regx']["'\[isnt-logged\](.*?)\[/isnt-logged\]'si"] = '';

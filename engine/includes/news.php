@@ -205,7 +205,16 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 //
 // Show news list
 // Params (newsID or alt_name should be filled)
-// $categoryList - list of categories to show
+// $filterConditions - conditions for filtering
+// $paginationParams - config params for page display
+//		'pluginName'	- name of plugin for call
+//		'pluginHandler'	- handler for call
+//		'params'		- standart param list for generateLink() call
+//		'xparams'		- standart param list for generateLink() call
+//		'paginator'		- set up for pagination
+//			[0]		- variable name
+//			[1]		- variable location 0 - params / 1 - xparams
+//			[2]		- zero show flag 0 - don't show if zero / 1 - show anytime
 // $callingParams
 //		'style'	  => mode for which we're called
 //			* short		- short new display
@@ -218,28 +227,79 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 //		'customCategoryNumber'	=> flag automatically override number of news per page
 //			[!!!] USES CUSTOM TEMPLATE FOR FIRST CATEGORY FROM NEWS [!!!]
 //		'overrideSQLquery' => array - sets if PLUGIN wants to run it's own query
+//		'page'		=> page number to show
 //
-function news_showlist($categoryList = array(), $callingParams = array()){
+function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
 	global $year, $month, $day;
 	global $timer;
 	global $SYSTEM_FLAGS;
 
-	// Get a list of categories to show
-	// "-" means "AND", "," means "OR"
-	// I.e: news-games,web,files is "Show news from: news&games (2 categories in news) or web or files"
-	if (is_array($categoryList)&&count($categoryList)) {
-		$carray = $categoryList;
-	} else {
-		$ctext  = trim(!is_array($categoryList)?$categoryList:category);
-		$carray = generateCategoryArray($ctext);
+	function processFilter($conditions) {
+		//print "CALL processFilter(".var_export($conditions, true).")<br/>\n";
 
-		// Error - didn't find chosen categories
-		if (strlen($ctext) && !count($carray)) {
-			msg(array("type" => "info", "info" => $lang['msgi_cat_not_found']));
-			return false;
+		if (!is_array($conditions))
+			return '';
+
+		switch (strtoupper($conditions[0])) {
+			case 'AND' :
+			case 'OR'  :
+				$list = array();
+				for($i = 1; $i <= count($conditions); $i++) {
+					$rec = processFilter($conditions[$i]);
+					//print ".result: ".var_export($rec, true)."<br/>\n";
+					if ($rec != '')
+						$list []= '('.$rec.')';
+				}
+				return join(' '.strtoupper($conditions[0]).' ', $list);
+			case 'DATA':
+				if ($conditions[1] == 'category') {
+					switch ($conditions[2]) {
+						case '=':
+							return "`catid` regexp '[[:<:]](".intval($conditions[3]).")[[:>:]]'";
+						default:
+							return '';
+					}
+				} else {
+					switch (strtoupper($conditions[2])) {
+						case '=':
+						case '>=':
+						case '<=':
+						case '>':
+						case '<':
+							return '`'.$conditions[1].'` '.$conditions[2].' '.db_squote($conditions[3]);
+						case 'IN':
+							if (is_array($conditions[3])) {
+								$xt = array();
+								foreach ($conditions[3] as $r)
+									$xt[]= db_squote($r);
+
+								return '`'.$conditions[1].'` IN ('.join(',', $xt).') ';
+							}
+							return '';
+						case 'BETWEEN':
+							if (is_array($conditions[3])) {
+								return '`'.$conditions[1].'` BETWEEN '.db_squote($conditions[3][0]).' AND '.db_squote($conditions[3][1]);
+							}
+							return '';
+					}
+				}
+				//
+				break;
+			case 'SQL' :
+				return '('.$conditions[1].')';
+			default: return '';
 		}
 	}
+
+	$categoryList = array();
+
+	// Generate SQL filter for 'WHERE' using filterConditions parameter
+	$query['filter'] = processFilter(array('AND', array('DATA', 'approve', '=', '1'), $filterConditions));
+	//print "<pre>".var_export($filterConditions, true)."</pre>";
+	//print "<pre>".$query['filter']."</pre>";
+
+	$query['where'] = $sql_filter;
 
 	// Make temlate procession - auto/manual overriding
 	// -> calling style
@@ -260,8 +320,7 @@ function news_showlist($categoryList = array(), $callingParams = array()){
 	// Set default template path
 	$templatePath = tpl_dir.$config['theme'];
 
-	$cstart		= abs(intval($_REQUEST['cstart'])?intval($_REQUEST['cstart']):0);
-	$start_from	= abs(intval($_REQUEST['start_from'])?intval($_REQUEST['start_from']):0);
+	$cstart = $start_from = intval($callingParams['page']);
 
 	if (!$cstart) { $cstart = 1; }
 
@@ -278,8 +337,6 @@ function news_showlist($categoryList = array(), $callingParams = array()){
 	$limit_start = $cstart?($cstart-1)*$showNumber:0;
 	$limit_count = $showNumber;
 
-	$query['where'] = "";
-
 	if ((count($carray) == 1)&&(is_array($carray[0]))&&(count($carray[0])==1)&&($catorder=$catz[$catmap[$carray[0][0]]]['orderby'])) {
 		$orderBy = "pinned desc, ".$catorder;
 	} else {
@@ -293,73 +350,8 @@ function news_showlist($categoryList = array(), $callingParams = array()){
 	$query['orderby'] = " order by ".$orderBy." limit ".$limit_start.",".$limit_count;
 
 	// ===================================================================
-	// Check what display mode is requested:
-	// * by category alt. name
-	// * by year
-	// * by month
-	// * by day
-	// * MAINPAGE DISPLAY
-
-	if (count($carray)) {
-		// * by category alt. name
-
-		// Mark link type for navigations
-		$which_link				=	'category_page';
-
-		// Make title header
-		$SYSTEM_FLAGS['info']['title']['group'] = GetCategories($carray[0], true);
-
-		// Make category filter
-		$cw = array();
-		foreach($carray as $cg){
-			$cn = array();
-			foreach($cg as $cv) {
-				array_push($cn, " (catid regexp '[[:<:]](".$cv.")[[:>:]]') ");
-			}
-			array_push($cw, " (".implode (" AND ",$cn).") ");
-		}
-		$query['where']			= implode(" OR ",$cw);
-	}
-	// * by day
-	elseif (year && month && day) {
-		// Make title header
-		$SYSTEM_FLAGS['info']['title']['group'] = LangDate("j Q Y", mktime("0", "0", "0", month, day, year));
-
-		// Mark link type for navigations
-		$which_link			=	'date_page';
-		$query['where']		= " postdate > '".mktime(0,0,0,month,day,year)."' AND postdate < '".mktime(23,59,59,month,day,year)."'";
-	}
-	// * by month
-	elseif (year && month && !day) {
-		// Make title header
-		$SYSTEM_FLAGS['info']['title']['group'] = LangDate("F Y", mktime("0", "0", "0", month, 7, year));
-
-		// Mark link type for navigations
-		$which_link			=	'month_page';
-		$query['where']		= " postdate > '".mktime(0,0,0,month,1,year)."' AND postdate < '".mktime(23,59,59,month,date("t",mktime(0,0,0,month,1,year)),year)."'";
-	}
-	// * by year
-	elseif (year && !month && !day) {
-		// Make title header
-		$SYSTEM_FLAGS['info']['title']['group'] = LangDate("Y", mktime("0", "0", "0", 12, 7, year));
-
-		// Mark link type for navigations
-		$which_link			=	'year_page';
-		$query['where']		= " postdate > '".mktime(0,0,0,1,1,year)."' AND postdate < '".mktime(23,59,59,12,31,year)."'";
-	}
-	// * MAIN PAGE DISPLAY
-	else {
-		// Make title header
-		$SYSTEM_FLAGS['info']['title']['group'] = $lang['mainpage'];
-
-		// Mark link type for navigations
-		$which_link			=	'page';
-		$query['where']		=	" mainpage=1";
-	}
-
-	$query['sql']		=	$query['where']." AND approve = 1";
-	$query['count']		=	"SELECT count(*) as count FROM ".prefix."_news WHERE".$query['sql'];
-	$query['result']	=	"SELECT * FROM ".prefix."_news WHERE".$query['sql'].$query['orderby'];
+	$query['count']		=	"SELECT count(*) as count FROM ".prefix."_news WHERE ".$query['filter'];
+	$query['result']	=	"SELECT * FROM ".prefix."_news WHERE ".$query['filter'].$query['orderby'];
 
 	// preload plugins
 	load_extras('news:show');
@@ -458,50 +450,25 @@ function news_showlist($categoryList = array(), $callingParams = array()){
 	// Prev page link
 	if ($limit_start && $nCount) {
 		$prev = floor($limit_start / $showNumber);
-		$row['page'] = $prev;
-		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',GetLink($which_link, $row), $navigations['prevlink']));
+		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev), $navigations['prevlink']));
 	} else {
 		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = "";
 		$no_prev = true;
 	}
 
+	// List of pages
 	$newsCount = $mysql->result($query['count']);
 	$pages_count = ceil($newsCount / $showNumber);
 
-	$pages = '';
 	$maxNavigations 		= $config['newsNavigationsCount'];
 	if ($maxNavigations < 1)
 		$maxNavigations = 10;
 
-	$sectionSize	= floor($maxNavigations / 3);
-	if ($pages_count > $maxNavigations) {
-		// We have more than 10 pages. Let's generate 3 parts
-		// Situation #1: 1,2,3,4,[5],6 ... 128
-		if ($cstart < ($sectionSize * 2)) {
-			$pages .= generateNavigations($cstart, 1, $sectionSize * 2, $which_link, $row, $navigations);
-			$pages .= " ... ";
-			$pages .= generateNavigations($cstart, $pages_count-$sectionSize, $pages_count, $which_link, $row, $navigations);
-		} elseif ($cstart > ($pages_count - $sectionSize * 2 + 1)) {
-			$pages .= generateNavigations($cstart, 1, $sectionSize, $which_link, $row, $navigations);
-			$pages .= " ... ";
-			$pages .= generateNavigations($cstart, $pages_count-$sectionSize*2 + 1, $pages_count, $which_link, $row, $navigations);
-		} else {
-			$pages .= generateNavigations($cstart, 1, $sectionSize, $which_link, $row, $navigations);
-			$pages .= " ... ";
-			$pages .= generateNavigations($cstart, $cstart-1, $cstart+1, $which_link, $row, $navigations);
-			$pages .= " ... ";
-			$pages .= generateNavigations($cstart, $pages_count-$sectionSize, $pages_count, $which_link, $row, $navigations);
-		}
-	} else {
-		// If we have less then 10 pages
-		$pages .= generateNavigations($cstart, 1, $pages_count, $which_link, $row, $navigations);
-	}
-	$tvars['vars']['pages'] = $pages;
+	$tvars['vars']['pages'] = generatePagination($cstart, 1, $pages_count, $maxNavigations, $paginationParams, $navigations);
 
 	// Next page link
 	if (($prev + 2 <= $pages_count) && $nCount) {
-		$row['page'] = $prev + 2;
-		$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',GetLink($which_link, $row), $navigations['nextlink']));"<a href=\"".GetLink($which_link, $row)."\">$1</a>";
+		$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev+2), $navigations['nextlink']));
 	} else {
 		$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = "";
 		$no_next = true;
@@ -520,8 +487,8 @@ function news_showlist($categoryList = array(), $callingParams = array()){
 // ================================================================= //
 
 // Default "show news" function
-function showNews() {
- global $catz, $catmap, $config, $userROW, $PFILTERS;
+function showNews($handlerName, $params) {
+ global $catz, $catmap, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS;
  // preload plugins
  load_extras('news');
 
@@ -532,8 +499,8 @@ function showNews() {
  // Set default template path
  $templatePath = tpl_dir.$config['theme'];
 
- // If alt_name or ID is set - show full news
- if (altname || id) {
+ // Check for FULL NEWS mode
+ if ($handlerName == 'news') {
  	$callingParams['style'] = 'full';
 
 	// Execute filters [ onBeforeShow ]
@@ -541,9 +508,20 @@ function showNews() {
 		foreach ($PFILTERS['news'] as $k => $v) { $v->onBeforeShow('full'); }
 	}
 
+	// Determine passed params
+	$vars = array();
+	if (isset($params['id'])) {
+		$vars['id'] = $params['id'];
+	} else if (isset($params['altname'])) {
+		$vars['altname'] = $params['altname'];
+	} else if (isset($_REQUEST['id'])) {
+		$vars['id'] = intval($_REQUEST['id']);
+	} else {
+		$vars['altname'] = $_REQUEST['altname'];
+	}
 
  	// Try to show news
-	if (($row = news_showone(id?id:0, !id?altname:'', $callingParams)) !== false) {
+	if (($row = news_showone($vars['id'], $vars['altname'], $callingParams)) !== false) {
 		// Execute filters [ onAfterShow ]
 		if (is_array($PFILTERS['news'])) {
 			foreach ($PFILTERS['news'] as $k => $v) { $v->onAfterNewsShow($row['id'], $row, array('style' => 'full')); }
@@ -551,13 +529,99 @@ function showNews() {
 	 }
 } else {
  	$callingParams['style'] = 'short';
+ 	$callingParams['page']  = intval($params['page'])?intval($params['page']):intval($_REQUEST['page']);
 
 	// Execute filters [ onBeforeShow ]
 	if (is_array($PFILTERS['news'])) {
 		foreach ($PFILTERS['news'] as $k => $v) { $v->onBeforeShow('short'); }
 	}
 
-	news_showlist(array(), $callingParams);
+	switch ($handlerName) {
+		case 'main':
+			$SYSTEM_FLAGS['info']['title']['group'] = $lang['mainpage'];
+		    $paginationParams = checkLinkAvailable('news', 'main')?
+		    			array('pluginName' => 'news', 'pluginHandler' => 'main', 'params' => array(), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'main'), 'xparams' => array(), 'paginator' => array('page', 1, false));
+
+			news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
+			break;
+
+		case 'by.category':
+			$category = '';
+			if (isset($params['catid'])) {
+				$category = $params['catid'];
+			} else if (isset($params['category']) && isset($catz[$params['category']])) {
+				$category = $catz[$params['category']]['id'];
+			} else if (isset($_REQUEST['catid'])) {
+				$category = $params['catid'];
+			} else if (isset($_REQUEST['category']) && isset($catz[$_REQUEST['category']])) {
+				$category = $catz[$_REQUEST['category']]['id'];
+			}
+
+			if (!$category) {
+				msg(array("type" => "info", "info" => $lang['msgi_cat_not_found']));
+				return false;
+			}
+			$SYSTEM_FLAGS['info']['title']['group'] = $catz[$catmap[$category]]['name'];
+
+			// Set meta tags for category page
+			if ($catz[$catmap[$category]]['description'])
+				$SYSTEM_FLAGS['meta']['description'] = $catz[$catmap[$category]]['description'];
+			if ($catz[$catmap[$category]]['keywords'])
+				$SYSTEM_FLAGS['meta']['keywords']    = $catz[$catmap[$category]]['keywords'];
+
+		    $paginationParams = checkLinkAvailable('news', 'by.category')?
+		    			array('pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => array('category' => $catmap[$category]), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.category'), 'xparams' => array('category' => $catmap[$category]), 'paginator' => array('page', 1, false));
+
+			news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
+			break;
+
+		case 'by.day':
+			$year	= intval(isset($params['year'])?$params['year']:$_REQUEST['year']);
+			$month	= intval(isset($params['month'])?$params['month']:$_REQUEST['month']);
+			$day	= intval(isset($params['day'])?$params['day']:$_REQUEST['day']);
+
+			if (($year < 1970)||($year > 2100)||($month < 1)||($month > 12)||($day < 1)||($day > 31))
+				return false;
+
+			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("j Q Y", mktime("0", "0", "0", $month, $day, $year));
+		    $paginationParams = checkLinkAvailable('news', 'by.day')?
+		    			array('pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => array('day' => $day, 'month' => $month, 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.day'), 'xparams' => array('day' => $day, 'month' => $month, 'year' => $year), 'paginator' => array('page', 1, false));
+
+			news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
+			break;
+
+		case 'by.month':
+			$year	= intval(isset($params['year'])?$params['year']:$_REQUEST['year']);
+			$month	= intval(isset($params['month'])?$params['month']:$_REQUEST['month']);
+
+			if (($year < 1970)||($year > 2100)||($month < 1)||($month > 12))
+				return false;
+
+			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("F Y", mktime(0,0,0, $month, 1, $year));
+		    $paginationParams = checkLinkAvailable('news', 'by.month')?
+		    			array('pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => array('month' => $month, 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.month'), 'xparams' => array('month' => $month, 'year' => $year), 'paginator' => array('page', 1, false));
+
+			news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
+			break;
+
+		case 'by.year':
+			$year	= intval(isset($params['year'])?$params['year']:$_REQUEST['year']);
+
+			if (($year < 1970)||($year > 2100))
+				return false;
+
+			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("Y", mktime(0,0,0, 1, 1, $year));
+		    $paginationParams = checkLinkAvailable('news', 'by.year')?
+		    			array('pluginName' => 'news', 'pluginHandler' => 'by.year', 'params' => array('year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.year'), 'xparams' => array('year' => $year), 'paginator' => array('page', 1, false));
+
+			news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,1,1,$year), mktime(23,59,59,12,31,$year))), $paginationParams, $callingParams);
+			break;
+	}
 
 	// Execute filters [ onAfterShow ]
 	if (is_array($PFILTERS['news'])) {

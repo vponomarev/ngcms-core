@@ -41,18 +41,24 @@ if ($action == "add") {
 		case 'do_mass_forbidden':	massStaticModify('approve = 0', 'msgo_forbidden', 'forbidden'); break;
 		case 'do_mass_delete':		massStaticDelete(); break;
 	}
+	listStatic();
+}
 
+
+//
+// Show list of static pages
+//
+function listStatic() {
+	global $tpl, $mysql, $mod, $userROW;
 
 	$per_page	= intval($_REQUEST['per_page']);
 	if (($per_page < 2)||($per_page > 500)) $per_page = 20;
 
-	$start_from		= intval($_REQUEST['start_from']);
-	$pageNo		= intval($_REQUEST['page'])?$_REQUEST['page']:0;
+	$pageNo		= intval($_REQUEST['page']);
 	if ($pageNo < 1)	$pageNo = 1;
-	if (!$start_from)	$start_from = ($pageNo - 1)* $per_page;
 
-
-	$query['sql']		= "select * from ".prefix."_static order by id desc limit ".$start_from.", ".$per_page;
+	$query = array();
+	$query['sql']		= "select * from ".prefix."_static order by id desc limit ".(($pageNo - 1)* $per_page).", ".$per_page;
 	$query['count']		= "select count(*) as cnt from ".prefix."_static ";
 
 	$tpl -> template('entries', tpl_actions.$mod);
@@ -71,12 +77,13 @@ if ($action == "add") {
 			$row['title'] = substr($row['title'], 0, 70)." ...";
 		}
 
-		$tvars['vars']['title'] = str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
-		$tvars['vars']['url'] = GetLink('static',array('alt_name' => $row['alt_name']));
+		$link = checkLinkAvailable('static', '')?
+					generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id'])):
+					generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']));
 
-		$tvars['vars']['url'] = '<a href="'.$tvars['vars']['url'].'" target="_blank">'.$tvars['vars']['url'].'</a>';
-
-		$tvars['vars']['status']	=	($row['approve'] == "1") ? '<img src="'.skins_url.'/images/bullet_green.gif" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/bullet_white.gif" alt="'.$lang['unapproved'].'" />';
+		$tvars['vars']['url']		= '<a href="'.$link.'" target="_blank">'.$config['home_url'].$link.'</a>';
+		$tvars['vars']['title']		= str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
+		$tvars['vars']['status']	=	($row['approve']) ? '<img src="'.skins_url.'/images/bullet_green.gif" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/bullet_white.gif" alt="'.$lang['unapproved'].'" />';
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
@@ -109,7 +116,7 @@ if ($action == "add") {
 		$tvars['vars']['[actions]'] = '';
 		$tvars['vars']['[/actions]'] = '';
 	} else {
-		$tvars['regx']["'\\[actions\\].*?\\[/actions\\]'si"] = '';
+		$tvars['regx']['#\[actions\].*?\[/actions\]#si'] = '';
 	}
 
 	exec_acts('static_list');

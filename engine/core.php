@@ -12,6 +12,10 @@
 //
 // Global variables definition
 //
+global $EXTRA_CONFIG, $EXTRA_CONFIG_loaded, $EXTRA_ACTIVE, $EXTRA_ACTIVE_loaded, $EXTRA_ACTIVATED, $EXTRA_FILES_LOADED, $EXTRA_HTML_VARS, $EXTRA_CSS;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
+global $timer, $mysql, $ip, $parse, $tpl, $lang;
+
 $EXTRA_CONFIG			= array();				// configuration params for extras
 $EXTRA_CONFIG_loaded	= 0;					// flag: are config params loaded
 $EXTRA_ACTIVE			= array();				// list of active modules (for each action)
@@ -51,6 +55,7 @@ $timer -> start();
 // Define default HTTP flags
 $SYSTEM_FLAGS['http.headers']['content-type']	= 'text/html; charset=Windows-1251';
 $SYSTEM_FLAGS['http.headers']['cache-control']	= 'private';
+
 
 //
 // Global variables configuration arrays
@@ -118,6 +123,14 @@ multi_multidomains();
 @include_once 'includes/classes/templates.class.php';
 @include_once 'includes/classes/parse.class.php';
 
+// Activate URL processing engine
+@include_once 'includes/classes/uhandler.class.php';
+$UHANDLER = new urlHandler();
+$UHANDLER->loadConfig();
+
+// Current handler that was `catched` by engine
+$CurrentHandler = array();
+
 $timer->registerEvent('Core files are included');
 
 $ip		=	checkIP();
@@ -164,45 +177,21 @@ if (!$AUTH_CAPABILITIES[$config['auth_db']]['db']) { $config['auth_db'] = 'basic
 if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD[$config['auth_db']])) ) {
 	// Auth subsystem is activated
 	// * choose default or user defined auth module
-	if (isset($_REQUEST['auth_module']) && $AUTH_CAPABILITIES[$_REQUEST['auth_module']]['login'] && is_object($AUTH_METHOD[$_REQUEST['auth_module']]))
+	if (isset($_REQUEST['auth_module']) && $AUTH_CAPABILITIES[$_REQUEST['auth_module']]['login'] && is_object($AUTH_METHOD[$_REQUEST['auth_module']])) {
 		$auth = &$AUTH_METHOD[$_REQUEST['auth_module']];
-	else
+	} else {
 		$auth = &$AUTH_METHOD[$config['auth_module']];
+	}
 	$auth_db = &$AUTH_METHOD[$config['auth_db']];
 
-	$row = $auth_db->check_auth();
-	$CURRENT_USER = $row;
+	$xrow = $auth_db->check_auth();
+	$CURRENT_USER = $xrow;
 
-	if ($row['name']) {
-		if ($action == 'logout') {
-			$auth_db->drop_auth();
-			@header("Location: ".(preg_match('#^http\:\/\/#', $HTTP_REFERER, $tmp)?$HTTP_REFERER:$config['home_url']));
-		} else {
-			$is_logged_cookie	= true;
-			$is_logged			= true;
-			$username			= $row['name'];
-			$userROW			= $row;
-		}
-	} else if ($action == 'dologin') {
-		$row = $auth->login();
-
-		if ( is_array($row) ) {
-			$auth_db->save_auth($row);
-			$username			= $row['name'];
-			$userROW			= $row;
-			$is_logged_cookie	= true;
-			$is_logged			= true;
-
-			if ( preg_match('/registration/',$HTTP_REFERER) || preg_match('/lostpassword/',$HTTP_REFERER) || preg_match('/logout/',$HTTP_REFERER) ) {
-				@header('Location: '.home);
-			} else {
-				@header("Location: ".(preg_match('#^http\:\/\/#', $HTTP_REFERER, $tmp)?$HTTP_REFERER:$config['home_url']));
-			}
-		} else {
-			$SYSTEM_FLAGS['auth_fail'] = 1;
-			$result = true;
-			$is_logged_cookie = false;
-		}
+	if ($xrow['name']) {
+		$is_logged_cookie	= true;
+		$is_logged			= true;
+		$username			= $xrow['name'];
+		$userROW			= $xrow;
 	}
 } else {
 	echo "Fatal error: No auth module is found.<br />To fix problem please run <i>upgrade.php</i> script<br /><br />\n";

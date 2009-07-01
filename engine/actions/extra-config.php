@@ -44,6 +44,11 @@ if (!is_array($extras[$plugin])) {
 	$cfg_file = extras_dir.'/'.$extras[$plugin]['dir'].'/'.$extras[$plugin][$stype];
 	if (is_array($extras[$plugin]) && ($extras[$plugin][$stype]) && is_file($cfg_file)) {
 		@include extras_dir.'/'.$extras[$plugin]['dir'].'/'.$extras[$plugin][$stype];
+
+		if (function_exists('plugin_'.$plugin.'_install')) {
+			call_user_func('plugin_'.$plugin.'_install', ($_REQUEST['action'] == 'commit')?'apply':'confirm');
+		}
+
 	} else {
 		$tpl -> template('nomodule', tpl_actions.'extra-config');
 		$tvars['vars'] = array('action' => $lang[$stype.'_text'], 'action_text' => $lang['nomod_'.$stype], 'plugin' => $plugin, 'php_self' => $PHP_SELF);

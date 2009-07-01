@@ -164,15 +164,12 @@ function print_commit_complete($plugin) {
 
 // check if table exists
 function mysql_table_exists($table) {
-	global $config;
+	global $config, $mysql;
 
-	$list = mysql_list_tables($config['dbname']);
-	if (!$list) { return 0; }
-
-	while ($row = mysql_fetch_row($list)) {
-		if ($row[0] == $table) { return 1; }
+	if (is_array($mysql->record("show tables like ".db_squote($table)))) {
+		return 1;
 	}
-	return 0;
+	return 0;	
 }
 
 // check field params
@@ -193,7 +190,7 @@ function get_mysql_field_type($table, $field) {
 }
 
 // Database update during install
-function fixdb_plugin_install($module, $params, $mode='install') {
+function fixdb_plugin_install($module, $params, $mode='install', $silent = false) {
 	global $lang, $tpl, $mysql;
 
 	// Load config
@@ -410,7 +407,9 @@ function fixdb_plugin_install($module, $params, $mode='install') {
 		'msg' => ($mode=='install'?($publish_error?$lang['ibdc_ifail']:$lang['idbc_iok']):($publish_error?$lang['dbdc_ifail']:$lang['ddbc_iok']))
 	);
 	$tpl -> vars('install-process', $tvars);
-	echo $tpl -> show('install-process');
+	if (!$silent) {
+		print $tpl -> show('install-process');
+	}
 
 	if ($publish_error) { return 0; }
 	return 1;
