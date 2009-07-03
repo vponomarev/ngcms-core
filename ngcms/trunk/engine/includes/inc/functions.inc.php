@@ -984,7 +984,7 @@ function newsGenerateLink($row) {
 
 
 	// Get full news link
-	return generateLink('news', 'news', array('category' => $clist, 'catid' => $ilist, 'altname' => $row['alt_name'], 'id' => $row['id']));
+	return generateLink('news', 'news', array('category' => $clist, 'catid' => $ilist, 'altname' => $row['alt_name'], 'id' => $row['id'], 'year' => date('Y',$row['postdate']), 'month' => date('m', $row['postdate']), 'day' => date('d', $row['postdate'])));
 
 }
 
