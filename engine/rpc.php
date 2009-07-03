@@ -50,6 +50,14 @@ function rpcDefault() {
 // RPC function: rewrite.submit
 // Description : Submit changes into REWRITE library
 function rpcRewriteSubmit($params) {
+	global $userROW;
+
+	// Check for permissions
+	if (!is_array($userROW) || ($userROW['status'] != 1)) {
+		// ACCESS DENIED
+		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Wrong params type');
+	}
+
 	@include_once 'includes/classes/uhandler.class.php';
 	$ULIB = new urlLibrary();
 	$ULIB->loadConfig();
@@ -59,7 +67,7 @@ function rpcRewriteSubmit($params) {
 
 	// Scan incoming params
 	if (!is_array($params)) {
-		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Wrong params type');
+		return array('status' => 0, 'errorCode' => 999, 'errorText' => 'Access denied');
 	}
 
 	$hList = array();
