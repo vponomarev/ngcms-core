@@ -19,7 +19,7 @@ function add_comment(){
 	cajax.setVar("content", form.content.value);
 	cajax.setVar("newsid", form.newsid.value);[ajax]
 	cajax.setVar("ajax", "1");[/ajax]
-	cajax.requestFile = "{post_url}"+Math.random();
+	cajax.requestFile = "{post_url}"; //+Math.random();
 	cajax.method = 'POST';
 	cajax.element = 'new_comments';[captcha]
 	cajax.onComplete = function() { reload_captcha(); }[/captcha]
