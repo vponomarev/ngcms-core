@@ -70,7 +70,7 @@ if ($subaction != "deletecomment") {
 			'comid'		=>	$comid
 		);
 		$tvars['vars']['smilies'] = ($config['use_smilies'] == "1") ? InsertSmilies("content", 5) : '';
-		$tvars['vars']['comdate'] = LangDate(extra_get_param('comments', 'timestamp'), $row['postdate']);
+		$tvars['vars']['comdate'] = LangDate(pluginGetVariable('comments', 'timestamp'), $row['postdate']);
 
 		if ($userROW['status'] < "3"){
 			$tvars['vars']['[answer]']	=	'';

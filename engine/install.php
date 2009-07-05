@@ -102,8 +102,7 @@ include_once root."includes/inc/extrainst.inc.php";
 				break;
 			}
 		}
-		switch_on($k);
-		array_push($LOG, "Активация плагина <b>".$pName."</b> ... OK");
+		array_push($LOG, "Активация плагина <b>".$pName."</b> ... ".(pluginSwitch($pName, 'on')?'OK':'ERROR'));
 	}
 
 	print '<p style="width: 99%;">';
