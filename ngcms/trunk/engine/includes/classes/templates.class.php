@@ -51,12 +51,12 @@ class tpl {
 		preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr);
 		foreach ($parr[0] as $k => $v) {
 			//print "ISPLUG '$k' => '$v' [".$parr[1][$k]."][".$parr[2][$k]."]<br>\n";
-			$data = str_replace($v,status($parr[1][$k])?$parr[2][$k]:'', $data);
+			$data = str_replace($v,getPluginStatusActive($parr[1][$k])?$parr[2][$k]:'', $data);
 		}
 
 		preg_match_all('/\[isnplugin (.+?)\](.+?)\[\/isnplugin\]/is', $data, $parr);
 		foreach ($parr[0] as $k => $v) {
-			$data = str_replace($v,status($parr[1][$k])?'':$parr[2][$k], $data);
+			$data = str_replace($v,getPluginStatusActive($parr[1][$k])?'':$parr[2][$k], $data);
 		}
 
 		preg_match_all('/(?<=\{)plugin_(.*?)(?=\})/i', $data, $parr);
@@ -66,7 +66,7 @@ class tpl {
 			if (preg_match('/^(.+)\_/', $name_parr, $match))
 				$name_parr = $match[1];
 
-			if (!status($name_parr)) {
+			if (!getPluginStatusActive($name_parr)) {
 				$data = str_replace('{'.$v.'}', '', $data);
 			}
 		}

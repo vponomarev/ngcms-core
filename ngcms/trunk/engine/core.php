@@ -12,16 +12,18 @@
 //
 // Global variables definition
 //
-global $EXTRA_CONFIG, $EXTRA_CONFIG_loaded, $EXTRA_ACTIVE, $EXTRA_ACTIVE_loaded, $EXTRA_ACTIVATED, $EXTRA_FILES_LOADED, $EXTRA_HTML_VARS, $EXTRA_CSS;
+global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
 global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 
-$EXTRA_CONFIG			= array();				// configuration params for extras
-$EXTRA_CONFIG_loaded	= 0;					// flag: are config params loaded
-$EXTRA_ACTIVE			= array();				// list of active modules (for each action)
-$EXTRA_ACTIVE_loaded	= 0;					// flag is active module list is loaded
-$EXTRA_ACTIVATED		= array();				// list of already loaded modules [ flag is set if one or more files for this plugin are loaded ]
-$EXTRA_FILES_LOADED		= array();				// a list of files [parts of plugins] that are loaded
+$PLUGINS	= array('active'	=> array(),
+			'active:loaded'	=> 0,
+			'loaded'	=> array(),
+			'loaded:files'	=> array(),
+			'config'	=> array(),
+			'config:loaded'	=> 0,
+
+);
 $EXTRA_HTML_VARS		= array();			// a list of added HTML vars in <head> block
 $EXTRA_CSS				= array();
 

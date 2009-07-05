@@ -3,7 +3,7 @@
 //
 // Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
 // Name: extras.inc.php
-// Description: 2z extras managment functions
+// Description: NGCMS extras managment functions
 // Author: Vitaly Ponomarev
 //
 
@@ -115,42 +115,38 @@ class StaticFilter {
 
 
 
-
-
 //
-// Get list of active modules
+// Get/Load list of active plugins & required files
 //
-function get_active_array() {
-	global $EXTRA_ACTIVE, $EXTRA_ACTIVE_loaded;
+function getPluginsActiveList(){
+	global $PLUGINS;
 
-	if ($EXTRA_ACTIVE_loaded) { return $EXTRA_ACTIVE; }
+	if ($PLUGINS['active:loaded']) { return $PLUGINS['active']; }
 	if (is_file(conf_pactive)) {
 		@include conf_pactive;
-		if (is_array($array)) { $EXTRA_ACTIVE = $array; }
+		if (is_array($array)) { $PLUGINS['active'] = $array; }
 	}
-	$EXTRA_ACTIVE_loaded = 1;
-	return $EXTRA_ACTIVE;
+	$PLUGINS['active:loaded'] = 1;
+	return $PLUGINS['active'];
 }
 
-function plugin_is_active($name) {
-	$array = get_active_array();
-	if ($array['active'][$name]) { return true; }
+//
+// Report if plugin is active
+//
+function getPluginStatusActive($pluginID){
+	$array = getPluginsActiveList();
+	if ($array['active'][$pluginID]) { return true; }
 	return false;
 }
 
-function status($module) {
-	$array = get_active_array();
-	if ($array['active'][$module]) { return true; }
+//
+// Report if plugin is installed
+//
+function getPluginStatusInstalled($pluginID) {
+	$array = getPluginsActiveList();
+	if ($array['installed'][$pluginID]) { return true; }
 	return false;
 }
-
-// Check if plugin is installed.
-function plugin_is_installed($name) {
-	$array = get_active_array();
-	if ($array['installed'][$name]) { return true; }
-	return false;
-}
-
 
 //
 // Load plugins for specified action [ CAN BE USED FOR MANUAL PLUGIN PRELOAD ]
@@ -159,10 +155,10 @@ function plugin_is_installed($name) {
 //   plugin for action
 //
 function load_extras($action, $plugin = '') {
-	global $EXTRA_ACTIVATED, $EXTRA_FILES_LOADED, $timer;
+	global $PLUGINS, $timer;
 
 	$loadedCount = 0;
-	$array = get_active_array();
+	$array = getPluginsActiveList();
 	// Find extras for selected action
 	if (isset($array['actions'][$action]) && is_array($array['actions'][$action])) {
 		// There're some modules
@@ -172,18 +168,18 @@ function load_extras($action, $plugin = '') {
 				continue;
 
 			// Do only if we already loaded this file
-			if (!isset($EXTRA_FILES_LOADED[$value])) {
+			if (!isset($PLUGINS['loaded:files'][$value])) {
 				// Try to load file. First check if it exists
 				if (is_file(extras_dir.'/'.$value)) {
 				        $tX = $timer->stop(4);
 					include_once extras_dir.'/'.$value;
 					$timer->registerEvent('func LOAD_EXTRAS ('.$action.'): preloaded file "'.$value.'" for '.($timer->stop(4) - $tX)." sec");
-					$EXTRA_FILES_LOADED[$value] = 1;
+					$PLUGINS['loaded:files'][$value] = 1;
 					$loadedCount ++;
 				} else {
 					$timer->registerEvent('func LOAD_EXTRAS ('.$action.'): CAN\'t preload file that doesn\'t exists: "'.$value.'"');
 				}
-				$EXTRA_ACTIVATED[$key] = 1;
+				$PLUGINS['loaded'][$key] = 1;
 			}
 		}
 	}
@@ -196,9 +192,9 @@ function load_extras($action, $plugin = '') {
 // Load plugin [ Same behaviour as for load_extras ]
 //
 function loadPlugin($pluginName, $actionList = '*') {
-	global $EXTRA_ACTIVATED, $EXTRA_FILES_LOADED, $timer;
+	global $PLUGINS, $timer;
 
-	$plugList = get_active_array();
+	$plugList = getPluginsActiveList();
 
 	// Don't load if plugin is not activated
 	if (!$plugList['active'][$pluginName])
@@ -213,13 +209,13 @@ function loadPlugin($pluginName, $actionList = '*') {
 			// Yes, we should load this file. If it's not loaded earlier
 			$pluginFileName = $pList[$pluginName];
 
-			if (!isset($EXTRA_FILES_LOADED[$pluginFileName])) {
+			if (!isset($PLUGINS['loaded:files'][$pluginFileName])) {
 				// Try to load file. First check if it exists
 				if (is_file(extras_dir.'/'.$pluginFileName)) {
 				        $tX = $timer->stop(4);
 					include_once extras_dir.'/'.$pluginFileName;
 					$timer->registerEvent('func loadPlugin ('.$pluginName.'): preloaded file "'.$pluginFileName.'" for '.($timer->stop(4) - $tX)." sec");
-					$EXTRA_FILES_LOADED[$value] = 1;
+					$PLUGINS['loaded:files'][$value] = 1;
 					$loadedCount ++;
 				} else {
 					$timer->registerEvent('func loadPlugin ('.$pluginName.'): CAN\'t preload file that doesn\'t exists: "'.$pluginFileName.'"');
@@ -228,7 +224,7 @@ function loadPlugin($pluginName, $actionList = '*') {
 		}
 	}
 
-	$EXTRA_ACTIVATED[$key] = 1;
+	$PLUGINS['loaded'][$key] = 1;
 	return true;
 }
 
@@ -236,9 +232,9 @@ function loadPlugin($pluginName, $actionList = '*') {
 // Load plugin's library
 //
 function loadPluginLibrary($plugin, $libname = '') {
-	global $EXTRA_ACTIVATED, $timer;
+	global $timer;
 
-	$list = get_active_array();
+	$list = getPluginsActiveList();
 
 	// Check if we know about this plugin
 	if (!isset($list['active'][$plugin])) return false;
@@ -326,60 +322,81 @@ function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $
 	return $sth;
 }
 
+// =========================================================
+// PLUGINS: parameters managment
+// =========================================================
+
 //
-// Extras managment
+// Get variable
 //
+function pluginGetVariable($pluginID, $var) {
+	global $PLUGINS;
 
-// get parameter value
-function extra_get_param($module, $var) {
-  global $EXTRA_CONFIG, $EXTRA_CONFIG_loaded;
+	if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig())
+		return false;
 
-  if (!$EXTRA_CONFIG_loaded) { plugins_load_config(); }
-  return $EXTRA_CONFIG[$module][$var];
+	return $PLUGINS['config'][$pluginID][$var];
+}
+// OLD
+function extra_get_param($module, $var) { return pluginGetVariable($module, $var); }
+
+
+//
+// Set variable
+//
+function pluginSetVariable($pluginID, $var, $value){
+	global $PLUGINS;
+
+	if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig())
+		return false;
+
+	$PLUGINS['config'][$pluginID][$var] = $value;
+	return true;
+}
+// OLD
+function extra_set_param($module, $var, $value) { return pluginSetVariable($module, $var, $value); }
+
+//
+// Save configuration parameters of plugins (should be called after pluginSetVariable)
+//
+function pluginsSaveConfig(){
+	global $PLUGINS;
+
+	if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig())
+		return false;
+
+	//
+	if (!($fconfig = @fopen(conf_pconfig, 'w')))
+		return false;
+
+	fwrite($fconfig, serialize($PLUGINS['config']));
+	fclose($fconfig);
+	return true;
+}
+// OLD
+function extra_commit_changes() { pluginsSaveConfig(); }
+
+//
+// Load configuration variables for plugins
+//
+function pluginsLoadConfig() {
+  global $PLUGINS;
+
+	if ($PLUGINS['config:loaded']) { return 1; }
+	$fconfig = @fopen(conf_pconfig,'r');
+	if ($fconfig && filesize(conf_pconfig)) {
+		$content = fread($fconfig, filesize(conf_pconfig));
+          $PLUGINS['config'] = unserialize($content);
+          $PLUGINS['config:loaded'] = 1;
+          fclose($fconfig);
+          return true;
+	}
+	return false;
 }
 
-// set parameter value
-function extra_set_param($module, $var, $value) {
-  global $EXTRA_CONFIG, $EXTRA_CONFIG_loaded;
-  //print "extra_set_param('$module', '$var', '$value')<br> [load: $EXTRA_CONFIG_loaded]\n";
+// OLD
+function plugins_load_config() { return pluginsLoadConfig(); }
 
-  if (!$EXTRA_CONFIG_loaded) { plugins_load_config(); }
-  $EXTRA_CONFIG[$module][$var] = $value;
-  return 1;
-}
-
-// commit changes
-function extra_commit_changes() {
-  global $EXTRA_CONFIG, $EXTRA_CONFIG_loaded;
-
-  if (!$EXTRA_CONFIG_loaded) { plugins_load_config(); }
-
-  $config = @fopen(conf_pconfig,'w');
-  if ($config) {
-          fwrite($config, serialize($EXTRA_CONFIG));
-          fclose($config);
-          return 1;
-  } else {
-          return 0;
-  }
-}
-
-// load common config file
-function plugins_load_config() {
-  global $EXTRA_CONFIG, $EXTRA_CONFIG_loaded;
-
-	if ($EXTRA_CONFIG_loaded) { return 1; }
-  $config = @fopen(conf_pconfig,'r');
-  if ($config && filesize(conf_pconfig)) {
-          $content = fread($config, filesize(conf_pconfig));
-          $EXTRA_CONFIG = unserialize($content);
-          $EXTRA_CONFIG_loaded = 1;
-          fclose($config);
-          return 1;
-  } else {
-          return 0;
-  }
-}
 
 //
 // Load 'version' file from plugin directory
@@ -447,7 +464,9 @@ function plugins_load_version_file($filename) {
 // Get a list of installed plugins
 //
 function get_extras_list() {
+	global $timer;
 
+	$timer->registerEvent('@ get_extras_list() called');
 	// open directory
 	$handle = @opendir(extras_dir);
 	$extras = array();

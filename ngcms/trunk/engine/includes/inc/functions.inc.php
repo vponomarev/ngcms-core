@@ -685,7 +685,8 @@ function LoadPluginLang($plugin, $file, $group = '', $prefix = '', $delimiter = 
 
 	if (!$prefix) { $prefix = $plugin; }
 	// If requested plugin is activated, we can get 'dir' information from active array
-	$active = get_active_array();
+	$active = getPluginsActiveList();
+
 	if (!$active['active'][$plugin]) {
 		// No, plugin is not active. Let's load plugin list
 		$extras = get_extras_list();

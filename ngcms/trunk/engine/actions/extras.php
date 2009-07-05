@@ -47,7 +47,7 @@ $enable  = $_REQUEST['enable'];
 $disable = $_REQUEST['disable'];
 
 if ($enable) {
-	if (switch_on($enable)) {
+	if (pluginSwitch($enable, 'on')) {
 		msg(array("text" => sprintf($lang['msgo_is_on'], $extras[$enable]['name'])));
 	} else {
 		// generate error message
@@ -59,7 +59,7 @@ if ($disable) {
 	if ($extras[$disable]['permanent']) {
 		msg(array("text" => 'ERROR: '.sprintf($lang['msgo_is_off'], $extras[$id]['name'])));
 	} else {
-		if (switch_off($disable)) {
+		if (pluginSwitch($disable, 'off')) {
 			msg(array("text" => sprintf($lang['msgo_is_off'], $extras[$id]['name'])));
 		} else {
 			msg(array("text" => 'ERROR: '.sprintf($lang['msgo_is_off'], $extras[$id]['name'])));
@@ -76,7 +76,7 @@ foreach($extras as $id => $extra) {
 		'author_url'	=>	($extra['author_uri'])?'<a href="'.check_uri($extra['author_uri']).'">'.$extra['author']."</a>":$extra['author'],
 		'author'		=>	$extra['author'],
 		'id'			=>	$extra['id'],
-		'style'			=>	status($id)?'contRow1':'contRow2',
+		'style'			=>	getPluginStatusActive($id)?'contRow1':'contRow2',
 		'readme'		=>	file_exists(extras_dir.'/'.$id.'/readme')&&filesize(extras_dir.'/'.$id.'/readme')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=readme&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>'):'',
 		'history'		=>	file_exists(extras_dir.'/'.$id.'/history')&&filesize(extras_dir.'/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=history&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
 	);
@@ -92,9 +92,9 @@ foreach($extras as $id => $extra) {
 	//
 	// Check for permanent modules
 	//
-	if (($extra['permanent'])&&(!status($id))) {
+	if (($extra['permanent'])&&(!getPluginStatusActive($id))) {
 		// turn on
-		if (switch_on($id)) {
+		if (pluginSwitch($id, 'on')) {
 			msg(array("text" => sprintf($lang['msgo_is_on'], $extra['name'])));
 		} else {
 			// generate error message
@@ -104,7 +104,7 @@ foreach($extras as $id => $extra) {
 
 	$needinstall = 0;
 	$tvars['vars']['install'] = '';
-	if (plugin_is_installed($extra['id'])) {
+	if (getPluginStatusInstalled($extra['id'])) {
 		if ($extra['deinstall'] && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['deinstall'])) {
 			$tvars['vars']['install'] = '<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'&amp;stype=deinstall">'.$lang['deinstall'].'</a>';
 		}
@@ -116,7 +116,7 @@ foreach($extras as $id => $extra) {
 	}
 
 	$tvars['vars']['url'] = ($extra['config'] && (!$needinstall) && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['config']))?'<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'">'.$extra['name'].'</a>' : $extra['name'];
-	$tvars['vars']['link'] = (status($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
+	$tvars['vars']['link'] = (getPluginStatusActive($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
 
 	if ($needinstall) { $tvars['vars']['link'] = ''; $tvars['vars']['style'] = 'contRow3'; }
 
