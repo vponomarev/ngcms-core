@@ -427,7 +427,7 @@ function doConfig_plugins() {
 			$tv['check'] = (in_array(strtolower($plugin['preinstall']), array('default_yes', 'yes')))?' checked="checked"':'';
 		}
 
-		$hinput[] = '<input type="hidden" name="plugin:'.$plugin['id'].'" value="0"/>';
+		//$hinput[] = '<input type="hidden" name="plugin:'.$plugin['id'].'" value="0"/>';
 
 		$tpl -> vars('config_prow', array('vars' => $tv));
 		$output .= $tpl -> show('config_prow');
