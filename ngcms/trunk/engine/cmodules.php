@@ -293,7 +293,7 @@ function coreLogin(){
 	global $tpl, $template, $config, $lang;
 
 	$lang = LoadLang('login', 'site');
-	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_activation'];
+	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_login'];
 
 	// If user ALREADY logged in - redirect to main page
 	if (is_array($userROW)) {
