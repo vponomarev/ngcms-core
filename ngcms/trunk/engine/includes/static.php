@@ -26,8 +26,10 @@ function showStaticPage($params) {
 	}
 
 	if ((!$limit)||(!is_array($row = $mysql->record("select * from ".prefix."_static where approve = 1 and ".$limit)))) {
-		msg(array("type" => "info", "info" => $lang['msgi_not_found']));
-		return;
+		if (!$params['FFC']) {
+			msg(array("type" => "info", "info" => $lang['msgi_not_found']));
+		}
+		return false;
 	}
 
 	$content	= $row['content'];
@@ -79,7 +81,7 @@ function showStaticPage($params) {
 		$row['template'] = "static/default";
 	} else {
 		$row['template'] = 'static/'.$row['template'];
-	}	
+	}
 
 	$tpl -> template($row['template'], tpl_dir.$config['theme']);
 	$tpl -> vars($row['template'], $tvars);
@@ -88,5 +90,7 @@ function showStaticPage($params) {
 	// Set meta tags for news page
 	$SYSTEM_FLAGS['meta']['description'] = $row['description'];
 	$SYSTEM_FLAGS['meta']['keywords']    = $row['keywords'];
+
+	return true;
 }
 

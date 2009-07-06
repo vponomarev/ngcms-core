@@ -447,10 +447,13 @@ class urlHandler {
 				if (!isset($h['callback']))
 					$h['callback'] = '_MASTER_URL_PROCESSOR';
 
-				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result);
-				$catchCount++;
-				if (!isset($h['nostop']))
-					return $catchCount;
+				$skip = array ('FFC' => $h['flagFailContinue']?true:false);
+				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, &$skip);
+
+				if (isset($skip['fail']))
+					continue;
+
+				return ++$catchCount;
 			}
 
 		}
