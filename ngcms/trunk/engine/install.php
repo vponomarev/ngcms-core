@@ -810,6 +810,7 @@ function doInstall() {
 			'auth_module' => 'basic',
 			'auth_db' => 'basic',
 			'crypto_salt' => substr(md5(uniqid(rand(),1)),0,8),
+			'404_mode' => 0,
 			'UUID' => md5(mt_rand().mt_rand()).md5(mt_rand().mt_rand()),
 		);
 
