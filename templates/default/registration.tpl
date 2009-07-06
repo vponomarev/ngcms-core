@@ -20,8 +20,7 @@
 				<td bgcolor="#FFFFFF">
 				<table border="0" width="100%">
 <tr>
-<form name="register" action="{php_self}" method="post">
-<input type="hidden" name="action" value="registration" />
+<form name="register" action="{register_link}" method="post">
 <input type="hidden" name="type" value="doregister" />
 {entries}
 [captcha]
