@@ -290,10 +290,19 @@ function generate_restorepw_page($params, $values = array(), $msg = '') {
 
 function coreLogin(){
 	global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
+	global $tpl, $template, $config, $lang;
+
+	$lang = LoadLang('login', 'site');
+	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_activation'];
+
+	// If user ALREADY logged in - redirect to main page
+	if (is_array($userROW)) {
+		@header('Location: '.$config['home_url']);
+		return;
+	}
 
 	// Try to auth
-	$row = $auth->login();
-	if (is_array($row)) {
+	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login())) {
 		$auth_db->save_auth($row);
 		$username			= $row['name'];
 		$userROW			= $row;
@@ -314,6 +323,17 @@ function coreLogin(){
 		$SYSTEM_FLAGS['auth_fail'] = 1;
 		$result = true;
 		$is_logged_cookie = false;
+
+		// Show login template
+		$tvars = array();
+		$tvars['vars']['form_action'] = generateLink('core', 'login');
+		$tvars['vars']['redirect'] = isset($_POST['redirect'])?$_POST['redirect']:$HTTP_REFERER;
+		$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($_SERVER['REQUEST_METHOD'] == 'POST')?'$1':'';
+
+		$tpl->template('login', tpl_site);
+		$tpl->vars('login', $tvars);
+		$template['vars']['mainblock'] = $tpl->show('login');
+
 	}
 }
 

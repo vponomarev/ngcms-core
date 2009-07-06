@@ -14,7 +14,7 @@ var set_pass  = 0;
 <tr>
 <td><img border="0" src="{tpl_url}/images/bib.gif" />&nbsp;<a href="{reg_link}">{l_registration}</a><br /><img border="0" src="{tpl_url}/images/bib.gif" />&nbsp;<a href="{lost_link}">{l_lostpassword}</a></td>
 <td><input type="image" value="{l_login}" src="{tpl_url}/images/2z_23.gif" style="width:37px; height:22px; border:0" name="Login" /></td>
-<td valign="middle"><br />[login-err]<div style="color : #fff; padding : 5px;">{l_msge_login}</div>[/login-err]</td>
+<td valign="middle"><br /></td>
 </tr>
 </table>
 </form>
