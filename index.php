@@ -72,7 +72,38 @@ $template['vars']["[/sitelock]"] = "";
 //
 //print "<pre>".var_export($_SERVER, true)."</pre><br/>\n";
 //print "<pre>".var_export($_REQUEST, true)."</pre><br/>\n";
-$UHANDLER->run($_SERVER['REDIRECT_URL'], false);
+
+// *****[ RUN ]*****
+$runResult = $UHANDLER->run($_SERVER['REDIRECT_URL'], false);
+
+
+// If no pages are catched
+if (!$runResult) {
+	switch ($config['404_mode']) {
+		// HTTP error 404
+		case 2:
+			@header('HTTP/1.1 404 Not found');
+			exit;
+
+		// External error template
+		case 1:
+			$tpl->template('404.external', tpl_site);
+			$tpl->vars('404.external', array());
+			echo $tpl->show('404.external');
+			exit;
+
+		// Internal error template
+		case 0:
+		default:
+			$tpl->template('404.internal', tpl_site);
+			$tpl->vars('404.internal', array());
+			$template['vars']['mainblock'] = $tpl->show('404.internal');
+
+			$SYSTEM_FLAGS['info']['title']['group']	= $lang['404.title'];
+	}
+}
+
+
 //$link = generateLink('core', 'plugin', array('plugin' => 'rss_export'));
 //print "URL ForWArd: ".var_export($link, true);
 //print "Config status: ".$UHANDLER->configLoaded."</br>\n";
