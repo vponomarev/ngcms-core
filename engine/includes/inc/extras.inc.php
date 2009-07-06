@@ -804,27 +804,27 @@ function generatePageLink($paginationParams, $page) {
 //
 //
 //
-function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params) {
-	global $PPAGES, $lang, $CurrentHandler;
+function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip) {
+	global $PPAGES, $lang, $SYSTEM_FLAGS, $CurrentHandler;
+	// Preload requested plugin
+	loadPlugin($pluginName, 'ppages');
 
-	function defaultRUN($pluginName, $handlerName, $params) {
-		global $PPAGES, $lang, $SYSTEM_FLAGS, $CurrentHandler;
-		// Preload requested plugin
-		loadPlugin($pluginName, 'ppages');
+	$pcall = $PPAGES[$pluginName][$handlerName];
 
-		$pcall = $PPAGES[$pluginName][$handlerName];
+	if (is_array($pcall) && function_exists($pcall['func'])) {
+		// Make page title
+		$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_plugin'];
 
-		if (is_array($pcall) && function_exists($pcall['func'])) {
-			// Make page title
-			$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_plugin'];
-
-			// Report current handler config
-			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
-			call_user_func($pcall['func'], $params);
-		} else {
-			msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array($handlerName, $pluginName), $lang['plugins.nohadler'])));
-		}
+		// Report current handler config
+		$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+		call_user_func($pcall['func'], $params);
+	} else {
+		msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array($handlerName, $pluginName), $lang['plugins.nohadler'])));
 	}
+}
+
+function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
+	global $PPAGES, $lang, $CurrentHandler;
 
 	//print "## PLUGIN CALL: <b> (".$pluginName.")</b><br/>\n";
 	//print "<pre>".var_export($params, tru)."</pre><br/>\n";
@@ -841,11 +841,14 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params) {
 			break;
 
 		case 'static':
-			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'FFC' => $SKIP['FFC']);
 			switch ($handlerName) {
 				default:
 					include_once root.'includes/static.php';
-					showStaticPage(array('id' => intval($params['id']), 'altname' => $params['altname']));
+					$cResult = showStaticPage(array('id' => intval($params['id']), 'altname' => $params['altname'], 'FFC' => $skip['FFC']));
+					if (!$cResult && $skip['FFC']) {
+						$skip['fail'] = 1;
+					}
 			}
 			break;
 
@@ -864,7 +867,7 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params) {
 			switch ($handlerName) {
 				case 'plugin':
 					// Set our own params $pluginName and $handlerName and pass it to default handler
-					defaultRUN($params['plugin'], $params['handler'], $params);
+					_MASTER_defaultRUN($params['plugin'], $params['handler'], $params, $skip);
 					break;
 
 				case 'registration':
@@ -896,7 +899,7 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params) {
 			}
 			break;
 		default:
-			defaultRUN($pluginName, $handlerName, $params);
+			_MASTER_defaultRUN($pluginName, $handlerName, $params, $skip);
 	}
 }
 
