@@ -420,6 +420,11 @@ function doConfig_plugins() {
 				'information' => $plugin['information'],
 				'enable' => (in_array(strtolower($plugin['preinstall']), array('yes', 'no')))?' disabled="disabled"':'',
 			);
+		// Add hidden field for DISABLED plugins
+		if (strtolower($plugin['preinstall']) == 'yes') {
+			$output .= '<input type="hidden" name="plugin:'.$plugin['id'].'" value="1"/>'."\n";
+		}
+
 		if (isset($_POST['plugin:'.$plugin['id']])) {
 			$tv['check'] = $_POST['plugin:'.$plugin['id']]?' checked="checked"':'';
 		} else {

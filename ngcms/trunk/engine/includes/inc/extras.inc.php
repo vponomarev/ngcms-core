@@ -384,12 +384,20 @@ function pluginsLoadConfig() {
 
 	if ($PLUGINS['config:loaded']) { return 1; }
 	$fconfig = @fopen(conf_pconfig,'r');
-	if ($fconfig && filesize(conf_pconfig)) {
-		$content = fread($fconfig, filesize(conf_pconfig));
-          $PLUGINS['config'] = unserialize($content);
-          $PLUGINS['config:loaded'] = 1;
-          fclose($fconfig);
-          return true;
+	if ($fconfig) {
+		if (filesize(conf_pconfig)) {
+			$content = fread($fconfig, filesize(conf_pconfig));
+		} else {
+			$content = serialize(array());
+		}
+        $PLUGINS['config'] = unserialize($content);
+    	$PLUGINS['config:loaded'] = 1;
+        fclose($fconfig);
+        return true;
+	} else {
+		// File doesn't exists. Mark as `loaded`
+		$PLUGINS['config'] = array();
+		$PLUGINS['config:loaded'] = 1;
 	}
 	return false;
 }
