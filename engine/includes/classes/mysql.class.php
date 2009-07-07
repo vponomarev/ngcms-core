@@ -29,7 +29,14 @@ class mysql {
 		$query = mysql_query($sql, $this->connect) or msg(array("type" => "error", "text" => "Error! Bad select query! [".$sql."]"));
 		$result = array();
 
-		while($item = mysql_fetch_array($query, $assocMode?MYSQL_ASSOC:MYSQL_BOTH)) {
+		switch ($assocMode) {
+			case -1: $am = MYSQL_NUM; break;
+			case  1: $am = MYSQL_ASSOC; break;
+			case  0:
+			default: $am = MYSQL_BOTH;
+		}	
+
+		while($item = mysql_fetch_array($query, $am)) {
 			$result[] = $item;
 		}
 
@@ -39,13 +46,20 @@ class mysql {
 		return $result;
 	}
 
-	function record($sql) {
+	function record($sql, $assocMode = 0) {
 	        global $timer;
 	        if ($this->queryTimer) { $tX = $timer->stop(4); }	
 
 		$this->queries++;
 		$query = @mysql_query($sql, $this->connect) or msg(array("type" => "error", "text" => "Error! Bad record query! [$sql]"));
-		$item = mysql_fetch_array($query);
+		switch ($assocMode) {
+			case -1: $am = MYSQL_NUM; break;
+			case  1: $am = MYSQL_ASSOC; break;
+			case  0:
+			default: $am = MYSQL_BOTH;
+		}	
+
+		$item = mysql_fetch_array($query, $am);
 
 		if ($this->queryTimer) { $tX = '[ '.($timer->stop(4) - $tX).' ] '; } else { $tX = ''; }	
 		array_push ($this->query_list, $tX.$sql);
