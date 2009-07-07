@@ -1,4 +1,4 @@
-<form method="post" action="">
+<form method="post" action="/search/">
 <table border="0" width="18%" id="table1" cellspacing="0" cellpadding="0">
 	<tr>
 		<td width="4">
