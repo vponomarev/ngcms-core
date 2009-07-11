@@ -204,6 +204,66 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 //
 // Show news list
+// [PROCESS FILTER]
+function newsProcessFilter($conditions) {
+	//print "CALL newsProcessFilter(".var_export($conditions, true).")<br/>\n";
+
+	if (!is_array($conditions))
+		return '';
+
+	switch (strtoupper($conditions[0])) {
+		case 'AND' :
+		case 'OR'  :
+			$list = array();
+			for($i = 1; $i <= count($conditions); $i++) {
+				$rec = newsProcessFilter($conditions[$i]);
+				//print ".result: ".var_export($rec, true)."<br/>\n";
+				if ($rec != '')
+					$list []= '('.$rec.')';
+			}
+			return join(' '.strtoupper($conditions[0]).' ', $list);
+		case 'DATA':
+			if ($conditions[1] == 'category') {
+				switch ($conditions[2]) {
+					case '=':
+						return "`catid` regexp '[[:<:]](".intval($conditions[3]).")[[:>:]]'";
+					default:
+						return '';
+				}
+			} else {
+				switch (strtoupper($conditions[2])) {
+					case '=':
+					case '>=':
+					case '<=':
+					case '>':
+					case '<':
+					case 'LIKE':
+						return '`'.$conditions[1].'` '.$conditions[2].' '.db_squote($conditions[3]);
+					case 'IN':
+						if (is_array($conditions[3])) {
+							$xt = array();
+							foreach ($conditions[3] as $r)
+								$xt[]= db_squote($r);
+
+							return '`'.$conditions[1].'` IN ('.join(',', $xt).') ';
+						}
+						return '';
+					case 'BETWEEN':
+						if (is_array($conditions[3])) {
+							return '`'.$conditions[1].'` BETWEEN '.db_squote($conditions[3][0]).' AND '.db_squote($conditions[3][1]);
+						}
+						return '';
+				}
+			}
+			//
+			break;
+		case 'SQL' :
+			return '('.$conditions[1].')';
+		default: return '';
+	}
+}
+
+
 // Params (newsID or alt_name should be filled)
 // $filterConditions - conditions for filtering
 // $paginationParams - config params for page display
@@ -228,6 +288,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 //			[!!!] USES CUSTOM TEMPLATE FOR FIRST CATEGORY FROM NEWS [!!!]
 //		'overrideSQLquery' => array - sets if PLUGIN wants to run it's own query
 //		'page'		=> page number to show
+//		'extendedReturn' => flag if we need to return an extended array:
+//			'count' - count of found news
+//			'data'  - data to be showed
 //
 function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
@@ -235,67 +298,11 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	global $timer;
 	global $SYSTEM_FLAGS;
 
-	function processFilter($conditions) {
-		//print "CALL processFilter(".var_export($conditions, true).")<br/>\n";
-
-		if (!is_array($conditions))
-			return '';
-
-		switch (strtoupper($conditions[0])) {
-			case 'AND' :
-			case 'OR'  :
-				$list = array();
-				for($i = 1; $i <= count($conditions); $i++) {
-					$rec = processFilter($conditions[$i]);
-					//print ".result: ".var_export($rec, true)."<br/>\n";
-					if ($rec != '')
-						$list []= '('.$rec.')';
-				}
-				return join(' '.strtoupper($conditions[0]).' ', $list);
-			case 'DATA':
-				if ($conditions[1] == 'category') {
-					switch ($conditions[2]) {
-						case '=':
-							return "`catid` regexp '[[:<:]](".intval($conditions[3]).")[[:>:]]'";
-						default:
-							return '';
-					}
-				} else {
-					switch (strtoupper($conditions[2])) {
-						case '=':
-						case '>=':
-						case '<=':
-						case '>':
-						case '<':
-							return '`'.$conditions[1].'` '.$conditions[2].' '.db_squote($conditions[3]);
-						case 'IN':
-							if (is_array($conditions[3])) {
-								$xt = array();
-								foreach ($conditions[3] as $r)
-									$xt[]= db_squote($r);
-
-								return '`'.$conditions[1].'` IN ('.join(',', $xt).') ';
-							}
-							return '';
-						case 'BETWEEN':
-							if (is_array($conditions[3])) {
-								return '`'.$conditions[1].'` BETWEEN '.db_squote($conditions[3][0]).' AND '.db_squote($conditions[3][1]);
-							}
-							return '';
-					}
-				}
-				//
-				break;
-			case 'SQL' :
-				return '('.$conditions[1].')';
-			default: return '';
-		}
-	}
 
 	$categoryList = array();
 
 	// Generate SQL filter for 'WHERE' using filterConditions parameter
-	$query['filter'] = processFilter(array('AND', array('DATA', 'approve', '=', '1'), $filterConditions));
+	$query['filter'] = newsProcessFilter(array('AND', array('DATA', 'approve', '=', '1'), $filterConditions));
 	//print "<pre>".var_export($filterConditions, true)."</pre>";
 	//print "<pre>".$query['filter']."</pre>";
 
@@ -428,18 +435,17 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	}
 	unset($tvars);
 
-	// Print "no news" if we didn't find any news
-	if (!$nCount) {
-		msg(array("type" => "info", "info" => $lang['msgi_no_news']));
-		$limit_start = 2;
-	}
-
 	// Return output if we're in export mode
 	if ($callingParams['style'] == 'export')
 		return $output;
 
-	// Add collected news into {mainlock}
-	$template['vars']['mainblock'] .= $output;
+	// Print "no news" if we didn't find any news [ DON'T PRINT IN EXTENDED MODE ]
+	if (!$nCount) {
+		if (!$callingParams['extendedReturn']) {
+			msg(array("type" => "info", "info" => $lang['msgi_no_news']));
+		}
+		$limit_start = 2;
+	}
 
 	// Make navigation bar
 	$navigations = getNavigations(tpl_dir.$config['theme']);
@@ -476,8 +482,11 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 	if ($nCount && ($pages_count>1)){
 		$tpl -> vars('pages', $tvars);
-		$template['vars']['mainblock'] .= $tpl -> show('pages');
+		$output .= $tpl -> show('pages');
 	}
+
+	// Add collected news into {mainlock}
+	return ($callingParams['extendedReturn'])?array('count' => $newsCount, 'data' => $output):$output;
 }
 
 
@@ -543,7 +552,7 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'main', 'params' => array(), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'main'), 'xparams' => array(), 'paginator' => array('page', 1, false));
 
-			news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
+			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
 			break;
 
 		case 'by.category':
@@ -574,7 +583,7 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => array('category' => $catmap[$category]), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.category'), 'xparams' => array('category' => $catmap[$category]), 'paginator' => array('page', 1, false));
 
-			news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
+			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
 			break;
 
 		case 'by.day':
@@ -590,7 +599,7 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => array('day' => $day, 'month' => $month, 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.day'), 'xparams' => array('day' => $day, 'month' => $month, 'year' => $year), 'paginator' => array('page', 1, false));
 
-			news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
+			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
 			break;
 
 		case 'by.month':
@@ -605,7 +614,7 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => array('month' => $month, 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.month'), 'xparams' => array('month' => $month, 'year' => $year), 'paginator' => array('page', 1, false));
 
-			news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
+			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
 			break;
 
 		case 'by.year':
@@ -619,7 +628,7 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.year', 'params' => array('year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.year'), 'xparams' => array('year' => $year), 'paginator' => array('page', 1, false));
 
-			news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,1,1,$year), mktime(23,59,59,12,31,$year))), $paginationParams, $callingParams);
+			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,1,1,$year), mktime(23,59,59,12,31,$year))), $paginationParams, $callingParams);
 			break;
 	}
 
