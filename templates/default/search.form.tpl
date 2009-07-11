@@ -1,4 +1,4 @@
-<form method="post" action="/search/">
+<form method="post" action="{form_url}">
 <table border="0" width="18%" id="table1" cellspacing="0" cellpadding="0">
 	<tr>
 		<td width="4">
@@ -7,7 +7,6 @@
 		<td><input type="image" src="{tpl_url}/images/2z_13.gif" /></td>
 	</tr>
 </table>
-<input type="hidden" name="action" value="search" />
 <input type="hidden" name="category" value="" />
 <input type="hidden" name="postdate" value="" />
 </form>
