@@ -37,10 +37,23 @@ function coreActivateUser() {
 
 
 function coreRegisterUser() {
-	global $lang, $config, $AUTH_METHOD, $SYSTEM_FLAGS, $userROW;
+	global $ip, $lang, $config, $AUTH_METHOD, $SYSTEM_FLAGS, $userROW;
 
 	$lang = LoadLang('registration', 'site');
 	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_registration'];
+
+	// If logged in user comes to us - REDIRECT him to main page
+	if (is_array($userROW)) {
+			@header('Location: '.$config['home_url']);
+			return;
+	}
+
+	// Check for ban
+	if ($ban_mode = checkBanned($ip, 'users', 'register', $userROW, $userROW['name'])) {
+		msg(array("type" => "error", "text" => ($ban_mode == 1)?$lang['register.banned']:$lang['msge_regforbid']));
+		return;
+	}
+
 
 	if (!$_REQUEST['type'] && $config['users_selfregister'] && !is_array($userROW)) {
 		// Receiving parameter list during registration
@@ -290,7 +303,7 @@ function generate_restorepw_page($params, $values = array(), $msg = '') {
 
 function coreLogin(){
 	global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
-	global $tpl, $template, $config, $lang;
+	global $tpl, $template, $config, $lang, $ip;
 
 	$lang = LoadLang('login', 'site');
 	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_login'];
@@ -301,8 +314,9 @@ function coreLogin(){
 		return;
 	}
 
-	// Try to auth
-	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login())) {
+	// Try to auth && check for bans
+	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login()) && (!($ban_mode = checkBanned($ip, 'users', 'auth', $userROW, $userROW['name'])))) {
+
 		$auth_db->save_auth($row);
 		$username			= $row['name'];
 		$userROW			= $row;
@@ -328,7 +342,9 @@ function coreLogin(){
 		$tvars = array();
 		$tvars['vars']['form_action'] = generateLink('core', 'login');
 		$tvars['vars']['redirect'] = isset($_POST['redirect'])?$_POST['redirect']:$HTTP_REFERER;
-		$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($_SERVER['REQUEST_METHOD'] == 'POST')?'$1':'';
+
+		$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = (($_SERVER['REQUEST_METHOD'] == 'POST') && ($ban_mode != 1))?'$1':'';
+		$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = ($ban_mode == 1)?'$1':'';
 
 		$tpl->template('login', tpl_site);
 		$tpl->vars('login', $tvars);
