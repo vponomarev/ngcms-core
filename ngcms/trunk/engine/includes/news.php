@@ -497,7 +497,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 // Default "show news" function
 function showNews($handlerName, $params) {
- global $catz, $catmap, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS;
+ global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS;
  // preload plugins
  load_extras('news');
 
