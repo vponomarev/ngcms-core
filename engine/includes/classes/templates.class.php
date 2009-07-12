@@ -6,9 +6,15 @@ class tpl {
 	var $root	=	'.';
 	var $ext	=	'.tpl';
 	var $da_vr	=	array();
+	var $execTime = 0;
+	var $execCount = 0;
 
 	function template($name, $dir, $file = '') {
 		global $lang;
+
+		// Prepare to calculate exec time
+		list($usec, $sec) = explode(' ', microtime());
+		$timeStart = (float) $sec + (float) $usec;
 
 		if (is_dir($dir)) {
 			$this -> root = $dir;
@@ -34,10 +40,20 @@ class tpl {
 		fclose($fp);
 
 		$this -> data[$nn] = $data;
+
+		// Save calculate exec time
+		list($usec, $sec) = explode(' ', microtime());
+		$timeStop = (float) $sec + (float) $usec;
+
+		$this->execTime += ($timeStop - $timeStart);
 	}
 
 	function vars($nn, $vars = array(), $codeExec = false) {
 		global $lang, $userROW, $config, $PHP_SELF;
+
+		// Prepare to calculate exec time
+		list($usec, $sec) = explode(' ', microtime());
+		$timeStart = (float) $sec + (float) $usec;
 
 		$data = ($codeExec)?(eval(' ?>'.$this->data[$nn].'<?php ')):$this -> data[$nn];
 
@@ -101,6 +117,13 @@ class tpl {
 		$data = str_replace('{admin_url}', admin_url, $data);
 
 		$this -> da_vr[$nn] = $data;
+
+		// Save calculate exec time
+		list($usec, $sec) = explode(' ', microtime());
+		$timeStop = (float) $sec + (float) $usec;
+
+		$this->execTime += ($timeStop - $timeStart);
+		$this->execCount++;
 	}
 
 	function show($name) {

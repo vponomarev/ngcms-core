@@ -24,7 +24,7 @@ function CatTree() {
 			'alt'		=>	$row['alt'],
 			'alt_url'	=> $row['alt_url'],
 			'orderlist'	=>	OrderList(''),
-			'show_main'	=>	($row['cat_show'] == "1") ? $lang['yesa'] : $lang['noa'],
+			'show_main'	=>	intval(substr($row['flags'],0,1)) ? $lang['yesa'] : $lang['noa'],
 			'news'		=>	$row['posts'],
 			'cutter'	=>	str_repeat('&#8212; ', $row['poslevel']),
 		);
@@ -112,13 +112,15 @@ function category_add() {
 	$SQL			= array();
 	$SQL['name']	= secure_html(trim($_REQUEST['name']));
 	$SQL['alt']		= trim($_REQUEST['alt']);
-	$SQL['cat_show']= intval($_REQUEST['cat_show']);
 	$SQL['parent']	= intval($_REQUEST['parent']);
 	$SQL['icon']	= $_REQUEST['icon'];
 	$SQL['alt_url']	= $_REQUEST['alt_url'];
 	$SQL['orderby']	= $_REQUEST['orderby'];
 	$SQL['tpl']		= $_REQUEST['tpl'];
 	$SQL['number']	= intval($_REQUEST['number']);
+
+	$SQL['flags']	= intval($_REQUEST['cat_show'])?'1':'0';
+	$SQL['flags']  .= (string) (abs(intval($_REQUEST['show_link'])<=2)?abs(intval($_REQUEST['show_link'])):'0');
 
 	$cat_name		= secure_html($_REQUEST['cat_name']);
 	$alt_cat_name	= trim($_REQUEST['alt_cat_name']);
@@ -216,6 +218,11 @@ function category_edit(){
 		$tpl_list .= '<option value="'.secure_html($k).'"'.(($row['tpl'] == $k)?' selected="selected"':'').'>'.secure_html($k)."</option>\n";
 	}
 
+	$showLink = '';
+	foreach (array('always', 'ifnews', 'never') as $k => $v) {
+		$showLink .= '<option value="'.$k.'"'.(($k == intval(substr($row['flags'], 1, 1)))?' selected="selected"':'').'>'.$lang['link.'.$v].'</option>';
+	}
+
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
 		'parent'		=> makeCategoryList(array('name' => 'parent', 'selected' => $row['parent'], 'skip' => $row['id'], 'doempty' => 1)),
@@ -223,13 +230,14 @@ function category_edit(){
 		'name'			=>	secure_html($row['name']),
 		'alt'			=>	secure_html($row['alt']),
 		'alt_url'		=>	secure_html($row['alt_url']),
-		'orderlist'		=>	OrderList($row['orderby']),
+		'orderlist'		=>	OrderList($row['orderby'], true),
 		'description'		=>	secure_html($row['description']),
 		'keywords'		=>	secure_html($row['keywords']),
 		'icon'			=>	secure_html($row['icon']),
-		'check'			=>	($row['cat_show'])?'checked="checked"':'',
+		'check'			=>	(substr($row['flags'],0, 1))?'checked="checked"':'',
 		'tpl_value'		=>	secure_html($row['tpl']),
 		'number'		=>	$row['number'],
+		'show.link'		=>  $showLink,
 		'tpl_list'		=>	$tpl_list
 	);
 
@@ -256,13 +264,15 @@ function category_doedit(){
 	$SQL			= array();
 	$SQL['name']	= secure_html($_REQUEST['name']);
 	$SQL['alt']		= trim($_REQUEST['alt']);
-	$SQL['cat_show']= intval($_REQUEST['cat_show']);
 	$SQL['parent']	= intval($_REQUEST['parent']);
 	$SQL['icon']	= $_REQUEST['icon'];
 	$SQL['alt_url']	= $_REQUEST['alt_url'];
 	$SQL['orderby']	= $_REQUEST['orderby'];
 	$SQL['tpl']		= $_REQUEST['tpl'];
 	$SQL['number']	= intval($_REQUEST['number']);
+
+	$SQL['flags']	= intval($_REQUEST['cat_show'])?'1':'0';
+	$SQL['flags']  .= (string) (abs(intval($_REQUEST['show_link'])<=2)?abs(intval($_REQUEST['show_link'])):'0');
 
 	$catid			= intval($_REQUEST['catid']);
 
