@@ -548,10 +548,12 @@ function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $na
 }
 
 
-function OrderList($value) {
+function OrderList($value, $showDefault = false) {
 	global $lang, $catz;
 
 	$output = "<select name=\"orderby\">\n";
+	if ($showDefault)
+		$output .= '<option value="">'.$lang['order_default'];
 	foreach (array('id desc', 'id asc', 'postdate desc', 'postdate asc', 'title desc', 'title asc', 'rating desc', 'rating asc') as $v) {
 	        $vx = str_replace(' ','_',$v);
 		$output.='<option value="'.$v.'"'.(($value==$v)?' selected="selected"':'').'>'.$lang["order_$vx"]."</option>\n";
@@ -917,17 +919,23 @@ function generateCategoryMenu(){
 
 	$tpl -> template('categories', tpl_site);
 	foreach($catz as $k => $v){
-		if (!$v['cat_show']) continue;
+		if (!substr($v['flags'],0,1)) continue;
 
 		$tvars['vars'] = array(
 			'if_active'	=>	(category && category == $v['alt'])?'active_cat':'',
-			'link'		=>	generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])),
+			'link'		=>	($v['alt_url'] == '')?generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])):$v['alt_url'],
 			'mark'		=>	str_repeat('&#8212;', $v['poslevel']),
 			'cat'		=>	$v['name'],
 			'counter'	=>	($config['category_counters'] && $v['posts'])?('['.$v['posts'].']'):'',
 			'icon'		=>	$v['icon'],
 		);
 		$tvars['regx']['[\[icon\](.*)\[/icon\]]'] = trim($v['icon'])?'$1':'';
+		switch (intval(substr($v['flags'],1,1))) {
+			case 0:	$rmode = true; break;
+			case 1: $rmode = ($v['posts'])?true:false; break;
+			case 2: $rmode = false; break;
+		}
+		$tvars['regx']['#\[if_link\](.+?)\[/if_link\]#is'] = $rmode?'$1':'';
 
 		$tpl -> vars('categories', $tvars);
 
