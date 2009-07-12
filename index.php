@@ -130,7 +130,7 @@ $template['vars']['titles'] = join(" : ", array_values($SYSTEM_FLAGS['info']['ti
 
 // Generate search form
 $tpl -> template('search.form', tpl_site);
-$tpl -> vars('search.form', array('vars' => array()));
+$tpl -> vars('search.form', array('vars' => array('form_url' =>	generateLink('search', '', array()) )));
 $template['vars']['search_form'] = $tpl -> show('search.form');
 
 // Save 'category' variable
