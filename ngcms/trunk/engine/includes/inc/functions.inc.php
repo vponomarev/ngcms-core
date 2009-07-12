@@ -1125,7 +1125,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	$tvars['vars']['news-id']	=	$row['id'];
 	$tvars['vars']['php-self']	=	$PHP_SELF;
 
-	if ($row['editdate']) {
+	if ($row['editdate'] > $row['postdate']) {
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '$1';
 		$tvars['vars']['update'] = LangDate($config['timestamp_updated'], $row['editdate']);
 	} else {

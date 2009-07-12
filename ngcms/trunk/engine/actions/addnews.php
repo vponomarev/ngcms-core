@@ -65,6 +65,8 @@ function news_add(){
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
 	}
 
+	$SQL['editdate'] = $SQL['postdate'];
+
 	// Fetch MASTER provided categories
 	$catids = array ();
 	if (intval($_POST['category']) && isset($catmap[intval($_POST['category'])])) {
