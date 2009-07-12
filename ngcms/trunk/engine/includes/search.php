@@ -35,6 +35,17 @@ function search_news(){
 		array_push($filter, array('DATA', 'category', '=', $_REQUEST['catid']));
 	}
 
+	// POST DATE
+	if ($_REQUEST['postdate'] && preg_match('#^(\d{4})(\d{2})$#', $_REQUEST['postdate'], $dv)) {
+		if (($dv[1] >= 1970)&&($dv[1] <= 2100)&&($dv[2] >=1)&&($dv[2] <= 12)) {
+			array_push($filter, array('OR',
+				array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$dv[2],1,$dv[1]), mktime(23,59,59,$dv[2],date("t",mktime(0,0,0,$dv[2],1,$dv[1])),$dv[1]))),
+			//	array('DATA', 'editdate', 'BETWEEN', array(mktime(0,0,0,$dv[2],1,$dv[1]), mktime(23,59,59,$dv[2],date("t",mktime(0,0,0,$dv[2],1,$dv[1])),$dv[1]))),
+			));
+
+		}
+	}
+
 
 	// TEXT
 	$search = array();
