@@ -284,8 +284,9 @@ function newsProcessFilter($conditions) {
 //		'overrideTemplateName' => alternative template for display
 //		'overrideTemplatePath' => alternative path for searching of template
 //		'customCategoryTemplate' => flag automatically override custom category templates
-//		'customCategoryNumber'	=> flag automatically override number of news per page
 //			[!!!] USES CUSTOM TEMPLATE FOR FIRST CATEGORY FROM NEWS [!!!]
+//		'showNumber'	=> set number of news to show per page
+//		'newsOrder'		=> set news order
 //		'overrideSQLquery' => array - sets if PLUGIN wants to run it's own query
 //		'page'		=> page number to show
 //		'extendedReturn' => flag if we need to return an extended array:
@@ -334,16 +335,19 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	$i			= $start_from?$start_from:0;
 
 	$showNumber = ($config['number']>=1)?$config['number']:5;
-
-	if (($callingParams['customCategoryNumber']) && count($carray) && ($fcat=$carray[0][0]) && $catmap[$fcat] && ($fcnt = $catz[$catmap[$fcat]]['number']))
-		$showNumber = $fcnt;
-
-	if ($config['number']<1)
-		$config['number'] = 5;
+	if (intval($callingParams['showNumber'])>0)
+			$showNumber = intval($callingParams['showNumber']);
 
 	$limit_start = $cstart?($cstart-1)*$showNumber:0;
 	$limit_count = $showNumber;
 
+	$orderBy = isset($callingParams['newsOrder'])?$callingParams['newsOrder']:'id desc';
+	if (!in_array($orderBy, array('id desc', 'id asc', 'postdate desc', 'postdate asc', 'title desc', 'title asc')))
+		$orderBy = 'id desc';
+
+	$orderBy = 'pinned desc, '.$orderBy;
+
+	/*
 	if ((count($carray) == 1)&&(is_array($carray[0]))&&(count($carray[0])==1)&&($catorder=$catz[$catmap[$carray[0][0]]]['orderby'])) {
 		$orderBy = "pinned desc, ".$catorder;
 	} else {
@@ -353,6 +357,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			$orderBy = "pinned desc, id desc";
 		}
 	}
+	*/
 
 	$query['orderby'] = " order by ".$orderBy." limit ".$limit_start.",".$limit_count;
 
@@ -571,13 +576,19 @@ function showNews($handlerName, $params) {
 				msg(array("type" => "info", "info" => $lang['msgi_cat_not_found']));
 				return false;
 			}
-			$SYSTEM_FLAGS['info']['title']['group'] = $catz[$catmap[$category]]['name'];
+			$currentCategory = $catz[$catmap[$category]];
+
+			$SYSTEM_FLAGS['info']['title']['group'] = $currentCategory['name'];
 
 			// Set meta tags for category page
-			if ($catz[$catmap[$category]]['description'])
-				$SYSTEM_FLAGS['meta']['description'] = $catz[$catmap[$category]]['description'];
-			if ($catz[$catmap[$category]]['keywords'])
-				$SYSTEM_FLAGS['meta']['keywords']    = $catz[$catmap[$category]]['keywords'];
+			if ($currentCategory['description'])
+				$SYSTEM_FLAGS['meta']['description'] = $currentCategory['description'];
+			if ($currentCategory['keywords'])
+				$SYSTEM_FLAGS['meta']['keywords']    = $currentCategory['keywords'];
+
+			// Set number of `news per page` if this parameter is filled in category
+			if ($currentCategory['orderby'])
+					$callingParams['newsOrder'] = $currentCategory['orderby'];
 
 		    $paginationParams = checkLinkAvailable('news', 'by.category')?
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => array('category' => $catmap[$category]), 'xparams' => array(), 'paginator' => array('page', 0, false)):
