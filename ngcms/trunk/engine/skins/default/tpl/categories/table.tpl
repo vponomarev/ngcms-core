@@ -58,6 +58,10 @@ if(selectedOption == 'addnew') {document.getElementById('addnew').style.display 
 <td width="50%" class="contentEntry2"><input type="text" size="40" name="name" /></td>
 </tr>
 <tr>
+<td width="50%" class="contentEntry1">{l_show.link}</td>
+<td width="50%" class="contentEntry2"><select name="show_link"><option value="0">{l_link.always}</option><option value="1">{l_link.ifnews}</option><option value="2">{l_link.never}</option></select></td>
+</tr>
+<tr>
 <td width="50%" class="contentEntry1">{l_alt_name}</td>
 <td width="50%" class="contentEntry2"><input type="text" size="40" name="alt" /></td>
 </tr>
