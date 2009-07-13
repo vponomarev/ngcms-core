@@ -11,6 +11,10 @@
 <td width="50%" class="contentEntry2"><input type="checkbox" id="cat_show" name="cat_show" value="1" class="check" {check} /></td>
 </tr>
 <tr>
+<td width="50%" class="contentEntry1">{l_show.link}</td>
+<td width="50%" class="contentEntry2"><select name="show_link">{show.link}</select></td>
+</tr>
+<tr>
 <td width="50%" class="contentEntry1">{l_title}</td>
 <td width="50%" class="contentEntry2"><input value="{name}" type=text size="40" name="name" /></td>
 </tr>
