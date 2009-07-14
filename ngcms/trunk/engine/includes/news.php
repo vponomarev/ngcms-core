@@ -91,6 +91,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 	// Show icon of `MAIN` category for current news
 	$masterCatID = intval(array_shift(explode(",", $row['catid'])));
+	if (!isset($catmap[$masterCatID]))
+		$masterCatID = 0;
+
 	if ($masterCatID && isset($catmap[$masterCatID]) && trim($catz[$catmap[$masterCatID]]['icon'])) {
 		$tvars['vars']['icon']		= trim($catz[$catmap[$masterCatID]]['icon']);
 		$tvars['vars']['[icon]']	= '';
@@ -118,7 +121,8 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	exec_acts('news_full', '', $row, &$tvars);
 
 	// Calculate exec time
-        $tX1 = $timer->stop(4);
+	$tX1 = $timer->stop(4);
+
 	// Execute filters
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) {
@@ -126,7 +130,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 			$v->showNews($row['id'], $row, $tvars, $callingParams);
 		}
 
-        $tX2 = $timer->stop(4);
+	$tX2 = $timer->stop(4);
 	$timer->registerEvent('call showNews() for [ '.($tX2 - $tX1).' ] sec');
 
 	// Check if we need only to export body
@@ -188,8 +192,8 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 		return $tpl -> show($templateName);
 
 	// Set meta tags for news page
-	$SYSTEM_FLAGS['meta']['description'] = $row['description'];
-	$SYSTEM_FLAGS['meta']['keywords']    = $row['keywords'];
+	$SYSTEM_FLAGS['meta']['description'] = ($row['description'] != '')?$row['description']:$catz[$catmap[$masterCatID]]['description'];
+	$SYSTEM_FLAGS['meta']['keywords']    = ($row['keywords'] != '')?$row['keywords']:$catz[$catmap[$masterCatID]]['keywords'];
 
 	// Prepare title
 	$SYSTEM_FLAGS['info']['title']['group']	= $config["category_link"]?GetCategories($row['catid'], true):LangDate(timestamp, $row['postdate']);
