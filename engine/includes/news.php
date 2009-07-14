@@ -77,11 +77,11 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->showNewsPre($row['id'], $row, $callingParams); }
 
-        $tX2 = $timer->stop(4);
+    $tX2 = $timer->stop(4);
 
 	$tvars = newsFillVariables($row, 1, $_REQUEST['page'], (substr($callingParams['style'], 0, 6) == 'export')?1:0);
 
-        $tX3 = $timer->stop(4);
+	$tX3 = $timer->stop(4);
 	$timer->registerEvent('call showNewsPre() for [ '.($tX2 - $tX1).' ] sec');
 	$timer->registerEvent('call newsFillVariables() for [ '.($tX3 - $tX2).' ] sec');
 
@@ -89,10 +89,10 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$tvars['vars']['views']		=	$row['views'];
 	$tvars['vars']['comnum']	=	$row['com'];
 
-	// Show category icon in case category identifier is used. Icon is showed from first category name
-	$showCategory = trim(array_shift(explode("-", $_REQUEST['category'])));
-	if ($showCategory && ($showCategory != "none") && trim($catz[$showCategory]['icon'])) {
-		$tvars['vars']['icon']		= trim($catz[$showCategory]['icon']);
+	// Show icon of `MAIN` category for current news
+	$masterCatID = intval(array_shift(explode(",", $row['catid'])));
+	if ($masterCatID && isset($catmap[$masterCatID]) && trim($catz[$catmap[$masterCatID]]['icon'])) {
+		$tvars['vars']['icon']		= trim($catz[$catmap[$masterCatID]]['icon']);
 		$tvars['vars']['[icon]']	= '';
 		$tvars['vars']['[/icon]']	= '';
 	} else {
