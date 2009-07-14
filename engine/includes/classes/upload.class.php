@@ -101,6 +101,9 @@ class file_managment {
 	function file_upload($param){
 		global $config, $lang, $mysql, $userROW;
 
+		// Normalize category (to make it possible to have empty category)
+		$wCategory = ($param['category'] != '')?($param['category'].'/'):'';
+
 		//print "CALL file_upload -> upload(".$param['http_var']."//".$param['http_varnum'].")<br>\n<pre>"; var_dump($param); print "</pre><br>\n";
 
 		$http_var		= $param['http_var'];
@@ -136,14 +139,14 @@ class file_managment {
 				$ferr	= $_FILES[$http_var]['error'];
 			}
 		}
-		//print "PROCESS: fname=".$fname."<br> fsize=".$fsize."<br>ftype=".$ftype."<br>ftmp=".$ftmp."<br>ferr=".$ferr."<br>\n";
-		//print "Param: <pre>"; var_dump($_FILES); print "</pre><br>\n";
-
 		// Check limits
 		if (!$this->get_limits($param['type'])) {
 			msg(array("type" => "error", "text" => $lang['msge_badtype']));
 			return 0;
 		}
+
+		//print "PROCESS: fname=".$fname."<br> fsize=".$fsize."<br>ftype=".$ftype."<br>ftmp=".$ftmp."<br>ferr=".$ferr."<br>this->dname=".$this->dname."<br/>\n";
+		//print "Param: <pre>"; var_dump($_FILES); print "</pre><br>\n";
 
 		// * File size
 		if ($fsize > $this->max_size) {
@@ -184,7 +187,7 @@ class file_managment {
 			do {
 				$prefix = sprintf("%04u",rand(1,9999));
 				$try++;
-			} while (($try < 100) && (file_exists($this->dname.$param['category']."/".$prefix.'_'.$fname) || (is_array($row = $mysql->record("select * from ".prefix."_".$this->tname." where name = ".db_squote($prefix.'_'.$fname)." and folder= ".db_squote($param['category']))))));
+			} while (($try < 100) && (file_exists($this->dname.$wCategory.$prefix.'_'.$fname) || (is_array($row = $mysql->record("select * from ".prefix."_".$this->tname." where name = ".db_squote($prefix.'_'.$fname)." and folder= ".db_squote($param['category']))))));
 
 			if ($try == 100) {
 				// Can't create RAND name - all values are occupied
@@ -196,7 +199,7 @@ class file_managment {
 
 		$replace_id = 0;
 		// Now we have correct filename. Let's check for dups
-		if (is_array($row = $mysql->record("select * from ".prefix."_".$this->tname." where name = ".db_squote($fname)." and folder= ".db_squote($param['category']))) || file_exists($this->dname.$param['category']."/".$fname)) {
+		if (is_array($row = $mysql->record("select * from ".prefix."_".$this->tname." where name = ".db_squote($fname)." and folder= ".db_squote($param['category']))) || file_exists($this->dname.$wCategory.$fname)) {
 			// Found file. Check if 'replace' flag is present and user have enough privilleges
 			if ($param['replace']) {
 				if (!(($row['user'] == $userROW['name']) || ($userROW['status'] == 1) || ($userROW['status'] == 2))) {
@@ -221,20 +224,20 @@ class file_managment {
 
 		// Now let's upload file
 		if ($param['manual']) {
-			if (!copy($ftmp, $this->dname.$param['category']."/".$fname)) {
+			if (!copy($ftmp, $this->dname.$wCategory.$fname)) {
 				unlink($ftmp);
 				msg(array("type" => "error", "text" => $lang['msge_errmove']));
 				return 0;
 			}
 		} else {
-			if (!move_uploaded_file($ftmp, $this->dname.$param['category']."/".$fname)) {
-				msg(array("type" => "error", "text" => $lang['msge_errmove']. "(".$ftpm." => ".$this->dname.$param['category']."/".$fname.")"));
+			if (!move_uploaded_file($ftmp, $this->dname.$wCategory.$fname)) {
+				msg(array("type" => "error", "text" => $lang['msge_errmove']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
 				return 0;
 			}
 		}
 
 		// Set correct permissions
-		@chmod($this->dname.$param['category']."/".$fname, 0644);
+		chmod($this->dname.$wCategory.$fname, 0644);
 
 		// Create record in SQL DB (or replace old)
 		if ($replace_id) {
