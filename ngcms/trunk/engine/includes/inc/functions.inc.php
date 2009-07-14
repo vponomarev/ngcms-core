@@ -1041,8 +1041,11 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 		if (($pcnt = count($pages)) > 1) {
 			// Prepare VARS for pagination
-			$catid = array_shift(explode(',', $row['catid']));
-			$cname = $catmap[$catid];
+			$catid = intval(array_shift(explode(',', $row['catid'])));
+
+			$cname = 'none';
+			if ($catid && isset($catmap[$catid]))
+				$cname = $catmap[$catid];
 
 			// Generate pagination within news
 		    $paginationParams = checkLinkAvailable('news', 'news')?
