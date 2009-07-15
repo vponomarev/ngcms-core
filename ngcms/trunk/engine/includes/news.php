@@ -576,7 +576,8 @@ function showNews($handlerName, $params) {
 				$category = $catz[$_REQUEST['category']]['id'];
 			}
 
-			if (!$category) {
+			// We can't show unexisted categories
+			if (!$category || !isset($catmap[$category])) {
 				msg(array("type" => "info", "info" => $lang['msgi_cat_not_found']));
 				return false;
 			}
@@ -590,11 +591,15 @@ function showNews($handlerName, $params) {
 			if ($currentCategory['keywords'])
 				$SYSTEM_FLAGS['meta']['keywords']    = $currentCategory['keywords'];
 
+			// Set personal `order by` for category
+			if ($currentCategory['number'])
+					$callingParams['showNumber'] = $currentCategory['number'];
+
 			// Set number of `news per page` if this parameter is filled in category
 			if ($currentCategory['orderby'])
-					$callingParams['newsOrder'] = $currentCategory['orderby'];
+				$callingParams['newsOrder'] = $currentCategory['orderby'];
 
-		    $paginationParams = checkLinkAvailable('news', 'by.category')?
+			$paginationParams = checkLinkAvailable('news', 'by.category')?
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => array('category' => $catmap[$category]), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.category'), 'xparams' => array('category' => $catmap[$category]), 'paginator' => array('page', 1, false));
 
