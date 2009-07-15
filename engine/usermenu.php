@@ -41,12 +41,12 @@ if (!$is_logged) {
 
 	// Generate avatar link
 	if ($config['use_avatars']) {
-		if ($row['avatar']) {
-			$tvars['vars']['avatar_url'] = avatars_url."/".$row['avatar'];
+		if ($userROW['avatar']) {
+			$tvars['vars']['avatar_url'] = avatars_url."/".$userROW['avatar'];
 		} else {
 			// If gravatar integration is active, show avatar from GRAVATAR.COM
 			if ($config['avatars_gravatar']) {
-				$tvars['vars']['avatar_url'] = 'http://www.gravatar.com/avatar/'.md5(strtolower($row['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode(avatars_url."/noavatar.gif");
+				$tvars['vars']['avatar_url'] = 'http://www.gravatar.com/avatar/'.md5(strtolower($userROW['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode(avatars_url."/noavatar.gif");
 			} else {
 				$tvars['vars']['avatar_url'] = avatars_url."/noavatar.gif";
 			}

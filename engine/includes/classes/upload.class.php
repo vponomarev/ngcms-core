@@ -24,6 +24,9 @@ class file_managment {
 
 	// CONSTRUCTOR
 	function file_managment(){
+		// Load additional LANG file
+		$lang = loadLang('files');
+
 		return;
 	}
 
@@ -71,7 +74,7 @@ class file_managment {
 		global $lang;
 
 		if ((!($tmpn = tempnam(ini_get('upload_tmp_dir'),'upload_')))||(!($f = fopen($tmpn, 'w')))) {
-			msg(array("type" => "error", "text" => $lang['msge_tempfile']));
+			msg(array("type" => "error", "text" => $lang['upload.error.tempcreate']));
 			return;
 		}
 
@@ -100,6 +103,8 @@ class file_managment {
 	// *  manualtmp		- TEMP file where manual uploaded file is [temporally] stored
 	function file_upload($param){
 		global $config, $lang, $mysql, $userROW;
+
+		$lang = loadLang('files');
 
 		// Normalize category (to make it possible to have empty category)
 		$wCategory = ($param['category'] != '')?($param['category'].'/'):'';
@@ -141,7 +146,7 @@ class file_managment {
 		}
 		// Check limits
 		if (!$this->get_limits($param['type'])) {
-			msg(array("type" => "error", "text" => $lang['msge_badtype']));
+			msg(array("type" => "error", "text" => $lang['upload.error.type']));
 			return 0;
 		}
 
@@ -150,13 +155,13 @@ class file_managment {
 
 		// * File size
 		if ($fsize > $this->max_size) {
-			msg(array("type" => "error", "text" => $lang['msge_size'], "info" => sprintf($lang['msgi_size'], Formatsize($this->max_size))));
+			msg(array("type" => "error", "text" => $lang['upload.error.size'], "info" => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])));
 			return 0;
 		}
 
 		// Check for existance of temp file
 		if (!$ftmp || !file_exists($ftmp)) {
-			msg(array("type" => "error", "text" => $lang['msge_ftmp']));
+			msg(array("type" => "error", "text" => $lang['upload.error.losttemp']));
 			return 0;
 		}
 
@@ -165,7 +170,7 @@ class file_managment {
 
 		// * File type
 		if (array_search($ext, $this->required_type) === FALSE) {
-			msg(array("type" => "error", "text" => $lang['msge_ext'], "info" => sprintf($lang['msgi_ext'], join(",",$this->required_type))));
+			msg(array("type" => "error", "text" => $lang['upload.error.ext'], "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
 			return;
 		}
 		// Process file name
@@ -191,7 +196,7 @@ class file_managment {
 
 			if ($try == 100) {
 				// Can't create RAND name - all values are occupied
-				msg(array("type" => "error", "text" => $lang['msge_errrand']));
+				msg(array("type" => "error", "text" => $lang['upload.error.rand']));
 				return;
 			}
 			$fname = $prefix.'_'.$fname;
@@ -203,11 +208,11 @@ class file_managment {
 			// Found file. Check if 'replace' flag is present and user have enough privilleges
 			if ($param['replace']) {
 				if (!(($row['user'] == $userROW['name']) || ($userROW['status'] == 1) || ($userROW['status'] == 2))) {
-					msg(array("type" => "error", "text" => $lang['msge_permrepl']));
+					msg(array("type" => "error", "text" => $lang['upload.error.perm.replace']));
 					return 0;
 				}
 			} else {
-				msg(array("type" => "error", "text" => $lang['msge_exists'], "info" => $lang['msgi_exists']));
+				msg(array("type" => "error", "text" => $lang['upload.error.exists'], "info" => $lang['upload.error.exists#info']));
 				return 0;
 			}
 			if (is_array($row))
@@ -217,7 +222,7 @@ class file_managment {
 		// We're ready to move file into target directory
 		if (!is_dir($this->dname.$param['category'])) {
 			// Category dir doesn't exists
-			msg(array("type" => "error", "text" => $lang['msge_catnexists']."(".$this->dname.$param['category'].")"));
+			msg(array("type" => "error", "text" => str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
 			return 0;
 		}
 
@@ -226,12 +231,12 @@ class file_managment {
 		if ($param['manual']) {
 			if (!copy($ftmp, $this->dname.$wCategory.$fname)) {
 				unlink($ftmp);
-				msg(array("type" => "error", "text" => $lang['msge_errmove']));
+				msg(array("type" => "error", "text" => $lang['upload.error.move']));
 				return 0;
 			}
 		} else {
 			if (!move_uploaded_file($ftmp, $this->dname.$wCategory.$fname)) {
-				msg(array("type" => "error", "text" => $lang['msge_errmove']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
+				msg(array("type" => "error", "text" => $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
 				return 0;
 			}
 		}
@@ -260,7 +265,7 @@ class file_managment {
 
 		// Check limits
 		if (!$this->get_limits($param['type'])) {
-			msg(array("type" => "error", "text" => $lang['msge_badtype']));
+			msg(array("type" => "error", "text" => $lang['upload.error.type']));
 			return 0;
 		}
 
@@ -276,21 +281,21 @@ class file_managment {
 		if (is_array($row = $mysql->record("select * from ".prefix."_".$this->tname." where ".$limit))) {
 			// Check permissions
 			if (!(($row['owner_id'] == $userROW['id'])||($userROW['status'] == 1)||($userROW['status'] == 2))) {
-				msg(array("type" => "error", "text" => $lang['msge_permdel']));
+				msg(array("type" => "error", "text" => $lang['upload.error.perm.delete']));
 				return 0;
 			}
 
 			// Check if thumb file exists & delete it
 			if ($row['preview'] && file_exists($this->dname.$row['folder'].'/thumb/'.$row['name'])) {
 				if (!@unlink($this->dname.$row['folder'].'/thumb/'.$row['name'])) {
-					msg(array("type" => "error", "text" => sprintf($lang['msge_delete'], $row['folder'].'/thumb/'.$row['name'])));
+					msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'].'/thumb/'.$row['name'], $lang['upload.error.delete'])));
 				}
 			}
 
 			// Check if file file exists & delete it
 			if (file_exists($this->dname.$row['folder'].'/'.$row['name'])) {
 				if (!@unlink($this->dname.$row['folder'].'/'.$row['name'])) {
-					msg(array("type" => "error", "text" => sprintf($lang['msge_delete'], $row['folder'].'/thumb/'.$row['name'])));
+					msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'].'/'.$row['name'], $lang['upload.error.delete'])));
 					return 0;
 				}
 			}
@@ -298,7 +303,7 @@ class file_managment {
 			$mysql->query("delete from ".prefix."_".$this->tname." where id = ".db_squote($row['id']));
 			return 1;
 		} else {
-			msg(array("type" => "error", "text" => $lang['msge_nofile'].", id=".$param['id']));
+			msg(array("type" => "error", "text" => $lang['upload.error.nofile'].", id=".$param['id']));
 			return 0;
 		}
 	}
@@ -319,7 +324,7 @@ class file_managment {
 
 		// Check limits
 		if (!$this->get_limits($param['type'])) {
-			msg(array("type" => "error", "text" => $lang['msge_badtype']));
+			msg(array("type" => "error", "text" => $lang['upload.error.type']));
 			return 0;
 		}
 
@@ -351,7 +356,7 @@ class file_managment {
 			$nnames = explode('.', $newname);
 			$ext = array_pop($nnames);
 			if (array_search($ext, $this->required_type) === FALSE) {
-				msg(array("type" => "error", "text" => $lang['msge_ext'], "info" => sprintf($lang['msgi_ext'], $config['images_ext'])));
+				msg(array("type" => "error", "text" => $lang['upload.error.ext'], "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
 				return 0;
 			}
 
@@ -359,18 +364,18 @@ class file_managment {
 
 			// Check for DUP
 			if (is_array($mysql->record("select * from ".prefix."_".$this->tname." where folder=".db_squote($param['move']?$param['newcategory']:$row['folder'])." and name=".db_squote($newname)))) {
-				msg(array("type" => "error", "text" => $lang['msge_renexists']));
+				msg(array("type" => "error", "text" => $lang['upload.error.renexists']));
 				return 0;
 			}
 
 			// Check if we have enough access and all required directories are created
 			if (!is_writable($this->dname.$row['folder'].'/'.$row['name'])) {
-				msg(array("type" => "error", "text" => $lang['msge_permoper']));
+				msg(array("type" => "error", "text" => $lang['upload.error.sysperm.access']));
 				return 0;
 			}
 
 			if ($param['move'] && !is_dir($this->dname.$param['newcategory'])) {
-				msg(array("type" => "error", "text" => $lang['msge_catnexists']));
+				msg(array("type" => "error", "text" => str_replace('{category}', $param['newcategory'], $lang['upload.error.catnexists'])));
 				return 0;
 			}
 
@@ -385,13 +390,13 @@ class file_managment {
 					}
 					return 1;
 				} else {
-					msg(array("type" => "error", "text" => $lang['msge_copy']));
+					msg(array("type" => "error", "text" => $lang['upload.error.copy']));
 					return 0;
 				}
 			} else {
 				// RENAME action
 				if (rename($this->dname.$row['folder'].'/'.$row['name'], $this->dname.$row['folder'].'/'.$newname)) {
-					msg(array("text" => $lang['msgo_renamed']));
+					msg(array("text" => $lang['upload.renamed']));
 					$mysql->query("update ".prefix."_".$this->tname." set name=".db_squote($newname).", orig_name=".db_squote($newname)." where id = ".$row['id']);
 					if (file_exists($this->dname.$row['folder'].'/thumb/'.$row['name'])) {
 						rename($this->dname.$row['folder'].'/thumb/'.$row['name'], $this->dname.$row['folder'].'/thumb/'.$newname);
@@ -401,7 +406,7 @@ class file_managment {
 			}
 
 		}
-		msg(array("type" => "error", "text" => $lang['msge_rename']));
+		msg(array("type" => "error", "text" => $lang['upload.error.rename']));
 		return 0;
 	}
 
@@ -420,14 +425,14 @@ class file_managment {
 		$category = $parse->translit(trim(str_replace(array(' ','\\','/',chr(0)),array('_', ''),$category)));
 
 		if (is_dir($dir.$category)) {
-			msg(array("type" => "error", "text" => $lang['msge_catexists'], "info" => $lang['msgi_catexists']));
+			msg(array("type" => "error", "text" => $lang['upload.error.catexists'], "info" => $lang['upload.error.catexists#info']));
 			return;
 		}
 
 		if (@mkdir($dir.$category,0777) && (($type != "image") || @mkdir($dir.$category.'/thumb', 0777))) {
-			msg(array("text" => $lang['msgo_catcreated']));
+			msg(array("text" => $lang['upload.catcreated']));
 		} else {
-			msg(array("type" => "error", "text" => $lang['msge_create']));
+			msg(array("type" => "error", "text" => $lang['upload.error.catcreate']));
 		}
 	}
 
@@ -444,7 +449,7 @@ class file_managment {
 
 		if ($category && is_dir($dir.$category)) {
 			if ($this->count_dir($dir.$category)) {
-				msg(array("type" => "error", "text" => $lang['msge_delfiles']));
+				msg(array("type" => "error", "text" => $lang['upload.error.catnotempty']));
 				return;
 			}
 			if (is_dir($dir.$category.'/thumb')) {
@@ -452,13 +457,13 @@ class file_managment {
 			}
 
 			if (@rmdir($dir.$category)) {
-				msg(array("text" => $lang['msgo_catdeleted']));
+				msg(array("text" => $lang['upload.catdeleted']));
 			} else {
-				msg(array("type" => "error", "text" => $lang['msge_delcat']."( '".$dir.$category."' )"));
+				msg(array("type" => "error", "text" => str_replace('{dir}', $dir.$category, $lang['upload.error.delcat'])));
 			}
 			return;
 		}
-		msg(array("text" => $lang['msgo_catdeleted']));
+		msg(array("text" => $lang['upload.catdeleted']));
 	}
 
 	function count_dir($dir){
@@ -506,7 +511,7 @@ class image_managment{
 		// Check if we have a directory for thumb
 		if (!is_dir($dir.'/thumb')) {
 			if (!@mkdir($dir.'/thumb', 0777)) {
-			msg(array("type" => "error", "text" => $lang['msge_thumbdir']));
+			msg(array("type" => "error", "text" => $lang['upload.error.sysperm.thumbdir']));
 			return;
 			}
 		}
@@ -539,7 +544,7 @@ class image_managment{
 		}
 
 		if (!$cmd || !function_exists($cmd)) {
-			msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['msge_unsuppthumb'])));
+			msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
 			return;
 		}
 
@@ -551,7 +556,7 @@ class image_managment{
 		}
 
 		if (!$img) {
-			msg(array("type" => "error", "text" => $lang['msge_imgopenerr']));
+			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return;
 		}
 
@@ -593,7 +598,7 @@ class image_managment{
 		@chmod($dir.'/thumb/'.$file, 0644);
 
 		if (!$res) {
-			msg(array("type" => "error", "text" => $lang['msge_thumbcreate']));
+			msg(array("type" => "error", "text" => $lang['upload.error.thumbcreate']));
 			return;
 		}
 		return 1;
@@ -632,7 +637,7 @@ class image_managment{
 		}
 
 		if (!$cmd || !function_exists($cmd)) {
-			msg(array("type" => "error", "text" => $lang['msge_unsuppstamp']));
+			msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
 			return;
 		}
 
@@ -644,7 +649,7 @@ class image_managment{
 		}
 
 		if (!$img) {
-			msg(array("type" => "error", "text" => $lang['msge_imgopenerr']));
+			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return;
 		}
 
@@ -668,7 +673,7 @@ class image_managment{
 			}
 
 			if (!$cmd || !function_exists($cmd)) {
-				msg(array("type" => "error", "text" => $lang['msge_unsuppstamp']));
+				msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
 				return;
 			}
 
@@ -680,7 +685,7 @@ class image_managment{
 			}
 
 			if (!$stamp) {
-				msg(array("type" => "error", "text" => $lang['msge_openstamp']));
+				msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
 				return;
 			}
 
@@ -688,7 +693,7 @@ class image_managment{
 			$destX = $origX - $stampX - 10;
 			$destY = $origY - $stampY - 10;
 			if (($destX<0)||($destY<0)) {
-				msg(array("type" => "error", "text" => $lang['msge_stampimgsml']));
+				msg(array("type" => "error", "text" => $lang['upload.error.stampsize']));
 				return;
 			}
 
@@ -740,7 +745,7 @@ class image_managment{
 			case 6: $res = @imagebmp($img,  $param['outfile']);		break;
 		}
 		if (!$res) {
-			msg(array("type" => "error", "text" => $lang['msge_stampcreate']));
+			msg(array("type" => "error", "text" => $lang['upload.error.addstamp']));
 			return;
 		}
 		return 1;
