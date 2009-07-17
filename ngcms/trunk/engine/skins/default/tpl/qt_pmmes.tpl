@@ -12,7 +12,7 @@
 <a href="javascript:insertext('[s]','[/s]', '{area}')" title='{l_qt_crossline}'><img src="{skins_url}/tags/crossline.gif" hspace="5" vspace="5"></a>
 <a href="javascript:insertext('[i]','[/i]', '{area}')" title='{l_qt_italic}'><img src="{skins_url}/tags/italic.gif" hspace="5" vspace="5"></a>
 <a href="javascript:insertext('[right]','[/right]', '{area}')" title='{l_qt_right}'><img src="{skins_url}/tags/right.gif" hspace="5" vspace="5"></a>
-<a href="javascript:insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]','\n[/ol]', '{area}')" title='{l_qt_numlist}'><img src="{skins_url}/tags/numlist.gif" hspace="5" vspace="5"></a>
+<a href="javascript:insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ol]','', '{area}')" title='{l_qt_numlist}'><img src="{skins_url}/tags/numlist.gif" hspace="5" vspace="5"></a>
 <a href="javascript:insertext('[email]','[/email]', '{area}')" title='{l_qt_email}'><img src="{skins_url}/tags/email.gif" hspace="5" vspace="5"></a>
 <a href="javascript:insertext('[img]','[/img]', '{area}')" title='{l_qt_imagelink}'><img src="{skins_url}/tags/imagelink.gif" hspace="5" vspace="5"></a>
 <a style="cursor: pointer;"  onclick="document.form.content{area}.rows -= 5;" title='{l_qt_rowdel}'><img src="{skins_url}/tags/rowdel.gif" hspace="5" vspace="5" alt="{l_qt_rowdel}" /></a>
