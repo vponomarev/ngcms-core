@@ -11,8 +11,8 @@
 <a onclick="insertext('[right]','[/right]', '{area}')" title='{l_tags.right}'><img src="{skins_url}/tags/right.gif" width="16" height="16" alt="{l_tags.right}" /></a>
 <img src="{skins_url}/tags/sep.gif" width="1" height="16" alt="" />
 
-<a onclick="insertext('[ul]\n[li][/li]\n[li][/li]\n[li][/li]','\n[/ul]', '{area}')" title='{l_tags.bulllist}'><img src="{skins_url}/tags/bulllist.gif" width="16" height="16" alt="{l_tags.bulllist}" /></a>
-<a onclick="insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]','\n[/ol]', '{area}')" title='{l_tags.numlist}'><img src="{skins_url}/tags/numlist.gif" width="16" height="16" alt="{l_tags.numlist}" /></a>
+<a onclick="insertext('[ul]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ul]','', '{area}')" title='{l_tags.bulllist}'><img src="{skins_url}/tags/bulllist.gif" width="16" height="16" alt="{l_tags.bulllist}" /></a>
+<a onclick="insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ol]','', '{area}')" title='{l_tags.numlist}'><img src="{skins_url}/tags/numlist.gif" width="16" height="16" alt="{l_tags.numlist}" /></a>
 <img src="{skins_url}/tags/sep.gif" width="1" height="16" alt="" />
 
 <a onclick="insertext('[spoiler]','[/spoiler]', '{area}')" title='{l_tags.spoiler}'><img src="{skins_url}/tags/spoiler.gif" width="16" height="16" alt="{l_tags.spoiler}" /></a>
