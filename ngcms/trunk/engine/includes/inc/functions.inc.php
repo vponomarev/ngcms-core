@@ -1221,17 +1221,17 @@ function generatePagination($current, $start, $end, $maxnav, $paginationParams, 
 		// Situation #1: 1,2,3,4,[5],6 ... 128
 		if ($start < ($sectionSize * 2)) {
 			$pages .= generatePaginationBlock($current, 1, $sectionSize * 2, $paginationParams, $navigations);
-			$pages .= " ... ";
+			$pages .= $navigations['dots'];
 			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations);
 		} elseif ($start > ($pages_count - $sectionSize * 2 + 1)) {
 			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations);
-			$pages .= " ... ";
+			$pages .= $navigations['dots'];
 			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize*2 + 1, $pages_count, $paginationParams, $navigations);
 		} else {
 			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations);
-			$pages .= " ... ";
+			$pages .= $navigations['dots'];
 			$pages .= generatePaginationBlock($current, $cstart-1, $cstart+1, $paginationParams, $navigations);
-			$pages .= " ... ";
+			$pages .= $navigations['dots'];
 			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations);
 		}
 	} else {
