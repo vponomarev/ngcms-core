@@ -1219,7 +1219,6 @@ function generatePagination($current, $start, $end, $maxnav, $paginationParams, 
 			$sectionSize = 1;
 
 		// Situation #1: 1,2,3,4,[5],6 ... 128
-		print "(X):[$start, $pages_count, $sectionSize, $maxnav, $current, $cstart]";
 		if ($current < ($sectionSize * 2)) {
 			$pages .= generatePaginationBlock($current, 1, $sectionSize * 2, $paginationParams, $navigations);
 			$pages .= $navigations['dots'];
