@@ -159,9 +159,10 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	} else {
 		// -> generate template name for selected style
 		switch ($callingParams['style']) {
-			case 'short': $templateName = 'news.short'; break;
-			case 'full' : $templateName = 'news.full'; break;
-			default     : $templateName = '';
+			case 'short' : $templateName = 'news.short'; break;
+			case 'full'  : $templateName = 'news.full'; break;
+			case 'print' : $templateName = 'news.print'; break;
+			default      : $templateName = '';
 		}
 	}
 
@@ -506,7 +507,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 // Default "show news" function
 function showNews($handlerName, $params) {
- global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS;
+ global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW;
  // preload plugins
  load_extras('news');
 
@@ -518,11 +519,15 @@ function showNews($handlerName, $params) {
  $templatePath = tpl_dir.$config['theme'];
 
  // Check for FULL NEWS mode
- if ($handlerName == 'news') {
- 	$callingParams['style'] = 'full';
+ if (($handlerName == 'news')||($handlerName == 'print')) {
+ 	$flagPrint = ($handlerName == 'print')?true:false;
+	if ($flagPrint)
+		$SUPRESS_TEMPLATE_SHOW = true;
 
-	// Execute filters [ onBeforeShow ]
-	if (is_array($PFILTERS['news'])) {
+	$callingParams['style'] = $flagPrint?'print':'full';
+
+	// Execute filters [ onBeforeShow ] ** ONLY IN 'news' mode. In print mode we don't use it
+	if (!flagPrint && is_array($PFILTERS['news'])) {
 		foreach ($PFILTERS['news'] as $k => $v) { $v->onBeforeShow('full'); }
 	}
 
@@ -540,8 +545,8 @@ function showNews($handlerName, $params) {
 
  	// Try to show news
 	if (($row = news_showone($vars['id'], $vars['altname'], $callingParams)) !== false) {
-		// Execute filters [ onAfterShow ]
-		if (is_array($PFILTERS['news'])) {
+		// Execute filters [ onAfterShow ] ** ONLY IN 'news' mode. In print mode we don't use it
+		if (!$flagPrint && is_array($PFILTERS['news'])) {
 			foreach ($PFILTERS['news'] as $k => $v) { $v->onAfterNewsShow($row['id'], $row, array('style' => 'full')); }
 		}
 	 }
