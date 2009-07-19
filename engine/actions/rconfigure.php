@@ -30,7 +30,7 @@ $ULIB->registerCommand('core', 'registration',
 $ULIB->registerCommand('core', 'activation',
 		array ('vars' => array(		'userid' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID пользователя')),
 						'code'	=> array('matchRegex' => '.+?', 'descr' => array( 'russian' => 'Код активации')),
-					
+
 				),
 				'descr'	=> array ('russian' => 'Активация нового пользователя'),
 		)
@@ -39,7 +39,7 @@ $ULIB->registerCommand('core', 'activation',
 $ULIB->registerCommand('core', 'lostpassword',
 		array ('vars' => array(		'userid' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID пользователя')),
 						'code'	=> array('matchRegex' => '.+?', 'descr' => array( 'russian' => 'Код активации')),
-					
+
 				),
 				'descr'	=> array ('russian' => 'Восстановление потерянного пароля'),
 		)
@@ -81,13 +81,30 @@ $ULIB->registerCommand('news', 'news',
 							'catid' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID категории')),
 							'year' => array('matchRegex' => '\d{4}', 'descr' => array ('russian' => 'Год')),
 							'month' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'Месяц')),
-							'day' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'День')),							'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
+							'day' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'День')),
+							'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
 							'altname' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя новости')),
 							'id' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID новости')),
 							'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
 					),
 				'descr'	=> array ('russian' => 'Отображение полной новости'),
 		)
+);
+
+$ULIB->registerCommand('news', 'print',
+	array ('vars' =>
+	array(	'category' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя категории')),
+	'catid' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID категории')),
+	'year' => array('matchRegex' => '\d{4}', 'descr' => array ('russian' => 'Год')),
+	'month' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'Месяц')),
+	'day' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'День')),
+	'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
+	'altname' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя новости')),
+	'id' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID новости')),
+	'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
+	),
+	'descr'	=> array ('russian' => 'Страница для печати полной новости'),
+	)
 );
 
 $ULIB->registerCommand('news', 'by.year',

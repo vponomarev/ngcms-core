@@ -320,8 +320,8 @@ $handlerList = array (
     'flagFailContinue' => false,
     'rstyle' => 
     array (
-      'rcmd' => '/plugin/{plugin}[/{handler}/]',
-      'regex' => '#^/plugin/(.+?)(?:/(.+?)/){0,1}$#',
+      'rcmd' => '/plugin/{plugin}/[{handler}/]',
+      'regex' => '#^/plugin/(.+?)/(?:(.+?)/){0,1}$#',
       'regexMap' => 
       array (
         1 => 'plugin',
@@ -351,7 +351,7 @@ $handlerList = array (
         array (
           0 => 0,
           1 => '/',
-          2 => 1,
+          2 => 0,
         ),
         3 => 
         array (
@@ -901,6 +901,75 @@ $handlerList = array (
       ),
     ),
   ),
+  19 => 
+  array (
+    'pluginName' => 'news',
+    'handlerName' => 'print',
+    'flagPrimary' => true,
+    'flagFailContinue' => false,
+    'rstyle' => 
+    array (
+      'rcmd' => '/{category}/{altname}[/page{page}].print',
+      'regex' => '#^/(.+?)/(.+?)(?:/page(\\d{1,4})){0,1}.print$#',
+      'regexMap' => 
+      array (
+        1 => 'category',
+        2 => 'altname',
+        3 => 'page',
+      ),
+      'reqCheck' => 
+      array (
+      ),
+      'setVars' => 
+      array (
+      ),
+      'genrMAP' => 
+      array (
+        0 => 
+        array (
+          0 => 0,
+          1 => '/',
+          2 => 0,
+        ),
+        1 => 
+        array (
+          0 => 1,
+          1 => 'category',
+          2 => 0,
+        ),
+        2 => 
+        array (
+          0 => 0,
+          1 => '/',
+          2 => 0,
+        ),
+        3 => 
+        array (
+          0 => 1,
+          1 => 'altname',
+          2 => 0,
+        ),
+        4 => 
+        array (
+          0 => 0,
+          1 => '/page',
+          2 => 1,
+        ),
+        5 => 
+        array (
+          0 => 1,
+          1 => 'page',
+          2 => 1,
+        ),
+        6 => 
+        array (
+          0 => 0,
+          1 => '.print',
+          2 => 0,
+        ),
+      ),
+    ),
+  ),
 );
 $handlerPrimary = array (
   'news' => 
@@ -933,6 +1002,11 @@ $handlerPrimary = array (
     'news' => 
     array (
       0 => 18,
+      1 => true,
+    ),
+    'print' => 
+    array (
+      0 => 19,
       1 => true,
     ),
   ),

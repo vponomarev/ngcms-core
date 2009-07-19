@@ -230,6 +230,80 @@ $urlLibrary = array (
         'russian' => 'Íîâîñòè çà äåíü',
       ),
     ),
+    'print' => 
+    array (
+      'vars' => 
+      array (
+        'category' => 
+        array (
+          'matchRegex' => '.+?',
+          'descr' => 
+          array (
+            'russian' => 'Àëüò. èìÿ êàòåãîğèè',
+          ),
+        ),
+        'catid' => 
+        array (
+          'matchRegex' => '\\d{1,4}',
+          'descr' => 
+          array (
+            'russian' => 'ID êàòåãîğèè',
+          ),
+        ),
+        'year' => 
+        array (
+          'matchRegex' => '\\d{4}',
+          'descr' => 
+          array (
+            'russian' => 'Ãîä',
+          ),
+        ),
+        'month' => 
+        array (
+          'matchRegex' => '\\d{2}',
+          'descr' => 
+          array (
+            'russian' => 'Ìåñÿö',
+          ),
+        ),
+        'day' => 
+        array (
+          'matchRegex' => '\\d{2}',
+          'descr' => 
+          array (
+            'russian' => 'Äåíü',
+          ),
+        ),
+        'page' => 
+        array (
+          'matchRegex' => '\\d{1,4}',
+          'descr' => 
+          array (
+            'russian' => 'Ñòğàíèöà âíóòğè íîâîñòè',
+          ),
+        ),
+        'altname' => 
+        array (
+          'matchRegex' => '.+?',
+          'descr' => 
+          array (
+            'russian' => 'Àëüò. èìÿ íîâîñòè',
+          ),
+        ),
+        'id' => 
+        array (
+          'matchRegex' => '\\d{1,4}',
+          'descr' => 
+          array (
+            'russian' => 'ID íîâîñòè',
+          ),
+        ),
+      ),
+      'descr' => 
+      array (
+        'russian' => 'Ñòğàíèöà äëÿ ïå÷àòè ïîëíîé íîâîñòè',
+      ),
+    ),
   ),
   'rss_export' => 
   array (

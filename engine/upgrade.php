@@ -235,8 +235,8 @@ if ($_REQUEST['db_update']) {
 // Now, let's check for auth_basic module
 if (is_array($extras['auth_basic'])) {
 	// Found
-	if (!status('auth_basic')) {
-		if (switch_on('auth_basic')) {
+	if (!getPluginStatusActive('auth_basic')) {
+		if (pluginSwitch('auth_basic', 'on')) {
 			echo "Модуль 'auth_basic' активирован!<br />\n";
 		} else {
 			echo "Ошибка: не могу активировать модуль 'auth_basic'<br />\n";

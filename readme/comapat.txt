@@ -1,0 +1,28 @@
+=========================================================================================
+* Список плагинов, адаптированных для работы с "Next Generation CMS" версии 0.9.1       *
+=========================================================================================
+
+ID плагина    | Версия | Наименование плагина
+--------------+--------+--------------------------------------
+ads           | 0.11   | ADS manager
+ads_linkfeed  | 0.01   | LINKFEED.RU links display
+ads_sape      | 0.02   | SAPE.RU links display
+archive       | 0.04   | Show news archive
+auth_basic    | 0.16   | Basic auth
+bb_media      | 0.03   | MEDIA bb code
+calendar      | 0.08   | Show news calendar
+comments      | 0.01   | User comments
+complain      | 0.04   | Сообщить о проблеме в новости
+cron          | 0.04   | Планировщик задач
+favorites     | 0.05   | Show favorite news
+ireplace      | 0.01   | Search and Replace
+jchat         | 0.03   | AJAX chat
+lastnews      | 0.12   | Show last news
+popular       | 0.06   | Show most popular news
+rating        | 0.04   | Рейтинг новостей
+switcher      | 0.05a  | Template/Language switcher
+tags          | 0.12   | Теги [без инсталлера]
+uprofile      | 0.01   | Users profile
+varmgr        | 0.04   | Variable manager
+xfields       | 0.09   | Custom fields
+
