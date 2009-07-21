@@ -972,7 +972,7 @@ function generateCategoryFilter(){
 //
 // Generate link to news
 //
-function newsGenerateLink($row, $flagPrint = false) {
+function newsGenerateLink($row, $flagPrint = false, $page = 0) {
 	global $catmap;
 
 	// Prepare category listing
@@ -993,7 +993,11 @@ function newsGenerateLink($row, $flagPrint = false) {
 
 
 	// Get full news link
-	return generateLink('news', $flagPrint?'print':'news', array('category' => $clist, 'catid' => $ilist, 'altname' => $row['alt_name'], 'id' => $row['id'], 'year' => date('Y',$row['postdate']), 'month' => date('m', $row['postdate']), 'day' => date('d', $row['postdate'])));
+	$params = array('category' => $clist, 'catid' => $ilist, 'altname' => $row['alt_name'], 'id' => $row['id'], 'year' => date('Y',$row['postdate']), 'month' => date('m', $row['postdate']), 'day' => date('d', $row['postdate']));
+	if ($page)
+		$params['page'] = $page;
+
+	return generateLink('news', $flagPrint?'print':'news', $params);
 
 }
 
@@ -1128,7 +1132,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	$tvars['vars']['pinned']	=	($row['pinned']) ? "news_pinned" : "";
 	$tvars['vars']['category']	=	@GetCategories($row['catid']);
 
-	$tvars['vars']['[print-link]']	=	"<a href=\"".newsGenerateLink($row, true)."\">";
+	$tvars['vars']['[print-link]']	=	"<a href=\"".newsGenerateLink($row, true, $page)."\">";
 	$tvars['vars']['[/print-link]']	=	"</a>";
 	$tvars['vars']['news_link']		=	$nlink;
 
