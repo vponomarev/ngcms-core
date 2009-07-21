@@ -49,7 +49,7 @@ function pm_list (){
 		$tvars['vars'] = array(
 			'php_self'	=>	$PHP_SELF,
 			'pmid'		=>	$row['pmid'],
-			'pmdate'	=>	LangDate($config['timestamp_comment'], $row['pmdate']),
+			'pmdate'	=>	LangDate('j.m.Y - H:i', $row['pmdate']),
 			'title'		=>	$row['title'],
 			'link'		=>	(!$row['name']) ? $lang['messaging'] : '<a href="'.GetLink('user', $row).'">'.$row['name'].'</a>',
 			'viewed'	=>	$row['viewed'] = ($row['viewed'] == 1 ? $lang["viewed"] : "<font color=green><b>$lang[unviewed]</b></font>")
