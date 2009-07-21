@@ -621,8 +621,8 @@ function showNews($handlerName, $params) {
 
 			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("j Q Y", mktime("0", "0", "0", $month, $day, $year));
 		    $paginationParams = checkLinkAvailable('news', 'by.day')?
-		    			array('pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => array('day' => $day, 'month' => $month, 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
-		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.day'), 'xparams' => array('day' => $day, 'month' => $month, 'year' => $year), 'paginator' => array('page', 1, false));
+		    			array('pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => array('day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.day'), 'xparams' => array('day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year), 'paginator' => array('page', 1, false));
 
 			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
 			break;
@@ -636,8 +636,8 @@ function showNews($handlerName, $params) {
 
 			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("F Y", mktime(0,0,0, $month, 1, $year));
 		    $paginationParams = checkLinkAvailable('news', 'by.month')?
-		    			array('pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => array('month' => $month, 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
-		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.month'), 'xparams' => array('month' => $month, 'year' => $year), 'paginator' => array('page', 1, false));
+		    			array('pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => array('month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.month'), 'xparams' => array('month' => sprintf('%02u', $month), 'year' => $year), 'paginator' => array('page', 1, false));
 
 			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
 			break;
