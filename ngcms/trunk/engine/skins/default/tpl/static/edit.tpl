@@ -2,7 +2,7 @@
 <input type=hidden name="area" value="" />
 </form>
 
-<form name="postForm" id="postForm" method="post" action="{php_self}?mod=static" target="_self">
+<form name="form" id="postForm" method="post" action="{php_self}?mod=static" target="_self">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
