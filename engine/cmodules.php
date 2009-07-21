@@ -1,9 +1,9 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
-// Name: registration.php
-// Description: registration system
+// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru/)
+// Name: cmodules.php
+// Description: Common CORE modules
 // Author: Vitaly Ponomarev
 //
 
@@ -55,12 +55,12 @@ function coreRegisterUser() {
 	}
 
 
-	if (!$_REQUEST['type'] && $config['users_selfregister'] && !is_array($userROW)) {
+	if (!$_REQUEST['type'] && $config['users_selfregister']) {
 		// Receiving parameter list during registration
 		$auth = $AUTH_METHOD[$config['auth_module']];
 		$params = $auth->get_reg_params();
 		generate_reg_page($params);
-	} else if ($_REQUEST['type'] == "doregister" && $config['users_selfregister'] && !is_array($userROW)) {
+	} else if ($_REQUEST['type'] == "doregister" && $config['users_selfregister']) {
 		// Receiving parameter list during registration
 		$auth = $AUTH_METHOD[$config['auth_module']];
 		$params = $auth->get_reg_params();
@@ -168,8 +168,8 @@ function coreRestorePassword() {
 	$lang = LoadLang('lostpassword', 'site');
 	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_lostpass'];
 
-	if (is_array($userROW) || !$config['users_selfregister']) {
-		msg(array("type" => "error", "text" => $lang['msge_lpforbid']));
+	if (is_array($userROW)) {
+		@header('Location: '.$config['home_url']);
 		return;
 	}
 
@@ -205,10 +205,20 @@ function coreRestorePassword() {
 		foreach ($params as $param) {
 			$values[$param['name']] = $_POST[$param['name']];
 		}
-		// Trying password recovery
+
 		$msg = '';
 
-		if ($auth->restorepw(&$params, $values, &$msg)) {
+		// Check captcha
+		if ($config['use_captcha']) {
+			$captcha = $_REQUEST['vcode'];
+			if (!$captcha || ($_SESSION['captcha'] != $captcha)) {
+				// Fail
+				$msg = $lang['msge_vcode'];
+			}
+		}
+
+		// Trying password recovery
+		if (($msg == '') && $auth->restorepw(&$params, $values, &$msg)) {
 			// OK
 			// ...
 		} else {
