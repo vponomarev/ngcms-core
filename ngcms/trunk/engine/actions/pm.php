@@ -45,13 +45,27 @@ function pm_send() {
 function pm_list (){
 	global $mysql, $config, $lang, $userROW, $tpl, $mod;
 
-	foreach($mysql->select("select * from ".uprefix."_users_pm pm left join ".uprefix."_users u on pm.from_id=u.id where pm.to_id = ".db_squote($userROW['id'])." order by pmid desc limit 0, 30") as $row) {
+	foreach($mysql->select("select pm.*, u.id as uid, u.name as uname from ".uprefix."_users_pm pm left join ".uprefix."_users u on pm.from_id=u.id where pm.to_id = ".db_squote($userROW['id'])." order by pmid desc limit 0, 30") as $row) {
+		$author = '';
+		if ($row['from_id'] && $row['uid']) {
+			$alink = checkLinkAvailable('uprofile', 'show')?
+						generateLink('uprofile', 'show', array('name' => $row['uname'], 'id' => $row['uid'])):
+						generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['uname'], 'id' => $row['uid']));
+			$author = '<a href="'.$alink.'">'.$row['uname'].'</a>';
+		} else if ($row['from_id']) {
+			$author = $lang['udeleted'];
+		} else {
+			$author = $lang['messaging'];
+		}
+
+
+
 		$tvars['vars'] = array(
 			'php_self'	=>	$PHP_SELF,
 			'pmid'		=>	$row['pmid'],
 			'pmdate'	=>	LangDate('j.m.Y - H:i', $row['pmdate']),
 			'title'		=>	$row['title'],
-			'link'		=>	(!$row['name']) ? $lang['messaging'] : '<a href="'.GetLink('user', $row).'">'.$row['name'].'</a>',
+			'link'		=>	$author,
 			'viewed'	=>	$row['viewed'] = ($row['viewed'] == 1 ? $lang["viewed"] : "<font color=green><b>$lang[unviewed]</b></font>")
 		);
 		$tpl -> template('entries', tpl_actions.$mod);
