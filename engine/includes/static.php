@@ -18,6 +18,8 @@ $lang = LoadLang('static', 'site');
 function showStaticPage($params) {
 	global $config, $tpl, $mysql, $userROW, $parse, $template, $lang, $SYSTEM_FLAGS, $PFILTERS;
 
+	load_extras('static');
+
 	$limit = '';
 	if (intval($params['id'])) {
 		$limit = "id = ".db_squote($params['id']);
