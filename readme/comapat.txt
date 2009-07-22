@@ -20,6 +20,7 @@ jchat         | 0.03   | AJAX chat
 lastnews      | 0.12   | Show last news
 popular       | 0.06   | Show most popular news
 rating        | 0.04   | Рейтинг новостей
+rss_export    | 0.10   | RSS экспорт
 switcher      | 0.05a  | Template/Language switcher
 tags          | 0.12   | Теги [без инсталлера]
 uprofile      | 0.01   | Users profile
