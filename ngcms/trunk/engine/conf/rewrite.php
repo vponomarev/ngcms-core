@@ -265,6 +265,49 @@ $handlerList = array (
   ),
   4 => 
   array (
+    'pluginName' => 'rss_export',
+    'handlerName' => 'category',
+    'flagPrimary' => true,
+    'flagFailContinue' => false,
+    'rstyle' => 
+    array (
+      'rcmd' => '/cat/{category}.xml',
+      'regex' => '#^/cat/(.+?).xml$#',
+      'regexMap' => 
+      array (
+        1 => 'category',
+      ),
+      'reqCheck' => 
+      array (
+      ),
+      'setVars' => 
+      array (
+      ),
+      'genrMAP' => 
+      array (
+        0 => 
+        array (
+          0 => 0,
+          1 => '/cat/',
+          2 => 0,
+        ),
+        1 => 
+        array (
+          0 => 1,
+          1 => 'category',
+          2 => 0,
+        ),
+        2 => 
+        array (
+          0 => 0,
+          1 => '.xml',
+          2 => 0,
+        ),
+      ),
+    ),
+  ),
+  5 => 
+  array (
     'pluginName' => 'news',
     'handlerName' => 'main',
     'flagPrimary' => true,
@@ -312,7 +355,7 @@ $handlerList = array (
       ),
     ),
   ),
-  5 => 
+  6 => 
   array (
     'pluginName' => 'core',
     'handlerName' => 'plugin',
@@ -368,7 +411,7 @@ $handlerList = array (
       ),
     ),
   ),
-  6 => 
+  7 => 
   array (
     'pluginName' => 'uprofile',
     'handlerName' => 'edit',
@@ -398,11 +441,11 @@ $handlerList = array (
       ),
     ),
   ),
-  7 => 
+  8 => 
   array (
     'pluginName' => 'uprofile',
     'handlerName' => 'show',
-    'flagPrimary' => true,
+    'flagPrimary' => false,
     'flagFailContinue' => false,
     'rstyle' => 
     array (
@@ -441,11 +484,11 @@ $handlerList = array (
       ),
     ),
   ),
-  8 => 
+  9 => 
   array (
     'pluginName' => 'uprofile',
     'handlerName' => 'show',
-    'flagPrimary' => false,
+    'flagPrimary' => true,
     'flagFailContinue' => false,
     'rstyle' => 
     array (
@@ -484,7 +527,7 @@ $handlerList = array (
       ),
     ),
   ),
-  9 => 
+  10 => 
   array (
     'pluginName' => 'static',
     'handlerName' => '',
@@ -527,7 +570,7 @@ $handlerList = array (
       ),
     ),
   ),
-  10 => 
+  11 => 
   array (
     'pluginName' => 'static',
     'handlerName' => '',
@@ -570,7 +613,7 @@ $handlerList = array (
       ),
     ),
   ),
-  11 => 
+  12 => 
   array (
     'pluginName' => 'rss_export',
     'handlerName' => '',
@@ -600,7 +643,7 @@ $handlerList = array (
       ),
     ),
   ),
-  12 => 
+  13 => 
   array (
     'pluginName' => 'search',
     'handlerName' => '',
@@ -630,7 +673,7 @@ $handlerList = array (
       ),
     ),
   ),
-  13 => 
+  14 => 
   array (
     'pluginName' => 'core',
     'handlerName' => 'registration',
@@ -660,7 +703,7 @@ $handlerList = array (
       ),
     ),
   ),
-  14 => 
+  15 => 
   array (
     'pluginName' => 'core',
     'handlerName' => 'activation',
@@ -716,7 +759,7 @@ $handlerList = array (
       ),
     ),
   ),
-  15 => 
+  16 => 
   array (
     'pluginName' => 'core',
     'handlerName' => 'lostpassword',
@@ -772,7 +815,7 @@ $handlerList = array (
       ),
     ),
   ),
-  16 => 
+  17 => 
   array (
     'pluginName' => 'core',
     'handlerName' => 'login',
@@ -802,7 +845,7 @@ $handlerList = array (
       ),
     ),
   ),
-  17 => 
+  18 => 
   array (
     'pluginName' => 'core',
     'handlerName' => 'logout',
@@ -832,7 +875,7 @@ $handlerList = array (
       ),
     ),
   ),
-  18 => 
+  19 => 
   array (
     'pluginName' => 'news',
     'handlerName' => 'news',
@@ -901,7 +944,7 @@ $handlerList = array (
       ),
     ),
   ),
-  19 => 
+  20 => 
   array (
     'pluginName' => 'news',
     'handlerName' => 'print',
@@ -996,17 +1039,30 @@ $handlerPrimary = array (
     ),
     'main' => 
     array (
-      0 => 4,
+      0 => 5,
       1 => true,
     ),
     'news' => 
     array (
-      0 => 18,
+      0 => 19,
       1 => true,
     ),
     'print' => 
     array (
-      0 => 19,
+      0 => 20,
+      1 => true,
+    ),
+  ),
+  'rss_export' => 
+  array (
+    'category' => 
+    array (
+      0 => 4,
+      1 => true,
+    ),
+    '' => 
+    array (
+      0 => 12,
       1 => true,
     ),
   ),
@@ -1014,32 +1070,32 @@ $handlerPrimary = array (
   array (
     'plugin' => 
     array (
-      0 => 5,
+      0 => 6,
       1 => true,
     ),
     'registration' => 
     array (
-      0 => 13,
+      0 => 14,
       1 => true,
     ),
     'activation' => 
     array (
-      0 => 14,
+      0 => 15,
       1 => true,
     ),
     'lostpassword' => 
     array (
-      0 => 15,
+      0 => 16,
       1 => true,
     ),
     'login' => 
     array (
-      0 => 16,
+      0 => 17,
       1 => true,
     ),
     'logout' => 
     array (
-      0 => 17,
+      0 => 18,
       1 => true,
     ),
   ),
@@ -1047,24 +1103,16 @@ $handlerPrimary = array (
   array (
     'edit' => 
     array (
-      0 => 6,
+      0 => 7,
       1 => true,
     ),
     'show' => 
     array (
-      0 => 7,
+      0 => 9,
       1 => true,
     ),
   ),
   'static' => 
-  array (
-    '' => 
-    array (
-      0 => 10,
-      1 => true,
-    ),
-  ),
-  'rss_export' => 
   array (
     '' => 
     array (
@@ -1076,7 +1124,7 @@ $handlerPrimary = array (
   array (
     '' => 
     array (
-      0 => 12,
+      0 => 13,
       1 => true,
     ),
   ),
