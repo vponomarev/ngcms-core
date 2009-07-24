@@ -27,4 +27,4 @@ RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^.*$ - [S=35]
 
 # Editable links
-RewriteRule ^.+$ ?$1 [QSA,L]
+RewriteRule ^.+$ index.php?$1 [QSA,L]
