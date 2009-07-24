@@ -14,6 +14,7 @@ calendar      | 0.08   | Show news calendar
 comments      | 0.01   | User comments
 complain      | 0.04   | Сообщить о проблеме в новости
 cron          | 0.04   | Планировщик задач
+gsmg          | 0.05   | Google SiteMap Generator
 favorites     | 0.05   | Show favorite news
 ireplace      | 0.01   | Search and Replace
 jchat         | 0.03   | AJAX chat

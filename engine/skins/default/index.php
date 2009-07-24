@@ -3,13 +3,13 @@
 $lang = LoadLang('index', 'admin');
 
 if (is_array($userROW)) {
-	$newpm = $mysql->rows($mysql->query("SELECT pmid FROM ".prefix."_users_pm WHERE to_id = ".db_squote($userROW['id'])." AND viewed = '0'"));
+	$newpm = $mysql->result("SELECT count(pmid) FROM ".prefix."_users_pm WHERE to_id = ".db_squote($userROW['id'])." AND viewed = '0'");
 	$newpm = ($newpm != "0") ? '<b>'.$newpm.'</b>' : '0';
 
 	// Calculate number of un-approved news
 	$unapproved = '';
 	if ($userROW['status'] == 1 || $userROW['status'] == 2) {
-		$unapp = $mysql->rows($mysql->query("SELECT id FROM ".prefix."_news WHERE approve = '0'"));
+		$unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
 		if ($unapp)
 			$unapproved = ' [ <a href="?mod=editnews&status_mode=1"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
 	}

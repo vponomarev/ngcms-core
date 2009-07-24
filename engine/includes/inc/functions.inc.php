@@ -360,7 +360,7 @@ function checkFlood($mode, $ip, $act, $subact, $userRec, $name){
 	$mysql->query("DELETE FROM ".prefix."_flood WHERE id < ".db_squote($this_time));
 
 	// Check if we have record
-	if ($mysql->rows($mysql->query("SELECT * FROM ".prefix."_flood WHERE id > ".db_squote($this_time)." AND ip = ".db_squote($ip))) > "0") {
+	if ($mysql->record("SELECT * FROM ".prefix."_flood WHERE id > ".db_squote($this_time)." AND ip = ".db_squote($ip)." limit 1")) {
 		// Flood found
 		return 1;
 	}
