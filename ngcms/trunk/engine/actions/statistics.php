@@ -91,9 +91,9 @@ $tpl -> template('statistics', tpl_actions);
 $df_size = @disk_free_space(root);
 $df = ($df_size > 1) ? Formatsize($df_size) : 'n/a';
 
-$news_unapp = $mysql->rows($mysql->query("SELECT id FROM ".prefix."_news WHERE approve = '0'"));
+$news_unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
 $news_unapp = ($news_unapp == "0") ? $news_unapp : '<font color="#ff6600">'.$news_unapp.'</font>';
-$users_unact = $mysql->rows($mysql->query("SELECT id FROM ".uprefix."_users WHERE activation != ''"));
+$users_unact = $mysql->result("SELECT count(id) FROM ".uprefix."_users WHERE activation != ''");
 $users_unact = ($users_unact == "0") ? $users_unact : '<font color="#ff6600">'.$users_unact.'</font>';
 $tvars['vars'] = array(
 	'php_self'			=>	$PHP_SELF,
@@ -109,15 +109,15 @@ $tvars['vars'] = array(
 	'upfiles'			=>	$upfiles,
 	'upimages'			=>	$upimages,
 	'photos'			=>	$photos,
-	'news'				=>	$mysql->rows($mysql->query("SELECT id FROM ".prefix."_news")),
+	'news'				=>	$mysql->result("SELECT count(id) FROM ".prefix."_news"),
 	'news_unapp'		=>	$news_unapp,
-	'comments'			=>	$mysql->rows($mysql->query("SELECT id FROM ".prefix."_comments")),
-	'users'				=>	$mysql->rows($mysql->query("SELECT id FROM ".uprefix."_users")),
+	'comments'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_comments"),
+	'users'				=>	$mysql->result("SELECT count(id) FROM ".uprefix."_users"),
 	'users_unact'		=>	$users_unact,
-	'images'			=>	$mysql->rows($mysql->query("SELECT id FROM ".prefix."_images")),
-	'files'				=>	$mysql->rows($mysql->query("SELECT id FROM ".prefix."_files")),
-	'categories'		=>	$mysql->rows($mysql->query("SELECT id FROM ".prefix."_category")),
-	'comments'			=>	$mysql->rows($mysql->query("SELECT id FROM ".prefix."_comments")),
+	'images'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_images"),
+	'files'				=>	$mysql->result("SELECT id FROM ".prefix."_files"),
+	'categories'		=>	$mysql->result("SELECT count(id) FROM ".prefix."_category"),
+	'comments'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_comments"),
 	'admin_note'		=>	($note) ? $note : $lang['no_notes']
 );
 
