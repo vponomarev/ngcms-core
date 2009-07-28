@@ -302,7 +302,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
 	global $year, $month, $day;
 	global $timer;
-	global $SYSTEM_FLAGS;
+	global $SYSTEM_FLAGS, $TemplateCache;
 
 
 	$categoryList = array();
@@ -458,7 +458,8 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	}
 
 	// Make navigation bar
-	$navigations = getNavigations(tpl_dir.$config['theme']);
+	templateLoadVariables(true);
+	$navigations = $TemplateCache['site']['#variables']['navigation'];
 	$tpl -> template('pages', tpl_dir.$config['theme']);
 
 	if (count($carray)) { $row['alt'] = category; }

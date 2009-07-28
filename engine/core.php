@@ -15,6 +15,7 @@
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
 global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
+global $TemplateCache;
 
 $PLUGINS	= array('active'	=> array(),
 			'active:loaded'	=> 0,
@@ -37,6 +38,8 @@ $SUPRESS_TEMPLATE_SHOW	= 0;
 $SUPRESS_MAINBLOCK_SHOW	= 0;
 
 $SYSTEM_FLAGS = array();	// internal system global flags
+
+$TemplateCache = array();
 
 // Configure error display mode
 @error_reporting (E_ALL ^ E_NOTICE);

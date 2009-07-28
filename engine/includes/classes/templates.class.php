@@ -48,14 +48,19 @@ class tpl {
 		$this->execTime += ($timeStop - $timeStart);
 	}
 
-	function vars($nn, $vars = array(), $codeExec = false) {
+	// Params [array]:
+	// codeExec	- flag to execute ( php eval() ) code
+	// inline	- flag: inline data. If set $nn is treated as data, not a template file name
+	function vars($nn, $vars = array(), $params = array()) {
 		global $lang, $userROW, $config, $PHP_SELF;
 
 		// Prepare to calculate exec time
 		list($usec, $sec) = explode(' ', microtime());
 		$timeStart = (float) $sec + (float) $usec;
 
-		$data = ($codeExec)?(eval(' ?>'.$this->data[$nn].'<?php ')):$this -> data[$nn];
+		$data = ($params['inline'])?$nn:$this->data[$nn];
+		if ($params['codeExec'])
+			$data = (eval(' ?>'.$this->data[$nn].'<?php '));
 
 		preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr);
 
@@ -115,6 +120,9 @@ class tpl {
 		$data = str_replace('{skins_url}', skins_url, $data);
 		$data = str_replace('{tpl_url}', tpl_url, $data);
 		$data = str_replace('{admin_url}', admin_url, $data);
+
+		if ($params['inline'])
+			return $data;
 
 		$this -> da_vr[$nn] = $data;
 
