@@ -402,29 +402,76 @@ function zzMail($to, $subject, $message, $filename = false, $mail_from = false) 
 	@mail($to, $subject, $message, $headers);
 }
 
+//
+// Load variables from template
+// $die	- flag: generate die() in case when file is not found (else - return false)
+// $loadMode - flag:
+//			0 - use SITE template
+//			1 - use ADMIN PANEL template
+function templateLoadVariables($die = false, $loadMode = 0) {
+	global $TemplateCache;
 
-function msg($msg_arr) {
-	global $config, $lang, $template, $PHP_SELF, $how;
+	if (isset($TemplateCache[$loadMode?'admin':'site']['#variables']))
+		return true;
 
-	if ($msg_arr["type"] == "error") {
-		$msg = '<div class="msge"><img src="'.skins_url.'/images/error.gif" hspace="10" />'.$lang["msge_error"].$msg_arr["text"].'</div>';
-		if ($PHP_SELF == "admin.php" || $how) { echo $msg; } else { $template['vars']['mainblock'] .= $msg; }
-
-		if ($msg_arr["info"] && $msg_arr["info"] != "") {
-			$msg = '<div class="msgi"><img src="'.skins_url.'/images/info.gif" hspace="10" />'.$lang["msgi_info"].$msg_arr["info"].'</div>';
-			if ($PHP_SELF == "admin.php" || $how) { echo $msg; } else { $template['vars']['mainblock'] .= $msg; }
+	$filename = ($loadMode?tpl_actions:tpl_site).'variables.ini';
+	if (!is_file($filename)) {
+		if ($die) {
+			die('Internal error: cannot locate Template Variables file');
 		}
-	} elseif ($msg_arr["type"] == "info") {
-		$msg = '<div class="msgi"><img src="'.skins_url.'/images/info.gif" hspace="10" />'.$lang["msgi_info"].$msg_arr["info"].'</div>';
-		if ($PHP_SELF == "admin.php" || $how) { echo $msg; } else { $template['vars']['mainblock'] .= $msg; }
-	} else {
-		$msg = '<div class="msgo"><img src="'.skins_url.'/images/msg.gif" hspace="10" />'.$msg_arr["text"].'</div>';
-		if ($PHP_SELF == "admin.php" || $how) { echo $msg; } else { $template['vars']['mainblock'] .= $msg; }
+		return false;
+	}
+	$TemplateCache[$loadMode?'admin':'site']['#variables'] = parse_ini_file($filename, true);
+	//print "<pre>".var_export($TemplateCache, true)."</pre>";
+	return true;
+}
 
-		if ($msg_arr["info"] && $msg_arr["info"] != "") {
-			$msg = '<div class="msgi"><img src="'.skins_url.'/images/info.gif" hspace="10" />'.$lang["msgi_info"].$msg_arr["info"].'</div>';
-			if ($PHP_SELF == "admin.php" || $how) { echo $msg; } else { $template['vars']['mainblock'] .= $msg; }
-		}
+//
+// Generate info / error message
+// $mode - working mode
+//			0 - use SITE template
+//			1 - use ADMIN PANEL template
+// $disp - flag [display mode]:
+//		   -1 - automatic mode
+//			0 - add into mainblock
+//			1 - print
+//			2 - return as result
+function msg($params, $mode = 0, $disp = -1) {
+	global $config, $tpl, $lang, $template, $PHP_SELF, $TemplateCache;
+
+	// Set AUTO mode if $disp == -1
+	if ($disp == -1)
+		$mode = ($PHP_SELF == 'admin.php')?1:0;
+
+	if (!templateLoadVariables(false, $mode)) {
+		die('Internal system error: '.var_export($params, true));
+	}
+
+
+	// Choose working mode
+	$type = 'msg.common';
+	switch ($params['type']) {
+		case 'error':	$type = 'msg.error'.(isset($params['info'])?'_info':''); break;
+		case 'info':	$type = 'msg.info'; break;
+		default:		$type = 'msg.common'.(isset($params['info'])?'_info':''); break;
+	}
+	$tmvars = array( 'vars' => array(
+		'text' => $params['text'],
+		'info' => $params['info'],
+	));
+	$message = $tpl->vars($TemplateCache[$mode?'admin':'site']['#variables']['messages'][$type], $tmvars, array('inline' => true));
+
+	switch ($disp) {
+		case 0: $template['vars']['mainblock'] .= $message; break;
+		case 1: print $message; break;
+		case 2: return $message;
+		default:
+			if ($PHP_SELF == 'admin.php') {
+					print $message;
+			} else {
+					$template['vars']['mainblock'] .= $message;
+			}
+			break;
 	}
 }
 
@@ -769,11 +816,13 @@ function generateAdminNavigations($current, $start, $stop, $link, $navigations){
 // * count   - total count of pages
 // * url	 - URL of page, %page% will be replaced by page number
 function generateAdminPagelist($param){
-	global $tpl;
+	global $tpl, $TemplateCache;
 
 	if ($param['count'] < 2) return '';
 
-	$nav = getNavigations(tpl_actions);
+	templateLoadVariables(true, 1);
+	$nav = $TemplateCache['admin']['#variables']['navigation'];
+
 	$tpl -> template('pages', tpl_actions);
 
 	// Prev page link
@@ -1007,7 +1056,7 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0) {
 // * $page - page No to show in full mode
 //function Prepare($row, $page) {
 function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
-	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler;
+	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $TemplateCache;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
 
@@ -1056,7 +1105,9 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'news', 'params' => array('category' => $cname, 'catid' => $catid, 'altname' => $row['alt_name'], 'id' => $row['id']), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'news'), 'xparams' => array('category' => $cname, 'catid' => $catid, 'altname' => $row['alt_name'], 'id' => $row['id']), 'paginator' => array('page', 1, false));
 
-			$navigations = getNavigations(tpl_dir.$config['theme']);
+
+			templateLoadVariables(true);
+			$navigations = $TemplateCache['site']['#variables']['navigation'];
 
 			// Show pagination bar
 			$tvars['vars']['pagination'] = generatePagination($page, 1, $pcnt, 10, $paginationParams, $navigations);
@@ -1180,16 +1231,6 @@ function GetMetatags() {
 
 	return $result;
 }
-
-function getNavigations($tpldir) {
-	if (is_file($tpldir.'/navigation.ini')) {
-		$navigation = parse_ini_file($tpldir.'/navigation.ini');
-	} else {
-		$navigation = array('prevlink' => '<a href="%link%">%page%</a> ','nextlink' => '<a href="%link%">%page%</a> ','current_page' => ' [%page%] ','link_page' => '<a href="%link%">%page%</a> ','dots' => ' ... ');
-	}
-	return $navigation;
-}
-
 
 // Generate pagination block
 function generatePaginationBlock($current, $start, $end, $paginationParams, $navigations){
