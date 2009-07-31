@@ -111,13 +111,12 @@ $tvars['vars'] = array(
 	'photos'			=>	$photos,
 	'news'				=>	$mysql->result("SELECT count(id) FROM ".prefix."_news"),
 	'news_unapp'		=>	$news_unapp,
-	'comments'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_comments"),
+	'comments'			=>	getPluginStatusActive('comments')?$mysql->result("SELECT count(id) FROM ".prefix."_comments"):'-',
 	'users'				=>	$mysql->result("SELECT count(id) FROM ".uprefix."_users"),
 	'users_unact'		=>	$users_unact,
 	'images'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_images"),
 	'files'				=>	$mysql->result("SELECT id FROM ".prefix."_files"),
 	'categories'		=>	$mysql->result("SELECT count(id) FROM ".prefix."_category"),
-	'comments'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_comments"),
 	'admin_note'		=>	($note) ? $note : $lang['no_notes']
 );
 
