@@ -30,7 +30,7 @@ if (!$is_logged) {
 	// User is logged in
 	$tvars['vars'] = array(
 		'profile_link'	=>	generateLink('uprofile', 'edit'),
-		'addnews_link'	=>	GetLink('addnews'),
+		'addnews_link'	=>	$config['admin_url'].'/admin.php?mod=addnews',
 		'logout_link'	=>  generateLink('core', 'logout'),
 		'name'			=>	$userROW['name'],
 		'phtumb_url'		=>	photos_url.'/'.(($userROW['photo'] != "")?'thumb/'.$userROW['photo']:'nophoto.gif'),
