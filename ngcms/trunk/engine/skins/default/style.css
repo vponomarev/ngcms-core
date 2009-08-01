@@ -420,3 +420,47 @@ width: 200px;
 float: left;
 }
 
+
+.sysmsg_common {
+font: 12px verdana; 
+background-color: #EEEEEE; 
+border: #ABCDEF 1px solid; 
+margin: 1px; 
+padding: 3px;
+margin-bottom: 5px;
+margin-top: 5px;
+}
+
+.sysmsg_common .info {
+padding-top: 5px;
+font: 12px verdana;
+margin:0px;
+background-color: #F5F5F5; 
+}
+
+.syserror_common {
+font: 12px verdana; 
+background-color: #EEEEEE; 
+border: red 2px solid; 
+margin: 1px; 
+padding: 3px;
+margin-bottom: 5px;
+margin-top: 5px;
+}
+
+.syserror_common .info {
+padding-top: 5px;
+font: 12px verdana;
+margin:0px;
+background-color: #F5F5F5; 
+}
+
+.sysinfo_common {
+font: 12px verdana; 
+background-color: #F5F5F5; 
+border: #ABCDEF 1px solid; 
+margin: 1px; 
+padding: 3px;
+margin-bottom: 5px;
+margin-top: 5px;
+}
