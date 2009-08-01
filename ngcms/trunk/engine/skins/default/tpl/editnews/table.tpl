@@ -17,7 +17,7 @@
 <td width="5%" class="contentHead">{l_postid_short}</td>
 <td width="15%" class="contentHead">{l_date}</td>
 <td width="40%" class="contentHead">{l_title}</td>
-<td width="10%" class="contentHead">{l_comments}</td>
+[comments]<td width="10%" class="contentHead">{l_comments}</td>[/comments]
 <td width="25%" class="contentHead">{l_category}</td>
 <td width="10%" class="contentHead">{l_author}</td>
 <td width="5%" class="contentHead">&nbsp;</td>
@@ -41,8 +41,8 @@
 <option value="do_mass_forbidden">{l_forbidden}</option>
 <option value="do_mass_mainpage">{l_massmainpage}</option>
 <option value="do_mass_unmainpage">{l_massunmainpage}</option>
-<option value="do_mass_com_approve">{l_com_approve}</option>
-<option value="do_mass_com_forbidden">{l_com_forbidden}</option>
+[comments]<option value="do_mass_com_approve">{l_com_approve}</option>
+<option value="do_mass_com_forbidden">{l_com_forbidden}</option>[/comments]
 </select>
 <input type="submit" value="OK" class="button" />
 <input type="hidden" name="mod" value="editnews" />
