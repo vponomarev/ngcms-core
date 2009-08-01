@@ -122,7 +122,7 @@ function preview(){
   <tr><td></td><td><label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {flag_mainpage} /> {l_mainpage}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {flag_pinned} /> {l_add_pinned}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {flag_favorite} /> {l_add_favorite}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="allow_com" value="1" class="check" id="allow_com" {flag_allow_com} /> {l_com_approve}</label></td></tr>
+[comments]  <tr><td></td><td><label><input type="checkbox" name="allow_com" value="1" class="check" id="allow_com" {flag_allow_com} /> {l_com_approve}</label></td></tr>[/comments]
   <tr><td></td><td><label><input type="checkbox" name="flag_HTML" value="1" class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label></td></tr>
  </table>

@@ -108,10 +108,14 @@ function editNews() {
 	// Change this parameters if user have enough access level
 	if ($userROW['status'] < 3) {
 		$SQL['mainpage']  = intval($_REQUEST['mainpage']);
-		$SQL['allow_com'] = intval($_REQUEST['allow_com']);
 		$SQL['approve']   = intval($_REQUEST['approve']);
 		$SQL['favorite']  = intval($_REQUEST['favorite']);
 		$SQL['pinned']    = intval($_REQUEST['pinned']);
+
+		// Use flag 'allow comments' only in case when plugin 'comments' is installed
+		if (getPluginStatusInstalled('comments'))
+			$SQL['allow_com'] = intval($_REQUEST['allow_com']);
+
 		if ($_REQUEST['setViews'])
 			$SQL['views'] = intval($_REQUEST['views']);
 	}
@@ -226,6 +230,9 @@ function editNewsForm() {
 	$tvars['vars']['ifpin']		=	($row['pinned'])    ? 'checked="checked"' : '';
 	$tvars['vars']['ifraw']		=	($row['flags'] & 1) ? 'checked="checked"' : '';
 	$tvars['vars']['ifhtml']	=	($row['flags'] & 2) ? 'checked="checked"' : '';
+
+	// Disable flag for comments if plugin 'comments' is not installed
+	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
 	$flock = 0;
 	switch ($userROW['status']) {
@@ -422,13 +429,16 @@ function massNewsDelete() {
 			}
 		}
 
-		// Delete comments (with updating user's comment counter)
-		foreach ($mysql->select("select * from ".prefix."_comments where post=".$nrow['id']) as $crow) {
-			if ($nrow['author_id']) {
-				$mysql->query("update ".uprefix."_users set com=com-1 where id=".$crow['author_id']);
+		// Delete comments (with updating user's comment counter) [ if plugin comments is installed ]
+		if (getPluginStatusInstalled('comments')) {
+			foreach ($mysql->select("select * from ".prefix."_comments where post=".$nrow['id']) as $crow) {
+				if ($nrow['author_id']) {
+					$mysql->query("update ".uprefix."_users set com=com-1 where id=".$crow['author_id']);
+				}
 			}
+			$mysql->query("delete from ".prefix."_comments WHERE post=".db_squote($nrow['id']));
 		}
-		$mysql->query("delete from ".prefix."_comments WHERE post=".db_squote($nrow['id']));
+
 		$mysql->query("delete from ".prefix."_news where id=".db_squote($nrow['id']));
 		$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($nrow['id']));
 
