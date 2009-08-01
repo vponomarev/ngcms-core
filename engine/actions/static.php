@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru/)
 // Name: static.php
 // Description: Manage static pages
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -49,7 +49,7 @@ if ($action == "add") {
 // Show list of static pages
 //
 function listStatic() {
-	global $tpl, $mysql, $mod, $userROW;
+	global $tpl, $mysql, $mod, $userROW, $config;
 
 	$per_page	= intval($_REQUEST['per_page']);
 	if (($per_page < 2)||($per_page > 500)) $per_page = 20;
@@ -322,7 +322,13 @@ function addStatic(){
 	$mysql->query("insert into ".prefix."_static (".implode(",",$vnames).") values (".implode(",",$vparams).")");
 	$id = $mysql->result("SELECT LAST_INSERT_ID() as id");
 
-	msg(array("text" => $lang['msgo_added'], "info" => sprintf($lang['msgi_added'], $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static')));
+	$link = $config['home_url'].(checkLinkAvailable('static', '')?
+				generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id)):
+				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id)));
+
+	msg(array(
+		"text" => str_replace('{url}',$link , $lang['msg.added']),
+		"info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.added#descr'])));
 }
 
 
@@ -477,5 +483,4 @@ function editStatic(){
 
 	msg(array("text" => $lang['msgo_edited']));
 }
-
 
