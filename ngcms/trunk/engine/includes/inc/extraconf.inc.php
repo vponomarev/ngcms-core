@@ -120,7 +120,12 @@ function plugin_mark_deinstalled($plugin) {
 		return 1;
 	}
 
-	$activated['installed'][$plugin] = '';
+	unset($activated['installed'][$plugin]);
+	unset($activated['active'][$plugin]);
+	foreach ($activated['actions'] as $k => $v) {
+		uset($activated['actions'][$k][$plugin]);
+	}
+
 	$PLUGINS['active'] = $activated;
 	return savePluginsActiveList();
 }
