@@ -87,7 +87,10 @@ function news_add(){
 	$SQL['author']		= $userROW['name'];
 	$SQL['author_id']	= $userROW['id'];
 	$SQL['catid']		= implode(",", array_keys($catids));
-	$SQL['allow_com']	= $_REQUEST['allow_com'];
+
+	// Use flag 'allow comments' only in case when plugin 'comments' is installed
+	if (getPluginStatusInstalled('comments'))
+		$SQL['allow_com']	= $_REQUEST['allow_com'];
 
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
@@ -241,6 +244,9 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 	$tvars['vars']['flag_pinned']    = (($userROW['status'] == 1)||($userROW['status'] == 2))?'':'disabled="disabled"';
 	$tvars['vars']['flag_allow_com'] = 'checked="checked"';
 
+	// Disable flag for comments if plugin 'comments' is not installed
+	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
+
 	// Run interceptors
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsForm($tvars); }
@@ -255,4 +261,3 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 } else {
 	msg(array("type" => "error", "text" => $lang['msge_adding']));
 }
-

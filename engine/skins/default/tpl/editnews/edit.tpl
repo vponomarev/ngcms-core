@@ -2,9 +2,9 @@
 function ChangeOption(optn) {
 	document.getElementById('maincontent').style.display  = (optn == 'maincontent')?"block":"none";
 	document.getElementById('additional').style.display   = (optn == 'additional')?"block":"none";
-	document.getElementById('comments').style.display     = (optn == 'comments')?"block":"none";
+[comments]	document.getElementById('comments').style.display     = (optn == 'comments')?"block":"none";
 	document.getElementById('showEditNews').style.display = (optn == 'comments')?"none":"block";
-	document.getElementById('rightBar').style.display = (optn == 'comments')?"none":"";
+	document.getElementById('rightBar').style.display = (optn == 'comments')?"none":"";[/comments]
 }
 function preview(){
 
@@ -41,7 +41,7 @@ function preview(){
 <td style="background: #F0F0F0; padding: 3px;">
 <input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_maincontent}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_additional}" class="navbutton" />
-<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_comments} ({comnum})" class="navbutton" />
+[comments]<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_comments} ({comnum})" class="navbutton" />[/comments]
 </td>
 </tr>
 <tr><td>
@@ -129,7 +129,7 @@ function preview(){
   <tr><td></td><td><label><input type="checkbox" name="mainpage" value="1" {ifmp} class="check" id="mainpage" /> {l_mainpage}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="pinned" value="1" {ifpin} class="check" id="pinned" /> {l_add_pinned}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="favorite" value="1" {iffav} class="check" id="favorite" /> {l_add_favorite}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="allow_com" value="1" {ifch} class="check" id="allow_com" /> {l_com_approve}</label></td></tr>
+[comments]  <tr><td></td><td><label><input type="checkbox" name="allow_com" value="1" {ifch} class="check" id="allow_com" /> {l_com_approve}</label></td></tr>[/comments]
   <tr><td></td><td><label><input type="checkbox" name="setViews" value="1" class="check" id="setViews" /> {l_set_views}:</label> <input type="text" size="4" name="views" value="{views}" /></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="flag_HTML" value="1" {ifhtml} class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label> {flags_lost}</td></tr>
   <tr><td></td><td><label><input type="checkbox" name="flag_RAW" value="1" {ifraw} class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label> {flags_lost}</td></tr>
