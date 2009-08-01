@@ -61,7 +61,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 		}
 
 		if (!is_array($row = $mysql->record("select * from ".prefix."_news where approve=1".(count($filter)?' and '.implode(" and ",$filter):'')))) {
-			msg(array("type" => "info", "info" => $lang['msgi_not_found']));
+			if (!$params['FFC']) {
+				error404();
+			}
 			return false;
 		}
 	}
@@ -584,7 +586,9 @@ function showNews($handlerName, $params) {
 
 			// We can't show unexisted categories
 			if (!$category || !isset($catmap[$category])) {
-				msg(array("type" => "info", "info" => $lang['msgi_cat_not_found']));
+				if (!$params['FFC']) {
+					error404();
+				}
 				return false;
 			}
 			$currentCategory = $catz[$catmap[$category]];
