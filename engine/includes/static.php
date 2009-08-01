@@ -29,7 +29,7 @@ function showStaticPage($params) {
 
 	if ((!$limit)||(!is_array($row = $mysql->record("select * from ".prefix."_static where approve = 1 and ".$limit)))) {
 		if (!$params['FFC']) {
-			msg(array("type" => "info", "info" => $lang['msgi_not_found']));
+			error404();
 		}
 		return false;
 	}
@@ -95,4 +95,3 @@ function showStaticPage($params) {
 
 	return true;
 }
-

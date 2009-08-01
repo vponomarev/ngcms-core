@@ -79,28 +79,7 @@ $runResult = $UHANDLER->run($_SERVER['REDIRECT_URL'], false);
 
 // If no pages are catched
 if (!$runResult) {
-	switch ($config['404_mode']) {
-		// HTTP error 404
-		case 2:
-			@header('HTTP/1.1 404 Not found');
-			exit;
-
-		// External error template
-		case 1:
-			$tpl->template('404.external', tpl_site);
-			$tpl->vars('404.external', array());
-			echo $tpl->show('404.external');
-			exit;
-
-		// Internal error template
-		case 0:
-		default:
-			$tpl->template('404.internal', tpl_site);
-			$tpl->vars('404.internal', array());
-			$template['vars']['mainblock'] = $tpl->show('404.internal');
-
-			$SYSTEM_FLAGS['info']['title']['group']	= $lang['404.title'];
-	}
+	error404();
 }
 
 
@@ -187,6 +166,7 @@ $template['vars']['exectime'] = $timer -> stop();
 
 // Fill debug information (if it is requested)
 if ($config['debug']) {
+	$timer->registerEvent('Templates generation time: '.$tpl->execTime. ' ('.$tpl->execCount.' times called)');
 	$timer->registerEvent('Generate DEBUG output');
 	if (is_array($userROW) && ($userROW['status'] == 1)) {
 		$template['vars']['debug_queries'] = ($config['debug_queries'])?('<b><u>SQL queries:</u></b><br>'.implode("<br />\n",$mysql->query_list)."<br />"):'';
