@@ -558,7 +558,7 @@ if ($action == "editnews") {
 			'username'	=>	$row['author'],
 			'comments'	=> ($row['com'])?$row['com']:''
 		);
-
+		$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
 		$showtitle = (strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title'];
 		$tvars['vars']['title'] = secure_html($showtitle);
@@ -622,6 +622,8 @@ if ($action == "editnews") {
 	else {
 		$tvars['regx']["'\\[actions\\].*?\\[/actions\\]'si"] = '';
 	}
+
+	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
 	exec_acts('editnews_list');
 
