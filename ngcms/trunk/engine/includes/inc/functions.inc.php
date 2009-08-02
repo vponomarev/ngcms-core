@@ -1460,7 +1460,7 @@ function printHTTPheaders() {
 // Generate error "PAGE NOT FOUND"
 //
 function error404(){
-	global $config, $tpl, $template, $SYSTEM_FLAGS;
+	global $config, $tpl, $template, $SYSTEM_FLAGS, $lang;
 
 	@header('HTTP/1.1 404 Not found');
 	switch ($config['404_mode']) {
