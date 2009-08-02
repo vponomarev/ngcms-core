@@ -9,6 +9,13 @@ function reload_captcha() {
 }	
 
 function add_comment(){
+	// First - delete previous error message
+	var perr;
+	if (perr=document.getElementById('error_message')) {
+		perr.parentNode.removeChild(perr);
+	}
+
+	// Now let's call AJAX comments add
 	var form = document.getElementById('comment');
 	cajax.whattodo = 'append';
 	cajax.onShow("");[not-logged]
