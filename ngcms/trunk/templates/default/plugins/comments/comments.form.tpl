@@ -17,19 +17,38 @@ function add_comment(){
 
 	// Now let's call AJAX comments add
 	var form = document.getElementById('comment');
-	cajax.whattodo = 'append';
+	//cajax.whattodo = 'append';
 	cajax.onShow("");[not-logged]
 	cajax.setVar("name", form.name.value);
 	cajax.setVar("password", form.password.value);
 	cajax.setVar("mail", form.mail.value);[captcha]
 	cajax.setVar("vcode", form.vcode.value); [/captcha][/not-logged]
 	cajax.setVar("content", form.content.value);
-	cajax.setVar("newsid", form.newsid.value);[ajax]
-	cajax.setVar("ajax", "1");[/ajax]
+	cajax.setVar("newsid", form.newsid.value);
+	cajax.setVar("ajax", "1");
+	cajax.setVar("json", "1");
 	cajax.requestFile = "{post_url}"; //+Math.random();
 	cajax.method = 'POST';
-	cajax.element = 'new_comments';[captcha]
-	cajax.onComplete = function() { reload_captcha(); }[/captcha]
+	//cajax.element = 'new_comments';
+	cajax.onComplete = function() { 
+		if (cajax.responseStatus[0] == 200) {
+			try {
+				resRX = eval('('+cajax.response+')');
+				var nc = document.getElementById('new_comments');
+				nc.innerHTML += resRX['data'];				
+				if (resRX['status']) { 
+					// Added successfully!
+					form.content.value = '';	
+				}
+  			} catch (err) { 
+				alert('Error parsing JSON output. Result: '+cajax.response); 
+			}
+		} else {
+			alert('TX.fail: HTTP code '+cajax.responseStatus[0]);
+		}	
+		[captcha] 
+		reload_captcha();[/captcha]
+	}
 	cajax.runAJAX();
 }
 </script>
