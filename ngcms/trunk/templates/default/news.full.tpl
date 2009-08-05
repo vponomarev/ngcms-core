@@ -30,7 +30,7 @@
 		<table border="0" width="100%" cellspacing="0" cellpadding="0">
 			<tr>
 				<td style="background-image:url('{tpl_url}/images/2z_54.gif');" width="7">&nbsp;</td>
-				<td bgcolor="#FFFFFF">[icon]<img src="{icon}" alt="" border="0" />[/icon][update]<br />{l_updated}{update}<br /><br />[/update]{short-story} {full-story}<div style="padding: 10px; text-align:center;">{pagination}</div><br />[isplugin finance][finance]<br />Стоимость доступа составляет: ${fin_price} [fin_on] <b>(оплачено)</b>[/fin_on][fin_off](не оплачено)[/fin_off][/finance][/isplugin]<br />{plugin_similar}[isplugin rating]{plugin_rating}[/isplugin][isplugin tags][tags]<div align="right"><img src="{tpl_url}/images/tag.png" width="13" height="13" alt="Мета-теги" /> {tags}</div>[/tags][/isplugin]</td>
+				<td bgcolor="#FFFFFF">[icon]<img src="{icon}" alt="" border="0" />[/icon][update]<br />{l_updated}{update}<br /><br />[/update]{short-story} [more]Раздел..[/more] {full-story}<div style="padding: 10px; text-align:center;">{pagination}</div><br />[isplugin finance][finance]<br />Стоимость доступа составляет: ${fin_price} [fin_on] <b>(оплачено)</b>[/fin_on][fin_off](не оплачено)[/fin_off][/finance][/isplugin]<br />{plugin_similar_tags}[isplugin rating]{plugin_rating}[/isplugin][isplugin tags][tags]<div align="right"><img src="{tpl_url}/images/tag.png" width="13" height="13" alt="Мета-теги" /> {tags}</div>[/tags][/isplugin]</td>
 				<td style="background-image:url('{tpl_url}/images/2z_59.gif');" width="7">&nbsp;</td>
 			</tr>
 		</table>
@@ -64,4 +64,5 @@
 	</tr>
 </table>
 {plugin_complain}
-<br /><div class="b_font">[comheader]КОММЕНТАРИИ[/comheader]</div><br />
+<br />
+{plugin_comments}
