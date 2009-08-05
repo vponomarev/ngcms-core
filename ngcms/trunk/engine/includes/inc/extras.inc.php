@@ -721,15 +721,20 @@ function checkLinkAvailable($pluginName, $handlerName) {
 
 //
 // Generate link
-//
-function generateLink($pluginName, $handlerName, $params = array(), $xparams = array()){
+// Params:
+// $pluginName	- ID of plugin
+// $handlerName	- Handler name
+// $params	- Params to pass to processor
+// $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
+// $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
+function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false){
 	global $UHANDLER;
 
 	$flagCommon = false;
 
 	// Check if we have handler for requested plugin
 	if (!isset($UHANDLER->hPrimary[$pluginName][$handlerName])) {
-		// No handler. Let's use "COMMON WAN"
+		// No handler. Let's use "COMMON WAY"
 		$params['plugin'] = $pluginName;
 		$params['handler'] = $handlerName;
 
@@ -777,7 +782,7 @@ function generateLink($pluginName, $handlerName, $params = array(), $xparams = a
 			$uparams[]= $k.'='.urlencode($v);
 	}
 
-	return join('', $url).(count($uparams)?'?'.join('&', $uparams):'');
+	return join('', $url).(count($uparams)?'?'.join('&'.($intLink?'amp;':''), $uparams):'');
 }
 
 
