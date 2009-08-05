@@ -15,4 +15,10 @@
 </table>
 
 <br/>
-<b>КОММЕНТАРИИ</b><br/><br/>
+[comheader]<div class="b_font">Все комментарии посетителей к данной новости</div><br />[/comheader]
+<!-- Here is user's comments -->
+{entries}
+
+{more_comments}
+<!-- Here is `add comments` form -->
+{form}
