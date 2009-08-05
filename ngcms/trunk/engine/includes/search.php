@@ -40,7 +40,6 @@ function search_news(){
 		if (($dv[1] >= 1970)&&($dv[1] <= 2100)&&($dv[2] >=1)&&($dv[2] <= 12)) {
 			array_push($filter, array('OR',
 				array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$dv[2],1,$dv[1]), mktime(23,59,59,$dv[2],date("t",mktime(0,0,0,$dv[2],1,$dv[1])),$dv[1]))),
-			//	array('DATA', 'editdate', 'BETWEEN', array(mktime(0,0,0,$dv[2],1,$dv[1]), mktime(23,59,59,$dv[2],date("t",mktime(0,0,0,$dv[2],1,$dv[1])),$dv[1]))),
 			));
 
 		}
@@ -77,7 +76,7 @@ function search_news(){
 	$paginationParams = array('pluginName' => 'search', 'xparams' => array('search' => $_REQUEST['search'], 'author' => $_REQUEST['author'], 'catid' => $_REQUEST['catid']), 'paginator' => array('page', 1, false));
 
 	// Configure display params
-	$callingParams = array('style' => 'short', 'extendedReturn' => true);
+	$callingParams = array('style' => 'short','searchFlag' => true, 'extendedReturn' => true);
 	if ($_REQUEST['page']) {
 		$callingParams['page'] = intval($_REQUEST['page']);
 	}

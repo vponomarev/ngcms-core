@@ -299,6 +299,7 @@ function newsProcessFilter($conditions) {
 //		'extendedReturn' => flag if we need to return an extended array:
 //			'count' - count of found news
 //			'data'  - data to be showed
+//		'searchFlag'	=> flag if we want to use non-mondatory template 'news.search.tpl' [!!only for style = 'short' !!]
 //
 function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
@@ -353,19 +354,6 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$orderBy = 'id desc';
 
 	$orderBy = 'pinned desc, '.$orderBy;
-
-	/*
-	if ((count($carray) == 1)&&(is_array($carray[0]))&&(count($carray[0])==1)&&($catorder=$catz[$catmap[$carray[0][0]]]['orderby'])) {
-		$orderBy = "pinned desc, ".$catorder;
-	} else {
-		if (in_array($config['default_newsorder'], array('id desc', 'id asc', 'postdate desc', 'postdate asc', 'title desc', 'title asc'))) {
-			$orderBy = "pinned desc, ".$config['default_newsorder'];
-		} else {
-			$orderBy = "pinned desc, id desc";
-		}
-	}
-	*/
-
 	$query['orderby'] = " order by ".$orderBy." limit ".$limit_start.",".$limit_count;
 
 	// ===================================================================
@@ -441,9 +429,16 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			foreach ($PFILTERS['news'] as $k => $v) { $v->showNews($row['id'], $row, $tvars, $callingParams); }
 		}
 
-		$tpl -> template($templateName, $templatePath);
-		$tpl -> vars($templateName, $tvars);
-		$output .= $tpl -> show($templateName);
+		// Hack for 'automatic search mode'
+		$currentTemplateName = $templateName;
+		// switch to `search` template if no templateName was overrided AND style is search AND searchFlag is set AND search template file exists
+		if (($callingParams['searchFlag']) && (!isset($callingParams['overrideTemplatePath'])) && ($callingParams['style'] == 'short') && (@file_exists($templatePath.'/news.search.tpl'))) {
+			$currentTemplateName = 'news.search';
+		}
+
+		$tpl -> template($currentTemplateName, $templatePath);
+		$tpl -> vars($currentTemplateName, $tvars);
+		$output .= $tpl -> show($currentTemplateName);
 	}
 	unset($tvars);
 
