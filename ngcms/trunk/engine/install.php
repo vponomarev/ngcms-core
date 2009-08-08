@@ -888,7 +888,7 @@ function doInstall() {
 		// Make navigation menu
 		$output .= '<div class="warningDiv">';
 		$output .= '<input type="button" style="width: 230px;" value="Вернуться к настройке БД" onclick="document.getElementById(\'stage\').value=\'0\'; form.submit();"/> - если Вы что-то неверно ввели в настройках БД, то Вы можете исправить ошибку.<br/>';
-		$output .= '<input type="button" style="width: 230px;" value="Попробовать ещё раз"/> - если Вы самостоятельно устранили ошибку, то нажмите сюда.';
+		$output .= '<input type="button" style="width: 230px;" value="Попробовать ещё раз" onclick="document.getElementById(\'action\').value=\'install\'; form.submit();"/> - если Вы самостоятельно устранили ошибку, то нажмите сюда.';
 		$output .= '</div>';
 	}
 
@@ -900,6 +900,6 @@ function doInstall() {
 	$tpl -> vars('config_process', $tvars);
 	print $tpl -> show('config_process');
 
-	return true;
+	return $error?false:true;
 }
 
