@@ -76,7 +76,7 @@ function search_news(){
 	$paginationParams = array('pluginName' => 'search', 'xparams' => array('search' => $_REQUEST['search'], 'author' => $_REQUEST['author'], 'catid' => $_REQUEST['catid']), 'paginator' => array('page', 1, false));
 
 	// Configure display params
-	$callingParams = array('style' => 'short','searchFlag' => true, 'extendedReturn' => true);
+	$callingParams = array('style' => 'short','searchFlag' => true, 'extendedReturn' => true, 'customCategoryTemplate' => true);
 	if ($_REQUEST['page']) {
 		$callingParams['page'] = intval($_REQUEST['page']);
 	}
