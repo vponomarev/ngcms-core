@@ -515,6 +515,15 @@ function massNewsDelete() {
 		$mysql->query("delete from ".prefix."_news where id=".db_squote($nrow['id']));
 		$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($nrow['id']));
 
+		// Delete attached files if any
+		if ($nrow['attach_count']) {
+			foreach ($mysql->select("select * from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($nrow['id']).")") as $frec) {
+				$fmanager = new file_managment();
+				$fmanager->file_delete(array('type' => 'file', 'id' => $frec['id']));
+			}
+		}
+
+
 		// Notify plugins about news deletion
 		if (is_array($PFILTERS['news']))
 			foreach ($PFILTERS['news'] as $k => $v) { $v->deleteNewsNotify($nrow['id'], $nrow); }
