@@ -208,13 +208,13 @@ class file_managment {
 
 			$wDir .= '/'.$dir1;
 			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
-				print "Cannot create directory: '".$wDir."'<br/>\n";
+				msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
 				return 0;
 			}
 
 			$wDir .= '/'.$dir2;
 			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
-				print "Cannot create directory: '".$wDir."'<br/>\n";
+				msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
 				return 0;
 			}
 
@@ -235,14 +235,14 @@ class file_managment {
 						continue;
 
 					// Unable to create dir
-					print "Cannot create directory: '".$wDir.'/'.$xDir."'<br/>\n";
+					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.ext'])));
 					return 0;
 				} else {
 					break;
 				}
 			}
 			if (!$xDir) {
-				print "Cannot find empty slot in directory: '".$wDir."'<br/>\n";
+				msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots'])));
 				return 0;
 			}
 
@@ -355,7 +355,7 @@ class file_managment {
 	// * id			- ID of file to delete
 	// * name		- filename to delete [if no ID specified]
 	function file_delete($param){
-		global $mysql, $lang, $userROW;
+		global $mysql, $lang, $userROW, $config;
 
 		// Check limits
 		if (!$this->get_limits($param['type'])) {
@@ -394,6 +394,8 @@ class file_managment {
 					msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'].'/'.$row['name'], $lang['upload.error.delete'])));
 					return 0;
 				}
+				// Now try to delete empty storage directory
+				@rmdir($storageDir);
 			}
 
 			$mysql->query("delete from ".prefix."_".$this->tname." where id = ".db_squote($row['id']));

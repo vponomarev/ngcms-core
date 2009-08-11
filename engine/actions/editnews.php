@@ -171,10 +171,13 @@ function editNews() {
 	// Now let's manage attached files
 	$fmanager = new file_managment();
 
+	$flagUpdateAttachCount = false;
+
 	// Delete files (if needed)
 	foreach ($_POST as $k => $v) {
 		if (preg_match('#^delfile_(\d+)$#', $k, $match)) {
 			$fmanager->file_delete(array('type' => 'file', 'id' => $match[1]));
+			$flagUpdateAttachCount = true;
 		}
 	}
 
@@ -186,6 +189,7 @@ function editNews() {
 			if ($v == '')
 				continue;
 
+			$flagUpdateAttachCount = true;
 			//
 			$up = $fmanager->file_upload(array('dsn' => true, 'linked_ds' => 1, 'linked_id' => $id, 'type' => 'file', 'http_var' => 'userfile', 'http_varnum' => $i));
 			//print "OUT: <pre>".var_export($up, true)."</pre>";
@@ -195,6 +199,12 @@ function editNews() {
 			}
 
 		}
+
+	// Update attach count if we need this
+	if ($flagUpdateAttachCount) {
+		$attachCount = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+		$mysql->query("update ".prefix."_news set attach_count = ".intval($attachCount)." where id = ".db_squote($id));
+	}
 
 }
 
@@ -286,7 +296,7 @@ function editNewsForm() {
 
 	// Check for attached files
 	$attaches_entries = '';
-	if ($row['attaches']) {
+	if ($row['attach_count']) {
 		// Yeah! We have some attached files
 		$tpl->template('attach.file', tpl_actions.$mod);
 
@@ -314,6 +324,7 @@ function editNewsForm() {
 	}
 
 	$tvars['vars']['attach_entries'] = $attach_entries;
+	$tvars['vars']['attach_count'] = '('.($num?$num:$lang['noa']).')';
 
 	exec_acts('editnews_entry', $row['xfields'], '');
 	exec_acts('editnews_form');

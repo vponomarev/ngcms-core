@@ -42,7 +42,7 @@ function preview(){
 <td style="background: #F0F0F0; padding: 3px;">
 <input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_bar.maincontent}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_bar.additional}" class="navbutton" />
-<input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{l_bar.attaches}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{l_bar.attaches} {attach_count}" class="navbutton" />
 [comments]<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_bar.comments} ({comnum})" class="navbutton" />[/comments]
 </td>
 </tr>

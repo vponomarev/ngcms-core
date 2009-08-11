@@ -211,6 +211,7 @@ function manage_showlist($type) {
 	$fmanager->get_limits($type);
 	$dir = $fmanager->dname;
 
+	array_push($filter, 'storage = 0');
 	$limit				= (count($filter)?"where ".join(" and ",$filter):'');
 	$query['sql']		= "select * from ".prefix."_".$fmanager->tname." ".$limit." order by date desc limit ".$start_from.", ".$news_per_page;
 	$query['count']		= "select count(*) as cnt from ".prefix."_".$fmanager->tname." ".$limit;
