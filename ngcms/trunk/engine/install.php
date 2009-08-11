@@ -735,12 +735,14 @@ function doInstall() {
 		} else {
 			array_push($LOG,'Активация пользователя-администратора ... OK');
 		}
+		// 1.6 Сохраняем конфигурационную переменную database.engine.version
+		@mysql_query("insert into `".$_POST['reg_dbprefix']."_config` (key, value) values ('database.engine.version', '0.9.1 beta1')");
 
 		// Вычищаем лишний перевод строки из 'home_url'
 		if (substr($_POST['home_url'], -1, 1) == '/')
 			$_POST['home_url'] = substr($_POST['home_url'], 0, -1);
 
-		// 1.6. Формируем конфигурационный файл
+		// 1.7. Формируем конфигурационный файл
 		$newconf = array(
 			'dbhost'		=> $_POST['reg_dbhost'],
 			'dbname'		=> $_POST['reg_dbname'],
@@ -902,4 +904,3 @@ function doInstall() {
 
 	return $error?false:true;
 }
-
