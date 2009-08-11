@@ -152,7 +152,7 @@ CREATE TABLE `XPREFIX_news` (
   `favorite` tinyint(1) default '0',
   `pinned` tinyint(1) default '0',
   `flags` tinyint(1) default '0',
-  `attaches` tinyint default `0`,
+  `attach_count` int(10) default `0`,
   `editdate` int(10) NOT NULL default '0',
   `catid` varchar(255) NOT NULL default '0',
   `xfields` text NOT NULL,
