@@ -130,12 +130,9 @@ function _modal_close() {
 </tr>
 <tr>
 <td colspan="2">&nbsp;</td></tr>
+
 <tr>
-
 <td width="50%" style="padding-right:10px;" valign="top">
-&nbsp;</td>
-
-<td width="50%" style="padding-left:10px;" valign="top">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_note}</td>
@@ -147,6 +144,10 @@ function _modal_close() {
 <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow;">{admin_note}</textarea><br />
 <input type="submit" class="button" value="{l_save_note}" />
 </form>
+</td>
+
+<td width="50%" style="padding-left:10px;" valign="top">
+&nbsp;
 </td>
 </tr>
 </table>

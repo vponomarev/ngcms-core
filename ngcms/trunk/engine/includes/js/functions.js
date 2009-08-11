@@ -110,7 +110,7 @@ function insertext(open, close, field){
 		msgfield.value += open + close;
 		msgfield.focus();
 	}
-	return;
+	return true;
 }
 
 function setCookie(name, value){
