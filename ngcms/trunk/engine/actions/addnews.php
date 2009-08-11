@@ -10,6 +10,8 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+@include_once root.'includes/classes/upload.class.php';
+
 $SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_addnews'];
 
 $lang = LoadLang('addnews', defined('ADMIN')?'admin':'site');
@@ -165,8 +167,47 @@ function news_add(){
 	foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
 
 	exec_acts('addnews_', $id);
-
 	msg(array("text" => $lang['msgo_added'], "info" => sprintf($lang['msgi_added'], admin_url.'/admin.php?mod=editnews&action=editnews&id='.$id, admin_url.'/admin.php?mod=editnews')));
+
+
+	// Now let's manage attached files
+	$fmanager = new file_managment();
+
+	$flagUpdateAttachCount = false;
+
+	// Delete files (if needed)
+	foreach ($_POST as $k => $v) {
+		if (preg_match('#^delfile_(\d+)$#', $k, $match)) {
+			$fmanager->file_delete(array('type' => 'file', 'id' => $match[1]));
+			$flagUpdateAttachCount = true;
+		}
+	}
+
+
+	//print "<pre>".var_export($_FILES, true)."</pre>";
+	// PREPARE a list for upload
+	if (is_array($_FILES['userfile']['name']))
+		foreach($_FILES['userfile']['name'] as $i => $v) {
+			if ($v == '')
+				continue;
+
+			$flagUpdateAttachCount = true;
+			//
+			$up = $fmanager->file_upload(array('dsn' => true, 'linked_ds' => 1, 'linked_id' => $id, 'type' => 'file', 'http_var' => 'userfile', 'http_varnum' => $i));
+			//print "OUT: <pre>".var_export($up, true)."</pre>";
+			if (!is_array($up)) {
+				// Error uploading file
+				// ... show error message ...
+			}
+
+		}
+
+	// Update attach count if we need this
+	if ($flagUpdateAttachCount) {
+		$attachCount = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+		$mysql->query("update ".prefix."_news set attach_count = ".intval($attachCount)." where id = ".db_squote($id));
+	}
+
 	return 1;
 }
 
