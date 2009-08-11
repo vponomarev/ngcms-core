@@ -3,6 +3,18 @@
 -- -------------------------------------------------------- --
 
 -- 
+-- Table `PREFIX_config`
+-- 
+
+CREATE TABLE `XPREFIX_config` (
+  `key` char(60),
+  `value` char(100),
+  PRIMARY KEY  (`key`)
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+-- 
 -- Table `PREFIX_category`
 -- 
 
