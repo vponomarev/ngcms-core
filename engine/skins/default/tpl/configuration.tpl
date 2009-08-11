@@ -426,6 +426,14 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[files_dir]' value='{c_files_dir}' size="40" /></td>
 </tr>
 <tr>
+<td class="contentEntry1">{l_attach_url}<br /><small>{l_example} http://server.com/uploads/dsn</small></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[attach_url]' value='{c_attach_url}' size="40" /></td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_attach_dir}<br /><small>{l_example} /home/servercom/public_html/uploads/dsn/</small></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[attach_dir]' value='{c_attach_dir}' size="40" /></td>
+</tr>
+<tr>
 <td class="contentEntry1">{l_files_ext}<br /><small>{l_files_ext_desc}</small></td>
 <td class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[files_ext]' value='{c_files_ext}' size="40" /></td>
 </tr>

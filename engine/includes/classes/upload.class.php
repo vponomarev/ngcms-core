@@ -94,9 +94,14 @@ class file_managment {
 	// * category	- category where to put file
 	// * http_var	- name of HTTP variable to transfer file
 	// * htt_varnum - number of file that is uploaded in group (via 1 variable)
-	// * replace	- 'replace if present' flag
-	// * randprefix	- add random prefix to file
-	// * randname	- make a random file name
+	// * dsn		- FLAG: store data (files/images) in Data Storage Network (BTREE)
+	// *** IS SET:
+	//   * linked_ds - id of data storage to link this file
+	//   * linked_id - id of item in data stodage to link this file
+	// *** IS NOT SET:
+	//   * replace	- 'replace if present' flag
+	//   * randprefix	- add random prefix to file
+	//   * randname	- make a random file name
 	// * manual		- manual upload mode. File name is sent via "manualfile"
 	// *  url			- upload URL instead of file
 	// *  manualfile	- file name for manual upload
@@ -184,6 +189,95 @@ class file_managment {
 
 		// Save original file name
 		$origFname = $fname;
+
+
+		// DSN - Data Storage Network. Store data in BTREE if requested
+		if ($param['dsn']) {
+			// Check if directory for DSN exists
+			$wDir = $config['attach_dir'];
+
+			if (!is_dir($wDir)) {
+				print "No access to directory: '".$wDir."'<br/>\n";
+				return 0;
+			}
+
+			// Determine storage tree
+			$fn_md5 = md5($fname);
+			$dir1 = substr($fn_md5,0,2);
+			$dir2 = substr($fn_md5,2,2);
+
+			$wDir .= '/'.$dir1;
+			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
+				print "Cannot create directory: '".$wDir."'<br/>\n";
+				return 0;
+			}
+
+			$wDir .= '/'.$dir2;
+			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
+				print "Cannot create directory: '".$wDir."'<br/>\n";
+				return 0;
+			}
+
+			// Now let's find empty slot
+			$i = 0;
+			$xDir = '';
+			while ($i < 999) {
+				$i++;
+				$xDir = sprintf("%03u", $i);
+				if (is_dir($wDir.'/'.$xDir)) {
+					$xDir = '';
+					continue;
+				}
+
+				// Fine. Create this dir ... but check for simultaneous run
+				if (!@mkdir($wDir.'/'.$xDir, 0777)) {
+					if (is_dir($wDir.'/'.$xDir))
+						continue;
+
+					// Unable to create dir
+					print "Cannot create directory: '".$wDir.'/'.$xDir."'<br/>\n";
+					return 0;
+				} else {
+					break;
+				}
+			}
+			if (!$xDir) {
+				print "Cannot find empty slot in directory: '".$wDir."'<br/>\n";
+				return 0;
+			}
+
+			$wDir .= '/'.$xDir;
+
+			// Now let's upload file
+			if ($param['manual']) {
+				if (!copy($ftmp, $wDir.'/'.$fname)) {
+					// Remove empty dir
+					rmdir($wDir);
+
+					// Delete file
+					unlink($ftmp);
+
+					msg(array("type" => "error", "text" => $lang['upload.error.move']));
+					return 0;
+				}
+			} else {
+				if (!move_uploaded_file($ftmp, $wDir.'/'.$fname)) {
+					// Remove empty dir
+					rmdir($wDir);
+
+					msg(array("type" => "error", "text" => $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
+					return 0;
+				}
+			}
+
+			// Set correct permissions
+			chmod($wDir.'/'.$fname, 0644);
+
+			// Create record in SQL DB (or replace old)
+			$mysql->query("insert into ".prefix."_".$this->tname." (name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id) values (".db_squote($fname).", 1,".db_squote($origFname).",".db_squote($dir1.'/'.$dir2.'/'.$xDir).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.", ".db_squote($param['linked_ds']).", ".db_squote($param['linked_id']).")");
+			$rowID = $mysql->record("select LAST_INSERT_ID() as id");
+			return is_array($rowID)?array($rowID['id'], $fname):0;
+		}
 
 		// Create random prefix if requested
 		$prefix = '';
@@ -285,16 +379,18 @@ class file_managment {
 				return 0;
 			}
 
+			$storageDir = ($row['storage']?$config['attach_dir']:$this->dname).$row['folder'];
+
 			// Check if thumb file exists & delete it
-			if ($row['preview'] && file_exists($this->dname.$row['folder'].'/thumb/'.$row['name'])) {
-				if (!@unlink($this->dname.$row['folder'].'/thumb/'.$row['name'])) {
+			if ($row['preview'] && file_exists($storageDir.'/thumb/'.$row['name'])) {
+				if (!@unlink($storageDir.'/thumb/'.$row['name'])) {
 					msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'].'/thumb/'.$row['name'], $lang['upload.error.delete'])));
 				}
 			}
 
 			// Check if file file exists & delete it
-			if (file_exists($this->dname.$row['folder'].'/'.$row['name'])) {
-				if (!@unlink($this->dname.$row['folder'].'/'.$row['name'])) {
+			if (file_exists($storageDir.'/'.$row['name'])) {
+				if (!@unlink($storageDir.'/'.$row['name'])) {
 					msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'].'/'.$row['name'], $lang['upload.error.delete'])));
 					return 0;
 				}

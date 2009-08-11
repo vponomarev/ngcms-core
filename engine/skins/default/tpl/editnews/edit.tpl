@@ -2,6 +2,7 @@
 function ChangeOption(optn) {
 	document.getElementById('maincontent').style.display  = (optn == 'maincontent')?"block":"none";
 	document.getElementById('additional').style.display   = (optn == 'additional')?"block":"none";
+	document.getElementById('attaches').style.display   = (optn == 'attaches')?"block":"none";
 [comments]	document.getElementById('comments').style.display     = (optn == 'comments')?"block":"none";
 	document.getElementById('showEditNews').style.display = (optn == 'comments')?"none":"block";
 	document.getElementById('rightBar').style.display = (optn == 'comments')?"none":"";[/comments]
@@ -26,7 +27,7 @@ function preview(){
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type=hidden name="area" value="" />
 </form>
-<form name="form" method="post" action="{php_self}?" id="form">
+<form name="form" ENCTYPE="multipart/form-data" method="post" action="{php_self}?" id="form">
 <input type="hidden" name="mod" value="editnews"/>
 <input type="hidden" name="action" value="editnews"/>
 <br />
@@ -39,9 +40,10 @@ function preview(){
 <table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
 <td style="background: #F0F0F0; padding: 3px;">
-<input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_maincontent}" class="navbutton" />
-<input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_additional}" class="navbutton" />
-[comments]<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_comments} ({comnum})" class="navbutton" />[/comments]
+<input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_bar.maincontent}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_bar.additional}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{l_bar.attaches}" class="navbutton" />
+[comments]<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_bar.comments} ({comnum})" class="navbutton" />[/comments]
 </td>
 </tr>
 <tr><td>
@@ -95,6 +97,57 @@ function preview(){
 [isplugin tags]{plugin_tags}[/isplugin]
 </table>
 </div>
+
+<!-- ATTACHES -->
+<div id="attaches" style="display: none;">
+<br/>
+<b><u>List of attached files:</u></b>
+<table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
+<thead>
+<tr><td>#</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
+</thead>
+<tbody>
+<!-- <tr><td colspan="5">No data</td></tr> -->
+{attach_entries}
+<!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
+<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="More rows" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
+</table>
+</div>
+
+<script language="javascript">
+<!--
+function attachAddRow() {
+	var tbl = document.getElementById('attachFilelist');
+	var lastRow = tbl.rows.length;
+	var row = tbl.insertRow(lastRow - 1);
+
+	// Add cells
+	row.insertCell(0).innerHTML = '*';
+	row.insertCell(1).innerHTML = 'New file';
+	
+	// Add file input
+	var el = document.createElement('input');
+	el.setAttribute('type', 'file');
+	el.setAttribute('name', 'userfile[' + (++attachAbsoluteRowID) + ']');
+	el.setAttribute('size', '80');
+
+	var xCell = row.insertCell(2);
+	xCell.colSpan = 2;
+	xCell.appendChild(el);
+
+
+	el = document.createElement('input');
+	el.setAttribute('type', 'button');
+	el.setAttribute('onclick', 'document.getElementById("attachFilelist").deleteRow(this.parentNode.parentNode.rowIndex);');
+	el.setAttribute('value', '-');
+	row.insertCell(3).appendChild(el);
+}
+// Add first row 
+var attachAbsoluteRowID = 0;
+attachAddRow();
+-->
+</script>
+
 
 </td>
 <td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">

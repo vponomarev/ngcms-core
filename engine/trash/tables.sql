@@ -67,6 +67,7 @@ CREATE TABLE `XPREFIX_files` (
   `category` int(10) default '0',
   `linked_ds` int(10) default 0,
   `linked_id` int(10) default 0,
+  `storage` int(1) default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
 
@@ -106,6 +107,7 @@ CREATE TABLE `XPREFIX_images` (
   `category` int(10) default '0',
   `linked_ds` int(10) default 0,
   `linked_id` int(10) default 0,
+  `storage` int(1) default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;
 
@@ -144,14 +146,13 @@ CREATE TABLE `XPREFIX_news` (
   `title` varchar(255) NOT NULL default '',
   `content` text NOT NULL,
   `alt_name` varchar(255) default NULL,
---  `com` int(10) default '0',
   `mainpage` tinyint(1) default '1',
---  `allow_com` tinyint(1) default '1',
   `approve` tinyint(1) default '0',
   `views` int(10) default '0',
   `favorite` tinyint(1) default '0',
   `pinned` tinyint(1) default '0',
   `flags` tinyint(1) default '0',
+  `attaches` tinyint default `0`,
   `editdate` int(10) NOT NULL default '0',
   `catid` varchar(255) NOT NULL default '0',
   `xfields` text NOT NULL,

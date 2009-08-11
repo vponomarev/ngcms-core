@@ -464,3 +464,17 @@ padding: 3px;
 margin-bottom: 5px;
 margin-top: 5px;
 }
+
+#attaches table {
+background: #FFFFFF;
+}
+
+#attaches table thead {
+background: #AAAAAA;
+font-weight: bold;
+}
+
+#attaches table tbody {
+background: #F0F0F0;
+}
+

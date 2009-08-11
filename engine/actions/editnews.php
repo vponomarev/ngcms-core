@@ -10,6 +10,9 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+@include_once root.'includes/classes/upload.class.php';
+
+
 $lang = LoadLang('editnews', 'admin');
 $situation = "news";
 
@@ -164,6 +167,35 @@ function editNews() {
 		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsNotify($id, $row, $SQL, $tvars); }
 
 	msg(array("text" => $lang['msgo_edited']));
+
+	// Now let's manage attached files
+	$fmanager = new file_managment();
+
+	// Delete files (if needed)
+	foreach ($_POST as $k => $v) {
+		if (preg_match('#^delfile_(\d+)$#', $k, $match)) {
+			$fmanager->file_delete(array('type' => 'file', 'id' => $match[1]));
+		}
+	}
+
+
+	//print "<pre>".var_export($_FILES, true)."</pre>";
+	// PREPARE a list for upload
+	if (is_array($_FILES['userfile']['name']))
+		foreach($_FILES['userfile']['name'] as $i => $v) {
+			if ($v == '')
+				continue;
+
+			//
+			$up = $fmanager->file_upload(array('dsn' => true, 'linked_ds' => 1, 'linked_id' => $id, 'type' => 'file', 'http_var' => 'userfile', 'http_varnum' => $i));
+			//print "OUT: <pre>".var_export($up, true)."</pre>";
+			if (!is_array($up)) {
+				// Error uploading file
+				// ... show error message ...
+			}
+
+		}
+
 }
 
 
@@ -190,7 +222,6 @@ function editNewsForm() {
 		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array())),
 		'allcats'			=>	@GetAllCategories($cats),
-	//	'comments'			=>	$parse->smilies($comments),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
 		'content'			=>  secure_html($row['content']),
@@ -252,6 +283,37 @@ function editNewsForm() {
 	} else{
 		$tvars['regx']["'\[meta\].*?\[/meta\]'si"] = '';
 	}
+
+	// Check for attached files
+	$attaches_entries = '';
+	if ($row['attaches']) {
+		// Yeah! We have some attached files
+		$tpl->template('attach.file', tpl_actions.$mod);
+
+		$num = 0;
+		foreach ($mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')') as $arow) {
+			$num++;
+			$avars = array('vars' => array(
+				'id'	=> $arow['id'],
+				'num'	=> $num,
+				'date'	=> $arow['date'],
+				'orig_name'	=> $arow['orig_name'],
+			));
+
+			// Check if file exists
+			$fname = (($arow['storage'])?($config['attach_dir']):($config['files_dir'])).$arow['folder'].'/'.$arow['name'];
+			if (file_exists($fname) && ($fsize = @filesize($fname))) {
+				$avars['vars']['filesize'] = Formatsize($fsize);
+				$avars['vars']['url'] = $config['files_url'].'/'.$arow['folder'].'/'.$arow['name'];
+			} else {
+				$avars['vars']['filesize'] = '<font color="red">n/a</font>';
+			}
+			$tpl->vars('attach.file', $avars);
+			$attach_entries .= $tpl->show('attach.file');
+		}
+	}
+
+	$tvars['vars']['attach_entries'] = $attach_entries;
 
 	exec_acts('editnews_entry', $row['xfields'], '');
 	exec_acts('editnews_form');

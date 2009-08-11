@@ -108,7 +108,7 @@ function manage_upload($type){
 	// LOAD ATTACHED FILE LIST
 	if (is_array($_FILES['userfile']['name']))
 		foreach($_FILES['userfile']['name'] as $i => $v)
-			if ($v)
+			if ($v != '')
 				array_push($filelist, array('type' => $type, 'category' => $subdirectory, 'http_var' => 'userfile', 'http_varnum' => $i, 'replace' => $_REQUEST['replace']?1:0, 'randprefix' => $_REQUEST['rand']?1:0));
 
 
@@ -353,4 +353,3 @@ function manage_showlist($type) {
 	$tpl -> vars('table', $tvars);
 	echo $tpl -> show('table');
 }
-
