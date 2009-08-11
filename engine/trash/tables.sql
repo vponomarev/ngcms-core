@@ -7,7 +7,7 @@
 -- 
 
 CREATE TABLE `XPREFIX_config` (
-  `key` char(60),
+  `name` char(60),
   `value` char(100),
   PRIMARY KEY  (`key`)
 ) ENGINE=MyISAM;
