@@ -280,7 +280,7 @@ function doConfig_perm() {
 	$chmod = '';
 	// Check file permissions
 	$permList = array ( '.htaccess', 'uploads/', 'uploads/avatars/', 'uploads/files/',
-		'uploads/images/', 'uploads/photos/', $adminDirName.'/backups/',
+		'uploads/images/', 'uploads/photos/', 'uploads/dsn/', $adminDirName.'/backups/',
 		$adminDirName.'/cache/', $adminDirName.'/conf/', $adminDirName.'/conf/links.inc.php' );
 	foreach ($permList as $dir) {
 		$perms = (($x=@fileperms($installDir.'/'.$dir))===FALSE)?'n/a':(decoct($x) % 1000);
