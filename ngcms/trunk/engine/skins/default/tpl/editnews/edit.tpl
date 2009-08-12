@@ -30,7 +30,6 @@ function preview(){
 <form name="form" ENCTYPE="multipart/form-data" method="post" action="{php_self}?" id="form">
 <input type="hidden" name="mod" value="editnews"/>
 <input type="hidden" name="action" value="editnews"/>
-<br />
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>

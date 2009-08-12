@@ -645,7 +645,7 @@ if ($action == "editnews") {
 		$showtitle = (strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title'];
 		$tvars['vars']['title'] = secure_html($showtitle);
 
-		$tvars['vars']['status']	=	($row['approve'] == "1") ? '<img src="'.skins_url.'/images/bullet_green.gif" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/bullet_white.gif" alt="'.$lang['unapproved'].'" />';
+		$tvars['vars']['status']	=	($row['approve'] == "1") ? '<img src="'.skins_url.'/images/ok.gif" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/bullet_white.gif" alt="'.$lang['unapproved'].'" />';
 		$tvars['vars']['itemdate']	=	date("d.m.Y",$row['postdate']);
 		$tvars['vars']['allcats']	=	@GetAllCategories($cats).' &nbsp;';
 
