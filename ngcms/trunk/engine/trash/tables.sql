@@ -9,7 +9,7 @@
 CREATE TABLE `XPREFIX_config` (
   `name` char(60),
   `value` char(100),
-  PRIMARY KEY  (`key`)
+  PRIMARY KEY  (`name`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
