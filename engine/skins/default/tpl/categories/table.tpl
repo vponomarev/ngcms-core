@@ -1,11 +1,10 @@
 <script type="text/javascript">
 function ChangeOption(selectedOption) {
-document.getElementById('list').style.display = "none";
-document.getElementById('addnew').style.display = "none";
-document.getElementById('delete').style.display = "none";
+ document.getElementById('list').style.display = "none";
+ document.getElementById('addnew').style.display = "none";
 
-if (selectedOption == 'list') {document.getElementById('list').style.display = ""; document.getElementById('delete').style.display = ""; }
-if(selectedOption == 'addnew') {document.getElementById('addnew').style.display = ""; document.getElementById('delete').style.display = "none";}
+ if (selectedOption == 'list')   { document.getElementById('list').style.display = "";   }
+ if (selectedOption == 'addnew') { document.getElementById('addnew').style.display = ""; }
 }
 </script>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -16,36 +15,30 @@ if(selectedOption == 'addnew') {document.getElementById('addnew').style.display 
 </td>
 </tr>
 </table>
-<br />
+<br/>
+<div id="list">
 <form method="post" name="categories" action="{php_self}?mod=categories&amp;action=sort">
-<table id="list" width="97%" class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<td width="100%" colspan="7">&nbsp;</td>
-</tr>
-<tr align="center">
-<td width="5%" class="contentHead">#</td>
-<td width="10%" class="contentHead">{l_position}</td>
-<td width="15%" class="contentHead">{l_title}</td>
-<td width="15%" class="contentHead">{l_alt_name}</td>
-<td width="10%" class="contentHead">{l_show_main}</td>
-<td width="10%" class="contentHead">{l_news}</td>
-<td width="10%" class="contentHead">{l_action}</td>
+<table width="97%" class="content" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr align="center" class="contHead">
+<td width="5%">#</td>
+<td>{l_position}</td>
+<td>{l_title}</td>
+<td>{l_alt_name}</td>
+<td>{l_category.header.menushow}</td>
+<td>{l_category.header.template}</td>
+<td>{l_news}</td>
+<td width="160">{l_action}</td>
 </tr>
 {cat_tree}
+<tr><td colspan="8" class="contentEdit"><input type="submit" value="{l_category.action.sort}" class="button" /></td></tr>
 </table>
 
-<table id="delete" border="0" width="97%" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<td>&nbsp;</td>
-</tr>
-<tr align="center">
-<td width="100%" class="contentEdit"><input type="submit" value="{l_sort}" class="button" /></td>
-</tr>
-</table>
 </form>
+</div>
 
+<div id="addnew" style="display: none;">
 <form method="post" action="{php_self}?mod=categories">
-<table id="addnew" style="display: none;"  border="0" width="100%" cellspacing="0" cellpadding="0">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_addnew}</td>
 </tr>
@@ -109,3 +102,4 @@ if(selectedOption == 'addnew') {document.getElementById('addnew').style.display 
 </tr>
 </table>
 </form>
+</div>
