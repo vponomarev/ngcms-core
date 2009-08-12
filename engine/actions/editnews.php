@@ -314,7 +314,7 @@ function editNewsForm() {
 			$fname = (($arow['storage'])?($config['attach_dir']):($config['files_dir'])).$arow['folder'].'/'.$arow['name'];
 			if (file_exists($fname) && ($fsize = @filesize($fname))) {
 				$avars['vars']['filesize'] = Formatsize($fsize);
-				$avars['vars']['url'] = $config['files_url'].'/'.$arow['folder'].'/'.$arow['name'];
+				$avars['vars']['url'] = $config['attach_url'].'/'.$arow['folder'].'/'.$arow['name'];
 			} else {
 				$avars['vars']['filesize'] = '<font color="red">n/a</font>';
 			}
