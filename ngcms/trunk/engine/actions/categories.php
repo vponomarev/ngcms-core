@@ -24,7 +24,7 @@ function CatTree() {
 			'alt'		=>	$row['alt'],
 			'alt_url'	=> $row['alt_url'],
 			'orderlist'	=>	OrderList(''),
-			'show_main'	=>	intval(substr($row['flags'],0,1)) ? ('<img src="'.skins_url.'/images/ok.gif" alt="'.$lang['yesa'].'"/>') : '--',
+			'show_main'	=>	intval(substr($row['flags'],0,1)) ? ('<img src="'.skins_url.'/images/yes.png" alt="'.$lang['yesa'].'"/>') : '--',
 			'template'	=>	($row['tpl'] != '')?$row['tpl']:'--',
 			'news'		=>	$row['posts'],
 			'cutter'	=>	str_repeat('&#8212; ', $row['poslevel']),

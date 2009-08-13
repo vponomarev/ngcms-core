@@ -83,7 +83,7 @@ function listStatic() {
 
 		$tvars['vars']['url']		= '<a href="'.$link.'" target="_blank">'.$config['home_url'].$link.'</a>';
 		$tvars['vars']['title']		= str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
-		$tvars['vars']['status']	=	($row['approve']) ? '<img src="'.skins_url.'/images/ok.gif" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/bullet_white.gif" alt="'.$lang['unapproved'].'" />';
+		$tvars['vars']['status']	=	($row['approve']) ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
