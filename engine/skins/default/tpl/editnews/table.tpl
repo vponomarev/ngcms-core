@@ -17,7 +17,7 @@
 <td width="5%" class="contentHead">{l_postid_short}</td>
 <td width="15%" class="contentHead">{l_date}</td>
 <td width="40%" class="contentHead">{l_title}</td>
-[comments]<td width="10%" class="contentHead">{l_comments}</td>[/comments]
+[comments]<td width="10%" class="contentHead">{l_listhead.comments}</td>[/comments]
 <td width="25%" class="contentHead">{l_category}</td>
 <td width="10%" class="contentHead">{l_author}</td>
 <td width="5%" class="contentHead">&nbsp;</td>

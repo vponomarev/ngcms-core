@@ -619,4 +619,41 @@ class parse {
 
 		return $output;
 	}
+
+	// Process [attach] BB code
+	function parseBBAttach($content, $db, $templateVariables = array()) {
+		global $config;
+
+		if (preg_match_all("#\[attach(\#\d+){0,1}\](.*?)\[\/attach\]#is", $content, $pcatch, PREG_SET_ORDER)) {
+			$rsrc = array();
+			$rdest = array();
+
+			foreach ($pcatch as $catch) {
+
+				// Find attach UID
+				if ($catch[1] != '') {
+					$uid = substr($catch[1], 1);
+				} else {
+					$uid = $catch[2];
+				}
+
+				if (is_int($uid)) {
+					if ($rec = $db->record("select * from ".prefix."_files where id = ".db_squote($uid))) {
+						// Generate file ULR
+						$fname = ($rec['storage']?$config['attach_dir']:$config['files_dir']).$rec['folder'].'/'.$rec['name'];
+						$fsize = (file_exists($fname) && ($fsize = @filesize($fname)))?Formatsize($fsize):'n/a';
+
+						$params = array(
+							'url'	=> ($rec['storage']?$config['attach_url']:$config['files_url']).'/'.$arow['folder'].'/'.$arow['name'],
+							'title'	=> $rec['orig_name'],
+							'size'	=> $fsize
+						);
+					}
+					$rdest = str_replace(array('{url}', '{title}', '{size}'), array($params['url'], $params['title'], $params['size']), $templateVariables['bbcodes']['attach.forman']);
+				}
+			}
+			$content = str_replace($rsrc, $rdest, $content);
+		}
+		return $content;
+	}
 }

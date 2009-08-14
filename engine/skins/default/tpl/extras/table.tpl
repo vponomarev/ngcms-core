@@ -1,6 +1,5 @@
-<table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<td width="100%" style="padding-right:10px;" valign="top">
+<div id="pluginMenu">
+
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr class="contHead">
 <td width=100% colspan="8"><img src="{skins_url}/images/nav.gif" hspace="8" />{l_extras}</td>
@@ -20,6 +19,4 @@
 </tr>
 {entries}
 </table>
-</td>
-</tr>
-</table>
+</div>
