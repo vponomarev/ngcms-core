@@ -651,6 +651,9 @@ class parse {
 					}
 					array_push($rsrc, $catch[0]);
 					array_push($rdest, str_replace(array('{url}', '{title}', '{size}'), array($params['url'], $params['title'], $params['size']), $templateVariables['bbcodes']['attach.format']));
+				} else {
+					array_push($rsrc, $catch[0]);
+					array_push($rdest, $templateVariables['bbcodes']['attach.nonexist']);
 				}
 			}
 			$content = str_replace($rsrc, $rdest, $content);

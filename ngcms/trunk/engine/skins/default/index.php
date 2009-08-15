@@ -36,6 +36,9 @@ $skin_header = <<<HTML
 <script type="text/javascript" src="$config[admin_url]/includes/js/functions.js"></script>
 </head>
 <body>
+<table border="0" width="1000" align="center" cellspacing="0" cellpadding="0">
+<tr>
+<td width="100%">
 <div id="topNavigator">
 	<span><a href="$config[home_url]" title="$lang[mainpage_t]" target="_blank">$lang[mainpage]</a></span>
 	<span${h_active_options}><a href="$PHP_SELF?mod=options" title="$lang[options_t]">$lang[options]</a></span>
@@ -47,9 +50,6 @@ $skin_header = <<<HTML
 	<span${h_active_pm}><a href="$PHP_SELF?mod=pm" title="$lang[pm_t]">$lang[pm]</a> [ $newpm ]</span>
 	<span><a href="$PHP_SELF?action=logout" title="$lang[logout_t]">$lang[logout]</a></span>
 </div>
-<table border="0" width="1000" align="center" cellspacing="0" cellpadding="0">
-<tr>
-<td width="100%">
 <div style="text-align : left;">
 HTML;
 
