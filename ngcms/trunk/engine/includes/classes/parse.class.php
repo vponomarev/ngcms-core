@@ -638,6 +638,7 @@ class parse {
 				}
 
 				if (is_numeric($uid)) {
+					array_push($rsrc, $catch[0]);
 					if ($rec = $db->record("select * from ".prefix."_files where id = ".db_squote($uid))) {
 						// Generate file ULR
 						$fname = ($rec['storage']?$config['attach_dir']:$config['files_dir']).$rec['folder'].'/'.$rec['name'];
@@ -648,12 +649,10 @@ class parse {
 							'title'	=> $rec['orig_name'],
 							'size'	=> $fsize
 						);
+						array_push($rdest, str_replace(array('{url}', '{title}', '{size}'), array($params['url'], $params['title'], $params['size']), $templateVariables['bbcodes']['attach.format']));
+					} else {
+						array_push($rdest, $templateVariables['bbcodes']['attach.nonexist']);
 					}
-					array_push($rsrc, $catch[0]);
-					array_push($rdest, str_replace(array('{url}', '{title}', '{size}'), array($params['url'], $params['title'], $params['size']), $templateVariables['bbcodes']['attach.format']));
-				} else {
-					array_push($rsrc, $catch[0]);
-					array_push($rdest, $templateVariables['bbcodes']['attach.nonexist']);
 				}
 			}
 			$content = str_replace($rsrc, $rdest, $content);
