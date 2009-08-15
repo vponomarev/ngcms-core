@@ -103,7 +103,7 @@ function preview(){
 <b><u>List of attached files:</u></b>
 <table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
-<tr><td>#</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
+<tr><td>ID</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
 </thead>
 <tbody>
 <!-- <tr><td colspan="5">No data</td></tr> -->

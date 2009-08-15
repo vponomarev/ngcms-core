@@ -1056,7 +1056,7 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0) {
 // * $page - page No to show in full mode
 //function Prepare($row, $page) {
 function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
-	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $TemplateCache;
+	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $TemplateCache, $mysql;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
 
@@ -1144,6 +1144,11 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 	}
 	if ($config['use_bbcodes'])			{ $short = $parse -> bbcodes($short);		$full = $parse -> bbcodes($full); }
 	if ($config['use_smilies'])			{ $short = $parse -> smilies($short);		$full = $parse -> smilies($full); }
+	if (1 && templateLoadVariables()) 	{
+
+		$short = $parse -> parseBBAttach($short, $mysql, $TemplateCache['site']['#variables']);
+		$full = $parse -> parseBBAttach($full, $mysql, $TemplateCache['site']['#variables']);
+	}
 
 	$tvars['vars']['short-story']	= $short;
 	$tvars['vars']['full-story']	= $full;
