@@ -59,7 +59,7 @@ $query_list = array(
 	'create table '.prefix.'_news_map (`newsID` int(11) default NULL,'.
 		'`categoryID` int(11) default NULL, KEY `newsID` (`newsID`), KEY `categoryID` (`categoryID`))',
 	'create table '.prefix.'_config (name char(60), value char(100), primary key(name))',
-	'insert into '.prefix.'_config (name, value) values (\'database.engine.version\', \'0.9.1 beta.1\'',
+	'insert into '.prefix.'_config (name, value) values (\'database.engine.version\', \'0.9.1 beta.1\')',
 );
 
 
