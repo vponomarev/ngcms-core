@@ -633,6 +633,7 @@ class parse {
 				// Find attach UID
 				if ($catch[1] != '') {
 					$uid = substr($catch[1], 1);
+					$title = $catch[2];
 				} else {
 					$uid = $catch[2];
 				}
@@ -646,7 +647,7 @@ class parse {
 
 						$params = array(
 							'url'	=> ($rec['storage']?$config['attach_url']:$config['files_url']).'/'.$rec['folder'].'/'.$rec['name'],
-							'title'	=> $rec['orig_name'],
+							'title'	=> ($title=='')?$rec['orig_name']:$title,
 							'size'	=> $fsize
 						);
 						array_push($rdest, str_replace(array('{url}', '{title}', '{size}'), array($params['url'], $params['title'], $params['size']), $templateVariables['bbcodes']['attach.format']));
