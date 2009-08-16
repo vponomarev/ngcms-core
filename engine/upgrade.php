@@ -20,7 +20,7 @@ if (!is_file(root.'upgrademe.txt')) {
 
 // Проверка заполнения опросника
 if (!$_REQUEST['doupgrade']) {
-	questionare_097();
+	questionare_0971();
 	exit;
 }
 
@@ -107,13 +107,65 @@ if ($_REQUEST['db_update']) {
 	foreach ($indexlist as $i) {
 		$mysql->query($i);
 	}
+
+	// DSN
+	$dir = preg_split('#\\\|/#', dirname(__FILE__));
+	array_pop($dir);
+	$dsn_dir = join('/', $dir) . '/uploads/dsn';
+	echo "Создание каталога для хранения приложенных к новостям файлов ... ".(mkdir($dsn_dir)?'OK':'FAIL')."<br/>\n";
+
+
+	// Перенос настроек в плагины
+	$p_vars_map = array(
+		'com_for_reg'		=> array(
+			'plugin'	=> 'comments',
+			'name'		=> 'regonly',
+			'type'		=> 'int',
+			'reverse'	=> false),
+		'reverse_comments'	=> array(
+			'plugin'	=> 'comments',
+			'name'		=> 'backorder',
+			'type'		=> 'int'),
+		'com_length'		=> array(
+			'plugin'	=> 'comments',
+			'name'		=> 'maxlen',
+			'type'		=> 'int'),
+		'com_wrap'			=> array(
+			'plugin'	=> 'comments',
+			'name'		=> 'maxwlen',
+			'type'		=> 'int'),
+		'block_many_com'	=> array(
+			'plugin'	=> 'comments',
+			'name'		=> 'multi',
+			'type'		=> 'int',
+			'reverse'	=> true),
+		'timestamp_comment' => array(
+			'plugin'	=> 'comments',
+			'name'		=> 'timestamp',
+			'type'		=> 'string'),
+	);
+
+	foreach ($p_vars_map as $old => $set) {
+		if (isset($config[$old])) {
+			if ($set['type'] == 'int') {
+				$nv = $set['reverse']?!$config[$old]:$config[$old];
+			} else {
+				$nv = $config[$old];
+			}
+
+			pluginSetVariable($set['plugin'], $set['name'], $nv);
+			unset($config[$old]);
+		}
+	}
+
+
 	echo "DONE <br><br>\n";
 }
 
 
 print "Все операции проведены.<br/><a href='?'>назад</a>";
 
-function questionare_097() {
+function questionare_0971() {
  print "
  <style>BODY {PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-TOP: 5px; PADDING-BOTTOM: 0px; MARGIN: 0px; COLOR: #333; FONT-FAMILY: 'Trebuchet MS', Verdana, Arial, sans-serif; BACKGROUND-COLOR: #fff; }</style>
 
