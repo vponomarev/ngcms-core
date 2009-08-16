@@ -158,8 +158,20 @@ if ($_REQUEST['db_update']) {
 		}
 	}
 
+	// Сохраняем обновлённый конфиг-файл
+	$handler			=	fopen(confroot.'config.php', "w");
+	$save_config		=	"<?php\n";
+	$save_config		.=	'$config = ';
+	$save_config		.=	var_export($config, true);
+	$save_config		.=	";\n";
+	$save_config		.=	"?>";
+	fwrite($handler, $save_config);
+	fclose($handler);
 
-	echo "DONE <br><br>\n";
+	// Сохраняем обновления переменных плагинов
+	pluginsSaveConfig();
+
+	echo "DONE <br><br>\n<b><u>Внимание!</u></b><br/>После завершения обновления Вам необходимо зайти в админ-панель и активировать следующие плагины: comments, uprofile.";
 }
 
 
