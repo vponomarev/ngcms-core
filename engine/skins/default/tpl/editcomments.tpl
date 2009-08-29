@@ -22,7 +22,7 @@ if(selectedOption == 'additional') {document.getElementById('additional').style.
 <td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" />{l_answer}</td>
 </tr>
 <tr>
-<td width="50%" valign="top" class="contentEntry1"><textarea name="content" rows="10" cols="70">{answer}</textarea></td>
+<td width="50%" valign="top" class="contentEntry1"><textarea id="content" name="content" rows="10" cols="70">{answer}</textarea></td>
 <td width="50%" valign="top" class="contentEntry1">{quicktags}<br />{smilies}</td>
 </tr>
 <tr>
