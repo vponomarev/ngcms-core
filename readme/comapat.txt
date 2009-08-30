@@ -14,17 +14,23 @@ calendar      | 0.08   | Show news calendar
 comments      | 0.01   | User comments
 complain      | 0.04   | Сообщить о проблеме в новости
 cron          | 0.04   | Планировщик задач
-gsmg          | 0.05   | Google SiteMap Generator
 favorites     | 0.05   | Show favorite news
+feedback      | 0.07   | адаптирован, требуется тестирование
+finance       | -      | ещё не адаптирован
+fin_wm        | -      | ещё не адаптирован
+gmsg          | 0.05   | Google SiteMap Generator
 ireplace      | 0.01   | Search and Replace
 jchat         | 0.03   | AJAX chat
 lastnews      | 0.12   | Show last news
+lastcomments  | 0.07   | Последние комментарии
+nsched        | 0.06   | Новости по расписанию
 popular       | 0.06   | Show most popular news
 rating        | 0.04   | Рейтинг новостей
 rss_export    | 0.10   | RSS экспорт
+similar       | 0.05   | Похожие новости
 switcher      | 0.05a  | Template/Language switcher
-tags          | 0.12   | Теги [без инсталлера]
+tags          | 0.14   | Теги [без инсталлера]
 uprofile      | 0.01   | Users profile
 varmgr        | 0.04   | Variable manager
+voting        | 0.10   | Управление голосованиями
 xfields       | 0.09   | Custom fields
-
