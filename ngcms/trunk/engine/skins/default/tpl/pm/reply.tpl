@@ -9,7 +9,7 @@
 <td width=100% class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_content}</td>
 </tr>
 <tr>
-<td width=100% class="contentEntry1">{quicktags}<br />{smilies}<br /><textarea name="content" rows="10" cols="60" tabindex="1" maxlength="3000" /></textarea></td>
+<td width=100% class="contentEntry1">{quicktags}<br />{smilies}<br /><textarea name="content" id="content" rows="10" cols="60" tabindex="1" maxlength="3000" /></textarea></td>
 </tr>
 </table>
 </td>
