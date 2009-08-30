@@ -137,10 +137,10 @@ echo $tpl -> show('table');
 // Functions
 // ==========================================================
 function repoSync(){
-	global $extras;
+	global $extras, $config;
 	if (($vms = cacheRetrieveFile('plugversion.dat', 3600)) === false) {
 		// Prepare request to repository
-		$paramList = array('_ver='.urlencode(engineVersion));
+		$paramList = array('_ver='.urlencode(engineVersion), 'UUID='.$config['UUID']);
 		foreach ($extras as $id => $extra)
 			$paramList []= urlencode($extra['id'])."=".urlencode($extra['version']);
 
