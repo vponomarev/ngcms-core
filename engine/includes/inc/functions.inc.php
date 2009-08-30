@@ -18,7 +18,7 @@ function db_squote($string) {
 }
 
 function db_dquote($string) {
-	return "'".mysql_real_escape_string($string).'"';
+	return '"'.mysql_real_escape_string($string).'"';
 }
 
 //
