@@ -1,0 +1,167 @@
+<html>
+<head>
+ <title>Обновление шаблонов с версии 0.9.0 до версии 0.9.1</title>
+ <link href="style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Изменения в шаблонной системе при переходе с версии 0.9.0 на 0.9.1</h1>
+<p>Разработка версии 0.9.1 заняла значительное время и в процессе работы над версией было внесено достаточное
+количество изменений в шаблонную систему.</p>
+<p>Несмотря на то, что изменений действительно много, вы можете достаточно быстро адаптировать ваш существующий
+шаблон для работы с новой версией. При наличии навыков работы с HTML на адаптацию шаблона у вас уйдёт от 10 до 30 минут.
+</p>
+<br/>
+Список наиболее заметных изменений, произошедших в шаблонной системе:
+<ul>
+<li>Комментарии вынесены в отдельный плагин (<b>comments</b>)</li>
+<li>Работа с учётными записями пользователей вынесена в отдельный плагин (<b>uprofile</b>)</li>
+<li>Созданы специальные страницы для обработки ошибки <b>404: Not found</b></li>
+<li>Создан специальный настроечный файл <b><i>variables.ini</i></b> (функционал из файла navigations.ini перенесён в него)</li>
+</ul>
+
+<br/>
+Для удобства представления изменений перед каждым именем файла добавляется специальный префикс:
+<ul>
+<li>[NEW] - новый шаблон</li>
+<li>[EDIT] - изменения в существующем шаблоне</li>
+<li>[DEL] - удаление существующего файла</li>
+<li>[MOVE] - существующий файл перенесён</li>
+</ul>
+
+<br/><br/>
+<h1>Список изменённых шаблонов/файлов</h1>
+
+<h3><span class="chPrefix">[EDIT]</span> categories.tpl</h3>
+<ul>
+<li>добавился блок [if_link]..[/if_link] - содержимое блока показывается в случае, если элемент меню должен быть ссылкой (см. параметр "Режим отображения ссылок в меню категорий" в настройках категорий)</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> usermenu.tpl</h3>
+<ul>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>добавилась переменная {logout_link}, её необходимо использовать для ссылки на выход (logout)</li>
+<li>удалён блок [login-err]..[/login-err]. Теперь в случае ошибки авторизации вся информация отображается в новом шаблоне login.tpl</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> news.short.tpl</h3>
+<ul>
+<li>блок [link]..[/link] переименован в [full-link]..[/full-link]</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> news.full.tpl</h3>
+<ul>
+<li>добавлен блок [more]..[/more], его необходимо устанавливать в месте разделения короткой и длинной новостей. логика работы блока: если включена поддержка "Расширенного режима для разделения короткой/полной новостей" (настройки системы => новости) и пользователь указал свой текст разделителя, то выводится пользовательский разделитель. Иначе - выводится содержимое этого блока.</li>
+<li>убран блок [comheader]..[/comheader], теперь вся информация для комментариев выводится плагином comments. для работы комментариев в шаблон необходимо добавить переменную {plugin_comments} в место, где должны отображаться комментарии</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> main.tpl</h3>
+<ul>
+<li>убрана переменная {metatags}, на её место пришла переменная {htmlvars} (на её месте отображаются не только мета-теги, но и подключаются необходимые JS/CSS библиотеки, включая те, которые подгружают плагины)</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> search.table.tpl</h3>
+<ul>
+<li>спрятанное input поле action больше не нужно</li>
+<li>переименованы языковые переменные: author => filter.author, category => filter.category, date => filter.date, search => search.submit, found => search.found (т.е. теперь вместо {l_author} надо писать {l_filter.author})</li>
+<li>убраны переменные {padeg1}, {padeg2}, {count_all}</li>
+</ul>
+Добавлены следующие элементы:
+<ul>
+<li>переменная {form_url}, её необходимо использовать в качестве action'а для формы</li>
+<li>языковые переменные {l_search.found}, {l_search.notfound}</li>
+<li>переменная {count} (кол-во найденных новостей)</li>
+<li>блок [found]..[/found] - отображается только в случае, если что-то нашли (в него удобно класть отображение информации о кол-ве найденных новостей)</li>
+<li>блок [found]..[/found] - отображается только в случае, если что-то нашли (в него удобно класть отображение информации о кол-ве найденных новостей)</li>
+<li>блок [notfound]..[/notfound] - отображатеся только в случае, если ничего найти не удалось</li>
+<li>блок [error]..[/error] и языковая переменная {l_search.error} - отображается в случае, если неверно указаны входные параметры (обычно - если не задан текст для поиска)</li>
+</ul>
+
+
+<h3><span class="chPrefix">[EDIT]</span> search.form.tpl</h3>
+<ul>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>спрятанное input поле action больше не нужно</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> registration.tpl</h3>
+<ul>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>спрятанное input поле action больше не нужно</li>
+</ul>
+
+<h3><span class="chPrefix">[DEL]</span> navigation.ini</h3>
+Настройки из этого файла перенесены в файл variables.ini (блок <b>[navigation]</b>)
+<br/><br/>
+
+<h3><span class="chPrefix">[NEW]</span> variables.ini</h3>
+Набор общих переменных, которые не были вынесены в отдельные шаблоны.<br/>
+Пример заполнения файла с комментариями:
+<div class="pre">
+<pre>
+<div class="comment">; Настройка панели постраничной навигации</div>
+[navigation]
+<div class="comment">; Формат ссылки `предыдущая страница`</div>
+prevlink	= "&lt;a href='%link%'>%page%</a> "
+<div class="comment">; Формат ссылки `следующая страница`</div>
+nextlink	= "&lt;a href='%link%'>%page%&lt;/a> "
+<div class="comment">; Формат ссылки `текущая страница`</div>
+current_page	= " &lt;b>[%page%]&lt;/b> "
+<div class="comment">; Формат ссылки `страница`</div>
+link_page	= "&lt;a href='%link%'>%page%&lt;/a> "
+<div class="comment">; Разделитель блока ссылок (многоточие)</div>
+dots		= " ... "
+
+<div class="comment">; Настройка отображения системных сообщений/ошибок</div>
+[messages]
+<div class="comment">; Сообщение об ощибке</div>
+msg.error	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>"
+<div class="comment">; Информационный блок к сообщению об ошибке</div>
+msg.error_info	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+<div class="comment">; Системное сообщение (об успешно выполненном действии)</div>
+msg.common	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>"
+<div class="comment">; Информационный блок к системному сообщению</div>
+msg.common_info	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+<div class="comment">; Отдельно создаваемый информационный блок</div>
+msg.info	= "&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+
+<div class="comment">; Настройка BB кодов</div>
+[bbcodes]
+<div class="comment">; ** URL ** (параметры BB кода)</div>
+<div class="comment">; Стиль по умолчанию для BB кода URL (если не задан в самом BB коде)</div>
+;url.class.default	= ""
+
+<div class="comment">; Задавать стиль для BB кода URL (вне зависимости от того задан ли стиль в BB коде)</div>
+;url.class.force	= ""
+
+<div class="comment">; Значение параметра <b>target</b> по умолчанию для BB кода URL (если не задан в самом BB коде)</div>
+;url.target.default	= ""
+
+<div class="comment">; Значение параметра <b>target</b> для BB кода URL (вне зависимости от того задан ли стиль в BB коде)</div>
+;url.target.force	= ""
+
+<div class="comment">; ** IMG ** (параметры BB кода)</div>
+;url.class.default	= ""
+;url.class.force	= ""
+
+<div class="comment">; ** ATTACH **</div>
+<div class="comment">; Формат отображения для BB кода <b>[attach]</b>
+; Допустимые параметры:
+; * {url}   - URL файла-вложения
+; * {title} - Имя файла-вложения
+; * {size}  - Размер файла-вложения</div>
+attach.format	= "&lt;a href='{url}'>{title} ({size})&lt;/a>"
+<div class="comment">; Текст, который будет выводиться вместо тега <b>[attach]</b> в случае, если такого файла-вложения не существует</div>
+attach.nonexist	= "[wrong or deleted attach]"
+
+</pre>
+</div>
+
+//<br/>
+// текст находится на стадии разработки, некоторые части ещё не готовы<br/>
+//<br/>
+<br/><br/>
+<div class="nav">&copy; <a href="http://ngcms.ru/">Next Generation CMS</a></div>
+
+</body>
+</html>
