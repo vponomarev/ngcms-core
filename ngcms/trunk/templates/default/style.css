@@ -671,3 +671,6 @@ border : 1px solid #eeeeef;
 	display: none;
 }	
 
+#tags A:hover {
+cursor: pointer;
+}
