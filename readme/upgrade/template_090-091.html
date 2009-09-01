@@ -66,7 +66,7 @@
 
 <h3><span class="chPrefix">[EDIT]</span> search.table.tpl</h3>
 <ul>
-<li>спрятанное input поле action больше не нужно</li>
+<li>спрятанное input-поле action больше не нужно</li>
 <li>переименованы языковые переменные: author => filter.author, category => filter.category, date => filter.date, search => search.submit, found => search.found (т.е. теперь вместо {l_author} надо писать {l_filter.author})</li>
 <li>убраны переменные {padeg1}, {padeg2}, {count_all}</li>
 </ul>
@@ -85,7 +85,7 @@
 <h3><span class="chPrefix">[EDIT]</span> search.form.tpl</h3>
 <ul>
 <li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
-<li>спрятанное input поле action больше не нужно</li>
+<li>спрятанное input-поле action больше не нужно</li>
 </ul>
 
 <h3><span class="chPrefix">[MOVE]</span> search.entries.tpl <i>[необязательный шаблон]</i></h3>
@@ -97,7 +97,7 @@
 <h3><span class="chPrefix">[EDIT]</span> registration.tpl</h3>
 <ul>
 <li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
-<li>спрятанное input поле action больше не нужно</li>
+<li>спрятанное input-поле action больше не нужно</li>
 </ul>
 
 <h3><span class="chPrefix">[NEW]</span> login.tpl</h3>
@@ -106,7 +106,7 @@
 Допустимые переменные:
 <ul>
 <li>{form_action} - URL формы-обработчика</li>
-<li>{redirect} - значение, которое необходимо передать в скрытом поле ввода <b>redirect</b>, позволяет возвратиться обратно на страницу (внутри сайта) с которой пользователь авторизовывался</li>
+<li>{redirect} - значение, которое необходимо передать в скрытом поле ввода <b>redirect</b>, позволяет вернуться обратно на страницу (внутри сайта), с которой пользователь авторизовывался</li>
 </ul>
 В форме должны использоваться переменные:
 <ul>
@@ -131,11 +131,28 @@
 <b>comments.form.tpl</b> =&gt; <b>plugins/comments/comments.form.tpl</b><br/>
 <br/>
 
-<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.external.tpl</h3>
+<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.internal.tpl</h3>
+// Шаблон для отображения блока комментариев - шаблон, отображаемый внутри новости (шаблон <b>news.full.tpl</b>)<br/>
+Поддерживаются следующие элементы:
+<ul>
+<li>[comheader]..[/comheader] - блок выводится в случае, если в новости уже есть комментарии</li>
+<li>{entries} - список комментариев (для отображения используется шаблон <b>comments.show.tpl</b>)</li>
+<li>{more_comments} - ссылка "Читать все комментарии" (отображается в случае, если комментарии к новости не помещаются на первой странице внутри новости)</li>
+<li>{form} - форма добавления комментариев</li>
+</ul>
 <br/>
 
-<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.internal.tpl</h3>
+
+<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.external.tpl</h3>
+// Шаблон для отображения блока комментариев на странице плагина комментариев (отображение второй и далее страницы комментариев к новости)<br/>
+Поддерживается тот же набор переменных, что и в шаблоне <b>comments.internal.tpl</b>, а также дополнительные элементы:
+<ul>
+<li>{link} - ссылка на новость, к которой показываются комментарии</li>
+<li>{title} - название новости, к которой показываются комментарии</li>
+</ul>
+
 <br/>
+
 
 <h3><span class="chPrefix">[MOVE]</span> users.tpl</h3>
 <b>users.tpl</b> =&gt; <b>plugins/uprofile/users.tpl</b><br/>
@@ -143,6 +160,13 @@
 
 <h3><span class="chPrefix">[MOVE]</span> profile.tpl</h3>
 <b>profile.tpl</b> =&gt; <b>plugins/uprofile/profile.tpl</b><br/>
+<ul>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>в форме необходимо добавить скрытое поле:
+<div class="pre"><pre>
+&lt;input type="hidden" name="plugin_cmd" value="apply" />
+</pre></div></li>
+</ul>
 <br/>
 
 <h3><span class="chPrefix">[MOVE]</span> static.tpl</h3>
@@ -231,7 +255,8 @@ attach.nonexist	= "[wrong or deleted attach]"
 
 <br/>
 //<br/>
-// текст находится на стадии разработки, некоторые части ещё не готовы<br/>
+// Версия от: <b>01:33 02.09.2009</b><br/>
+// Статус: <b style="color: red">разработка завершена, необходима проверка</b><br/>
 //<br/>
 <br/><br/>
 <div class="nav">&copy; <a href="http://ngcms.ru/">Next Generation CMS</a></div>
