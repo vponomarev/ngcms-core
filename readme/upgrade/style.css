@@ -3,7 +3,14 @@ p { padding: 0; margin: 0; }
 .text { font: normal 11px verdana, sans-serif; padding: 10px; text-align: justify; }
 h1 { font: bold 16px verdana, sans-serif; color: #6BB5EE; margin: 5px; margin-bottom: 10px; }
 h2 { font: bold 14px verdana, sans-serif; color: #444; margin: 0; }
-h3 { font: bold 12px verdana, sans-serif; color: #444; margin: 0; }
+h3 { 
+	border-top: 1px solid #EEEEEE; 
+	font: bold 12px verdana, sans-serif; 
+	color: #444;
+	margin: 0; 
+	background: #F0FFFF url(mark.gif) no-repeat right;
+	padding-bottom: 5px;
+}
 ol { color: #444; margin-left: 10px; }
 ul { color: #444; margin-left: 10px; list-style-type: square; }
 a:active,a:visited, a:link { font-weight: bold; color: #333; text-decoration: none; letter-spacing: 1px; }

@@ -55,6 +55,10 @@
 <li>убран блок [comheader]..[/comheader], теперь вся информация для комментариев выводится плагином comments. для работы комментариев в шаблон необходимо добавить переменную {plugin_comments} в место, где должны отображаться комментарии</li>
 </ul>
 
+<h3><span class="chPrefix">[MOVE]</span> print.tpl</h3>
+<b>print.tpl</b> =&gt; <b>news.print.tpl</b><br/>
+<br/>
+
 <h3><span class="chPrefix">[EDIT]</span> main.tpl</h3>
 <ul>
 <li>убрана переменная {metatags}, на её место пришла переменная {htmlvars} (на её месте отображаются не только мета-теги, но и подключаются необходимые JS/CSS библиотеки, включая те, которые подгружают плагины)</li>
@@ -84,11 +88,78 @@
 <li>спрятанное input поле action больше не нужно</li>
 </ul>
 
+<h3><span class="chPrefix">[MOVE]</span> search.entries.tpl <i>[необязательный шаблон]</i></h3>
+<b>search.entries.tpl</b> =&gt; <b>news.search.tpl</b><br/>
+// Шаблон для отображения найденных новостей (в списке). При его отсутствии используется шаблон <b>news.short.tpl</b><br/>
+<br/>
+
+
 <h3><span class="chPrefix">[EDIT]</span> registration.tpl</h3>
 <ul>
 <li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
 <li>спрятанное input поле action больше не нужно</li>
 </ul>
+
+<h3><span class="chPrefix">[NEW]</span> login.tpl</h3>
+// Отдельная форма авторизации.<br/>
+Отображается на сайте при заходе на URL логина, а также при неправильном указании логина/пароля при авторизации через usermenu.tpl<br/>
+Допустимые переменные:
+<ul>
+<li>{form_action} - URL формы-обработчика</li>
+<li>{redirect} - значение, которое необходимо передать в скрытом поле ввода <b>redirect</b>, позволяет возвратиться обратно на страницу (внутри сайта) с которой пользователь авторизовывался</li>
+</ul>
+В форме должны использоваться переменные:
+<ul>
+<li><b>username</b> - логин пользователя</li>
+<li><b>password</b> - пароль пользователя</li>
+</ul>
+
+<h3><span class="chPrefix">[NEW]</span> 404.internal.tpl</h3>
+// Шаблон страницы для ошибки "404.Объект не найден" (шаблон для отображения внутри общего шаблона <b>main.tpl</b>)<br/>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> 404.external.tpl</h3>
+// Шаблон страницы для ошибки "404.Объект не найден" (шаблон для отображения вместо общего шаблона)<br/>
+// Рекомендуемый размер страницы - не менее 1kb, иначе некоторые браузеры не будут отображать содержимое страницы.<br/>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> comments.show.tpl</h3>
+<b>comments.show.tpl</b> =&gt; <b>plugins/comments/comments.show.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> comments.form.tpl</h3>
+<b>comments.form.tpl</b> =&gt; <b>plugins/comments/comments.form.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.external.tpl</h3>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.internal.tpl</h3>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> users.tpl</h3>
+<b>users.tpl</b> =&gt; <b>plugins/uprofile/users.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> profile.tpl</h3>
+<b>profile.tpl</b> =&gt; <b>plugins/uprofile/profile.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> static.tpl</h3>
+<b>static.tpl</b> =&gt; <b>static/default.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> redirect.tpl</h3>
+// Шаблон страницы переадресации (используется в случае, когда пользователя надо о чём-то проинформировать и вернуть его обратно)<br/>
+Допустимые переменные:
+<ul>
+<li>{title} - заголовок страницы</li>
+<li>{message} - сообщение для пользователя</li>
+<li>{link} - URL страницы-переадресации</li>
+<li>{linktext} - текст, отображаемый на URL'е переадресации</li>
+</ul>
+<br/>
+
 
 <h3><span class="chPrefix">[DEL]</span> navigation.ini</h3>
 Настройки из этого файла перенесены в файл variables.ini (блок <b>[navigation]</b>)
@@ -157,6 +228,8 @@ attach.nonexist	= "[wrong or deleted attach]"
 </pre>
 </div>
 
+
+<br/>
 //<br/>
 // текст находится на стадии разработки, некоторые части ещё не готовы<br/>
 //<br/>
