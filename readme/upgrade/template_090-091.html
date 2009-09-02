@@ -129,6 +129,10 @@
 
 <h3><span class="chPrefix">[MOVE]</span> comments.form.tpl</h3>
 <b>comments.form.tpl</b> =&gt; <b>plugins/comments/comments.form.tpl</b><br/>
+<ul>
+<li>добавилась переменная {post_url}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>изменён блок JS кодов, отвечающих за добавление комментариев через AJAX, необходимо этот блок взять из стандартной поставки</li>
+</ul>
 <br/>
 
 <h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.internal.tpl</h3>
@@ -142,16 +146,43 @@
 </ul>
 <br/>
 
-
-<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.external.tpl</h3>
+<h3><span class="chPrefix">[MOVE]</span> plugins/comments/comments.external.tpl</h3>
 // Шаблон для отображения блока комментариев на странице плагина комментариев (отображение второй и далее страницы комментариев к новости)<br/>
 Поддерживается тот же набор переменных, что и в шаблоне <b>comments.internal.tpl</b>, а также дополнительные элементы:
 <ul>
 <li>{link} - ссылка на новость, к которой показываются комментарии</li>
 <li>{title} - название новости, к которой показываются комментарии</li>
 </ul>
-
 <br/>
+
+<h3><span class="chPrefix">[EDIT]</span> bbcodes.tpl</h3>
+// Шаблон отвечает за вывод BB кодов в форме добавления комментариев.
+В связи с тем, что некоторые новые браузеры некорректно поддерживают конструкцию вида:
+<div class="pre">
+<pre>
+&lt;a href="javascript:insertext('[b]','[/b]', '{area}')" title='{l_qt_bold}'> ...
+</pre></div>
+в шаблоне была повсеместно проведена замена на код:
+<div class="pre">
+<pre>
+&lt;a onclick="insertext('[b]','[/b]', '{area}')" title='{l_qt_bold}'> ...
+</pre></div>
+а также содержимое всего файла <b>bbcodes.tpl</b> взять в блок:
+<div class="pre">
+<pre>
+&lt;span id="tags">
+...содержимое...
+&lt;/span>
+</pre></div>
+Рекомендуем использовать в своём шаблоне файл из стандартной поставки.<br/>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> error.tpl</h3>
+<b>error.tpl</b> =&gt; <b>plugins/comments/error.tpl</b><br/>
+// Шаблон используется при отображении ошибки добавления комментария в AJAX режиме<br/>
+В шаблоне изменена логика работы кнопки "Закрыть", рекомендуем в вашем шаблоне использовать файл из поставки.<br/>
+<br/>
+
 
 
 <h3><span class="chPrefix">[MOVE]</span> users.tpl</h3>
