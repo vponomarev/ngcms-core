@@ -130,8 +130,20 @@
 <h3><span class="chPrefix">[MOVE]</span> comments.form.tpl</h3>
 <b>comments.form.tpl</b> =&gt; <b>plugins/comments/comments.form.tpl</b><br/>
 <ul>
+<li>изменён блок JS кодов, отвечающих за добавление комментариев через AJAX, необходимо этот блок взять из стандартной поставки. Также из стандартной поставки желательно взять заголовочную часть (идёт сразу за JS кодом) либо сделать по аналогии:
+<div class="pre"><pre>
+&lt;div id="new_comments">&lt;/div>
+&lt;form id="comment" method="post" action="{post_url}" name="form" [ajax]onsubmit="add_comment(); return false;"[/ajax]>
+&lt;input type="hidden" name="newsid" value="{newsid}" />
+&lt;input type="hidden" name="referer" value="{request_uri}" />
+</pre></div>
+</li>
 <li>добавилась переменная {post_url}, её необходимо использовать в качестве action'а для формы авторизации</li>
-<li>изменён блок JS кодов, отвечающих за добавление комментариев через AJAX, необходимо этот блок взять из стандартной поставки</li>
+<li>добавилась переменная {request_uri}, её значение необходимо передавать в hidden-переменную <b>referer</b> для корректной переадресации обратно к новости при добавлении комментария и отключении AJAX режима:
+<div class="pre"><pre>
+&lt;input type="hidden" name="referer" value="{request_uri}" />
+</pre></div>
+</li>
 </ul>
 <br/>
 
