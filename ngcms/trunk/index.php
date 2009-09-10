@@ -83,7 +83,7 @@ if (($tmp_pos = strpos($systemAccessURL, '?')) !== FALSE) {
 
 
 // /////////////////////////////////////////////////////////// //
-$runResult = $UHANDLER->run($_SERVER['REDIRECT_URL'], false);
+$runResult = $UHANDLER->run($systemAccessURL, false);
 
 
 // If no pages are catched
