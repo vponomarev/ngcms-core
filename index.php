@@ -70,10 +70,19 @@ $template['vars']["[/sitelock]"] = "";
 //
 // Core URL processing block
 //
-//print "<pre>".var_export($_SERVER, true)."</pre><br/>\n";
-//print "<pre>".var_export($_REQUEST, true)."</pre><br/>\n";
 
-// *****[ RUN ]*****
+// Prepare variable with access URL
+$systemAccessURL = $_SERVER['REQUEST_URI'];
+if (($tmp_pos = strpos($systemAccessURL, '?')) !== FALSE) {
+ $systemAccessURL = substr($systemAccessURL, 0, $tmp_pos);
+}
+
+// /////////////////////////////////////////////////////////// //
+// You may modify variable $systemAccessURL here (for hacks)   //
+// /////////////////////////////////////////////////////////// //
+
+
+// /////////////////////////////////////////////////////////// //
 $runResult = $UHANDLER->run($_SERVER['REDIRECT_URL'], false);
 
 
@@ -103,6 +112,7 @@ $timer->registerEvent('Category menu created');
 
 // Generate page title
 $template['vars']['titles'] = join(" : ", array_values($SYSTEM_FLAGS['info']['title']));
+
 
 // Generate user menu
 @include_once root.'usermenu.php';
