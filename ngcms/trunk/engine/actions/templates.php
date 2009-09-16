@@ -123,7 +123,8 @@ if ($action == "edit") {
 		default:		$path = '';
 	}
 	$tpl -> template('edit', tpl_actions.$mod);
-	$tpl -> vars('edit', array('vars' => array(
+
+	$tvars = array('vars' => array(
 		'php_self'	=>	$PHP_SELF,
 		'filename'	=>	$filename,
 		'theme'		=>	$theme,
@@ -131,7 +132,10 @@ if ($action == "edit") {
 		'where'		=>	$where,
 		'new'		=>	'',
 		'filebody'	=>	str_replace('[','&#91;',str_replace('{','&#123;',htmlspecialchars(file_get_contents($path))))
-	)));
+	));
+	$tvars['vars']['location'] = '<a href="admin.php?mod=options">'.$lang['tpl.loc.configure'].'</a> => <a href="admin.php?mod=templates">'.$lang['tpl.loc.templates'].'</a> => '.str_replace('{template}', $theme, $lang['tpl.loc.tpl']).' => '.str_replace('{file}', $filename, $lang['tpl.loc.file']);
+
+	$tpl -> vars('edit', $tvars);
 	echo $tpl -> show('edit');
 } elseif ($action == "save" && $filename) {
 

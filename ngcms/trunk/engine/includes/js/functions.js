@@ -88,7 +88,7 @@ function insertext(open, close, field){
         } catch (err) {
         	return false;
         }	
-		
+
 	// IE support
 	if (document.selection && document.selection.createRange){
 		msgfield.focus();
