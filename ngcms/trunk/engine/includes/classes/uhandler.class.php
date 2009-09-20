@@ -35,6 +35,10 @@ class urlLibrary {
 
 	// Load config from DISK
 	function loadConfig(){
+		// Check if config already loaded
+		if ($this->configLoaded) {
+			return true;
+		}
 
 		// Try to read config file
 		if (is_file($this->configFileName)) {
@@ -70,7 +74,30 @@ class urlLibrary {
 
 	// Register supported commands
 	function registerCommand($plugin, $cmd, $params){
+		if (!$this->loadConfig()) {
+			return false;
+		}
+
 		$this->CMD[$plugin][$cmd] = $params;
+		return true;
+	}
+
+	// Remove recently registered command
+	function removeCommand($plugin, $cmd){
+		if (!$this->loadConfig()) {
+			return false;
+		}
+
+		// Check if command exists
+		if (isset($this->CMD[$plugin][$cmd])) {
+			unset($this->CMD[$plugin][$cmd]);
+
+			// Check if there're no more commands for this plugin
+			if (is_array($this->CMD[$plugin]) && (!count($this->CMD[$plugin]))) {
+				unset($this->CMD[$plugin]);
+			}
+		}
+		return true;
 	}
 
 	// Fetch command data
