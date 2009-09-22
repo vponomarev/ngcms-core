@@ -1,8 +1,8 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru)
-// Name: robotic.php
+// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru)
+// Name: rpc.php
 // Description: Service functions controller
 // Author: Vitaly Ponomarev
 //
@@ -95,5 +95,4 @@ function rpcRewriteSubmit($params) {
 
 	return array('status' => 1, 'errorCode' => 0, 'errorText' => var_export($rcall[1], true));
 }
-
 

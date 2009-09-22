@@ -15,7 +15,7 @@ $lang = LoadLang('usermenu', 'site');
 // If not logged in
 if (!$is_logged) {
 	$tvars['vars'] = array(
-		'request_uri'	=>	$_SERVER['REQUEST_URI'],
+		'redirect'	=>	$_SERVER['REQUEST_URI'],
 		'reg_link'		=>	generateLink('core', 'registration'),
 		'lost_link'		=>	generateLink('core', 'lostpassword'),
 		'form_action'	=>  generateLink('core', 'login'),

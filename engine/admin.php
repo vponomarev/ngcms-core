@@ -27,7 +27,6 @@ $PHP_SELF = "admin.php";
 // We have only one admin panel skin
 @require_once("./skins/default/index.php");
 
-
 //
 // Handle LOGIN
 //

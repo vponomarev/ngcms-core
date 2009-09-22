@@ -301,7 +301,7 @@ function generate_restorepw_page($params, $values = array(), $msg = '') {
 		$tvars['regx']["'\[captcha\](.*?)\[/captcha\]'si"] = '';
 	}
 
-	$tvars['vars']['php_self'] = checkLinkAvailable('core', 'lostpassword')?
+	$tvars['vars']['form_action'] = checkLinkAvailable('core', 'lostpassword')?
 										generateLink('core', 'lostpassword', array()):
 										generateLink('core', 'plugin', array('plugin' => 'core', 'handler' => 'lostpassword'));
 	$tvars['vars']['entries']  = $entries;
