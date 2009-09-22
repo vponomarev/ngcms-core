@@ -12,6 +12,7 @@ $ULIB->loadConfig();
 $UHANDLER = new urlHandler();
 $UHANDLER->loadConfig();
 
+
 $ULIB->registerCommand('core', 'plugin',
 		array ('vars' =>
 					array(	'plugin' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'ID плагина')),

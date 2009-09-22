@@ -4,8 +4,7 @@ var set_login = 0;
 var set_pass  = 0;
 </script>
 <form name="login" method="post" action="{form_action}" id="login">
-<input type="hidden" name="referer" value="{request_uri}" />
-<!-- <input type="hidden" name="action" value="dologin" /> -->
+<input type="hidden" name="redirect" value="{redirect}" />
 <table border="0" cellspacing="0" cellpadding="0" width="300">
 <tr>
 <td align="left"><input onfocus="if (!set_login){set_login=1;this.value='';}" value="{l_name}" class="mw_login_form" type="text" name="username" maxlength="60" size="25" /></td>
