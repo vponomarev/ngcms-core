@@ -151,7 +151,7 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 	}
 
 	$tvars['vars'] = array();
-	$tvars['vars']['register_link'] = checkLinkAvailable('core', 'registration')?
+	$tvars['vars']['form_action'] = checkLinkAvailable('core', 'registration')?
 										generateLink('core', 'registration', array()):
 										generateLink('core', 'plugin', array('plugin' => 'core', 'handler' => 'registration'));
 
