@@ -25,5 +25,3 @@ function stripslashes_deep($value)  {
     return $value;
 }
 
-fix_magic_quotes();
-?>
