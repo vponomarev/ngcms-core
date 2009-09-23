@@ -274,8 +274,14 @@ function add_act($item, $function, $arguments = 1, $priority = 0) {
 }
 
 function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL) {
-	global $acts, $timer;
+	global $acts, $timer, $SYSTEM_FLAGS;
 
+	// Do not run action if it's disabled
+	if ($SYSTEM_FLAGS['actions.disabled'][$item]) {
+		$timer->registerEvent('disabled EXEC_ACTS ('.$item.')');
+		return;
+	}
+	
 	$timer->registerEvent('exec EXEC_ACTS ('.$item.')');
 
 	// Make module preload if needed
@@ -320,6 +326,14 @@ function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $
 		}
 	}
 	return $sth;
+}
+
+
+// Disable desired action from plugin
+function actionDisable($action) {
+	global $SYSTEM_FLAGS;
+	$SYSTEM_FLAGS['actions.disabled'][$action] = 1;
+	return;
 }
 
 // =========================================================

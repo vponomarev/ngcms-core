@@ -38,12 +38,10 @@ $SUPRESS_TEMPLATE_SHOW	= 0;
 $SUPRESS_MAINBLOCK_SHOW	= 0;
 
 $SYSTEM_FLAGS = array();	// internal system global flags
-
 $TemplateCache = array();
 
 // Configure error display mode
 @error_reporting (E_ALL ^ E_NOTICE);
-//@error_reporting (E_ALL);
 
 define('root', dirname(__FILE__).'/');
 define('site_root', dirname(dirname(__FILE__)).'/');
@@ -53,18 +51,26 @@ include_once root.'includes/classes/timer.class.php';
 $timer = new microTimer;
 $timer -> start();
 
-@include_once root.'includes/inc/fix_magic_quotes.php';
+// Fix MagicQuotes [ if this feature is enabled ]
+if (get_magic_quotes_gpc()) {
+	@include_once root.'includes/inc/fix_magic_quotes.php';
+	fix_magic_quotes();
+}
 
 @session_start();
+
+//
+// Global variables configuration arrays
+//
+
+// List of disabled (by plugins) actions
+$SYSTEM_FLAGS['actions.disabled'] = array();
 
 // Define default HTTP flags
 $SYSTEM_FLAGS['http.headers']['content-type']	= 'text/html; charset=Windows-1251';
 $SYSTEM_FLAGS['http.headers']['cache-control']	= 'private';
 
 
-//
-// Global variables configuration arrays
-//
 
 // Configuration array
 $confArray = array (

@@ -83,6 +83,7 @@ if (($tmp_pos = strpos($systemAccessURL, '?')) !== FALSE) {
 
 
 // /////////////////////////////////////////////////////////// //
+$timer->registerEvent('Search route for URL "'.$systemAccessURL.'"');
 $runResult = $UHANDLER->run($systemAccessURL, false);
 
 
