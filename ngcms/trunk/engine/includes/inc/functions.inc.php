@@ -583,7 +583,7 @@ function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $na
 	foreach($catz as $k => $v){
 		if (in_array($v['id'], $params['skip'])) { continue; }
 		if ($params['checkarea']) {
-			$out .= str_repeat('&#8212; ', $v['poslevel']).'<label><input type="checkbox" name="'.$name.'_'.$v['id'].'" value="1"'.((is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').'/> '.$v['name']."</label><br/>\n";
+			$out .= str_repeat('&#8212; ', $v['poslevel']).'<label><input type="checkbox" name="'.$name.'_'.$v['id'].'" value="1"'.((is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').(($v['alt_url'] != '')?' disabled="disabled"':'').'/> '.$v['name']."</label><br/>\n";
 		} else {
 			$out.="<option value=\"".($params['nameval']?$v['name']:$v['id'])."\"".(($v['id']==$params['selected'])?' selected="selected"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
 		}
