@@ -481,5 +481,11 @@ function editStatic(){
 
 	$mysql->query("update ".prefix."_static set ".implode(", ",$SQLparams)." where id = ".db_squote($id));
 
-	msg(array("text" => $lang['msgo_edited']));
+	$link = $config['home_url'].(checkLinkAvailable('static', '')?
+				generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id)):
+				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id)));
+	msg(array(
+		"text" => str_replace('{url}',$link , $lang['msg.edited']),
+		"info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.edited#descr'])));
+
 }
