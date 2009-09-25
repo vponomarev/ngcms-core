@@ -18,7 +18,7 @@
 			<tr>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_49.gif" width="7" height="24" /></td>
-				<td style="background-image:url('{tpl_url}/images/2z_50.gif');" width="100%">{ip} ({date}) [quote]<a href="" onclick="quote('{author}');" title="{l_quote}"> {l_quote}</a>[/quote]</td>
+				<td style="background-image:url('{tpl_url}/images/2z_50.gif');" width="100%">{ip} ({date}) [quote]<a href="" onclick="quote('{author}'); return false;" title="{l_quote}"> {l_quote}</a>[/quote]</td>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_51.gif" width="7" height="24" /></td>
 			</tr>
