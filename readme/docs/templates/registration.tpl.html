@@ -1,0 +1,68 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3>Ўаблон registration.tpl</h3>
+<br/>
+Ўаблон используетс€ дл€ генерации регистрационной формы.<br/>
+<br/>
+ƒл€ генерации страницы восстановлени€ утраченного парол€ используетс€ одновременно 2 шаблона:
+<ul>
+ <li><b>registration.tpl</b> - основной шаблон</li>
+ <li><a href="registration.entries.tpl.html"><b>registration.entries.tpl</b></a> - шаблон отвечающий за показ стандартной переменной (наименование, описание, поле ввода)</li>
+</ul>
+<br/>
+
+<h3>ƒоступные блоки/переменные</h3>
+Ѕлоки:
+<ul>
+ <li><b>[captcha]</b> ... <b>[/captcha]</b> - содержимое блока отображаетс€ если включена поддержка защитного кода безопасности (настройки => настройки системы => безопасность => код безопасности)</li>
+</ul>
+
+ѕеременные:
+<ul>
+ <li><b>{form_action}</b> - URL формы-обработчика</li>
+ <li><b>{entries}</b> - используетс€ дл€ вставки списка строк с переменными, необходимыми дл€ регистрации</li>
+</ul>
+<br/>
+<br/>
+Ўаблон должен содержать форму (тег <b>&lt;form></b>, метод запроса - <b>POST</b>), котора€ позволит вводить данные, необходимые дл€ регистрации.
+¬ форму должны передаватьс€ следующие переменные:
+<ul>
+<li><b>type</b> (тип: hidden) - должна содержать значение "<b>doregister</b>"</li>
+<li><b>vcode</b> (тип: text) - в это поле пользователь будет вводить значение защитного кода безопасности.<br/>URL защитного кода безопасности: <b>{admin_url}/captcha.php</b>:
+<div class="pre"><pre>&lt;img src="{admin_url}/captcha.php" alt="Security code"/></pre></div>
+<b>*</b> <i>переменна€ <b>vcode</b> должна быть помещена внутрь блока [captcha] ... [/captcha]</i>
+</li>
+</ul>
+<br/>
+
+ƒоступные €зыковые переменные:
+<ul>
+<li><b>{l_registration}</b> - текст "–егистраци€"</li>
+<li><b>{l_register}</b> - текст "зарегистрироватьс€" (дл€ submit кнопки формы)</li>
+</ul>
+<br/>
+<br/>
+
+
+
+<h3>ѕример заполнени€ шаблона</h3>
+<br/>
+¬ примере показан минимально набор дл€ полнофункциональной работы:
+<div class="pre">
+<pre>
+&lt;form name="registration" action="{form_action}" method="post">
+&lt;input type="hidden" name="type" value="doregister" />
+{entries}
+[captcha]&lt;img src="{admin_url}/captcha.php"> &lt;input type="text" name="vcode" />&lt;br/>[/captcha]
+&lt;input type="submit" class="button" value="{l_send_pass}" />
+&lt;/form>
+</pre>
+</div>
+* <small> - что такое переменна€ <b>{admin_url}</b> и как ей пользоватьс€ можно узнать в описании <a href="templates.html"><b>шаблонной системы</b></a>.</small>
+
+
+</body>
+</html>

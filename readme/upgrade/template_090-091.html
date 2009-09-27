@@ -40,6 +40,7 @@
 <h3><span class="chPrefix">[EDIT]</span> usermenu.tpl</h3>
 <ul>
 <li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>переменная {request_uri} переименована в {redirect}, её необходимо использовать в качестве значения для переменной <b>redirect</b> в форме авторизации</li>
 <li>добавилась переменная {logout_link}, её необходимо использовать для ссылки на выход (logout)</li>
 <li>удалён блок [login-err]..[/login-err]. Теперь в случае ошибки авторизации вся информация отображается в новом шаблоне login.tpl</li>
 </ul>
@@ -66,7 +67,7 @@
 
 <h3><span class="chPrefix">[EDIT]</span> search.table.tpl</h3>
 <ul>
-<li>спрятанное input-поле action больше не нужно</li>
+<li>невидимое (hidden) input-поле action больше не нужно</li>
 <li>переименованы языковые переменные: author => filter.author, category => filter.category, date => filter.date, search => search.submit, found => search.found (т.е. теперь вместо {l_author} надо писать {l_filter.author})</li>
 <li>убраны переменные {padeg1}, {padeg2}, {count_all}</li>
 </ul>
@@ -85,7 +86,7 @@
 <h3><span class="chPrefix">[EDIT]</span> search.form.tpl</h3>
 <ul>
 <li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
-<li>спрятанное input-поле action больше не нужно</li>
+<li>невидимое (hidden) input-поле action больше не нужно</li>
 </ul>
 
 <h3><span class="chPrefix">[MOVE]</span> search.entries.tpl <i>[необязательный шаблон]</i></h3>
@@ -93,11 +94,17 @@
 // Шаблон для отображения найденных новостей (в списке). При его отсутствии используется шаблон <b>news.short.tpl</b><br/>
 <br/>
 
+<h3><span class="chPrefix">[EDIT]</span> lostpassword.tpl</h3>
+<ul>
+<li>переменная {php_self} заменена на {form_action} (используется в качестве <b>action</b> для тега <b>&lt;form></b></li>
+<li>удалена переменная <b>action</b> из формы</li>
+</ul>
+<br/>
 
 <h3><span class="chPrefix">[EDIT]</span> registration.tpl</h3>
 <ul>
-<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
-<li>спрятанное input-поле action больше не нужно</li>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации (ранее в некоторых случаях там использовалась переменная {php_self} либо {register_link}. обе переменные сейчас недоступны)</li>
+<li>невидимое (hidden) input-поле action больше не нужно</li>
 </ul>
 
 <h3><span class="chPrefix">[NEW]</span> login.tpl</h3>
@@ -216,6 +223,18 @@
 <b>static.tpl</b> =&gt; <b>static/default.tpl</b><br/>
 <br/>
 
+<h3><span class="chPrefix">[DEL]</span> activation.tpl</h3>
+Шаблон более не требуется.<br/>
+<br/>
+
+<h3><span class="chPrefix">[DEL]</span> addnews.tpl</h3>
+Шаблон более не требуется.<br/>
+<br/>
+
+<h3><span class="chPrefix">[DEL]</span> quicktags.tpl</h3>
+Шаблон более не требуется.<br/>
+<br/>
+
 <h3><span class="chPrefix">[NEW]</span> redirect.tpl</h3>
 // Шаблон страницы переадресации (используется в случае, когда пользователя надо о чём-то проинформировать и вернуть его обратно)<br/>
 Допустимые переменные:
@@ -298,7 +317,7 @@ attach.nonexist	= "[wrong or deleted attach]"
 
 <br/>
 //<br/>
-// Версия от: <b>13:18 05.09.2009</b><br/>
+// Версия от: <b>00:47 24.09.2009</b><br/>
 // Статус: <b style="color: red">разработка завершена, необходима проверка</b><br/>
 //<br/>
 <br/><br/>
