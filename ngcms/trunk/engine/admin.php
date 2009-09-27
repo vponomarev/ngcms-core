@@ -30,7 +30,7 @@ $PHP_SELF = "admin.php";
 //
 // Handle LOGIN
 //
-if ($_REQUEST['action'] == 'login') {
+if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
 	include_once root.'cmodules.php';
 	coreLogin();
 }
@@ -38,7 +38,7 @@ if ($_REQUEST['action'] == 'login') {
 //
 // Handle LOGOUT
 //
-if ($_REQUEST['action'] == 'logout') {
+if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
 	include_once root.'cmodules.php';
 	coreLogout();
 }

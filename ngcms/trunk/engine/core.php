@@ -42,6 +42,18 @@ $TemplateCache = array();
 
 // Configure error display mode
 @error_reporting (E_ALL ^ E_NOTICE);
+/*
+ini_set("display_errors","1");
+if (version_compare(phpversion(), "5.0.0", ">")==1) {
+    ini_set("error_reporting", E_ALL | E_STRICT);
+} else {
+    ini_set("error_reporting", E_ALL);
+}
+*/
+// Override TimeZone warning generator for PHP >= 5.1.0
+if (function_exists('date_default_timezone_get') && function_exists('date_default_timezone_set')) {
+ date_default_timezone_set ( @date_default_timezone_get() );
+}
 
 define('root', dirname(__FILE__).'/');
 define('site_root', dirname(dirname(__FILE__)).'/');

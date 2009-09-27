@@ -124,7 +124,7 @@ $tpl -> vars('search.form', array('vars' => array('form_url' =>	generateLink('se
 $template['vars']['search_form'] = $tpl -> show('search.form');
 
 // Save 'category' variable
-$template['vars']['category'] = $_REQUEST['category']?secure_html($_REQUEST['category']):'';
+$template['vars']['category'] = (isset($_REQUEST['category']) && ($_REQUEST['category'] != ''))?secure_html($_REQUEST['category']):'';
 
 
 // ====================================================================

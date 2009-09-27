@@ -58,15 +58,16 @@ class tpl {
 		list($usec, $sec) = explode(' ', microtime());
 		$timeStart = (float) $sec + (float) $usec;
 
-		$data = ($params['inline'])?$nn:$this->data[$nn];
-		if ($params['codeExec'])
+		$data = (isset($params['inline']) && $params['inline'])?$nn:$this->data[$nn];
+		if (isset($params['codeExec']) && $params['codeExec'])
 			$data = (eval(' ?>'.$this->data[$nn].'<?php '));
 
 		preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr);
 
 		foreach ($larr[0] as $k => $v) {
 			$name_larr = substr($v, 2);
-			$data = str_replace('{'.$v.'}', $lang[$name_larr], $data);
+			//if (!isset($lang[$name_larr])) { print "[LLOST: ".$name_larr."]"; }
+			$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST]', $data);
 		}
 
 		preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr);
@@ -112,7 +113,7 @@ class tpl {
 			}
 		}
 
-		if ($vars['regx']) {
+		if (isset($vars['regx']) && is_array($vars['regx'])) {
 			foreach ($vars['regx'] as $id => $var) {
 				$data = preg_replace($id, $var, $data);
 			}
@@ -121,7 +122,7 @@ class tpl {
 		$data = str_replace('{tpl_url}', tpl_url, $data);
 		$data = str_replace('{admin_url}', admin_url, $data);
 
-		if ($params['inline'])
+		if (isset($params['inline']) && $params['inline'])
 			return $data;
 
 		$this -> da_vr[$nn] = $data;
