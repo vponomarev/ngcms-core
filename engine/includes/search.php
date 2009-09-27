@@ -71,9 +71,11 @@ function search_news(){
 	if (count($filter) == 1) { $filter = $filter[0]; }
 
 	//print "FILTER: <pre>".var_export($filter, true)."</pre>\n";
+	load_extras('news');
+	load_extras('news:search');
 
 	// Configure pagination
-	$paginationParams = array('pluginName' => 'search', 'xparams' => array('search' => $_REQUEST['search'], 'author' => $_REQUEST['author'], 'catid' => $_REQUEST['catid']), 'paginator' => array('page', 1, false));
+	$paginationParams = array('pluginName' => 'search', 'xparams' => array('search' => $_REQUEST['search'], 'author' => $_REQUEST['author'], 'catid' => $_REQUEST['catid'], 'postdate' => $_REQUEST['postdate']), 'paginator' => array('page', 1, false));
 
 	// Configure display params
 	$callingParams = array('style' => 'short','searchFlag' => true, 'extendedReturn' => true, 'customCategoryTemplate' => true);
@@ -94,8 +96,6 @@ function search_news(){
 	$tvars['vars']['author'] = secure_html($_REQUEST['author']);
 	$tvars['vars']['search'] = secure_html($_REQUEST['search']);
 
-	$tvars['vars']['padeg2'] = Padeg($found['count'], $lang['found_skl2']);
-	$tvars['vars']['padeg1'] = Padeg($found['count'], $lang['found_skl1']);
 	$tvars['vars']['count'] = $found['count'];
 	$tvars['vars']['form_url'] = generateLink('search', '', array());
 

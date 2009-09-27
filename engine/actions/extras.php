@@ -43,8 +43,8 @@ $repoPluginInfo = repoSync();
 // ==============================================================
 // Process enable request
 // ==============================================================
-$enable  = $_REQUEST['enable'];
-$disable = $_REQUEST['disable'];
+$enable  = (isset($_REQUEST['enable']) && $_REQUEST['enable'])?1:0;
+$disable = (isset($_REQUEST['disable']) && $_REQUEST['disable'])?1:0;
 
 if ($enable) {
 	if (pluginSwitch($enable, 'on')) {
@@ -67,9 +67,13 @@ if ($disable) {
 	}
 }
 
+$entries = '';
 $tpl -> template('entries', tpl_actions.$mod);
 
 foreach($extras as $id => $extra) {
+	if (!isset($extra['author_uri'])) { $extra['author_uri'] = ''; }
+	if (!isset($extra['author'])) { $extra['author'] = 'Unknown'; }
+
 	$tvars['vars'] = array(
 		'version'		=>	$extra['version'],
 		'description'	=>	$extra['description'],
@@ -105,17 +109,17 @@ foreach($extras as $id => $extra) {
 	$needinstall = 0;
 	$tvars['vars']['install'] = '';
 	if (getPluginStatusInstalled($extra['id'])) {
-		if ($extra['deinstall'] && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['deinstall'])) {
+		if (isset($extra['deinstall']) && $extra['deinstall'] && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['deinstall'])) {
 			$tvars['vars']['install'] = '<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'&amp;stype=deinstall">'.$lang['deinstall'].'</a>';
 		}
 	} else {
-		if ($extra['install'] && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['install'])) {
+		if (isset($extra['install']) && $extra['install'] && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['install'])) {
 			$tvars['vars']['install'] = '<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'&amp;stype=install">'.$lang['install'].'</a>';
 			$needinstall = 1;
 		}
 	}
 
-	$tvars['vars']['url'] = ($extra['config'] && (!$needinstall) && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['config']))?'<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'">'.$extra['name'].'</a>' : $extra['name'];
+	$tvars['vars']['url'] = (isset($extra['config']) && $extra['config'] && (!$needinstall) && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['config']))?'<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'">'.$extra['name'].'</a>' : $extra['name'];
 	$tvars['vars']['link'] = (getPluginStatusActive($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
 
 	if ($needinstall) { $tvars['vars']['link'] = ''; $tvars['vars']['style'] = 'contRow3'; }

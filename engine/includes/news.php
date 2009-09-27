@@ -525,12 +525,12 @@ function showNews($handlerName, $params) {
 	$callingParams['style'] = $flagPrint?'print':'full';
 
 	// Execute filters [ onBeforeShow ] ** ONLY IN 'news' mode. In print mode we don't use it
-	if (!flagPrint && is_array($PFILTERS['news'])) {
+	if (!$flagPrint && is_array($PFILTERS['news'])) {
 		foreach ($PFILTERS['news'] as $k => $v) { $v->onBeforeShow('full'); }
 	}
 
 	// Determine passed params
-	$vars = array();
+	$vars = array('id' => 0, 'altname' => '');
 	if (isset($params['id'])) {
 		$vars['id'] = $params['id'];
 	} else if (isset($params['altname'])) {

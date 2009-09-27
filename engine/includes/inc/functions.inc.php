@@ -202,6 +202,8 @@ function InsertSmilies($insert_location, $break_location = false, $area = false)
 		// For smilies in comments, try to use 'smilies.tpl' from site template
 		$templateDir = (($insert_location == 'comments') && is_readable(tpl_dir.$config['theme'].'/smilies.tpl'))?tpl_dir.$config['theme']:tpl_actions;
 
+		$i = 0;
+		$output = '';
 		foreach ($smilies as $null => $smile) {
 			$i++;
 			$smile = trim($smile);
@@ -238,7 +240,7 @@ function phphighlight($content = '') {
 
 
 function QuickTags($area = false, $template = false) {
-	global $config, $lang, $tpl;
+	global $config, $lang, $tpl, $PHP_SELF;
 
 	$tvars['vars'] = array(
 		'php_self'	=>	$PHP_SELF,
@@ -274,7 +276,6 @@ function BBCodes($area = false) {
 
 
 function Padeg($n, $s) {
-
 	$n	=	abs($n);
 	$a	=	split(",", $s);
 	$l1	=	$n - ((int)($n / 10)) * 10;
@@ -564,15 +565,17 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null) {
 function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $name='category'*/){
 	global $catz, $lang, $mysql;
 
+	if (!isset($params['skip'])) { $params['skip'] = array(); }
 	if (!is_array($params['skip'])) { $params['skip'] = $params['skip']?array($params['skip']):array(); }
 	$name = array_key_exists('name', $params)?$params['name']:'category';
 
-	if (!$params['checkarea']) {
-	 $out = "<select name=\"$name\" id=\"catmenu\"".($params['class']?' class="'.$params['class'].'"':'').">\n";
-	 if ($params['doempty'])	{ $out.= "<option value=\"0\">".$lang['no_cat']."</option>\n"; }
-	 if ($params['doall'])	{ $out.= "<option value=\"\">".$lang['sh_all']."</option>\n"; }
+	$out = '';
+	if (!isset($params['checkarea']) || !$params['checkarea']) {
+	 $out = "<select name=\"$name\" id=\"catmenu\"".((isset($params['class']) && ($params['class'] != ''))?' class="'.$params['class'].'"':'').">\n";
+	 if (isset($params['doempty']) && $params['doempty'])	{ $out.= "<option value=\"0\">".$lang['no_cat']."</option>\n"; }
+	 if (isset($params['doall']) && $params['doall'])	{ $out.= "<option value=\"\">".$lang['sh_all']."</option>\n"; }
 	}
-	if ($params['resync'])  {
+	if (isset($params['resync']) && $params['resync'])  {
 		$catz = array();
 		foreach ($mysql->select("select * from `".prefix."_category` order by posorder asc", 1) as $row) {
 			$catz[$row['alt']] = $row;
@@ -582,13 +585,13 @@ function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $na
 
 	foreach($catz as $k => $v){
 		if (in_array($v['id'], $params['skip'])) { continue; }
-		if ($params['checkarea']) {
-			$out .= str_repeat('&#8212; ', $v['poslevel']).'<label><input type="checkbox" name="'.$name.'_'.$v['id'].'" value="1"'.((is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').(($v['alt_url'] != '')?' disabled="disabled"':'').'/> '.$v['name']."</label><br/>\n";
+		if (isset($params['checkarea']) && $params['checkarea']) {
+			$out .= str_repeat('&#8212; ', $v['poslevel']).'<label><input type="checkbox" name="'.$name.'_'.$v['id'].'" value="1"'.((isset($params['selected']) && is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').(($v['alt_url'] != '')?' disabled="disabled"':'').'/> '.$v['name']."</label><br/>\n";
 		} else {
-			$out.="<option value=\"".($params['nameval']?$v['name']:$v['id'])."\"".(($v['id']==$params['selected'])?' selected="selected"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
+			$out.="<option value=\"".((isset($params['nameval']) && $params['nameval'])?$v['name']:$v['id'])."\"".((isset($params['selected']) && ($v['id']==$params['selected']))?' selected="selected"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
 		}
 	}
-	if (!$params['checkarea']) {
+	if (!isset($params['checkarea']) || !$params['checkarea']) {
 		$out.="</select>";
 	}
 	return $out;

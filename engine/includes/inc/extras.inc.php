@@ -135,7 +135,7 @@ function getPluginsActiveList(){
 //
 function getPluginStatusActive($pluginID){
 	$array = getPluginsActiveList();
-	if ($array['active'][$pluginID]) { return true; }
+	if (isset($array['active'][$pluginID]) && $array['active'][$pluginID]) { return true; }
 	return false;
 }
 
@@ -144,7 +144,7 @@ function getPluginStatusActive($pluginID){
 //
 function getPluginStatusInstalled($pluginID) {
 	$array = getPluginsActiveList();
-	if ($array['installed'][$pluginID]) { return true; }
+	if (isset($array['installed'][$pluginID]) && $array['installed'][$pluginID]) { return true; }
 	return false;
 }
 
@@ -260,7 +260,7 @@ function loadPluginLibrary($plugin, $libname = '') {
 function add_act($item, $function, $arguments = 1, $priority = 0) {
 	global $acts;
 
-	if ($acts[$item][$priority]) {
+	if (isset($acts[$item][$priority]) && $acts[$item][$priority]) {
 		foreach($acts[$item][$priority] as $act) {
 			if ($act['function'] == $function) {
 				return true;
@@ -277,7 +277,7 @@ function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $
 	global $acts, $timer, $SYSTEM_FLAGS;
 
 	// Do not run action if it's disabled
-	if ($SYSTEM_FLAGS['actions.disabled'][$item]) {
+	if (isset($SYSTEM_FLAGS['actions.disabled'][$item]) && $SYSTEM_FLAGS['actions.disabled'][$item]) {
 		$timer->registerEvent('disabled EXEC_ACTS ('.$item.')');
 		return;
 	}
@@ -349,6 +349,8 @@ function pluginGetVariable($pluginID, $var) {
 	if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig())
 		return false;
 
+	if (!isset($PLUGINS['config'][$pluginID])) { return ''; }
+	if (!isset($PLUGINS['config'][$pluginID][$var])) { return ''; }
 	return $PLUGINS['config'][$pluginID][$var];
 }
 // OLD
