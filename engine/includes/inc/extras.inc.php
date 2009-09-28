@@ -318,7 +318,7 @@ function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $
 				if ($func['arguments'] == 4) {
 					$sth.=call_user_func($func['function'],$sth, &$arg1, &$arg2, &$arg3);
 				}
-				if ($func['arguments'] == 4) {
+				if ($func['arguments'] == 5) {
 					$sth.=call_user_func($func['function'],$sth, &$arg1, &$arg2, &$arg3, &$arg4);
 				}
 				$timer->registerEvent('func EXEC_ACTS ('.$item.'): call function "'.$func['function'].'" ['.$func['arguments'].' params] for '.($timer->stop(4) - $tX)." sec");
