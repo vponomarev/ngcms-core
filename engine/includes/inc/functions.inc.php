@@ -259,7 +259,7 @@ function QuickTags($area = false, $template = false) {
 
 
 function BBCodes($area = false) {
-	global $config, $lang, $tpl;
+	global $config, $lang, $tpl, $PHP_SELF;
 
 	if ($config['use_bbcodes'] == "1") {
 		$tvars['vars'] = array(
@@ -968,7 +968,8 @@ function GetCategories($catid, $plain = false) {
 // New category menu generator
 function generateCategoryMenu(){
 	global $mysql, $catz, $tpl, $config;
-
+	
+	$result = '';
 	$tpl -> template('categories', tpl_site);
 	foreach($catz as $k => $v){
 		if (!substr($v['flags'],0,1)) continue;
@@ -1059,7 +1060,7 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0) {
 // * $page - page No to show in full mode
 //function Prepare($row, $page) {
 function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
-	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $TemplateCache, $mysql;
+	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $TemplateCache, $mysql, $PHP_SELF;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
 
@@ -1262,6 +1263,7 @@ function generatePaginationBlock($current, $start, $end, $paginationParams, $nav
 // $paginationParams	- pagination params [ for function generatePageLink() ]
 function generatePagination($current, $start, $end, $maxnav, $paginationParams, $navigations){
 	$pages_count = $end - $start + 1;
+	$pages = '';
 
 	if ($pages_count > $maxnav) {
 		// We have more than 10 pages. Let's generate 3 parts
