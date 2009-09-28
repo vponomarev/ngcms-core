@@ -588,7 +588,7 @@ function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $na
 		if (isset($params['checkarea']) && $params['checkarea']) {
 			$out .= str_repeat('&#8212; ', $v['poslevel']).'<label><input type="checkbox" name="'.$name.'_'.$v['id'].'" value="1"'.((isset($params['selected']) && is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').(($v['alt_url'] != '')?' disabled="disabled"':'').'/> '.$v['name']."</label><br/>\n";
 		} else {
-			$out.="<option value=\"".((isset($params['nameval']) && $params['nameval'])?$v['name']:$v['id'])."\"".((isset($params['selected']) && ($v['id']==$params['selected']))?' selected="selected"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
+			$out.="<option value=\"".((isset($params['nameval']) && $params['nameval'])?$v['name']:$v['id'])."\"".((isset($params['selected']) && ($v['id']==$params['selected']))?' selected="selected"':'').($v['alt_url'] != ''?' disabled="disabled" style="background: #c41e3a;"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
 		}
 	}
 	if (!isset($params['checkarea']) || !$params['checkarea']) {
