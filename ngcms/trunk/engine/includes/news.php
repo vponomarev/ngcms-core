@@ -42,7 +42,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	global $timer;
 	global $year, $month, $day, $SUPRESS_TEMPLATE_SHOW;
 
-	if (is_array($callingParams['emulate'])) {
+	if (isset($callingParams['emulate']) && is_array($callingParams['emulate'])) {
 		$row = $callingParams['emulate'];
 		$callingParams['emulateMode'] = 1;
 	} else {
@@ -81,7 +81,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
     $tX2 = $timer->stop(4);
 
-	$tvars = newsFillVariables($row, 1, $_REQUEST['page'], (substr($callingParams['style'], 0, 6) == 'export')?1:0);
+	$tvars = newsFillVariables($row, 1, isset($_REQUEST['page'])?$_REQUEST['page']:0, (substr($callingParams['style'], 0, 6) == 'export')?1:0);
 
 	$tX3 = $timer->stop(4);
 	$timer->registerEvent('call showNewsPre() for [ '.($tX2 - $tX1).' ] sec');
