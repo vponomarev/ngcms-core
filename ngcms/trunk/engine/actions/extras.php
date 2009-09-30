@@ -43,8 +43,8 @@ $repoPluginInfo = repoSync();
 // ==============================================================
 // Process enable request
 // ==============================================================
-$enable  = (isset($_REQUEST['enable']) && $_REQUEST['enable'])?1:0;
-$disable = (isset($_REQUEST['disable']) && $_REQUEST['disable'])?1:0;
+$enable  = isset($_REQUEST['enable'])?$_REQUEST['enable']):'';
+$disable = isset($_REQUEST['disable'])?$_REQUEST['disable']:'';
 
 if ($enable) {
 	if (pluginSwitch($enable, 'on')) {
