@@ -381,7 +381,7 @@ function massCommentDelete(){
 		}
 
 		// User can't delete comments of another user with the same (or higher) access level
-		if (($userROW['status'] > 1) && ($userROW['status'] >= $crow['castatus']) && ($userROW['id'] != $crow['author_id'])) {
+		if (($userROW['status'] > 1) && ($userROW['status'] >= $crow['castatus']) && ($userROW['id'] != $crow['author_id']) && ($crow['castatus'] > 0)) {
 			$countBlocked++;
 			continue;
 		}
