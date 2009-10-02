@@ -357,27 +357,36 @@ function massCommentDelete(){
 		return;
 	}
 
+	$countRequested = count($delcomid);
 	$countDeleted = 0;
-	$coundBlocked = 0;
+	$countBlocked = 0;
+	$countLost    = 0;
 	foreach ($delcomid as $delid) {
 		list($comid, $author, $add_ip, $postid) = split("-", $delid);
-		print "COM: $comid <br/>\n";
+
 		// Let's delete using only comment id ( $comid )
-		if (!is_array($crow = $mysql->record("select * from ".prefix."_comments where id = ".db_squote($comid)))) {
+		if (!is_array($crow = $mysql->record("select (select status from ng_users u where u.id=c.author_id) as castatus, (select author_id from ng_news n where n.id=c.post) as naid, c.* from ".prefix."_comments c where c.id = ".db_squote($comid)))) {
+			$countLost++;
 			continue;
 		}
 
 		// Check permissions. Journalists (status=3) can delete comments only from their own news
 		// and only from commenters (status=4)
-		if ($userROW['status']>3) { continue; }
-		if ($userROW['status'] == 2) {
-			// Fetch related NEWS
-			// Fetch comment's author
-
-
+		if ($userROW['status'] == 3) {
+			if ($crow['naid'] != $userROW['id']) {
+				// Attempt to delete comments from news created by another person
+				$countBlocked++;
+				continue;
+			}
 		}
 
-		continue;
+		// User can't delete comments of another user with the same (or higher) access level
+		if (($userROW['status'] > 1) && ($userROW['status'] >= $crow['castatus']) && ($userROW['id'] != $crow['author_id'])) {
+			$countBlocked++;
+			continue;
+		}
+
+		$countDeleted++;
 		$mysql->query("update ".prefix."_news set com=com-1 where id=".db_squote($crow['post']));
 		if ($crow['author_id']) {
 			$mysql->query("update ".uprefix."_users set com=com-1 where id=".db_squote($crow['author_id']));
@@ -385,7 +394,12 @@ function massCommentDelete(){
 
 		$mysql->query("delete from ".prefix."_comments where id=".db_squote($comid));
 	}
-	msg(array("text" => $lang['msgo_comdeleted'], "info" => sprintf($lang['msgi_comdeleted'], $PHP_SELF.'?mod=editnews&action=editnews&id='.$postid)));
+	//
+	if ($countRequested == $countDeleted) {
+		msg(array("text" => $lang['msg.comdel.ok'], 'info' => str_replace(array('{cnt_req}', '{edit_link}'), array($countRequested, $PHP_SELF.'?mod=editnews&action=editnews&id='.$postid), $lang['msg.comdel.ok#descr'])));
+	} else {
+		msg(array("text" => $lang['msg.comdel.fail'], 'info' => str_replace(array('{cnt_req}', '{cnt_deleted}', '{cnt_blocked}', '{cnt_lost}', '{edit_link}'), array($countRequested, $countDeleted, $countBlocked, $countLost, $PHP_SELF.'?mod=editnews&action=editnews&id='.$postid), $lang['msg.comdel.fail#descr'])));
+	}
 }
 
 
