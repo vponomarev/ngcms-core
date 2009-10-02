@@ -121,6 +121,13 @@ function editNews() {
 
 		if ($_REQUEST['setViews'])
 			$SQL['views'] = intval($_REQUEST['views']);
+	} else {
+		foreach (array('mainpage', 'approve', 'favorite', 'pinned') as $v) {
+			$SQL[$v] = $row[$v];
+		}
+
+		if (getPluginStatusInstalled('comments'))
+			$SQL['allow_com'] = $row['allow_com'];
 	}
 
 	exec_acts('editnews', $id);
@@ -341,23 +348,36 @@ function editNewsForm() {
 // Mass comment delete
 //
 function massCommentDelete(){
-	global $mysql, $lang;
+	global $mysql, $lang, $userROW;
 
 	$delcomid = $_REQUEST['delcomid'];
 
-	if (!$delcomid){
+	if (!$delcomid || !count($delcomid)){
 		msg(array("type" => "error", "text" => $lang['msge_selectcom'], "info" => $lang['msgi_selectcom']));
 		return;
 	}
 
+	$countDeleted = 0;
+	$coundBlocked = 0;
 	foreach ($delcomid as $delid) {
 		list($comid, $author, $add_ip, $postid) = split("-", $delid);
-
+		print "COM: $comid <br/>\n";
 		// Let's delete using only comment id ( $comid )
 		if (!is_array($crow = $mysql->record("select * from ".prefix."_comments where id = ".db_squote($comid)))) {
 			continue;
 		}
 
+		// Check permissions. Journalists (status=3) can delete comments only from their own news
+		// and only from commenters (status=4)
+		if ($userROW['status']>3) { continue; }
+		if ($userROW['status'] == 2) {
+			// Fetch related NEWS
+			// Fetch comment's author
+
+
+		}
+
+		continue;
 		$mysql->query("update ".prefix."_news set com=com-1 where id=".db_squote($crow['post']));
 		if ($crow['author_id']) {
 			$mysql->query("update ".uprefix."_users set com=com-1 where id=".db_squote($crow['author_id']));

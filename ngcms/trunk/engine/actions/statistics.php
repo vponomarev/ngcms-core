@@ -42,7 +42,10 @@ foreach (array('backup' => root.'backups', 'avatar' => avatars_dir, 'photo' => p
  }
 }
 
-$gd_version = gd_info();
+if (function_exists('gd_info')) {
+	$gd_version = gd_info();
+}
+
 $mysql_size = 0;
 
 foreach ($mysql->select("SHOW TABLE STATUS FROM `".$config['dbname']."`") as $result) {
@@ -100,7 +103,7 @@ $tvars['vars'] = array(
 	'php_os'			=>	PHP_OS,
 	'php_version'		=>	phpversion(),
 	'mysql_version'		=>	mysql_get_server_info(),
-	'gd_version'		=>	$gd_version["GD Version"],
+	'gd_version'		=>	(isset($gd_version) && is_array($gd_version))?$gd_version["GD Version"]:'<font color="red"><b>NOT INSTALLED</b></font>',
 	'currentVersion'	=>	engineVersion,
 	'mysql_size'		=>	$mysql_size,
 	'allowed_size'		=>	$df,
