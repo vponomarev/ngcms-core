@@ -35,7 +35,8 @@ function GetFiles($dir, $path, $list = false) {
 			}
 			else {
 				if (!$global) {
-					if (ereg('.tpl', $fp)) {
+					if (preg_match('#\.tpl$#', $fp, $null) || preg_match('#\.css#', $fp, $null)) {
+					//if (ereg('.tpl', $fp)) {
 						$files[] = array('dir' => ($dir ? $dir : ''), 'name' => $fp);
 					}
 				}
@@ -150,10 +151,17 @@ if ($action == "edit") {
 		$path = root.'/plugins/'.$filename;
 	}
 
-	$fp = fopen($path, 'wb+');
-	fputs($fp, $_REQUEST['filebody']);
-	fclose($fp);
-	msg(array("text" => $lang['msgo_saved']));
+	$link = 'admin.php?mod=templates&theme='.$_REQUEST['theme'];
+	// Try to write file
+	if (($fp = @fopen($path, 'wb+')) !== FALSE) {
+		fputs($fp, $_REQUEST['filebody']);
+		fclose($fp);
+
+		msg(array('text' => $lang['msg.save.ok'], 'info' => str_replace(array('{fname}', '{link}'), array($path,$link), $lang['msg.save.ok#desc'])));
+	} else {
+		msg(array('type' => 'error', 'text' => $lang['msg.save.err'], 'info' => str_replace(array('{fname}', '{link}'), array($path,$link), $lang['msg.save.err#desc'])));
+	}
+
 } elseif ($action == "rename" && $filename && $newfilename) {
 	$path = tpl_dir.$theme;
 	@rename($path.$filename, $path.'/custom/'.$newfilename);
