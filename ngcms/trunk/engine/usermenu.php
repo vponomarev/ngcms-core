@@ -68,3 +68,7 @@ exec_acts('usermenu');
 $tpl -> template('usermenu', tpl_site);
 $tpl -> vars('usermenu', $tvars);
 $template['vars']['personal_menu'] = $tpl -> show('usermenu');
+
+// Add special variables `personal_menu:logged` and `personal_menu:not.logged`
+$template['vars']['personal_menu:logged'] = $is_logged ? $template['vars']['personal_menu'] : '';
+$template['vars']['personal_menu:not.logged'] = $is_logged ? '' : $template['vars']['personal_menu'];
