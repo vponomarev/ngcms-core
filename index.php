@@ -170,6 +170,11 @@ foreach ($EXTRA_HTML_VARS as $htmlvar) {
 if (count($htmlrow))
 	$template['vars']['htmlvars'] .= join("\n",$htmlrow);
 
+// Add support of blocks [is-logged] .. [/isnt-logged] in main template
+$tvars['regx']['#\[is-logged\](.+?)\[/is-logged\]#is'] = $is_logged?'$1':'';
+$tvars['regx']['#\[isnt-logged\](.+?)\[/isnt-logged\]#is'] = $is_logged?'':'$1';
+
+
 // ***** EXECUTION TIME CATCH POINT *****
 // Calculate script execution time
 $template['vars']['queries'] = $mysql -> qcnt();
@@ -185,7 +190,7 @@ if ($config['debug']) {
 		$template['vars']['[debug]'] = '';
 		$template['vars']['[/debug]'] = '';
 	} else {
-		$template['regx']["'\\[debug\\].*?\\[/debug\\]'si"] = '';
+		$template['regx']["#\[debug\].*?\[/debug\]#si"] = '';
 	}
 }
 
@@ -193,12 +198,16 @@ if ($config['debug']) {
 // ===================================================================
 // Make page output
 // ===================================================================
+// 1. Determine template name & path
+$mainTemplateName = isset($SYSTEM_FLAGS['template.main.name']) ? $SYSTEM_FLAGS['template.main.name'] : 'main';
+$mainTemplatePath = isset($SYSTEM_FLAGS['template.main.path']) ? $SYSTEM_FLAGS['template.main.path'] : tpl_site;
 
-$tpl -> template('main', tpl_site);
-$tpl -> vars('main', $template);
+// 2. Load & show template
+$tpl -> template($mainTemplateName, $mainTemplatePath);
+$tpl -> vars($mainTemplateName, $template);
 if (!$SUPRESS_TEMPLATE_SHOW) {
 	printHTTPheaders();
-	echo $tpl -> show('main');
+	echo $tpl -> show($mainTemplateName);
 } else if (!$SUPRESS_MAINBLOCK_SHOW) {
 	printHTTPheaders();
 	echo $template['vars']['mainblock'];
