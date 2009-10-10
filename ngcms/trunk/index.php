@@ -171,8 +171,8 @@ if (count($htmlrow))
 	$template['vars']['htmlvars'] .= join("\n",$htmlrow);
 
 // Add support of blocks [is-logged] .. [/isnt-logged] in main template
-$tvars['regx']['#\[is-logged\](.+?)\[/is-logged\]#is'] = $is_logged?'$1':'';
-$tvars['regx']['#\[isnt-logged\](.+?)\[/isnt-logged\]#is'] = $is_logged?'':'$1';
+$template['regx']['#\[is-logged\](.+?)\[/is-logged\]#is'] = $is_logged?'$1':'';
+$template['regx']['#\[isnt-logged\](.+?)\[/isnt-logged\]#is'] = $is_logged?'':'$1';
 
 
 // ***** EXECUTION TIME CATCH POINT *****
