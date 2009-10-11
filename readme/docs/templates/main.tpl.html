@@ -43,6 +43,28 @@
  <li><b>{debug_profiler}</b> - отладочная переменная (видимая только администратору), содержит <b>HTML</b>-список наиболее значимых действий системы с указанием времени их исполнения</li>
 </ul>
 <br/>
+<h3>Необходимые для работы элементы</h3>
+<p>Для корректной работы всех элементов ядра CMS вам необходимо подключить несколько <b>JavaScript'ов, обеспечивающих работу части функций ядра</b>, а также некоторые другие элементы:</p>
+<ul>
+ <li>Загрузка необходимых JavaScript'ов, добавляется в секцию <b>&lt;head&gt;</b> шаблона:
+<div class="pre">
+<pre>
+&lt;script type="text/javascript" src="{admin_url}/includes/js/functions.js">&lt;/script>
+&lt;script type="text/javascript" src="{admin_url}/includes/js/ajax.js">&lt;/script>
+</pre>
+</div>
+</li>
+<li>Подключение невидимого блока, в секцию <b>&lt;body&gt;</b> шаблона, блок должен иметь id="<b>loading-layer</b>".<br/>
+Возможны различные варианты реализации такого подхода. Например так:
+<div class="pre">
+<pre>
+&lt;div id="loading-layer" style="display:none; width:180px; height:40px; background:#fff; text-align:center; border:1px solid #eeeeef;">&lt;img src="{tpl_url}/images/loading.gif" alt="" />&lt;/div>
+</pre>
+</div>
+Указанный блок необходим для корректной работы AJAX библиотеки и отображается в момент обращения к серверу для получения необходимой дополнительной информации.
+</li>
+</ul>
+<br/>
 
 <h3>Пример заполнения шаблона</h3>
 Ниже приведён пример заполнения шаблона из поставки "по умолчанию":<br/>
