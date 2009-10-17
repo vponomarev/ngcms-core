@@ -67,7 +67,7 @@ class tpl {
 		foreach ($larr[0] as $k => $v) {
 			$name_larr = substr($v, 2);
 			//if (!isset($lang[$name_larr])) { print "[LLOST: ".$name_larr."]"; }
-			$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST]', $data);
+			$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST:'.$name_larr.']', $data);
 		}
 
 		preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr);
