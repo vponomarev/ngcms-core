@@ -36,8 +36,8 @@ function users_edit(){
 		'mail'			=>	$row['mail'],
 		'site'			=>	$row['site'],
 		'icq'			=>	$row['icq'],
-		'where_from'	=>	$row['where_from'],
-		'info'			=>	$row['info'],
+		'where_from'	=>	secure_html($row['where_from']),
+		'info'			=>	secure_html($row['info']),
 		'id'			=>	$id,
 		'pass'			=>	$row['pass'],
 		'last'			=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('l, j Q Y - H:i', $row['last']),
@@ -234,6 +234,5 @@ if ($action == 'edituser') {
 	}
 	users_list();
 }
-
 
 
