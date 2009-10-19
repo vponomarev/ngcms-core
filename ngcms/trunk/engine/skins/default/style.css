@@ -425,15 +425,15 @@ padding: 1px;
 }
 
 .tselect_active {
-background: #FFEEFF;
+background: #a2d5a6;
 width: 200px; 
-float: left;
+color:#000000;
 }
 
 .tselect {
 background: white;
 width: 200px; 
-float: left;
+
 }
 
 
@@ -494,3 +494,7 @@ font-weight: bold;
 background: #F0F0F0;
 }
 
+
+/* dorogoff */
+.h-l-tpl{background:#d4d0c8;color:#000000;font-size:12px;}
+.h-l-tpl td{padding:4px;}
