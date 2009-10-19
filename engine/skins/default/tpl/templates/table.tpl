@@ -93,8 +93,15 @@ if(selectedOption == 'templates') { document.getElementById('templates').style.d
 <form id="template.select" method="get" action="">
 <input type="hidden" name="mod" value="templates"/>
 <input type="hidden" name="theme" id="template.select.theme" value=""/>
-<table width="100%">
-<tr><td>Name</td><td>Title</td><td>Author</td><td>Version</td><td>Reldate</td><td>&nbsp;</td></tr>
+<table width="100%" style="padding-top:10px;">
+<tr class="h-l-tpl">
+	<td>Name</td>
+	<td>Title</td>
+	<td>Author</td>
+	<td>Version</td>
+	<td>Reldate</td>
+	<td>&nbsp;</td>
+</tr>
 {template_select}
 </table>
 </form>
