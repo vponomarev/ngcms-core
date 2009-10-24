@@ -708,7 +708,8 @@ function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '') {
 		if (!$localsource && is_readable(tpl_site.'plugins/'.$plugin.'/'.$fnc)) {
 			$tpath[$fn] = tpl_site.'plugins/'.$plugin.'/';
 			$tpath['url:'.$fn] = tpl_url.'/plugins/'.$plugin;
-		} else {
+		} else if (is_readable(extras_dir.'/'.$plugin.'/tpl/'.($skin?'skins/'.$skin.'/':'').$fnc)) {
+//		} else {
 			$tpath[$fn] = extras_dir.'/'.$plugin.'/tpl/'.($skin?'skins/'.$skin.'/':'');
 			$tpath['url:'.$fn] = admin_url.'/plugins/'.$plugin.'/tpl'.($skin?'/skins/'.$skin:'');
 		}
