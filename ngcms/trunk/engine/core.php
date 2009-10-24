@@ -141,7 +141,6 @@ multi_multidomains();
 @include_once root.'includes/inc/consts.inc.php';
 @include_once root.'includes/inc/functions.inc.php';
 @include_once root.'includes/inc/extras.inc.php';
-@include_once confroot.'links.inc.php';
 
 @include_once 'includes/classes/templates.class.php';
 @include_once 'includes/classes/parse.class.php';

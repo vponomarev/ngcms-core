@@ -281,7 +281,7 @@ function doConfig_perm() {
 	// Check file permissions
 	$permList = array ( '.htaccess', 'uploads/', 'uploads/avatars/', 'uploads/files/',
 		'uploads/images/', 'uploads/photos/', 'uploads/dsn/', $adminDirName.'/backups/',
-		$adminDirName.'/cache/', $adminDirName.'/conf/', $adminDirName.'/conf/links.inc.php' );
+		$adminDirName.'/cache/', $adminDirName.'/conf/');
 	foreach ($permList as $dir) {
 		$perms = (($x=@fileperms($installDir.'/'.$dir))===FALSE)?'n/a':(decoct($x) % 1000);
 		$chmod .= '<tr><td>./'.$dir.'</td><td>'.$perms.'</td><td>'.(is_writable($installDir.'/'.$dir)?'Разрешен':'<font color="red"><b>Нет доступа</b></font>').'</td></tr>';
