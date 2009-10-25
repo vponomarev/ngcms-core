@@ -187,10 +187,6 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle">{use_gzip}</td>
 </tr>
 <tr>
-<td class="contentEntry1">{l_mod_rewrite}<br /><small>{l_mod_rewrite_desc}</small></td>
-<td class="contentEntry2" valign="middle">{mod_rewrite}</td>
-</tr>
-<tr>
 <td class="contentEntry1">{l_404_mode}<br /><small>{l_404_mode_desc}</small></td>
 <td class="contentEntry2" valign="middle">{404_mode}</td>
 </tr>
