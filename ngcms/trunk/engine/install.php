@@ -778,7 +778,6 @@ function doInstall() {
 			'captcha_font'	=> 'verdana',
 			'use_cookies'	=> '0',
 			'use_sessions'	=> '1',
-			'mod_rewrite'	=> '0',
 			'number'		=> '5',
 			'category_link' => '1',
 			'add_onsite' => '1',
