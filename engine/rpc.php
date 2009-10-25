@@ -12,6 +12,16 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+//
+// Add json_decode() support for PHP < 5.2.0
+//
+if (!function_exists('json_decode')) {
+	function json_decode($json, $assoc = false) {
+		include_once root.'includes/classes/json.php';
+		$jclass = new Services_JSON($assoc?SERVICES_JSON_LOOSE_TYPE:0);
+		return $jclass->decode($json);
+	}
+}
 
 //
 // We support two types of RPC calls: HTTP/JSON-RPC and XML-RPC
@@ -20,6 +30,7 @@ if (!defined('NGCMS')) die ('HAL');
 if (isset($_REQUEST['json'])) {
 	processJSON();
 }
+
 
 
 
