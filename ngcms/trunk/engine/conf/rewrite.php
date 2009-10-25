@@ -735,14 +735,57 @@ $handlerList = array (
   ),
   16 => 
   array (
-    'pluginName' => 'news',
-    'handlerName' => 'by.category',
+    'pluginName' => 'rss_export',
+    'handlerName' => 'category',
     'flagPrimary' => true,
     'flagFailContinue' => false,
     'rstyle' => 
     array (
-      'rcmd' => '/cat/{category}[/page/{page}].html',
-      'regex' => '#^/cat/(.+?)(?:/page/(\\d{1,4})){0,1}.html$#',
+      'rcmd' => '/{category}.xml',
+      'regex' => '#^/(.+?).xml$#',
+      'regexMap' => 
+      array (
+        1 => 'category',
+      ),
+      'reqCheck' => 
+      array (
+      ),
+      'setVars' => 
+      array (
+      ),
+      'genrMAP' => 
+      array (
+        0 => 
+        array (
+          0 => 0,
+          1 => '/',
+          2 => 0,
+        ),
+        1 => 
+        array (
+          0 => 1,
+          1 => 'category',
+          2 => 0,
+        ),
+        2 => 
+        array (
+          0 => 0,
+          1 => '.xml',
+          2 => 0,
+        ),
+      ),
+    ),
+  ),
+  17 => 
+  array (
+    'pluginName' => 'news',
+    'handlerName' => 'by.category',
+    'flagPrimary' => false,
+    'flagFailContinue' => false,
+    'rstyle' => 
+    array (
+      'rcmd' => '/{category}/page/{page}.html',
+      'regex' => '#^/(.+?)/page/(\\d{1,4}).html$#',
       'regexMap' => 
       array (
         1 => 'category',
@@ -759,7 +802,7 @@ $handlerList = array (
         0 => 
         array (
           0 => 0,
-          1 => '/cat/',
+          1 => '/',
           2 => 0,
         ),
         1 => 
@@ -772,61 +815,18 @@ $handlerList = array (
         array (
           0 => 0,
           1 => '/page/',
-          2 => 1,
+          2 => 0,
         ),
         3 => 
         array (
           0 => 1,
           1 => 'page',
-          2 => 1,
+          2 => 0,
         ),
         4 => 
         array (
           0 => 0,
           1 => '.html',
-          2 => 0,
-        ),
-      ),
-    ),
-  ),
-  17 => 
-  array (
-    'pluginName' => 'rss_export',
-    'handlerName' => 'category',
-    'flagPrimary' => true,
-    'flagFailContinue' => false,
-    'rstyle' => 
-    array (
-      'rcmd' => '/cat/{category}.xml',
-      'regex' => '#^/cat/(.+?).xml$#',
-      'regexMap' => 
-      array (
-        1 => 'category',
-      ),
-      'reqCheck' => 
-      array (
-      ),
-      'setVars' => 
-      array (
-      ),
-      'genrMAP' => 
-      array (
-        0 => 
-        array (
-          0 => 0,
-          1 => '/cat/',
-          2 => 0,
-        ),
-        1 => 
-        array (
-          0 => 1,
-          1 => 'category',
-          2 => 0,
-        ),
-        2 => 
-        array (
-          0 => 0,
-          1 => '.xml',
           2 => 0,
         ),
       ),
@@ -970,6 +970,62 @@ $handlerList = array (
       ),
     ),
   ),
+  20 => 
+  array (
+    'pluginName' => 'news',
+    'handlerName' => 'by.category',
+    'flagPrimary' => true,
+    'flagFailContinue' => false,
+    'rstyle' => 
+    array (
+      'rcmd' => '/{category}[/page/{page}].html',
+      'regex' => '#^/(.+?)(?:/page/(\\d{1,4})){0,1}.html$#',
+      'regexMap' => 
+      array (
+        1 => 'category',
+        2 => 'page',
+      ),
+      'reqCheck' => 
+      array (
+      ),
+      'setVars' => 
+      array (
+      ),
+      'genrMAP' => 
+      array (
+        0 => 
+        array (
+          0 => 0,
+          1 => '/',
+          2 => 0,
+        ),
+        1 => 
+        array (
+          0 => 1,
+          1 => 'category',
+          2 => 0,
+        ),
+        2 => 
+        array (
+          0 => 0,
+          1 => '/page/',
+          2 => 1,
+        ),
+        3 => 
+        array (
+          0 => 1,
+          1 => 'page',
+          2 => 1,
+        ),
+        4 => 
+        array (
+          0 => 0,
+          1 => '.html',
+          2 => 0,
+        ),
+      ),
+    ),
+  ),
 );
 $handlerPrimary = array (
   'core' => 
@@ -1029,7 +1085,7 @@ $handlerPrimary = array (
     ),
     'by.category' => 
     array (
-      0 => 16,
+      0 => 20,
       1 => true,
     ),
     'news' => 
@@ -1073,7 +1129,7 @@ $handlerPrimary = array (
     ),
     'category' => 
     array (
-      0 => 17,
+      0 => 16,
       1 => true,
     ),
   ),
