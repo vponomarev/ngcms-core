@@ -736,7 +736,7 @@ function doInstall() {
 			array_push($LOG,'Активация пользователя-администратора ... OK');
 		}
 		// 1.6 Сохраняем конфигурационную переменную database.engine.version
-		@mysql_query("insert into `".$_POST['reg_dbprefix']."_config` (name, value) values ('database.engine.version', '0.9.1 beta1')");
+		@mysql_query("insert into `".$_POST['reg_dbprefix']."_config` (name, value) values ('database.engine.version', '0.9.1 Release')");
 
 		// Вычищаем лишний перевод строки из 'home_url'
 		if (substr($_POST['home_url'], -1, 1) == '/')
