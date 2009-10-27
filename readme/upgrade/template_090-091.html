@@ -206,11 +206,15 @@
 
 <h3><span class="chPrefix">[MOVE]</span> users.tpl</h3>
 <b>users.tpl</b> =&gt; <b>plugins/uprofile/users.tpl</b><br/>
+<ul>
+<li>Языковые переменные перенесены в плагин <b>uprofile</b>, теперь вместо {l_<b>var</b>} нужно писать {l_uprofile:<b>var</b>}<br/>Пример: вместо <b>{l_icq}</b> нужно писать <b>{l_uprofile:icq}</b></li>
+</ul>
 <br/>
 
 <h3><span class="chPrefix">[MOVE]</span> profile.tpl</h3>
 <b>profile.tpl</b> =&gt; <b>plugins/uprofile/profile.tpl</b><br/>
 <ul>
+<li>Языковые переменные перенесены в плагин <b>uprofile</b>, теперь вместо {l_<b>var</b>} нужно писать {l_uprofile:<b>var</b>}<br/>Пример: вместо <b>{l_icq}</b> нужно писать <b>{l_uprofile:icq}</b></li>
 <li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
 <li>в форме необходимо добавить скрытое поле:
 <div class="pre"><pre>
@@ -317,7 +321,7 @@ attach.nonexist	= "[wrong or deleted attach]"
 
 <br/>
 //<br/>
-// Версия от: <b>00:47 24.09.2009</b><br/>
+// Версия от: <b>00:18 28.10.2009</b><br/>
 // Статус: <b style="color: red">разработка завершена, необходима проверка</b><br/>
 //<br/>
 <br/><br/>
