@@ -2,7 +2,7 @@
 
 //
 // Configurable HTTP GET with timeout support
-// (c) Vitaly Ponomarev, revision: 2008.07.12
+// (c) Vitaly Ponomarev, revision: 2009.11.04
 //
 
 class http_get {
@@ -44,9 +44,9 @@ class http_get {
 
 		// Send header
 		if (strtolower($proto) == 'get') {
-			fputs($fp,"GET /$path".(!empty($ext)?('?'.$ext):'')." HTTP/1.1\r\nHost: $host\r\nConnection: close\r\n".($referer?('Referer: http://'.$_SERVER['HTTP_HOST']."/\r\n"):'')."\r\n");
+			fputs($fp,"GET /$path".(!empty($ext)?('?'.$ext):'')." HTTP/1.1\r\nHost: $host\r\nConnection: close\r\n".($referer?('Referer: http://'.$_SERVER['HTTP_HOST']."/\r\n"):'')."User-Agent: PHPfetcher class 20091104 (designed for: http://ngcms.ru/)\r\n"."\r\n");
 		} else if (strtolower($proto) == 'post') {
-			fputs($fp,"POST /$path HTTP/1.1\r\nHost: $host\r\nConnection: close\r\nContent-length: ".strlen($ext)."\r\n".($referer?('Referer: http://'.$_SERVER['HTTP_HOST']."/\r\n"):'')."\r\n$ext");
+			fputs($fp,"POST /$path HTTP/1.1\r\nHost: $host\r\nConnection: close\r\nContent-length: ".strlen($ext)."\r\n".($referer?('Referer: http://'.$_SERVER['HTTP_HOST']."/\r\n"):'')."User-Agent: PHPfetcher class 20091104 (designed for: http://ngcms.ru/)\r\n"."\r\n$ext");
 		}
 
 		// Try to read data, not more than 1 Mb
