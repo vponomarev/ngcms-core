@@ -916,7 +916,7 @@ function GetCategories($catid, $plain = false) {
 // New category menu generator
 function generateCategoryMenu(){
 	global $mysql, $catz, $tpl, $config;
-	
+
 	$result = '';
 	$tpl -> template('categories', tpl_site);
 	foreach($catz as $k => $v){
@@ -1073,6 +1073,12 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		}
 	} else {
 			$tvars['regx']["'\[pagination\].*?\[/pagination\]'si"] = '';
+	}
+
+	// Conditional blocks for full-page
+	if ($full) {
+		$tvars['regx']['#\[page-first\](.*?)\[\/page-first\]#si']	= ($page < 2 )?'$1':'';
+		$tvars['regx']['#\[page-next\](.*?)\[\/page-next\]#si']		= ($page > 1 )?'$1':'';
 	}
 
 	// Delete "<!--nextpage-->" if pagination is disabled
