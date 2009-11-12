@@ -564,6 +564,9 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'main', 'params' => array(), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'main'), 'xparams' => array(), 'paginator' => array('page', 1, false));
 
+			if ($config['default_newsorder'] != '')
+				$callingParams['newsOrder'] = $config['default_newsorder'];
+			
 			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
 			break;
 
