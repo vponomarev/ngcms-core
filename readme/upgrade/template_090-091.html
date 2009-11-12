@@ -68,7 +68,7 @@
 <h3><span class="chPrefix">[EDIT]</span> search.table.tpl</h3>
 <ul>
 <li>невидимое (hidden) input-поле action больше не нужно</li>
-<li>переименованы €зыковые переменные: author => filter.author, category => filter.category, date => filter.date, search => search.submit, found => search.found (т.е. теперь вместо {l_author} надо писать {l_filter.author})</li>
+<li>переименованы €зыковые переменные: author => search.filter.author, category => search.filter.category, date => search.filter.date, search => search.submit, found => search.found (т.е. теперь вместо {l_author} надо писать {l_search.filter.author})</li>
 <li>убраны переменные {padeg1}, {padeg2}, {count_all}</li>
 </ul>
 ƒобавлены следующие элементы:
@@ -85,7 +85,7 @@
 
 <h3><span class="chPrefix">[EDIT]</span> search.form.tpl</h3>
 <ul>
-<li>добавилась переменна€ {form_action}, еЄ необходимо использовать в качестве action'а дл€ формы авторизации</li>
+<li>добавилась переменна€ {form_url}, еЄ необходимо использовать в качестве action'а дл€ формы авторизации</li>
 <li>невидимое (hidden) input-поле action больше не нужно</li>
 </ul>
 
@@ -132,6 +132,13 @@
 
 <h3><span class="chPrefix">[MOVE]</span> comments.show.tpl</h3>
 <b>comments.show.tpl</b> =&gt; <b>plugins/comments/comments.show.tpl</b><br/>
+<ul>
+<li>ƒл€ правильной отработки ссылки на цитирование необходимо в блоке [quote]..[/quote] ссылку прописывать так (т.е. добавить <b>return false;</b>):
+<div class="pre"><pre>
+[quote]&lt;a href="" onclick="quote('{author}'); return false;" title="{l_quote}"&gt; {l_quote}&lt;/a&gt;[/quote]
+</pre></div>
+</li>
+</ul>
 <br/>
 
 <h3><span class="chPrefix">[MOVE]</span> comments.form.tpl</h3>
@@ -151,6 +158,10 @@
 &lt;input type="hidden" name="referer" value="{request_uri}" />
 </pre></div>
 </li>
+<li>теперь дл€ текстового блока &lt;textarea&gt; необходимо указывать id="content":
+<div class="pre"><pre>
+&lt;textarea name="content" id="content" style="width: 95%;" rows="8"&gt;&lt;/textarea&gt;
+</pre></div>
 </ul>
 <br/>
 
@@ -165,7 +176,7 @@
 </ul>
 <br/>
 
-<h3><span class="chPrefix">[MOVE]</span> plugins/comments/comments.external.tpl</h3>
+<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.external.tpl</h3>
 // Ўаблон дл€ отображени€ блока комментариев на странице плагина комментариев (отображение второй и далее страницы комментариев к новости)<br/>
 ѕоддерживаетс€ тот же набор переменных, что и в шаблоне <b>comments.internal.tpl</b>, а также дополнительные элементы:
 <ul>
@@ -321,8 +332,8 @@ attach.nonexist	= "[wrong or deleted attach]"
 
 <br/>
 //<br/>
-// ¬ерси€ от: <b>00:18 28.10.2009</b><br/>
-// —татус: <b style="color: red">разработка завершена, необходима проверка</b><br/>
+// ¬ерси€ от: <b>02:27 13.11.2009</b><br/>
+// —татус: <b style="color: red">разработка завершена, возможно нахождение некоторых мелких ошибок</b><br/>
 //<br/>
 <br/><br/>
 <div class="nav">&copy; <a href="http://ngcms.ru/">Next Generation CMS</a></div>
