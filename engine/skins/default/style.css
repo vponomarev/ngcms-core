@@ -498,3 +498,9 @@ background: #F0F0F0;
 /* dorogoff */
 .h-l-tpl{background:#d4d0c8;color:#000000;font-size:12px;}
 .h-l-tpl td{padding:4px;}
+
+/* d7p4x */
+.adminNavPages {padding-left:30px;padding-top:15px;}
+.adminNavPages a {text-decoration:none;color:#ffffff;font-family:arial;font-weight:bold;font-size:12px;padding:1px 5px 1px 5px;background:#cacac9;}
+.adminNavPages a:hover {text-decoration:underline;color:#ffffff;font-family:arial;font-weight:bold;font-size:12px;padding:1px 5px 1px 5px;background:#626262;}
+.adminNavPages b{color:#ffffff;font-size:12px;font-family:arial;font-weight:bold;padding:1px 5px 1px 5px;background:#43a612;}
