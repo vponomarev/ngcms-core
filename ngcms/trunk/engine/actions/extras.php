@@ -32,7 +32,7 @@ function check_uri($uri) {
 // ==============================================================
 
 $lang	=	LoadLang('extras', 'admin');
-$extras	=	get_extras_list();
+$extras	=	pluginsGetList();
 ksort($extras);
 
 // ==============================================================
@@ -70,6 +70,8 @@ if ($disable) {
 $entries = '';
 $tpl -> template('entries', tpl_actions.$mod);
 
+$pCount = array (0 => 0, 1 => 0, 2 => 0);
+
 foreach($extras as $id => $extra) {
 	if (!isset($extra['author_uri'])) { $extra['author_uri'] = ''; }
 	if (!isset($extra['author'])) { $extra['author'] = 'Unknown'; }
@@ -80,13 +82,14 @@ foreach($extras as $id => $extra) {
 		'author_url'	=>	($extra['author_uri'])?'<a href="'.check_uri($extra['author_uri']).'">'.$extra['author']."</a>":$extra['author'],
 		'author'		=>	$extra['author'],
 		'id'			=>	$extra['id'],
-		'style'			=>	getPluginStatusActive($id)?'contRow1':'contRow2',
+		'style'			=>	getPluginStatusActive($id)?'pluginEntryActive':'pluginEntryInactive',
 		'readme'		=>	file_exists(extras_dir.'/'.$id.'/readme')&&filesize(extras_dir.'/'.$id.'/readme')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=readme&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>'):'',
 		'history'		=>	file_exists(extras_dir.'/'.$id.'/history')&&filesize(extras_dir.'/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=history&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
 	);
+	$pCount[!getPluginStatusActive($id)]++;
 
 	if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] != $extra['version'])) {
-		$tvars['vars']['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';	
+		$tvars['vars']['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';
 	} else {
 		$tvars['vars']['new'] = '';
 	}
@@ -122,14 +125,23 @@ foreach($extras as $id => $extra) {
 	$tvars['vars']['url'] = (isset($extra['config']) && $extra['config'] && (!$needinstall) && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['config']))?'<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'">'.$extra['name'].'</a>' : $extra['name'];
 	$tvars['vars']['link'] = (getPluginStatusActive($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
 
-	if ($needinstall) { $tvars['vars']['link'] = ''; $tvars['vars']['style'] = 'contRow3'; }
+	if ($needinstall) {
+		$tvars['vars']['link'] = '';
+		$tvars['vars']['style'] = 'pluginEntryUninstalled';
+		$pCount[2]++;
+	}
 
 	$tpl -> vars('entries', $tvars);
 	$entries .= $tpl -> show('entries');
 }
 
 $tpl -> template('table', tpl_actions.$mod);
-$tvars['vars']['entries'] = $entries;
+$tvars = array ('vars' => array(
+	'entries'			=> $entries,
+	'cntActive'			=> $pCount[0],
+	'cntInactive'		=> $pCount[1],
+	'cntUninstalled'	=> $pCount[2]
+));
 
 $tpl -> vars('table', $tvars);
 echo $tpl -> show('table');
