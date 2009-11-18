@@ -1,4 +1,4 @@
-<tr align="left" class="{style}" id="{id}">
+<tr align="left" class="{style}" id="plugin_{id}">
 <td>{id} {new}</td>
 <td>{url}</td>
 <td>{type}</td>
