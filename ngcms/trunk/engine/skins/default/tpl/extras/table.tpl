@@ -106,8 +106,8 @@ function togglePDisplayMode(id) {
 
 //
 // Now let's init buttons
-document.getElementById('pTypeActive').className	= (sIndexActive >= 0    )?(qStateActive?'pActive':'pInactive'):'pLocked';
-document.getElementById('pTypeInactive').className	= (sIndexInactive >= 0  )?(qStateInactive?'pActive':'pInactive'):'pLocked';
+document.getElementById('pTypeActive').className		= (sIndexActive >= 0    )?(qStateActive?'pActive':'pInactive'):'pLocked';
+document.getElementById('pTypeInactive').className		= (sIndexInactive >= 0  )?(qStateInactive?'pActive':'pInactive'):'pLocked';
 document.getElementById('pTypeUninstalled').className	= (sIndexUninstalled >=0)?(qStateUninstalled?'pActive':'pInactive'):'pLocked';
 
 </script>
