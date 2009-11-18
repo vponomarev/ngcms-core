@@ -26,7 +26,6 @@ for (i in sheetRules) {
 	if (sText == '.pluginentryinactive td')		sIndexInactive = i;
 	if (sText == '.pluginentryuninstalled td')	sIndexUninstalled = i;
 }
-//alert('Index values: '+sIndexActive+', '+sIndexInactive+', '+sIndexUninstalled+"\n"+ln);
 
 //
 // Init pre-saved in cookies values
@@ -36,32 +35,40 @@ if ((cookieStatus !== null)&&(typeof(cookieStatus) == "string")) {
 	qStateInactive		= (cookieStatus.substr(1,1)=='x')?1:0;
 	qStateUninstalled	= (cookieStatus.substr(2,1)=='x')?1:0;
 }
-//alert('cStatus: '+qStateActive+','+qStateInactive+','+qStateUninstalled);
 
  // Now let's set configured values
- if ((sIndexActive	>= 0)&&(!qStateActive)) 	sheetRules[sIndexActive].style.display		= 'none'; 
- if ((sIndexInactive	>= 0)&&(!qStateInactive))	sheetRules[sIndexInactive].style.display	= 'none';
+ if ((sIndexActive		>= 0)&&(!qStateActive)) 		sheetRules[sIndexActive].style.display		= 'none'; 
+ if ((sIndexInactive	>= 0)&&(!qStateInactive))		sheetRules[sIndexInactive].style.display	= 'none';
  if ((sIndexUninstalled	>= 0)&&(!qStateUninstalled))	sheetRules[sIndexUninstalled].style.display	= 'none';
-
-//	document.getElementById('pTypeActive').className = (cStatus.substr(0,1) == 'x')?'pActive':'pInactive';
-//	document.getElementById('pTypeInactive').className = (cStatus.substr(1,1) == 'x')?'pActive':'pInactive';
-//	document.getElementById('pTypeUninstalled').className = (cStatus.substr(2,1) == 'x')?'pActive':'pInactive';
 
 
 //
 // Function for toggling display
 function togglePDisplayMode(id) {
+	// Get item's record
 	var item = document.getElementById(id);
-	item.className = (item.className == 'pInactive')?'pActive':'pInactive';
+	
+	// Determine required state
+	var currentState = (item.className == 'pInactive')?1:0;
+	
+	// Set new className for item
+	item.className = currentState?'pActive':'pInactive';
+	
 	if ((id == 'pTypeActive')&&(sIndexActive >= 0)) {
-		sheetRules[sIndexActive].style.display = (item.className == 'pActive')?'':'none';
+		sheetRules[sIndexActive].style.display = currentState?'':'none';
+		qStateActive = currentState;
 	}
 	if ((id == 'pTypeInactive')&&(sIndexInactive >= 0)) {
-		sheetRules[sIndexInactive].style.display = (item.className == 'pActive')?'':'none';
+		sheetRules[sIndexInactive].style.display = currentState?'':'none';
+		qStateInactive = currentState;
 	}
 	if ((id == 'pTypeUninstalled')&&(sIndexUninstalled >= 0)) {
-		sheetRules[sIndexUninstalled].style.display = (item.className == 'pActive')?'':'none';
+		sheetRules[sIndexUninstalled].style.display = currentState?'':'none';
+		qStateUninstalled = currentState;
 	}
+	
+	cookieStatus = (qStateActive?'x':'-')+(qStateInactive?'x':'-')+(qStateUninstalled?'x':'-');
+	setCookie('ngadm_pstatus', cookieStatus, 0, 0, 0, 0);
 }
 
 </script>
