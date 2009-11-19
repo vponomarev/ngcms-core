@@ -487,6 +487,7 @@ function plugins_load_version_file($filename) {
 //
 // Get a list of installed plugins
 //
+function pluginsGetList() { return get_extras_list(); }
 function get_extras_list() {
 	global $timer;
 
