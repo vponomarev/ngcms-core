@@ -495,6 +495,73 @@ background: #F0F0F0;
 }
 
 
+#pluginTypeMenu {
+	font: 12px verdana;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	float: left;
+}
+
+#pluginTypeMenu .pInactive {
+	width: 170px;
+	float: left;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 5px;
+	padding-left: 25px;
+	border: 1px solid #D0D0D0;
+	cursor: pointer;
+	background: #F0F0F0 url("/engine/skins/default/images/no.png") no-repeat;
+	background-position: 8px center;
+}
+#pluginTypeMenu .pActive {
+	width: 170px;
+	float: left;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 5px;
+	padding-left: 25px;
+	border: 1px solid red;
+	cursor: pointer;
+	background: #FFFFFF url("/engine/skins/default/images/yes.png") no-repeat;
+	background-position: 8px center;
+	
+}
+#pluginTypeMenu .pSeparator {
+	float: left;
+	width: 10px;
+}
+
+/* PLUGIN ENTRIES */
+.pluginEntryActive TD { 
+	display: ;
+	padding: 5px 0 1px 5px;
+	background-color: #ffffff;
+	border-bottom: 1px solid #f0f0f0;
+	font: normal 11px tahoma, sans-serif;
+	color: #000;
+	text-align: left;
+}
+.pluginEntryInactive TD {
+	display: ;
+	padding: 5px 0 1px 5px;
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #f0f0f0;
+	font: normal 11px tahoma, sans-serif;
+	color: #bbbbbb;
+	text-align: left;
+}
+.pluginEntryUninstalled TD {
+	display: ;
+	padding: 5px 0 1px 5px;
+	background-color: #D0D0D0;
+	border-bottom: 1px solid #f0f0f0;
+	font: normal 11px tahoma, sans-serif;
+	color: #000000;
+}
+
+
+
 /* dorogoff */
 .h-l-tpl{background:#d4d0c8;color:#000000;font-size:12px;}
 .h-l-tpl td{padding:4px;}
