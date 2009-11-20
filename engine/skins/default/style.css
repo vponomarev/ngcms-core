@@ -562,6 +562,19 @@ background: #F0F0F0;
 
 
 
+/* Plugin configuration */
+.pluginConfigHeader {
+background-color: #fafafa;
+padding: 1px 0 1px 5px;
+font: bold 12px verdana, sans-serif;
+color: #333;
+border-top: 1px solid #eee;
+border-bottom: 1px solid #eee;
+}
+
+.pluginConfigHeader A { font: 12px verdana; }
+
+
 /* dorogoff */
 .h-l-tpl{background:#d4d0c8;color:#000000;font-size:12px;}
 .h-l-tpl td{padding:4px;}
