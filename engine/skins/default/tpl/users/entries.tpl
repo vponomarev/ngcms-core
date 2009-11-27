@@ -1,4 +1,4 @@
-<tr align="center">
+<tr align="left">
 <td class="contentEntry1">{id}</td>
 <td class="contentEntry1"><a href="{php_self}?mod=users&amp;action=edituser&amp;id={id}">{name}</a></td>
 <td class="contentEntry1">{regdate}</td>

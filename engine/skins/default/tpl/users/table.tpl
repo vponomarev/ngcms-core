@@ -42,7 +42,7 @@ if(selectedOption == 'adduser') {document.getElementById('adduser').style.displa
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
-<tr align="center">
+<tr align="left">
 <td width="5%" class="contentHead">#</td>
 <td width="20%" class="contentHead">{l_name}</td>
 <td width="20%" class="contentHead">{l_regdate}</td>
@@ -67,7 +67,7 @@ if(selectedOption == 'adduser') {document.getElementById('adduser').style.displa
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
 <tr>
-<td align="center" colspan="8" class="contentHead">{npp_nav}</td>
+<td align="center" colspan="8" class="contentHead">{pagesss}</td>
 </tr>
 </table>
 </form>
