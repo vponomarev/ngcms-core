@@ -15,6 +15,12 @@ $lang = LoadLang('configuration', 'admin');
 $save_con = $_REQUEST['save_con'];
 
 if ($subaction == "save" && !is_null($save_con)) {
+	// Save our UUID or regenerate LOST UUID
+	$save_con['UUID'] = $config['UUID'];
+	if ($save_con['UUID'] == '') {
+		$save_con['UUID'] = md5(mt_rand().mt_rand()).md5(mt_rand().mt_rand());
+	}
+
 	$handler			=	fopen(confroot.'config.php', "w");
 	$save_config		=	"<?php\n";
 	$save_config		.=	'$config = ';
@@ -60,7 +66,6 @@ $tvars['vars'] = array(
 	'use_captcha'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_captcha]", $config['use_captcha']),
 	'use_cookies'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_cookies]", $config['use_cookies']),
 	'use_sessions'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_sessions]", $config['use_sessions']),
-	'mod_rewrite'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[mod_rewrite]", $config['mod_rewrite']),
 	'category_link'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[category_link]", $config['category_link']),
 	'category_counters'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[category_counters]", $config['category_counters']),
 	'add_onsite'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[add_onsite]", $config['add_onsite']),

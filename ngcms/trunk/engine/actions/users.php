@@ -151,11 +151,11 @@ function users_list(){
 	if (($per_page < 1)||($per_page > 500))
 		$per_page = 30;
 
-	$page = intval($_REQUEST['page']);
-	if (!$page)
-		$page = 1;
+	$pageNo = intval($_REQUEST['page']);
+	if (!$pageNo)
+		$pageNo = 1;
 
-	$limit = "limit ".(($page-1)*$per_page).", ".$per_page;
+	$limit = "limit ".(($pageNo-1)*$per_page).", ".$per_page;
 	$where = ($name?'where name like '.$name:'');
 	$order = "order by ".(($available_orders[$rsort])?$rsort:'reg').($_REQUEST['how']?' desc':'');
 
@@ -176,7 +176,7 @@ function users_list(){
 			'last_login'	=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('j Q Y - H:i', $row['last'])
 		);
 
-		$tvars['vars']['active'] = (!$row['activation'] || $row['activation'] == "") ? '<img src="'.skins_url.'/images/bullet_green.gif" alt="'.$lang['active'].'" />' : '<img src="'.skins_url.'/images/bullet_white.gif" alt="'.$lang['unactive'].'" />';
+		$tvars['vars']['active'] = (!$row['activation'] || $row['activation'] == "") ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['active'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unactive'].'" />';
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
@@ -191,13 +191,30 @@ function users_list(){
 	$userCount	=	$mysql->result("SELECT count(*) FROM ".uprefix."_users ".$where);
 	$pageCount	=	ceil($userCount / $per_page);
 
+
+	$pagesss = generateAdminPagelist( array(
+			'current' => $pageNo, 
+			'count' => $pageCount, 
+			'url' => admin_url.'/admin.php?mod=users&action=list'.
+				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name']):'').
+				($_REQUEST['how']?'&how='.htmlspecialchars($_REQUEST['how']):'').
+				($_REQUEST['per_page']?'&per_page='.intval($_REQUEST['per_page']):'').
+				'&sort='.$rsort.
+				'&page=%page%'
+		));
+
 	if ($pageCount > 1) {
 
 		for ($i = 1; $i <= $pageCount; $i++) {
-			if ($i == $page) {
+			if ($i == $pageNo) {
 				$npp_nav .= ' <b>[ </b>'.$i.' <b>]</b> ';
 			} else {
-				$npp_nav .= "<a href=\"$PHP_SELF?mod=users&amp;action=list&amp;name=".htmlspecialchars($_REQUEST['name'])."&amp;sort=".$rsort."&amp;how=".($_REQUEST['how']?'desc':'')."&amp;page=".($i).($_REQUEST['per_page']?'&amp;per_page='.$per_page:'')."\">".$i."</a> ";
+				$npp_nav .= "<a href=\"$PHP_SELF?mod=users&amp;action=list&amp;name=".
+					htmlspecialchars($_REQUEST['name']).
+					"&amp;sort=".$rsort.
+					"&amp;how=".($_REQUEST['how']?'desc':'').
+					"&amp;page=".($i).($_REQUEST['per_page']?'&amp;per_page='.$per_page:'').
+					"\">".$i."</a> ";
 			}
 		}
 	}
@@ -210,6 +227,7 @@ function users_list(){
 		'entries'		=>	$entries,
 		'per_page'		=> $per_page,
 		'name'			=> htmlspecialchars($_REQUEST['name']),
+		'pagesss'		=> $pagesss,
 	);
 
 	$tpl -> template('table', tpl_actions.$mod);
