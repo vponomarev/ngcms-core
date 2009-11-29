@@ -70,7 +70,7 @@ if ($disable) {
 $entries = '';
 $tpl -> template('entries', tpl_actions.$mod);
 
-$pCount = array (0 => 0, 1 => 0, 2 => 0);
+$pCount = array (0 => 0, 1 => 0, 2 => 0, 3 => 0);
 
 foreach($extras as $id => $extra) {
 	if (!isset($extra['author_uri'])) { $extra['author_uri'] = ''; }
@@ -86,7 +86,6 @@ foreach($extras as $id => $extra) {
 		'readme'		=>	file_exists(extras_dir.'/'.$id.'/readme')&&filesize(extras_dir.'/'.$id.'/readme')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=readme&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>'):'',
 		'history'		=>	file_exists(extras_dir.'/'.$id.'/history')&&filesize(extras_dir.'/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=history&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
 	);
-	$pCount[!getPluginStatusActive($id)]++;
 
 	if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] != $extra['version'])) {
 		$tvars['vars']['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';
@@ -128,8 +127,11 @@ foreach($extras as $id => $extra) {
 	if ($needinstall) {
 		$tvars['vars']['link'] = '';
 		$tvars['vars']['style'] = 'pluginEntryUninstalled';
-		$pCount[2]++;
+		$pCount[3]++;
+	} else {
+		$pCount[1 + (!getPluginStatusActive($id))]++;
 	}
+	$pCount[0]++;
 
 	$tpl -> vars('entries', $tvars);
 	$entries .= $tpl -> show('entries');
@@ -138,9 +140,10 @@ foreach($extras as $id => $extra) {
 $tpl -> template('table', tpl_actions.$mod);
 $tvars = array ('vars' => array(
 	'entries'			=> $entries,
-	'cntActive'			=> $pCount[0],
-	'cntInactive'		=> $pCount[1],
-	'cntUninstalled'	=> $pCount[2]
+	'cntAll'			=> $pCount[0],
+	'cntActive'			=> $pCount[1],
+	'cntInactive'		=> $pCount[2],
+	'cntUninstalled'	=> $pCount[3]
 ));
 
 $tpl -> vars('table', $tvars);
