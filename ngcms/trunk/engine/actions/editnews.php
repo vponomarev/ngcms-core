@@ -572,7 +572,9 @@ function makeSortList($selected) {
 	return	'<option value="id_desc"'.($selected == "id_desc"?' selected':'').">".$lang['sort_postid_desc']."</option>".
 			'<option value="id"'.($selected == "id"?' selected':'').">".$lang['sort_postid']."</option>".
 			'<option value="postdate_desc"'.($selected == "postdate_desc"?' selected':'').">".$lang['sort_postdate_desc']."</option>".
-			'<option value="postdate"'.($selected == "postdate"?' selected':'').">".$lang['sort_postdate']."</option>";
+			'<option value="postdate"'.($selected == "postdate"?' selected':'').">".$lang['sort_postdate']."</option>".
+			'<option value="title_desc"'.($selected == "title_desc"?' selected':'').">".$lang['sort_title_desc']."</option>".
+			'<option value="title"'.($selected == "title"?' selected':'').">".$lang['sort_title']."</option>";
 }
 
 
@@ -610,10 +612,12 @@ if ($action == "editnews") {
 
 	$sortBy = '';
 	switch($_REQUEST['sort']){
-		case 'id':				$sortBy = 'id';	break;
-		case 'id_desc':			$sortBy = 'id desc';	break;
-		case 'postdate':		$sortBy = 'postdate';	break;
+		case 'id':				$sortBy = 'id';				break;
+		case 'id_desc':			$sortBy = 'id desc';		break;
+		case 'postdate':		$sortBy = 'postdate';		break;
 		case 'postdate_desc':	$sortBy = 'postdate desc';	break;
+		case 'title':			$sortBy = 'title';			break;
+		case 'title_desc':		$sortBy = 'title desc';		break;
 	}
 
 	if ($sortBy) {
