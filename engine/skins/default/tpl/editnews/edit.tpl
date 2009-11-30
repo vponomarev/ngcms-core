@@ -100,16 +100,16 @@ function preview(){
 <!-- ATTACHES -->
 <div id="attaches" style="display: none;">
 <br/>
-<b><u>List of attached files:</u></b>
+<b><u>{l_attach.list}</u></b>
 <table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
-<tr><td>ID</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
+<tr><td>ID</td><td width="80">{l_attach.date}</td><td>{l_attach.filename}</td><td width="90">{l_attach.size}</td><td width="40">DEL</td></tr>
 </thead>
 <tbody>
 <!-- <tr><td colspan="5">No data</td></tr> -->
 {attach_entries}
 <!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
-<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="More rows" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
+<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="{l_attach.more_rows}" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
 </table>
 </div>
 
@@ -122,7 +122,7 @@ function attachAddRow() {
 
 	// Add cells
 	row.insertCell(0).innerHTML = '*';
-	row.insertCell(1).innerHTML = 'New file';
+	row.insertCell(1).innerHTML = '{l_attach.new_file}';
 	
 	// Add file input
 	var el = document.createElement('input');

@@ -15,8 +15,8 @@
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left">
 <td width="5%" class="contentHead">{l_postid_short}</td>
-<td width="15%" class="contentHead">{l_date}</td>
-<td width="40%" class="contentHead">{l_title}</td>
+<td width="10%" class="contentHead">{l_date}</td>
+<td width="45%" class="contentHead">{l_title}</td>
 [comments]<td width="10%" class="contentHead">{l_listhead.comments}</td>[/comments]
 <td width="25%" class="contentHead">{l_category}</td>
 <td width="10%" class="contentHead">{l_author}</td>
