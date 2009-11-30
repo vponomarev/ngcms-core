@@ -23,8 +23,8 @@ var qStateInactive	= 0;
 var qStateUninstalled	= 0;
 */
 
-for (i in sheetRules) {
-	var sText = ''+sheetRules[i]['selectorText'];
+for (i=0; i<sheetRules.length; i++) {
+	var sText = ''+sheetRules[i]['selectorText']; 
 	sText = sText.toLowerCase();
 	if (sText == '.pluginentryactive td')		sIndexActive = i;
 	if (sText == '.pluginentryinactive td')		sIndexInactive = i;
