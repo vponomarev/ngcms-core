@@ -1,10 +1,10 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
-// Name: pm.php
+// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru/)
+// Name: users.php
 // Description: manage users
-// Author: Vitaly Ponomarev, Alexey Zinchenko
+// Author: Vitaly Ponomarev
 //
 
 // Protect against hack attempts
@@ -12,7 +12,10 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('users', 'admin');
 
-function users_edit(){
+
+//
+// Form: Edit user
+function userEditForm(){
 	global $mysql, $lang, $tpl, $mod;
 
 	$id = $_REQUEST['id'];
@@ -39,7 +42,6 @@ function users_edit(){
 		'where_from'	=>	secure_html($row['where_from']),
 		'info'			=>	secure_html($row['info']),
 		'id'			=>	$id,
-		'pass'			=>	$row['pass'],
 		'last'			=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('l, j Q Y - H:i', $row['last']),
 		'ip'			=>	$row['ip']
 	);
@@ -49,7 +51,10 @@ function users_edit(){
 	echo $tpl -> show('edit');
 }
 
-function users_doedit(){
+
+//
+// Edit user's profile
+function userEdit(){
 	global $mysql, $lang, $tpl, $mod;
 
 	$id = $_REQUEST['id'];
@@ -66,7 +71,10 @@ function users_doedit(){
 	msg(array("text" => $lang['msgo_edituser']));
 }
 
-function users_adduser(){
+
+//
+// Add new user
+function userAdd(){
 	global $mysql, $lang, $tpl, $mod;
 
 	$regusername	= trim($_REQUEST['regusername']);
@@ -90,7 +98,10 @@ function users_adduser(){
 	msg(array("text" => $lang['msgo_adduser']));
 }
 
-function users_mass_activate(){
+
+//
+// Bulk action: activate selected users
+function userMassActivate(){
 	global $mysql, $lang;
 
 	$selected_users = $_REQUEST['selected_users'];
@@ -104,20 +115,74 @@ function users_mass_activate(){
 	msg(array("text" => $lang['msgo_activate']));
 }
 
-function users_mass_delete(){
-	global $mysql, $lang, $userROW, $config;
+//
+// Bulk action: LOCK selected users
+function userMassLock(){
+	global $mysql, $lang;
 
 	$selected_users = $_REQUEST['selected_users'];
 	if (!$selected_users) {
 		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
 		return;
 	}
+
+	// Lock all users (excluding admins)
+	foreach ($selected_users as $id) {
+		$mysql->query("update ".uprefix."_users set activation=".db_squote(MakeRandomPassword())." where (id=".db_squote($id).") and (status <> 1)");
+	}
+	msg(array("text" => $lang['msgo_lock']));
+}
+
+
+//
+// Bulk action: set status to selected users
+function userMassSetStatus(){
+	global $mysql, $lang, $userROW;
+
+	$selected_users = $_REQUEST['selected_users'];
+	if (!$selected_users) {
+		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
+		return;
+	}
+
+
+	// Determine status to set to
+	// NOTE: we CAN'T set status `ADMIN` and we can't change STATUS for ADMINS
+	$status = intval($_REQUEST['newstatus']);
+	if (($status <= 1) or ($status > 4)) {
+		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
+		return;
+	}
+
+	// Lock all users (excluding admins)
+	foreach ($selected_users as $id) {
+		$mysql->query("update ".uprefix."_users set status=".db_squote($status)." where (id=".db_squote($id).") and (status <> 1)");
+	}
+	msg(array("text" => $lang['msgo_status']));
+}
+
+
+//
+// Bulk action: delete selected users
+function userMassDelete(){
+	global $mysql, $lang, $userROW, $config;
+
+	$selected_users = $_REQUEST['selected_users'];
+	if (!$selected_users || !is_array($selected_users)) {
+		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
+		return;
+	}
+
 	foreach ($selected_users as $id) {
 		// Don't let us to delete ourselves
 		if ($id == $userROW['id']) { continue; }
 
-		// Check if user has his own photo or avatar
+		// Fetch user's record
 		if (is_array($urow = $mysql->record("select * from ".prefix."_users where id = ".db_squote($id)))) {
+			// Do not delete admins
+			if ($urow['status'] == 1) { continue; }
+
+			// Check if user has his own photo or avatar
 			if (($urow['avatar'] != '') && (file_exists($config['avatars_dir'].$urow['photo'])))
 				@unlink($config['avatars_dir'].$urow['avatar']);
 
@@ -130,14 +195,22 @@ function users_mass_delete(){
 	msg(array("text" => $lang['msgo_deluser']));
 }
 
-function users_mass_delunact(){
+
+//
+// Bulk action: delete inactive (never logged in) users [but user should be registered for more than 1 day ago or who have 1+ news]
+function userMassDeleteInactive(){
 	global $mysql, $lang, $userROW;
 
-	$mysql->query("DELETE FROM ".uprefix."_users WHERE last IS NULL OR last=''");
+	$today = time();
+
+	$mysql->query("DELETE FROM ".uprefix."_users WHERE ((last IS NULL) OR (last='')) AND ((reg + 86400) < $today) AND (news < 1)");
 	msg(array("text" => $lang['msgo_delunact']));
 }
 
-function users_list(){
+
+//
+// Show list of users
+function userList(){
 	global $mysql, $lang, $tpl, $mod, $userROW;
 	global $news_per_page, $start_from;
 
@@ -178,6 +251,9 @@ function users_list(){
 
 		$tvars['vars']['active'] = (!$row['activation'] || $row['activation'] == "") ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['active'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unactive'].'" />';
 
+		$tvars['regx']['#\[mass\](.+?)\[\/mass\]#is'] = ($row['status'] == 1)?'':'$1';
+		$tvars['regx']['#\[link_news\](.+?)\[\/link_news\]#is'] = ($row['news'] > 0)?'$1':'';
+
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
 	}
@@ -193,8 +269,8 @@ function users_list(){
 
 
 	$pagesss = generateAdminPagelist( array(
-			'current' => $pageNo, 
-			'count' => $pageCount, 
+			'current' => $pageNo,
+			'count' => $pageCount,
 			'url' => admin_url.'/admin.php?mod=users&action=list'.
 				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name']):'').
 				($_REQUEST['how']?'&how='.htmlspecialchars($_REQUEST['how']):'').
@@ -240,17 +316,17 @@ function users_list(){
 // Actions
 // ==============================================
 
-if ($action == 'edituser') {
-	users_edit();
+if ($action == 'editForm') {
+	userEditForm();
 } else {
 	switch ($action) {
-		case 'doedituser'  : users_doedit();  break;
-		case 'adduser'     : users_adduser(); break;
-		case 'massactivate': users_mass_activate(); break;
-		case 'massdelete'  : users_mass_delete(); break;
-		case 'massdelunact': users_mass_delunact(); break;
+		case 'edit'				: userEdit();				break;
+		case 'add'				: userAdd();				break;
+		case 'massActivate'		: userMassActivate();		break;
+		case 'massLock'			: userMassLock();			break;
+		case 'massSetStatus'	: userMassSetStatus();		break;
+		case 'massDel'			: userMassDelete();			break;
+		case 'massDelInactive'	: userMassDeleteInactive();	break;
 	}
-	users_list();
+	userList();
 }
-
-

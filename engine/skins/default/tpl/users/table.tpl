@@ -1,12 +1,51 @@
 <script type="text/javascript">
 function ChangeOption(selectedOption) {
-document.getElementById('list').style.display = "none";
-document.getElementById('adduser').style.display = "none";
-document.getElementById('addbutton').style.display = "none";
+	document.getElementById('list').style.display		= "none";
+	document.getElementById('adduser').style.display	= "none";
+	document.getElementById('addbutton').style.display	= "none";
 
-if(selectedOption == 'list') {document.getElementById('list').style.display = ""; document.getElementById('addbutton').style.display = "none"; }
-if(selectedOption == 'adduser') {document.getElementById('adduser').style.display = ""; document.getElementById('addbutton').style.display = ""; }
+	if (selectedOption == 'list') 	 {
+		document.getElementById('list').style.display		= ""; 
+		document.getElementById('addbutton').style.display	= "none";
+	}
+	if (selectedOption == 'adduser') {
+		document.getElementById('adduser').style.display	= ""; 
+		document.getElementById('addbutton').style.display	= "";
+	}
 }
+
+var fInitStatus = false;
+
+function updateAction() {
+	mode = document.forms['form_users'].action.value;
+	
+	if (mode == 'massSetStatus') {
+		if (!fInitStatus) {
+			document.forms['form_users'].newstatus.value = '4';
+			fInitStatus = true;
+		}
+		document.forms['form_users'].newstatus.disabled = false;
+	} else {
+		document.forms['form_users'].newstatus.disabled = true;
+	}
+}
+
+function validateAction() {
+	mode = document.forms['form_users'].action.value;
+	
+	if (mode == '') {
+		alert('Необходимо выбрать действие!');
+		return;
+	}
+	
+	if ((mode == 'massSetStatus')&&(document.forms['form_users'].newstatus.value < 1)) {
+		alert('Необходимо выбрать статус!');
+		return;
+	}
+	
+	document.forms['form_users'].submit();
+}
+
 </script>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
@@ -23,12 +62,14 @@ if(selectedOption == 'adduser') {document.getElementById('adduser').style.displa
 <table border="0" width="100%" cellspacing="0" cellpadding="0" align="center" class="contentNav">
 <tr>
 <td width="100%" align="left">
+<!-- Filter form: BEGIN -->
 <form method="post" action="{php_self}?mod=users&amp;action=list">
 {l_namefilter} <input type="text" name="name" value="{name}"/> &nbsp; {l_sort} <select name="sort">{sort_options}</select>
 <select name="how">{how_options}</select>
 <input style="text-align: center;" size=3 name="per_page" value="{per_page}"/>
 <input type="submit" value="{l_sortit}" class="button" />
 </form>
+<!-- Filter form: END -->
 </td>
 </tr>
 </table>
@@ -36,8 +77,7 @@ if(selectedOption == 'adduser') {document.getElementById('adduser').style.displa
 </tr>
 <tr>
 <td width="100%" valign="top">
-<form method="post" name="users" action="{php_self}?mod=users">
-<input type="hidden" name="action" value="" />
+<form method="post" name="form_users" id="form_users" action="{php_self}?mod=users">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
@@ -57,10 +97,22 @@ if(selectedOption == 'adduser') {document.getElementById('adduser').style.displa
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
 <tr align="center">
-<td colspan="8" class="contentEdit" align="center" valign="top">
-<input class="button" type="submit" value="{l_activate}" onclick="if (confirm('{l_c_activate}')){document.forms['users'].action.value = 'massactivate';}else{return false;}" />&nbsp;
-<input class="button" type="submit" value="{l_delete}" onclick="if (confirm('{l_c_delete}')){document.forms['users'].action.value = 'massdelete';}else{return false;}" />
-<input class="button" type="submit" value="{l_delete_unact}" onclick="if (confirm('{l_c_delete_unact}')){document.forms['users'].action.value = 'massdelunact';}else{return false;}" />
+<td colspan="8" class="contentEdit" align="right" valign="top">
+<div style="text-align: left;">
+Действие: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
+ <option value="" style="background-color: #E0E0E0;">-- Действие --</option>
+ <option value="massActivate">{l_activate}</option>
+ <option value="massLock">Заблокировать отмеченных</option>
+ <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
+ <option value="massDel">{l_delete}</option>
+ <option value="massDelInactive">{l_delete_unact}</option>
+ <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
+ <option value="massSetStatus">Установить статус &raquo;</option>
+</select>
+<select name="newstatus" disabled="disabled" style="font: 12px Verdana, Courier, Arial; width: 150px;"><option value="0"></option><option value="2">2 ({l_st_2})</option><option value="3">3 ({l_st_3})</option><option value="4">4 ({l_st_4})</option></select>
+<input type="button" class="button" value="Выполнить.." onclick="validateAction();" />
+<br/>
+</div>
 </td>
 </tr>
 <tr>
@@ -75,7 +127,7 @@ if(selectedOption == 'adduser') {document.getElementById('adduser').style.displa
 </tr>
 </table>
 <form method="post" action="{php_self}?mod=users">
-<input type="hidden" name="action" value="adduser" />
+<input type="hidden" name="action" value="add" />
 <table id="adduser" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
 <td width="50%" class="contentEntry1">{l_name}</td>
