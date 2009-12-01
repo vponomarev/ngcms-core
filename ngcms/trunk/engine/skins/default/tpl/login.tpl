@@ -6,16 +6,18 @@
 <link rel="stylesheet" href="{skins_url}/style.css" type="text/css" media="screen" />
 </head>
 <body>
+
+<div style="padding-top: 70px;">
 <form name="login" method="post" action="{php_self}">
-<table width="350" align="center" cellspacing="3" cellpadding="0" style="padding-top: 50px;">
-<tr><td colspan=2 align="center" style="color: red; font-weight: bold; background: #EEEEEE;">{error}</td></tr>
+<table width="350" style="border: 0px;" border="0" align="center" cellspacing="3" cellpadding="0">
+[error]<tr><td colspan=2 align="center" style="color: red; font-weight: bold; background: #EEEEEE;">{error}</td></tr>[/error]
 <tr>
-<td>{l_name}</td>
-<td><input tabindex="1" type="text" name="username" value="" maxlength="60" size="30" /></td>
+	<td>{l_name}</td>
+	<td><input tabindex="1" type="text" name="username" value="" maxlength="60" size="30" /></td>
 </tr>
 <tr>
-<td>{l_password}</td>
-<td><input class="password" tabindex="2" type="password" name="password" maxlength="20" size="30" /></td>
+	<td>{l_password}</td>
+	<td><input class="password" tabindex="2" type="password" name="password" maxlength="20" size="30" /></td>
 </tr>
 <tr>
 <td>&nbsp;</td>
@@ -25,5 +27,7 @@
 </tr>
 </table>
 </form>
+</div>
+
 </body>
 </html>

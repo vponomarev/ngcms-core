@@ -62,8 +62,7 @@
 <input type="submit" value="{l_save}" class="button" />
 <input type="button" value="{l_cancel}" onClick="history.back();" class="button" />
 <input type="hidden" name="id" value="{id}" />
-<input type="hidden" name="action" value="doedituser" />
-<input type="hidden" name="oldpass" value="{pass}" />
+<input type="hidden" name="action" value="edit" />
 </td>
 </tr>
 </table>
