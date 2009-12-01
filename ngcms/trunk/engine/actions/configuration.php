@@ -114,7 +114,7 @@ if (is_array($multiconfig)) {
 	}
 }
 $tvars['vars']['multilist'] = $tmpline;
-$tvars['vars']['defaultSection'] = 'news';
+$tvars['vars']['defaultSection'] = (isset($_REQUEST['selectedOption']) && $_REQUEST['selectedOption'])?htmlspecialchars($_REQUEST['selectedOption']):'news';
 
 $tpl -> vars('configuration', $tvars);
 echo $tpl -> show('configuration');

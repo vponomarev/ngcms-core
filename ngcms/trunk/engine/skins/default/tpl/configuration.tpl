@@ -13,6 +13,8 @@ function ChangeOption(selectedOption) {
  if (!found) {
 	document.getElementById(defaultOption).style.display='';
 	document.getElementById('b_'+defaultOption).style.fontWeight='bold';
+ } else {
+	document.getElementById('selectedOption').value = selectedOption;
  }
 }
 </script>
