@@ -54,6 +54,7 @@ if (!is_array($userROW)) {
 		'home_title'	=>	home_title,
 		'error'			=>	($SYSTEM_FLAGS['auth_fail'])?$lang['msge_login']:'',
 	);
+	$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($SYSTEM_FLAGS['auth_fail'])?'$1':'';
 
 	$tpl -> template('login', tpl_actions);
 	$tpl -> vars('login', $tvars);
