@@ -36,13 +36,16 @@
 [actions]
 <select name="subaction">
 <option value="">-- {l_action} --</option>
-<option value="do_mass_delete">{l_delete}</option>
 <option value="do_mass_approve">{l_approve}</option>
 <option value="do_mass_forbidden">{l_forbidden}</option>
+<option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
 <option value="do_mass_mainpage">{l_massmainpage}</option>
 <option value="do_mass_unmainpage">{l_massunmainpage}</option>
+<option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
 [comments]<option value="do_mass_com_approve">{l_com_approve}</option>
-<option value="do_mass_com_forbidden">{l_com_forbidden}</option>[/comments]
+<option value="do_mass_com_forbidden">{l_com_forbidden}</option>
+<option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>[/comments]
+<option value="do_mass_delete">{l_delete}</option>
 </select>
 <input type="submit" value="OK" class="button" />
 <input type="hidden" name="mod" value="editnews" />

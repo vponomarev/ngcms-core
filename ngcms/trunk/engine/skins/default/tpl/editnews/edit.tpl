@@ -153,7 +153,7 @@ attachAddRow();
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr><td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td><td>Общая информация</td></tr>
-  <tr><td></td><td>Автор: <b>{author}</b></td></tr>
+  <tr><td></td><td>Автор: <a style="font-family: Tahoma, Sans-serif;" href="{php_self}?mod=users&amp;action=editForm&amp;id={authorid}"><b>{author}</b></a> [isplugin uprofile] <a href="{author_page}" target="_blank" title="{l_site.viewuser}"><img src="{skins_url}/images/open_new.png" alt="{l_newpage}"/></a>[/isplugin]</td></tr>
   <tr><td></td><td>Создано: <b>{createdate}</b></td></tr>
   <tr><td></td><td>Отредактировано: <b>{editdate}</b></td></tr>
   <tr>
