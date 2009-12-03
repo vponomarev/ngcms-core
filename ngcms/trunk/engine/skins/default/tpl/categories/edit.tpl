@@ -62,7 +62,7 @@
 </tr>
 <tr align="center">
 <td width="100%" colspan="2" class="contentEdit">
-<input type="submit" value="{l_edit}" class="button" />
+<input type="submit" value="{l_save}" class="button" /> <input type="button" class="button" value="{l_cancel}" onclick="document.location='admin.php?mod=categories';" />
 <input type="hidden" name="action" value="doedit" />
 <input type="hidden" name="catid" value="{catid}" />
 </td>

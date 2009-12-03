@@ -13,7 +13,7 @@ if (!defined('NGCMS')) die ('HAL');
 $lang = LoadLang('categories', 'admin');
 
 function CatTree() {
-	global $mysql, $tpl, $out, $cat_tree, $lang;
+	global $mysql, $tpl, $out, $cat_tree, $lang, $config;
 
 	foreach ($mysql->select("select * from ".prefix."_category order by posorder") as $row) {
 		$tvars['vars'] = array(
@@ -26,9 +26,14 @@ function CatTree() {
 			'orderlist'	=>	OrderList(''),
 			'show_main'	=>	intval(substr($row['flags'],0,1)) ? ('<img src="'.skins_url.'/images/yes.png" alt="'.$lang['yesa'].'"/>') : ('<img src="'.skins_url.'/images/no.png" alt="'.$lang['noa'].'"/>'),
 			'template'	=>	($row['tpl'] != '')?$row['tpl']:'--',
-			'news'		=>	$row['posts'],
+			'news'		=>	($row['posts']>0)?$row['posts']:'--',
+			'showcat'	=>  $config['home_url'].(checkLinkAvailable('news', 'by.category')?
+							generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id'])):
+							generateLink('core', 'plugin', array('plugin' => 'news', 'handler' => 'by.category'), array('category' => $row['alt'], 'catid' => $row['id']))),
 			'cutter'	=>	str_repeat('&#8212; ', $row['poslevel']),
 		);
+		$tvars['regx']['#\[news\](.*?)\[\/news\]#is'] = ($row['posts']>0)?'$1':'';
+
 		$tpl -> vars('entries', $tvars);
 		$cat_tree .= $tpl -> show('entries');
 	}
