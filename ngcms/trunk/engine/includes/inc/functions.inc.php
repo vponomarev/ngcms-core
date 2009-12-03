@@ -613,12 +613,13 @@ function OrderList($value, $showDefault = false) {
 }
 
 
-function ChangeDate($time = 0) {
+function ChangeDate($time = 0, $nodiv = 0) {
 	global $lang, $langShortMonths;
 
 	if ($time <= 0) { $time = time(); }
 
-	$result = '<div id="cdate"><select name="c_day">';
+	$result = $nodiv?'':'<div id="cdate">';
+	$result .= '<select name="c_day">';
 	for ($i=1; $i <= 31; $i++)
 		$result .= '<option value="'.$i.'"'.((date('j', $time)==$i)?' selected="selected"':'').'>'.$i.'</option>';
 
@@ -630,8 +631,8 @@ function ChangeDate($time = 0) {
 	$result .= '</select>
 	<input type="text" id="c_year" name="c_year" size="4" maxlength="4" value="'.date('Y',$time).'" />
 	<input type="text" id="c_hour" name="c_hour" size="2" maxlength="2" value="'.date('H',$time).'" /> :
-	<input type="text" id="c_minute" name="c_minute" size="2" maxlength="2" value="'.date('i',$time).'" />
-	</div>';
+	<input type="text" id="c_minute" name="c_minute" size="2" maxlength="2" value="'.date('i',$time).'" />';
+	if (!$nodiv) { $result .= '</div>'; }
 
 	return $result;
 }
