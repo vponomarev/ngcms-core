@@ -85,10 +85,17 @@ function preview(){
 <div id="additional" style="display: none;">
 <table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
-<td class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
+<td class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" />{l_date.manage}</td>
 </tr>
 <tr>
-<td class="contentEntry1">{changedate}</td>
+<td class="contentEntry1">
+
+<table cellspacing=1 cellpadding=1 style="font: 11px verdana, sans-serif;">
+<tr><td><input type="checkbox" name="setdate_custom" id="setdate_custom" value="1" class="check" onclick="document.getElementById('setdate_current').checked=false;" /></td><td><label for="setdate_custom">{l_date.setdate}</label></td><td><span id="cdate">{changedate}</span></td></tr>
+<tr><td><input type="checkbox" name="setdate_current" id="setdate_current" value="1" class="check" onclick="document.getElementById('setdate_custom').checked=false;" /></td><td><label for="setdate_current">{l_date.setcurrent}</label> &nbsp;</td><td>&nbsp;</td>
+</table>
+
+</td>
 </tr>
 [isplugin xfields]{plugin_xfields}[/isplugin]
 [isplugin nsched]{nsched}[/isplugin]

@@ -101,7 +101,15 @@ function editNews() {
 
 	$content = str_replace("\r\n", "\n", $_REQUEST['content']);
 
-	$SQL['postdate']  = $_REQUEST['customdate']?mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60):$row['postdate'];
+	if ($_REQUEST['setdate_custom']) {
+		$SQL['postdate'] = mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60);
+	} else if ($_REQUEST['setdate_current']) {
+		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
+	} else {
+		$postdate = $row['postdate'];
+	}
+
+	//$SQL['postdate']  = $_REQUEST['customdate']?mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60):$row['postdate'];
 	$SQL['title']     = $title;
 	$SQL['content']   = $content;
 	$SQL['alt_name']  = $alt_name;
@@ -235,7 +243,7 @@ function editNewsForm() {
 	$tvars = array();
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
-		'changedate'		=>	ChangeDate($row['postdate']),
+		'changedate'		=>	ChangeDate($row['postdate'], 1),
 		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array())),
 		'allcats'			=>	@GetAllCategories($cats),
