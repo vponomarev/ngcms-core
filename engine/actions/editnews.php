@@ -248,8 +248,13 @@ function editNewsForm() {
 		'keywords'			=>	secure_html($row['keywords']),
 		'views'				=>	$row['views'],
 		'author'			=>  $row['author'],
+		'authorid'			=>  $row['author_id'],
 		'createdate'		=>  strftime('%d.%m.%Y %H:%M', $row['postdate']),
 		'editdate'			=>  ($row['editdate'] > $row['postdate'])?strftime('%d.%m.%Y %H:%M', $row['editdate']):'-',
+		'author_page'		=>  checkLinkAvailable('uprofile', 'show')?
+									generateLink('uprofile', 'show', array('name' => $row['author'], 'id' => $row['author_id'])):
+									generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['author'], 'id' => $row['author_id'])),
+
 	);
 
 	if ($config['use_smilies']) {
