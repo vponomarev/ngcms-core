@@ -194,15 +194,16 @@ function reDeleteRow(id) {
  }
  if (confirm('Вы действительно хотите удалить строку # '+id)) {
   // Delete with renumbering
-  var dCounter = document.getElementById('cfg.body').rows.length;
+  var dCounter = document.getElementById('cfg.body').rows.length-1;
   
-  for (i = id; i < dCounter; i++) {
+  for (var i = id; i < dCounter; i++) {
    dData[i] = dData[i+1];
    dData[i]['id'] = i;
   }
   delete(dData[dCounter]);
   populateCfg();
  }
+ return true;
 }
 
 // Move record UP
@@ -226,6 +227,7 @@ function reMoveUp(id) {
  dData[id-1]['id'] = id-1;
 
  populateCfg();
+ return true;
 }
 
 // Move record DOWN
@@ -243,6 +245,7 @@ function reMoveDown(id) {
 
  // Вызываем обработчик "move UP"
  reMoveUp(id+1);
+ return true;
 }
 
 // Button click :: CANCEL
@@ -285,7 +288,7 @@ function reSubmitEdit() {
  if (recNo == '*') {
   // Add
   var cbody = document.getElementById('cfg.body');
-  rd['id'] = cbody.rows.length + 1;
+  rd['id'] = cbody.rows.length;
   // Save info into data array
   dData[rd['id']] = rd;
  } else {
