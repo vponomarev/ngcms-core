@@ -160,6 +160,7 @@ function sack(file) {
 		} else {
 			this.vars[encodeURIComponent(name)] = Array(encodeURIComponent(value), true);
 		}
+		return true;
 	}
 
 	this.processURLString = function(string, encode) {

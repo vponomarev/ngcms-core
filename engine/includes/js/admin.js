@@ -133,6 +133,7 @@ function json_encode(mixed_val) {
                 gap = mind;
                 return v;
         }
+        return null;
     };
  
     // Make a fake root object containing our value under the key of ''.
@@ -159,7 +160,7 @@ function getCookie(name) {
 			setStr = unescape(cookie.substring(offset, end));
 		}
 	}
-	return(setStr);
+	return setStr;
 }
 
 function setCookie (name, value, expires, path, domain, secure) {
@@ -168,5 +169,6 @@ function setCookie (name, value, expires, path, domain, secure) {
         ((path) ? "; path=" + path : "") +
         ((domain) ? "; domain=" + domain : "") +
         ((secure) ? "; secure" : "");
+      return true;
 }
 
