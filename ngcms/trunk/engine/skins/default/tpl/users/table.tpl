@@ -63,7 +63,9 @@ function validateAction() {
 <tr>
 <td width="100%" align="left">
 <!-- Filter form: BEGIN -->
-<form method="post" action="{php_self}?mod=users&amp;action=list">
+<form method="GET" action="{php_self}">
+<input type="hidden" name="mod" value="users" />
+<input type="hidden" name="action" value="list" />
 {l_namefilter} <input type="text" name="name" value="{name}"/> &nbsp; {l_sort} <select name="sort">{sort_options}</select>
 <select name="how">{how_options}</select>
 <input style="text-align: center;" size=3 name="per_page" value="{per_page}"/>
@@ -77,7 +79,14 @@ function validateAction() {
 </tr>
 <tr>
 <td width="100%" valign="top">
-<form method="post" name="form_users" id="form_users" action="{php_self}?mod=users">
+<!-- Mass actions form: BEGIN -->
+<form method="GET" name="form_users" id="form_users" action="{php_self}">
+<input type="hidden" name="mod" value="users" />
+<input type="hidden" name="name" value="{name}" />
+<input type="hidden" name="how" value="{how_value}" />
+<input type="hidden" name="sort" value="{sort_value}" />
+<input type="hidden" name="page" value="{page_value}" />
+<input type="hidden" name="per_page" value="{per_page_value}" />
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
@@ -90,7 +99,7 @@ function validateAction() {
 <td width="10%" class="contentHead">{l_all_news2}</td>
 <td width="15%" class="contentHead">{l_status}</td>
 <td width="5%" class="contentHead">&nbsp;</td>
-<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(users)" /></td>
+<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" /></td>
 </tr>
 {entries}
 <tr>
@@ -123,6 +132,7 @@ function validateAction() {
 </tr>
 </table>
 </form>
+<!-- Mass actions form: END -->
 </td>
 </tr>
 </table>
