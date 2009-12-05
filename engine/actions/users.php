@@ -304,7 +304,11 @@ function userList(){
 		'per_page'		=> $per_page,
 		'name'			=> htmlspecialchars($_REQUEST['name']),
 		'pagesss'		=> $pagesss,
-	);
+		'how_value'		=> htmlspecialchars($_REQUEST['how']),
+		'sort_value'	=> htmlspecialchars($_REQUEST['sort']),
+		'page_value'	=> htmlspecialchars($_REQUEST['page']),
+		'per_page_value'	=> htmlspecialchars($_REQUEST['per_page']),
+);
 
 	$tpl -> template('table', tpl_actions.$mod);
 	$tpl -> vars('table', $tvars);
