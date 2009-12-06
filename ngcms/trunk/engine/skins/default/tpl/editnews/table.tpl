@@ -26,15 +26,14 @@
 [no-news]<tr><td colspan="6"><p>- {l_not_found} -</p></td></tr>[/no-news]
 {entries}
 <tr>
-<td colspan="6" style="border-top: 1px solid #EBEBEB;">&nbsp;</td>
+<td width="100%" colspan="8">&nbsp;</td>
 </tr>
-</table>
-<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr>
-<td width="50%" class="contentEntry2">{pagesss}</td>
-<td width="47%" align="right" class="contentEntry2"><div id="submit">
+
 [actions]
-<select name="subaction">
+<tr align="center">
+<td colspan="8" class="contentEdit" align="right" valign="top">
+<div style="text-align: left;">
+Действие: <select name="subaction" style="font: 12px Verdana, Courier, Arial; width: 230px;">
 <option value="">-- {l_action} --</option>
 <option value="do_mass_approve">{l_approve}</option>
 <option value="do_mass_forbidden">{l_forbidden}</option>
@@ -47,10 +46,18 @@
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>[/comments]
 <option value="do_mass_delete">{l_delete}</option>
 </select>
-<input type="submit" value="OK" class="button" />
+<input type="submit" value="Выполнить.." class="button" />
 <input type="hidden" name="mod" value="editnews" />
+<br/>
+</div>
+</td>
+</tr>
+<tr>
+<td width="100%" colspan="8">&nbsp;</td>
+</tr>
 [/actions]
-</div></td>
+<tr>
+<td align="center" colspan="8" class="contentHead">{pagesss}</td>
 </tr>
 </table>
 </form>
