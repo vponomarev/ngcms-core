@@ -819,6 +819,7 @@ function generateAdminNavigations($current, $start, $stop, $link, $navigations){
 // * current - number of current page
 // * count   - total count of pages
 // * url	 - URL of page, %page% will be replaced by page number
+// * maxNavigations - max number of navigation links
 function generateAdminPagelist($param){
 	global $tpl, $TemplateCache;
 
@@ -840,7 +841,11 @@ function generateAdminPagelist($param){
 
 	// ===[ TO PUT INTO CONFIG ]===
 	$pages = '';
-	$maxNavigations 		= 10;
+	if (isset($param['maxNavigations']) && ($param['maxNavigations'] > 3) && ($param['maxNavigations'] < 500)) {
+		$maxNavigations		= intval($param['maxNavigations']);
+	} else {
+		$maxNavigations 		= 10;
+	}
 
 	$sectionSize	= floor($maxNavigations / 3);
 	if ($param['count'] > $maxNavigations) {

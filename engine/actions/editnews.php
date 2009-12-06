@@ -745,7 +745,7 @@ if ($action == "editnews") {
 	}
 	else {
 		$tvars['regx']["'\\[no-news\\].*?\\[/no-news\\]'si"] = '';
-		$tvars['vars']['pagesss'] = generateAdminPagelist( array('current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=editnews&action=list'.($_REQUEST['news_per_page']?'&news_per_page='.$news_per_page:'').($_REQUEST['author']?'&author='.$_REQUEST['author']:'').($_REQUEST['category']?'&category='.$_REQUEST['category']:'').($_REQUEST['sort']?'&sort='.$_REQUEST['sort']:'').($postdate?'&postdate='.$postdate:'').($authorid?'&authorid='.$authorid:'').($status_mode?'&status_mode='.$status_mode:'').'&page=%page%'));
+		$tvars['vars']['pagesss'] = generateAdminPagelist( array('maxNavigations' => 30, 'current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=editnews&action=list'.($_REQUEST['news_per_page']?'&news_per_page='.$news_per_page:'').($_REQUEST['author']?'&author='.$_REQUEST['author']:'').($_REQUEST['category']?'&category='.$_REQUEST['category']:'').($_REQUEST['sort']?'&sort='.$_REQUEST['sort']:'').($postdate?'&postdate='.$postdate:'').($authorid?'&authorid='.$authorid:'').($status_mode?'&status_mode='.$status_mode:'').'&page=%page%'));
 	}
 
 	if($userROW['status'] <= 2) {
