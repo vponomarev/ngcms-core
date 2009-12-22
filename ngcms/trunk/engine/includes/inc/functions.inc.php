@@ -244,7 +244,7 @@ function QuickTags($area = false, $template = false) {
 
 	$tvars['vars'] = array(
 		'php_self'	=>	$PHP_SELF,
-		'area'		=>	$area
+		'area'		=>	$area?$area:"''"
 	);
 
 	if (!in_array($template, array('pmmes', 'editcom', 'news', 'static')))
@@ -562,7 +562,9 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null) {
 // * nameval   - use DB field "name" instead of ID in HTML option value
 // * resync    - flag, if set - we make additional lookup into database for new category list
 // * checkarea - flag, if set - generate a list of checkboxes instead of <SELECT>
-function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $name='category'*/){
+// * class     - HTML class name
+// * style     - HTML style
+function makeCategoryList($params = array()){
 	global $catz, $lang, $mysql;
 
 	if (!isset($params['skip'])) { $params['skip'] = array(); }
@@ -571,7 +573,10 @@ function makeCategoryList($params = array() /*selected=0, $my=0, $noempty=0, $na
 
 	$out = '';
 	if (!isset($params['checkarea']) || !$params['checkarea']) {
-	 $out = "<select name=\"$name\" id=\"catmenu\"".((isset($params['class']) && ($params['class'] != ''))?' class="'.$params['class'].'"':'').">\n";
+	 $out = "<select name=\"$name\" id=\"catmenu\"".
+		((isset($params['style']) && ($params['style'] != ''))?' style="'.$params['style'].'"':'').
+		((isset($params['class']) && ($params['class'] != ''))?' class="'.$params['class'].'"':'').
+		">\n";
 	 if (isset($params['doempty']) && $params['doempty'])	{ $out.= "<option value=\"0\">".$lang['no_cat']."</option>\n"; }
 	 if (isset($params['doall']) && $params['doall'])	{ $out.= "<option value=\"\">".$lang['sh_all']."</option>\n"; }
 	}

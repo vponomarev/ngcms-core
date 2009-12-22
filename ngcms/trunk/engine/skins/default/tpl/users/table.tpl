@@ -136,6 +136,8 @@ function validateAction() {
 </td>
 </tr>
 </table>
+
+
 <form method="post" action="{php_self}?mod=users">
 <input type="hidden" name="action" value="add" />
 <table id="adduser" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
