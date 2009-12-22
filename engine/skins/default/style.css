@@ -112,7 +112,7 @@ color: black;
 }
 
 #topNavigator {
- style:  text-align: left;
+ text-align: left;
  margin: 5px 0px;
  width: 1000px;
  background-color: #D4D0C8;
@@ -481,6 +481,24 @@ margin-bottom: 5px;
 margin-top: 5px;
 }
 
+.contentActive {
+ border: #ABCDEF 1px solid;
+ font: normal 11px Tahoma,sans-serif;
+ margin: 0px;
+ padding: 0px;
+ margin-bottom: 3px;
+ background: #123456;
+}
+
+.contentInactive {
+ border: #F0F0F0 1px solid;
+ font: normal 11px Tahoma,sans-serif;
+ margin: 0px;
+ padding: 0px;
+ margin-bottom: 3px;
+}
+
+
 #attaches table {
 background: #FFFFFF;
 }
@@ -560,6 +578,57 @@ background: #F0F0F0;
 	color: #000000;
 }
 
+
+#suggestWindow {
+ background: white; 
+ border: 1px solid #aaaaaa; 
+ color: black;
+ width: 250px; 
+ display: block;
+ visibility: hidden;
+ padding: 0px;
+ font: normal 12px verdana, tahoma, sans-serif;
+}
+
+#suggestBlock {
+ padding-top: 2px;
+ padding-bottom: 2px;
+}
+
+#suggestBlock td {
+ padding-left: 2px;
+}
+
+#suggestBlock tr {
+ padding: 3px;
+ padding-left: 8px;
+ background: white;
+}
+
+/* #suggestBlock tr:hover, */
+#suggestBlock .trHL {
+ background: #3366cc;
+ color: white;
+ cursor: default;
+}
+
+#suggestBlock .cleft {
+ padding-left: 5px;
+}
+
+#suggestBlock .cright {
+ text-align: right;
+ padding-right: 5px;
+}
+
+#suggestClose {
+ display: block;
+ text-align: right;
+ font: normal 12px verdana, tahoma, sans-serif;
+ background: #aaaaaa;
+ color: white;
+ padding-right: 3px;
+}
 
 
 /* Plugin configuration */

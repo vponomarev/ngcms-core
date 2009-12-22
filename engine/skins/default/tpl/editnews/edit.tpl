@@ -1,14 +1,18 @@
 <script type="text/javascript">
+
+//
+// Global variable: ID of current active input area
+var currentInputAreaID = 'content.short';
+
 function ChangeOption(optn) {
-	document.getElementById('maincontent').style.display  = (optn == 'maincontent')?"block":"none";
-	document.getElementById('additional').style.display   = (optn == 'additional')?"block":"none";
-	document.getElementById('attaches').style.display   = (optn == 'attaches')?"block":"none";
-[comments]	document.getElementById('comments').style.display     = (optn == 'comments')?"block":"none";
-	document.getElementById('showEditNews').style.display = (optn == 'comments')?"none":"block";
-	document.getElementById('rightBar').style.display = (optn == 'comments')?"none":"";[/comments]
+	document.getElementById('maincontent').style.display 	= (optn == 'maincontent')?"block":"none";
+	document.getElementById('additional').style.display 	= (optn == 'additional')?"block":"none";
+	document.getElementById('attaches').style.display		= (optn == 'attaches')?"block":"none";
+[comments]	document.getElementById('comments').style.display	= (optn == 'comments')?"block":"none";
+	document.getElementById('showEditNews').style.display	= (optn == 'comments')?"none":"block";
+	document.getElementById('rightBar').style.display	= (optn == 'comments')?"none":"";[/comments]
 }
 function preview(){
-
  var form = document.getElementById("form");
  if (form.content == '' || form.title.value == '') {
   alert('{l_msge_preview}');
@@ -22,6 +26,18 @@ function preview(){
  form['mod'].value = "editnews";
  form.target = "_self";
  return true;
+}
+
+function changeActive(name) {
+ if (name == 'full') {
+	document.getElementById('container.content.full').className  = 'contentActive';
+	document.getElementById('container.content.short').className = 'contentInactive';
+	currentInputAreaID = 'content.full';
+ } else {
+	document.getElementById('container.content.short').className = 'contentActive';
+	document.getElementById('container.content.full').className  = 'contentInactive';
+	currentInputAreaID = 'content.short';
+ }
 }
 </script>
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
@@ -57,7 +73,9 @@ function preview(){
   </tr>
   <tr>
    <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
-   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" id="content" rows="16" tabindex="2">{content}</textarea></td>
+    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" name="content.short" id="content.short" rows="10" tabindex="2">{content}</textarea></div>
+    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" name="content.full" id="content.full" rows="10" tabindex="2">{content}</textarea></div>
+   </td>
   </tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>

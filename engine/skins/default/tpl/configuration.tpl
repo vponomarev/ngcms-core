@@ -213,13 +213,15 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry1">{l_category_counters}<br /><small>{l_category_counters_desc}</small></td>
 <td class="contentEntry2" valign="middle">{category_counters}</td>
 </tr>
+<!--
 <tr>
 <td class="contentEntry1">{l_category_link}<br /><small>{l_category_link_desc}</small></td>
 <td class="contentEntry2" valign="middle">{category_link}</td>
 </tr>
+-->
 <tr>
-<td class="contentEntry1">{l_add_onsite}<br /><small>{l_add_onsite_desc}</small></td>
-<td class="contentEntry2" valign="middle">{add_onsite}</td>
+<td class="contentEntry1">{l_news.edit.split}<br /><small>{l_news.edit.split#desc}</small></td>
+<td class="contentEntry2" valign="middle">{news.edit.split}</td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_date_adjust}<br /><small>{l_date_adjust_desc}</small></td>

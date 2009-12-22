@@ -249,7 +249,7 @@ function editNewsForm() {
 		'allcats'			=>	@GetAllCategories($cats),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
-		'content'			=>  secure_html($row['content']),
+		'content'			=>  secure_html($content),
 		'alt_name'			=>	$row['alt_name'],
 		'avatar'			=>	$row['avatar'],
 		'description'		=>	secure_html($row['description']),
@@ -265,6 +265,24 @@ function editNewsForm() {
 
 	);
 
+
+	// Generate data for content input fields
+	if ($config['news.edit.split']) {
+		if (preg_split('#^(.+?)<!--more-->(.*?)$#', $row['content'], $match)) {
+			$tvars['vars']['content.short'] = $match[1];
+			$tvars['vars']['content.full'] = $match[2];
+		} else if (preg_split('#^(.+?)<!--more=\"(.*?)\"-->(.*?)$#', $row['content'], $match)) {
+			$tvars['vars']['content.short'] = $match[1];
+			$tvars['vars']['content.full'] = $match[3];
+		} else {
+			$tvars['vars']['content.short'] = $row['content'];
+			$tvars['vars']['content.full'] = '';
+		}
+	} else {
+		$tvars['vars']['content'] = $row['content'];
+	}
+
+
 	if ($config['use_smilies']) {
 		$tvars['vars']['smilies'] = InsertSmilies('content', 20);
 	} else {
@@ -272,7 +290,7 @@ function editNewsForm() {
 	}
 
 	if ($config['use_bbcodes']) {
-		$tvars['vars']['quicktags'] = QuickTags('', 'news');
+		$tvars['vars']['quicktags'] = QuickTags('currentInputAreaID', 'news');
 	} else {
 		$tvars['vars']['quicktags'] = '';
 	}
@@ -615,70 +633,111 @@ if ($action == "editnews") {
 		case 'do_mass_delete'       : massNewsDelete(); break;
 	}
 
-	$postdate		= intval($_REQUEST['postdate']);
-	$authorid		= intval($_REQUEST['authorid']);
-	$category		= intval($_REQUEST['category']);
+	// Search filters
+	$fSearchLine		= $_REQUEST['sl'];
+	$fSearchType		= intval($_REQUEST['st']);
 
-	$news_per_page	= intval($_REQUEST['news_per_page']);
-	$start_from		= intval($_REQUEST['start_from']);
-	$status_mode	= intval($_REQUEST['status_mode']);
+	// Author filter (by name)
+	$fAuthorName		= $_REQUEST['an'];
 
-	$sortBy = '';
+	// Date range
+	$fDateStart			= '';
+	$fDateStartText		= '';
+	if (preg_match('#^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$#', $_REQUEST['dr1'], $match)) {
+		$fDateStartText = $_REQUEST['dr1'];
+		$fDateStart		= mktime(0, 0, 0, $match[2], $match[1], $match[3]);
+	}
+
+	$fDateStop			= '';
+	$fDateStopText		= '';
+	if (preg_match('#^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$#', $_REQUEST['dr2'], $match)) {
+		$fDateStopText	= $_REQUEST['dr2'];
+		$fDateStop		= mktime(0, 0, 0, $match[2], $match[1], $match[3]);
+	}
+
+	// Category
+	$fCategoryId	= intval($_REQUEST['category']);
+
+	// Status
+	$fStatus		= intval($_REQUEST['status']);
+
+	// Records Per Page
+	$fRPP			= intval($_REQUEST['rpp']);
+
+	// Sort mode
+	$fSort = '';
 	switch($_REQUEST['sort']){
-		case 'id':				$sortBy = 'id';				break;
-		case 'id_desc':			$sortBy = 'id desc';		break;
-		case 'postdate':		$sortBy = 'postdate';		break;
-		case 'postdate_desc':	$sortBy = 'postdate desc';	break;
-		case 'title':			$sortBy = 'title';			break;
-		case 'title_desc':		$sortBy = 'title desc';		break;
+		case 'id':				$fSort = 'id';				break;
+		case 'id_desc':			$fSort = 'id desc';			break;
+		case 'postdate':		$fSort = 'postdate';		break;
+		case 'postdate_desc':	$fSort = 'postdate desc';	break;
+		case 'title':			$fSort = 'title';			break;
+		case 'title_desc':		$fSort = 'title desc';		break;
 	}
+	$fSort = ' order by '.($fSort?$fSort:'id desc');
 
-	if ($sortBy) {
-		$sortBy = " order by ".$sortBy;
-	} else {
-		$sortBy = "order by id desc";
-	}
 
-	if ($userROW['status'] >= 3)	{ $authorid = $userROW['id']; }
-	if (($news_per_page < 2)||($news_per_page > 2000)) $news_per_page = 20;
+	// Users with status >= 3 can see only their own news
+	$fAuthorId = 0;
+	if ($userROW['status'] >= 3)	{ $fAuthorId = intval($userROW['id']); }
 
+	// Set default value for `Records Per Page` parameter
+	if (($fRPP < 2)||($fRPP > 2000))
+		$fRPP = 20;
+
+	// Determine requested page number
 	$pageNo		= intval($_REQUEST['page'])?$_REQUEST['page']:0;
 	if ($pageNo < 1)	$pageNo = 1;
+
 	if (!$start_from)	$start_from = ($pageNo - 1)* $news_per_page;
 
 	$i				=	$start_from;
-	$postyear		=	substr($postdate, 0, 4);
-	$postmonth		=	substr($postdate, 4, 2);
 	$entries_showed	=	'0';
 
 	$conditions = array();
-	if ($category)
-		array_push($conditions, "catid regexp '[[:<:]](".intval($category).")[[:>:]]'");
+	if ($fCategoryId)
+		array_push($conditions, "catid regexp '[[:<:]](".intval($fCategoryId).")[[:>:]]'");
 
-	if ($postdate) {
-		array_push($conditions, "postdate > '".mktime(0, 0, 0, $postmonth, 1, $postyear)."'");
-		array_push($conditions, "postdate < '".mktime(23,59,59,$postmonth,date("t",mktime(0, 0, 0, $postmonth, 1, $postyear)), $postyear)."'");
+	if ($fDateStart) {
+		array_push($conditions, "postdate >= ".intval($fDateStart));
 	}
 
-	if ($authorid)
-		array_push($conditions, "author_id = ".db_squote($authorid));
+	if ($fDateStop) {
+		array_push($conditions, "postdate <= ".intval($fDateStop));
+	}
 
-	if ($status_mode)
-		array_push($conditions, "approve = ".(($status_mode == 1)?'0':'1'));
+	if ($fAuthorId) {
+		array_push($conditions, "author_id = ".$fAuthorId);
+	} else if ($fAuthorName) {
+		array_push($conditions, "author = ".db_squote($fAuthorName));
+	}
 
-	$sql_endr = "from ".prefix."_news ".(count($conditions)?"where ".implode(" AND ", $conditions):'').' '.$sortBy;
-	$sql_count = "select count(id) as cid ".$sql_endr;
-	$sql = "select * ".$sql_endr;
+	if ($fStatus)
+		array_push($conditions, "approve = ".(($fStatus == 1)?'0':'1'));
 
 
-	$cnt = $mysql->record($sql_count);
-	$all_count_news = $cnt['cid'];
-	$countPages = ceil($all_count_news / $news_per_page);
+	// Perform search
+	if ($fSearchLine != '') {
+			array_push($conditions, ($fSearchType?'content':'title')." like ".db_squote('%'.$fSearchLine.'%'));
+	}
 
-	$result = $sql." LIMIT $start_from,$news_per_page";
+	$sqlQPart = "from ".prefix."_news ".(count($conditions)?"where ".implode(" AND ", $conditions):'').' '.$fSort;
+	$sqlQCount = "select count(id) as cid ".$sqlQPart;
+	$sqlQ = "select * ".$sqlQPart;
+
+
+	$cnt = $mysql->record($sqlQCount);
+	$countNews = $cnt['cid'];
+	$countPages = ceil($countNews / $fRPP);
+
+	// If Count of pages is less that pageNo we want to show - show last page
+	if (($pageNo > $countPages)&&($pageNo > 1))
+		$pageNo = $countPages;
+
 	$tpl -> template('entries', tpl_actions.$mod);
 
-	foreach ($mysql->select($result) as $row) {
+	$sqlResult = $sqlQ." LIMIT ".(($pageNo - 1)* $fRPP).",".$fRPP;
+	foreach ($mysql->select($sqlResult) as $row) {
 		$i++;
 		$allow_com	=	$row['allow_com'];
 		$cats		=	explode(",", $row['catid']);
@@ -709,10 +768,10 @@ if ($action == "editnews") {
 
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
-		'news_per_page'	=>	$news_per_page,
+		'rpp'			=>	$fRPP,
 		'entries'		=>	$entries,
 		'sortlist'		=>	makeSortList($_REQUEST['sort']),
-		'statuslist'	=> 	'<option value="1"'.(($status_mode==1)?' selected':'').'>'.$lang['smode_unpublished'].'</option><option value="2"'.(($status_mode==2)?' selected':'').'>'.$lang['smode_published'].'</option>'
+		'statuslist'	=> 	'<option value="1"'.(($fStatus==1)?' selected':'').'>'.$lang['smode_unpublished'].'</option><option value="2"'.(($fStatus==2)?' selected':'').'>'.$lang['smode_published'].'</option>'
 	);
 
 	foreach ($mysql->select("SELECT DISTINCT FROM_UNIXTIME(postdate,'%b %Y') as monthes, COUNT(id) AS cnt FROM ".prefix."_news GROUP BY monthes ORDER BY postdate DESC") as $row){
@@ -729,7 +788,7 @@ if ($action == "editnews") {
 		$tvars['vars']['selectdate'] .= "<option value=\"$post_date[en]\" $ifselected>$post_date[ru]</option>";
 	}
 
-	$tvars['vars']['category_select'] = makeCategoryList(array('doall' => 1, 'selected' => $category));
+	$tvars['vars']['category_select'] = makeCategoryList(array('doall' => 1, 'selected' => $category, 'style' => 'width: 200px;'));
 
 	if ($userROW['status'] < 3) {
 		foreach($mysql->select("select id, status, news, name from ".uprefix."_users where news>0 ".($authorid?"or id=".db_squote($authorid):'')." order by name") as $row){
@@ -745,7 +804,22 @@ if ($action == "editnews") {
 	}
 	else {
 		$tvars['regx']["'\\[no-news\\].*?\\[/no-news\\]'si"] = '';
-		$tvars['vars']['pagesss'] = generateAdminPagelist( array('maxNavigations' => 30, 'current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=editnews&action=list'.($_REQUEST['news_per_page']?'&news_per_page='.$news_per_page:'').($_REQUEST['author']?'&author='.$_REQUEST['author']:'').($_REQUEST['category']?'&category='.$_REQUEST['category']:'').($_REQUEST['sort']?'&sort='.$_REQUEST['sort']:'').($postdate?'&postdate='.$postdate:'').($authorid?'&authorid='.$authorid:'').($status_mode?'&status_mode='.$status_mode:'').'&page=%page%'));
+		$tvars['vars']['pagesss'] = generateAdminPagelist(
+				array(
+					'maxNavigations' => 30,
+					'current' => $pageNo,
+					'count' => $countPages,
+					'url' => admin_url.
+							'/admin.php?mod=editnews&action=list'.
+							($fRPP?'&rpp='.$fRPP:'').
+							($fAuthorName != ''?'&an='.$fAuthorName:'').
+							($_REQUEST['category']?'&category='.$_REQUEST['category']:'').
+							($_REQUEST['sort']?'&sort='.$_REQUEST['sort']:'').
+							($postdate?'&postdate='.$postdate:'').
+							($authorid?'&authorid='.$authorid:'').
+							($status_mode?'&status_mode='.$status_mode:'').
+							'&page=%page%'
+						));
 	}
 
 	if($userROW['status'] <= 2) {
@@ -757,6 +831,13 @@ if ($action == "editnews") {
 	}
 
 	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
+
+	$tvars['vars']['an'] = secure_html($fAuthorName);
+	$tvars['vars']['sl'] = secure_html($fSearchLine);
+	$tvars['vars']['st.selected0'] = !$fSearchType?' selected="selected"':'';
+	$tvars['vars']['st.selected1'] =  $fSearchType?' selected="selected"':'';
+	$tvars['vars']['dr1'] = ($fDateStartText != '')?$fDateStartText:'  .  .    ';
+	$tvars['vars']['dr2'] = ($fDateStopText != '')?$fDateStopText:'  .  .    ';
 
 	exec_acts('editnews_list');
 

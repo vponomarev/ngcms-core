@@ -199,7 +199,8 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$SYSTEM_FLAGS['meta']['keywords']    = ($row['keywords'] != '')?$row['keywords']:$catz[$catmap[$masterCatID]]['keywords'];
 
 	// Prepare title
-	$SYSTEM_FLAGS['info']['title']['group']	= $config["category_link"]?GetCategories($row['catid'], true):LangDate(timestamp, $row['postdate']);
+	//$SYSTEM_FLAGS['info']['title']['group']	= $config["category_link"]?GetCategories($row['catid'], true):LangDate(timestamp, $row['postdate']);
+	$SYSTEM_FLAGS['info']['title']['group']	= GetCategories($row['catid'], true);
 	$SYSTEM_FLAGS['info']['title']['item']	= secure_html($row['title']);
 
 	// We are in short or full mode. Add data into {mainblock}
