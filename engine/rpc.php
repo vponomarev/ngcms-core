@@ -42,8 +42,9 @@ function processJSON(){
 	$params = json_decode($_POST['params'], true);
 
 	switch ($_POST['methodName']) {
-		case 'rewrite.submit':	$out = rpcRewriteSubmit($params); break;
-		default:				$out = rpcDefault(); break;
+		case 'rewrite.submit':		$out = rpcRewriteSubmit($params); break;
+		case 'admin.users.search':	$out = rpcAdminUsersSearch($params); break;
+		default:					$out = rpcDefault(); break;
 	}
 
 	// Print output
@@ -66,7 +67,7 @@ function rpcRewriteSubmit($params) {
 	// Check for permissions
 	if (!is_array($userROW) || ($userROW['status'] != 1)) {
 		// ACCESS DENIED
-		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Wrong params type');
+		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
 	}
 
 	@include_once 'includes/classes/uhandler.class.php';
@@ -78,7 +79,7 @@ function rpcRewriteSubmit($params) {
 
 	// Scan incoming params
 	if (!is_array($params)) {
-		return array('status' => 0, 'errorCode' => 999, 'errorText' => 'Access denied');
+		return array('status' => 0, 'errorCode' => 999, 'errorText' => 'Wrong params type');
 	}
 
 	$hList = array();
@@ -105,5 +106,29 @@ function rpcRewriteSubmit($params) {
 	$UHANDLER->saveConfig();
 
 	return array('status' => 1, 'errorCode' => 0, 'errorText' => var_export($rcall[1], true));
+}
+
+
+// Admin panel: search for users
+function rpcAdminUsersSearch($params){
+	global $userROW, $mysql;
+
+	// Check for permissions
+	if (!is_array($userROW) || ($userROW['status'] > 3)) {
+		// ACCESS DENIED
+		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
+	}
+
+	$searchName = iconv('UTF-8', 'Windows-1251', $params);
+	// Return a list of users
+	$SQL = 'select name, news from '.uprefix.'_users where name like '.db_squote('%'.$searchName.'%').' and news > 0 order by news desc limit 20';
+
+	// Scan incoming params
+	$output = array();
+	foreach ($mysql->select($SQL) as $row) {
+		$output[] = array(iconv('Windows-1251', 'UTF-8',$row['name']), iconv('Windows-1251', 'UTF-8', $row['news'].' новостей'));
+	}
+
+	return array('status' => 1, 'errorCode' => 0, 'data' => array($params, $output));
 }
 
