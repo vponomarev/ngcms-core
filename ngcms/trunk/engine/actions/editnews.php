@@ -53,7 +53,10 @@ function editNews() {
 
 	$id			= $_REQUEST['id'];
 	$title		= $_REQUEST['title'];
-	$content	= $_REQUEST['content'];
+	$content	= str_replace("\r\n", "\n",
+		($config['news.edit.split'])?
+			($_REQUEST['content_short'].(($_REQUEST['content_full'] != '')?'<!--more-->'.$_REQUEST['content_full']:'')):
+			$_REQUEST['content']);
 	$alt_name	= $_REQUEST['alt_name'];
 
 	// Try to find news that we're trying to edit
@@ -97,9 +100,6 @@ function editNews() {
 		$SQL['description'] = $_REQUEST['description'];
 		$SQL['keywords']    = $_REQUEST['keywords'];
 	}
-
-
-	$content = str_replace("\r\n", "\n", $_REQUEST['content']);
 
 	if ($_REQUEST['setdate_custom']) {
 		$SQL['postdate'] = mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60);
@@ -268,18 +268,23 @@ function editNewsForm() {
 
 	// Generate data for content input fields
 	if ($config['news.edit.split']) {
-		if (preg_split('#^(.+?)<!--more-->(.*?)$#', $row['content'], $match)) {
+		if (preg_match('#^(.+?)<!--more-->(.*?)$#si', $row['content'], $match)) {
 			$tvars['vars']['content.short'] = $match[1];
 			$tvars['vars']['content.full'] = $match[2];
-		} else if (preg_split('#^(.+?)<!--more=\"(.*?)\"-->(.*?)$#', $row['content'], $match)) {
+		} else if (preg_match('#^(.+?)<!--more=\"(.*?)\"-->(.*?)$#si', $row['content'], $match)) {
 			$tvars['vars']['content.short'] = $match[1];
 			$tvars['vars']['content.full'] = $match[3];
 		} else {
 			$tvars['vars']['content.short'] = $row['content'];
 			$tvars['vars']['content.full'] = '';
 		}
+		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '$1';
+		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '';
+
 	} else {
 		$tvars['vars']['content'] = $row['content'];
+		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '';
+		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '$1';
 	}
 
 
@@ -813,11 +818,17 @@ if ($action == "editnews") {
 							'/admin.php?mod=editnews&action=list'.
 							($fRPP?'&rpp='.$fRPP:'').
 							($fAuthorName != ''?'&an='.$fAuthorName:'').
-							($_REQUEST['category']?'&category='.$_REQUEST['category']:'').
-							($_REQUEST['sort']?'&sort='.$_REQUEST['sort']:'').
-							($postdate?'&postdate='.$postdate:'').
-							($authorid?'&authorid='.$authorid:'').
-							($status_mode?'&status_mode='.$status_mode:'').
+							($fSearchLine != ''?'&sl='.$fSearchLine:'').
+							($fSearchType != ''?'&st='.$fSearchType:'').
+							($fDateStartText != ''?'&dr1='.$fDateStartText:'').
+							($fDateStopText != ''?'&dr2='.$fDateStopText:'').
+							($fCategoryId != ''?'&category='.$fCategoryId:'').
+							($fStatus != ''?'&status='.$fStatus:'').
+						//	($_REQUEST['category']?'&category='.$_REQUEST['category']:'').
+						//	($_REQUEST['sort']?'&sort='.$_REQUEST['sort']:'').
+						//	($postdate?'&postdate='.$postdate:'').
+						//	($authorid?'&authorid='.$authorid:'').
+						//	($status_mode?'&status_mode='.$status_mode:'').
 							'&page=%page%'
 						));
 	}

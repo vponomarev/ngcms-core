@@ -482,16 +482,16 @@ margin-top: 5px;
 }
 
 .contentActive {
- border: #ABCDEF 1px solid;
+ border: #CCCCCC 1px solid;
  font: normal 11px Tahoma,sans-serif;
  margin: 0px;
  padding: 0px;
  margin-bottom: 3px;
- background: #123456;
+ background: #CCCCCC;
 }
 
 .contentInactive {
- border: #F0F0F0 1px solid;
+ border: #FFFFFF 1px solid;
  font: normal 11px Tahoma,sans-serif;
  margin: 0px;
  padding: 0px;

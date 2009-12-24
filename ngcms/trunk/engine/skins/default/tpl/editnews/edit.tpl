@@ -2,7 +2,7 @@
 
 //
 // Global variable: ID of current active input area
-var currentInputAreaID = 'content.short';
+[edit.split]var currentInputAreaID = 'content.short';[/edit.split][edit.nosplit]var currentInputAreaID = 'content';[/edit.nosplit]
 
 function ChangeOption(optn) {
 	document.getElementById('maincontent').style.display 	= (optn == 'maincontent')?"block":"none";
@@ -73,9 +73,14 @@ function changeActive(name) {
   </tr>
   <tr>
    <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
-    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" name="content.short" id="content.short" rows="10" tabindex="2">{content}</textarea></div>
-    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" name="content.full" id="content.full" rows="10" tabindex="2">{content}</textarea></div>
-   </td>
+[edit.split]
+    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" name="content_short" id="content.short" rows="10" tabindex="2">{content.short}</textarea></div>
+    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" name="content_full" id="content.full" rows="10" tabindex="2">{content.full}</textarea></div>
+[/edit.split]
+[edit.nosplit]
+    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="content" id="content" rows="10" tabindex="2">{content}</textarea></div>
+[/edit.nosplit]
+	</td>
   </tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
