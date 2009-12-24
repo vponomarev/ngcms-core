@@ -131,7 +131,7 @@ CREATE TABLE `XPREFIX_images` (
 
 CREATE TABLE `XPREFIX_ipban` (
   `id` int not null auto_increment,
-  `addr` char(20),
+  `addr` char(32),
   `atype` int default 0,
   `addr_start` bigint default 0,
   `addr_stop` bigint default 0,
