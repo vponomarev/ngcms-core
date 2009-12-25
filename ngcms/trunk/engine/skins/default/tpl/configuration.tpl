@@ -237,7 +237,7 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_smilies}<br /><small>{l_smilies_desc} (<b>,</b>)</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[smilies]' value='{c_smilies}' size="45" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[smilies]' value='{c_smilies}' style="width: 400px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_blocks_for_reg}<br /><small>{l_blocks_for_reg_desc}</small></td>
@@ -311,11 +311,11 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_avatar_wh}<br /><small>{l_avatar_wh_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[avatar_wh]' value='{c_avatar_wh}' size="6" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[avatar_wh]' value='{c_avatar_wh}' style="width: 40px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_avatar_max_size}<br /><small>{l_avatar_max_size_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[avatar_max_size]' value='{c_avatar_max_size}' size="6" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[avatar_max_size]' value='{c_avatar_max_size}' style="width: 40px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_use_photos}<br /><small>{l_use_photos_desc}</small></td>
@@ -331,15 +331,15 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_photos_max_size}<br /><small>{l_photos_max_size_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[photos_max_size]' value='{c_photos_max_size}' size="6" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[photos_max_size]' value='{c_photos_max_size}' style="width: 40px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_photos_thumb_size}<br /><small>{l_photos_thumb_size_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[photos_thumb_size]' value='{c_photos_thumb_size}' size="6" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[photos_thumb_size]' value='{c_photos_thumb_size}' style="width: 40px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_user_aboutsize}<br /><small>{l_user_aboutsize_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[user_aboutsize]' value='{c_user_aboutsize}' size="3" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[user_aboutsize]' value='{c_user_aboutsize}' style="width: 40px"  /></td>
 </tr>
 </table>
 </div>
@@ -352,15 +352,15 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_images_url}<br /><small>{l_example} http://server.com/uploads/images</small></td>
-<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[images_url]' value='{c_images_url}' size="40" /></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[images_url]' value='{c_images_url}' style="width: 400px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_images_dir}<br /><small>{l_example} /home/servercom/public_html/uploads/images/</small></td>
-<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[images_dir]' value='{c_images_dir}' size="40" /></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[images_dir]' value='{c_images_dir}' style="width: 400px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_images_ext}<br /><small>{l_images_ext_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[images_ext]' value='{c_images_ext}' size="40" /></td>
+<td class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[images_ext]' value='{c_images_ext}' style="width: 400px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_images_max_size}<br /><small>{l_images_max_size_desc}</small></td>
@@ -392,20 +392,20 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr><td colspan="2" class="contentHead">&nbsp;</td></tr>
 <tr>
-<td class="contentEntry1">{l_wm_image}<br /><small>{l_wm_image_desc}</small></td>
-<td class="contentEntry2" valign="middle">{wm_image}</td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_wm_image_transition}<br /><small>{l_wm_image_transition_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[wm_image_transition]' value='{c_wm_image_transition}' size="6" /></td>
-</tr>
-<tr>
 <td class="contentEntry1">{l_stamp_mode}<br /><small>{l_stamp_mode_desc}</small></td>
 <td class="contentEntry2" valign="middle">{stamp_mode}</td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_stamp_place}<br /><small>{l_stamp_place_desc}</small></td>
 <td class="contentEntry2" valign="middle">{stamp_place}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_wm_image}<br /><small>{l_wm_image_desc}</small></td>
+<td class="contentEntry2" valign="middle">{wm_image}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_wm_image_transition}<br /><small>{l_wm_image_transition_desc}</small></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[wm_image_transition]' value='{c_wm_image_transition}' size="6" /></td>
 </tr>
 <!-- END: IMAGE transform control -->
 </table>
@@ -439,7 +439,7 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_files_max_size}<br /><small>{l_files_max_size_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[files_max_size]' value='{c_files_max_size}' size="40" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[files_max_size]' value='{c_files_max_size}' style="width: 40px" /></td>
 </tr>
 </table>
 </div>

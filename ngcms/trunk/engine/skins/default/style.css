@@ -414,6 +414,13 @@ background: #fff url(images/email.gif) scroll right no-repeat;
 background: #f9fafb url(images/home.gif) scroll right no-repeat;
 }
 
+#system input,
+#users input,
+#files input {
+width: 400px;
+}
+
+
 .home:focus {
 background: #fff url(images/home.gif) scroll right no-repeat;
 }
