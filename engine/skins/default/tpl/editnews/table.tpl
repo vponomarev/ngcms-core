@@ -501,6 +501,8 @@ function swClick(t) {
 <option value="do_mass_mainpage">{l_massmainpage}</option>
 <option value="do_mass_unmainpage">{l_massunmainpage}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
+<option value="do_mass_currdate">{l_modify.mass.currdate}</option>
+<option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
 [comments]<option value="do_mass_com_approve">{l_com_approve}</option>
 <option value="do_mass_com_forbidden">{l_com_forbidden}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>[/comments]
