@@ -289,7 +289,7 @@ function editNewsForm() {
 
 
 	if ($config['use_smilies']) {
-		$tvars['vars']['smilies'] = InsertSmilies('content', 20);
+		$tvars['vars']['smilies'] = InsertSmilies('', 20, 'currentInputAreaID');
 	} else {
 		$tvars['vars']['smilies'] = '';
 	}

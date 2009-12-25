@@ -23,7 +23,12 @@ function news_add(){
 
 
 	$title = $_REQUEST['title'];
-	$content = $_REQUEST['content'];
+
+	$content	= str_replace("\r\n", "\n",
+		($config['news.edit.split'])?
+			($_REQUEST['content_short'].(($_REQUEST['content_full'] != '')?'<!--more-->'.$_REQUEST['content_full']:'')):
+			$_REQUEST['content']);
+
 	$alt_name = $parse->translit( trim($_REQUEST['alt_name']), 1);
 
 
@@ -128,7 +133,6 @@ function news_add(){
 		$SQL['pinned']		= intval($_REQUEST['pinned']);
 	}
 
-	$content = str_replace("\r\n", "\n", $content);
 	$SQL['content']		= $content;
 
 	exec_acts('addnews');
@@ -244,8 +248,8 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 		'JEV'			=> $JEV
 	);
 
-	$tvars['vars']['smilies']	= ($config['use_smilies'])?InsertSmilies('content', 20):'';
-	$tvars['vars']['quicktags']	= ($config['use_bbcodes'])?QuickTags('', 'news'):'';
+	$tvars['vars']['smilies']	= ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'';
+	$tvars['vars']['quicktags']	= ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'';
 
 	if ($userROW['status'] < 3) {
 		$tvars['vars']['[options]'] = "";
@@ -284,6 +288,16 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 	$tvars['vars']['flag_favorite']  = (($userROW['status'] == 1)||($userROW['status'] == 2))?'':'disabled="disabled"';
 	$tvars['vars']['flag_pinned']    = (($userROW['status'] == 1)||($userROW['status'] == 2))?'':'disabled="disabled"';
 	$tvars['vars']['flag_allow_com'] = 'checked="checked"';
+
+	// Generate data for content input fields
+	if ($config['news.edit.split']) {
+		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '$1';
+		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '';
+	} else {
+		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '';
+		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '$1';
+	}
+
 
 	// Disable flag for comments if plugin 'comments' is not installed
 	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
