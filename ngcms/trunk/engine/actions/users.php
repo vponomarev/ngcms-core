@@ -243,6 +243,7 @@ function userList(){
 			'php_self'		=>	$PHP_SELF,
 			'name'			=>	$row['name'],
 			'news'			=>	$row['news'],
+			'comments'		=>	$row['com'],
 			'status'		=>	$status,
 			'id'			=>	$row['id'],
 			'regdate'		=>	LangDate('j Q Y - H:i', $row['reg']),
@@ -253,6 +254,9 @@ function userList(){
 
 		$tvars['regx']['#\[mass\](.+?)\[\/mass\]#is'] = ($row['status'] == 1)?'':'$1';
 		$tvars['regx']['#\[link_news\](.+?)\[\/link_news\]#is'] = ($row['news'] > 0)?'$1':'';
+
+		// Disable flag for comments if plugin 'comments' is not installed
+		$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
@@ -308,7 +312,10 @@ function userList(){
 		'sort_value'	=> htmlspecialchars($_REQUEST['sort']),
 		'page_value'	=> htmlspecialchars($_REQUEST['page']),
 		'per_page_value'	=> htmlspecialchars($_REQUEST['per_page']),
-);
+	);
+
+	// Disable flag for comments if plugin 'comments' is not installed
+	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
 	$tpl -> template('table', tpl_actions.$mod);
 	$tpl -> vars('table', $tvars);

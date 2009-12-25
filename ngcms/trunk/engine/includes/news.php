@@ -32,6 +32,7 @@ $situation = "news";
 //		'overrideTemplateName' => alternative template for display
 //		'overrideTemplatePath' => alternative path for searching of template
 //		'customCategoryTemplate' => automatically override custom category templates
+//		'setCurrentCategory' => update Current Category in system flags
 //
 //		Returns:
 //			false    - when news is not found
@@ -67,6 +68,18 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 			return false;
 		}
 	}
+
+	if ($callingParams['setCurrentCategory']) {
+		// Fetch category ID from news
+		$cid = intval(array_shift(split(',', $row['catid'])));
+		if ($cid && isset($catmap[$cid])) {
+			// Save current category identifier
+			$SYSTEM_FLAGS['news']['currentCategory.alt']	= $catz[$catmap[$cid]]['alt'];
+			$SYSTEM_FLAGS['news']['currentCategory.id']		= $catz[$catmap[$cid]]['id'];
+			$SYSTEM_FLAGS['news']['currentCategory.name']	= $catz[$catmap[$cid]]['name'];
+		}
+	}
+
 
 	// preload plugins
 	load_extras('news:show');
@@ -511,7 +524,7 @@ function showNews($handlerName, $params) {
  load_extras('news');
 
  // Init array with configuration parameters
- $callingParams = array('customCategoryTemplate' => 1, 'customCategoryNumber' => 1);
+ $callingParams = array('customCategoryTemplate' => 1, 'customCategoryNumber' => 1, 'setCurrentCategory' => 1);
  $callingCommentsParams = array();
 
  // Set default template path
@@ -567,7 +580,7 @@ function showNews($handlerName, $params) {
 
 			if ($config['default_newsorder'] != '')
 				$callingParams['newsOrder'] = $config['default_newsorder'];
-			
+
 			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
 			break;
 
@@ -592,6 +605,12 @@ function showNews($handlerName, $params) {
 			}
 			$currentCategory = $catz[$catmap[$category]];
 
+			// Save current category identifier
+			$SYSTEM_FLAGS['news']['currentCategory.alt']	= $currentCategory['alt'];
+			$SYSTEM_FLAGS['news']['currentCategory.id']		= $currentCategory['id'];
+			$SYSTEM_FLAGS['news']['currentCategory.name']	= $currentCategory['name'];
+
+			// Set title
 			$SYSTEM_FLAGS['info']['title']['group'] = $currentCategory['name'];
 
 			// Set meta tags for category page

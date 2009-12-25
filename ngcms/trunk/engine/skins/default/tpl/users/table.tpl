@@ -97,6 +97,7 @@ function validateAction() {
 <td width="20%" class="contentHead">{l_regdate}</td>
 <td width="20%" class="contentHead">{l_last_login}</td>
 <td width="10%" class="contentHead">{l_all_news2}</td>
+[comments]<td width="10%" class="contentHead">{l_listhead.comments}</td>[/comments]
 <td width="15%" class="contentHead">{l_status}</td>
 <td width="5%" class="contentHead">&nbsp;</td>
 <td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" /></td>
