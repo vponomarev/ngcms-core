@@ -629,13 +629,15 @@ if ($action == "editnews") {
 	massCommentDelete();
 } else {
 	switch($subaction) {
-		case 'do_mass_approve'      : massNewsModify( array('approve'   => 1),   'msgo_approved',   'approve');    break;
-		case 'do_mass_mainpage'     : massNewsModify( array('mainpage'  => 1),  'msgo_mainpaged',  'mainpage');   break;
-		case 'do_mass_unmainpage'   : massNewsModify( array('mainpage'  => 0),  'msgo_unmainpage', 'unmainpage'); break;
-		case 'do_mass_forbidden'    : massNewsModify( array('approve'   => 0),   'msgo_forbidden',  'forbidden');  break;
-		case 'do_mass_com_forbidden': massNewsModify( array('allow_com' => 0), 'msgo_cforbidden', 'cforbidden'); break;
-		case 'do_mass_com_approve'  : massNewsModify( array('allow_com' => 1), 'msgo_capproved',  'capprove');   break;
-		case 'do_mass_delete'       : massNewsDelete(); break;
+		case 'do_mass_currdate'		:	$curdate = time() + ($config['date_adjust'] * 60);
+										massNewsModify( array('postdate' => $curdate),	'msgo_currdate',	'capprove');   break;
+		case 'do_mass_approve'      :	massNewsModify( array('approve'   => 1),	'msgo_approved',	'approve');    break;
+		case 'do_mass_mainpage'     :	massNewsModify( array('mainpage'  => 1),	'msgo_mainpaged',	'mainpage');   break;
+		case 'do_mass_unmainpage'   :	massNewsModify( array('mainpage'  => 0),	'msgo_unmainpage',	'unmainpage'); break;
+		case 'do_mass_forbidden'    :	massNewsModify( array('approve'   => 0),	'msgo_forbidden',	'forbidden');  break;
+		case 'do_mass_com_forbidden':	massNewsModify( array('allow_com' => 0),	'msgo_cforbidden',	'cforbidden'); break;
+		case 'do_mass_com_approve'  :	massNewsModify( array('allow_com' => 1),	'msgo_capproved',	'capprove');   break;
+		case 'do_mass_delete'       :	massNewsDelete(); break;
 	}
 
 	// Search filters
