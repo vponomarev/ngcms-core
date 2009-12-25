@@ -100,9 +100,11 @@ function insertext(open, close, field){
 	else if (msgfield.selectionStart || msgfield.selectionStart == "0"){
 		var startPos = msgfield.selectionStart;
 		var endPos = msgfield.selectionEnd;
+		var scrollPos = msgfield.scrollTop;		
 
 		msgfield.value = msgfield.value.substring(0, startPos) + open + msgfield.value.substring(startPos, endPos) + close + msgfield.value.substring(endPos, msgfield.value.length);
 		msgfield.selectionStart = msgfield.selectionEnd = endPos + open.length + close.length;
+		msgfield.scrollTop = scrollPos;
 		msgfield.focus();
 	}
 	// Fallback support for other browsers
