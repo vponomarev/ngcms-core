@@ -5,14 +5,14 @@
 <input type="hidden" name="massrepair" value="" />
 <input type="hidden" name="massoptimize" value="" />
 <input type="hidden" name="massdelete" value="" />
-<table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-<tr align="center">
+<table class="content" border="0" cellspacing="0" cellpadding="0" align="left">
+<tr align="left">
 <td width="15%" class="contentHead">{l_table}</td>
 <td width="15%" class="contentHead">{l_rows}</td>
 <td width="15%" class="contentHead">{l_data}</td>
 <td width="15%" class="contentHead">{l_overhead}</td>
 <td width="20%" class="contentHead" colspan="3">{l_action}</td>
-<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form)" /></td>
+<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form, 'tables')" /></td>
 </tr>
 {entries}
 <tr>
@@ -46,7 +46,7 @@
 <input type="hidden" name="delbackup" value="" />
 <input type="hidden" name="massdelbackup" value="" />
 <input type="hidden" name="restore" value="" />
-<table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
+<table class="content" border="0" cellspacing="0" cellpadding="0" align="left">
 <tr align="right">
 <td width="100%" colspan="8" class="contentEdit">
 {restore} <input class="button" type="submit" value="{l_restore}" onclick="document.forms['backups'].restore.value = 'true';" />&nbsp;

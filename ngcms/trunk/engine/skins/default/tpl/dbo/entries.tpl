@@ -1,4 +1,4 @@
-<tr align="center">
+<tr align="left">
 <td class=contentEntry1>{table}</td>
 <td class=contentEntry1>{rows}</td>
 <td class=contentEntry1>{data}</td>
