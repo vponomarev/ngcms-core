@@ -209,7 +209,7 @@ function InsertSmilies($insert_location, $break_location = false, $area = false)
 			$smile = trim($smile);
 
 			$tvars['vars'] = array(
-				'area'		=>	$area,
+				'area'		=>	$area?$area:"''",
 				'smile'		=>	$smile
 			);
 
@@ -217,7 +217,7 @@ function InsertSmilies($insert_location, $break_location = false, $area = false)
 			$tpl -> vars('smilies', $tvars);
 			$output .= $tpl -> show('smilies');
 
-			if ($i%$break_location == "0" && $break_location) {
+			if (($break_location>0) && (! $i % $break_location)) {
 				$output .= "<br />";
 			} else {
 				$output .= "&nbsp;";

@@ -1,5 +1,8 @@
-
 <script type="text/javascript">
+//
+// Global variable: ID of current active input area
+[edit.split]var currentInputAreaID = 'content.short';[/edit.split][edit.nosplit]var currentInputAreaID = 'content';[/edit.nosplit]
+
 function ChangeOption(optn) {
 	document.getElementById('maincontent').style.display = (optn == 'maincontent')?"block":"none";
 	document.getElementById('additional').style.display  = (optn == 'additional')?"block":"none";
@@ -21,6 +24,18 @@ function preview(){
  form.mod.value = "addnews";
  form.target = "_self";
  return true;
+}
+
+function changeActive(name) {
+ if (name == 'full') {
+	document.getElementById('container.content.full').className  = 'contentActive';
+	document.getElementById('container.content.short').className = 'contentInactive';
+	currentInputAreaID = 'content.full';
+ } else {
+	document.getElementById('container.content.short').className = 'contentActive';
+	document.getElementById('container.content.full').className  = 'contentInactive';
+	currentInputAreaID = 'content.short';
+ }
 }
 </script>
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
@@ -54,8 +69,15 @@ function preview(){
   </tr>
   <tr>
    <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
-   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" id="content" rows="16" tabindex="2"></textarea></td>
-  </tr>
+[edit.split]
+    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" name="content_short" id="content.short" rows="10" tabindex="2"></textarea></div>
+    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" name="content_full" id="content.full" rows="10" tabindex="2"></textarea></div>
+[/edit.split]
+[edit.nosplit]
+    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="content" id="content" rows="10" tabindex="2"></textarea></div>
+[/edit.nosplit]
+
+   </tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
    <td>{l_alt_name}:</td>
