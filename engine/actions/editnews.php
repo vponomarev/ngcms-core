@@ -687,6 +687,16 @@ if ($action == "editnews") {
 	// Users with status >= 3 can see only their own news
 	$fAuthorId = 0;
 	if ($userROW['status'] >= 3)	{ $fAuthorId = intval($userROW['id']); }
+	else {
+		// But another's can set AuthorID manually for filtering (callback from users list)
+		if ($_REQUEST['aid']) {
+			// Try to fetch userName
+			if ($urow = $mysql->record("select id, name from ".uprefix."_users where id = ".db_squote($_REQUEST['aid']))) {
+				$fAuthorId = $urow['id'];
+				$fAuthorName = $urow['name'];
+			}
+		}
+	}
 
 	// Set default value for `Records Per Page` parameter
 	if (($fRPP < 2)||($fRPP > 2000))

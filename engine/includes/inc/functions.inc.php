@@ -926,7 +926,7 @@ function GetCategories($catid, $plain = false) {
 //
 // New category menu generator
 function generateCategoryMenu(){
-	global $mysql, $catz, $tpl, $config;
+	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS;
 
 	$result = '';
 	$tpl -> template('categories', tpl_site);
@@ -934,7 +934,7 @@ function generateCategoryMenu(){
 		if (!substr($v['flags'],0,1)) continue;
 
 		$tvars['vars'] = array(
-			'if_active'	=>	(category && category == $v['alt'])?'active_cat':'',
+			'if_active'	=>	(isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id']))?'active_cat':'',
 			'link'		=>	($v['alt_url'] == '')?generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])):$v['alt_url'],
 			'mark'		=>	str_repeat('&#8212;', $v['poslevel']),
 			'cat'		=>	$v['name'],
