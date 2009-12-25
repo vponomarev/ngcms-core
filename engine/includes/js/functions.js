@@ -61,17 +61,17 @@ else {item.style.display = "none"; }
 }else{ item.visibility = "show"; }
 }
 
-function check_uncheck_all(area) {
-var frm = area;
-for (var i=0;i<frm.elements.length;i++) {
-var elmnt = frm.elements[i];
-if (elmnt.type=="checkbox") {
-if(frm.master_box.checked == true){ elmnt.checked=true; }
-else{ elmnt.checked=false; }
-}
-}
-if(frm.master_box.checked == true){ frm.master_box.checked = true; }
-else{ frm.master_box.checked = false; }
+function check_uncheck_all(area, prefix) {
+	var frm = area;
+	var p = (prefix)?prefix:'';
+	for (var i=0; i<frm.elements.length; i++) {
+		var e = frm.elements[i];
+		if ((e.type == "checkbox") && (e.name != "master_box") && 
+			((p.length == 0)||(e.name.substr(0,p.length) == p))
+		) {
+			e.checked = frm.master_box.checked ? true : false;
+		}
+	}
 }
 
 function showpreview(image,name){
