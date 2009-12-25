@@ -33,12 +33,12 @@ function add_comment(){
 	cajax.onComplete = function() { 
 		if (cajax.responseStatus[0] == 200) {
 			try {
-				resRX = eval('('+cajax.response+')');
+				var resRX = eval('('+cajax.response+')');
 				var nc = document.getElementById('new_comments');
 				nc.innerHTML += resRX['data'];				
 				if (resRX['status']) { 
 					// Added successfully!
-					form.content.value = '';	
+					form.content.value = '';
 				}
   			} catch (err) { 
 				alert('Error parsing JSON output. Result: '+cajax.response); 
