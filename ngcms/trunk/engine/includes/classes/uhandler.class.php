@@ -466,7 +466,7 @@ class urlHandler {
 
 				foreach ($scan as $k => $v)
 					if (isset($h['rstyle']['regexMap'][$k]))
-						$result[$h['rstyle']['regexMap'][$k]] = $v;
+						$result[$h['rstyle']['regexMap'][$k]] = urldecode($v);
 
 				if ($debug)
 					print "Find match with REGex <b><font color=blue>".$h['rstyle']['regex']."</font></b>, params: <pre>".var_export($result, true)."</pre><br>\n";

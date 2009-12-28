@@ -783,7 +783,7 @@ function generateLink($pluginName, $handlerName, $params = array(), $xparams = a
 	$url = array();
 	foreach ($hRec['rstyle']['genrMAP'] as $rec) {
 		if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
-			$url[] = $rec[0]?$params[$rec[1]]:$rec[1];
+			$url[] = $rec[0]?urlencode($params[$rec[1]]):$rec[1];
 		}
 	}
 
