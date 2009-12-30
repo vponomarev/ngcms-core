@@ -266,14 +266,14 @@ function manage_showlist($type) {
 		);
 
 		if ($type == 'image') {
-			$tvars['vars']['insert_file']    = '<a href="javascript:insertimage(\''.$html_file.'\', \''.$_REQUEST['area'].'\')" title="Insert file"><img src="'.skins_url.'/images/insert_image.gif" border="0"/></a>';
-			$tvars['vars']['insert_thumb']   = $row['preview'] ? '<a href="javascript:insertimage(\''.$html_thumb.'\', \''.$_REQUEST['area'].'\')"><img src="'.skins_url.'/images/insert_thumb.gif" border="0"/></a>' : '';
-			$tvars['vars']['insert_preview'] = $row['preview'] ? '<a href="javascript:insertimage(\''.$html_preview.'\', \''.$_REQUEST['area'].'\')"><img src="'.skins_url.'/images/insert_preview.gif" border="0"/></a>' : '';
+			$tvars['vars']['insert_file']    = '<a href="javascript:insertimage(\''.$html_file.'\', \''.$_REQUEST['ifield'].'\')" title="Insert file"><img src="'.skins_url.'/images/insert_image.gif" border="0"/></a>';
+			$tvars['vars']['insert_thumb']   = $row['preview'] ? '<a href="javascript:insertimage(\''.$html_thumb.'\', \''.$_REQUEST['ifield'].'\')"><img src="'.skins_url.'/images/insert_thumb.gif" border="0"/></a>' : '';
+			$tvars['vars']['insert_preview'] = $row['preview'] ? '<a href="javascript:insertimage(\''.$html_preview.'\', \''.$_REQUEST['ifield'].'\')"><img src="'.skins_url.'/images/insert_preview.gif" border="0"/></a>' : '';
 
 			$tvars['vars']['view_file']      = '<a target="_blank" href="'.$fileurl.'"><img src="'.skins_url.'/images/insert_image.gif" border="0"/></a>';
 			$tvars['vars']['view_thumb']     = $row['preview'] ? '<a target="_blank" href="'.$thumburl.'"><img src="'.skins_url.'/images/insert_thumb.gif" border="0"/></a>' : '';
 		} else {
-			$tvars['vars']['insert_file']    = '<a href="javascript:insertimage(\''.$html_file.'\', \''.$_REQUEST['area'].'\')">'.$lang['insert'].'</a>';
+			$tvars['vars']['insert_file']    = '<a href="javascript:insertimage(\''.$html_file.'\', \''.$_REQUEST['ifield'].'\')">'.$lang['insert'].'</a>';
 
 		}
 

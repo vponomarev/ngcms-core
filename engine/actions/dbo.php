@@ -244,15 +244,11 @@ if ($_REQUEST['massbackup']) {
 
 if ($_REQUEST['massdelbackup']) {
 	$backup_dir = opendir(root.'backups');
-	readdir($backup_dir);
-	readdir($backup_dir);
-	readdir($backup_dir);
-	$i = '0';
-
 	while($bf = readdir($backup_dir)) {
-		$bf_arr[] = $bf;
-		@unlink (root.'backups/'.$bf_arr[$i]);
-		$i++;
+		if (($bf == '.')||($bf == '..'))
+			continue;
+
+		@unlink (root.'backups/'.$bf);
 	}
 	msg(array("text" => $lang['msgo_massdelb']));
 }

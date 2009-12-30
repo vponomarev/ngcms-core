@@ -28,8 +28,8 @@
 <a onclick="insertext('[img]','[/img]', {area})" title='{l_tags.imagelink}'><img src="{skins_url}/tags/imagelink.gif" width="16" height="16" alt="{l_tags.imagelink}" /></a>
 <img src="{skins_url}/tags/sep.gif" width="1" height="16" alt="" />
 
-<a onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=files&amp;area={area}', '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" title='{l_tags.file}'><img src="{skins_url}/tags/file.gif" width="16" height="16" alt="{l_tags.file}" /></a>
-<a onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=images&amp;area={area}', '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" title='{l_tags.image}'><img src="{skins_url}/tags/image.gif" width="16" height="16" alt="{l_tags.image}" /></a>
+<a onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=files&amp;ifield='+{area}, '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" title='{l_tags.file}'><img src="{skins_url}/tags/file.gif" width="16" height="16" alt="{l_tags.file}" /></a>
+<a onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=images&amp;ifield='+{area}, '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" title='{l_tags.image}'><img src="{skins_url}/tags/image.gif" width="16" height="16" alt="{l_tags.image}" /></a>
 <img src="{skins_url}/tags/sep.gif" width="1" height="16" alt="" />
 
 <a onclick="insertext('<!--nextpage-->','', {area})" title='{l_tags.nextpage}'><img src="{skins_url}/tags/nextpage.gif" width="16" height="16" alt="{l_tags.nextpage}" /></a>
