@@ -130,8 +130,8 @@ function insertimage(text, area) {
 	 var xarea = win.document.forms['DATA_tmp_storage'].area.value;
 	 if (xarea != '') area = xarea;
 	} catch(err) {;}
-	var control = (area == "short") ? form.contentshort : ( (area == "full")? form.contentfull : form.content );
-
+	var control = win.document.getElementById(area);
+	                  
 	control.focus();
 
 	// IE
