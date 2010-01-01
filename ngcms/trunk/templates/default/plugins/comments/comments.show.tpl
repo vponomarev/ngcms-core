@@ -18,7 +18,7 @@
 			<tr>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_49.gif" width="7" height="24" /></td>
-				<td style="background-image:url('{tpl_url}/images/2z_50.gif');" width="100%">{ip} ({date}) [quote]<a href="" onclick="quote('{author}'); return false;" title="{l_quote}"> {l_quote}</a>[/quote]</td>
+				<td style="background-image:url('{tpl_url}/images/2z_50.gif');" width="100%">[if-have-perm]ip: {ip} [/if-have-perm]({date}) [quote]<a href="" onclick="quote('{author}'); return false;" title="{l_quote}"> {l_quote}</a>[/quote]</td>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_51.gif" width="7" height="24" /></td>
 			</tr>
@@ -62,7 +62,7 @@
 			<tr>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_63.gif" width="7" height="19" /></td>
-				<td class="mw_links" style="background-image:url('{tpl_url}/images/2z_64.gif');" width="100%" align="right">[edit-com]{l_addanswer}[/edit-com] [del-com]{l_comdelete}[/del-com]&nbsp;</td>
+				<td class="mw_links" style="background-image:url('{tpl_url}/images/2z_64.gif');" width="100%" align="right">[if-have-perm][edit-com]{l_addanswer}[/edit-com] [del-com]{l_comdelete}[/del-com][/if-have-perm]&nbsp;</td>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_65.gif" width="7" height="19" /></td>
 			</tr>

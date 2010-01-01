@@ -1,7 +1,7 @@
 <html>
-<header>
+<head>
 <title>{l_404.title}</title>
-</header>
+</head>
 <body>
 {l_404.description}
 <!--
