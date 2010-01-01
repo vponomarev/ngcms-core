@@ -8,9 +8,9 @@ function ChangeOption(optn) {
 	document.getElementById('maincontent').style.display 	= (optn == 'maincontent')?"block":"none";
 	document.getElementById('additional').style.display 	= (optn == 'additional')?"block":"none";
 	document.getElementById('attaches').style.display		= (optn == 'attaches')?"block":"none";
-[comments]	document.getElementById('comments').style.display	= (optn == 'comments')?"block":"none";
+[isplugin comments]	document.getElementById('comments').style.display	= (optn == 'comments')?"block":"none";
 	document.getElementById('showEditNews').style.display	= (optn == 'comments')?"none":"block";
-	document.getElementById('rightBar').style.display	= (optn == 'comments')?"none":"";[/comments]
+	document.getElementById('rightBar').style.display	= (optn == 'comments')?"none":"";[/isplugin]
 }
 function preview(){
  var form = document.getElementById("form");
@@ -58,7 +58,7 @@ function changeActive(name) {
 <input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_bar.maincontent}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_bar.additional}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{l_bar.attaches} {attach_count}" class="navbutton" />
-[comments]<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_bar.comments} ({comnum})" class="navbutton" />[/comments]
+[isplugin comments]<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{l_bar.comments} ({comnum})" class="navbutton" />[/isplugin]
 </td>
 </tr>
 <tr><td>
