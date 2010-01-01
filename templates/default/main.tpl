@@ -165,8 +165,8 @@
 <td valign="top" width="173">
 <table border="0" width="200" cellspacing="0" cellpadding="0">
 
-<!-- CALENDAR start -->
 [isplugin calendar]
+<!-- CALENDAR start -->
 <tr><td>
 {plugin_calendar}
 </td></tr>
@@ -174,20 +174,26 @@
 <!-- CALENDAR end -->
 [/isplugin]
 
+[isplugin archive]
 <!-- Archive -->
 <tr><td>
 {plugin_archive}
 </td></tr>
+[/isplugin]
 
+[isplugin jchat]
 <!-- JChat -->
 <tr><td>
 {plugin_jchat}
 </td></tr>
+[/isplugin]
 
-<!-- JChat -->
+[isplugin lastcomments]
+<!-- LastComments -->
 <tr><td>
 {plugin_lastnews}
 </td></tr>
+[/isplugin]
 
 
 <!-- inc begin -->
@@ -267,8 +273,5 @@
 	</tr>
 </table>
 [/sitelock]
-[debug]
-{debug_queries}<br/>{debug_profiler}
-[/debug]
 </body>
 </html>
