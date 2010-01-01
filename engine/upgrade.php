@@ -43,7 +43,7 @@ echo $skin_header;
 //
 // Create required fields in DB
 //
-$query_list = array(
+$query_list_090_091 = array(
 	'alter table '.prefix.'_category add column flags char(10) default \'\' after alt',
 	'update '.prefix.'_category set flags=cat_show',
 	'alter table '.prefix.'_category drop column cat_show',
@@ -62,6 +62,13 @@ $query_list = array(
 	'insert into '.prefix.'_config (name, value) values (\'database.engine.version\', \'0.9.1 beta.1\')',
 );
 
+$query_list_091_091fp1 = array(
+	'alter table '.prefix.'_ipban modify column `addr` char(32)',
+	'alter table '.prefix.'_ipban modify column addr_start bigint default 0',
+	'alter table '.prefix.'_ipban modify column addr_stop bigint default 0',
+	'create table if not exists '.prefix.'_config (name char(60), value char(100), primary key(name))',
+	'insert into '.prefix.'_config (name, value) values (\'database.engine.version\', \'0.9.1.fp01\') on duplicate key update value=\'0.9.1.fp01\'',
+);
 
 
 // Load plugin list
@@ -69,14 +76,14 @@ $extras	=	get_extras_list();
 // Load lang files
 $lang	=	LoadLang('extra-config', 'admin');
 
-if ($_REQUEST['db_update']) {
+if ($_REQUEST['update090_091']) {
 	// Выполнение SQL запросов на обновление
 	print '<br/>Выполнение SQL запросов:<br/>';
 	print '<table width="80%">';
 	print '<tr><td><b>Команда</b></td><td><b>Результат</b></td></tr>';
 
 	$flag_err = false;
-	foreach ($query_list as $sql) {
+	foreach ($query_list_090_091 as $sql) {
 		$res = mysql_query($sql);
 		print '<tr><td>'.$sql.'</td><td>'.($res?'OK':'<font color="red"><b>FAIL</b></font>').'</td></tr>'."\n";
 		if (!$res) {
@@ -174,8 +181,34 @@ if ($_REQUEST['db_update']) {
 	echo "DONE <br><br>\n<b><u>Внимание!</u></b><br/>После завершения обновления Вам необходимо зайти в админ-панель и активировать следующие плагины: comments, uprofile.";
 }
 
+if ($_REQUEST['update091_091fp01']) {
+	// Выполнение SQL запросов на обновление
+	print '<br/>Выполнение SQL запросов:<br/>';
+	print '<table width="80%">';
+	print '<tr><td><b>Команда</b></td><td><b>Результат</b></td></tr>';
 
-print "Все операции проведены.<br/><a href='?'>назад</a>";
+	$flag_err = false;
+	foreach ($query_list_091_091fp1 as $sql) {
+		$res = mysql_query($sql);
+		print '<tr><td>'.$sql.'</td><td>'.($res?'OK':'<font color="red"><b>FAIL</b></font>').'</td></tr>'."\n";
+		if (!$res) {
+			$flag_err = true;
+			break;
+		}
+	}
+	print "</table><br/>\n\n";
+
+	if ($flag_err) {
+		//
+		print "<font color='red'><b>Во время обновления БД произошла ошибка!<br/>Обновление в автоматическом режиме невозможно, Вам необходимо обновить БД вручную.</b></font>";
+		exit;
+	}
+
+	echo "OK<br /><br />\n";
+}
+
+
+print "Все операции проведены.<br/><a href='?'>назад</a><br/><br/><br/>После окончания обновления вам <font color=\"red\"><u>необходимо</u></font> удалить файл <b>upgrademe.txt</b> из каталога engine/";
 
 function questionare_0971() {
  print "
@@ -189,10 +222,17 @@ function questionare_0971() {
  резервную копию БД</font><br/><br/>
  <table width='80%' border='1'>
  <tr>
-  <td>Выполнить обновление структуры БД<br/>
+  <td>Выполнить обновление структуры БД 0.9.0 => 0.9.1<br/>
   <small>Данную операцию требуется произвести единожды при обновлении со старых версий.<br/>
   Для апгрейда с версии 0.9.1 beta1 - не требуется</td>
-  <td width='10%'><input type=checkbox name='db_update' value='1' /></td></tr>
+  <td width='10%'><input type=checkbox name='update090_091' value='1' /></td>
+ </tr>
+ <tr>
+  <td>Выполнить обновление структуры БД 0.9.1 => 0.9.1 FixPack #01<br/>
+  <small>Данную операцию требуется произвести единожды при установке FixPack #01</td>
+  <td width='10%'><input type=checkbox name='update091_091fp01' value='1' /></td>
+ </tr>
+
  </table><br/>
  <input type='submit' value='Начать преобразование!'>
  </form>
