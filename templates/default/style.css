@@ -671,6 +671,6 @@ border : 1px solid #eeeeef;
 	display: none;
 }	
 
-#tags A:hover {
-cursor: pointer;
-}
+.timeProfiler TD {
+	background-color: #E8E8E8;
+}	

@@ -148,6 +148,12 @@
 
 <tr><td>&nbsp;</td></tr>
 
+<!-- LASTCOMMENTS start -->
+<tr><td>
+{plugin_lastcomments}
+</td></tr>
+<!-- LASTCOMMENTS end -->
+
 <tr><td>&nbsp;</td></tr>
 <tr><td>&nbsp;</td></tr>
 
@@ -172,6 +178,17 @@
 <tr><td>
 {plugin_archive}
 </td></tr>
+
+<!-- JChat -->
+<tr><td>
+{plugin_jchat}
+</td></tr>
+
+<!-- JChat -->
+<tr><td>
+{plugin_lastnews}
+</td></tr>
+
 
 <!-- inc begin -->
 [isplugin voting]
@@ -250,5 +267,8 @@
 	</tr>
 </table>
 [/sitelock]
+[debug]
+{debug_queries}<br/>{debug_profiler}
+[/debug]
 </body>
 </html>
