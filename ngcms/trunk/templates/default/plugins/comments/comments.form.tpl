@@ -94,7 +94,7 @@ function add_comment(){
 </tr>
 [captcha]
 <tr>
-<td style="padding-left: 15px;"><img id="img_captcha" onclick="reload_captcha();" src="{captcha_url}/captcha.php?rand={rand}" alt="captcha" /></td>
+<td style="padding-left: 15px;"><img id="img_captcha" onclick="reload_captcha();" src="{captcha_url}?rand={rand}" alt="captcha" /></td>
 <td style="padding: 5px;"><input class="important" type="text" name="vcode" maxlength="5" size="30" /></td>
 </tr>
 [/captcha]
