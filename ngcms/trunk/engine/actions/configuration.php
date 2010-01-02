@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: configuration.php
 // Description: Configuration managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -52,10 +52,10 @@ $tvars['vars'] = array(
 	'timestamp_active_now'					=>	LangDate($config['timestamp_active'], time()),
 	'timestamp_updated_now'					=>	LangDate($config['timestamp_updated'], time()),
 	'lock'							=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[lock]", $config['lock']),
-	'language_selection'			=>	MakeDropDown(ListFiles("lang", ".."), "save_con[default_lang]", $config['default_lang']),
-	'wm_image'						=>	MakeDropDown(ListFiles("trash", "gif"), "save_con[wm_image]", $config['wm_image']),
-	'captcha_font'					=>	MakeDropDown(ListFiles("trash", "ttf"), "save_con[captcha_font]", $config['captcha_font']),
-	'list_themes'					=>	MakeDropDown(ListFiles("../templates",".."), "save_con[theme]", $config['theme']),
+	'language_selection'			=>	MakeDropDown(ListFiles('lang', ''), "save_con[default_lang]", $config['default_lang']),
+	'wm_image'						=>	MakeDropDown(ListFiles('trash', 'gif'), "save_con[wm_image]", $config['wm_image']),
+	'captcha_font'					=>	MakeDropDown(ListFiles('trash', 'ttf'), "save_con[captcha_font]", $config['captcha_font']),
+	'list_themes'					=>	MakeDropDown(ListFiles('../templates',''), "save_con[theme]", $config['theme']),
 	'users_selfregister'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[users_selfregister]", $config['users_selfregister']),
 	'register_type'					=>	MakeDropDown(array("0"=>"$lang[register_extremly]", "1"=>"$lang[register_simple]", "2"=>"$lang[register_activation]", "3"=>"$lang[register_manual]"), "save_con[register_type]", $config['register_type']),
 	'blocks_for_reg'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[blocks_for_reg]", $config['blocks_for_reg']),

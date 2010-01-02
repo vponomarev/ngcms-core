@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: upgrade.php
 // Description: Upgrade NGCMS 0.9.0 => 0.9.1
 // Author: Vitaly Ponomarev

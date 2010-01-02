@@ -104,7 +104,7 @@ class tpl {
 
 		if ($vars['vars']) {
 			foreach ($vars['vars'] as $id => $var) {
-				if (eregi("\[", $id)) {
+				if (substr($id,0,1) == '[') {
 					$data = str_replace($id, $var, $data);
 				}
 				else {
