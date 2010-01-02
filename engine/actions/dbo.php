@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: dbo.php
 // Description: Database managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -301,7 +301,7 @@ if (!$action) {
 	$tvars['vars'] = array(
 		'php_self'	=>	$PHP_SELF,
 		'entries'	=>	$entries,
-		'restore'	=>	MakeDropDown(ListFiles(root."backups", "gz"), "filename", ''),
+		'restore'	=>	MakeDropDown(ListFiles(root.'backups', 'gz'), 'filename', ''),
 	);
 	$tpl -> vars('table', $tvars);
 	echo $tpl -> show('table');

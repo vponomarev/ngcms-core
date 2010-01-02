@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: static.php
 // Description: Manage static pages
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -176,7 +176,7 @@ function massStaticDelete() {
 function staticListTemplates($default = ''){
 	global $config;
 
-	$list = ListFiles(tpl_dir.$config['theme']."/static", "tpl");
+	$list = ListFiles(tpl_dir.$config['theme'].'/static', 'tpl');
 	$output = '<option value=""></option>';
 
 	foreach ($list as $fn) {

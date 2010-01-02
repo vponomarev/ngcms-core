@@ -45,6 +45,64 @@ function findPosY(obj) {
     }
     return curtop;
 }
+
+// DateEdit filter
+function filter_attach_DateEdit(id) {
+	var field = document.getElementById(id);
+	if (!field)
+		return false;
+	
+	field.value = 'DD.MM.YYYY';
+	
+	field.onfocus = function(event) {
+		var ev = event ? event : window.event;
+		var elem = ev.target;
+
+		if (elem.value == 'DD.MM.YYYY')
+			elem.value = '';
+		
+		return true;
+	}
+	
+	field.onkeyup = function(event) {
+		var ev = event ? event : window.event;
+		var keyCode = ev.keyCode;
+		var elem = ev.target;
+		var ev = elem.value;
+		
+
+		// Pass ENTER / ESCAPE / TAB keys
+		if ((keyCode == 13) || (keyCode == 27) || (keyCode == 9))
+			return true;
+
+		alert(elem.value+'; '+keyCode);
+			
+		// Block all keys except 0..9 and '.'
+		if ((((keyCode < 48) || (keyCode > 57))) && (keyCode != 190))
+			return false;
+		
+		// Divide entered data into parts
+		var cIndex = 0;
+		//var dd = ev.indexOf('.');
+		
+		// Now let's see what should we do
+		// 1. User pressed '.'
+		if (keyCode == 190) {
+		
+		
+		
+		}
+		
+		
+		
+		var s = '';
+		//for (var i in ev) { s = s + 'i: '+ev[i]+'\n'; }
+		//alert('KEY: '+keyCode);
+		return true;
+	}
+	return true;
+}
+
 -->
 </script>
 
@@ -66,7 +124,7 @@ function findPosY(obj) {
 <td><input name="sl" type="text" size="40" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>заголовок</option><option value="1" {st.selected1}>текст</option></select></td>
 <td rowspan="2" width="3px" style="background-image: url({skins_url}/images/delim.png);  background-repeat: repeat-y;">&nbsp;</td>
 <td valign="top">Дата с:</td>
-<td><input type="text" name="dr1" value="{dr1}" size="10"/> по <input type="text" name="dr2" value="{dr2}" size="10"/></td>
+<td><input type="text" id="dr1" name="dr1" value="{dr1}" size="10"/> по <input type="text" name="dr2" value="{dr2}" size="10"/></td>
 <td rowspan="3" width="5" style="background-image: url({skins_url}/images/delim.png); background-repeat: repeat-y;">&nbsp;</td>
 <td>Статус:</td>
 <td valign="top"><select name="status" size="1"><option value="">{l_smode_all}</option>{statuslist}</select> &nbsp;</td>
@@ -182,6 +240,7 @@ if (document.body.attachEvent) {
 	systemInit();
 }
 
+filter_attach_DateEdit('dr1');
 -->
 </script>
 

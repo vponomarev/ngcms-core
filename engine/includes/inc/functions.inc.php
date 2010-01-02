@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: functions.php
 // Description: Common system functions
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -643,22 +643,31 @@ function ChangeDate($time = 0, $nodiv = 0) {
 }
 
 
+//
+// Return a list of files
 function ListFiles($path, $ext) {
 
-	$file_list = array();
+	$list = array();
+	$extlen = strlen($ext);
 
 	if (!$handle = opendir("$path")) {
 		echo "<p>Can not open directory $path</p> ";
 	}
 
-	while (false !== ($file = readdir($handle))) {
-		if(eregi(".$ext", $file)) {
-			$file_arr = explode(".", $file);
-			$file_list["$file_arr[0]"]= $file_arr[0];
+	while (($file = readdir($handle)) !== false) {
+		// Skip reserved words
+		if (($file == '.') || ($file == '..')) continue;
+
+		//print "ListFiles[".$ext."][".$file."]($extlen,".substr($file, -$extlen-1).")<br/>\n";
+		if (!$extlen) {
+			$list[$file] = $file;
+		} else if (substr($file, -$extlen-1) == ('.'.$ext)) {
+			$fn = substr($file, 0, 0-$extlen-1);
+			$list[$fn] = $fn;
 		}
 	}
 	closedir($handle);
-	return $file_list;
+	return $list;
 }
 
 
