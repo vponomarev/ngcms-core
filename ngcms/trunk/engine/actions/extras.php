@@ -18,15 +18,6 @@ if (!defined('NGCMS')) die ('HAL');
 @include_once root.'includes/inc/httpget.inc.php';
 
 
-function check_uri($uri) {
-	if (ereg("@",$uri)) {
-		$uri="mailto:".$uri;
-	}
-	return $uri;
-}
-
-
-
 // ==============================================================
 //  Main module code
 // ==============================================================
@@ -79,7 +70,7 @@ foreach($extras as $id => $extra) {
 	$tvars['vars'] = array(
 		'version'		=>	$extra['version'],
 		'description'	=>	$extra['description'],
-		'author_url'	=>	($extra['author_uri'])?'<a href="'.check_uri($extra['author_uri']).'">'.$extra['author']."</a>":$extra['author'],
+		'author_url'	=>	($extra['author_uri'])?'<a href="'.((strpos($extras['author_uri'], '@') !==FALSE)?'mailto:':'').$extra['author_uri'].'">'.$extra['author']."</a>":$extra['author'],
 		'author'		=>	$extra['author'],
 		'id'			=>	$extra['id'],
 		'style'			=>	getPluginStatusActive($id)?'pluginEntryActive':'pluginEntryInactive',

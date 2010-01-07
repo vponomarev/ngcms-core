@@ -154,7 +154,7 @@ function massStaticModify($setValue, $langParam, $tag ='') {
 // Mass static pages delete
 //
 function massStaticDelete() {
-	global $mysql, $lang;
+	global $mysql, $lang, $PFILTERS;
 
 	$selected = $_REQUEST['selected'];
 
@@ -164,7 +164,12 @@ function massStaticDelete() {
 	}
 
 	foreach ($selected as $id) {
-		$mysql->query("delete from ".prefix."_static where id=".db_squote($id));
+		if ($srow = $mysql->record("select * from ".prefix."_static where id = ".db_squote($id))) {
+			if (is_array($PFILTERS['static']))
+				foreach ($PFILTERS['static'] as $k => $v) { $v->deleteStatic($srow['id'], $srow); }
+			$mysql->query("delete from ".prefix."_static where id=".db_squote($id));
+		}
+
 	}
 	msg(array("text" => $lang['msgo_deleted']));
 }
@@ -233,6 +238,10 @@ function addStaticForm(){
 
 	exec_acts('addstatic');
 
+	if (is_array($PFILTERS['static']))
+		foreach ($PFILTERS['static'] as $k => $v) { $v->addStaticForm($tvars); }
+
+
 	$tpl -> template('add', tpl_actions.$mod);
 	$tpl -> vars('add', $tvars);
 	echo $tpl -> show('add');
@@ -243,7 +252,7 @@ function addStaticForm(){
 // Add static page
 //
 function addStatic(){
-	global $mysql, $parse, $PFILTER, $lang, $config, $userROW;
+	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
 
 	$title = $_REQUEST['title'];
 	$content = $_REQUEST['content'];
@@ -397,6 +406,9 @@ function editStaticForm(){
 	$tvars['vars']['disable_flag_html']	= $flock?'disabled':'';
 
 	exec_acts('editstatic');
+
+	if (is_array($PFILTERS['static']))
+		foreach ($PFILTERS['static'] as $k => $v) { $v->editStaticForm($row['id'], $SQL, $tvars); }
 
 	$tpl -> template('edit', tpl_actions.$mod);
 	$tpl -> vars('edit', $tvars);
