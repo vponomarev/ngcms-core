@@ -188,7 +188,7 @@
 </td></tr>
 [/isplugin]
 
-[isplugin lastcomments]
+[isplugin lastnews]
 <!-- LastComments -->
 <tr><td>
 {plugin_lastnews}
