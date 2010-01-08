@@ -408,7 +408,7 @@ function editStaticForm(){
 	exec_acts('editstatic');
 
 	if (is_array($PFILTERS['static']))
-		foreach ($PFILTERS['static'] as $k => $v) { $v->editStaticForm($row['id'], $SQL, $tvars); }
+		foreach ($PFILTERS['static'] as $k => $v) { $v->editStaticForm($row['id'], $row, $tvars); }
 
 	$tpl -> template('edit', tpl_actions.$mod);
 	$tpl -> vars('edit', $tvars);
@@ -486,7 +486,7 @@ function editStatic(){
 	}
 
 	if (is_array($PFILTERS['static']))
-		foreach ($PFILTERS['static'] as $k => $v) { $v->editStatic($tvars, $SQL); }
+		foreach ($PFILTERS['static'] as $k => $v) { $v->editStatic($row['id'], $row, $SQL, $tvars); }
 
 	$SQLparams = array();
 	foreach ($SQL as $k => $v) { $SQLparams[] = $k.' = '.db_squote($v); }
