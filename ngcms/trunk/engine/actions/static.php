@@ -420,7 +420,7 @@ function editStaticForm(){
 // Edit static page
 //
 function editStatic(){
-	global $mysql, $parse, $PFILTER, $lang, $config, $userROW;
+	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
 
 	$id			=	intval($_REQUEST['id']);
 	$title		=	$_REQUEST['title'];
