@@ -52,59 +52,60 @@ function filter_attach_DateEdit(id) {
 	if (!field)
 		return false;
 	
-	field.value = 'DD.MM.YYYY';
+	if (field.value == '')
+		field.value = 'DD.MM.YYYY';
 	
 	field.onfocus = function(event) {
 		var ev = event ? event : window.event;
-		var elem = ev.target;
+		var elem = ev.target ? ev.target : ev.srcElement;
 
 		if (elem.value == 'DD.MM.YYYY')
 			elem.value = '';
-		
+
 		return true;
 	}
-	
-	field.onkeyup = function(event) {
-		var ev = event ? event : window.event;
-		var keyCode = ev.keyCode;
-		var elem = ev.target;
-		var ev = elem.value;
-		
 
-		// Pass ENTER / ESCAPE / TAB keys
-		if ((keyCode == 13) || (keyCode == 27) || (keyCode == 9))
+	
+	field.onkeypress = function(event) {
+		var ev = event ? event : window.event;
+		var keyCode = ev.keyCode ? ev.keyCode : ev.charCode;
+		var elem = ev.target ? ev.target : ev.srcElement;
+		var elv = elem.value;
+
+		isMozilla = false;
+		isIE = false;
+		if (navigator.appName == 'Netscape') { isMozilla = true; }
+		else if (navigator.appName == 'Microsoft Internet Explorer') { isIE = true; }
+		else { alert('Unknown navigator: `'+navigator.appName+'`'); }
+		
+		//document.getElementById('debugWin').innerHTML = 'keyPress('+ev.keyCode+':'+ev.charCode+')['+(ev.shiftKey?'S':'.')+(ev.ctrlKey?'C':'.')+(ev.altKey?'A':'.')+']<br/>' + document.getElementById('debugWin').innerHTML;
+		
+		// FF - onKeyPress captures functional keys. Skip anything with charCode = 0
+		if (isMozilla && !ev.charCode)
+			return true;
+		
+		
+		// Don't block CTRL / ALT keys
+		if (ev.altKey || ev.ctrlKey || !keyCode)
 			return true;
 
-		alert(elem.value+'; '+keyCode);
-			
-		// Block all keys except 0..9 and '.'
-		if ((((keyCode < 48) || (keyCode > 57))) && (keyCode != 190))
-			return false;
+		// Allow to input only digits [0..9] and dot [.]
+		if (((keyCode >= 48) && (keyCode <= 57)) || (keyCode == 46))
+			return true;
 		
-		// Divide entered data into parts
-		var cIndex = 0;
-		//var dd = ev.indexOf('.');
-		
-		// Now let's see what should we do
-		// 1. User pressed '.'
-		if (keyCode == 190) {
-		
-		
-		
-		}
-		
-		
-		
-		var s = '';
-		//for (var i in ev) { s = s + 'i: '+ev[i]+'\n'; }
-		//alert('KEY: '+keyCode);
-		return true;
+		return false;
 	}
+
 	return true;
 }
 
 -->
 </script>
+
+<!-- DEBUG WINDOW -->
+<!--
+<div id="debugWin" style="overflow: auto; position: absolute; top: 160px; left: 230px; width: 400px; height: 400px; background: white; 4px double black; padding: 2px; margin: 2px;">DEBUG WINDOW</div>
+-->
 
 <!-- Hidden SUGGEST div -->
 <div id="suggestWindow" style="position:absolute; top: 0px; left: 0px;">
@@ -124,7 +125,7 @@ function filter_attach_DateEdit(id) {
 <td><input name="sl" type="text" size="40" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>заголовок</option><option value="1" {st.selected1}>текст</option></select></td>
 <td rowspan="2" width="3px" style="background-image: url({skins_url}/images/delim.png);  background-repeat: repeat-y;">&nbsp;</td>
 <td valign="top">Дата с:</td>
-<td><input type="text" id="dr1" name="dr1" value="{dr1}" size="10"/> по <input type="text" name="dr2" value="{dr2}" size="10"/></td>
+<td><input type="text" id="dr1" name="dr1" value="{dr1}" size="11"/> по <input type="text" id="dr2" name="dr2" value="{dr2}" size="11"/></td>
 <td rowspan="3" width="5" style="background-image: url({skins_url}/images/delim.png); background-repeat: repeat-y;">&nbsp;</td>
 <td>Статус:</td>
 <td valign="top"><select name="status" size="1"><option value="">{l_smode_all}</option>{statuslist}</select> &nbsp;</td>
@@ -241,6 +242,7 @@ if (document.body.attachEvent) {
 }
 
 filter_attach_DateEdit('dr1');
+filter_attach_DateEdit('dr2');
 -->
 </script>
 
