@@ -31,14 +31,14 @@ function userEditForm(){
 	//	Îáğàáàòûâàåì íåîáõîäèìûå ïåğåìåííûå äëÿ øàáëîíà
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
-		'name'			=>	$row['name'],
+		'name'			=>	secure_html($row['name']),
 		'regdate'		=>	LangDate("l, j Q Y - H:i", $row['reg']),
 		'com'			=>	$row['com'],
 		'news'			=>	$row['news'],
 		'status'		=>	$status,
-		'mail'			=>	$row['mail'],
-		'site'			=>	$row['site'],
-		'icq'			=>	$row['icq'],
+		'mail'			=>	secure_html($row['mail']),
+		'site'			=>	secure_html($row['site']),
+		'icq'			=>	secure_html($row['icq']),
 		'where_from'	=>	secure_html($row['where_from']),
 		'info'			=>	secure_html($row['info']),
 		'id'			=>	$id,
