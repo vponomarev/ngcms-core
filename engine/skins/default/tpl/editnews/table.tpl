@@ -74,15 +74,28 @@ function filter_attach_DateEdit(id) {
 
 		isMozilla = false;
 		isIE = false;
+		isOpera = false;
 		if (navigator.appName == 'Netscape') { isMozilla = true; }
 		else if (navigator.appName == 'Microsoft Internet Explorer') { isIE = true; }
-		else { alert('Unknown navigator: `'+navigator.appName+'`'); }
+		else if (navigator.appName == 'Opera') { isOpera = true; }
+		else { /* alert('Unknown navigator: `'+navigator.appName+'`'); */ }
 		
 		//document.getElementById('debugWin').innerHTML = 'keyPress('+ev.keyCode+':'+ev.charCode+')['+(ev.shiftKey?'S':'.')+(ev.ctrlKey?'C':'.')+(ev.altKey?'A':'.')+']<br/>' + document.getElementById('debugWin').innerHTML;
 		
 		// FF - onKeyPress captures functional keys. Skip anything with charCode = 0
 		if (isMozilla && !ev.charCode)
 			return true;
+		
+		// Opera - dumb browser, don't let us to determine some keys
+		if (isOpera) {
+			var ek = '';
+			//for (i in event) { ek = ek + '['+i+']: '+event[i]+'<br/>\n'; }
+			//alert(ek);
+			if (ev.keyCode < 32) return true;
+			if (!ev.shiftKey && ((ev.keyCode >= 33) && (ev.keyCode <= 47))) return true;
+			if (!ev.keyCode) return true;
+			if (!ev.which) return true;
+		}
 		
 		
 		// Don't block CTRL / ALT keys
@@ -102,10 +115,8 @@ function filter_attach_DateEdit(id) {
 -->
 </script>
 
-<!-- DEBUG WINDOW -->
-<!--
-<div id="debugWin" style="overflow: auto; position: absolute; top: 160px; left: 230px; width: 400px; height: 400px; background: white; 4px double black; padding: 2px; margin: 2px;">DEBUG WINDOW</div>
--->
+<!-- DEBUG WINDOW <div id="debugWin" style="overflow: auto; position: absolute; top: 160px; left: 230px; width: 400px; height: 400px; background: white; 4px double black; padding: 2px; margin: 2px;">DEBUG WINDOW</div> -->
+
 
 <!-- Hidden SUGGEST div -->
 <div id="suggestWindow" style="position:absolute; top: 0px; left: 0px;">
