@@ -859,8 +859,8 @@ if ($action == "editnews") {
 	$tvars['vars']['sl'] = secure_html($fSearchLine);
 	$tvars['vars']['st.selected0'] = !$fSearchType?' selected="selected"':'';
 	$tvars['vars']['st.selected1'] =  $fSearchType?' selected="selected"':'';
-	$tvars['vars']['dr1'] = ($fDateStartText != '')?$fDateStartText:'  .  .    ';
-	$tvars['vars']['dr2'] = ($fDateStopText != '')?$fDateStopText:'  .  .    ';
+	$tvars['vars']['dr1'] = $fDateStartText;
+	$tvars['vars']['dr2'] = $fDateStopText;
 
 	exec_acts('editnews_list');
 
