@@ -200,7 +200,7 @@ function addStaticForm(){
 
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
-		'quicktags'			=>	QuickTags('', 'static'),
+		'quicktags'			=>	QuickTags('currentInputAreaID', 'static'),
 		'templateopts'		=> staticListTemplates(''),
 	);
 
@@ -356,7 +356,7 @@ function editStaticForm(){
 
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
-		'quicktags'			=>	QuickTags('', 'static'),
+		'quicktags'			=>	QuickTags('currentInputAreaID', 'static'),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
 		'content'			=>	secure_html($row['content']),

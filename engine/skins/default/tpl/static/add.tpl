@@ -1,3 +1,7 @@
+<script language="javascript">
+var currentInputAreaID = 'content';
+</script>
+
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type=hidden name="area" value="" />
 </form>
