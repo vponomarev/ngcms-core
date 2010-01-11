@@ -369,7 +369,7 @@ function checkFlood($mode, $ip, $act, $subact, $userRec, $name){
 }
 
 
-function zzMail($to, $subject, $message, $filename = false, $mail_from = false) {
+function zzMail($to, $subject, $message, $filename = false, $mail_from = false, $ctype = 'text/html') {
 	global $lang, $config;
 
 	$mail_from	=	(!$mail_from) ? "mailbot@".str_replace("www.", "", $_SERVER['SERVER_NAME']) : $mail_from;
@@ -387,7 +387,7 @@ function zzMail($to, $subject, $message, $filename = false, $mail_from = false) 
 	$headers	.=	'X-MimeOLE: '.engineName.' : '.engineVersion."\n";
 	$headers	.=	'content-type: multipart/mixed;boundary="----------'.$uniqid.'"'."\n\n";
 	$headers	.=	'------------'.$uniqid."\n";
-	$headers	.=	'content-type: text/html;charset='.$lang['encoding'].''."\n";
+	$headers	.=	'content-type: '.$ctype.';charset='.$lang['encoding'].''."\n";
 	$headers	.=	'content-transfer-Encoding: 8bit';
 
 	if (is_file($filename)){
