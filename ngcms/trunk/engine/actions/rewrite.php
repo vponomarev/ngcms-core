@@ -53,6 +53,7 @@ foreach ($UH->hList as $hId) {
 			'regex'	=> $hId['rstyle']['rcmd'],
 			'flagPrimary' => $hId['flagPrimary'],
 			'flagFailContinue' => $hId['flagFailContinue'],
+			'flagDisabled' => $hId['flagDisabled'],
 		);
 
 	// Fetch associated command

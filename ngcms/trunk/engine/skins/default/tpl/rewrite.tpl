@@ -22,7 +22,7 @@
  <td id="row.url"><input type="text" style="width: 90%;" id="ed.regex"/><br/>
  	Доступные переменные:<br/><span id="ed.varlist"></span>
  </td>
- <td id="row.flags"><input id="ed.flagPrimary" type="checkbox"/> &nbsp; <input id="ed.flagFailContinue" type="checkbox"/></td>
+ <td id="row.flags"><input id="ed.flagPrimary" type="checkbox"/> &nbsp; <input id="ed.flagFailContinue" type="checkbox"/> &nbsp; <input id="ed.flagDisabled" type="checkbox"/></td>
  <td><input style="width: 60px;" type="button" onclick="reSubmitEdit();" id="ed.button" value="Add"/> <input type="button" id="ed.bcancel" onclick="reCancelEdit();" value="Cancel"/></td>
 </tr>
 </table>
@@ -42,7 +42,8 @@ var currentEditRow = 0;
 function populateTemplate(row) {
  var tpl = String(dTemplate);
  var flags = '<b><span style="color: '+(row['flagPrimary']?'blue':'#E0E0E0')+';">Pri</span> '+
-             '<span style="color: '+(row['flagFailContinue']?'red':'#E0E0E0')+';">FFC</span></b>';
+				'<span style="color: '+(row['flagFailContinue']?'red':'#E0E0E0')+';">FFC</span> '+
+				'<span style="color: '+(row['flagDisabled']?'red':'#E0E0E0')+';">'+(row['flagDisabled']?'OFF':'On')+'</span></b>';
 
  return tpl.replace(/{id}/g, row['id']).replace(/{pluginName}/g, row['pluginName']).replace(/{handlerName}/g, row['handlerName']).replace(/{description}/g, row['description']).replace(/{regex}/g, row['regex']).replace(/{flags}/g, flags);
 }
@@ -100,7 +101,7 @@ function reServerSubmit() {
   if (linkTX.responseStatus[0] == 200) {
         try {
   	 resTX = eval('('+linkTX.response+')');
-  	} catch (err) { alert('Error parsing JSON output. Result: '+linkTX.response); }
+  	} catch (err) { alert('{l_fmsg.save.json_parse_error} '+linkTX.response); }
 
   	// First - check error state
   	if (!resTX['status']) {
@@ -110,10 +111,10 @@ function reServerSubmit() {
   		// ERROR. Display it
   		alert('Error ('+resTX['errorCode']+'): '+resTX['errorText']);
   	} else {
-  		alert('Request complete');
+  		alert('{l_fmsg.save.done}');
   	}	
   } else {
-  	alert('TX.fail: HTTP code '+linkTX.responseStatus[0]);
+  	alert('{l_fmsg.save.httperror} '+linkTX.responseStatus[0]);
   }	
  }
  linkTX.runAJAX();
@@ -149,7 +150,7 @@ function reUpdateDescr(plugin, cmd) {
 //
 // Set edit data
 //
-function reSetData(id, plugin, cmd, regex, flagPrimary, flagFailContinue) {
+function reSetData(id, plugin, cmd, regex, flagPrimary, flagFailContinue, flagDisabled) {
  reFillCmd(plugin);
  reUpdateDescr(plugin, cmd);
 
@@ -159,6 +160,7 @@ function reSetData(id, plugin, cmd, regex, flagPrimary, flagFailContinue) {
  document.getElementById('ed.regex').value = regex;
  document.getElementById('ed.flagPrimary').checked = flagPrimary;
  document.getElementById('ed.flagFailContinue').checked = flagFailContinue;
+ document.getElementById('ed.flagDisabled').checked = flagDisabled;
 
  if (id=='*') {
   document.getElementById('ed.button').value = 'Add';
@@ -179,7 +181,7 @@ function reEditRow(id) {
  }
 
  // Get values from this row
- reSetData(id, dData[id].pluginName, dData[id].handlerName, dData[id].regex, dData[id].flagPrimary, dData[id].flagFailContinue);
+ reSetData(id, dData[id].pluginName, dData[id].handlerName, dData[id].regex, dData[id].flagPrimary, dData[id].flagFailContinue, dData[id].flagDisabled);
  
  currentEditRow = id;
  document.getElementById('re.row.'+currentEditRow).style.background = 'red';
@@ -189,10 +191,10 @@ function reEditRow(id) {
 // Action on "DELETE" button click
 function reDeleteRow(id) {
  if (currentEditRow > 0) {
-  alert('Сначала необходимо выйти из режима редактирования!');
+  alert('{l_fmsg.edit.shouldleave}');
   return false;
  }
- if (confirm('Вы действительно хотите удалить строку # '+id)) {
+ if (confirm('{l_fmsg.edit.rowdel_confirm} '+id)) {
   // Delete with renumbering
   var dCounter = document.getElementById('cfg.body').rows.length-1;
   
@@ -209,7 +211,7 @@ function reDeleteRow(id) {
 // Move record UP
 function reMoveUp(id) {
  if (currentEditRow > 0) {
-  alert('Сначала необходимо выйти из режима редактирования!');
+  alert('{l_fmsg.edit.shouldleave}');
   return false;
  }
  // Самую первую строчку некуда двигать
@@ -233,7 +235,7 @@ function reMoveUp(id) {
 // Move record DOWN
 function reMoveDown(id) {
  if (currentEditRow > 0) {
-  alert('Сначала необходимо выйти из режима редактирования!');
+  alert('{l_fmsg.edit.shouldleave}');
   return false;
  }
  var dCounter = document.getElementById('cfg.body').rows.length;
@@ -283,6 +285,7 @@ function reSubmitEdit() {
  rd['regex']       = document.getElementById('ed.regex').value;
  rd['flagPrimary'] = document.getElementById('ed.flagPrimary').checked;
  rd['flagFailContinue'] = document.getElementById('ed.flagFailContinue').checked;
+ rd['flagDisabled'] = document.getElementById('ed.flagDisabled').checked;
  rd['description'] = dConfig[rd['pluginName']][rd['handlerName']]['descr'];
 
  if (recNo == '*') {
