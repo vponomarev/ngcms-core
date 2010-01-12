@@ -369,6 +369,7 @@ class urlHandler {
 			'handlerName'	=> $data['handlerName'],
 			'flagPrimary'	=> $data['flagPrimary']?true:false,
 			'flagFailContinue'	=> $data['flagFailContinue']?true:false,
+			'flagDisabled'	=> $data['flagDisabled']?true:false,
 			'rstyle'		=> array(
 				'rcmd'		=> $rcmd,
 				'regex'		=> $regex,
@@ -459,7 +460,11 @@ class urlHandler {
 
 		foreach($this->hList as $h) {
 			if ($debug)
-				print "&raquo; Scan [".$h['pluginName']."][".$h['handlerName']."] ReGEX check [ <b><font color=blue>".$h['rstyle']['regex']." </font></b>]<br>\n";
+				print "&raquo; ".($h['flagDisabled']?'<b><font color="red">DISABLED</font></b> ':'')."Scan [".$h['pluginName']."][".$h['handlerName']."] ReGEX check [ <b><font color=blue>".$h['rstyle']['regex']." </font></b>]<br>\n";
+
+			// Skip disabled records
+			if ($h['flagDisabled'])
+				continue;
 
 			if (preg_match($h['rstyle']['regex'], $url, $scan)) {
 				$result = array( '0' => $scan[0]);
