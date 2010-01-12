@@ -24,13 +24,27 @@ function news_add(){
 
 	$title = $_REQUEST['title'];
 
-	$content	= str_replace("\r\n", "\n",
-		($config['news.edit.split'])?
-			($_REQUEST['content_short'].(($_REQUEST['content_full'] != '')?'<!--more-->'.$_REQUEST['content_full']:'')):
-			$_REQUEST['content']);
+	// Fill content
+	$content	= '';
+
+	// Check if EDITOR SPLIT feature is activated
+	if ($config['news.edit.split']) {
+		// Prepare delimiter
+		$ed = '<!--more-->';
+		if ($config['extended_more'] && ($_REQUEST['content_delimiter'] != '')) {
+			// Disable `new line` + protect from XSS
+			$ed = '<!--more="'.str_replace(array("\r", "\n", '"'), '', $_REQUEST['content_delimiter']).'"-->';
+		}
+		$content = $_REQUEST['content_short'].(($_REQUEST['content_full'] != '')?$ed.$_REQUEST['content_full']:'');
+
+	} else {
+		$content = $_REQUEST['content'];
+	}
+
+	// Rewrite `\r\n` to `\n`
+	$content = str_replace("\r\n", "\n", $content);
 
 	$alt_name = $parse->translit( trim($_REQUEST['alt_name']), 1);
-
 
 	// Check title
 	if ( (!strlen(trim($title))) || (!strlen(trim($content))) ) {
@@ -298,6 +312,8 @@ if (defined('ADMIN') || (is_array($userROW) && $userROW['status'] < 4) || ($conf
 		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '$1';
 	}
 
+	// Extended <!--more--> support
+	$tvars['regx']['#\[extended\.more\](.*?)\[\/extended\.more\]#is']		= $config['extended_more']?'$1':'';
 
 	// Disable flag for comments if plugin 'comments' is not installed
 	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
