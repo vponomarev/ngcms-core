@@ -1186,7 +1186,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		$tvars['vars']['[more]']	= '';
 		$tvars['vars']['[/more]']	= '';
 	} else {
-		$tvars['regx']['#\[more\](.+?)\[/more\]#is'] = $more;
+		$tvars['regx']['#\[more\](.*?)\[/more\]#is'] = $more;
 	}
 
 
