@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: addnews.php
 // Description: Adding news (ADMIN or ON-SITE)
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -19,8 +19,6 @@ $situation = "news";
 
 function news_add(){
 	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config, $catz, $catmap;
-	global $c_day, $c_month, $c_year, $c_hour, $c_minute;
-
 
 	$title = $_REQUEST['title'];
 
@@ -81,7 +79,7 @@ function news_add(){
 	}
 
 	if ($_REQUEST['customdate']) {
-		$SQL['postdate'] = mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60);
+		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
 	}

@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: preview.php
 // Description: News preview
 // Author: Vitaly Ponomarev
@@ -16,13 +16,13 @@ $lang = LoadLang('preview', 'admin');
 include root.'includes/news.php';
 
 function showPreview() {
-	global $userROW, $EXTRA_CSS, $EXTRA_HTML_VARS, $PFILTERS, $tpl, $parse, $mysql, $c_hour, $c_minute, $c_month, $c_day, $c_year, $config, $catmap;
+	global $userROW, $EXTRA_CSS, $EXTRA_HTML_VARS, $PFILTERS, $tpl, $parse, $mysql, $config, $catmap;
 
 	$SQL = array( 'id' => -1 );
 	// Эмулируем работу всех штатных средств отвечающих за отображение новости.
 	// Заполняем соответствующие поля
 	if ($_REQUEST['customdate']) {
-		$SQL['postdate'] = mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year);
+		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
 	}
@@ -81,12 +81,26 @@ function showPreview() {
 		$SQL['pinned']		= $_REQUEST['pinned'];
 	}
 
-	$cshort	= $_REQUEST['contentshort'];
-	$cfull	= $_REQUEST['contentfull'];
+	// Fill content
+	$content	= '';
 
-	// $content = $cshort.(trim($cfull)?'<!--more-->'.$cfull:'');
-	$content = $_REQUEST['content'];
+	// Check if EDITOR SPLIT feature is activated
+	if ($config['news.edit.split']) {
+		// Prepare delimiter
+		$ed = '<!--more-->';
+		if ($_REQUEST['content_delimiter'] != '') {
+			// Disable `new line` + protect from XSS
+			$ed = '<!--more="'.str_replace(array("\r", "\n", '"'), '', $_REQUEST['content_delimiter']).'"-->';
+		}
+		$content = $_REQUEST['content_short'].(($_REQUEST['content_full'] != '')?$ed.$_REQUEST['content_full']:'');
+
+	} else {
+		$content = $_REQUEST['content'];
+	}
+
+	// Rewrite `\r\n` to `\n`
 	$content = str_replace("\r\n", "\n", $content);
+
 	$SQL['content']		= $content;
 
 	// Process plugin variables to make proper SQL filling

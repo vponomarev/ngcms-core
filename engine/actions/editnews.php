@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: editnews.php
 // Description: News managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -23,7 +23,6 @@ $SQL = array();
 //
 function editNews() {
 	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW, $catz, $catmap;
-	global $c_day, $c_month, $c_year, $c_hour, $c_minute, $description, $keywords;
 
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
@@ -119,14 +118,11 @@ function editNews() {
 	}
 
 	if ($_REQUEST['setdate_custom']) {
-		$SQL['postdate'] = mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60);
+		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else if ($_REQUEST['setdate_current']) {
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
-	} else {
-		$postdate = $row['postdate'];
 	}
 
-	//$SQL['postdate']  = $_REQUEST['customdate']?mktime($c_hour, $c_minute, 0, $c_month, $c_day, $c_year) + ($config['date_adjust'] * 60):$row['postdate'];
 	$SQL['title']     = $title;
 	$SQL['content']   = $content;
 	$SQL['alt_name']  = $alt_name;
@@ -213,8 +209,6 @@ function editNews() {
 		}
 	}
 
-
-	//print "<pre>".var_export($_FILES, true)."</pre>";
 	// PREPARE a list for upload
 	if (is_array($_FILES['userfile']['name']))
 		foreach($_FILES['userfile']['name'] as $i => $v) {
@@ -237,7 +231,6 @@ function editNews() {
 		$attachCount = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
 		$mysql->query("update ".prefix."_news set attach_count = ".intval($attachCount)." where id = ".db_squote($id));
 	}
-
 }
 
 
@@ -246,7 +239,9 @@ function editNews() {
 //
 function editNewsForm() {
 	global $lang, $parse, $mysql, $config, $tpl, $mod, $PFILTERS, $tvars, $userROW;
-	global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute;
+
+	// Get news id
+	$id			= $_REQUEST['id'];
 
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):'')))) {
