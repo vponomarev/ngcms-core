@@ -9,6 +9,7 @@
 <a onclick="insertext('[left]','[/left]', {area})" title='{l_tags.left}'><img src="{skins_url}/tags/left.gif" width="16" height="16" alt="{l_tags.left}" /></a>
 <a onclick="insertext('[center]','[/center]', {area})" title='{l_tags.center}'><img src="{skins_url}/tags/center.gif" width="16" height="16" alt="{l_tags.center}" /></a>
 <a onclick="insertext('[right]','[/right]', {area})" title='{l_tags.right}'><img src="{skins_url}/tags/right.gif" width="16" height="16" alt="{l_tags.right}" /></a>
+<a onclick="insertext('[justify]','[/justify]', {area})" title='{l_tags.justify}'><img src="{skins_url}/tags/justify.gif" width="16" height="16" alt="{l_tags.justify}" /></a>
 <img src="{skins_url}/tags/sep.gif" width="1" height="16" alt="" />
 
 <a onclick="insertext('[ul]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ul]','', {area})" title='{l_tags.bulllist}'><img src="{skins_url}/tags/bulllist.gif" width="16" height="16" alt="{l_tags.bulllist}" /></a>

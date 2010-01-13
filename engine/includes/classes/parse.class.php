@@ -146,6 +146,7 @@ class parse {
 		$content	=	preg_replace("#\[left\](.*?)\[/left\]#is","<p style=\"text-align: left\">$1</p>", $content);
 		$content	=	preg_replace("#\[right\](.*?)\[/right\]#is","<p style=\"text-align: right\">$1</p>", $content);
 		$content	=	preg_replace("#\[center\](.*?)\[/center\]#is","<p style=\"text-align: center\">$1</p>", $content);
+		$content	=	preg_replace("#\[justify\](.*?)\[/justify\]#is","<p style=\"text-align: justify\">$1</p>", $content);
 		$content	=	preg_replace("#\[br\]#is", "<br/>", $content);
 
 		// Process spoilers
