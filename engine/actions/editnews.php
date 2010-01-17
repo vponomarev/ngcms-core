@@ -280,10 +280,10 @@ function editNewsForm() {
 
 	// Generate data for content input fields
 	if ($config['news.edit.split']) {
+		$tvars['vars']['content.delimiter'] = '';
 		if (preg_match('#^(.*?)<!--more-->(.*?)$#si', $row['content'], $match)) {
 			$tvars['vars']['content.short'] = $match[1];
 			$tvars['vars']['content.full'] = $match[2];
-			$tvars['vars']['content.delimiter'] = '';
 		} else if (preg_match('#^(.*?)<!--more=\"(.*?)\"-->(.*?)$#si', $row['content'], $match)) {
 			$tvars['vars']['content.short'] = $match[1];
 			$tvars['vars']['content.full'] = $match[3];

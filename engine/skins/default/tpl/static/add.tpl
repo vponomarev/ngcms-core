@@ -61,7 +61,7 @@ var currentInputAreaID = 'content';
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>Настройки</td>
+   <td>{l_editor.configuration}</td>
   </tr>
   <tr><td></td><td><label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="flag_HTML" value="1" class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label></td></tr>
@@ -69,7 +69,7 @@ var currentInputAreaID = 'content';
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>Шаблон</td>
+   <td>{l_configuration.template}</td>
   </tr>
   <tr><td></td><td>
   	<select name="template" style="width: 200px;" value="{template}">{templateopts}</select>
