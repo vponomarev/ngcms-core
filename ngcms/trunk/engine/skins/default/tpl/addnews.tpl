@@ -191,7 +191,7 @@ attachAddRow();
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>Настройки</td>
+   <td>{l_editor.configuration}</td>
   </tr>
   <tr><td></td><td><label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {flag_mainpage} /> {l_mainpage}</label></td></tr>

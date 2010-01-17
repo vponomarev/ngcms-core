@@ -132,13 +132,13 @@ function filter_attach_DateEdit(id) {
 
 <!-- Блок фильтрации -->
 <table border="0" cellspacing="2" cellpadding="2">
-<td  valign="top">Поиск:</td>
-<td><input name="sl" type="text" size="40" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>заголовок</option><option value="1" {st.selected1}>текст</option></select></td>
+<td  valign="top">{l_header.search}:</td>
+<td><input name="sl" type="text" size="40" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>{l_header.stitle}</option><option value="1" {st.selected1}>{l_header.stext}</option></select></td>
 <td rowspan="2" width="3px" style="background-image: url({skins_url}/images/delim.png);  background-repeat: repeat-y;">&nbsp;</td>
-<td valign="top">Дата с:</td>
-<td><input type="text" id="dr1" name="dr1" value="{dr1}" size="11"/> по <input type="text" id="dr2" name="dr2" value="{dr2}" size="11"/></td>
+<td valign="top">{l_header.date_since}:</td>
+<td><input type="text" id="dr1" name="dr1" value="{dr1}" size="11"/> {l_header.date_till} <input type="text" id="dr2" name="dr2" value="{dr2}" size="11"/></td>
 <td rowspan="3" width="5" style="background-image: url({skins_url}/images/delim.png); background-repeat: repeat-y;">&nbsp;</td>
-<td>Статус:</td>
+<td>{l_header.status}:</td>
 <td valign="top"><select name="status" size="1"><option value="">{l_smode_all}</option>{statuslist}</select> &nbsp;</td>
 </tr>
 
@@ -146,7 +146,7 @@ function filter_attach_DateEdit(id) {
 <td valign="top">{l_author}:</td><td><input name="an" id="an" type="text" size="25" value="{an}"autocomplete="off" /> <span id="suggestLoader" style="width: 20px; visibility: hidden;"><img src="{skins_url}/images/loading.gif"/></span></td>
 <td>{l_category}:</td>
 <td>{category_select}</td>
-<td>На странице:</td>
+<td>{l_header.perpage}:</td>
 <td><input style="text-align: center" name="rpp" value="{rpp}" type="text" size="3" /></td>
 </tr>
 

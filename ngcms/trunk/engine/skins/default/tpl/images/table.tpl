@@ -53,10 +53,10 @@ function setStatus(mode) {
 <input type="hidden" name="area" value="{area}" />
 <table id="entries" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr class="contHead">
-<td colspan="3" width="80">Вставка</td>
+<td colspan="3" width="80">{l_header.insert}</td>
 [preview]<td>{l_show_preview}</td>[/preview]
 <td>{l_name}</td>
-<td colspan="2">Просмотр</td>
+<td colspan="2">{l_header.view}</td>
 <!-- <td>{l_action}</td> -->
 <td colspan="2">{l_size}</td>
 <td>{l_category}</td>

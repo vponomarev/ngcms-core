@@ -82,10 +82,10 @@ function setDisplayMode(mode) {
 <tr>
 <td width=100% colspan="8">
 <div id="pluginTypeMenu">
-<span id="pTypeAll" class="pInactive" onclick="setDisplayMode(0);">Все ({cntAll})</span><span class="pSeparator">&nbsp;</span>
-<span id="pTypeActive" class="pInactive" onclick="setDisplayMode(1);">Активные ({cntActive})</span><span class="pSeparator">&nbsp;</span>
-<span id="pTypeInactive" class="pInactive" onclick="setDisplayMode(2);">Неактивные ({cntInactive})</span><span class="pSeparator">&nbsp;</span>
-<span id="pTypeUninstalled" class="pInactive" onclick="setDisplayMode(3);">Требуют установки ({cntUninstalled})</span>
+<span id="pTypeAll" class="pInactive" onclick="setDisplayMode(0);">{l_list.all} ({cntAll})</span><span class="pSeparator">&nbsp;</span>
+<span id="pTypeActive" class="pInactive" onclick="setDisplayMode(1);">{l_list.active} ({cntActive})</span><span class="pSeparator">&nbsp;</span>
+<span id="pTypeInactive" class="pInactive" onclick="setDisplayMode(2);">{l_list.inactive} ({cntInactive})</span><span class="pSeparator">&nbsp;</span>
+<span id="pTypeUninstalled" class="pInactive" onclick="setDisplayMode(3);">{l_list.needinstall} ({cntUninstalled})</span>
 </div>
 &nbsp;
 </td>

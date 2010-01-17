@@ -6,7 +6,7 @@
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <thead>
-<tr class="contentNav" style="font-weight: bold;"><td>&nbsp;</td><td width="25">#</td><td width="100">Плагин</td><td width="130">Действие</td><td>Описание</td><td>URL</td><td>Флаги</td><td>&nbsp;</td></tr>
+<tr class="contentNav" style="font-weight: bold;"><td>&nbsp;</td><td width="25">#</td><td width="100">{l_hdr.plugin}</td><td width="130">{l_hdr.action}</td><td>{l_hdr.description}</td><td>URL</td><td>{l_hdr.flags}</td><td>&nbsp;</td></tr>
 </thead>
 <tbody id="cfg.body">
 </tbody>
@@ -20,7 +20,7 @@
  <td id="row.cmd">&nbsp;</td>
  <td id="row.description">&nbsp;</td>
  <td id="row.url"><input type="text" style="width: 90%;" id="ed.regex"/><br/>
- 	Доступные переменные:<br/><span id="ed.varlist"></span>
+ 	{l_tbl.available_vars}:<br/><span id="ed.varlist"></span>
  </td>
  <td id="row.flags"><input id="ed.flagPrimary" type="checkbox"/> &nbsp; <input id="ed.flagFailContinue" type="checkbox"/> &nbsp; <input id="ed.flagDisabled" type="checkbox"/></td>
  <td><input style="width: 60px;" type="button" onclick="reSubmitEdit();" id="ed.button" value="Add"/> <input type="button" id="ed.bcancel" onclick="reCancelEdit();" value="Cancel"/></td>

@@ -95,11 +95,11 @@ if(selectedOption == 'templates') { document.getElementById('templates').style.d
 <input type="hidden" name="theme" id="template.select.theme" value=""/>
 <table width="100%" style="padding-top:10px;">
 <tr class="h-l-tpl">
-	<td>Name</td>
-	<td>Title</td>
-	<td>Author</td>
-	<td>Version</td>
-	<td>Reldate</td>
+	<td>{l_tpl.table.name}</td>
+	<td>{l_tpl.table.title}</td>
+	<td>{l_tpl.table.author}</td>
+	<td>{l_tpl.table.version}</td>
+	<td>{l_tpl.table.reldate}</td>
 	<td>&nbsp;</td>
 </tr>
 {template_select}
