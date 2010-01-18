@@ -959,6 +959,7 @@ function generateCategoryMenu(){
 			'if_active'	=>	(isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id']))?'active_cat':'',
 			'link'		=>	($v['alt_url'] == '')?generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])):$v['alt_url'],
 			'mark'		=>	str_repeat('&#8212;', $v['poslevel']),
+			'level'		=>	$v['poslevel'],
 			'cat'		=>	$v['name'],
 			'counter'	=>	($config['category_counters'] && $v['posts'])?('['.$v['posts'].']'):'',
 			'icon'		=>	$v['icon'],
