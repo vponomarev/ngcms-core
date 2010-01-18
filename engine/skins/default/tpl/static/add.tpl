@@ -69,7 +69,7 @@ var currentInputAreaID = 'content';
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>{l_configuration.template}</td>
+   <td>{l_editor.template}</td>
   </tr>
   <tr><td></td><td>
   	<select name="template" style="width: 200px;" value="{template}">{templateopts}</select>

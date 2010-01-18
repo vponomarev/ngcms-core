@@ -450,8 +450,13 @@ class urlHandler {
 	function run($url = null, $debug = false){
 		// Firstly don't check for priority
 
-		if ($url == null)
+		// Init URL if it's not passed in params
+		if ($url == null) {
 			$url = $_SERVER['REQUEST_URI'];
+			if (($tmp_pos = strpos($url, '?')) !== FALSE) {
+				$url = substr($url, 0, $tmp_pos);
+			}
+		}
 
 		if ($debug)
 			print "urlHandler :: RUN(".$url.")<br>\n";

@@ -39,7 +39,7 @@ function validateAction() {
 	}
 	
 	if ((mode == 'massSetStatus')&&(document.forms['form_users'].newstatus.value < 1)) {
-		alert('Необходимо выбрать статус!');
+		alert('{l_msge_setstatus}');
 		return;
 	}
 	
@@ -107,29 +107,29 @@ function validateAction() {
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
 <tr align="center">
-<td colspan="8" class="contentEdit" align="right" valign="top">
+<td colspan="9" class="contentEdit" align="right" valign="top">
 <div style="text-align: left;">
-Действие: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
- <option value="" style="background-color: #E0E0E0;">-- Действие --</option>
+{l_action}: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
+ <option value="" style="background-color: #E0E0E0;">-- {l_action} --</option>
  <option value="massActivate">{l_activate}</option>
- <option value="massLock">Заблокировать отмеченных</option>
+ <option value="massLock">{l_lock}</option>
  <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
  <option value="massDel">{l_delete}</option>
  <option value="massDelInactive">{l_delete_unact}</option>
  <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
- <option value="massSetStatus">Установить статус &raquo;</option>
+ <option value="massSetStatus">{l_setstatus} &raquo;</option>
 </select>
 <select name="newstatus" disabled="disabled" style="font: 12px Verdana, Courier, Arial; width: 150px;"><option value="0"></option><option value="2">2 ({l_st_2})</option><option value="3">3 ({l_st_3})</option><option value="4">4 ({l_st_4})</option></select>
-<input type="button" class="button" value="Выполнить.." onclick="validateAction();" />
+<input type="button" class="button" value="{l_submit}" onclick="validateAction();" />
 <br/>
 </div>
 </td>
 </tr>
 <tr>
-<td width="100%" colspan="8">&nbsp;</td>
+<td width="100%" colspan="9">&nbsp;</td>
 </tr>
 <tr>
-<td align="center" colspan="8" class="contentHead">{pagesss}</td>
+<td align="center" colspan="9" class="contentHead">{pagesss}</td>
 </tr>
 </table>
 </form>
