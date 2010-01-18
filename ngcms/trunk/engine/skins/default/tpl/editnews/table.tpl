@@ -191,7 +191,7 @@ function filter_attach_DateEdit(id) {
 <tr align="center">
 <td colspan="8" class="contentEdit" align="right" valign="top">
 <div style="text-align: left;">
-Действие: <select name="subaction" style="font: 12px Verdana, Courier, Arial; width: 230px;">
+{l_action}: <select name="subaction" style="font: 12px Verdana, Courier, Arial; width: 230px;">
 <option value="">-- {l_action} --</option>
 <option value="do_mass_approve">{l_approve}</option>
 <option value="do_mass_forbidden">{l_forbidden}</option>
@@ -206,7 +206,7 @@ function filter_attach_DateEdit(id) {
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>[/comments]
 <option value="do_mass_delete">{l_delete}</option>
 </select>
-<input type="submit" value="Выполнить.." class="button" />
+<input type="submit" value="{l_submit}" class="button" />
 <input type="hidden" name="mod" value="editnews" />
 <br/>
 </div>

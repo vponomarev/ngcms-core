@@ -182,7 +182,7 @@ attachAddRow();
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
-   <td>Дополнительные категории</td>
+   <td>{l_editor.extcat}</td>
   </tr>
   <tr>
    <td></td><td>
