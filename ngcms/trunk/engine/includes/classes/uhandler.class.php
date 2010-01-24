@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2009 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2009-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: uhandler.class.php
 // Description: URL handler class
 // Author: Vitaly Ponomarev
@@ -219,18 +219,24 @@ class urlLibrary {
    // will generate URL like '?action=sync&name=HERE_IS_A_NAME'
 
 
+   // // // FLAGS PARAMS // // //
+   debug		-	flag if debug mode should be activated
+   localPrefix	-	set if system is installed in subdirectory
+   domainPrefix	-	prefix with full domain name. used for generation of ABSOLUTE links
 
 */
 
 
 class urlHandler {
 	// constructor
-	function urlHandler() {
+	function urlHandler($options = array()) {
 		global $config;
 
 		$this->hList		= array();
 		$this->configLoaded	= false;
 		$this->configFileName = confroot . 'rewrite.php';
+
+		$this->options		= $options;
 	}
 
 	// Populate handler record from HTTP submit interface
@@ -446,10 +452,15 @@ class urlHandler {
 		return true;
 	}
 
-	// RUN callback functions
-	function run($url = null, $debug = false){
-		// Firstly don't check for priority
+	// Set configuration options
+	function setOptions($options = array()){
+		foreach ($options as $k => $v) {
+			$this->options[$k] = $v;
+		}
+	}
 
+	// RUN callback functions
+	function run($url = null, $flags = array()){
 		// Init URL if it's not passed in params
 		if ($url == null) {
 			$url = $_SERVER['REQUEST_URI'];
@@ -458,13 +469,34 @@ class urlHandler {
 			}
 		}
 
-		if ($debug)
+		// Merge flags with default options
+		foreach ($this->options as $optName => $optValue) {
+			if (!isset($flags[$optName]))
+					$flags[$optName] = $optValue;
+		}
+
+		if ($flags['debug'])
 			print "urlHandler :: RUN(".$url.")<br>\n";
+
+		// Modity calling URL if localPrefix is defined
+		if (isset($flags['localPrefix']) && ($flags['localPrefix'] != '')) {
+			if (substr($url, 0, strlen($flags['localPrefix'])) == $flags['localPrefix']) {
+				// Catched prefix
+				$url = substr($url, strlen($flags['localPrefix']));
+				if ($flags['debug'])
+					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `".$flags['localPrefix']."`] (".$url.")<br/>\n";
+			} else {
+				// URL doesn't correspond to LOCAL PREFIX
+				if ($flags['debug'])
+					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `".$flags['localPrefix']."`] - <i><b>ERROR: URL DOES NOT CORRESPOND TO PREFIX</b></i><br/>\n";
+				return 0;
+			}
+		}
 
 		$catchCount = 0;
 
 		foreach($this->hList as $h) {
-			if ($debug)
+			if ($flags['debug'])
 				print "&raquo; ".($h['flagDisabled']?'<b><font color="red">DISABLED</font></b> ':'')."Scan [".$h['pluginName']."][".$h['handlerName']."] ReGEX check [ <b><font color=blue>".$h['rstyle']['regex']." </font></b>]<br>\n";
 
 			// Skip disabled records
@@ -478,8 +510,8 @@ class urlHandler {
 					if (isset($h['rstyle']['regexMap'][$k]))
 						$result[$h['rstyle']['regexMap'][$k]] = urldecode($v);
 
-				if ($debug)
-					print "Find match with REGex <b><font color=blue>".$h['rstyle']['regex']."</font></b>, params: <pre>".var_export($result, true)."</pre><br>\n";
+				if ($flags['debug'])
+					print "Find match [plugin: <b>".$h['pluginName']."</b>, handler: <b>".$h['handlerName']."</b>] with REGex <b><font color=blue>".$h['rstyle']['regex']."</font></b>, params: <pre>".var_export($result, true)."</pre><br>\n";
 
 				if (!isset($h['callback']))
 					$h['callback'] = '_MASTER_URL_PROCESSOR';
@@ -497,4 +529,70 @@ class urlHandler {
 		return $catchCount;
 	}
 
+	//
+	// Generate link
+	// Params:
+	// $pluginName	- ID of plugin
+	// $handlerName	- Handler name
+	// $params	- Params to pass to processor
+	// $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
+	// $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
+	// $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
+	function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false){
+		$flagCommon = false;
+
+		// Check if we have handler for requested plugin
+		if (!isset($this->hPrimary[$pluginName][$handlerName])) {
+			// No handler. Let's use "COMMON WAY"
+			$params['plugin'] = $pluginName;
+			$params['handler'] = $handlerName;
+
+			$pluginName = 'core';
+			$handlerName = 'plugin';
+			$flagCommon = true;
+		}
+
+		// Fetch identity [ array( recNo, primaryFlagStatus ) ]
+		$hId = $this->hPrimary[$pluginName][$handlerName];
+		// Fetch record
+		$hRec = $this->hList[$hId[0]];
+
+		// Check integrity
+		if (!is_array($hRec) || !is_array($hRec['rstyle']['genrMAP']))
+			return false;
+
+		// First: find block dependency
+		$depMAP = array();
+		foreach ($hRec['rstyle']['genrMAP'] as $rec) {
+			// If dependent block & this is variable & no rec in $depMAP - save
+			if ($rec[2] && $rec[0] && !isset($depMAP[$rec[2]]))
+				$depMAP[$rec[2]] = $rec[1];
+		}
+
+
+		// Now we can generate URL
+		$url = array();
+		foreach ($hRec['rstyle']['genrMAP'] as $rec) {
+			if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
+				$url[] = $rec[0]?urlencode($params[$rec[1]]):$rec[1];
+			}
+		}
+
+		// Add params in case of common mode
+		$uparams = array();
+		if ($flagCommon) {
+			unset($params['plugin']);
+			unset($params['handler']);
+			$xparams = array_merge($params, $xparams);
+		}
+
+		foreach ($xparams as $k => $v) {
+			if (($k != 'plugin') && ($k != 'handler'))
+				$uparams[]= $k.'='.urlencode($v);
+		}
+
+		return	((isset($this->options['localPrefix']) && ($this->options['localPrefix'] != ''))?$this->options['localPrefix']:'').
+				join('', $url).
+				(count($uparams)?'?'.join('&'.($intLink?'amp;':''), $uparams):'');
+	}
 }

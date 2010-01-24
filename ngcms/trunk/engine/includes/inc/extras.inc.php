@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: extras.inc.php
 // Description: NGCMS extras managment functions
 // Author: Vitaly Ponomarev
@@ -281,7 +281,7 @@ function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $
 		$timer->registerEvent('disabled EXEC_ACTS ('.$item.')');
 		return;
 	}
-	
+
 	$timer->registerEvent('exec EXEC_ACTS ('.$item.')');
 
 	// Make module preload if needed
@@ -745,62 +745,10 @@ function checkLinkAvailable($pluginName, $handlerName) {
 // $params	- Params to pass to processor
 // $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
 // $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
-function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false){
+// $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
+function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false){
 	global $UHANDLER;
-
-	$flagCommon = false;
-
-	// Check if we have handler for requested plugin
-	if (!isset($UHANDLER->hPrimary[$pluginName][$handlerName])) {
-		// No handler. Let's use "COMMON WAY"
-		$params['plugin'] = $pluginName;
-		$params['handler'] = $handlerName;
-
-		$pluginName = 'core';
-		$handlerName = 'plugin';
-		$flagCommon = true;
-	}
-
-	// Fetch identity [ array( recNo, primaryFlagStatus ) ]
-	$hId = $UHANDLER->hPrimary[$pluginName][$handlerName];
-	// Fetch record
-	$hRec = $UHANDLER->hList[$hId[0]];
-
-	// Check integrity
-	if (!is_array($hRec) || !is_array($hRec['rstyle']['genrMAP']))
-		return false;
-
-	// First: find block dependency
-	$depMAP = array();
-	foreach ($hRec['rstyle']['genrMAP'] as $rec) {
-		// If dependent block & this is variable & no rec in $depMAP - save
-		if ($rec[2] && $rec[0] && !isset($depMAP[$rec[2]]))
-			$depMAP[$rec[2]] = $rec[1];
-	}
-
-
-	// Now we can generate URL
-	$url = array();
-	foreach ($hRec['rstyle']['genrMAP'] as $rec) {
-		if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
-			$url[] = $rec[0]?urlencode($params[$rec[1]]):$rec[1];
-		}
-	}
-
-	// Add params in case of common mode
-	$uparams = array();
-	if ($flagCommon) {
-		unset($params['plugin']);
-		unset($params['handler']);
-		$xparams = array_merge($params, $xparams);
-	}
-
-	foreach ($xparams as $k => $v) {
-		if (($k != 'plugin') && ($k != 'handler'))
-			$uparams[]= $k.'='.urlencode($v);
-	}
-
-	return join('', $url).(count($uparams)?'?'.join('&'.($intLink?'amp;':''), $uparams):'');
+ 	return $UHANDLER->generateLink($pluginName, $handlerName, $params, $xparams, $intLink, $absoluteLink);
 }
 
 

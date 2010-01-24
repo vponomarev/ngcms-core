@@ -261,6 +261,7 @@ class parse {
 		// target: anything
 		// class: anything
 		// title: anything
+		// external: yes/no - flag if link is opened via external page or not
 
 		if (preg_match_all("#\[url(\=| *)(.*?)\](.*?)\[\/url\]#is", $content, $pcatch, PREG_SET_ORDER)) {
 			$rsrc = array();

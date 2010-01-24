@@ -84,7 +84,11 @@ if (($tmp_pos = strpos($systemAccessURL, '?')) !== FALSE) {
 
 // /////////////////////////////////////////////////////////// //
 $timer->registerEvent('Search route for URL "'.$systemAccessURL.'"');
-$runResult = $UHANDLER->run($systemAccessURL, false);
+
+// Check if engine is installed in subdirectory
+if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home'], $match))
+	$UHANDLER->setOptions(array('localPrefix' => $match[1]));
+$runResult = $UHANDLER->run($systemAccessURL, array('debug' => false));
 
 
 // If no pages are catched
