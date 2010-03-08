@@ -20,7 +20,7 @@ php_flag allow_call_time_pass_reference on
 php_value session.use_trans_sid 0
 
 RewriteEngine On
-RewriteBase /
+#RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

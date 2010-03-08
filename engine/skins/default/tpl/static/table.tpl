@@ -2,11 +2,10 @@
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" align="center" class="contentNav">
 <tr>
-<td width="50%">{l_per_page} <form action="{php_self}" method="GET" name="options_bar"><input type="hidden" name="mod" value="static" /><input style="text-align: center" name="per_page" value="{per_page}" type="text" size="3" /> <input type="submit" value="{l_do_show}" class="button" /></form></td>
-<td width="50%">[actions]<form action="{php_self}" method="GET" name="options_bar"><input type="hidden" name="mod" value="static" /><input type="hidden" name="action" value="add" /><input type="submit" value="{l_addstatic}" class="button" />[/actions]</td>
+<td width="50%">{l_per_page} <form action="{php_self}" method="get" name="options_bar"><input type="hidden" name="mod" value="static" /><input style="text-align: center" name="per_page" value="{per_page}" type="text" size="3" /> <input type="submit" value="{l_do_show}" class="button" /></form></td>
+<td width="50%">[actions]<form action="{php_self}" method="get" name="options_bar2"><input type="hidden" name="mod" value="static" /><input type="hidden" name="action" value="add" /><input type="submit" value="{l_addstatic}" class="button" /></form>[/actions]</td>
 </tr>
 </table>
-</form>
 <br />
 <form action="{php_self}?mod=static" method="post" name="static">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">

@@ -1,4 +1,5 @@
-<script language="javascript">
+
+<script language="javascript" type="text/javascript">
 var currentInputAreaID = 'content';
 </script>
 

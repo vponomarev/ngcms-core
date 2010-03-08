@@ -1,5 +1,6 @@
+
 <script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
-<script language="javascript">
+<script type="text/javascript" language="javascript">
 
 //
 // First: Init CSS manage mechanism
@@ -104,7 +105,7 @@ function setDisplayMode(mode) {
 </table>
 </div>
 
-<script language="javascript">
+<script language="javascript" type="text/javascript">
 
 // ===================================================================
 // Now let's init buttons
