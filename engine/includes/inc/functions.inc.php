@@ -1007,7 +1007,7 @@ function generateCategoryFilter(){
 //
 // Generate link to news
 //
-function newsGenerateLink($row, $flagPrint = false, $page = 0) {
+function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = false) {
 	global $catmap;
 
 	// Prepare category listing
@@ -1032,7 +1032,7 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0) {
 	if ($page)
 		$params['page'] = $page;
 
-	return generateLink('news', $flagPrint?'print':'news', $params);
+	return generateLink('news', $flagPrint?'print':'news', $params, array(), false, $absoluteLink);
 
 }
 
