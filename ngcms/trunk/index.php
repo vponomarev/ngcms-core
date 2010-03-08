@@ -85,6 +85,9 @@ if (($tmp_pos = strpos($systemAccessURL, '?')) !== FALSE) {
 // /////////////////////////////////////////////////////////// //
 $timer->registerEvent('Search route for URL "'.$systemAccessURL.'"');
 
+// Give domainName to URL handler engine for generating absolute links
+$UHANDLER->setOptions(array('domainPrefix' => $config['home_url']));
+
 // Check if engine is installed in subdirectory
 if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 	$UHANDLER->setOptions(array('localPrefix' => $match[2]));

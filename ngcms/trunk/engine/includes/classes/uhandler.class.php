@@ -591,7 +591,11 @@ class urlHandler {
 				$uparams[]= $k.'='.urlencode($v);
 		}
 
-		return	((isset($this->options['localPrefix']) && ($this->options['localPrefix'] != ''))?$this->options['localPrefix']:'').
+		$linkPrefix = ($absoluteLink && isset($this->options['domainPrefix']) && ($this->options['domainPrefix'] != '')) ?
+				$this->options['domainPrefix'] :
+				( (isset($this->options['localPrefix']) && ($this->options['localPrefix'] != '')) ? $this->options['localPrefix'] : '');
+
+		return	$linkPrefix.
 				join('', $url).
 				(count($uparams)?'?'.join('&'.($intLink?'amp;':''), $uparams):'');
 	}
