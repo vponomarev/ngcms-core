@@ -383,7 +383,7 @@ function editStaticForm(){
 		$tvars['regx']["'\\[options\\].*?\\[/options\\]'si"] = '';
 	}
 
-	$tvars['vars']['ifapp'] = ($row['approve']) ? 'checked' : '';
+	$tvars['vars']['flag_approve'] = ($row['approve']) ? 'checked' : '';
 
 	if ($config['meta']) {
 		$tvars['vars']['[meta]'] = '';

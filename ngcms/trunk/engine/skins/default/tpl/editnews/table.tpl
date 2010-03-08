@@ -1,7 +1,7 @@
 <script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
 <script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
 <script type="text/javascript" src="{admin_url}/includes/js/libsuggest.js"></script>
-<script language="javascript">
+<script language="javascript" type="text/javascript">
 <!--
 							
 function addEvent(elem, type, handler){
@@ -125,16 +125,17 @@ function filter_attach_DateEdit(id) {
 </div>
 
 
-<form action="{php_self}?mod=editnews" method="POST" name="options_bar">
+<form action="{php_self}?mod=editnews" method="post" name="options_bar">
 <table border="0" width="100%" cellspacing="2" cellpadding="2" align="center" class="contentNav">
 <tr>
 <td>
 
 <!-- Блок фильтрации -->
 <table border="0" cellspacing="2" cellpadding="2">
+<tr>
 <td  valign="top">{l_header.search}:</td>
 <td><input name="sl" type="text" size="40" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>{l_header.stitle}</option><option value="1" {st.selected1}>{l_header.stext}</option></select></td>
-<td rowspan="2" width="3px" style="background-image: url({skins_url}/images/delim.png);  background-repeat: repeat-y;">&nbsp;</td>
+<td rowspan="2" width="3" style="background-image: url({skins_url}/images/delim.png);  background-repeat: repeat-y;">&nbsp;</td>
 <td valign="top">{l_header.date_since}:</td>
 <td><input type="text" id="dr1" name="dr1" value="{dr1}" size="11"/> {l_header.date_till} <input type="text" id="dr2" name="dr2" value="{dr2}" size="11"/></td>
 <td rowspan="3" width="5" style="background-image: url({skins_url}/images/delim.png); background-repeat: repeat-y;">&nbsp;</td>
@@ -155,9 +156,6 @@ function filter_attach_DateEdit(id) {
 <input type="submit" value="{l_do_show}" class="button" style="width: 303px;" />
 </td>
 <td>{l_sort}</td><td><select name="sort">{sortlist}</select></td>
-</tr>
-
-</td>
 </tr>
 </table>
 
@@ -222,7 +220,7 @@ function filter_attach_DateEdit(id) {
 </table>
 </form>
 
-<script language="javascript">
+<script language="javascript" type="text/javascript">
 <!--
 // INIT NEW SUGGEST LIBRARY [ call only after full document load ]
 function systemInit() {

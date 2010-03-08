@@ -1,4 +1,5 @@
-<script language="javascript">
+
+<script language="javascript" type="text/javascript">
 var currentInputAreaID = 'content';
 </script>
 
@@ -63,7 +64,7 @@ var currentInputAreaID = 'content';
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
    <td>{l_editor.configuration}</td>
   </tr>
-  <tr><td></td><td><label><input type="checkbox" name="approve" {ifapp} value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label></td></tr>
+  <tr><td></td><td><label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="flag_HTML" {ifhtml} value="1" class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label></td></tr>
   <tr><td></td><td><label><input type="checkbox" name="flag_RAW" {ifraw} value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label></td></tr>
   <tr><td colspan=2>&nbsp;</td></tr>
@@ -85,7 +86,7 @@ var currentInputAreaID = 'content';
 <td width="100%" class="contentEdit" align="center" valign="top">
 <input type="hidden" name="id" value="{id}" />
 <input type="hidden" name="subaction" value="doedit" />
-<input type="hidden" name="action" value="edit">
+<input type="hidden" name="action" value="edit" />
 <input type="submit" value="{l_do_editnews}" accesskey="s" class="button" />&nbsp;
 <input type="button" value="{l_delete}" onClick="confirmit('{php_self}?mod=static&subaction=do_mass_delete&selected[]={id}', '{l_sure_del}')" class="button" />
 </td>

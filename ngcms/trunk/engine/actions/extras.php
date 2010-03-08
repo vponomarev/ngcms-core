@@ -74,12 +74,12 @@ foreach($extras as $id => $extra) {
 		'author'		=>	$extra['author'],
 		'id'			=>	$extra['id'],
 		'style'			=>	getPluginStatusActive($id)?'pluginEntryActive':'pluginEntryInactive',
-		'readme'		=>	file_exists(extras_dir.'/'.$id.'/readme')&&filesize(extras_dir.'/'.$id.'/readme')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=readme&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>'):'',
-		'history'		=>	file_exists(extras_dir.'/'.$id.'/history')&&filesize(extras_dir.'/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&item=history&plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
+		'readme'		=>	file_exists(extras_dir.'/'.$id.'/readme')&&filesize(extras_dir.'/'.$id.'/readme')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&amp;item=readme&amp;plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>'):'',
+		'history'		=>	file_exists(extras_dir.'/'.$id.'/history')&&filesize(extras_dir.'/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&amp;item=history&amp;plugin='.$id.'" target="_blank" title="Documentation"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
 	);
 
 	if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] != $extra['version'])) {
-		$tvars['vars']['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';
+		$tvars['vars']['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&amp;id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';
 	} else {
 		$tvars['vars']['new'] = '';
 	}

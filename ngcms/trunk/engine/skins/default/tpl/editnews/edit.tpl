@@ -1,4 +1,5 @@
-<script type="text/javascript">
+
+<script language="javascript" type="text/javascript">
 
 //
 // Global variable: ID of current active input area
@@ -144,41 +145,6 @@ function changeActive(name) {
 </table>
 </div>
 
-<script language="javascript">
-<!--
-function attachAddRow() {
-	var tbl = document.getElementById('attachFilelist');
-	var lastRow = tbl.rows.length;
-	var row = tbl.insertRow(lastRow - 1);
-
-	// Add cells
-	row.insertCell(0).innerHTML = '*';
-	row.insertCell(1).innerHTML = '{l_attach.new_file}';
-	
-	// Add file input
-	var el = document.createElement('input');
-	el.setAttribute('type', 'file');
-	el.setAttribute('name', 'userfile[' + (++attachAbsoluteRowID) + ']');
-	el.setAttribute('size', '80');
-
-	var xCell = row.insertCell(2);
-	xCell.colSpan = 2;
-	xCell.appendChild(el);
-
-
-	el = document.createElement('input');
-	el.setAttribute('type', 'button');
-	el.setAttribute('onclick', 'document.getElementById("attachFilelist").deleteRow(this.parentNode.parentNode.rowIndex);');
-	el.setAttribute('value', '-');
-	row.insertCell(3).appendChild(el);
-}
-// Add first row 
-var attachAbsoluteRowID = 0;
-attachAddRow();
--->
-</script>
-
-
 </td>
 <td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
  <!-- Right edit column -->
@@ -266,3 +232,38 @@ attachAddRow();
 </table>
 </div>
 </form>
+
+
+<script language="javascript" type="text/javascript">
+<!--
+function attachAddRow() {
+	var tbl = document.getElementById('attachFilelist');
+	var lastRow = tbl.rows.length;
+	var row = tbl.insertRow(lastRow - 1);
+
+	// Add cells
+	row.insertCell(0).innerHTML = '*';
+	row.insertCell(1).innerHTML = '{l_attach.new_file}';
+	
+	// Add file input
+	var el = document.createElement('input');
+	el.setAttribute('type', 'file');
+	el.setAttribute('name', 'userfile[' + (++attachAbsoluteRowID) + ']');
+	el.setAttribute('size', '80');
+
+	var xCell = row.insertCell(2);
+	xCell.colSpan = 2;
+	xCell.appendChild(el);
+
+
+	el = document.createElement('input');
+	el.setAttribute('type', 'button');
+	el.setAttribute('onclick', 'document.getElementById("attachFilelist").deleteRow(this.parentNode.parentNode.rowIndex);');
+	el.setAttribute('value', '-');
+	row.insertCell(3).appendChild(el);
+}
+// Add first row 
+var attachAbsoluteRowID = 0;
+attachAddRow();
+-->
+</script>

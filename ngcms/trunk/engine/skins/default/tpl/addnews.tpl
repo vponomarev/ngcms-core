@@ -130,7 +130,7 @@ function changeActive(name) {
 </table>
 </div>
 
-<script language="javascript">
+<script language="javascript" type="text/javascript">
 <!--
 function attachAddRow() {
 	var tbl = document.getElementById('attachFilelist');
