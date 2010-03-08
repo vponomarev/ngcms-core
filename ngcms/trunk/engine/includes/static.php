@@ -34,6 +34,9 @@ function showStaticPage($params) {
 		return false;
 	}
 
+	if (is_array($PFILTERS['static']))
+		foreach ($PFILTERS['static'] as $k => $v) { $v->showStaticPre($row['id'], $row, array()); }
+
 	$content	= $row['content'];
 
 	// If HTML code is not permitted - LOCK it
