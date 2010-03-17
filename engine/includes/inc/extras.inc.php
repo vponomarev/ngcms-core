@@ -753,6 +753,23 @@ function generateLink($pluginName, $handlerName, $params = array(), $xparams = a
 
 
 //
+// Generate plugin link [ generate personal link if available. if not - generate common link ]
+// Params:
+// $pluginName	- ID of plugin
+// $handlerName	- Handler name
+// $params	- Params to pass to processor
+// $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
+// $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
+// $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
+function generatePluginLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false){
+
+	return checkLinkAvailable($pluginName, $handlerName)?
+		generateLink($pluginName, $handlerName, $params, $xparams, $intLink, $absoluteLink):
+		generateLink('core', 'plugin', array('plugin' => $pluginName, $handlerName), array_merge($params, $xparams));
+}
+
+
+//
 // Generate link to page
 //
 function generatePageLink($paginationParams, $page) {
