@@ -350,8 +350,9 @@ class parse {
 		// Авто-подсветка URL'ов в тексте новости
 		$content	=	preg_replace("#(^|\s)((http|https|news|ftp)://\w+[^\s\[\]\<]+)#i", "$1<a href='$2' target='_blank'>$2</a>", $content);
 
-		while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#ies", $content)) {
-			$content = preg_replace("#\[color=([^\]]+)\](.+?)\[/color\]#ies"  , "\$this->color(array('style'=>'$1','text'=>'$2'))", $content);
+		while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#ies", $content, $res)) {
+			$nl = $this->color(array('style' => $res[1], 'text' => $res[2]));
+			$content = str_replace($res[0], $nl, $content);
 		}
 		return $content;
 	}
@@ -430,7 +431,6 @@ class parse {
 	}
 
 	function color($arr) {
-
 		$style = $arr['style'];
 		$text  = $arr['text'];
 		$style = str_replace('&quot;', '', $style);
