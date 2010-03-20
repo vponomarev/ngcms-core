@@ -282,21 +282,21 @@ function editNewsForm() {
 	if ($config['news.edit.split']) {
 		$tvars['vars']['content.delimiter'] = '';
 		if (preg_match('#^(.*?)<!--more-->(.*?)$#si', $row['content'], $match)) {
-			$tvars['vars']['content.short'] = $match[1];
-			$tvars['vars']['content.full'] = $match[2];
+			$tvars['vars']['content.short'] = secure_html($match[1]);
+			$tvars['vars']['content.full'] = secure_html($match[2]);
 		} else if (preg_match('#^(.*?)<!--more=\"(.*?)\"-->(.*?)$#si', $row['content'], $match)) {
-			$tvars['vars']['content.short'] = $match[1];
-			$tvars['vars']['content.full'] = $match[3];
+			$tvars['vars']['content.short'] = secure_html($match[1]);
+			$tvars['vars']['content.full'] = secure_html($match[3]);
 			$tvars['vars']['content.delimiter'] = secure_html($match[2]);
 		} else {
-			$tvars['vars']['content.short'] = $row['content'];
+			$tvars['vars']['content.short'] = secure_html($row['content']);
 			$tvars['vars']['content.full'] = '';
 		}
 		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '$1';
 		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '';
 
 	} else {
-		$tvars['vars']['content'] = $row['content'];
+		$tvars['vars']['content'] = secure_html($row['content']);
 		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '';
 		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '$1';
 	}
