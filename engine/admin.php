@@ -22,6 +22,14 @@ if (defined('DEBUG')) {
 	print "HTTP CALL PARAMS: <pre>"; var_dump($_REQUEST); print "</pre><br>\n";
 }
 
+// Check for REQUIRED PHP EXTENSIONS
+foreach (array('iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
+	if (!function_exists($pFunction)) {
+		print str_replace(array('{extension}', '{function}'), array($pModule, $pFunction), $lang['fatal.lostlib']);
+		die();
+	}
+}
+
 $PHP_SELF = "admin.php";
 
 // We have only one admin panel skin
