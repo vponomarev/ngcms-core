@@ -71,7 +71,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 	if ($callingParams['setCurrentCategory']) {
 		// Fetch category ID from news
-		$cid = intval(array_shift(split(',', $row['catid'])));
+		$cid = intval(array_shift(explode(',', $row['catid'])));
 		if ($cid && isset($catmap[$cid])) {
 			// Save current category identifier
 			$SYSTEM_FLAGS['news']['currentCategory.alt']	= $catz[$catmap[$cid]]['alt'];
