@@ -105,7 +105,7 @@ include_once root."includes/inc/extrainst.inc.php";
 		array_push($LOG, "Активация плагина <b>".$pName."</b> ... ".(pluginSwitch($pName, 'on')?'OK':'ERROR'));
 	}
 
-	print '<p style="width: 99%;">';
+	print '<div class="body"><p style="width: 99%;">';
 	foreach ($LOG as $line) { print $line."<br />\n"; }
 	if ($error) {
 		foreach ($ERROR as $errText) {
@@ -116,7 +116,7 @@ include_once root."includes/inc/extrainst.inc.php";
 	} else {
 		print '<br/><br/><b>Установка успешно заверешена!</b><br/>Для проведения дальнейших настроек перейдите, пожалуйста, <a href="'.$homeURL.$adminDirName.'/">по этой ссылке</a>.';
 	}
-	print '</p>';
+	print '</p></div>';
 }
 
 
@@ -722,7 +722,7 @@ function doInstall() {
 					$error = 1;
 					break;
 				}
-				array_push($LOG,'Создание таблицы "'.$tname.'" ... OK');
+				array_push($LOG,'Создание таблицы "<b>'.$tname.'</b>" ... OK');
 			}
 		}
 		array_push($LOG,'Все таблицы успешно созданы ... OK');
