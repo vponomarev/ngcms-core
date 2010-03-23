@@ -22,8 +22,7 @@
 				<td>
 				<table border="0" width="100%">
 <tr>
-<form name="register" action="{php_self}" method="post">
-<input type="hidden" name="action" value="registration" />
+<form name="register" action="{form_action}" method="post">
 <input type="hidden" name="type" value="doregister" />
 {entries}
 [captcha]

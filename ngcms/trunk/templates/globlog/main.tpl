@@ -175,7 +175,7 @@
         <!--content end-->
         <!--footer -->
           <div id="footer">
-           Система управления сайтом: <a href="http://ngcms.ru/" target="_blank" title="Next Generation CMS">Next Generation CMS</a> [v0.9.0]<br />
+           Система управления сайтом: <a href="http://ngcms.ru/" target="_blank" title="Next Generation CMS">Next Generation CMS</a> [v0.9.2]<br />
 		   Оптимизация: <a href="http://dorogow.info">d7p4x</a>
         </div>
         <!--footer end-->	

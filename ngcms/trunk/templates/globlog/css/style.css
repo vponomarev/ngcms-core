@@ -530,3 +530,7 @@ line-height : 140%;
 	display: none;
 }	
 
+
+.timeProfiler TD {
+	background-color: #E8E8E8;
+}	
