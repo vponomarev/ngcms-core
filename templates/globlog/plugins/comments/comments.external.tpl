@@ -1,11 +1,5 @@
-<!-- Начало новости -->
-										
 										<div class="title">
-                                                <div class="comments">
-                                               <font style="color:#6ac015;"> Категория:</font> {category} | <font style="color:#6ac015;">Автор:</font> {author} | 
-												<font style="color:#6ac015;">Комментарии:</font> {comnum} |&nbsp; <font style="color:#6ac015;">Просмотров:</font> {views}  [edit-news]Редактировать[/edit-news] [del-news]Удалить[/del-news] [print-link]{l_print}[/print-link]
-                                                </div>
-                                                <div class="date">{date}</div>
+                                      
                                                 <div class="clear"></div>
 
                                                 <div class="side_left_5">
@@ -16,8 +10,7 @@
                                                                     <div class="right_top_5">
                                                                         <div class="left_bot_5">
                                                                             <div class="right_bot_5">
-                                                                                <h3>
-<a href>{title}</a></h3>
+                                                                                <h3>[comheader]<font color="#000000">Все комментарии посетителей к данной новости: </font><a href="{link}"><b>{title}</b></a><br />[/comheader]</h3>
 
                                                                             </div>
 																			
@@ -31,11 +24,15 @@
                                             </div>
 
                                             <div class="text_box">
-												[icon]<img src="{icon}" alt="" border="0" />[/icon][update]<br />{l_updated}{update}<br /><br />[/update]{short-story}{full-story}<div style="padding: 10px; text-align:center;">{pagination}</div><br />[isplugin finance][finance]<br />Стоимость доступа составляет: ${fin_price} [fin_on] <b>(оплачено)</b>[/fin_on][fin_off](не оплачено)[/fin_off][/finance][/isplugin]<br />[isplugin rating]{plugin_rating}<br /><br />[/isplugin]
+										{entries}
 
+{more_comments}
                                             </div>
 
-<br />
-{plugin_complain}
-<br />
-{plugin_comments}
+
+
+
+<!-- Here is user's comments -->
+
+<!-- Here is `add comments` form -->
+{form}

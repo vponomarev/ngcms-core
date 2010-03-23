@@ -21,13 +21,12 @@
 				<td width="7">&nbsp;</td>
 				<td>
 				<table border="0" width="100%">
-<form name="lostpassword" action="{php_self}" method="post">
-<input type="hidden" name="action" value="lostpassword" />
+<form name="lostpassword" action="{form_action}" method="post">
 <input type="hidden" name="type" value="send" />
 {entries}
 [captcha]
 <tr>
-<td style="padding: 5px;"><img src="{admin_url}/captcha.php"></td>
+<td style="padding: 5px;"><img src="{admin_url}/captcha.php" alt="Security code"/></td>
 <td style="padding: 5px;"><input class="important" tabindex="3" type="text" name="vcode" maxlength="5" size="30" /></td>
 </tr>
 [/captcha]
