@@ -135,7 +135,7 @@ function changeActive(name) {
 <b><u>{l_attach.list}</u></b>
 <table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
-<tr><td>ID</td><td width="80">{l_attach.date}</td><td>{l_attach.filename}</td><td width="90">{l_attach.size}</td><td width="40">DEL</td></tr>
+<tr><td>ID</td><td width="80">{l_attach.date}</td><td width="16">&nbsp;</td><td>{l_attach.filename}</td><td width="90">{l_attach.size}</td><td width="40">DEL</td></tr>
 </thead>
 <tbody>
 <!-- <tr><td colspan="5">No data</td></tr> -->
@@ -252,7 +252,7 @@ function attachAddRow() {
 	el.setAttribute('size', '80');
 
 	var xCell = row.insertCell(2);
-	xCell.colSpan = 2;
+	xCell.colSpan = 3;
 	xCell.appendChild(el);
 
 

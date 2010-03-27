@@ -27,9 +27,9 @@ function CatTree() {
 			'show_main'	=>	intval(substr($row['flags'],0,1)) ? ('<img src="'.skins_url.'/images/yes.png" alt="'.$lang['yesa'].'"/>') : ('<img src="'.skins_url.'/images/no.png" alt="'.$lang['noa'].'"/>'),
 			'template'	=>	($row['tpl'] != '')?$row['tpl']:'--',
 			'news'		=>	($row['posts']>0)?$row['posts']:'--',
-			'showcat'	=>  $config['home_url'].(checkLinkAvailable('news', 'by.category')?
-							generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id'])):
-							generateLink('core', 'plugin', array('plugin' => 'news', 'handler' => 'by.category'), array('category' => $row['alt'], 'catid' => $row['id']))),
+			'showcat'	=>  (checkLinkAvailable('news', 'by.category')?
+							generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id']), array(), false, true):
+							generateLink('core', 'plugin', array('plugin' => 'news', 'handler' => 'by.category'), array('category' => $row['alt'], 'catid' => $row['id']), false, true)),
 			'cutter'	=>	str_repeat('&#8212; ', $row['poslevel']),
 		);
 		$tvars['regx']['#\[news\](.*?)\[\/news\]#is'] = ($row['posts']>0)?'$1':'';
