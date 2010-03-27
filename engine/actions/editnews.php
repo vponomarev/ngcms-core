@@ -791,6 +791,8 @@ if ($action == "editnews") {
 		$tvars['vars']['status']	=	($row['approve'] == "1") ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
 		$tvars['vars']['itemdate']	=	date("d.m.Y",$row['postdate']);
 		$tvars['vars']['allcats']	=	@GetAllCategories($cats).' &nbsp;';
+		$tvars['regx']['#\[attach\](.*?)\[\/attach\]#is']	=	($row['attach_count']>0)?'$1':'';
+		$tvars['vars']['attach_count'] = $row['attach_count'];
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');

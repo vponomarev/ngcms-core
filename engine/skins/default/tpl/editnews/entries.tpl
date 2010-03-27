@@ -1,6 +1,7 @@
 <tr align="left">
 <td class="contentEntry1">{newsid}</td>
 <td class="contentEntry1">{itemdate}</td>
+<td class="contentEntry1">[attach]<img src="{skins_url}/images/attach.png" border="0" width="16" height="16" title="{l_attach.count}: {attach_count}"/></a>[/attach]</td>
 <td class="contentEntry1"><a href="{php_self}?mod=editnews&amp;action=editnews&amp;id={newsid}">{title}</a></td>
 [comments]<td class="contentEntry1">{comments}</td>
 [/comments]<td class="contentEntry1">{allcats}</td>

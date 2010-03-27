@@ -34,7 +34,7 @@ if ($subaction == "doeditcomment") {
 
 		if ($content && $_REQUEST['send_notice'] && $mail) {
 			$row = $mysql->record("select * from ".prefix."_news where id=".db_squote($newsid));
-			$newsLink = $config['home_url'].newsGenerateLink($row);
+			$newsLink = newsGenerateLink($row, false, 0, true);
 			zzMail($mail, $lang['comanswer'], sprintf($lang['notice'], $userROW['name'], $content, $newsLink), 'html');
 		}
 

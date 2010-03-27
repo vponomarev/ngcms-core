@@ -78,10 +78,10 @@ function listStatic() {
 		}
 
 		$link = checkLinkAvailable('static', '')?
-					generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id'])):
-					generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']));
+					generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id']), array(), false, true):
+					generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']), false, true);
 
-		$tvars['vars']['url']		= '<a href="'.$link.'" target="_blank">'.$config['home_url'].$link.'</a>';
+		$tvars['vars']['url']		= '<a href="'.$link.'" target="_blank">'.$link.'</a>';
 		$tvars['vars']['title']		= str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
 		$tvars['vars']['status']	=	($row['approve']) ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
 
@@ -331,9 +331,9 @@ function addStatic(){
 	$mysql->query("insert into ".prefix."_static (".implode(",",$vnames).") values (".implode(",",$vparams).")");
 	$id = $mysql->result("SELECT LAST_INSERT_ID() as id");
 
-	$link = $config['home_url'].(checkLinkAvailable('static', '')?
-				generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id)):
-				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id)));
+	$link = (checkLinkAvailable('static', '')?
+				generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id), array(), false, true):
+				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id), false, true));
 
 	msg(array(
 		"text" => str_replace('{url}',$link , $lang['msg.added']),
@@ -493,9 +493,9 @@ function editStatic(){
 
 	$mysql->query("update ".prefix."_static set ".implode(", ",$SQLparams)." where id = ".db_squote($id));
 
-	$link = $config['home_url'].(checkLinkAvailable('static', '')?
-				generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id)):
-				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id)));
+	$link = (checkLinkAvailable('static', '')?
+				generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id), array(), false, true):
+				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id), false, true));
 	msg(array(
 		"text" => str_replace('{url}',$link , $lang['msg.edited']),
 		"info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.edited#descr'])));

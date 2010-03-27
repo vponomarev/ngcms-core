@@ -171,7 +171,7 @@ function filter_attach_DateEdit(id) {
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left">
 <td width="5%" class="contentHead" nowrap>{l_postid_short}</td>
-<td width="10%" class="contentHead" nowrap>{l_date}</td>
+<td width="10%" class="contentHead" colspan="2" nowrap>{l_date}</td>
 <td width="45%" class="contentHead">{l_title}</td>
 [comments]<td width="10%" class="contentHead">{l_listhead.comments}</td>[/comments]
 <td width="25%" class="contentHead">{l_category}</td>
