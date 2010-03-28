@@ -55,6 +55,10 @@ if (function_exists('date_default_timezone_get') && function_exists('date_defaul
  date_default_timezone_set ( @date_default_timezone_get() );
 }
 
+// Disable magic_quotes_runtime if this [f.cking] feature is turned on
+if (ini_get('magic_quotes_runtime') && function_exists('set_magic_quotes_runtime'))
+	set_magic_quotes_runtime(false);
+
 define('root', dirname(__FILE__).'/');
 define('site_root', dirname(dirname(__FILE__)).'/');
 
@@ -165,6 +169,14 @@ if ( ( !file_exists(confroot.'config.php') ) || ( filesize(confroot.'config.php'
 	echo "You should run install script first";
 	exit;
 }
+
+// Give domainName to URL handler engine for generating absolute links
+$UHANDLER->setOptions(array('domainPrefix' => $config['home_url']));
+
+// Check if engine is installed in subdirectory
+if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
+	$UHANDLER->setOptions(array('localPrefix' => $match[2]));
+
 
 @include_once root.'includes/classes/mysql.class.php';
 $mysql = new mysql;
