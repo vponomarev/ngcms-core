@@ -125,6 +125,14 @@ $tvars['vars'] = array(
 
 $tvars['vars'] = $tvars['vars'] + $STATS;
 
+// PHP errors
+$phpErrors = 0;
+foreach (array('register_globals', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase') as $flag) {
+	$tvars['vars']['flag:'.$flag]     = ini_get($flag)?('<font color="red"><b>'.$lang['perror.on'].'</b></font>'):$lang['perror.off'];
+	if (ini_get($flag)) { $phpErrors++; }
+}
+$tvars['regx']['#\[conf_error\](.+?)\[\/conf_error\]#is'] = ($phpErrors)?'$1':'';
+
+
 $tpl -> vars('statistics', $tvars);
 echo $tpl -> show('statistics');
-?>
