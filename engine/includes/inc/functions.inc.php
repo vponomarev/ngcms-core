@@ -645,13 +645,16 @@ function ChangeDate($time = 0, $nodiv = 0) {
 
 //
 // Return a list of files
-function ListFiles($path, $ext) {
+// $path		- путь по которому искать файлы
+// $ext			- [scalar/array] расширение (одно или массивом) файла
+// $showExt		- флаг: показывать ли расширение
+function ListFiles($path, $ext, $showExt = 0) {
 
 	$list = array();
 	$extlen = strlen($ext);
 
-	if (!$handle = opendir("$path")) {
-		echo "<p>Can not open directory $path</p> ";
+	if (!$handle = opendir($path)) {
+		echo "<p>Can not open directory $path</p>";
 	}
 
 	while (($file = readdir($handle)) !== false) {

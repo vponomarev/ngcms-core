@@ -128,29 +128,44 @@ function _modal_close() {
 </table>
 </td>
 </tr>
-<tr>
-<td colspan="2">&nbsp;</td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
 
 <tr>
 <td width="50%" style="padding-right:10px;" valign="top">
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-<tr>
-<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_note}</td>
-</tr>
-<tr>
-<td width="50%" colspan="2" class="contentEntry1">
-<form method="post" action="{php_self}?mod=statistics">
-<input type="hidden" name="action" value="save" />
-<textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow;">{admin_note}</textarea><br />
-<input type="submit" class="button" value="{l_save_note}" />
-</form>
+ <table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr><td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_note}</td></tr>
+  <tr>
+   <td width="50%" colspan="2" class="contentEntry1">
+    <form method="post" action="{php_self}?mod=statistics">
+     <input type="hidden" name="action" value="save" />
+     <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow;">{admin_note}</textarea><br />
+     <input type="submit" class="button" value="{l_save_note}" />
+    </form>
+   </td>
+  </tr>
+ </table>
 </td>
-
 <td width="50%" style="padding-left:10px;" valign="top">
-&nbsp;
-</td>
-</tr>
+[conf_error]
+<!-- Configuration errors -->
+ <table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr><td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" /><font color="red">{l_pconfig.error}</font></td></tr>
+  <tr><td>
+<table width="100%">
+<thead><tr><td>{l_perror.parameter}</td><td>{l_perror.shouldbe}</td><td>{l_perror.set}</td></thead>
+<tr><td>Register Globals</td><td>Отключено</td><td>{flag:register_globals}</td></tr>
+<tr><td>Magic Quotes GPC</td><td>Отключено</td><td>{flag:magic_quotes_gpc}</td></tr>
+<tr><td>Magic Quotes Runtime</td><td>Отключено</td><td>{flag:magic_quotes_runtime}</td></tr>
+<tr><td>Magic Quotes Sybase</td><td>Отключено</td><td>{flag:magic_quotes_sybase}</td></tr>
 </table>
+<br/>
+&nbsp;<a style="cursor: pointer; color: red;" onclick="document.getElementById('perror_resolve').style.display='block';">{l_perror.howto}</a><br/>
+<div id="perror_resolve" style="display: none;">
+{l_perror.descr}
+</div>
+  </td></tr>
+ </table>
+[/conf_error]
 </td>
 </tr>
 </table>
