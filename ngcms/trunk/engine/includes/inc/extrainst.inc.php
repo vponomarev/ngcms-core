@@ -169,7 +169,7 @@ function mysql_table_exists($table) {
 	if (is_array($mysql->record("show tables like ".db_squote($table)))) {
 		return 1;
 	}
-	return 0;	
+	return 0;
 }
 
 // check field params
@@ -309,7 +309,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 			// Check if different character set are supported [ version >= 4.1.1 ]
 			$charset = is_array($mysql->record("show variables like 'character_set_client'"))?' DEFAULT CHARSET=CP1251':'';
 
-			$query = "create table ".prefix.'_'.$table['table']." (".implode(', ',$fieldlist).($table['key']?', '.$table['key']:'').")".$charset;
+			$query = "create table ".prefix.'_'.$table['table']." (".implode(', ',$fieldlist).($table['key']?', '.$table['key']:'').")".$charset.($table['engine']?' '.$table['engine']:'');
 			$mysql->query($query);
 			array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
 		} else {
