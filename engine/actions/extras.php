@@ -78,7 +78,7 @@ foreach($extras as $id => $extra) {
 		'history'		=>	file_exists(extras_dir.'/'.$id.'/history')&&filesize(extras_dir.'/'.$id.'/history')?('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&amp;item=history&amp;plugin='.$id.'" target="_blank" title="'.$lang['entry.history'].'"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>'):''
 	);
 
-	if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] != $extra['version'])) {
+	if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] > $extra['version'])) {
 		$tvars['vars']['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&amp;id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';
 	} else {
 		$tvars['vars']['new'] = '';
