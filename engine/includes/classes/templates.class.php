@@ -9,7 +9,14 @@ class tpl {
 	var $execTime = 0;
 	var $execCount = 0;
 
-	function template($name, $dir, $file = '') {
+	// $name   - name of template
+	// $dir    - directory where to search template
+	// $file   - file name for template [use $name if not specified]
+	// $params - advanced params:
+	//	includeAllowed        - flag: if includes are allowed
+	//  includeDisableChroot  - flag: to allow to include files beyond $dir
+	//  includeAllowRecursive - flag: to allow recursive includes
+	function template($name, $dir, $file = '', $params = array()) {
 		global $lang;
 
 		// Prepare to calculate exec time
@@ -18,26 +25,66 @@ class tpl {
 
 		if (is_dir($dir)) {
 			$this -> root = $dir;
-		}
-		else {
+		} else {
 			die(sprintf($lang['msge_no_tpldir'], $dir));
 		}
 
 		$nn		=	$name;
-		$ext	=	$this -> ext;
-		$name	=	$dir.'/'.$name.$ext;
 
-		if ($file) {
-			$name = $dir.$file;
+		$fname	=	$dir.($file?$file:((substr($dir, -1) != '/'?'/':'').$name.$this->ext));
+
+		if (!is_file($fname)) {
+			die(sprintf($lang['msgå_no_tpl'], $fname));
 		}
 
-		if (!is_file($name)) {
-			die(sprintf($lang['msgå_no_tpl'], $name));
-		}
-
-		$fp		=	fopen($name,'r');
-		$data	=	filesize($name)?fread($fp,filesize($name)):'';
+		$fp		=	fopen($fname,'r');
+		$data	=	filesize($fname)?fread($fp,filesize($fname)):'';
 		fclose($fp);
+
+		// Check if includes feature is activated
+		if (isset($params['includeAllowed']) && $params['includeAllowed']) {
+			// Check include working mode: recursive or normal
+			if (isset($params['includeAllowRecursive']) && $params['includeAllowRecursive']) {
+				// Recursive mode: ON
+				while (preg_match('#\[:include (.+?)\]#is', $data, $iM)) {
+					$incName = $iM[1];
+					if (!(isset($params['includeDisableChroot']) && $params['includeDisableChroot'])) {
+						$incName = str_replace(array('/../', '/./'), '', $incName);
+						if (preg_match('#^\.\.\/(.+)$#is', $incName, $mt))
+							$incName = $mt[1];
+					}
+					$incFile = $dir.$incName;
+					if (is_file($incFile) && is_readable($incFile)) {
+						$fI = fopen($incFile, 'r');
+						$incData = filesize($incFile) ? fread($fI, filesize($incFile)) : '';
+						$data = str_replace($iM[0], $incData, $data);
+					}
+				}
+			} else {
+				// Recursive mode: OFF
+				if (preg_match_all('#\[:include (.+?)\]#is', $data, $iMList, PREG_SET_ORDER)) {
+					$pMatchString = array();
+					$pMatchData = array();
+
+					foreach ($iMList as $iMNo => $iM) {
+						$incName = $iM[1];
+						if (!(isset($params['includeDisableChroot']) && $params['includeDisableChroot'])) {
+							$incName = str_replace(array('/../', '/./'), '', $incName);
+							if (preg_match('#^\.\.\/(.+)$#is', $incName, $mt))
+								$incName = $mt[1];
+						}
+						$incFile = $dir.$incName;
+						if (is_file($incFile) && is_readable($incFile)) {
+							$fI = fopen($incFile, 'r');
+							$incData = filesize($incFile) ? fread($fI, filesize($incFile)) : '';
+							$pMatchString[] = $iM[0];
+							$pMatchData[] = $incData;
+						}
+						$data = str_replace($pMatchString, $pMatchData, $data);
+					}
+				}
+			}
+		}
 
 		$this -> data[$nn] = $data;
 
@@ -66,13 +113,11 @@ class tpl {
 
 		foreach ($larr[0] as $k => $v) {
 			$name_larr = substr($v, 2);
-			//if (!isset($lang[$name_larr])) { print "[LLOST: ".$name_larr."]"; }
 			$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST:'.$name_larr.']', $data);
 		}
 
 		preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr);
 		foreach ($parr[0] as $k => $v) {
-			//print "ISPLUG '$k' => '$v' [".$parr[1][$k]."][".$parr[2][$k]."]<br>\n";
 			$data = str_replace($v,getPluginStatusActive($parr[1][$k])?$parr[2][$k]:'', $data);
 		}
 
@@ -141,4 +186,3 @@ class tpl {
 		return $ret;
 	}
 }
-?>
