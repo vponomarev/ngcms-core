@@ -765,7 +765,7 @@ function generatePluginLink($pluginName, $handlerName, $params = array(), $xpara
 
 	return checkLinkAvailable($pluginName, $handlerName)?
 		generateLink($pluginName, $handlerName, $params, $xparams, $intLink, $absoluteLink):
-		generateLink('core', 'plugin', array('plugin' => $pluginName, 'handler' => $handlerName), array_merge($params, $xparams));
+		generateLink('core', 'plugin', array('plugin' => $pluginName, 'handler' => $handlerName), array_merge($params, $xparams), $intLink, $absoluteLink);
 }
 
 
