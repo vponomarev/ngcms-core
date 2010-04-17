@@ -108,7 +108,7 @@ if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
 	$stampFileName = $config['wm_image'];
 }
 
-$tvars['vars']['wm_image']		= MakeDropDown(ListFiles('trash', array('gif', 'png'), true), "save_con[wm_image]", $config['wm_image']);
+$tvars['vars']['wm_image']		= MakeDropDown(ListFiles('trash', array('gif', 'png'), 2), "save_con[wm_image]", $config['wm_image']);
 
 
 //
