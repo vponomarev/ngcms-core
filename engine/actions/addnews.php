@@ -179,12 +179,6 @@ function news_add(){
 		$mysql->query("update ".uprefix."_users set news=news+1 where id=".$SQL['author_id']);
 	}
 
-	if (is_array($PFILTERS['news']))
-	foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
-
-	exec_acts('addnews_', $id);
-	msg(array("text" => $lang['msgo_added'], "info" => sprintf($lang['msgi_added'], admin_url.'/admin.php?mod=editnews&action=editnews&id='.$id, admin_url.'/admin.php?mod=editnews')));
-
 
 	// Now let's manage attached files
 	$fmanager = new file_managment();
@@ -223,6 +217,14 @@ function news_add(){
 		$attachCount = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
 		$mysql->query("update ".prefix."_news set attach_count = ".intval($attachCount)." where id = ".db_squote($id));
 	}
+
+	// Notify plugins about adding new news
+	if (is_array($PFILTERS['news']))
+	foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
+
+	exec_acts('addnews_', $id);
+	msg(array("text" => $lang['msgo_added'], "info" => sprintf($lang['msgi_added'], admin_url.'/admin.php?mod=editnews&action=editnews&id='.$id, admin_url.'/admin.php?mod=editnews')));
+
 
 	return 1;
 }

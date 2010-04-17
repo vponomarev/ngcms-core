@@ -141,10 +141,12 @@ class mysql {
 	}
 
 	function lastid($table) {
-
-		$row = $this->record("SHOW TABLE STATUS LIKE '".prefix."_".$table."'");
-
-		return ($row['Auto_increment'] - 1);
+		if ($table != '') {
+			$row = $this->record("SHOW TABLE STATUS LIKE '".prefix."_".$table."'");
+			return ($row['Auto_increment'] - 1);
+		} else {
+			return mysql_insert_id($this->connect);
+		}
 	}
 
 	function close() {

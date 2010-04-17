@@ -1,4 +1,4 @@
-<?php
+w<?php
 
 
 //
@@ -129,13 +129,23 @@ function manage_upload($type){
 
 				// Make thumb if required
 				$thumb = 0;
+
+				// Prepare params for STAMP. In older versions we don't store extension and support only .gif files, in
+				// newer - store stampFileName with extension and support .gif and .png
+				$stampFileName = '';
+				if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
+					$stampFileName = root.'trash/'.$config['wm_image'].'.gif';
+				} else if (file_exists(root.'trash/'.$config['wm_image'])) {
+					$stampFileName = root.'trash/'.$config['wm_image'];
+				}
+
 				if ($mkThumb) {
 					$tsz = intval($config['thumb_size']);
 					if (($tsz < 10)||($tsz > 1000)) $tsz = 150;
 					$thumb = $imanager->create_thumb($config['images_dir'].$subdirectory, $up[1], $tsz,$tsz, $config['thumb_quality']);
 					if ($thumb) {
 						// If we created thumb - check if we need to transform it
-						$stampThumb  = ($mkStamp  && $config['stamp_place'])?1:0;
+						$stampThumb  = ($mkStamp  && $config['stamp_place'] && ($stampFileName != ''))?1:0;
 						$shadowThumb = ($mkShadow && $config['shadow_place'])?1:0;
 						if ($shadowThumb || $stampThumb) {
 							$stamp = $imanager->image_transform(
@@ -143,12 +153,12 @@ function manage_upload($type){
 								'stamp' => $stampThumb,
 								'stamp_transparency' => $config['wm_image_transition'],
 								'shadow' => $shadowThumb,
-								'stampfile' => root.'trash/stamp.gif'));
+								'stampfile' => $stampFileName));
 						}
 					}
 				}
 
-				$stampOrig  = ($mkStamp  && ($config['stamp_place'] != 1))?1:0;
+				$stampOrig  = ($mkStamp  && ($config['stamp_place'] != 1) && ($stampFileName != ''))?1:0;
 				$shadowOrig = ($mkShadow && ($config['shadow_place'] != 1))?1:0;
 
 				if ($shadowOrig || $stampOrig) {
@@ -157,7 +167,7 @@ function manage_upload($type){
 						'stamp' => $stampOrig,
 						'stamp_transparency' => $config['wm_image_transition'],
 						'shadow' => $shadowOrig,
-						'stampfile' => root.'trash/stamp.gif'));
+						'stampfile' => $stampFileName));
 				}
 
 				// Now write info about image into DB
