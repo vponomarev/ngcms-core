@@ -342,7 +342,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 						$publish_error = 1;
 						break;
 					}
-					$query = "alter table ".prefix.'_'.$table['table']." drop column ".$field['name'];
+					$query = "alter table ".prefix.'_'.$table['table']." drop column `".$field['name']."`";
 					$mysql->query($query);
 					array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
 				}
@@ -356,16 +356,16 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 						$publish_error = 1;
 						break;
 					}
-					$query = "alter table ".prefix."_".$table['table']." add column ".$field['name']." ".$field['type']." ".$field['params'];
+					$query = "alter table ".prefix."_".$table['table']." add column `".$field['name']."` ".$field['type']." ".$field['params'];
 					$mysql->query($query);
 					array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
 					continue;
 				}
 				if ($field['action'] == 'cmodify') {
 					if (!$ft) {
-						$query = "alter table ".prefix."_".$table['table']." add column ".$field['name']." ".$field['type']." ".$field['params'];
+						$query = "alter table ".prefix."_".$table['table']." add column `".$field['name']."` ".$field['type']." ".$field['params'];
 					} else {
-						$query = "alter table ".prefix."_".$table['table']." change column ".$field['name']." ".$field['name']." ".$field['type']." ".$field['params'];
+						$query = "alter table ".prefix."_".$table['table']." change column `".$field['name']."` `".$field['name']."` ".$field['type']." ".$field['params'];
 					}
 					$mysql->query($query);
 					array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
