@@ -53,7 +53,6 @@ $tvars['vars'] = array(
 	'timestamp_updated_now'			=>	LangDate($config['timestamp_updated'], time()),
 	'lock'							=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[lock]", $config['lock']),
 	'language_selection'			=>	MakeDropDown(ListFiles('lang', ''), "save_con[default_lang]", $config['default_lang']),
-	'wm_image'						=>	MakeDropDown(ListFiles('trash', 'gif'), "save_con[wm_image]", $config['wm_image']),
 	'captcha_font'					=>	MakeDropDown(ListFiles('trash', 'ttf'), "save_con[captcha_font]", $config['captcha_font']),
 	'list_themes'					=>	MakeDropDown(ListFiles('../templates',''), "save_con[theme]", $config['theme']),
 	'users_selfregister'			=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[users_selfregister]", $config['users_selfregister']),
@@ -68,7 +67,7 @@ $tvars['vars'] = array(
 	'use_sessions'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_sessions]", $config['use_sessions']),
 	'category_counters'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[category_counters]", $config['category_counters']),
 	'news.edit.split'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[news.edit.split]", $config['news.edit.split']),
-	'add_onsite_guests'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[add_onsite_guests]", $config['add_onsite_guests']),
+//	'add_onsite_guests'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[add_onsite_guests]", $config['add_onsite_guests']),
 	'use_smilies'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_smilies]", $config['use_smilies']),
 	'use_bbcodes'					=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_bbcodes]", $config['use_bbcodes']),
 	'use_htmlformatter'				=>	MakeDropDown(array("1"=>"$lang[yesa]","0"=>"$lang[noa]"), "save_con[use_htmlformatter]", $config['use_htmlformatter']),
@@ -100,6 +99,16 @@ $tvars['vars'] = array(
 	'stamp_place'					=>	MakeDropDown(array("0"=>$lang['mode_orig'],"1"=>$lang['mode_copy'], "2" => $lang['mode_origcopy']), "save_con[stamp_place]", $config['stamp_place']),
 	'404_mode'						=>	MakeDropDown(array("0"=>$lang['404.int'],"1"=>$lang['404.ext'], "2" => $lang['404.http']), "save_con[404_mode]", $config['404_mode']),
 );
+
+// Prepare file name for STAMP
+$stampFileName = '';
+if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
+	$stampFileName = $config['wm_image'].'.gif';
+} else if (file_exists(root.'trash/'.$config['wm_image'])) {
+	$stampFileName = $config['wm_image'];
+}
+
+$tvars['vars']['wm_image']		= MakeDropDown(ListFiles('trash', array('gif', 'png'), true), "save_con[wm_image]", $config['wm_image']);
 
 
 //
