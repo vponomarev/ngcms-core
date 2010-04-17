@@ -191,10 +191,6 @@ function editNews() {
 			}
 		}
 	}
-	if (is_array($PFILTERS['news']))
-		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsNotify($id, $row, $SQL, $tvars); }
-
-	msg(array("text" => $lang['msgo_edited']));
 
 	// Now let's manage attached files
 	$fmanager = new file_managment();
@@ -231,6 +227,12 @@ function editNews() {
 		$attachCount = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
 		$mysql->query("update ".prefix."_news set attach_count = ".intval($attachCount)." where id = ".db_squote($id));
 	}
+
+	// Notify plugins about news edit completion
+	if (is_array($PFILTERS['news']))
+		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsNotify($id, $row, $SQL, $tvars); }
+
+	msg(array("text" => $lang['msgo_edited']));
 }
 
 
