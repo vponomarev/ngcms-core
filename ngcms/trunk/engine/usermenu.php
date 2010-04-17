@@ -11,11 +11,12 @@
 if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('usermenu', 'site');
+global $SYSTEM_FLAGS;
 
 // If not logged in
 if (!$is_logged) {
 	$tvars['vars'] = array(
-		'redirect'	=>	$_SERVER['REQUEST_URI'],
+		'redirect'	=>	isset($SYSTEM_FLAGS['module.usermenu']['redirect'])?$SYSTEM_FLAGS['module.usermenu']['redirect']:$_SERVER['REQUEST_URI'],
 		'reg_link'		=>	generateLink('core', 'registration'),
 		'lost_link'		=>	generateLink('core', 'lostpassword'),
 		'form_action'	=>  generateLink('core', 'login'),
