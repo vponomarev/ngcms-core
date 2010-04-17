@@ -647,27 +647,36 @@ function ChangeDate($time = 0, $nodiv = 0) {
 // Return a list of files
 // $path		- путь по которому искать файлы
 // $ext			- [scalar/array] расширение (одно или массивом) файла
-// $showExt		- флаг: показывать ли расширение
+// $showExt		- флаг: показывать ли расширение [0 - нет, 1 - показывать, 2 - использовать в значениях]
 function ListFiles($path, $ext, $showExt = 0) {
 
 	$list = array();
-	$extlen = strlen($ext);
+	if (!is_array($ext))
+		$ext = array($ext);
 
 	if (!$handle = opendir($path)) {
-		echo "<p>Can not open directory $path</p>";
+		echo "<p>ListFiles() execution error: Can not open directory $path</p>";
 	}
 
 	while (($file = readdir($handle)) !== false) {
 		// Skip reserved words
 		if (($file == '.') || ($file == '..')) continue;
 
-		//print "ListFiles[".$ext."][".$file."]($extlen,".substr($file, -$extlen-1).")<br/>\n";
-		if (!$extlen) {
-			$list[$file] = $file;
-		} else if (substr($file, -$extlen-1) == ('.'.$ext)) {
-			$fn = substr($file, 0, 0-$extlen-1);
-			$list[$fn] = $fn;
+		// Check file against all extensions
+		foreach ($ext as $e) {
+			if ($e == '') {
+				if (strpos($file, '.') === false) {
+					$list[$file] = $file;
+					break;
+				}
+			} else {
+				if (preg_match('#^(.+?)\.'.$e.'$#', $file, $m)) {
+					$list[($showExt == 2)?$file:$m[1]] = $showExt?$file:$m[1];
+					break;
+				}
+			}
 		}
+
 	}
 	closedir($handle);
 	return $list;
