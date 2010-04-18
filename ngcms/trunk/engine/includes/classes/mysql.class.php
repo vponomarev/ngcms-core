@@ -140,7 +140,7 @@ class mysql {
 		return $this->queries;
 	}
 
-	function lastid($table) {
+	function lastid($table = '') {
 		if ($table != '') {
 			$row = $this->record("SHOW TABLE STATUS LIKE '".prefix."_".$table."'");
 			return ($row['Auto_increment'] - 1);
