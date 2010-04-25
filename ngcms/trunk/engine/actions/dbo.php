@@ -82,11 +82,13 @@ if ($_REQUEST['cat_recount']) {
 		}
 	}
 
+	// Update table `news_map`
 	$mysql->query("truncate table ".prefix."_news_map");
 
 	if (strlen($nmap))
 		$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values ".substr($nmap,0,-1));
 
+	// Update category news counters
 	foreach ($catz as $key) {
 		$mysql->query("update ".prefix."_category set posts = ".intval($ccount[$key['id']])." where id = ".$key['id']);
 	}
@@ -105,6 +107,16 @@ if ($_REQUEST['cat_recount']) {
   	foreach ($mysql->select("select author_id, count(*) as cnt from ".prefix."_comments group by author_id") as $row) {
   		$mysql->query("update ".uprefix."_users set com=".$row['cnt']." where id = ".$row['author_id']);
   	}
+
+	// Обновляем кол-во приложенных файлов/изображений к новостям
+	$mysql->query("update ".prefix."_news set num_files = 0, num_images = 0");
+	foreach ($mysql->select("select linked_id, count(id) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) group by linked_id") as $row) {
+		$mysql->query("update ".prefix."_news set num_files = ".db_squote($row['cnt'])." where id = ".db_squote($row['linked_id']));
+	}
+
+	foreach ($mysql->select("select linked_id, count(id) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) group by linked_id") as $row) {
+		$mysql->query("update ".prefix."_news set num_images = ".db_squote($row['cnt'])." where id = ".db_squote($row['linked_id']));
+	}
 
   	msg(array("text" => $lang['msgo_cat_recount']));
 }

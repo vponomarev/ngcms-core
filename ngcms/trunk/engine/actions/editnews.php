@@ -224,8 +224,12 @@ function editNews() {
 
 	// Update attach count if we need this
 	if ($flagUpdateAttachCount) {
-		$attachCount = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-		$mysql->query("update ".prefix."_news set attach_count = ".intval($attachCount)." where id = ".db_squote($id));
+		$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+		$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+
+		$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
+		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
+
 	}
 
 	// Notify plugins about news edit completion
@@ -357,7 +361,7 @@ function editNewsForm() {
 
 	// Check for attached files
 	$attaches_entries = '';
-	if ($row['attach_count']) {
+	if ($row['num_files']) {
 		// Yeah! We have some attached files
 		$tpl->template('attach.file', tpl_actions.$mod);
 
@@ -604,7 +608,7 @@ function massNewsDelete() {
 		$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($nrow['id']));
 
 		// Delete attached files if any
-		if ($nrow['attach_count']) {
+		if ($nrow['num_files']) {
 			foreach ($mysql->select("select * from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($nrow['id']).")") as $frec) {
 				$fmanager = new file_managment();
 				$fmanager->file_delete(array('type' => 'file', 'id' => $frec['id']));
@@ -793,8 +797,8 @@ if ($action == "editnews") {
 		$tvars['vars']['status']	=	($row['approve'] == "1") ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
 		$tvars['vars']['itemdate']	=	date("d.m.Y",$row['postdate']);
 		$tvars['vars']['allcats']	=	@GetAllCategories($cats).' &nbsp;';
-		$tvars['regx']['#\[attach\](.*?)\[\/attach\]#is']	=	($row['attach_count']>0)?'$1':'';
-		$tvars['vars']['attach_count'] = $row['attach_count'];
+		$tvars['regx']['#\[attach\](.*?)\[\/attach\]#is']	=	($row['num_files']>0)?'$1':'';
+		$tvars['vars']['attach_count'] = $row['num_files'];
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
