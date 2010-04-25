@@ -214,8 +214,11 @@ function news_add(){
 
 	// Update attach count if we need this
 	if ($flagUpdateAttachCount) {
-		$attachCount = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-		$mysql->query("update ".prefix."_news set attach_count = ".intval($attachCount)." where id = ".db_squote($id));
+		$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+		$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+
+		$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
+		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
 	}
 
 	// Notify plugins about adding new news
