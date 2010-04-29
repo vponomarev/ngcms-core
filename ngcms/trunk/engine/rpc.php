@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
 // Name: rpc.php
 // Description: Service functions controller
 // Author: Vitaly Ponomarev
@@ -23,6 +23,12 @@ if (!function_exists('json_decode')) {
 	}
 }
 
+// Load additional handlers [ common ]
+loadActionHandlers('rpc');
+loadActionHandlers('rpc:'.(is_array($userROW)?'active':'inactive'));
+
+
+
 //
 // We support two types of RPC calls: HTTP/JSON-RPC and XML-RPC
 //
@@ -38,13 +44,20 @@ if (isset($_REQUEST['json'])) {
 // HTTP/JSON-RPC processor
 //
 function processJSON(){
+	global $RPCFUNC;
+
 	// Decode passed params
 	$params = json_decode($_POST['params'], true);
 
 	switch ($_POST['methodName']) {
 		case 'rewrite.submit':		$out = rpcRewriteSubmit($params); break;
 		case 'admin.users.search':	$out = rpcAdminUsersSearch($params); break;
-		default:					$out = rpcDefault(); break;
+		default:
+			if (isset($RPCFUNC[$_POST['methodName']])) {
+				$out = call_user_func($RPCFUNC[$_POST['methodName']], $params);
+			} else {
+				$out = rpcDefault($params); break;
+			}
 	}
 
 	// Print output
