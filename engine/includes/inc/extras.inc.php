@@ -167,7 +167,7 @@ function load_extras($action, $plugin = '') {
 			if ($plugin && ($key != $plugin))
 				continue;
 
-			// Do only if we already loaded this file
+			// Do only if this file is was not loaded earlier
 			if (!isset($PLUGINS['loaded:files'][$value])) {
 				// Try to load file. First check if it exists
 				if (is_file(extras_dir.'/'.$value)) {
@@ -186,6 +186,8 @@ function load_extras($action, $plugin = '') {
 	// Return count of loaded plugins
 	return $loadedCount;
 }
+// * New Style function name for `load_extras`
+function loadActionHandlers($action, $plugin = '') { return load_extras($action, $plugin); }
 
 
 //
@@ -724,6 +726,16 @@ function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '') {
 function register_filter($group, $name, $instance) {
  global $PFILTERS;
  $PFILTERS[$group][$name] = $instance;
+}
+
+// NEW style for `register_filter`
+function pluginRegisterFilter($group, $name, $instance) { return register_filter($group, $name, $instance); }
+
+
+// Register RPC function
+function rpcRegisterFunction($name, $instance) {
+ global $RPCFUNC;
+ $RPCFUNC[$name] = $instance;
 }
 
 
