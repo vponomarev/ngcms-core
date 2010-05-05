@@ -113,6 +113,11 @@ function validate_form() {
 <td style="padding: 5px;" class="entry">{l_uprofile:about} {about_sizelimit_text}</td>
 <td style="padding: 5px;" class="entry"><textarea name="editabout" rows="7" cols="55">{about}</textarea></td>
 </tr>
+<tr>
+<td style="padding: 5px;" class="entry">{l_uprofile:oldpass}</td>
+<td style="padding: 5px;" class="entry"><input type="password" name="oldpass" value="" size="40" maxlength="10" /></td>
+</tr>
+<tr>
 </table>
 
 <table id="additional" style="display: none;" class="content" border="0" width="100%" cellspacing="0" cellpadding="0">
