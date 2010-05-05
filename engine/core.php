@@ -192,6 +192,13 @@ foreach ($mysql->select("select * from `".prefix."_category` order by posorder a
 $timer->registerEvent('DB category list is loaded');
 
 //
+// RUN compatibility mode [ rewrite old links ]
+//
+//include_once root.'includes/inc/libcompat.php';
+//compatRedirector();
+// [ END compatibility mode ]
+
+//
 // Make authentication
 //
 $timer->registerEvent('Ready to load auth plugins');
