@@ -733,7 +733,7 @@ function pluginRegisterFilter($group, $name, $instance) { return register_filter
 
 
 // Register RPC function
-function rpcRegisterFunction($name, $instance) {
+function rpcRegisterFunction($name, $instance, $permanent = false) {
  global $RPCFUNC;
  $RPCFUNC[$name] = $instance;
 }

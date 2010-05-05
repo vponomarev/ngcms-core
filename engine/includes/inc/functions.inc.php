@@ -686,27 +686,35 @@ function ListFiles($path, $ext, $showExt = 0) {
 function ListDirs($folder, $category = false, $alllink = true) {
 	global $lang;
 
+	switch ($folder) {
+		case 'files':
+				$wdir = files_dir;
+				break;
+		case 'images':
+				$wdir = images_dir;
+				break;
+
+		default:
+				return fase;
+	}
+
 	$select = '<select name="category">'.($alllink?'<option value="">- '.$lang['all'] .' -</option>':'');
 
-	if ($folder == "files") {
-		$def_dir	=	files_dir;
-		$dir		=	opendir(files_dir);
+	if (($dir = @opendir($wdir)) === FALSE) {
+		msg(array('type' => 'error', 'text' => str_replace('{dirname}', $wdir, $lang['msge_nodir'])), 1);
+		return false;
 	}
 
-	if ($folder == "images") {
-		$def_dir	=	images_dir;
-		$dir		=	opendir(images_dir);
-	}
-
+	$filelist = array();
 	while($file = readdir($dir)) {
-		$in_dir[] = $file;
+		$filelist[] = $file;
 	}
 
-	natcasesort($in_dir);
-	reset($in_dir);
+	natcasesort($filelist);
+	reset($filelist);
 
-	foreach ($in_dir as $file) {
-		if (is_dir($def_dir."/".$file) && $file != "." && $file != "..")
+	foreach ($filelist as $file) {
+		if (is_dir($wdir."/".$file) && $file != "." && $file != "..")
 			$select .= "<option value=\"".$file."\"".($category==$file?' selected="selected"':'').">".$file."</option>\n";
 	}
 	$select .= '</select>';
