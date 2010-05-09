@@ -8,7 +8,7 @@
 var sheetRules = new Array();
 var sIdx;
 for (sIdx = 0; sIdx < document.styleSheets.length; sIdx++) {
-	if (document.styleSheets[sIdx].href.indexOf('/skins/default/style.css')) {
+	if ((document.styleSheets[sIdx].href != null) && (document.styleSheets[sIdx].href.indexOf('/skins/default/style.css'))) {
 		// Catched
 		if (document.styleSheets[0].cssRules) {
 			sheetRules = document.styleSheets[0].cssRules;
