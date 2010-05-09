@@ -10,10 +10,10 @@ var sIdx;
 for (sIdx = 0; sIdx < document.styleSheets.length; sIdx++) {
 	if ((document.styleSheets[sIdx].href != null) && (document.styleSheets[sIdx].href.indexOf('/skins/default/style.css'))) {
 		// Catched
-		if (document.styleSheets[0].cssRules) {
-			sheetRules = document.styleSheets[0].cssRules;
-		} else if (document.styleSheets[0].rules) {
-			sheetRules = document.styleSheets[0].rules;
+		if (document.styleSheets[sIdx].cssRules) {
+			sheetRules = document.styleSheets[sIdx].cssRules;
+		} else if (document.styleSheets[sIdx].rules) {
+			sheetRules = document.styleSheets[sIdx].rules;
 		}
 		break;
 	}
