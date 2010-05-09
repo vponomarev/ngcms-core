@@ -6,10 +6,17 @@
 // First: Init CSS manage mechanism
 
 var sheetRules = new Array();
-if (document.styleSheets[0].cssRules) {
-	sheetRules = document.styleSheets[0].cssRules;
-} else if (document.styleSheets[0].rules) {
-	sheetRules = document.styleSheets[0].rules;
+var sIdx;
+for (sIdx = 0; sIdx < document.styleSheets.length; sIdx++) {
+	if (document.styleSheets[sIdx].href.indexOf('/skins/default/style.css')) {
+		// Catched
+		if (document.styleSheets[0].cssRules) {
+			sheetRules = document.styleSheets[0].cssRules;
+		} else if (document.styleSheets[0].rules) {
+			sheetRules = document.styleSheets[0].rules;
+		}
+		break;
+	}
 }
 
 var sIndexActive	= -1;
