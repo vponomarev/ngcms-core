@@ -119,9 +119,9 @@ function filter_attach_DateEdit(id) {
 
 
 <!-- Hidden SUGGEST div -->
-<div id="suggestWindow" style="position:absolute; top: 0px; left: 0px;">
-<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
-<a href="#" align="right" id="suggestClose">close</a>
+<div id="suggestWindow" class="suggestWindow">
+<table id="suggestBlock" style="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
+<a href="#" align="right" id="suggestClose" style="suggestClose">close</a>
 </div>
 
 
@@ -229,6 +229,8 @@ var aSuggest = new ngSuggest('an',
 									'sId'		: 'suggestWindow', 
 									'stId'		: 'suggestBlock',
 									'lId'		: 'suggestLoader',
+									'sClass'	: 'suggestWindow',
+									'stClass'	: 'suggestBlock',
 									'hlr'		: 'true',
 									'iMinLen'	: 1,
 									'stCols'	: 2,
