@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 002 ( 2010-05-12)                                                              //
+// Build: 003 ( 2010-05-13)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -9,12 +9,12 @@ var ngSuggest = function(fieldID, params) {
 	// Check for DOM
 	if (!document.getElementById)
 		return false;
-	
+
 	// Get field
 	this.field = document.getElementById(fieldID);
 	if (!this.field)
 		return false;
-	
+
 	// Init internal variables
 	this.searchDest		= '';
 	this.iLen			= 0;
@@ -22,10 +22,10 @@ var ngSuggest = function(fieldID, params) {
 	this.sValue			= '';
 	this.sCount			= 0;
 	this.sList			= [];
-	
+
 	// Init parameters
 	this.opts = params ? params : {};
-	
+
 	if (!this.opts.iMinLen)			this.opts.iMinLen	= 2;		// input: minimal len for search
 	if (!this.opts.sId)				this.opts.sId		= null;		// search: search DIV element ID
 	if (!this.opts.sClass)			this.opts.sClass	= '';		// search: search DIV element class
@@ -37,7 +37,7 @@ var ngSuggest = function(fieldID, params) {
 	if (!this.opts.stColsClass)		this.opts.stColsClass = [];		// list of classes (1 by one) that should be applied to cols
 	if (!this.opts.stColsHLR)		this.opts.stColsHLR	= [];		// list of flags: do we need highlighing for this col
 	if (!this.opts.hlr)				this.opts.hlr 		= false;	// should we manually HighLight Results
-	if (!this.opts.reqMethodName)		this.opts.reqMethodName = 'admin.users.search';	// AJAX RPC Request method name
+	if (!this.opts.reqMethodName)	this.opts.reqMethodName = 'admin.users.search';	// AJAX RPC Request method name
 
 	if (!this.opts.lId)				this.opts.lId		= null;		// ID of loading layer
 	if (!this.opts.delay)			this.opts.delay		= 500;		// Delay before making AJAX request (ms)
@@ -46,27 +46,36 @@ var ngSuggest = function(fieldID, params) {
 
 	// Save link to our object
 	var pointer = this;
-	
+
 	// Now let's init search DIV
 	this.searchDIV = this.opts.sId ? document.getElementById(this.opts.sId) : false;
-	if (!this.searchDIV)
+	if (!this.searchDIV) {
 		this.searchDIV = document.createElement('div');
+
+		document.body.appendChild(this.searchDIV);
+	}
 	if (this.opts.sClass)
 		this.searchDIV.className = this.opts.sClass;
 
 	// Let's init search TABLE
 	this.searchTBL = this.opts.stId ? document.getElementById(this.opts.stId) : false;
-	if (!this.searchTBL)
+	if (!this.searchTBL) {
 		this.searchTBL = document.createElement('table');
+		this.searchTBL.style.width	= '100%';
+		this.searchTBL.style.cellspacing = '0';
+		this.searchTBL.style.cellpadding = '0';
+
+		this.searchDIV.appendChild(this.searchTBL);
+	}
 	if (this.opts.stClass)
 		this.searchTBL.className = this.opts.stClass;
 
 	// Let's init loader
 	this.loader = (this.opts.lId && document.getElementById(this.opts.lId)) ? document.getElementById(this.opts.lId) : null;
-		
+
 	// Now let's setup correctly DIV position
-	this.searchDIV.style.left	= findPosX(this.field)+'px';
-	this.searchDIV.style.top	= (findPosY(this.field)+this.field.clientHeight+4)+'px';	
+	this.searchDIV.style.left	= this.DOMelementPosX(this.field)+'px';
+	this.searchDIV.style.top	= (this.DOMelementPosY(this.field)+this.field.clientHeight+4)+'px';
 
 	this.field.onkeypress 	= function(event){ return pointer.onKeyPress(event); }
 	this.field.onkeyup 		= function(event){ return pointer.onKeyUp(event); }
@@ -96,31 +105,31 @@ ngSuggest.prototype.focusField = function() { this.field.focus(); }
 
 ngSuggest.prototype.onKeyUp = function(event) {
 	var key = window.event ? window.event.keyCode : event.keyCode;
-	
+
 	//alert('onKeyUp: '+key);
 	// This allows to move between highlighted items using UP/DOWN keyboard keys
 	var keyUP = 38;
 	var keyDN = 40;
-	
+
 	// Flag if we should return this event to next processing stage
 	var catchContinue = true;
-	
+
 	switch(key) {
-		case keyUP:	this.highlightMove(-1); 
+		case keyUP:	this.highlightMove(-1);
 					cathContinue = false;
 					break;
-		case keyDN: this.highlightMove( 1); 
+		case keyDN: this.highlightMove( 1);
 					catchContinue = false;
 					break;
 		default:	this.suggestSearch(this.field.value);
 	}
-	
+
 	return catchContinue;
 }
 
 ngSuggest.prototype.onKeyPress = function(event) {
 	var key = window.event ? window.event.keyCode : event.keyCode;
-	
+
 	//alert('onKeyPress: '+key);
 	// This allows to move between highlighted items using UP/DOWN keyboard keys
 	var keyENTER  = 13;
@@ -129,7 +138,7 @@ ngSuggest.prototype.onKeyPress = function(event) {
 
 	// Flag if we should return this event to next processing stage
 	var catchContinue = true;
-	
+
 	switch(key) {
 		case keyTAB:	if (this.hightlightAccept())
 							catchContinue = false;
@@ -138,14 +147,14 @@ ngSuggest.prototype.onKeyPress = function(event) {
 						break;
 		default:		this.suggestSearch(this.field.value);
 	}
-	
+
 	return catchContinue;
 }
 
 ngSuggest.prototype.highlightClear = function () {
 	if (this.sHighlighted > 0)
 		this.searchTBL.rows[this.sHighlighted - 1].className = this.opts.stRClass;
-	
+
 }
 
 ngSuggest.prototype.hightlightAccept = function() {
@@ -165,24 +174,24 @@ ngSuggest.prototype.highlightSet = function (pos) {
 	this.sHighlighted = pos;
 	if (this.sHighlighted > 0)
 		this.searchTBL.rows[this.sHighlighted - 1].className = this.opts.stRHClass;
-}	
+}
 
 ngSuggest.prototype.highlightMove = function (pos) {
 	var hNew = this.sHighlighted + pos;
 
 	if (hNew > this.sCount)
 		hNew = 0;
-		
+
 	if (hNew < 0)
 		hNew = this.sCount;
-	
+
 	this.highlightSet(hNew);
 }
 
 ngSuggest.prototype.suggestShow = function(mode) {
 	//window.status = 'suggestShow('+mode+')';
 	this.searchDIV.style.visibility = mode? 'visible' : 'hidden';
-	
+
 	// Delete highlight info
 	this.sHighlighted = 0;
 }
@@ -207,19 +216,19 @@ ngSuggest.prototype.suggestSearch = function(text) {
 		this.suggestShow(false);
 		return;
 	}
-	
+
 	// Nothing changed
 	if (text == this.sValue) {
 		// BUT - if suggest window is not showed now - let's show it
 		if (!this.suggestStatus() && (this.sCount > 0))
 			this.suggestShow(true);
-			
+
 		return;
 	}
-	
+
 	// Prevent from running multiple times for the same data
-	this.searchDest = text;	
-	
+	this.searchDest = text;
+
 	// Call AJAX after timeout
 	clearTimeout(this.timeoutID);
 	this.timeoutID = setTimeout( function() { pointer.callAJAX() }, this.opts.delay);
@@ -242,7 +251,7 @@ ngSuggest.prototype.callAJAX = function() {
 		if (linkTX.responseStatus[0] == 200) {
 		var resTX;
 		try {
-			resTX = eval('('+linkTX.response+')'); 
+			resTX = eval('('+linkTX.response+')');
 		} catch (err) { alert('Error parsing JSON output. Result: '+linkTX.response); }
 
 		// First - check error state
@@ -254,15 +263,15 @@ ngSuggest.prototype.callAJAX = function() {
 			alert('Error ('+resTX['errorCode']+'): '+resTX['errorText']);
 		} else {
 			//alert('Request complete');
-			
+
 			var sInput	= resTX['data'][0];
 			var sReturn	= resTX['data'][1];
-			
+
 			pointer.sValue = sInput;
 			pointer.sCount = sReturn.length;
 			pointer.sList  = sReturn;
 			pointer.sHighlighted = 0;
-			
+
 			//var sReturn = resTX['data'];
 			var sB = pointer.searchTBL;
 
@@ -274,21 +283,21 @@ ngSuggest.prototype.callAJAX = function() {
 				pointer.suggestShow(false);
 				return;
 			}
-			
+
 			for (var i = 0; i < sReturn.length; i++) {
 				var r = sB.insertRow(-1);
 				r.onclick = function() { pointer.setValue(this.dataOutput); pointer.focusField(); pointer.suggestShow(false); }
 				r.onmouseover = function() { pointer.highlightSet(this.dataId); }
 				r.dataOutput = sReturn[i][0];
 				r.dataId = i+1;
-				
+
 				for (var fNo = 0; fNo < pointer.opts.stCols; fNo++) {
 					var d = document.createElement('td');
-					
+
 					// Set className if needed
 					if (pointer.opts.stColsClass[fNo])
 						d.className = pointer.opts.stColsClass[fNo];
-						
+
 					// Make HighLightResults if needed
 					if (pointer.opts.stColsHLR[fNo]) {
 						var rE = new RegExp(sInput.replace(/([\|\!\[\]\^\$\(\)\{\}\+\=\?\.\*\\])/g, "\\$1"), 'i');
@@ -306,24 +315,62 @@ ngSuggest.prototype.callAJAX = function() {
 					var rE = new RegExp(sInput.replace(/([\|\!\[\]\^\$\(\)\{\}\+\=\?\.\*\\])/g, "\\$1"), 'i');
 					var rV = sReturn[i][0].replace(rE, function (x) { return '<b>'+x+'</b>'; });
 					//alert('E: '+rE+'; V: '+rV);
-					tl.innerHTML = rV;					
+					tl.innerHTML = rV;
 				} else {
 					tl.innerHTML = sReturn[i][0];
 				}
 				var tr = document.createElement('td');
 				tr.className = 'tr';
 				tr.innerHTML = sReturn[i][1];
-				
+
 				r.appendChild(tl);
 				r.appendChild(tr);
 				*/
 			}
 			pointer.suggestShow(true);
-		}	
+		}
 		} else {
 		alert('TX.fail: HTTP code '+linkTX.responseStatus[0]);
-		}	
+		}
 	}
 	this.loaderShow(true);
 	linkTX.runAJAX();
+}
+
+// ======================================
+// DOM managment functions
+// ======================================
+
+// Find object's position (X)
+ngSuggest.prototype.DOMelementPosX = function(obj) {
+    var curleft = 0;
+    if (obj.offsetParent) {
+        while (1) {
+            curleft+=obj.offsetLeft;
+            if (!obj.offsetParent) {
+                break;
+            }
+            obj=obj.offsetParent;
+        }
+    } else if (obj.x) {
+        curleft+=obj.x;
+    }
+    return curleft;
+}
+
+// Find object's position (Y)
+ngSuggest.prototype.DOMelementPosY = function(obj) {
+    var curtop = 0;
+    if (obj.offsetParent) {
+        while (1) {
+            curtop+=obj.offsetTop;
+            if (!obj.offsetParent) {
+                break;
+            }
+            obj=obj.offsetParent;
+        }
+    } else if (obj.y) {
+        curtop+=obj.y;
+    }
+    return curtop;
 }
