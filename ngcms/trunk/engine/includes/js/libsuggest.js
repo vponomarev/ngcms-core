@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 003 ( 2010-05-13)                                                              //
+// Build: 002 ( 2010-05-12)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -26,23 +26,24 @@ var ngSuggest = function(fieldID, params) {
 	// Init parameters
 	this.opts = params ? params : {};
 
-	if (!this.opts.iMinLen)			this.opts.iMinLen	= 2;		// input: minimal len for search
-	if (!this.opts.sId)				this.opts.sId		= null;		// search: search DIV element ID
-	if (!this.opts.sClass)			this.opts.sClass	= '';		// search: search DIV element class
-	if (!this.opts.stId)			this.opts.stId		= null;		// search table: ID
-	if (!this.opts.stClass)			this.opts.stClass	= '';		// search table: class for search table
-	if (!this.opts.stRClass)		this.opts.stRClass	= '';		// search table: class for normal row
-	if (!this.opts.stRHClass)		this.opts.stHRClass	= '';		// search table: class for HIGHLIGHTED row
-	if (!this.opts.stCols)			this.opts.stCols	= 1;		// number of columns in returning result
-	if (!this.opts.stColsClass)		this.opts.stColsClass = [];		// list of classes (1 by one) that should be applied to cols
-	if (!this.opts.stColsHLR)		this.opts.stColsHLR	= [];		// list of flags: do we need highlighing for this col
-	if (!this.opts.hlr)				this.opts.hlr 		= false;	// should we manually HighLight Results
+	if (!this.opts.iMinLen)			this.opts.iMinLen	= 2;				// input: minimal len for search
+	if (!this.opts.sId)				this.opts.sId		= null;				// search: search DIV element ID
+	if (!this.opts.sClass)			this.opts.sClass	= 'suggestWindow';		// search: search DIV element class
+	if (!this.opts.stId)			this.opts.stId		= null;				// search table: ID
+	if (!this.opts.stClass)			this.opts.stClass	= 'suggestBlock';		// search table: class for search table
+	if (!this.opts.stRClass)		this.opts.stRClass	= '';				// search table: class for normal row
+	if (!this.opts.stRHClass)		this.opts.stRHClass	= '';				// search table: class for HIGHLIGHTED row
+	if (!this.opts.stCols)			this.opts.stCols	= 1;				// number of columns in returning result
+	if (!this.opts.stColsClass)		this.opts.stColsClass = [];				// list of classes (1 by one) that should be applied to cols
+	if (!this.opts.stColsHLR)		this.opts.stColsHLR	= [];				// list of flags: do we need highlighing for this col
+	if (!this.opts.hlr)				this.opts.hlr 		= false;			// should we manually HighLight Results
 	if (!this.opts.reqMethodName)	this.opts.reqMethodName = 'admin.users.search';	// AJAX RPC Request method name
 
-	if (!this.opts.lId)				this.opts.lId		= null;		// ID of loading layer
-	if (!this.opts.delay)			this.opts.delay		= 500;		// Delay before making AJAX request (ms)
+	if (!this.opts.lId)				this.opts.lId		= null;				// ID of loading layer
+	if (!this.opts.delay)			this.opts.delay		= 500;				// Delay before making AJAX request (ms)
 
-	if (!this.opts.cId)				this.opts.cId		= null;		// `CLOSE SUGGEST` element ID
+	if (!this.opts.cId)				this.opts.cId		= null;				// `CLOSE SUGGEST` element ID
+	if (!this.opts.cClass)			this.opts.cClass	= 'suggestClose';	// `CLOSE SUGGEST` class
 
 	// Save link to our object
 	var pointer = this;
@@ -62,8 +63,8 @@ var ngSuggest = function(fieldID, params) {
 	if (!this.searchTBL) {
 		this.searchTBL = document.createElement('table');
 		this.searchTBL.style.width	= '100%';
-		this.searchTBL.style.cellspacing = '0';
-		this.searchTBL.style.cellpadding = '0';
+		this.searchTBL.cellSpacing = '0';
+		this.searchTBL.cellPadding = '0';
 
 		this.searchDIV.appendChild(this.searchTBL);
 	}
@@ -81,11 +82,20 @@ var ngSuggest = function(fieldID, params) {
 	this.field.onkeyup 		= function(event){ return pointer.onKeyUp(event); }
 
 	// Initiate `CLOSE SUGGEST` event handler
-	if (this.opts.cId) {
-		var closeElement = document.getElementById(this.opts.cId);
-		if (closeElement) {
-			closeElement.onclick = function() { pointer.suggestShow(false); return false; }
-		}
+	if (!this.opts.cId) {
+		this.closeElement = document.createElement('A');
+		this.closeElement.innerHTML = 'close';
+
+		this.searchDIV.appendChild(this.closeElement);
+	} else {
+		closeElement = document.getElementById(this.opts.cId);
+	}
+
+	if (this.opts.cClass)
+		this.closeElement.className = this.opts.cClass;
+
+	if (this.closeElement) {
+		this.closeElement.onclick = function() { pointer.suggestShow(false); return false; }
 	}
 
 	this.debugDIV = document.createElement('div');
@@ -96,7 +106,7 @@ var ngSuggest = function(fieldID, params) {
 	this.debugDIV.style.background = 'white';
 	this.debugDIV.style.display = 'block';
 
-	document.body.appendChild(this.debugDIV);
+	//document.body.appendChild(this.debugDIV);
 	return this;
 }
 
