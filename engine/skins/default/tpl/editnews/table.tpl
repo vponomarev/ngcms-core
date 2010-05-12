@@ -12,40 +12,6 @@ function addEvent(elem, type, handler){
   }
 } 
 
-// Find object's position (X)
-function findPosX(obj) {
-    var curleft = 0;
-    if (obj.offsetParent) {
-        while (1) {
-            curleft+=obj.offsetLeft;
-            if (!obj.offsetParent) {
-                break;
-            }
-            obj=obj.offsetParent;
-        }
-    } else if (obj.x) {
-        curleft+=obj.x;
-    }
-    return curleft;
-}
-
-// Find object's position (Y)
-function findPosY(obj) {
-    var curtop = 0;
-    if (obj.offsetParent) {
-        while (1) {
-            curtop+=obj.offsetTop;
-            if (!obj.offsetParent) {
-                break;
-            }
-            obj=obj.offsetParent;
-        }
-    } else if (obj.y) {
-        curtop+=obj.y;
-    }
-    return curtop;
-}
-
 // DateEdit filter
 function filter_attach_DateEdit(id) {
 	var field = document.getElementById(id);
@@ -226,17 +192,12 @@ function filter_attach_DateEdit(id) {
 function systemInit() {
 var aSuggest = new ngSuggest('an', 
 								{ 
-									'sId'		: 'suggestWindow', 
-									'stId'		: 'suggestBlock',
 									'lId'		: 'suggestLoader',
-									'sClass'	: 'suggestWindow',
-									'stClass'	: 'suggestBlock',
 									'hlr'		: 'true',
 									'iMinLen'	: 1,
 									'stCols'	: 2,
 									'stColsClass': [ 'cleft', 'cright' ],
 									'stColsHLR'	: [ true, false ],
-									'cId'		: 'suggestClose',
 									'stRHClass'	: 'trHL'
 								}
 							);
