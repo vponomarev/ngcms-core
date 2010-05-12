@@ -45,6 +45,11 @@ var ngSuggest = function(fieldID, params) {
 	if (!this.opts.cId)				this.opts.cId		= null;				// `CLOSE SUGGEST` element ID
 	if (!this.opts.cClass)			this.opts.cClass	= 'suggestClose';	// `CLOSE SUGGEST` class
 
+	if (!this.opts.outputGenerator)
+		this.outputGenerator = function(obj) { return json_encode(obj.searchDest); }
+	else
+		this.outputGenerator = this.opts.outputGenerator;
+
 	// Save link to our object
 	var pointer = this;
 
@@ -254,7 +259,8 @@ ngSuggest.prototype.callAJAX = function() {
 	linkTX.requestFile = 'rpc.php';
 	linkTX.setVar('json', '1');
 	linkTX.setVar('methodName', this.opts.reqMethodName);
-	linkTX.setVar('params', json_encode(this.searchDest));
+//	linkTX.setVar('params', json_encode(this.searchDest));
+	linkTX.setVar('params', this.outputGenerator(this));
 	linkTX.method='POST';
 	linkTX.onComplete = function() {
 		pointer.loaderShow(false);
