@@ -198,7 +198,7 @@ var aSuggest = new ngSuggest('an',
 									'stCols'	: 2,
 									'stColsClass': [ 'cleft', 'cright' ],
 									'stColsHLR'	: [ true, false ],
-									'stRHClass'	: 'trHL'
+									'stRHClass'	: 'trHL',
 								}
 							);
 
