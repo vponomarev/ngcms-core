@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 001 ( 2009-12-30)                                                              //
+// Build: 002 ( 2010-05-12)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -37,6 +37,7 @@ var ngSuggest = function(fieldID, params) {
 	if (!this.opts.stColsClass)		this.opts.stColsClass = [];		// list of classes (1 by one) that should be applied to cols
 	if (!this.opts.stColsHLR)		this.opts.stColsHLR	= [];		// list of flags: do we need highlighing for this col
 	if (!this.opts.hlr)				this.opts.hlr 		= false;	// should we manually HighLight Results
+	if (!this.opts.reqMethodName)		this.opts.reqMethodName = 'admin.users.search';	// AJAX RPC Request method name
 
 	if (!this.opts.lId)				this.opts.lId		= null;		// ID of loading layer
 	if (!this.opts.delay)			this.opts.delay		= 500;		// Delay before making AJAX request (ms)
@@ -233,7 +234,7 @@ ngSuggest.prototype.callAJAX = function() {
 	var linkTX = new sack();
 	linkTX.requestFile = 'rpc.php';
 	linkTX.setVar('json', '1');
-	linkTX.setVar('methodName', 'admin.users.search');
+	linkTX.setVar('methodName', this.opts.reqMethodName);
 	linkTX.setVar('params', json_encode(this.searchDest));
 	linkTX.method='POST';
 	linkTX.onComplete = function() {
