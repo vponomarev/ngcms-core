@@ -388,24 +388,6 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		// Give 'news in order' field to plugins
 		$callingParams['nCount'] = $nCount;
 
-		// Set default template path
-		$templatePath = tpl_dir.$config['theme'];
-
-		// -> desired template path - override path if needed
-		if ($callingParams['overrideTemplatePath']) {
-			$templatePath = $callingParams['overrideTemplatePath'];
-		} else if ($callingParams['customCategoryTemplate']) {
-			// -> check for custom category templates
-			// Find first category
-			$fcat = array_shift(explode(",", $row['catid']));
-			// Check if there is a custom mapping
-			if ($fcat && $catmap[$fcat] && ($ctname = $catz[$catmap[$fcat]]['tpl'])) {
-				// Check if directory exists
-				if (is_dir($templatePath.'/ncustom/'.$ctname))
-					$templatePath = $templatePath.'/ncustom/'.$ctname;
-			}
-		}
-
 		// Execute filters
 		if (is_array($PFILTERS['news']))
 			foreach ($PFILTERS['news'] as $k => $v) { $v->showNewsPre($row['id'], $row, $callingParams); }
@@ -441,6 +423,24 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		// Execute filters
 		if (is_array($PFILTERS['news'])) {
 			foreach ($PFILTERS['news'] as $k => $v) { $v->showNews($row['id'], $row, $tvars, $callingParams); }
+		}
+
+		// Set default template path
+		$templatePath = tpl_dir.$config['theme'];
+
+		// -> desired template path - override path if needed
+		if ($callingParams['overrideTemplatePath']) {
+			$templatePath = $callingParams['overrideTemplatePath'];
+		} else if ($callingParams['customCategoryTemplate']) {
+			// -> check for custom category templates
+			// Find first category
+			$fcat = array_shift(explode(",", $row['catid']));
+			// Check if there is a custom mapping
+			if ($fcat && $catmap[$fcat] && ($ctname = $catz[$catmap[$fcat]]['tpl'])) {
+				// Check if directory exists
+				if (is_dir($templatePath.'/ncustom/'.$ctname))
+					$templatePath = $templatePath.'/ncustom/'.$ctname;
+			}
 		}
 
 		// Hack for 'automatic search mode'
