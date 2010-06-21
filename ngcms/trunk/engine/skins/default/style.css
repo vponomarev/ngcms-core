@@ -618,7 +618,7 @@ background: #F0F0F0;
 }
 
 /* #suggestBlock tr:hover, */
-.suggestBlock .trHL {
+.suggestBlock .suggestRowHighlight {
  background: #3366cc;
  color: white;
  cursor: default;
