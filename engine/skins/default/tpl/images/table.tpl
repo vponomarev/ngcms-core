@@ -25,7 +25,10 @@ function setStatus(mode) {
 }
 
 </script>
-<form action="{php_self}?mod=images&amp;action=list" method="post" name="options_bar">
+<form action="{php_self}" method="get" name="options_bar">
+<input type="hidden" name="mod" value="images" />
+<input type="hidden" name="action" value="list" />
+
 <input type="hidden" name="area" value="{area}" />
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
@@ -43,7 +46,7 @@ function setStatus(mode) {
 <td width="20%">{l_month} <select name="postdate"><option selected value="">- {l_all} -</option>{dateslist}</select></td>
 <td width="20%">{l_category} {dirlistcat}</td>
 <td width="20%">[status]{l_author} <select name="author"><option value="">- {l_all} -</option>{authorlist}</select>[/status]</td>
-<td width="20%">{l_per_page} <input style="text-align: center" name="news_per_page" value="{news_per_page}" type=text size=3 /> <input type=submit value="{l_show}" class="button" /></td>
+<td width="20%">{l_per_page} <input style="text-align: center" name="npp" value="{npp}" type=text size=3 /> <input type=submit value="{l_show}" class="button" /></td>
 </tr>
 </table>
 </form>
@@ -66,11 +69,11 @@ function setStatus(mode) {
 </tr>
 {entries}
 <tr>
-<td colspan="3">{pagesss}</td>
+<td colspan="8">{pagesss}</td>
 <td colspan="1" align="center">[status]<br /><div><input type=submit class="button" onclick="setStatus('delete');" value="{l_delete}" /></div>[/status]</td><td colspan="3" align="right">[status]<br /><div>{l_move}: {dirlist} <input type=submit class=button onclick="setStatus('move');" value="OK" /></div>[/status]</td>
 </tr>
 <tr>
-<td colspan="7">&nbsp;</td>
+<td colspan="12">&nbsp;</td>
 </tr>
 </table>
 </form>

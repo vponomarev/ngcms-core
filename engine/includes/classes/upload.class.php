@@ -610,20 +610,20 @@ class image_managment{
 		if (!is_dir($dir.'/thumb')) {
 			if (!@mkdir($dir.'/thumb', 0777)) {
 			msg(array("type" => "error", "text" => $lang['upload.error.sysperm.thumbdir']));
-			return;
+			return false;
 			}
 		}
 
 		// Check if file exists and we can get it's image size
 		if (!file_exists($fname) || !is_array($sz=@getimagesize($fname))) {
-			return 0;
+			return false;
 		}
 		$origX	= $sz[0];
 		$origY	= $sz[1];
 		$origType	= $sz[2];
 
 		if (!(($sizeX>0) && ($sizeY>0) && ($origX>0) && ($origY>0))) {
-			return;
+			return false;
 		}
 
 		// Calculate resize factor
@@ -655,7 +655,7 @@ class image_managment{
 
 		if (!$img) {
 			msg(array("type" => "error", "text" => $lang['upload.error.open']));
-			return;
+			return false;
 		}
 
 		// Calculate thumb size and create an empty object for it
@@ -697,9 +697,9 @@ class image_managment{
 
 		if (!$res) {
 			msg(array("type" => "error", "text" => $lang['upload.error.thumbcreate']));
-			return;
+			return false;
 		}
-		return 1;
+		return array($newX, $newY);
 	}
 
 
@@ -718,6 +718,7 @@ class image_managment{
 		// LOAD ORIGINAL IMAGE
 		// Check if file exists and we can get it's image size
 		if (!file_exists($param['image']) || !is_array($sz=@getimagesize($param['image']))) {
+			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return 0;
 		}
 
@@ -754,6 +755,7 @@ class image_managment{
 		if ($param['stamp']) {
 			// LOAD STAMP IMAGE
 			if (!file_exists($param['stampfile']) || !is_array($sz=@getimagesize($param['stampfile']))) {
+				msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
 				return 0;
 			}
 
@@ -806,6 +808,8 @@ class image_managment{
 		}
 
 
+		$newX = $origX;
+		$newY = $origY;
 		if ($param['shadow']) {
 			$newX			=	$origX + 5;
 			$newY			=	$origY + 5;
@@ -849,7 +853,7 @@ class image_managment{
 			msg(array("type" => "error", "text" => $lang['upload.error.addstamp']));
 			return;
 		}
-		return 1;
+		return array($newX, $newY);
 	}
 	function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct){
 		if(!isset($pct)){
@@ -892,5 +896,5 @@ class image_managment{
 		}
 		// The image copy
 		imagecopy($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h);
-	} 
+	}
 }

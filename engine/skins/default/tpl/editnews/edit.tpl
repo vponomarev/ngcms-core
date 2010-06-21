@@ -126,6 +126,7 @@ function changeActive(name) {
 [isplugin nsched]{nsched}[/isplugin]
 [isplugin finance]{finance}[/isplugin]
 [isplugin tags]{plugin_tags}[/isplugin]
+[isplugin tracker]{plugin_tracker}[/isplugin]
 </table>
 </div>
 

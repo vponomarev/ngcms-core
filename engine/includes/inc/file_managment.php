@@ -173,7 +173,14 @@ function manage_upload($type){
 				// Now write info about image into DB
 				if (is_array($sz = $imanager->get_size($dir.$subdirectory.'/'.$up[1]))) {
 					$fmanager->get_limits($type);
-					$mysql->query("update ".prefix."_".$fmanager->tname." set width=".db_squote($sz[1]).", height=".db_squote($sz[2]).", preview=".db_squote($thumb).", stamp=".db_squote($stamp)." where id = ".db_squote($up[0]));
+
+					// Gather filesize for thumbinals
+					if ($thumb && is_readable($dir.$subdirectory.'/thumb/'.$up[1]) && is_array($szt = $imanager->get_size($dir.$subdirectory.'/thumb/'.$up[1]))) {
+						$thumb_size_x = $szt[1];
+						$thumb_size_y = $szt[2];
+					}
+
+					$mysql->query("update ".prefix."_".$fmanager->tname." set width=".db_squote($sz[1]).", height=".db_squote($sz[2]).", preview=".db_squote($thumb).", p_width=".db_squote($thumb_size_x).", p_height=".db_squote($thumb_size_y).", stamp=".db_squote($stamp)." where id = ".db_squote($up[0]));
 				}
 			}
 	}
@@ -191,11 +198,11 @@ function manage_showlist($type) {
 	$start_from	= abs(intval($_REQUEST['start_from'])?intval($_REQUEST['start_from']):0);
 
 	if (!$cstart) { $cstart = 1; }
-	$news_per_page = intval($_REQUEST['news_per_page']);
-	if (($news_per_page < 1)||($news_per_page > 500))
-		$news_per_page = 20;
+	$npp = intval($_REQUEST['npp']);
+	if (($npp < 1)||($npp > 500))
+		$npp = 20;
 
-	if (!$start_from) $start_from = ($cstart - 1)*$news_per_page;
+	if (!$start_from) $start_from = ($cstart - 1)*$npp;
 
 
 	// Filter category if we work with images
@@ -223,7 +230,7 @@ function manage_showlist($type) {
 
 	array_push($filter, 'storage = 0');
 	$limit				= (count($filter)?"where ".join(" and ",$filter):'');
-	$query['sql']		= "select * from ".prefix."_".$fmanager->tname." ".$limit." order by date desc limit ".$start_from.", ".$news_per_page;
+	$query['sql']		= "select * from ".prefix."_".$fmanager->tname." ".$limit." order by date desc limit ".$start_from.", ".$npp;
 	$query['count']		= "select count(*) as cnt from ".prefix."_".$fmanager->tname." ".$limit;
 
 
@@ -282,6 +289,12 @@ function manage_showlist($type) {
 
 			$tvars['vars']['view_file']      = '<a target="_blank" href="'.$fileurl.'"><img src="'.skins_url.'/images/insert_image.png" border="0"/></a>';
 			$tvars['vars']['view_thumb']     = $row['preview'] ? '<a target="_blank" href="'.$thumburl.'"><img src="'.skins_url.'/images/insert_thumb.png" border="0"/></a>' : '';
+			$tvars['vars']['edit_link']	 = '?mod=images&subaction=editForm&id='.$row['id'].
+								($_REQUEST['author']?'&author='.$_REQUEST['author']:'').
+								($_REQUEST['category']?'&category='.$_REQUEST['category']:'').
+								($_REQUEST['postdate']?'&postdate='.$_REQUEST['postdate']:'').
+								($_REQUEST['page']?'&page='.$_REQUEST['page']:'').
+								($_REQUEST['npp']?'&npp='.$_REQUEST['npp']:'');
 		} else {
 			$tvars['vars']['insert_file']    = '<a href="javascript:insertimage(\''.$html_file.'\', \''.$_REQUEST['ifield'].'\')">'.$lang['insert'].'</a>';
 
@@ -318,10 +331,10 @@ function manage_showlist($type) {
 
 	if (is_array($pcnt = $mysql->record($query['count']))) {
 		$itemCount = $pcnt['cnt'];
-		$pagesCount = ceil($itemCount / $news_per_page);
+		$pagesCount = ceil($itemCount / $npp);
 
 		if ($pagesCount) {
-			$pagesss = generateAdminPagelist( array('current' => $cstart, 'count' => $pagesCount, 'url' => admin_url.'/admin.php?mod='.$type.'s&action=list'.($_REQUEST['news_per_page']?'&news_per_page='.$news_per_page:'').($_REQUEST['author']?'&author='.$_REQUEST['author']:'').($_REQUEST['category']?'&category='.$_REQUEST['category']:'').($_REQUEST['postdate']?'&postdate='.$_REQUEST['postdate']:'').'&page=%page%'));
+			$pagesss = generateAdminPagelist( array('current' => $cstart, 'count' => $pagesCount, 'url' => admin_url.'/admin.php?mod='.$type.'s&action=list'.($_REQUEST['npp']?'&npp='.$npp:'').($_REQUEST['author']?'&author='.$_REQUEST['author']:'').($_REQUEST['category']?'&category='.$_REQUEST['category']:'').($_REQUEST['postdate']?'&postdate='.$_REQUEST['postdate']:'').'&page=%page%'));
 		}
 	}
 
@@ -338,11 +351,11 @@ function manage_showlist($type) {
 		'dateslist'			=>	$dateslist,
 		'dirlist'			=>	$dirlist,
 		'authorlist'		=>	$authorlist,
-		'news_per_page'		=>	$news_per_page,
+		'npp'		=>	$npp,
 		'entries'			=>	$entries,
 		'pagesss'			=>	$pagesss,
 		'dirlistcat'		=>	$dirlistcat,
-		'news_per_page'		=>	$news_per_page,
+		'npp'		=>	$npp,
 		'area'				=>	($area) ? $area : '',
 		'shadow_mode'		=>	$config['shadow_mode']?'disabled':'',
 		'stamp_mode'		=>	$config['stamp_mode']?'disabled':'',
@@ -359,8 +372,187 @@ function manage_showlist($type) {
 		$tvars['vars']['[status]']	=	'';
 		$tvars['vars']['[/status]']	=	'';
 	} else {
-		$tvars['regx']["'\\[status\\].*?\\[/status\\]'si"] = "";
+		$tvars['regx']["#\[status\].*?\[/status\]#si"] = "";
 	}
 	$tpl -> vars('table', $tvars);
 	echo $tpl -> show('table');
+}
+
+//
+// Edit image / files form
+//
+function manage_editForm($type, $id){
+	global $config, $mysql, $tpl, $mod, $lang, $userROW, $fmanager, $langMonths;
+
+
+	// Determine SQL table / directory for files
+	$fmanager->get_limits($type);
+	$dir = $fmanager->dname;
+
+	$tvars = array();
+	switch ($type) {
+		case 'image':
+			if ($irow = $mysql->record("select * from ".prefix."_images where id = ".db_squote($id))) {
+
+				$folder				=	$irow['folder']?$irow['folder'].'/':'';
+				$fname				=	$fmanager->dname.$folder.$irow['name'];
+				$thumbname			=	$fmanager->dname.$folder.'thumb/'.$irow['name'];
+				$fileurl			=	$fmanager->uname.'/'.$folder.$irow['name'];
+				$thumburl			=	$fmanager->uname.'/'.$folder.'thumb/'.$irow['name'];
+
+				$fsize			=	is_readable($fname) ? FormatSize(@filesize($fname)) : '-';
+				$thumbsize		=	is_readable($thumbname) ? FormatSize(@filesize($thumbname)) : '-';
+
+				$tvars['vars'] = array(
+					'id'		=> $irow['id'],
+					'name'		=> $irow['name'],
+					'orig_name'	=> $irow['orig_name'],
+					'date'		=> strftime('%d.%m.%Y %H:%M', $irow['date']),
+					'author'	=> $irow['user'],
+					'width'		=> $irow['width'],
+					'height'	=> $irow['height'],
+					'size'		=> $fsize,
+					'description' => $irow['description'],
+					'category'	=> $irow['folder'],
+					'fileurl'	=> $fileurl,
+					'thumburl'	=> $thumburl,
+					'preview_width' => $irow['p_width'],
+					'preview_height' => $irow['p_height'],
+					'preview_size' => $thumbsize,
+					'thumb_quality' => $config['thumb_quality'],
+					'thumb_size_x' => $config['thumb_size'],
+					'thumb_size_y' => $config['thumb_size'],
+					'r_author'	=> $_REQUEST['author'],
+					'r_category'	=> $_REQUEST['category'],
+					'r_postdate'	=> $_REQUEST['postdate'],
+					'r_page'	=> $_REQUEST['page'],
+					'r_npp'		=> $_REQUEST['npp'],
+
+					'link_back'	=> '?mod=images&action=list'.
+								($_REQUEST['author']?'&author='.$_REQUEST['author']:'').
+								($_REQUEST['category']?'&category='.$_REQUEST['category']:'').
+								($_REQUEST['postdate']?'&postdate='.$_REQUEST['postdate']:'').
+								($_REQUEST['page']?'&page='.$_REQUEST['page']:'').
+								($_REQUEST['npp']?'&npp='.$_REQUEST['npp']:''),
+
+				);
+				$tvars['regx']['#\[have_stamp\](.*?)\[\/have_stamp\]#is'] = $irow['stamp']?'$1':'';
+				$tvars['regx']['#\[no_stamp\](.*?)\[\/no_stamp\]#is'] = $irow['stamp']?'':'$1';
+
+				if ($irow['preview']) {
+					$tvars['vars']['preview_status'] = 'есть';
+					$tvars['regx']['#\[preview\](.+?)\[\/preview\]#is'] = '$1';
+				} else {
+					$tvars['vars']['preview_status'] = 'нет';
+					$tvars['regx']['#\[preview\](.+?)\[\/preview\]#is'] = '';
+				}
+
+			}
+	}
+
+	$tpl->template('edit', tpl_actions.$mod);
+	$tpl->vars('edit', $tvars);
+	echo $tpl->show('edit');
+}
+
+function manage_editApply($type, $id){
+	global $config, $fmanager, $mysql;
+
+	// Получаем данные об изображении
+	if (!($irow = $mysql->record("select * from ".prefix."_images where id = ".db_squote($id)))) {
+		return false;
+	}
+
+	// Переименование
+	if ($_POST['newname']) {
+		if ($fmanager->file_rename(array('type' => $type, 'id' => $id, 'move' => 1, 'newname' => $_POST['newname']))) {
+			// OK. Reload image data
+			if (!($irow = $mysql->record("select * from ".prefix."_images where id = ".db_squote($id)))) {
+				return false;
+			}
+		}
+	}
+
+	// Инициализация обрабочика изображений
+	$imanager = new image_managment();
+
+	// Наложение штампа на оригинальную картинку
+	if ($_POST['createStamp'] && !$irow['stamp']) {
+		$stampFileName = '';
+
+		if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
+			$stampFileName = root.'trash/'.$config['wm_image'].'.gif';
+		} else if (file_exists(root.'trash/'.$config['wm_image'])) {
+			$stampFileName = root.'trash/'.$config['wm_image'];
+		}
+
+		if ($stamp = $imanager->image_transform(
+		array('image' => $config['images_dir'].$irow['folder'].'/'.$irow['name'],
+		'stamp' => 1,
+		'stamp_transparency' => $config['wm_image_transition'],
+		'stampfile' => $stampFileName))) {
+			$tsx = $stamp[0];
+			$tsy = $stamp[1];
+
+			$irow['stamp'] = 1;
+			$mysql->query("update ".prefix."_images set stamp = 1 where id = ".db_squote($irow['id']));
+			//print "STAMP added to original img: ".var_export($stamp, true);
+		}
+
+	}
+
+	// Создание/изменение уменьшенной копии (preview)
+	if ($_POST['flagPreview']) {
+		//print "Create thumb<br/>\n";
+		$tsx = intval($_POST['thumbSizeX']);
+		$tsy = intval($_POST['thumbSizeY']);
+		if (($tsx < 10)||($tsx > 1000)) $tsx = 150;
+		if (($tsy < 10)||($tsy > 1000)) $tsy = 150;
+
+		$tq = intval($_POST['thumbQuality']);
+		if (($tq < 10)||($tq > 100)) $tq = 80;
+
+		$thumb = $imanager->create_thumb($config['images_dir'].$irow['folder'], $irow['name'], $tsx, $tsy, $tq);
+		//print "Status: ".var_export($thumb, true)." <br/>\n";
+		if ($thumb) {
+			// If we created thumb - check if we need to transform it
+			$stampThumb  = ($_POST['flagStamp'] && !$irow['stamp'] )?1:0;
+			$shadowThumb = ($_POST['flagShadow'])?1:0;
+			if ($shadowThumb || $stampThumb) {
+				//print "call transform: `".$config['images_dir'].$irow['folder'].'/thumb/'.$irow['name']."`<br/>\n";
+
+				$stampFileName = '';
+				if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
+					$stampFileName = root.'trash/'.$config['wm_image'].'.gif';
+				} else if (file_exists(root.'trash/'.$config['wm_image'])) {
+					$stampFileName = root.'trash/'.$config['wm_image'];
+				}
+
+				if ($stamp = $imanager->image_transform(
+					array('image' => $config['images_dir'].$irow['folder'].'/thumb/'.$irow['name'],
+					'stamp' => $stampThumb,
+					'stamp_transparency' => $config['wm_image_transition'],
+					'shadow' => $shadowThumb,
+					'stampfile' => $stampFileName))) {
+						$tsx = $stamp[0];
+						$tsy = $stamp[1];
+					//	print "TRANSFORM: OK<br/>\n";
+				}
+
+
+			}
+		}
+
+		// Update Thumb params
+		$mysql->query("update ".prefix."_images set p_width = ".intval($tsx).", p_height=".db_squote($tsy).", preview=1 where id = ".db_squote($irow['id']));
+	}
+
+	// Update description (if changed)
+	if ($irow['description'] != $_POST['description'])
+		$mysql->query("update ".prefix."_images set description = ".db_squote($_POST['description'])." where id = ".db_squote($irow['id']));
+
+ msg(array("text" => 'Изображение отредактировано'));
+ manage_editForm('image', $irow['id']);
+
+// print "<pre>".var_export($_POST, true)."</pre>";
 }
