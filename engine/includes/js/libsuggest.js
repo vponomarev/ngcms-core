@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 002 ( 2010-05-12)                                                              //
+// Build: 003 ( 2010-06-24)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -26,6 +26,7 @@ var ngSuggest = function(fieldID, params) {
 	// Init parameters
 	this.opts = params ? params : {};
 
+	if (!this.opts.postURL)			this.opts.postURL	= '/engine/rpc.php';		// URL where to send POST request
 	if (!this.opts.iMinLen)			this.opts.iMinLen	= 2;				// input: minimal len for search
 	if (!this.opts.sId)				this.opts.sId		= null;				// search: search DIV element ID
 	if (!this.opts.sClass)			this.opts.sClass	= 'suggestWindow';		// search: search DIV element class
@@ -256,7 +257,7 @@ ngSuggest.prototype.callAJAX = function() {
 	var pointer = this;
 
 	var linkTX = new sack();
-	linkTX.requestFile = 'rpc.php';
+	linkTX.requestFile = this.opts.postURL;
 	linkTX.setVar('json', '1');
 	linkTX.setVar('methodName', this.opts.reqMethodName);
 //	linkTX.setVar('params', json_encode(this.searchDest));
