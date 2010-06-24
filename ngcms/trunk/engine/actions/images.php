@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: images.php
 // Description: Images managment
 // Author: Vitaly Ponomarev
@@ -39,10 +39,12 @@ switch($subaction){
 	case "move":		manage_move('image'); break;
 	case "upload":
 	case "uploadurl":	manage_upload('image'); break;
-
+	case "editForm":	manage_editForm('image', $_REQUEST['id']); break;
+	case "editApply":	manage_editApply('image', $_POST['id']); break;
 }
 
-manage_showlist('image');
+if (($subaction != 'editForm')&&($subaction != 'editApply'))
+	manage_showlist('image');
 
 
 
