@@ -34,7 +34,7 @@ class tpl {
 		$fname	=	$dir.($file?$file:((substr($dir, -1) != '/'?'/':'').$name.$this->ext));
 
 		if (!is_file($fname)) {
-			die(sprintf($lang['msgå_no_tpl'], $fname));
+			die(sprintf(str_replace('{fname}', $fname, $lang['fatal.tpl.lost'], $fname)));
 		}
 
 		$fp		=	fopen($fname,'r');
