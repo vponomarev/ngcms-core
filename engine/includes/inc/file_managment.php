@@ -518,6 +518,9 @@ function manage_editApply($type, $id){
 			// If we created thumb - check if we need to transform it
 			$stampThumb  = ($_POST['flagStamp'] && !$irow['stamp'] )?1:0;
 			$shadowThumb = ($_POST['flagShadow'])?1:0;
+
+			$tsx = $thumb[0];
+			$tsy = $thumb[1];
 			if ($shadowThumb || $stampThumb) {
 				//print "call transform: `".$config['images_dir'].$irow['folder'].'/thumb/'.$irow['name']."`<br/>\n";
 
@@ -541,10 +544,9 @@ function manage_editApply($type, $id){
 
 
 			}
+			// Update Thumb params
+			$mysql->query("update ".prefix."_images set p_width = ".intval($tsx).", p_height=".db_squote($tsy).", preview=1 where id = ".db_squote($irow['id']));
 		}
-
-		// Update Thumb params
-		$mysql->query("update ".prefix."_images set p_width = ".intval($tsx).", p_height=".db_squote($tsy).", preview=1 where id = ".db_squote($irow['id']));
 	}
 
 	// Update description (if changed)
