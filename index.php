@@ -21,7 +21,9 @@ $template['vars'] = array(
 	'version'		=>	engineVersion,
 	'home'			=>	home,
 	'titles'		=>	home_title,
-	'home_title'	=>	home_title
+	'home_title'	=>	home_title,
+	'mainblock'	=>	'',
+	'htmlvars'	=> 	'',
 );
 
 // ===================================================================

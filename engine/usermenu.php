@@ -11,7 +11,6 @@
 if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('usermenu', 'site');
-global $SYSTEM_FLAGS;
 
 // If not logged in
 if (!$is_logged) {

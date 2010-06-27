@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: news.php
 // Description: News display sub-engine
 // Author: Vitaly Ponomarev
@@ -236,7 +236,7 @@ function newsProcessFilter($conditions) {
 		case 'AND' :
 		case 'OR'  :
 			$list = array();
-			for($i = 1; $i <= count($conditions); $i++) {
+			for($i = 1; $i < count($conditions); $i++) {
 				$rec = newsProcessFilter($conditions[$i]);
 				//print ".result: ".var_export($rec, true)."<br/>\n";
 				if ($rec != '')
@@ -329,14 +329,12 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	//print "<pre>".var_export($filterConditions, true)."</pre>";
 	//print "<pre>".$query['filter']."</pre>";
 
-	$query['where'] = $sql_filter;
-
 	// Make temlate procession - auto/manual overriding
 	// -> calling style
 	if (!$callingParams['style']) $callingParams['style'] = 'short';
 
 	// -> desired template - override template if needed
-	if ($callingParams['overrideTemplateName']) {
+	if (isset($callingParams['overrideTemplateName']) && $callingParams['overrideTemplateName']) {
 		$templateName = $callingParams['overrideTemplateName'];
 	} else {
 		// -> generate template name for selected style
@@ -357,7 +355,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	$i			= $start_from?$start_from:0;
 
 	$showNumber = ($config['number']>=1)?$config['number']:5;
-	if (intval($callingParams['showNumber'])>0)
+	if (isset($callingParams['showNumber']) && (intval($callingParams['showNumber'])>0))
 			$showNumber = intval($callingParams['showNumber']);
 
 	$limit_start = $cstart?($cstart-1)*$showNumber:0;
@@ -392,7 +390,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		if (is_array($PFILTERS['news']))
 			foreach ($PFILTERS['news'] as $k => $v) { $v->showNewsPre($row['id'], $row, $callingParams); }
 
-		$tvars = newsFillVariables($row, 0, $_REQUEST['page']);
+		$tvars = newsFillVariables($row, 0, isset($_REQUEST['page'])?intval($_REQUEST['page']):0);
 
 		$tvars['vars']['alternating'] = ($i%2)?'odd':'even';
 
@@ -400,7 +398,8 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$tvars['vars']['views'] = $row['views'];
 
 		// Print icon if only one parent category
-		if ($row['catid'] && !stristr(",", $row['catid']) && ($catalt = $catmap[$row['catid']]) && $catz[$catalt]['icon']) {
+
+		if (isset($row['catid']) && $row['catid'] && !stristr(",", $row['catid']) && isset($catmap[$row['catid']]) && ($catalt = $catmap[$row['catid']]) && isset($catz[$catalt]['icon']) && $catz[$catalt]['icon']) {
 			$tvars['vars']['icon'] = $catz[$catalt]['icon'];
 			$tvars['vars']['[icon]'] = '';
 			$tvars['vars']['[/icon]'] = '';
@@ -429,9 +428,9 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$templatePath = tpl_dir.$config['theme'];
 
 		// -> desired template path - override path if needed
-		if ($callingParams['overrideTemplatePath']) {
+		if (isset($callingParams['overrideTemplatePath']) && $callingParams['overrideTemplatePath']) {
 			$templatePath = $callingParams['overrideTemplatePath'];
-		} else if ($callingParams['customCategoryTemplate']) {
+		} else if (isset($callingParams['customCategoryTemplate']) && $callingParams['customCategoryTemplate']) {
 			// -> check for custom category templates
 			// Find first category
 			$fcat = array_shift(explode(",", $row['catid']));
@@ -446,7 +445,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		// Hack for 'automatic search mode'
 		$currentTemplateName = $templateName;
 		// switch to `search` template if no templateName was overrided AND style is search AND searchFlag is set AND search template file exists
-		if (($callingParams['searchFlag']) && (!isset($callingParams['overrideTemplatePath'])) && ($callingParams['style'] == 'short') && (@file_exists($templatePath.'/news.search.tpl'))) {
+		if (isset($callingParams['searchFlag']) && ($callingParams['searchFlag']) && (!isset($callingParams['overrideTemplatePath'])) && ($callingParams['style'] == 'short') && (@file_exists($templatePath.'/news.search.tpl'))) {
 			$currentTemplateName = 'news.search';
 		}
 
@@ -462,7 +461,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 	// Print "no news" if we didn't find any news [ DON'T PRINT IN EXTENDED MODE ]
 	if (!$nCount) {
-		if (!$callingParams['extendedReturn']) {
+		if (!isset($callingParams['extendedReturn']) || !$callingParams['extendedReturn']) {
 			msg(array("type" => "info", "info" => $lang['msgi_no_news']));
 		}
 		$limit_start = 2;
@@ -473,14 +472,13 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	$navigations = $TemplateCache['site']['#variables']['navigation'];
 	$tpl -> template('pages', tpl_dir.$config['theme']);
 
-	if (count($carray)) { $row['alt'] = category; }
-
 	// Prev page link
 	if ($limit_start && $nCount) {
 		$prev = floor($limit_start / $showNumber);
 		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev), $navigations['prevlink']));
 	} else {
 		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = "";
+		$prev = 0;
 		$no_prev = true;
 	}
 
@@ -508,7 +506,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	}
 
 	// Add collected news into {mainlock}
-	return ($callingParams['extendedReturn'])?array('count' => $newsCount, 'data' => $output):$output;
+	return (isset($callingParams['extendedReturn']) && $callingParams['extendedReturn'])?array('count' => $newsCount, 'data' => $output):$output;
 }
 
 
@@ -564,7 +562,7 @@ function showNews($handlerName, $params) {
 	 }
 } else {
  	$callingParams['style'] = 'short';
- 	$callingParams['page']  = intval($params['page'])?intval($params['page']):intval($_REQUEST['page']);
+ 	$callingParams['page']  = (isset($params['page']) && intval($params['page']))?intval($params['page']):(isset($_REQUEST['page'])?intval($_REQUEST['page']):0);
 
 	// Execute filters [ onBeforeShow ]
 	if (is_array($PFILTERS['news'])) {
