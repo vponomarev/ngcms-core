@@ -151,7 +151,7 @@ class file_managment {
 		}
 		// Check limits
 		if (!$this->get_limits($param['type'])) {
-			msg(array("type" => "error", "text" => $lang['upload.error.type']));
+			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.type'])));
 			return 0;
 		}
 
@@ -160,13 +160,13 @@ class file_managment {
 
 		// * File size
 		if ($fsize > $this->max_size) {
-			msg(array("type" => "error", "text" => $lang['upload.error.size'], "info" => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])));
+			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.size']), "info" => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])));
 			return 0;
 		}
 
 		// Check for existance of temp file
 		if (!$ftmp || !file_exists($ftmp)) {
-			msg(array("type" => "error", "text" => $lang['upload.error.losttemp']));
+			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));
 			return 0;
 		}
 
@@ -175,7 +175,7 @@ class file_managment {
 
 		// * File type
 		if (array_search($ext, $this->required_type) === FALSE) {
-			msg(array("type" => "error", "text" => $lang['upload.error.ext'], "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
+			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.ext']), "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
 			return;
 		}
 		// Process file name
