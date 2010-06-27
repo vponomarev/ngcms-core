@@ -174,13 +174,15 @@ function manage_upload($type){
 				if (is_array($sz = $imanager->get_size($dir.$subdirectory.'/'.$up[1]))) {
 					$fmanager->get_limits($type);
 
+					
 					// Gather filesize for thumbinals
-					if ($thumb && is_readable($dir.$subdirectory.'/thumb/'.$up[1]) && is_array($szt = $imanager->get_size($dir.$subdirectory.'/thumb/'.$up[1]))) {
+					$thumb_size_x = 0;
+					$thumb_size_y = 0;
+					if (is_array($thumb) && is_readable($dir.$subdirectory.'/thumb/'.$up[1]) && is_array($szt = $imanager->get_size($dir.$subdirectory.'/thumb/'.$up[1]))) {
 						$thumb_size_x = $szt[1];
 						$thumb_size_y = $szt[2];
 					}
-
-					$mysql->query("update ".prefix."_".$fmanager->tname." set width=".db_squote($sz[1]).", height=".db_squote($sz[2]).", preview=".db_squote($thumb).", p_width=".db_squote($thumb_size_x).", p_height=".db_squote($thumb_size_y).", stamp=".db_squote($stamp)." where id = ".db_squote($up[0]));
+					$mysql->query("update ".prefix."_".$fmanager->tname." set width=".db_squote($sz[1]).", height=".db_squote($sz[2]).", preview=".db_squote(is_array($thumb)?1:0).", p_width=".db_squote($thumb_size_x).", p_height=".db_squote($thumb_size_y).", stamp=".db_squote($stamp)." where id = ".db_squote($up[0]));
 				}
 			}
 	}
