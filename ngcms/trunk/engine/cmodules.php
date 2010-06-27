@@ -312,22 +312,19 @@ function generate_restorepw_page($params, $values = array(), $msg = '') {
 	$template['vars']['mainblock'] .= $tpl -> show('lostpassword');
 }
 
-
-function coreLogin(){
+//
+// Execute an action for coreLogin() function
+// This is a workaround for 2-stage AUTH functions (like openID)
+// Parameter: user's record [row]
+function coreLoginAction($row = null, $redirect = null){
 	global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
 	global $tpl, $template, $config, $lang, $ip;
 
 	$lang = LoadLang('login', 'site');
 	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_login'];
 
-	// If user ALREADY logged in - redirect to main page
-	if (is_array($userROW)) {
-		@header('Location: '.$config['home_url']);
-		return;
-	}
-
 	// Try to auth && check for bans
-	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login()) && (!($ban_mode = checkBanned($ip, 'users', 'auth', $userROW, $userROW['name'])))) {
+	if (is_array($row) && (!($ban_mode = checkBanned($ip, 'users', 'auth', $row, $row['name'])))) {
 
 		$auth_db->save_auth($row);
 		$username			= $row['name'];
@@ -335,16 +332,8 @@ function coreLogin(){
 		$is_logged_cookie	= true;
 		$is_logged			= true;
 
-		// Determine redirect point
-		// If POST fiels (ONLY POST) 'redirect' is set - redirect
-		$redirect = '';
-		if ($_POST['redirect']) {											$redirect = $_POST['redirect'];
-		} else if ($_REQUEST['redirect_home']) {							$redirect = $config['home_url'];
-		} else if (preg_match('#^http\:\/\/#', $HTTP_REFERER, $tmp)) {		$redirect = $HTTP_REFERER;
-		} else {															$redirect = $config['home_url'];  }
-
 		// Redirect back
-		@header('Location: '.$redirect);
+		@header('Location: '.($redirect?$redirect:home));
 	} else {
 		$SYSTEM_FLAGS['auth_fail'] = 1;
 		$result = true;
@@ -355,13 +344,39 @@ function coreLogin(){
 		$tvars['vars']['form_action'] = generateLink('core', 'login');
 		$tvars['vars']['redirect'] = isset($_POST['redirect'])?$_POST['redirect']:$HTTP_REFERER;
 
-		$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = (($_SERVER['REQUEST_METHOD'] == 'POST') && ($ban_mode != 1))?'$1':'';
+		$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($ban_mode != 1)?'$1':'';
 		$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = ($ban_mode == 1)?'$1':'';
 
 		$tpl->template('login', tpl_site);
 		$tpl->vars('login', $tvars);
 		$template['vars']['mainblock'] = $tpl->show('login');
+	}
+}
 
+function coreLogin(){
+	global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
+	global $tpl, $template, $config, $lang, $ip;
+
+	// If user ALREADY logged in - redirect to main page
+	if (is_array($userROW)) {
+		@header('Location: '.$config['home_url']);
+		return;
+	}
+
+	// Determine redirect point
+	// If POST fiels (ONLY POST) 'redirect' is set - redirect
+	$redirect = '';
+	if (isset($_POST['redirect']) && $_POST['redirect']) {							$redirect = $_POST['redirect'];
+	} else if (isset($_REQUEST['redirect_home']) && $_REQUEST['redirect_home']) {	$redirect = $config['home_url'];
+	} else if (preg_match('#^http\:\/\/#', $HTTP_REFERER, $tmp)) {					$redirect = $HTTP_REFERER;
+	} else {																		$redirect = $config['home_url'];  }
+
+	// Try to auth
+	$row = null;
+	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login())) {
+		coreLoginAction($row, $redirect);
+	} else {
+		coreLoginAction(null);
 	}
 }
 

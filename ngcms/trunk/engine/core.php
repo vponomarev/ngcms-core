@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -43,6 +43,7 @@ $TemplateCache = array();
 
 // Configure error display mode
 @error_reporting (E_ALL ^ E_NOTICE);
+//@error_reporting (E_ALL);
 /*
 ini_set("display_errors","1");
 if (version_compare(phpversion(), "5.0.0", ">")==1) {
@@ -229,7 +230,7 @@ if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHO
 	$xrow = $auth_db->check_auth();
 	$CURRENT_USER = $xrow;
 
-	if ($xrow['name']) {
+	if (isset($xrow['name']) && $xrow['name']) {
 		$is_logged_cookie	= true;
 		$is_logged			= true;
 		$username			= $xrow['name'];

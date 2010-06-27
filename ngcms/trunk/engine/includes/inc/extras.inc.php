@@ -226,7 +226,7 @@ function loadPlugin($pluginName, $actionList = '*') {
 		}
 	}
 
-	$PLUGINS['loaded'][$key] = 1;
+	$PLUGINS['loaded'][$pluginName] = 1;
 	return true;
 }
 
@@ -867,7 +867,7 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
 			switch ($handlerName) {
 				case 'plugin':
 					// Set our own params $pluginName and $handlerName and pass it to default handler
-					_MASTER_defaultRUN($params['plugin'], $params['handler'], $params, $skip);
+					_MASTER_defaultRUN($params['plugin'], isset($params['handler'])?$params['handler']:null, $params, $skip);
 					break;
 
 				case 'registration':

@@ -457,8 +457,8 @@ function msg($params, $mode = 0, $disp = -1) {
 		default:		$type = 'msg.common'.(isset($params['info'])?'_info':''); break;
 	}
 	$tmvars = array( 'vars' => array(
-		'text' => $params['text'],
-		'info' => $params['info'],
+		'text' => isset($params['text'])?$params['text']:'',
+		'info' => isset($params['info'])?$params['info']:'',
 	));
 	$message = $tpl->vars($TemplateCache[$mode?'admin':'site']['#variables']['messages'][$type], $tmvars, array('inline' => true));
 
@@ -953,6 +953,7 @@ function utf2cp1251($text) { return convert($text); }
 function GetCategories($catid, $plain = false) {
 	global $catz, $catmap;
 
+	$catline = array();
 	$cats = is_array($catid)?$catid:explode(",", $catid);
 	foreach ($cats as $v) {
 		if (isset($catmap[$v])) {
@@ -1092,7 +1093,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 	// Check if long part is divided into several pages
 	if ($full && (!$disablePagination) && (strpos($full, "<!--nextpage-->") !== false)) {
-		$page = intval( isset($CurrentHandler['params']['page'])?$CurrentHandler['params']['page']:$_REQUEST['page'] );
+		$page = intval( isset($CurrentHandler['params']['page'])?$CurrentHandler['params']['page']:(isset($_REQUEST['page'])?$_REQUEST['page']:0) );
 		if ($page < 1) $page = 1;
 
 		$pagination		=	'';
