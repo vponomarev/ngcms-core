@@ -49,12 +49,13 @@ function processJSON(){
 	// Decode passed params
 	$params = json_decode($_POST['params'], true);
 
-	switch ($_POST['methodName']) {
+	$methodName = (isset($_POST['methodName']))?$_POST['methodName']:(isset($_GET['methodName'])?$_GET['methodName']:'');
+	switch ($methodName) {
 		case 'rewrite.submit':		$out = rpcRewriteSubmit($params); break;
 		case 'admin.users.search':	$out = rpcAdminUsersSearch($params); break;
 		default:
-			if (isset($RPCFUNC[$_POST['methodName']])) {
-				$out = call_user_func($RPCFUNC[$_POST['methodName']], $params);
+			if (isset($RPCFUNC[$methodName])) {
+				$out = call_user_func($RPCFUNC[$methodName], $params);
 			} else {
 				$out = rpcDefault($params); break;
 			}
