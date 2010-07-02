@@ -173,11 +173,11 @@ function load_extras($action, $plugin = '') {
 				if (is_file(extras_dir.'/'.$value)) {
 				        $tX = $timer->stop(4);
 					include_once extras_dir.'/'.$value;
-					$timer->registerEvent('func LOAD_EXTRAS ('.$action.'): preloaded file "'.$value.'" for '.($timer->stop(4) - $tX)." sec");
+					$timer->registerEvent('loadActionHandlers('.$action.'): preloaded file "'.$value.'" for '.($timer->stop(4) - $tX)." sec");
 					$PLUGINS['loaded:files'][$value] = 1;
 					$loadedCount ++;
 				} else {
-					$timer->registerEvent('func LOAD_EXTRAS ('.$action.'): CAN\'t preload file that doesn\'t exists: "'.$value.'"');
+					$timer->registerEvent('loadActionHandlers('.$action.'): CAN\'t preload file that doesn\'t exists: "'.$value.'"');
 				}
 				$PLUGINS['loaded'][$key] = 1;
 			}
@@ -251,7 +251,9 @@ function loadPluginLibrary($plugin, $libname = '') {
 		return true;
 	} else {
 		if (isset($list['libs'][$plugin][$libname])) {
+			$tX = $timer->stop(4);
 			include_once extras_dir.'/'.$list['active'][$plugin].'/'.$list['libs'][$plugin][$libname];
+			$timer->registerEvent('loadPluginLibrary: '.$plugin.' ['.$libname.'] for '.($timer->stop(4) - $tX)." sec");
 			return true;
 		}
 		return false;
@@ -797,7 +799,8 @@ function generatePageLink($paginationParams, $page) {
 			$lparams[$paginationParams['paginator'][0]] = $page;
 		}
 	}
-	return generateLink($paginationParams['pluginName'], $paginationParams['pluginHandler'], $lparams, $lxparams);
+	//return generateLink($paginationParams['pluginName'], $paginationParams['pluginHandler'], $lparams, $lxparams);
+	return generatePluginLink($paginationParams['pluginName'], $paginationParams['pluginHandler'], $lparams, $lxparams);
 }
 
 
@@ -808,6 +811,10 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip) {
 	global $PPAGES, $lang, $SYSTEM_FLAGS, $CurrentHandler;
 	// Preload requested plugin
 	loadPlugin($pluginName, 'ppages');
+
+	// Make chain-load for all plugins, that want to activate during this plugin activation
+        loadActionHandlers('action.ppages.'.$pluginName);
+	loadActionHandlers('plugin.'.$pluginName);
 
 	$pcall = $PPAGES[$pluginName][$handlerName];
 
