@@ -438,6 +438,8 @@ class urlHandler {
 		// Generate helper $handlerPrimary table
 		$hPrimary = array();
 		foreach ($this->hList as $hId => $hData) {
+			// Skip disabled records
+			if ($hData['flagDisabled']) { continue; }
 			if (isset($hPrimary[$hData['pluginName']][$hData['handlerName']])) {
 				if (!$hPrimary[$hData['pluginName']][$hData['handlerName']][1] && ($hData['flagPrimary'])) {
 					$hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
