@@ -164,6 +164,8 @@ class parse {
 		// width
 		// height
 		// border
+		// hspace
+		// vspace
 		// align: 'left', 'right', 'center'
 		// class: anything
 
@@ -229,6 +231,8 @@ class parse {
 					switch ($kn) {
 						case 'width':
 						case 'height':
+						case 'hspace':
+						case 'vspace':
 						case 'border':
 								$outkeys[] = $kn.'="'.intval($kv).'"';
 								break;
