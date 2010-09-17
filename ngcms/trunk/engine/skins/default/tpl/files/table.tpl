@@ -26,6 +26,11 @@ function setStatus(mode) {
 </script>
 <form action="{php_self}?mod=files&amp;action=list" method="post" name="options_bar">
 <input type="hidden" name="area" value="{area}" />
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_files_title}</td>
+</tr>
+</table>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
 <td width="100%" class="contentNav" align="center" valign="top">
@@ -42,7 +47,7 @@ function setStatus(mode) {
 <td width="20%">{l_month} <select name="postdate"><option selected value="">- {l_all} -</option>{dateslist}</select></td>
 <td width="20%">{l_category} {dirlistcat}</td>
 <td width="20%">[status]{l_author} <select name="author"><option value="">- {l_all} -</option>{authorlist}</select>[/status]</td>
-<td width="20%">{l_per_page} <input style="text-align: center" name="news_per_page" value="{news_per_page}" type=text size=3 /> <input type=submit value="{l_show}" class="button" /></td>
+<td width="20%">{l_per_page} <input style="text-align: center" name="npp" value="{npp}" type=text size=3 /> <input type=submit value="{l_show}" class="button" /></td>
 </tr>
 </table>
 </form>
@@ -51,19 +56,22 @@ function setStatus(mode) {
 <input type="hidden" name="area" value="{area}" />
 <input type="hidden" name="subaction" value="" />
 <table id="entries" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr align="center">
-<td width="5%" class="contentHead">#</td>
-<td width="25%" class="contentHead">{l_name}</td>
-<td width="20%" class="contentHead">{l_action}</td>
-<td width="20%" class="contentHead">{l_size}</td>
-<td width="15%" class="contentHead">{l_category}</td>
-<td width="10%" class="contentHead">{l_author}</td>
-<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(delform)" /></td>
+<tr align="left" class="contHead">
+<td width="5%">#</td>
+<td width="25%">{l_name}</td>
+<td width="20%">{l_action}</td>
+<td width="20%">{l_size}</td>
+<td width="15%">{l_category}</td>
+<td width="10%" >{l_author}</td>
+<td width="5%"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(delform)" /></td>
 </tr>
 {entries}
 <tr>
-<td colspan="3">{pagesss}</td>
-<td colspan="1" align="center">[status]<br /><div><input type=submit class="button" onclick="setStatus('delete');" value="{l_delete}" /></div>[/status]</td><td colspan="3" align="right">[status]<br /><div>{l_move}: {dirlist} <input type=submit class=button onclick="setStatus('move');" value="OK" /></div>[/status]</td>
+
+
+<td colspan="3" class="contentEdit">{pagesss}</td>
+<td colspan="1" align="left" class="contentEdit">[status]<br /><div><input type=submit class="button" onclick="setStatus('delete');" value="{l_delete}" /></div>[/status]</td><td colspan="3" align="right" class="contentEdit">[status]<div>{l_move}: {dirlist} <input type=submit class=button onclick="setStatus('move');" value="OK" /></div>[/status]
+</td>
 </tr>
 <tr>
 <td colspan="7">&nbsp;</td>
@@ -101,10 +109,12 @@ function setStatus(mode) {
 <td width="50%" valign="top" class="contentEntry1">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
-<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_upload_file}</td>
+<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_upload_file}
+</td>
 </tr>
 <tr>
 <td>
+<br />
 
 <form action='{php_self}?mod=files' method='post' enctype="multipart/form-data" name="sn">
 <input type="hidden" name="area" value="{area}" />
@@ -140,12 +150,15 @@ function RemoveFiles() {
 </script>
 <table id="fileup" class="upload">
 <tr id="row">
-<td style="font-size: 12px;">1: </td><td><input type="file" size="30" name="userfile[0]" /></td>
+<td>1: </td><td><input type="file" size="30" name="userfile[0]" /></td>
 </tr>
 </table>
-<br />
-<input type=checkbox name="replace" value='replace' id=replace class='check' /> <label for=replace>{l_do_replace}</label><br />
-<input type=checkbox name="rand" value='rand' id=rand class='check' /> <label for=rand>{l_do_rand}</label><br />
+<br /><br />
+<div class="list">
+  <input type=checkbox name="replace" value='replace' id=replace class='check' /> 
+  <label for=replace>{l_do_replace}</label><br />
+  <input type=checkbox name="rand" value='rand' id=rand class='check' /> <label for=rand>{l_do_rand}</label><br />
+</div>
 <br /><input type="submit" value='{l_upload}' class="button" />
 </form>
 
@@ -160,7 +173,8 @@ function RemoveFiles() {
 <td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_upload_file_url}</td>
 </tr>
 <tr>
-<td>
+<td><br />
+
 <form action="{php_self}?mod=files" method="post" name="snup">
 <input type="hidden" name="subaction" value="uploadurl" />
 <input type="hidden" name="area" value="{area}" />
@@ -196,13 +210,17 @@ function RemoveFiles2() {
 </script>
 <table id="fileup2" class="upload">
 <tr id="row">
-<td style="font-size: 12px;">1: </td><td><input type="text" size="30" name="userurl[0]" /></td>
+<td>1: </td><td><input type="text" size="30" name="userurl[0]" /></td>
 </tr>
 </table>
 <br />
-<input type=checkbox name="replace" value='replace' id=replace class='check' /> <label for=replace>{l_do_replace}</label><br />
-<input type=checkbox name="rand" value='rand' id=rand class='check' /> <label for=rand>{l_do_rand}</label><br />
-<br /><input type="submit" value='{l_upload}' class="button" />
+<div class="list">
+  <input type=checkbox name="replace" value='replace' id=replace class='check' /> 
+  <label for=replace>{l_do_replace}</label><br />
+  <input type=checkbox name="rand" value='rand' id=rand class='check' /> <label for=rand>{l_do_rand}</label><br />
+</div>
+<br />
+<input type="submit" value='{l_upload}' class="button" />
 </form>
 </td>
 </tr>

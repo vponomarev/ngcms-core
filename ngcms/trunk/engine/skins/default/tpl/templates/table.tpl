@@ -17,7 +17,11 @@ if(selectedOption == 'extras')    { document.getElementById('extras').style.disp
 if(selectedOption == 'templates') { document.getElementById('templates').style.display = ""; }
 }
 </script>
-
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_tplthemeselect}</td>
+</tr>
+</table>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
 <td width="100%" class="contentNav" align="center" valign="top">
@@ -31,12 +35,7 @@ if(selectedOption == 'templates') { document.getElementById('templates').style.d
 
 <!-- BLOCK: ADMIN -->
 <table id="admin" style="{show_adm}" class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-<tr>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_tplthemeselect}</td>
-</tr>
+
 <tr>
 <td class="contentEntry1">
 <form action="" method="post">
@@ -55,9 +54,9 @@ if(selectedOption == 'templates') { document.getElementById('templates').style.d
 <td class="contentEntry1">
 
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr align="left">
-<td width="50%" class="contentHead">{l_filename}</td>
-<td width="50%" class="contentHead">{l_action}</td>
+<tr align="left" class="contHead">
+<td width="50%" class="contHead">{l_filename}</td>
+<td width="50%" class="contHead">{l_action}</td>
 </tr>
 {entries_actions}
 </table>
@@ -93,8 +92,8 @@ if(selectedOption == 'templates') { document.getElementById('templates').style.d
 <form id="template.select" method="get" action="">
 <input type="hidden" name="mod" value="templates"/>
 <input type="hidden" name="theme" id="template.select.theme" value=""/>
-<table width="100%" style="padding-top:10px;">
-<tr class="h-l-tpl">
+<table width="100%">
+<tr class="contHead">
 	<td>{l_tpl.table.name}</td>
 	<td>{l_tpl.table.title}</td>
 	<td>{l_tpl.table.author}</td>
@@ -117,9 +116,9 @@ if(selectedOption == 'templates') { document.getElementById('templates').style.d
 <td class="contentEntry1">
 
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr align="left">
-<td width="50%" class="contentHead">{l_filename}</td>
-<td width="50%" class="contentHead">{l_action}</td>
+<tr align="left" class="contHead">
+<td width="50%">{l_filename}</td>
+<td width="50%">{l_action}</td>
 </tr>
 {entries_site}
 </table>
@@ -141,9 +140,9 @@ if(selectedOption == 'templates') { document.getElementById('templates').style.d
 <tr>
 <td class="contentEntry1">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr align="left">
-<td width="50%" class="contentHead">{l_dirname}</td>
-<td width="50%" class="contentHead">{l_action}</td>
+<tr align="left" class="contHead">
+<td width="50%">{l_dirname}</td>
+<td width="50%">{l_action}</td>
 </tr>
 {themes_entries_actions}
 </table>

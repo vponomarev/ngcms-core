@@ -7,6 +7,7 @@ if(selectedOption == 'maincontent') {document.getElementById('maincontent').styl
 if(selectedOption == 'additional') {document.getElementById('additional').style.display = "";}
 }
 </script>
+
 <form name="form" method="post" action="{php_self}?mod=editcomments">
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">

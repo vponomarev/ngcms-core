@@ -41,6 +41,12 @@ function changeActive(name) {
  }
 }
 </script>
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_editnews_title}</td>
+</tr>
+</table>
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type=hidden name="area" value="" />
 </form>
@@ -55,7 +61,7 @@ function changeActive(name) {
 
 <table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
-<td style="background: #F0F0F0; padding: 3px;">
+<td class="contentNav" align="center">
 <input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_bar.maincontent}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_bar.additional}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{l_bar.attaches} {attach_count}" class="navbutton" />
@@ -69,7 +75,7 @@ function changeActive(name) {
 <table width="100%" cellspacing="1" cellpadding="0" border="0">
   <tr>
    <td width="10"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
-   <td width="100">{l_title}:</td>
+   <td width="100"><span class="f15">{l_title}</span></td>
    <td><input type="text" class="important" size="79" name="title" value="{title}" tabindex="1" /></td>
   </tr>
   <tr>
@@ -133,56 +139,65 @@ function changeActive(name) {
 <!-- ATTACHES -->
 <div id="attaches" style="display: none;">
 <br/>
-<b><u>{l_attach.list}</u></b>
+<span class="f15">{l_attach.list}</span>
 <table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
-<tr><td>ID</td><td width="80">{l_attach.date}</td><td width="16">&nbsp;</td><td>{l_attach.filename}</td><td width="90">{l_attach.size}</td><td width="40">DEL</td></tr>
+<tr class="contHead"><td>ID</td><td width="80">{l_attach.date}</td><td>{l_attach.filename}</td><td width="90">{l_attach.size}</td><td width="40">DEL</td></tr>
 </thead>
 <tbody>
 <!-- <tr><td colspan="5">No data</td></tr> -->
 {attach_entries}
 <!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
-<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="{l_attach.more_rows}" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
+<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" class="button" value="{l_attach.more_rows}" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
 </table>
 </div>
 
 </td>
-<td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
+<td id="rightBar" width="300" valign="top">
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-  <tr><td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td><td>{l_editor.comminfo}</td></tr>
-  <tr><td></td><td>{l_editor.author}: <a style="font-family: Tahoma, Sans-serif;" href="{php_self}?mod=users&amp;action=editForm&amp;id={authorid}"><b>{author}</b></a> [isplugin uprofile] <a href="{author_page}" target="_blank" title="{l_site.viewuser}"><img src="{skins_url}/images/open_new.png" alt="{l_newpage}"/></a>[/isplugin]</td></tr>
-  <tr><td></td><td>{l_editor.dcreate}: <b>{createdate}</b></td></tr>
-  <tr><td></td><td>{l_editor.dedit}: <b>{editdate}</b></td></tr>
+  <tr><td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td><td><span class="f15">{l_editor.comminfo}</span></td></tr>
+  <tr><td></td><td>
+  <div class="list">
+  {l_editor.author}: <a style="font-family: Tahoma, Sans-serif;" href="{php_self}?mod=users&amp;action=editForm&amp;id={authorid}"><b>{author}</b></a> [isplugin uprofile] <a href="{author_page}" target="_blank" title="{l_site.viewuser}"><img src="{skins_url}/images/open_new.png" alt="{l_newpage}"/></a>[/isplugin]<br />
+{l_editor.dcreate}: <b>{createdate}</b><br />
+{l_editor.dedit}: <b>{editdate}</b>
+  </div>
+</td></tr>
   <tr>
-   <td width="20"><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>{l_category}</td>
+    <td width="20"><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+    <td><span class="f15">{l_category}</span></td>
   </tr>
   <tr>
-   <td></td><td>{mastercat}</td>
-  </tr>
-  <tr><td colspan=2>&nbsp;</td></tr>
-  <tr>
-   <td></td>
-   <td>{l_editor.extcat}</td>
-  </tr>
-  <tr>
-   <td></td><td>
-   <div style="width: 95%; margin-top: 5px; overflow: auto; height: 102px; margin-left: 5px; padding: 3px; border: 1px solid #AABBCC;">{extcat}</div></td>
+   <td></td><td><div class="list">{mastercat}</div></td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>{l_editor.configuration}</td>
+   <td><span class="f15">{l_editor.extcat}</span></td>
   </tr>
-  <tr><td></td><td><label><input type="checkbox" name="approve" value="1" {ifapp} class="check" id="approve" /> {l_approve}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="mainpage" value="1" {ifmp} class="check" id="mainpage" /> {l_mainpage}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="pinned" value="1" {ifpin} class="check" id="pinned" /> {l_add_pinned}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="favorite" value="1" {iffav} class="check" id="favorite" /> {l_add_favorite}</label></td></tr>
-[comments]  <tr><td></td><td><label><input type="checkbox" name="allow_com" value="1" {ifch} class="check" id="allow_com" /> {l_com_approve}</label></td></tr>[/comments]
-  <tr><td></td><td><label><input type="checkbox" name="setViews" value="1" class="check" id="setViews" /> {l_set_views}:</label> <input type="text" size="4" name="views" value="{views}" /></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="flag_HTML" value="1" {ifhtml} class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label> {flags_lost}</td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="flag_RAW" value="1" {ifraw} class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label> {flags_lost}</td></tr>
+  <tr>
+   <td></td><td>
+   <div style="overflow: auto; height: 80px;" class="list">{extcat}</div></td>
+  </tr>
+  <tr><td colspan=2>&nbsp;</td></tr>
+  <tr>
+   <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+   <td><span class="f15">{l_editor.configuration}</span></td>
+  </tr>
+  <tr><td></td><td>
+  <div class="list">
+   <label><input type="checkbox" name="approve" value="1" {ifapp} class="check" id="approve" /> {l_approve}</label><br />
+   <label><input type="checkbox" name="mainpage" value="1" {ifmp} class="check" id="mainpage" /> {l_mainpage}</label><br />
+   <label><input type="checkbox" name="pinned" value="1" {ifpin} class="check" id="pinned" /> {l_add_pinned}</label><br />
+   <label><input type="checkbox" name="favorite" value="1" {iffav} class="check" id="favorite" /> {l_add_favorite}</label><br />
+   [comments]<label><input type="checkbox" name="allow_com" value="1" {ifch} class="check" id="allow_com" /> {l_com_approve}</label>[/comments]<br />
+   <label><input type="checkbox" name="setViews" value="1" class="check" id="setViews" /> {l_set_views}:</label> <input type="text" size="4" name="views" value="{views}" /><br />
+   <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" checked="checked" {ifhtml} {disable_flag_html} /> {l_flag_html}</label>{flags_lost}<br />
+   <label><input type="checkbox" name="flag_RAW" value="1" {ifraw} class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label> {flags_lost}
+  </div>
+  </td></tr>
+
  </table>
 
 </td>
@@ -253,7 +268,7 @@ function attachAddRow() {
 	el.setAttribute('size', '80');
 
 	var xCell = row.insertCell(2);
-	xCell.colSpan = 3;
+	xCell.colSpan = 2;
 	xCell.appendChild(el);
 
 

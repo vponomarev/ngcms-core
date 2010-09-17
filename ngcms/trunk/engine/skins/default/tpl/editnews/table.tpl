@@ -86,47 +86,78 @@ function filter_attach_DateEdit(id) {
 
 <!-- Hidden SUGGEST div -->
 <div id="suggestWindow" class="suggestWindow">
-<table id="suggestBlock" style="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
-<a href="#" align="right" id="suggestClose" style="suggestClose">close</a>
+<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
+<a href="#" align="right" id="suggestClose">close</a>
 </div>
-
-
-<form action="{php_self}?mod=editnews" method="post" name="options_bar">
-<table border="0" width="100%" cellspacing="2" cellpadding="2" align="center" class="contentNav">
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td>
-
-<!-- Блок фильтрации -->
-<table border="0" cellspacing="2" cellpadding="2">
-<tr>
-<td  valign="top">{l_header.search}:</td>
-<td><input name="sl" type="text" size="40" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>{l_header.stitle}</option><option value="1" {st.selected1}>{l_header.stext}</option></select></td>
-<td rowspan="2" width="3" style="background-image: url({skins_url}/images/delim.png);  background-repeat: repeat-y;">&nbsp;</td>
-<td valign="top">{l_header.date_since}:</td>
-<td><input type="text" id="dr1" name="dr1" value="{dr1}" size="11"/> {l_header.date_till} <input type="text" id="dr2" name="dr2" value="{dr2}" size="11"/></td>
-<td rowspan="3" width="5" style="background-image: url({skins_url}/images/delim.png); background-repeat: repeat-y;">&nbsp;</td>
-<td>{l_header.status}:</td>
-<td valign="top"><select name="status" size="1"><option value="">{l_smode_all}</option>{statuslist}</select> &nbsp;</td>
-</tr>
-
-<tr>
-<td valign="top">{l_author}:</td><td><input name="an" id="an" type="text" size="25" value="{an}"autocomplete="off" /> <span id="suggestLoader" style="width: 20px; visibility: hidden;"><img src="{skins_url}/images/loading.gif"/></span></td>
-<td>{l_category}:</td>
-<td>{category_select}</td>
-<td>{l_header.perpage}:</td>
-<td><input style="text-align: center" name="rpp" value="{rpp}" type="text" size="3" /></td>
-</tr>
-
-<tr>
-<td colspan="5">
-<input type="submit" value="{l_do_show}" class="button" style="width: 303px;" />
-</td>
-<td>{l_sort}</td><td><select name="sort">{sortlist}</select></td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_editnews_title}</td>
 </tr>
 </table>
 
+<form action="{php_self}?mod=editnews" method="post" name="options_bar">
+<table width="1000" border="0" cellspacing="0" cellpadding="0" class="editfilter">
+  <tr>
+<!--Block 1--><td rowspan="2">
+<table border="0" cellspacing="0" cellpadding="0" class="filterblock">
+  <tr>
+    <td valign="top" >
+    <label>Поиск</label>
+    <input name="sl" type="text" class="bfsearch" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>заголовок</option><option value="1" {st.selected1}>текст</option></select>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <label>{l_author}</label>
+    <input name="an" id="an" class="bfauthor" type="text"  value="{an}" autocomplete="off" /> <span id="suggestLoader" style="width: 20px; visibility: hidden;"><img src="{skins_url}/images/loading.gif"/></span>
+    </td>
+  </tr>
+</table>
+
+</td><!--/Block 1--> 
+
+<!--Block 2--><td rowspan="2">
+<table border="0" cellspacing="0" cellpadding="0" class="filterblock">
+  <tr>
+    <td valign="top">
+    <label>Дата</label>
+    с:&nbsp; <input type="text" name="dr1" value="{dr1}" class="bfdate"/>&nbsp;&nbsp; по&nbsp;&nbsp; <input type="text" name="dr2" value="{dr2}" class="bfdate"/>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <label>{l_category}</label>
+    {category_select}
+    </td>
+  </tr>
+</table>
+
+</td><!--/Block 2-->
+    
+<!--Block 3--><td valign="top" >
+<table border="0" cellspacing="0" cellpadding="0" class="filterblock2">
+  <tr>
+    <td valign="top" >
+    <label>Статус</label>
+    <select name="status" class="bfstatus"><option value="">{l_smode_all}</option>{statuslist}</select>
+    </td>
+    <td align="right" valign="top"  >
+    <label>На странице</label>
+    <input name="rpp" value="{rpp}" type="text" size="3" />
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+    <label class="left">{l_sort}</label>&nbsp;&nbsp;<select name="sort" class="bfsortlist">{sortlist}</select>
+    </td>
+  </tr>
+</table>
+
 </td>
-</tr>
+  </tr>
+  <tr>
+    <td><input type="submit" value="{l_do_show}" class="filterbutton"  /></td>
+  </tr>
 </table>
 </form>
 <!-- Конец блока фильтрации -->
@@ -135,15 +166,15 @@ function filter_attach_DateEdit(id) {
 <!-- List of news start here -->
 <form action="{php_self}?mod=editnews" method="post" name="editnews">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr align="left">
-<td width="5%" class="contentHead" nowrap>{l_postid_short}</td>
-<td width="10%" class="contentHead" colspan="2" nowrap>{l_date}</td>
-<td width="45%" class="contentHead">{l_title}</td>
-[comments]<td width="10%" class="contentHead">{l_listhead.comments}</td>[/comments]
-<td width="25%" class="contentHead">{l_category}</td>
-<td width="10%" class="contentHead">{l_author}</td>
-<td width="5%" class="contentHead">&nbsp;</td>
-<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(editnews)" /></td>
+<tr align="left" class="contHead">
+<td width="5%" nowrap>{l_postid_short}</td>
+<td width="10%"  nowrap>{l_date}</td>
+<td width="45%" >{l_title}</td>
+[comments]<td width="10%" >{l_listhead.comments}</td>[/comments]
+<td width="25%">{l_category}</td>
+<td width="10%">{l_author}</td>
+<td width="5%">&nbsp;</td>
+<td width="5%"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(editnews)" /></td>
 </tr>
 [no-news]<tr><td colspan="6"><p>- {l_not_found} -</p></td></tr>[/no-news]
 {entries}
@@ -216,4 +247,6 @@ filter_attach_DateEdit('dr1');
 filter_attach_DateEdit('dr2');
 -->
 </script>
+
+
 

@@ -63,12 +63,14 @@ function _modal_close() {
 <tr>
 <td colspan="4" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_size}</td>
 </tr>
-<tr><td>{l_group}</td><td align="right">{l_amount}</td><td align="right">{l_volume}</td><td> &nbsp; {l_permissions}</td></tr>
-<tr><td>{l_group_images}</td><td align="right">{image_amount}</td><td align="right">{image_size}</td><td> &nbsp; {image_perm}</td></tr>
-<tr><td>{l_group_files}</td><td align="right">{file_amount}</td><td align="right">{file_size}</td><td> &nbsp; {file_perm}</td></tr>
-<tr><td>{l_group_photos}</td><td align="right">{photo_amount}</td><td align="right">{photo_size}</td><td> &nbsp; {photo_perm}</td></tr>
-<tr><td>{l_group_avatars}</td><td align="right">{avatar_amount}</td><td align="right">{avatar_size}</td><td> &nbsp; {avatar_perm}</td></tr>
-<tr><td>{l_group_backup}</td><td align="right">{backup_amount}</td><td align="right">{backup_size}</td><td> &nbsp; {backup_perm}</td></tr>
+<tr><td class="contentEntry1">{l_group}</td><td class="contentEntry1" align="right">{l_amount}</td><td class="contentEntry1"align="right">{l_volume}</td><td class="contentEntry1"> &nbsp; {l_permissions}</td></tr>
+<tr><td class="contentEntry1">{l_group_images}</td><td class="contentEntry1"align="right">{image_amount}</td><td class="contentEntry1"align="right">{image_size}</td><td class="contentEntry1"> &nbsp; {image_perm}</td></tr>
+<tr>
+<td class="contentEntry1">{l_group_files}</td><td class="contentEntry1"align="right">{file_amount}</td><td class="contentEntry1"align="right">{file_size}</td><td class="contentEntry1"> &nbsp; {file_perm}</td></tr>
+<tr>
+<td class="contentEntry1">{l_group_photos}</td><td class="contentEntry1" align="right">{photo_amount}</td><td class="contentEntry1" align="right">{photo_size}</td><td class="contentEntry1">&nbsp; {photo_perm}</td></tr>
+<tr><td class="contentEntry1">{l_group_avatars}</td><td class="contentEntry1" align="right">{avatar_amount}</td><td class="contentEntry1" align="right">{avatar_size}</td><td class="contentEntry1"> &nbsp; {avatar_perm}</td></tr>
+<tr><td class="contentEntry1">{l_group_backup}</td><td class="contentEntry1" align="right">{backup_amount}</td><td class="contentEntry1" align="right">{backup_size}</td><td class="contentEntry1"> &nbsp; {backup_perm}</td></tr>
 </table>
 
 <br/><br/>

@@ -23,6 +23,11 @@ function ChangeOption(selectedOption) {
 <input type=hidden name="selectedOption" id="selectedOption" />
 
 <!-- Navigation bar -->
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_configuration_title}</td>
+</tr>
+</table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="100%" class="contentNav" align="center" valign="top">

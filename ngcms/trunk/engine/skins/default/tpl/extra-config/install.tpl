@@ -3,7 +3,7 @@
 <tr>
 <td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{mode_text}: {plugin}</td>
 </tr>
-<tr><td>{install_text}</td></tr>
+<tr><td><div class="telo">{install_text}</div></td></tr>
 <tr align="center">
 <td width="100%" colspan="2" class="contentEdit" valign="top">
 <input type="hidden" name="plugin" value="{plugin}" />

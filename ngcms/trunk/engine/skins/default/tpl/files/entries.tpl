@@ -1,4 +1,4 @@
-<tr align=center>
+<tr align="left">
 <td class="contentEntry1">{id}</td>
 <td class="contentEntry1">{file_link}</td>
 <td class="contentEntry1">{insert_file} {rename}</td>

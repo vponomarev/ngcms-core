@@ -1,24 +1,27 @@
-
-
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_static_title}</td>
+</tr>
+</table>
 <table border="0" width="100%" cellspacing="0" cellpadding="0" align="center" class="contentNav">
 <tr>
 <td width="50%">{l_per_page} <form action="{php_self}" method="get" name="options_bar"><input type="hidden" name="mod" value="static" /><input style="text-align: center" name="per_page" value="{per_page}" type="text" size="3" /> <input type="submit" value="{l_do_show}" class="button" /></form></td>
 <td width="50%">[actions]<form action="{php_self}" method="get" name="options_bar2"><input type="hidden" name="mod" value="static" /><input type="hidden" name="action" value="add" /><input type="submit" value="{l_addstatic}" class="button" /></form>[/actions]</td>
 </tr>
 </table>
-<br />
+
 <form action="{php_self}?mod=static" method="post" name="static">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-<tr align="left">
-<td width="45%" class="contentHead">{l_title}</td>
-<td width="45%" class="contentHead">{l_url}</td>
-<td width="5%" class="contentHead">&nbsp;</td>
-<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(static)" /></td>
+<tr align="left" class="contHead">
+<td width="45%">{l_title}</td>
+<td width="45%">{l_url}</td>
+<td width="5%">&nbsp;</td>
+<td width="5%"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(static)" /></td>
 </tr>
 [no-static]<tr><td colspan="6"><p>- {l_not_found} -</p></td></tr>[/no-static]
 {entries}
 <tr>
-<td colspan="6" style="border-top: 1px solid #EBEBEB;">&nbsp;</td>
+<td colspan="6">&nbsp;</td>
 </tr>
 </table>
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">

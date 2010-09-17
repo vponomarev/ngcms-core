@@ -47,6 +47,11 @@ function validateAction() {
 }
 
 </script>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_users_title}</td>
+</tr>
+</table>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
 <td width="100%" class="contentNav" align="center" valign="top">
@@ -91,16 +96,16 @@ function validateAction() {
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
-<tr align="left">
-<td width="5%" class="contentHead">#</td>
-<td width="20%" class="contentHead">{l_name}</td>
-<td width="20%" class="contentHead">{l_regdate}</td>
-<td width="20%" class="contentHead">{l_last_login}</td>
-<td width="10%" class="contentHead">{l_all_news2}</td>
-[comments]<td width="10%" class="contentHead">{l_listhead.comments}</td>[/comments]
-<td width="15%" class="contentHead">{l_status}</td>
-<td width="5%" class="contentHead">&nbsp;</td>
-<td width="5%" class="contentHead"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" /></td>
+<tr align="left" class="contHead">
+<td width="5%">#</td>
+<td width="20%">{l_name}</td>
+<td width="20%">{l_regdate}</td>
+<td width="20%">{l_last_login}</td>
+<td width="10%">{l_all_news2}</td>
+[comments]<td width="10%">{l_listhead.comments}</td>[/comments]
+<td width="15%">{l_status}</td>
+<td width="5%">&nbsp;</td>
+<td width="5%"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" /></td>
 </tr>
 {entries}
 <tr>
