@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: users.php
 // Description: manage users
 // Author: Vitaly Ponomarev
@@ -16,7 +16,7 @@ $lang = LoadLang('users', 'admin');
 //
 // Form: Edit user
 function userEditForm(){
-	global $mysql, $lang, $tpl, $mod;
+	global $mysql, $lang, $tpl, $mod, $PFILTERS;
 
 	$id = $_REQUEST['id'];
 
@@ -24,6 +24,9 @@ function userEditForm(){
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
+
+//	if (is_array($PFILTERS['p_uprofile']))
+//		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfilePre($row['id'], $row, $tvars); }
 
     for ($i = 4; $i >= 1; $i--) {
     	$status .= ' <option value="'.$i.'"'.(($row['status'] == $i)?' selected':'').'>'.$i.' ('.$lang['st_'.$i].')</option>';
@@ -45,6 +48,10 @@ function userEditForm(){
 		'last'			=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('l, j Q Y - H:i', $row['last']),
 		'ip'			=>	$row['ip']
 	);
+
+//	if (is_array($PFILTERS['p_uprofile']))
+//		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfile($row['id'], $row, $tvars); }
+
 
 	$tpl -> template('edit', tpl_actions.$mod);
 	$tpl -> vars('edit', $tvars);
