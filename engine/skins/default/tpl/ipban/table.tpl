@@ -1,3 +1,4 @@
+
 <table class="content" border="0" cellspacing="0" cellpadding="2" align="center">
 <tr>
 <td width="66%" style="padding-right:10px;" valign="top">
@@ -5,15 +6,13 @@
 <tr>
 <td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_hdr.list}</td>
 </tr>
-<tr>
-<td width=100% colspan="4">&nbsp;</td>
-</tr>
-<tr>
-<td class="contentHead">{l_hdr.ip}</td>
-<td class="contentHead">{l_hdr.counter}</td>
-<td class="contentHead">{l_hdr.type}</td>
-<td class="contentHead">{l_hdr.reason}</td>
-<td class="contentHead">&nbsp;</td>
+
+<tr align="left" class="contHead">
+<td>{l_hdr.ip}</td>
+<td>{l_hdr.counter}</td>
+<td>{l_hdr.type}</td>
+<td>{l_hdr.reason}</td>
+<td>&nbsp;</td>
 </tr>
 {entries}
 </table>

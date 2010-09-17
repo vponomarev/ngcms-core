@@ -9,7 +9,7 @@
 <tr>
 <td width=100% colspan="5">&nbsp;</td>
 </tr>
-<tr align="center">
+<tr align="center" class="contHead">
 <td width="15%" class="contentHead">{l_pmdate}</td>
 <td width="40%" class="contentHead">{l_title}</td>
 <td width="25%" class="contentHead">{l_from}</td>

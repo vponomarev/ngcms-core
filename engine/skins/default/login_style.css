@@ -1,0 +1,38 @@
+@charset "windows-1251";
+/* CSS Document */
+
+html {
+height:100%;
+}
+
+body {
+background: #fff url(images/login/main_bg.png) repeat-x top;
+margin : 0;
+padding : 0;
+height:auto !important;
+min-height:100%;
+font: normal 11px/14px Tahoma,sans-serif;
+color: #666;
+}
+
+a {
+	
+color: #075e7c;
+text-decoration: underline;
+}
+
+a:hover {
+color: #5a912d;
+text-decoration: none;
+}
+
+#login_wrap { width: 400px; background: url(images/login/block_bg.png) top center no-repeat; margin: 0 auto; margin-top: 152px; text-align:center; padding: 18px 0 34px 0;}
+.l_block { width: 320px; height: 320px; background:#ecf1f7; border:#dbe4ed 1px solid; margin: 0 auto;}
+p.log_copyright { font-size: 10px; color:#b0b0b0;}
+.l_block .in { margin: 15px 0 15px 0;}
+form { text-align:left; padding: 18px;}
+label { display:block; color:#2a4764; font: 13px "Trebuchet MS", Arial, Helvetica, sans-serif normal; }
+input { width: 274px; padding: 2px; border: 1px solid #ccc; font: 13px "Trebuchet MS", Arial, Helvetica, sans-serif normal; color:#555; margin: 0 0 10px 0;}
+input:focus  {background: #fff; border: 1px solid #aaa;}
+.filterbutton {  width: 280px; height: 25px; background:#3c9c08 url(images/1px.png) repeat-x; border:#317e08 1px solid; font: 13px "Trebuchet MS", Arial, Helvetica, sans-serif; text-transform:uppercase; color:#edffd9; font-weight: bold;}
+.filterbutton:hover { background:#243e5c url(images/1px.png) repeat-x; border:#203752 1px solid;}

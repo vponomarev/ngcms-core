@@ -7,6 +7,11 @@ function ChangeOption(selectedOption) {
  if (selectedOption == 'addnew') { document.getElementById('addnew').style.display = ""; }
 }
 </script>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_categories_title}</td>
+</tr>
+</table>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
 <td width="100%" class="contentNav" align="center" valign="top">
@@ -19,7 +24,7 @@ function ChangeOption(selectedOption) {
 <div id="list">
 <form method="post" name="categories" action="{php_self}?mod=categories&amp;action=sort">
 <table width="97%" class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-<tr align="center" class="contHead">
+<tr align="left" class="contHead">
 <td width="5%">#</td>
 <td>{l_position}</td>
 <td>{l_title}</td>
@@ -30,7 +35,7 @@ function ChangeOption(selectedOption) {
 <td width="160">{l_action}</td>
 </tr>
 {cat_tree}
-<tr><td colspan="8" class="contentEdit"><input type="submit" value="{l_category.action.sort}" class="button" /></td></tr>
+<tr><td colspan="8" class="contentEdit" align="center"><input type="submit" value="{l_category.action.sort}" class="button" /></td></tr>
 </table>
 
 </form>

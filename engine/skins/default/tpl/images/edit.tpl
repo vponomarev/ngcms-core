@@ -6,21 +6,20 @@ function markNameEdit() {
 }
 
 </script>
-<a href="{link_back}">Вернуться к списку</a><br/>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">Редактировать</td>
+</tr>
+</table>
+<br/>
+<a href="{link_back}"><strong>Вернуться к списку</strong></a><br/>
 <br/>
 <form method="post" action="admin.php">
 <input type="hidden" name="mod" value="images"/>
 <input type="hidden" name="subaction" value="editApply"/>
 <input type="hidden" name="id" value="{id}"/>
 
-<input type="hidden" name="author" value="{r_author}"/>
-<input type="hidden" name="category" value="{r_category}"/>
-<input type="hidden" name="postdate" value="{r_postdate}"/>
-<input type="hidden" name="page" value="{r_page}"/>
-<input type="hidden" name="npp" value="{r_npp}"/>
-
-
-<table class="contentNav" border="0" cellspacing="1" cellpadding="1" width="100%">
+<table class="contentNav" border="0" cellspacing="0" cellpadding="2" width="100%">
 <tr class="contRow2"><td width="300">Исходное имя изображения:</td><td>{orig_name}</td></tr>
 <tr class="contRow1"><td>Имя изображения:</td><td><span id="bk_editImageName">{name}</span> <a href="#" onclick="markNameEdit(); this.style.display='none';">[ переименовать ]</a></td></tr>
 <tr class="contRow1"><td>Текущий URL изображения:</td><td><a target="_blank" href="{fileurl}">{fileurl}</a></td></tr>
@@ -32,7 +31,7 @@ function markNameEdit() {
 <tr class="contRow1"><td>Уменьшенная копия:</td>
  <td>
    статус: {preview_status}
-  [preview]<br/>размер: {preview_width} x {preview_height} ( {preview_size} )[/preview]<br/>
+  [preview]<br/>размер: {preview_width} x {preview_height} ( {preview_size} )[/preview]<br/><br/>
   <a href="#" onclick="document.getElementById('bk_createPreview').style.display='block'; this.style.display='none';">[ создать / изменить ]</a>
   <div id="bk_createPreview" style="display: none;">
   <fieldset>
@@ -50,6 +49,6 @@ function markNameEdit() {
 [preview]<tr class="contRow1"><td>Текущий URL уменьшенной копии:</td><td><a target=_blank" href="{thumburl}">{thumburl}</a></td></tr>
 <tr class="contRow1"><td>&nbsp;</td><td><img src="{thumburl}" border="0"/></td></tr>[/preview]
 <tr class="contRow1"><td>Описание:</td><td><textarea name="description" cols="80" rows="2">{description}</textarea></td></tr>
-<tr class="contRow1"><td colspan="2"><input type="submit" style="width: 300px;" value="Сохранить изменения"/></td></tr>
+<tr class="contRow1"><td colspan="2"><input type="submit" style="width: 300px;" value="Сохранить изменения" class="button"/></td></tr>
 </table>
 </form>

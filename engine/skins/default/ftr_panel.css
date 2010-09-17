@@ -1,0 +1,96 @@
+body { font-family:Tahoma, Geneva, sans-serif;}
+#footpanel {
+	position: fixed;
+	bottom: 0; left: 0;
+	z-index: 9999; /*--Keeps the panel on top of all other elements--*/
+	background: #3c9c08;
+	border: 1px solid #235b05;
+	border-bottom: none;
+	width: 100%;
+	margin: 0;
+}
+*html #footpanel { /*--IE6 Hack - Fixed Positioning to the Bottom--*/
+	margin-top: -1px; /*--Prevents IE6 from having an infinity scroll bar - due to 1px border on #footpanel--*/
+	position: absolute;
+	top:expression(eval(document.compatMode &&document.compatMode=='CSS1Compat') ?documentElement.scrollTop+(documentElement.clientHeight-this.clientHeight) : document.body.scrollTop +(document.body.clientHeight-this.clientHeight));
+}
+
+
+#footpanel ul {
+	padding: 0; margin: 0;
+	float: left;
+	width: 100%;
+	list-style: none;
+	border-top: 1px solid #6fb316; /*--Gives the bevel feel on the panel--*/
+	font-size: 10px; 
+}
+#footpanel ul li{
+	padding: 0; margin: 0;
+	float: left;
+	position: relative; 
+}
+#footpanel ul li a{
+	padding: 5px;
+	float: left;
+	text-indent: -9999px; /*--For text replacement - Shove text off of the page--*/
+	height: 16px; width: 16px;
+	text-decoration: none;
+	color:#fdffc0;
+	position: relative;
+}
+html #footpanel ul li a:hover{	background-color: #307d06; }
+html #footpanel ul li a.active { /*--Active state when sub-panel is open--*/
+	background-color: #fff;
+	height: 17px;
+	margin-top: -2px; /*--Push it up 2px to attach the active button to sub-panel--*/
+	border: 1px solid #555;
+	border-top: none;
+	z-index: 200; /*--Keeps the active link on top of the sub-panel--*/
+	position: relative;
+}
+#footpanel a.home{
+	background: url(images/home.png) no-repeat 15px center;
+	width: 180px;
+	padding-left: 40px;
+	border-right: 1px solid #235b05;
+	text-indent: 0; /*--Reset text indent since there will be a combination of both text and image--*/
+}
+a.add_news{ background: url(images/add_news.png) no-repeat center center;  }
+a.add_edit{ background: url(images/add_edit.png) no-repeat center center; }
+a.add_files{ background: url(images/add_files.png) no-repeat center center; }
+a.add_images{ background: url(images/add_images.png) no-repeat center center; }
+a.add_user { background: url(images/add_users.png) no-repeat center center; }
+a.add_plugins{ background: url(images/add_plugins.png) no-repeat center center; }
+a.add_category{ background: url(images/add_category.png) no-repeat center center; }
+a.add_system_option{ background: url(images/add_system.png) no-repeat center center; }
+
+a.videos{ background: url(film.png) no-repeat center center; }
+a.rocket{ background: url(images/rocket.png) no-repeat center center; }
+#footpanel a.chat{
+	background: url(images/add_forum.png) no-repeat 15px center;
+	width: 126px;
+	border-left: 1px solid #7cc71d;
+	border-right: 1px solid #235b05;
+	padding-left: 40px;
+	text-indent: 0; /*--Reset text indent since there will be a combination of both text and image--*/
+}
+#footpanel li#chatpanel, #footpanel li#alertpanel {	float: right; }
+#footpanel a small {
+	text-align: center;
+	width: 120px;
+	background: url(images/pop_arrow.gif) no-repeat center bottom;
+	padding: 5px 5px 11px;
+	display: none; /*--Hide by default--*/
+	color: #fff;
+	font-size: 10px;
+	text-indent: 0;
+}
+#footpanel a:hover small{
+	display: block; /*--Show on hover--*/
+	position: absolute;
+	top: -35px; /*--Position tooltip 35px above the list item--*/
+	left: 50%;
+	margin-left: -40px; /*--Center the tooltip--*/
+	z-index: 9999;
+}
+.clear_20 { clear:both; height: 50px;}

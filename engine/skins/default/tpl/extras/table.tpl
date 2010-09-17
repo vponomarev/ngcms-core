@@ -1,4 +1,3 @@
-
 <script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
 <script type="text/javascript" language="javascript">
 
@@ -82,13 +81,17 @@ function setDisplayMode(mode) {
  
 </script>
 
+
 <div id="pluginMenu">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
-<tr class="contHead">
-<td width=100% colspan="8"><img src="{skins_url}/images/nav.gif" hspace="8" />{l_extras}</td>
-</tr>
 <tr>
-<td width=100% colspan="8">
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_extras}</td>
+</tr>
+</table>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+
+<tr>
+<td width=100% colspan="8" class="contentNav">
 <div id="pluginTypeMenu">
 <span id="pTypeAll" class="pInactive" onclick="setDisplayMode(0);">{l_list.all} ({cntAll})</span><span class="pSeparator">&nbsp;</span>
 <span id="pTypeActive" class="pInactive" onclick="setDisplayMode(1);">{l_list.active} ({cntActive})</span><span class="pSeparator">&nbsp;</span>

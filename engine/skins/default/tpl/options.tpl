@@ -1,3 +1,9 @@
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_options_title}</td>
+</tr>
+</table><br />
+
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
 <td width="50%" style="padding-right:10px;" valign="top">

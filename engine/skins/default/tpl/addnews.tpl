@@ -42,7 +42,11 @@ function changeActive(name) {
 <input type="hidden" name="area" value="" />
 </form>
 <form id="postForm" name="form" ENCTYPE="multipart/form-data" method="post" action="{php_self}" target="_self">
-<br/>
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_addnews_title}</td>
+</tr>
+</table>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
@@ -51,7 +55,7 @@ function changeActive(name) {
 
 <table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
-<td style="background: #F0F0F0; padding: 3px;">
+<td class="contentNav" align="center">
 <input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_bar.maincontent}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_bar.additional}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{l_bar.attaches}" class="navbutton" />
@@ -64,7 +68,7 @@ function changeActive(name) {
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
   <tr>
    <td width="10"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
-   <td width="100">{l_title}:</td>
+   <td width="100"><span class="f15">{l_title}</span></td>
    <td><input type="text" class="important" size="79" name="title" value="" tabindex="1" /></td>
   </tr>
   <tr>
@@ -102,9 +106,9 @@ function changeActive(name) {
 
 <!-- ADDITIONAL -->
 <div id="additional" style="display: none;">
-<table border="0" cellspacing="1" cellpadding="0" width="98%">
+<table border="0" cellspacing="1" cellpadding="0" width="100%">
 <tr>
-<td class="contentHead"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
+<td class="contentHead"><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
 </tr>
 <tr>
 <td class="contentEntry1">{changedate}</td>
@@ -119,14 +123,14 @@ function changeActive(name) {
 <!-- ATTACHES -->
 <div id="attaches" style="display: none;">
 <br/>
-<b><u>List of attached files:</u></b>
-<table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
+<span class="f15">{l_attach.list}</span>
+<table width="100%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
-<tr><td>#</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
+<tr class="contHead"><td>#</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
 </thead>
 <tbody>
 <!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
-<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="More rows" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
+<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="Добавить поле" class="button" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
 </table>
 </div>
 
@@ -169,37 +173,50 @@ attachAddRow();
 </table>
 
 </td>
-<td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
+<td id="rightBar" width="300" valign="top" >
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
-   <td width="20"><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>{l_category}</td>
+   <td width="20"></td>
+   <td><span class="f15">{l_category}</span></td>
   </tr>
   <tr>
-   <td></td><td>{mastercat}</td>
+   <td></td><td><div class="list">{mastercat}</div></td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
-   <td>{l_editor.extcat}</td>
+   <td><span class="f15">{l_editor.extcat}</span></td>
   </tr>
   <tr>
    <td></td><td>
-   <div style="width: 95%; margin-top: 5px; overflow: auto; height: 102px; margin-left: 5px; padding: 3px; border: 1px solid #AABBCC;">{extcat}</div></td>
+   <div style="overflow: auto; height: 150px;" class="list">{extcat}</div>
+   
+   </td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
-   <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>{l_editor.configuration}</td>
+   <td></td>
+   <td><span class="f15">{l_editor.configuration}</span></td>
   </tr>
-  <tr><td></td><td><label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {flag_mainpage} /> {l_mainpage}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {flag_pinned} /> {l_add_pinned}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {flag_favorite} /> {l_add_favorite}</label></td></tr>
-[comments]  <tr><td></td><td><label><input type="checkbox" name="allow_com" value="1" class="check" id="allow_com" {flag_allow_com} /> {l_com_approve}</label></td></tr>[/comments]
-  <tr><td></td><td><label><input type="checkbox" name="flag_HTML" value="1" class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label></td></tr>
+  <tr>
+  
+  
+  <td></td><td>
+  <div class="list">
+  <label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label><br />
+  <label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {flag_mainpage} /> {l_mainpage}</label><br />
+  <label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {flag_pinned} /> {l_add_pinned}</label><br />
+  <label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {flag_favorite} /> {l_add_favorite}</label><br />
+  
+  [comments]<label><input type="checkbox" name="allow_com" value="1" class="check" id="allow_com" {flag_allow_com} /> {l_com_approve}
+  </label>[/comments]<br />
+  <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" checked="checked" {disable_flag_html} /> {l_flag_html}</label><br />
+  <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label><br />
+  </div>
+  
+  
+  </tr>
  </table>
 
 </td>

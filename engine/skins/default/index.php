@@ -32,6 +32,7 @@ $skin_header = <<<HTML
 <meta http-equiv="Content-Type" content="text/html; charset=$lang[encoding]" />
 <title>$config[home_title] - $lang[adminpanel]</title>
 <link rel="stylesheet" href="$skins_url/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="$skins_url/ftr_panel.css" type="text/css" />
 <script type="text/javascript" src="$config[admin_url]/includes/js/functions.js"></script>
 </head>
 <body>
@@ -55,7 +56,24 @@ HTML;
 
 $skin_footer = <<<HTML
 </div>
-<div class="footer">$lang[copyright]</div>
+<div class="clear_20"></div>
+<div class="clear_ftr"></div>
+<div id="footpanel">
+    <ul id="mainpanel">
+        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2010 <strong>Next Generation</strong> CMS <small>Сайт разработчика</small></a></li>
+        <li><a href="$PHP_SELF?mod=addnews" class="add_news">Добавить новость<small>Добавить новость</small></a></li>
+        <li><a href="$PHP_SELF?mod=editnews" class="add_edit">Редактировать<small>Редактировать</small></a></li>
+        <li><a href="$PHP_SELF?mod=images" class="add_images">Изображения<small>Изображения</small></a></li>
+        <li><a href="$PHP_SELF?mod=files" class="add_files">Файлы<small>Загрузить файл</small></a></li>
+        <li><a href="$PHP_SELF?mod=extras" class="add_plugins">Плагины<small>Плагины</small></a></li>
+        <li><a href="$PHP_SELF?mod=categories" class="add_category">Категории<small>Категории</small></a></li>
+        <li><a href="$PHP_SELF?mod=users" class="add_user">Пользователи<small>Пользователи</small></a></li>
+        <li><a href="$PHP_SELF?mod=configuration" class="add_system_option">Настройка системы<small>Настройка системы</small></a></li>
+        <li id="alertpanel"><a href="http://rocketboy.ru" target="_blank" class="rocket">Дизайн- RocketBoy</a></li>
+        <li id="chatpanel"><a href="http://ngcms.ru/forum/" target="_blank" class="chat">Форум тех. поддержки</a></li>
+        
+    </ul>
+</div>
 </td>
 </table>
 </body>

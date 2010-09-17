@@ -1,4 +1,4 @@
-<tr align="left">
+<tr align="left" class="contHead">
 <td class="contentEntry1" width="50%">{dirname}</td>
 <td class="contentEntry1" width="50%">
 <a href="{php_self}?mod=templates&action=themedelete&theme_name={dirname}&where={where}">{l_delete}</a>

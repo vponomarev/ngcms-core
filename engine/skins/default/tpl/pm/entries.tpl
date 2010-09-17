@@ -1,4 +1,4 @@
-<tr align="center">
+<tr align="left">
 <td class="contentEntry1">{pmdate}</td>
 <td class="contentEntry1"><a href="{php_self}?mod=pm&action=read&pmid={pmid}">{title}</a></td>
 <td class="contentEntry1">{link}</td>
