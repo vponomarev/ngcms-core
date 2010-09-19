@@ -244,7 +244,7 @@ if ($_REQUEST['massbackup']) {
 		dbBackup($filename, $_REQUEST['gzencode']);
 
 		if ($_REQUEST['email_send']) {
-			zzMail($config['admin_mail'], $lang['title'], sprintf($lang['message'], $date2), $filename);
+			sendEmailMessage($config['admin_mail'], $lang['title'], sprintf($lang['message'], $date2), $filename);
 			@unlink($filename);
 			msg(array("text" => $lang['msgo_backup_m']));
 		}
