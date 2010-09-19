@@ -370,6 +370,10 @@ function checkFlood($mode, $ip, $act, $subact, $userRec, $name){
 
 
 function zzMail($to, $subject, $message, $filename = false, $mail_from = false, $ctype = 'text/html') {
+	sendEmailMessage($to, $subject, $message, $filename, $mail_from, $ctype);
+}
+
+function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from = false, $ctype = 'text/html') {
 	global $lang, $config;
 
 	$mail_from	=	(!$mail_from) ? "mailbot@".str_replace("www.", "", $_SERVER['SERVER_NAME']) : $mail_from;

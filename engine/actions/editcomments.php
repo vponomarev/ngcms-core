@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: editcomments.php
 // Description: News comments managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -35,7 +35,7 @@ if ($subaction == "doeditcomment") {
 		if ($content && $_REQUEST['send_notice'] && $mail) {
 			$row = $mysql->record("select * from ".prefix."_news where id=".db_squote($newsid));
 			$newsLink = newsGenerateLink($row, false, 0, true);
-			zzMail($mail, $lang['comanswer'], sprintf($lang['notice'], $userROW['name'], $content, $newsLink), 'html');
+			sendEmailMessage($mail, $lang['comanswer'], sprintf($lang['notice'], $userROW['name'], $content, $newsLink), 'html');
 		}
 
 		msg(array("text" => $lang['msgo_saved']));

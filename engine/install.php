@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
 // Name: install.php
 // Description: System installer
 // Author: Vitaly Ponomarev
@@ -796,7 +796,7 @@ function doInstall() {
 			'flood_time' => '20',
 			'timestamp_comment' => 'j.m.Y - H:i',
 			'users_selfregister' => '1',
-			'register_type' => '3',
+			'register_type' => '4',
 			'use_avatars' => '1',
 			'avatar_wh' => '65',
 			'avatar_max_size' => '16',

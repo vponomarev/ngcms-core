@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: cmodules.php
 // Description: Common CORE modules
 // Author: Vitaly Ponomarev
@@ -32,8 +32,9 @@ function coreActivateUser() {
 		msg(array("text" => $lang['msgo_activated'], "info" => sprintf($lang['msgi_activated'], admin_url)));
 		$SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'].'/';
 	} else {
-		msg(array("type" => "error", "text" => $lang['msge_activation'], "info" => $lang['msgi_activation']));
-		$SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'].'/';
+		error404();
+		//msg(array("type" => "error", "text" => $lang['msge_activation'], "info" => $lang['msgi_activation']));
+		//$SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'].'/';
 	}
 }
 
@@ -344,8 +345,16 @@ function coreLoginAction($row = null, $redirect = null){
 		$tvars['vars']['form_action'] = generateLink('core', 'login');
 		$tvars['vars']['redirect'] = isset($_POST['redirect'])?$_POST['redirect']:$HTTP_REFERER;
 
-		$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($ban_mode != 1)?'$1':'';
-		$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = ($ban_mode == 1)?'$1':'';
+		if ($row == 'ERR:NEED.ACTIVATE') {
+			$tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '$1';
+			$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
+			$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
+		} else {
+			$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($ban_mode != 1)?'$1':'';
+			$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = ($ban_mode == 1)?'$1':'';
+			$tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '';
+		}
+
 
 		$tpl->template('login', tpl_site);
 		$tpl->vars('login', $tvars);
@@ -376,7 +385,7 @@ function coreLogin(){
 	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login())) {
 		coreLoginAction($row, $redirect);
 	} else {
-		coreLoginAction(null);
+		coreLoginAction(($row == 'ERR:NEED.ACTIVATE'?$row:''));
 	}
 }
 

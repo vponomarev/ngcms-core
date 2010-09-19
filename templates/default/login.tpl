@@ -21,6 +21,7 @@
 				<table width="100%">
 				[error]<tr><td colspan="2" align="center" style="background-color: red; color: white; font-weight: bold;">{l_login.error}</td></tr>[/error]
 				[banned]<tr><td colspan="2" align="center" style="background-color: red; color: white; font-weight: bold;">{l_login.banned}</td></tr>[/banned]
+				[need.activate]<tr><td colspan="2" align="center" style="background-color: red; color: white; font-weight: bold;">{l_login.need.activate}</td></tr>[/need.activate]
 				<tr><td width=70>{l_login.name}:</td><td><input type="text" name="username" /></td></tr>
 				<tr><td width=70>{l_login.password}:</td><td><input type="password" name="password" /></td></tr>
 				<tr><td colspan="2"><input type="submit" value="{l_login.submit}"/></td></tr>
