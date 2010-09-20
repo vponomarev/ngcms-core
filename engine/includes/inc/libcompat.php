@@ -17,7 +17,7 @@ function compatRedirector() {
 		if (isset($_GET['category']) && isset($_GET['altname'])) {
 			// Полная новость, находим её
 			if ($nrow = $mysql->record("select * from ".prefix."_news where alt_name=".db_squote($_GET['altname']))) {
-				$link = newGenerateLink($nrow, false, 0, true);
+				$link = newsGenerateLink($nrow, false, 0, true);
 				//print "Redirect: ".$link;
 				header("Location: ".$link);
 			} else {

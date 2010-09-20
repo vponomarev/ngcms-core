@@ -195,8 +195,10 @@ $timer->registerEvent('DB category list is loaded');
 //
 // RUN compatibility mode [ rewrite old links ]
 //
-//include_once root.'includes/inc/libcompat.php';
-//compatRedirector();
+if ($config['libcompat']) {
+	include_once root.'includes/inc/libcompat.php';
+	compatRedirector();
+}
 // [ END compatibility mode ]
 
 //
