@@ -197,6 +197,10 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry1">{l_404_mode}<br /><small>{l_404_mode_desc}</small></td>
 <td class="contentEntry2" valign="middle">{404_mode}</td>
 </tr>
+<tr>
+<td class="contentEntry1">{l_libcompat}<br /><small>{l_libcompat_desc}</small></td>
+<td class="contentEntry2" valign="middle">{libcompat}</td>
+</tr>
 </table>
 </div>
 
