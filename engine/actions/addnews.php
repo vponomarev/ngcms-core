@@ -107,9 +107,9 @@ function news_add(){
 	$SQL['author_id']	= $userROW['id'];
 	$SQL['catid']		= implode(",", array_keys($catids));
 
-	// Use flag 'allow comments' only in case when plugin 'comments' is installed
-	if (getPluginStatusInstalled('comments'))
-		$SQL['allow_com']	= $_REQUEST['allow_com'];
+//	// Use flag 'allow comments' only in case when plugin 'comments' is installed
+//	if (getPluginStatusInstalled('comments'))
+//		$SQL['allow_com']	= $_REQUEST['allow_com'];
 
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]

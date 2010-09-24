@@ -114,6 +114,44 @@ class StaticFilter {
 }
 
 
+// ==================================================================
+// Categories edit interceptors
+// ==================================================================
+
+class FilterAdminCategories {
+
+	// ### Add category interceptor ###
+	// Form generator
+	function addCategoryForm(&$tvars) { return 1;}
+
+	// Adding executor [done BEFORE actual add and CAN block adding ]
+	function addCategory(&$tvars, &$SQL) { return 1;}
+
+	// Adding notificator [ after successful adding ]
+	function addCategoryNotify(&$tvars, $SQL, $newsid) { return 1;}
+
+
+	// ### Edit category interceptor ###
+	// Form generator
+	function editCategoryForm($categoryID, $SQL, &$tvars) { return 1; }
+
+	// Edit executor  [done BEFORE actual edit and CAN block editing ]
+	function editCategory($categoryID, $SQL, &$SQLnew, &$tvars) { return 1; }
+
+	// Edit Notifier [ adfter successful editing ]
+	function editCategoryNotify($categoryID, $SQL, &$SQLnew, &$tvars) { return 1; }
+
+}
+
+
+// Register admin filter
+function register_admin_filter($group, $name, $instance) {
+ global $AFILTERS;
+ $AFILTERS[$group][$name] = $instance;
+}
+
+
+
 
 //
 // Get/Load list of active plugins & required files
@@ -353,8 +391,8 @@ function pluginGetVariable($pluginID, $var) {
 	if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig())
 		return false;
 
-	if (!isset($PLUGINS['config'][$pluginID])) { return ''; }
-	if (!isset($PLUGINS['config'][$pluginID][$var])) { return ''; }
+	if (!isset($PLUGINS['config'][$pluginID])) { return null; }
+	if (!isset($PLUGINS['config'][$pluginID][$var])) { return null; }
 	return $PLUGINS['config'][$pluginID][$var];
 }
 // OLD

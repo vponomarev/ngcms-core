@@ -209,10 +209,9 @@ attachAddRow();
   <label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {flag_pinned} /> {l_add_pinned}</label><br />
   <label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {flag_favorite} /> {l_add_favorite}</label><br />
   
-  [comments]<label><input type="checkbox" name="allow_com" value="1" class="check" id="allow_com" {flag_allow_com} /> {l_com_approve}
-  </label>[/comments]<br />
   <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" checked="checked" {disable_flag_html} /> {l_flag_html}</label><br />
   <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label><br />
+   [comments]<hr/>{l_comments:mode.header}: <select name="allow_com"><option value="0"{acom:0}>{l_comments:mode.disallow}<option value="1"{acom:1}>{l_comments:mode.allow}<option value="2"{acom:2}>{l_comments:mode.default}</select>[/comments]<br />
   </div>
   
   

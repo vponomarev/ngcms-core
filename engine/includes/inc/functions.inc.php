@@ -1508,3 +1508,20 @@ function error404(){
 			$SYSTEM_FLAGS['info']['title']['group']	= $lang['404.title'];
 	}
 }
+
+
+//
+// Generate SecureToken for protection from CSRF attacks
+//
+function genUToken($identity = ''){
+	global $userROW, $config;
+
+	$line = $identity;
+	if (isset($userROW))
+		$line.= $userROW['id'].$userROW['authcookie'];
+
+	if (isset($config['UUID']))
+		$line .= $config['UUID'];
+
+	return md5($line);
+}
