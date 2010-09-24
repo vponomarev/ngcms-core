@@ -330,12 +330,14 @@ function editNewsForm() {
 	}
 
 	$tvars['vars']['ifmp']		=	($row['mainpage'])  ? 'checked="checked"' : '';
-	$tvars['vars']['ifch']		=	($row['allow_com']) ? 'checked="checked"' : '';
 	$tvars['vars']['iffav']		=	($row['favorite'])  ? 'checked="checked"' : '';
 	$tvars['vars']['ifapp']		=	($row['approve'])   ? 'checked="checked"' : '';
 	$tvars['vars']['ifpin']		=	($row['pinned'])    ? 'checked="checked"' : '';
 	$tvars['vars']['ifraw']		=	($row['flags'] & 1) ? 'checked="checked"' : '';
 	$tvars['vars']['ifhtml']	=	($row['flags'] & 2) ? 'checked="checked"' : '';
+
+//	$tvars['vars']['ifch']		=	($row['allow_com']) ? 'checked="checked"' : '';
+
 
 	// Disable flag for comments if plugin 'comments' is not installed
 	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
