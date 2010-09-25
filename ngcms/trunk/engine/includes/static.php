@@ -66,17 +66,6 @@ function showStaticPage($params) {
 		$tvars['regx']["'\\[del-static\\].*?\\[/del-static\\]'si"] = "";
 	}
 
-	if ($config['blocks_for_reg']) {
-		if (is_array($userROW)) {
-			$tvars['vars']['[hide]'] = "";
-			$tvars['vars']['[/hide]'] = "";
-		} else {
-			$tvars['regx']["'\\[hide\\].*?\\[/hide\\]'si"] = "<div class=\"not_logged\">".$lang['not_logged']."</div>";
-		}
-	} else {
-		$tvars['regx']["'\\[hide\\].*?\\[/hide\\]'si"] = "$1";
-	}
-
 	if (is_array($PFILTERS['static']))
 		foreach ($PFILTERS['static'] as $k => $v) { $v->showStatic($row['id'], $row, $tvars, array()); }
 
