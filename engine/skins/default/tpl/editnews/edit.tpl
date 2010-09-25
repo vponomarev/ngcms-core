@@ -156,7 +156,7 @@ function changeActive(name) {
 <td id="rightBar" width="300" valign="top">
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-  <tr><td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td><td><span class="f15">{l_editor.comminfo}</span></td></tr>
+  <tr><td></td><td><span class="f15">{l_editor.comminfo}</span></td></tr>
   <tr><td></td><td>
   <div class="list">
   {l_editor.author}: <a style="font-family: Tahoma, Sans-serif;" href="{php_self}?mod=users&amp;action=editForm&amp;id={authorid}"><b>{author}</b></a> [isplugin uprofile] <a href="{author_page}" target="_blank" title="{l_site.viewuser}"><img src="{skins_url}/images/open_new.png" alt="{l_newpage}"/></a>[/isplugin]<br />
@@ -165,7 +165,7 @@ function changeActive(name) {
   </div>
 </td></tr>
   <tr>
-    <td width="20"><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+    <td width="20"></td>
     <td><span class="f15">{l_category}</span></td>
   </tr>
   <tr>
@@ -173,16 +173,16 @@ function changeActive(name) {
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
-   <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+   <td></td>
    <td><span class="f15">{l_editor.extcat}</span></td>
   </tr>
   <tr>
    <td></td><td>
-   <div style="overflow: auto; height: 80px;" class="list">{extcat}</div></td>
+   <div style="overflow: auto; height: 150px;" class="list">{extcat}</div></td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
-   <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+   <td></td>
    <td><span class="f15">{l_editor.configuration}</span></td>
   </tr>
   <tr><td></td><td>
@@ -260,7 +260,7 @@ function attachAddRow() {
 	// Add cells
 	row.insertCell(0).innerHTML = '*';
 	row.insertCell(1).innerHTML = '{l_attach.new_file}';
-	
+
 	// Add file input
 	var el = document.createElement('input');
 	el.setAttribute('type', 'file');
@@ -278,7 +278,7 @@ function attachAddRow() {
 	el.setAttribute('value', '-');
 	row.insertCell(3).appendChild(el);
 }
-// Add first row 
+// Add first row
 var attachAbsoluteRowID = 0;
 attachAddRow();
 -->
