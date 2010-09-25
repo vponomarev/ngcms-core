@@ -17,6 +17,7 @@
 <br/>
 [comheader]<div class="b_font">Все комментарии посетителей к данной новости</div><br />[/comheader]
 <!-- Here is user's comments -->
+<div id="new_comments_rev"></div>
 {entries}
 
 {more_comments}
