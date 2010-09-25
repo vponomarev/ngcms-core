@@ -127,7 +127,7 @@ class parse {
 		$content	=	preg_replace("#\[code\](.+?)\[/code\]#is", "<pre>$1</pre>",$content);
 
 		$content	=	preg_replace("#\[quote\]\s*(.*?)\s*\[/quote\]#is", "<blockquote><b>".$lang['bb_quote']."</b><br />$1</blockquote>",$content);
-		$content	=	preg_replace("#\[quote=(.*?)\]\s*(.*?)\s*\[/quote\]#is","<div class='answer'><b>$1 ".$lang['bb_wrote']."</b><br />$2</div>",$content);
+		$content	=	preg_replace("#\[quote=(.*?)\]\s*(.*?)\s*\[/quote\]#is","<blockquote><b>$1 ".$lang['bb_wrote']."</b><br />$2</blockquote>",$content);
 
 		$content	=	preg_replace("#\[acronym\]\s*(.*?)\s*\[/acronym\]#is", "<acronym>$1</acronym>",$content);
 		$content	=	preg_replace("#\[acronym=(.*?)\]\s*(.*?)\s*\[/acronym\]#is","<acronym title=\"$1\">$2</acronym>",$content);
