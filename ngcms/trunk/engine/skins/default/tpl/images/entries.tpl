@@ -8,7 +8,7 @@
 <td width="35">{view_thumb}</td>
 <!-- <td class="contentEntry1">{rename}</td> -->
 <td width="70">{width}x{height}</td>
-<td>{size}</td>
+<td nowrap="nowrap">{size}</td>
 <td>{folder}</td>
 <td>{user}</td>
 <td><a href="{edit_link}">{l_edit}</a></td>

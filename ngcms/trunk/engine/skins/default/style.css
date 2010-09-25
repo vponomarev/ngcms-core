@@ -13,7 +13,7 @@ color: #666;
 }
 
 a {
-	
+
 color: #075e7c;
 text-decoration: underline;
 }
@@ -117,7 +117,7 @@ color: black;
  width: 1000px;
  background: #243e5c url(images/1px.png) repeat-x;
  font: 12px "Trebuchet MS", Arial, Helvetica, sans-serif;
- color: #ecf3f7; 
+ color: #ecf3f7;
  line-height: 25px;
  border-top: #152f59 1px solid;
 }
@@ -446,80 +446,80 @@ padding: 1px;
 
 .tselect_active {
 background: #a2d5a6;
-width: 200px; 
+width: 200px;
 color:#000000;
 }
 
 .tselect {
 background: white;
-width: 200px; 
+width: 200px;
 
 }
 
 
 .sysmsg_common {
- font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
- font-size: 18px; 
- font-weight: normal; 
- letter-spacing: 0px;  
+ font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+ font-size: 18px;
+ font-weight: normal;
+ letter-spacing: 0px;
  background: #6cba6f url(images/green_bg.jpg) top left no-repeat;
- border: #538958 1px solid; 
- color:#fff; margin:0; 
- line-height: 25px; 
- padding: 15px 10px 10px 100px; 
- margin-bottom: 5px; 
- margin-top: 5px;
+ border: #538958 1px solid;
+ color:#fff;
+ line-height: 25px;
+ padding: 15px 10px 0 100px;
+ margin: 5px 0;
+ height: 79px;
 }
 
 .sysmsg_common .info a {
- padding: 7px 0 0 0; 
+ padding: 7px 0 0 0;
  line-height: 18px;
- font-size: 12px; 
- font-family:Tahoma, Geneva, sans-serif; 
+ font-size: 12px;
+ font-family:Tahoma, Geneva, sans-serif;
  letter-spacing: normal;
 
 
 }
 .sysmsg_common .info a:hover {
- padding: 5px; 
- background:url(images/w20.png) repeat; 
- text-decoration: none; 
+ padding: 5px;
+ background:url(images/w20.png) repeat;
+ text-decoration: none;
  color:#333;
 }
 
-.syserror_common { 
- font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
- font-size: 18px; 
- font-weight: normal; 
- letter-spacing: 0px; 
- background:#cb2d25 url(images/red_bg.jpg) top left no-repeat; 
- border:#b1241d 1px solid; 
- padding: 15px 10px 10px 100px;
- margin-bottom: 5px; color:#fff; 
- margin-top: 5px;
- line-height: 100%;
+.syserror_common {
+ font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+ font-size: 18px;
+ font-weight: normal;
+ letter-spacing: 0px;
+ background:#cb2d25 url(images/red_bg.jpg) top left no-repeat;
+ border:#b1241d 1px solid;
+ padding: 15px 10px 0 100px;
+ color:#fff;
+ margin: 5px 0;
+ height: 79px;
 }
 
 .syserror_common .info {
- padding: 7px  0 0 0; 
+ padding: 7px  0 0 0;
  /* line-height: 22px; */
- font-size: 12px; 
- font-family:Tahoma, Geneva, sans-serif; 
+ font-size: 12px;
+ font-family:Tahoma, Geneva, sans-serif;
  letter-spacing: normal;
 }
 
 .sysinfo_common {
- font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; 
- font-size: 20px; 
- font-weight: normal; 
- letter-spacing: -1px;  
+ font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+ font-size: 20px;
+ font-weight: normal;
+ letter-spacing: -1px;
  background: #6cba6f url(images/green_bg.jpg) top left no-repeat;
- border: #538958 1px solid; 
- color:#fff; margin:0; 
+ border: #538958 1px solid;
+ color:#fff; margin:0;
  /* line-height: 25px; */
- padding: 15px 10px 10px 100px; 
- margin-bottom: 5px; 
- margin-top: 5px;
+ padding: 15px 10px 0 100px;
+ margin: 5px 0;
+ height: 79px;
 }
 
 .contentActive {
@@ -584,7 +584,7 @@ background: #F0F0F0;
 	cursor: pointer;
 	background: #FFFFFF url("/engine/skins/default/images/yes_plug.png") no-repeat;
 	background-position: 8px center;
-	
+
 }
 #pluginTypeMenu .pSeparator {
 	float: left;
@@ -592,9 +592,8 @@ background: #F0F0F0;
 }
 
 /* PLUGIN ENTRIES */
-.pluginEntryActive TD { 
-	display: ;
-	padding: 5px 0 1px 5px;
+.pluginEntryActive TD {
+	padding: 5px 3px;
 	background-color: #ffffff;
 	border-bottom: 1px solid #f0f0f0;
 	font: normal 11px tahoma, sans-serif;
@@ -602,31 +601,29 @@ background: #F0F0F0;
 	text-align: left;
 }
 .pluginEntryInactive TD {
-	display: ;
-	padding: 5px 0 1px 5px;
+    vertical-align: top;
+	padding: 5px 3px;
 	background-color: #FFFFFF;
 	border-bottom: 1px solid #f0f0f0;
 	font: normal 11px tahoma, sans-serif;
-	color: #bbbbbb;
+	color: #999;
 	text-align: left;
 }
 .pluginEntryUninstalled TD {
-	display: ;
-padding: 5px;
+    vertical-align: top;
+padding: 5px 3px;
 background:#59a6ec url(images/1px.png) repeat-x;
-border-top: 1px solid #4d8bc6;
-border-bottom: 1px solid #4d8bc6;
+border-bottom: 1px solid #EEE;
 font: normal 11px tahoma, sans-serif;
 color: #fff;
 }
-.pluginEntryUninstalled TD a{ color:#b4def9; text-decoration: none; padding: 3px;}
-.pluginEntryUninstalled TD a:hover{ color:#fff; text-decoration: none; background:url(images/w20.png) repeat;}
+.pluginEntryUninstalled TD a:hover{ background:url(images/w20.png) repeat;}
 
 .suggestWindow {
- background:#f6f8fb; 
- border: 1px solid #aaaaaa; 
+ background:#f6f8fb;
+ border: 1px solid #aaaaaa;
  color: #232323;
- width: 274px; 
+ width: 274px;
  display: block;
  visibility: hidden;
  padding: 0px;
@@ -725,19 +722,19 @@ border-bottom: 1px solid #eee;
 .right { float: right;}
 .clear { border: none; background:none; margin:0; padding:0; clear: both;}
 
-.f10 { font-size: 10px;}
 .f15 { font-size: 15px; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; font-weight: normal;}
 
 .list { background:#ecf3f7 url(images/1px.png) repeat-x; border:#e4ecf0 1px solid; padding: 10px; margin: 10px 0 10px 0;}
-.telo { 
- font-size: 14px; 
- line-height: 19px; 
+.list label { line-height: 16px; }
+.telo {
+ font-size: 14px;
+ line-height: 19px;
  margin: 20px;
 }
 
 /* SPOILERs */
 .spoiler {
-	border:solid 1px #adbac6; 
+	border:solid 1px #adbac6;
 	background:#eaf0f7;
 	margin:10px 0;
 	padding: 0px;
@@ -768,7 +765,7 @@ border-bottom: 1px solid #eee;
 	border-top:solid 1px #cad4de;
 	background: #fff;
 	display: none; padding: 15px;
-}	
+}
 
 .timeProfiler TD {
 	background-color: #E8E8E8;
