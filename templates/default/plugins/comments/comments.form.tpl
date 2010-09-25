@@ -34,7 +34,12 @@ function add_comment(){
 		if (cajax.responseStatus[0] == 200) {
 			try {
 				var resRX = eval('('+cajax.response+')');
-				var nc = document.getElementById('new_comments');
+				var nc;
+				if (resRX['rev'] && document.getElementById('new_comments_rev')) {
+					nc = document.getElementById('new_comments_rev');
+				} else {
+					nc = document.getElementById('new_comments');
+				}
 				nc.innerHTML += resRX['data'];				
 				if (resRX['status']) { 
 					// Added successfully!
