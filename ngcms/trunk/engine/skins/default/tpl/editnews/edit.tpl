@@ -142,7 +142,7 @@ function changeActive(name) {
 <span class="f15">{l_attach.list}</span>
 <table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
-<tr class="contHead"><td>ID</td><td width="80">{l_attach.date}</td><td>{l_attach.filename}</td><td width="90">{l_attach.size}</td><td width="40">DEL</td></tr>
+<tr class="contHead"><td>ID</td><td width="80">{l_attach.date}</td><td width="10">&nbsp;</td><td>{l_attach.filename}</td><td width="90">{l_attach.size}</td><td width="40">DEL</td></tr>
 </thead>
 <tbody>
 <!-- <tr><td colspan="5">No data</td></tr> -->
@@ -258,8 +258,9 @@ function attachAddRow() {
 	var row = tbl.insertRow(lastRow - 1);
 
 	// Add cells
-	row.insertCell(0).innerHTML = '*';
-	row.insertCell(1).innerHTML = '{l_attach.new_file}';
+	row.insertCell(-1).innerHTML = '*';
+	row.insertCell(-1).innerHTML = '{l_attach.new_file}';
+	row.insertCell(-1).innerHTML = '';
 
 	// Add file input
 	var el = document.createElement('input');
@@ -267,7 +268,7 @@ function attachAddRow() {
 	el.setAttribute('name', 'userfile[' + (++attachAbsoluteRowID) + ']');
 	el.setAttribute('size', '80');
 
-	var xCell = row.insertCell(2);
+	var xCell = row.insertCell(-1);
 	xCell.colSpan = 2;
 	xCell.appendChild(el);
 
@@ -276,7 +277,7 @@ function attachAddRow() {
 	el.setAttribute('type', 'button');
 	el.setAttribute('onclick', 'document.getElementById("attachFilelist").deleteRow(this.parentNode.parentNode.rowIndex);');
 	el.setAttribute('value', '-');
-	row.insertCell(3).appendChild(el);
+	row.insertCell(-1).appendChild(el);
 }
 // Add first row
 var attachAbsoluteRowID = 0;
