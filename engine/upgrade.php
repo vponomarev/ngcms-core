@@ -70,10 +70,15 @@ $query_list_091_091fp1 = array(
 	'insert into '.prefix.'_config (name, value) values (\'database.engine.version\', \'0.9.1.fp01\') on duplicate key update value=\'0.9.1.fp01\'',
 );
 
-$query_list_091fp1_092 = array(
+$query_list_091fp1_092rc1 = array(
 	'alter table '.prefix.'_news drop column attach_count',
 	'alter table '.prefix.'_news add column num_images int(10) default 0 after flags',
 	'alter table '.prefix.'_news add column num_files int(10) default 0 after flags',
+);
+
+$query_list_092rc1_092 = array(
+	'update '.uprefix.' users set activation=\'\'',
+	'alter table '.prefix.'_category add column allow_com int default 2',
 );
 
 
@@ -222,14 +227,14 @@ if ($_REQUEST['update091_091fp01']) {
 	echo "OK<br /><br />\n";
 }
 
-if ($_REQUEST['update091fp1_092']) {
+if ($_REQUEST['update091fp1_092rc1']) {
 	// Выполнение SQL запросов на обновление
 	print '<br/>Выполнение SQL запросов:<br/>';
 	print '<table width="80%">';
 	print '<tr><td><b>Команда</b></td><td><b>Результат</b></td></tr>';
 
 	$flag_err = false;
-	foreach ($query_list_091fp1_092 as $sql) {
+	foreach ($query_list_091fp1_092rc1 as $sql) {
 		$res = mysql_query($sql);
 		print '<tr><td>'.$sql.'</td><td>'.($res?'OK':'<font color="red"><b>FAIL</b></font>').'</td></tr>'."\n";
 		if (!$res) {
@@ -248,6 +253,31 @@ if ($_REQUEST['update091fp1_092']) {
 	echo "OK<br /><br />\n";
 }
 
+if ($_REQUEST['update092rc1_092']) {
+	// Выполнение SQL запросов на обновление
+	print '<br/>Выполнение SQL запросов:<br/>';
+	print '<table width="80%">';
+	print '<tr><td><b>Команда</b></td><td><b>Результат</b></td></tr>';
+
+	$flag_err = false;
+	foreach ($query_list_092rc_092 as $sql) {
+		$res = mysql_query($sql);
+		print '<tr><td>'.$sql.'</td><td>'.($res?'OK':'<font color="red"><b>FAIL</b></font>').'</td></tr>'."\n";
+		if (!$res) {
+			$flag_err = true;
+			break;
+		}
+	}
+	print "</table><br/>\n\n";
+
+	if ($flag_err) {
+		//
+		print "<font color='red'><b>Во время обновления БД произошла ошибка!<br/>Обновление в автоматическом режиме невозможно, Вам необходимо обновить БД вручную.</b></font>";
+		exit;
+	}
+
+	echo "OK<br /><br />\n";
+}
 
 
 print "Все операции проведены.<br/><a href='?'>назад</a><br/><br/><br/>После окончания обновления вам <font color=\"red\"><u>необходимо</u></font> удалить файл <b>upgrademe.txt</b> из каталога engine/";
@@ -275,9 +305,14 @@ function questionare_0971() {
   <td width='10%'><input type=checkbox name='update091_091fp01' value='1' /></td>
  </tr>
  <tr>
-  <td>Выполнить обновление структуры БД 0.9.1 FixPack #01 => 0.9.2<br/>
+  <td>Выполнить обновление структуры БД 0.9.1 FixPack #01 => 0.9.2 Release Candidate 1<br/>
   <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.1 FixPack #1 до версии 0.9.2<br/>После обновления БД вам необходимо зайти в 'настройки' => 'управление базой данных' и выполнить 'обновить счетчик новостей'</td>
-  <td width='10%'><input type=checkbox name='update091fp1_092' value='1' /></td>
+  <td width='10%'><input type=checkbox name='update091fp1_092rc1' value='1' /></td>
+ </tr>
+ <tr>
+  <td>Выполнить обновление структуры БД 0.9.1 Release Candidate 1 => 0.9.2 Release<br/>
+  <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.1 Release Candidate 1 до версии 0.9.2</td>
+  <td width='10%'><input type=checkbox name='update02rc1_092' value='1' /></td>
  </tr>
 
  </table><br/>
