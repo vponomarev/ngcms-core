@@ -69,7 +69,7 @@ $skin_footer = <<<HTML
         <li><a href="$PHP_SELF?mod=categories" class="add_category">Категории<small>Категории</small></a></li>
         <li><a href="$PHP_SELF?mod=users" class="add_user">Пользователи<small>Пользователи</small></a></li>
         <li><a href="$PHP_SELF?mod=configuration" class="add_system_option">Настройка системы<small>Настройка системы</small></a></li>
-        <li id="alertpanel"><a href="http://rocketboy.ru" target="_blank" class="rocket">Дизайн- RocketBoy</a></li>
+        <li id="alertpanel"><a href="http://ngcms.ru/forum/profile.php?id=23" target="_blank" class="rocket">Дизайн- RocketBoy</a></li>
         <li id="chatpanel"><a href="http://ngcms.ru/forum/" target="_blank" class="chat">Форум тех. поддержки</a></li>
         
     </ul>
