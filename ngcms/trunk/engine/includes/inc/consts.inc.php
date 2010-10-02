@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2009 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: consts.inc.php
 // Description: Initializing global consts
 // Author: Alexey Zinchenko, Vitaly Ponomarev
@@ -13,10 +13,12 @@ define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.1 Release + SVN');
+@define('engineVersion', '0.9.2 RC [SVN638+]');
 
 @define('prefix', $config['prefix']);
 @define('home', $config['home_url']);
+@define('localPrefix', (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $tempMatch))?$tempMatch[2]:'');
+
 @define('home_title', $config['home_title']);
 @define('zz_url', $config['zz_url']);
 @define('admin_url', isset($config['admin_url'])?$config['admin_url']:$config['zz_url']);

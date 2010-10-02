@@ -887,6 +887,7 @@ if ($action == "editnews") {
 	$tvars['vars']['st.selected1'] =  $fSearchType?' selected="selected"':'';
 	$tvars['vars']['dr1'] = $fDateStartText;
 	$tvars['vars']['dr2'] = $fDateStopText;
+	$tvars['vars']['localPrefix'] = localPrefix;
 
 	exec_acts('editnews_list');
 

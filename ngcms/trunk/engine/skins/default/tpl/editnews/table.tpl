@@ -222,7 +222,8 @@ function filter_attach_DateEdit(id) {
 // INIT NEW SUGGEST LIBRARY [ call only after full document load ]
 function systemInit() {
 var aSuggest = new ngSuggest('an', 
-								{ 
+								{
+									'localPrefix'	: '{localPrefix}',
 									'lId'		: 'suggestLoader',
 									'hlr'		: 'true',
 									'iMinLen'	: 1,
