@@ -237,7 +237,7 @@ function RemoveImages2() {
   <input type="checkbox" name="thumb" value='thumb' id=thumb2 class='check'  {thumb_mode}{thumb_checked} /> 
   <label for=thumb2>{l_do_preview}</label><br />
   <input type="checkbox" name="shadow" value='shadow' id=shadow2 class='check' {shadow_mode}{shadow_checked} /><label for=shadow2>{l_do_shadow}</label><br />
-  <input type="checkbox" name="stamp" value='stamp' id=stamp2 class='check' {stamp_mode}{stamp_checked} /><label for=stamp>{l_do_wmimage}</label>
+  <input type="checkbox" name="stamp" value='stamp' id=stamp2 class='check' {stamp_mode}{stamp_checked} /><label for=stamp2>{l_do_wmimage}</label>
 </div></td>
 </tr>
 <tr align="center">
