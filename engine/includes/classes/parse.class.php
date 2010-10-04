@@ -630,6 +630,7 @@ class parse {
 	function parseBBAttach($content, $db, $templateVariables = array()) {
 		global $config;
 
+		$dataCache = array();
 		if (preg_match_all("#\[attach(\#\d+){0,1}\](.*?)\[\/attach\]#is", $content, $pcatch, PREG_SET_ORDER)) {
 			$rsrc = array();
 			$rdest = array();
@@ -646,7 +647,16 @@ class parse {
 
 				if (is_numeric($uid)) {
 					array_push($rsrc, $catch[0]);
-					if ($rec = $db->record("select * from ".prefix."_files where id = ".db_squote($uid))) {
+					$rec = array();
+					if (is_array($dataCache[$uid])) {
+						$rec = $dataCache[$uid];
+					} else {
+						$rec = $db->record("select * from ".prefix."_files where id = ".db_squote($uid));
+						if (is_array($rec)) {
+							$dataCache[$uid] = $rec;
+						}
+					}
+					if (is_array($rec)) {
 						// Generate file ULR
 						$fname = ($rec['storage']?$config['attach_dir']:$config['files_dir']).$rec['folder'].'/'.$rec['name'];
 						$fsize = (file_exists($fname) && ($fsize = @filesize($fname)))?Formatsize($fsize):'n/a';
@@ -664,6 +674,67 @@ class parse {
 			}
 			$content = str_replace($rsrc, $rdest, $content);
 		}
+
+		// Scan for separate {attach#ID.url}, {attach#ID.size}, {attach#ID.name}, {attach#ID.ext}
+		if (preg_match_all("#\{attach\#(\d+)\.(url|size|name|ext|fname)\}#is", $content, $pcatch, PREG_SET_ORDER)) {
+			$rsrc = array();
+			$rdest = array();
+
+			foreach ($pcatch as $catch) {
+				if (is_numeric($uid = $catch[1])) {
+					array_push($rsrc, $catch[0]);
+					$rec = array();
+					if (is_array($dataCache[$uid])) {
+						$rec = $dataCache[$uid];
+					} else {
+						$rec = $db->record("select * from ".prefix."_files where id = ".db_squote($uid));
+						if (is_array($rec)) {
+							$dataCache[$uid] = $rec;
+						}
+					}
+					if (is_array($rec)) {
+						// Generate file ULR
+						$fname = ($rec['storage']?$config['attach_dir']:$config['files_dir']).$rec['folder'].'/'.$rec['name'];
+
+						// Decide what to do
+						switch ($catch[2]) {
+							case 'url':
+									array_push($rdest, ($rec['storage']?$config['attach_url']:$config['files_url']).'/'.$rec['folder'].'/'.$rec['name']);
+								break;
+							case 'size':
+									array_push($rdest, (file_exists($fname) && ($fsize = @filesize($fname)))?Formatsize($fsize):'n/a');
+								break;
+							case 'name':
+									$dots = explode(".", $rec['orig_name']);
+									if (count($dots) > 1) {
+										array_pop($dots);
+									}
+									array_push($rdest, join(".", $dots));
+								break;
+							case 'ext':
+								$dots = explode(".", $rec['orig_name']);
+								if (count($dots) > 1) {
+									array_push($rdest, array_pop($dots));
+								} else {
+									array_push($rdest, '');
+								}
+
+								break;
+							case 'fname':
+									array_push($rdest, $rec['orig_name']);
+								break;
+						}
+
+					} else {
+						array_push($rdest, $templateVariables['bbcodes']['attach.nonexist']);
+					}
+				}
+			}
+			$content = str_replace($rsrc, $rdest, $content);
+		}
+
+
+
 		return $content;
 	}
 }
