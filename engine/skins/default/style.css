@@ -245,13 +245,14 @@ text-align: right;
 .button {
 padding: 2px 8px;
 background:#59a6ec url(images/1px.png) repeat-x;
-border: 1px solid #4d8bc6;
+border: 1px solid #59a6ec;
 font: normal 11px tahoma, sans-serif;
 color: #fff;
+cursor: pointer; 
 }
 .button:hover {
 padding: 2px 8px;
-background:#4f92d0 url(images/1px.png) repeat-x;
+background:#447baf url(images/1px.png) repeat-x;
 border: 1px solid #447baf;
 font: normal 11px tahoma, sans-serif;
 color: #fff;
@@ -269,7 +270,9 @@ border: 1px solid #d0d8e0;
 font: normal 11px tahoma, sans-serif;
 color: #3287b5;
 background: #fff;
+cursor: pointer; 
 }
+.navbutton:hover { background: #59a6ec; color: #FFF; }
 
 #tags {
 margin-left: 0px;
