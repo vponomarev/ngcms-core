@@ -350,7 +350,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 	$cstart = $start_from = intval($callingParams['page']);
 
-	if (!$cstart) { $cstart = 1; }
+	if ($cstart < 1) { $cstart = 1; }
 
 	$i			= $start_from?$start_from:0;
 
