@@ -467,7 +467,7 @@ function manage_editApply($type, $id){
 
 	// Переименование
 	if ($_POST['newname']) {
-		if ($fmanager->file_rename(array('type' => $type, 'id' => $id, 'move' => 1, 'newname' => $_POST['newname']))) {
+		if ($fmanager->file_rename(array('type' => $type, 'id' => $id, 'move' => 0, 'newname' => $_POST['newname']))) {
 			// OK. Reload image data
 			if (!($irow = $mysql->record("select * from ".prefix."_images where id = ".db_squote($id)))) {
 				return false;
