@@ -306,6 +306,13 @@ function newsProcessFilter($conditions) {
 //		'overrideTemplatePath' => alternative path for searching of template
 //		'customCategoryTemplate' => flag automatically override custom category templates
 //			[!!!] USES CUSTOM TEMPLATE FOR FIRST CATEGORY FROM NEWS [!!!]
+//		'regenShortNews' => 
+//			'mode' 		=> If we should generate `on the fly` short news from long one
+//				* ''		- Leave short news as is [ default ]
+//				* 'auto'	- Generate ShortNews from long only if ShortNews is empty
+//				* 'force'	- Generate ShortNews from long in any case
+//			'len'  			=> Length in chars of part of LongNews that will be used for regeneration (in case if regeneration is active)
+//			'finisher'		=> chars that will be added into the end to indicate that this is truncated line ( default = '...' )
 //		'showNumber'	=> set number of news to show per page
 //		'newsOrder'		=> set news order
 //		'overrideSQLquery' => array - sets if PLUGIN wants to run it's own query
@@ -390,7 +397,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		if (is_array($PFILTERS['news']))
 			foreach ($PFILTERS['news'] as $k => $v) { $v->showNewsPre($row['id'], $row, $callingParams); }
 
-		$tvars = newsFillVariables($row, 0, isset($_REQUEST['page'])?intval($_REQUEST['page']):0);
+		$tvars = newsFillVariables($row, 0, isset($_REQUEST['page'])?intval($_REQUEST['page']):0, 0, isset($callingParams['regenShortNews'])?$callingParams['regenShortNews']:array());
 
 		$tvars['vars']['alternating'] = ($i%2)?'odd':'even';
 
