@@ -1062,11 +1062,19 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = f
 }
 
 // Fill variables for news:
-// * $row - SQL row
-// * $fullMode - flag if desired mode is full
-// * $page - page No to show in full mode
+// * $row		- SQL row
+// * $fullMode		- flag if desired mode is full
+// * $page		- page No to show in full mode
+// * $disablePagination	- flag if pagination should be disabled
+// * $regenShortNews	- array, describe what to do with `short news`
+//	mode:
+//		''	- no modifications
+//		'auto'	- generate short news from long news in case if short news is empty
+//		'force'	- generate short news from long news in any case
+//	len		- size in chars for part of long news to use
+//	finisher	- chars that will be added into the end to indicate that this is truncated line ( default = '...' )
 //function Prepare($row, $page) {
-function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
+function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $regenShortNews = array()) {
 	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $TemplateCache, $mysql, $PHP_SELF;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
@@ -1081,7 +1089,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 
 	// Divide into short and full content
 	if ($config['extended_more']) {
-		if (preg_match('#^(.+?)\<\!--more(?:\="(.+?)"){0,1}--\>(.+)$#is', $row['content'], $pres)) {
+		if (preg_match('#^(.*?)\<\!--more(?:\="(.+?)"){0,1}--\>(.+)$#is', $row['content'], $pres)) {
 			$short	= $pres[1];
 			$full	= $pres[3];
 			$more	= $pres[2];
@@ -1166,6 +1174,18 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0) {
 		$short = $parse -> parseBBAttach($short, $mysql, $TemplateCache['site']['#variables']);
 		$full = $parse -> parseBBAttach($full, $mysql, $TemplateCache['site']['#variables']);
 	}
+
+	// Check if we need to regenerate short news
+	if (isset($regenShortNews['mode']) && ($regenShortNews['mode'] != '')) {
+		if (($regenShortNews['mode'] == 'force')||(trim($short) == '')) {
+			// REGEN
+			if (!isset($regenShortNews['len']) || (intval($regenShortNews['len']) < 0)) { $regenShortNews['len'] = 50; }
+			if (!isset($regenShortNews['finisher'])) { $regenShortNews['finisher'] = '...'; }
+			$short = $parse -> truncateHTML($full, $regenShortNews['len'], $regenShortNews['finisher']);
+		}
+
+	}
+
 
 	$tvars['vars']['short-story']	= $short;
 	$tvars['vars']['full-story']	= $full;
