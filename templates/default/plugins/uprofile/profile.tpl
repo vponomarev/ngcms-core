@@ -39,6 +39,7 @@ function validate_form() {
 }
 </script>
 <form id="profileForm" method="post" action="{form_action}" enctype="multipart/form-data">
+<input type="hidden" name="token" value="{token}"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 	<tr>
 		<td>
@@ -90,10 +91,6 @@ function validate_form() {
 <td style="padding: 5px;" class="entry">{comments}</td>
 </tr>
 <tr>
-<td style="padding: 5px; background-color: #f9fafb;" class="entry">{l_uprofile:new_pass}</td>
-<td style="padding: 5px; background-color: #f9fafb;" class="entry"><input class="password" name="editpassword" size="40" maxlength="16" /><br /><small>{l_uprofile:pass_left}</small></td>
-</tr>
-<tr>
 <td style="padding: 5px;" class="entry">{l_uprofile:email}</td>
 <td style="padding: 5px;" class="entry"><input type="text" class="email" name="editmail" value="{email}" size="40" /></td>
 </tr>
@@ -112,6 +109,10 @@ function validate_form() {
 <tr>
 <td style="padding: 5px;" class="entry">{l_uprofile:about} {about_sizelimit_text}</td>
 <td style="padding: 5px;" class="entry"><textarea name="editabout" rows="7" cols="55">{about}</textarea></td>
+</tr>
+<tr>
+<td style="padding: 5px; background-color: #f9fafb;" class="entry">{l_uprofile:new_pass}</td>
+<td style="padding: 5px; background-color: #f9fafb;" class="entry"><input class="password" name="editpassword" size="40" maxlength="16" /><br /><small>{l_uprofile:pass_left}</small></td>
 </tr>
 <tr>
 <td style="padding: 5px;" class="entry">{l_uprofile:oldpass}</td>
