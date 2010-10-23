@@ -115,7 +115,7 @@ function validate_form() {
 <td style="padding: 5px; background-color: #f9fafb;" class="entry"><input class="password" name="editpassword" size="40" maxlength="16" /><br /><small>{l_uprofile:pass_left}</small></td>
 </tr>
 <tr>
-<td style="padding: 5px;" class="entry">{l_uprofile:oldpass}</td>
+<td style="padding: 5px;" class="entry">{l_uprofile:oldpass}<br/><small>{l_uprofile:oldpass#desc}</small></td>
 <td style="padding: 5px;" class="entry"><input type="password" name="oldpass" value="" size="40" maxlength="10" /></td>
 </tr>
 <tr>
