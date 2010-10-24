@@ -349,6 +349,10 @@ function coreLoginAction($row = null, $redirect = null){
 			$tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '$1';
 			$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
 			$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
+		} else if ($row == 'ERR:NOT_ENTERED') {
+			$tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '';
+			$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
+			$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
 		} else {
 			$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($ban_mode != 1)?'$1':'';
 			$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = ($ban_mode == 1)?'$1':'';
@@ -379,6 +383,12 @@ function coreLogin(){
 	} else if (isset($_REQUEST['redirect_home']) && $_REQUEST['redirect_home']) {	$redirect = $config['home_url'];
 	} else if (preg_match('#^http\:\/\/#', $HTTP_REFERER, $tmp)) {					$redirect = $HTTP_REFERER;
 	} else {																		$redirect = $config['home_url'];  }
+
+	// Auth can work ONLY via POST method
+	if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+		coreLoginAction('ERR:NOT_ENTERED');
+		return;
+	}
 
 	// Try to auth
 	$row = null;
