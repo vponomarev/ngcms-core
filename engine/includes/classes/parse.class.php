@@ -132,9 +132,9 @@ class parse {
 		$content	=	preg_replace("#\[acronym\]\s*(.*?)\s*\[/acronym\]#is", "<acronym>$1</acronym>",$content);
 		$content	=	preg_replace("#\[acronym=(.*?)\]\s*(.*?)\s*\[/acronym\]#is","<acronym title=\"$1\">$2</acronym>",$content);
 
-		$content	=	preg_replace("#\[email\]\s*(\S+?)\s*\[/email\]#i", "<a href=\"mailto:$1\">$1</a>", $content);
-		$content	=	preg_replace("#\[email\s*=\s*\&quot\;([\.\w\-]+\@[\.\w\-]+\.[\.\w\-]+)\s*\&quot\;\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
-		$content	=	preg_replace("#\[email\s*=\s*([\.\w\-]+\@[\.\w\-]+\.[\w\-]+)\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
+		$content	=	preg_replace("#\[email\]\s*([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\[/email\]#i", "<a href=\"mailto:$1\">$1</a>", $content);
+		$content	=	preg_replace("#\[email\s*=\s*\&quot\;([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\&quot\;\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
+		$content	=	preg_replace("#\[email\s*=\s*([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
 		$content	=	preg_replace("#\[s\](.*?)\[/s\]#is", "<s>$1</s>", $content);
 		$content	=	preg_replace("#\[b\](.+?)\[/b\]#is", "<b>$1</b>", $content);
 		$content	=	preg_replace("#\[i\](.+?)\[/i\]#is", "<i>$1</i>", $content);
@@ -158,7 +158,7 @@ class parse {
 
 		// Process Images
 		// Possible format:
-		// '[img' + ( '=' or ' ' ) + URL + flags + ']' + alt + '[/url]'
+		// '[img' + ( '=' + URL) + flags + ']' + alt + '[/url]'
 		// '[img' + flags ']' + url + '[/url]'
 		// Allower flags:
 		// width
@@ -241,11 +241,11 @@ class parse {
 								$outkeys[] = $kn.'="'.strtolower($kv).'"';
 							break;
 						case 'class':
-							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&'),'',$kv);
+							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&', '[', ']'),'',$kv);
 							$outkeys [] = $kn.'="'.$v.'"';
 							break;
 						case 'alt':
-							$v = str_replace(array("\"", ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'),array("'",''),$kv);
+							$v = str_replace(array("\"", '[', ']', ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'),array("'",'%5b', '%5d', ''),$kv);
 							$outkeys [] = $kn.'="'.$v.'"';
 							break;
 					}
@@ -259,7 +259,7 @@ class parse {
 
 		// Process URLS
 		// Possible format:
-		// '[url' + ( '=' or ' ' ) + URL + flags + ']' + Name + '[/url]'
+		// '[url' + ( '=' + URL) + flags + ']' + Name + '[/url]'
 		// '[url' + flags ']' + url + '[/url]'
 		// Allower flags:
 		// target: anything
@@ -333,11 +333,11 @@ class parse {
 					switch ($kn) {
 						case 'class':
 						case 'target':
-							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&'),'',$kv);
+							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&', '[', ']'),'',$kv);
 							$outkeys [] = $kn.'="'.$v.'"';
 							break;
 						case 'title':
-							$v = str_replace(array("\"", ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'),array("'",''),$kv);
+							$v = str_replace(array("\"", '[', ']', ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'),array("'",'%5b', '%5d', ''),$kv);
 							$outkeys [] = $kn.'="'.$v.'"';
 							break;
 					}
@@ -368,7 +368,7 @@ class parse {
 
 		// Make replacement of dangerous symbols
 		if (preg_match('#^(http|https|ftp)://(.+)$#', $url, $mresult))
-			return $mresult[1].'://'.str_replace(array(':', "'", '"'), array('%3A', '%27', '%22'), $mresult[2]);
+			return $mresult[1].'://'.str_replace(array(':', "'", '"', '[', ']'), array('%3A', '%27', '%22', '%5b', '%5d'), $mresult[2]);
 
 		// Process special `magnet` links
 		if (preg_match('#^(magnet\:\?)(.+)$#', $url, $mresult))

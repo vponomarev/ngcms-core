@@ -864,7 +864,7 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip) {
 		$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
 		call_user_func($pcall['func'], $params);
 	} else {
-		msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array($handlerName, $pluginName), $lang['plugins.nohadler'])));
+		msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array(secure_html($handlerName), secure_html($pluginName)), $lang['plugins.nohadler'])));
 	}
 }
 

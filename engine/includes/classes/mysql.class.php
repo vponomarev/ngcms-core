@@ -25,7 +25,15 @@ class mysql {
 	// $type	- query type
 	// $query	- text of the query
 	function errorReport($type, $query){
-		print "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [".$type."]: ".$query."</span><br/><span style=\"font: 9px arial;\">(".mysql_errno($this->connect).'): '.mysql_error($this->connect).'</span></div>';
+		global $userROW, $lang, $config;
+
+		if (($config['sql_error_show'] == 2) ||
+		    (($config['sql_error_show'] == 1) && (is_array($userROW))) ||
+		    (($config['sql_error_show'] == 0) && (is_array($userROW)) && ($userROW['status'] == 1))) {
+			print "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [".$type."]: ".$query."</span><br/><span style=\"font: 9px arial;\">(".mysql_errno($this->connect).'): '.mysql_error($this->connect).'</span></div>';
+		} else {
+			print "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [".$type."]: *** (you don't have a permission to see this error) ***</span></span></div>";
+		}
 	}
 
 	function select($sql, $assocMode = 0) {

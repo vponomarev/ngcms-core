@@ -14,10 +14,12 @@ if (!defined('NGCMS')) die ('HAL');
 // SQL security string escape
 //
 function db_squote($string) {
+	if (is_array($string)) { return false; }
 	return "'".mysql_real_escape_string($string)."'";
 }
 
 function db_dquote($string) {
+	if (is_array($string)) { return false; }
 	return '"'.mysql_real_escape_string($string).'"';
 }
 
@@ -25,6 +27,7 @@ function db_dquote($string) {
 // HTML & special symbols protection
 //
 function secure_html($string) {
+	if (is_array($string)) { return '[UNEXPECTED ARRAY]'; }
 	return str_replace(array("{","<", ">"), array("&#123;","&lt;", "&gt;"), htmlspecialchars($string));
 }
 
@@ -1177,7 +1180,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 
 	// Check if we need to regenerate short news
 	if (isset($regenShortNews['mode']) && ($regenShortNews['mode'] != '')) {
-		if (($regenShortNews['mode'] == 'force')||(trim($short) == '')) {
+		if ((($regenShortNews['mode'] == 'force')||(trim($short) == ''))&&(trim($full) != '')) {
 			// REGEN
 			if (!isset($regenShortNews['len']) || (intval($regenShortNews['len']) < 0)) { $regenShortNews['len'] = 50; }
 			if (!isset($regenShortNews['finisher'])) { $regenShortNews['finisher'] = '...'; }
