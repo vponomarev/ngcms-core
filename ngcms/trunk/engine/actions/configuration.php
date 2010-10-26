@@ -99,6 +99,7 @@ $tvars['vars'] = array(
 	'stamp_place'					=>	MakeDropDown(array(0 => $lang['mode_orig'],   1 =>$lang['mode_copy'],    2 => $lang['mode_origcopy']), "save_con[stamp_place]",  $config['stamp_place']),
 	'404_mode'						=>	MakeDropDown(array(0 => $lang['404.int'],     1 =>$lang['404.ext'],      2 => $lang['404.http']),      "save_con[404_mode]",     $config['404_mode']),
 	'libcompat'						=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),      "save_con[libcompat]",     $config['libcompat']),
+	'sql_error'				=>	MakeDropDown(array(0 => $lang['sql_error_0'],   1 =>$lang['sql_error_1'],    2 => $lang['sql_error_2']), "save_con[sql_error_show]",  $config['sql_error_show']),
 );
 
 // Prepare file name for STAMP
