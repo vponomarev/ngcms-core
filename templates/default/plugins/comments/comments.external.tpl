@@ -23,5 +23,5 @@
 {more_comments}
 <!-- Here is `add comments` form -->
 [regonly]Только зарегистрированные пользователи могут оставлять в данной новости свои комментарии.[/regonly]
-[nocomments]Комментирование данной новости запрещено.[/nocomments]
+[commforbidden]Комментирование данной новости запрещено.[/commforbidden]
 {form}
