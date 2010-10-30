@@ -22,4 +22,6 @@
 
 {more_comments}
 <!-- Here is `add comments` form -->
+[regonly]“олько зарегистрированные пользователи могут оставл€ть в данной новости свои комментарии.[/regonly]
+[nocomments] омментирование данной новости запрещено.[/nocomments]
 {form}
