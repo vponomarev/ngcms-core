@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: usermenu.php
 // Description: user's menu on the site
 // Author: Vitaly Ponomarev, Alexey Zinchenko
