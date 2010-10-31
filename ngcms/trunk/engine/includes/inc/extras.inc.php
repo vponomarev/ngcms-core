@@ -862,7 +862,8 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip) {
 
 		// Report current handler config
 		$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
-		call_user_func($pcall['func'], $params);
+		$req = call_user_func($pcall['func'], $params);
+		if (!is_null($req) && $skip['FFC'] && !$req) $skip['fail'] = 1;
 	} else {
 		msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array(secure_html($handlerName), secure_html($pluginName)), $lang['plugins.nohadler'])));
 	}
