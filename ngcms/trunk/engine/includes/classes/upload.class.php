@@ -450,7 +450,7 @@ class file_managment {
 				if (!$param['newname']) $param['newname'] = $row['name'];
 			}
 
-			$newname = trim(str_replace(array(' ','\\','/',chr(0)),array('_', ''),$param['newname']));
+			$newname = trim(str_replace(array(' ','\\','/',chr(0)),array('-', ''),$param['newname']));
 			$nnames = explode('.', $newname);
 			$ext = array_pop($nnames);
 			if (array_search($ext, $this->required_type) === FALSE) {
@@ -520,7 +520,7 @@ class file_managment {
 			return;
 		}
 
-		$category = $parse->translit(trim(str_replace(array(' ','\\','/',chr(0)),array('_', ''),$category)));
+		$category = $parse->translit(trim(str_replace(array(' ','\\','/',chr(0)),array('-', ''),$category)));
 
 		if (is_dir($dir.$category)) {
 			msg(array("type" => "error", "text" => $lang['upload.error.catexists'], "info" => $lang['upload.error.catexists#info']));

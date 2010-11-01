@@ -14,8 +14,8 @@ class tpl {
 	// $file   - file name for template [use $name if not specified]
 	// $params - advanced params:
 	//	includeAllowed        - flag: if includes are allowed
-	//  includeDisableChroot  - flag: to allow to include files beyond $dir
-	//  includeAllowRecursive - flag: to allow recursive includes
+	//	includeDisableChroot  - flag: to allow to include files beyond $dir
+	//	includeAllowRecursive - flag: to allow recursive includes
 	function template($name, $dir, $file = '', $params = array()) {
 		global $lang;
 
@@ -99,7 +99,7 @@ class tpl {
 	// codeExec	- flag to execute ( php eval() ) code
 	// inline	- flag: inline data. If set $nn is treated as data, not a template file name
 	function vars($nn, $vars = array(), $params = array()) {
-		global $lang, $userROW, $config, $PHP_SELF;
+		global $lang, $userROW, $CurrentHandler, $config, $PHP_SELF;
 
 		// Prepare to calculate exec time
 		list($usec, $sec) = explode(' ', microtime());
@@ -111,21 +111,26 @@ class tpl {
 
 		preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr);
 
+		// Show language variables
 		foreach ($larr[0] as $k => $v) {
 			$name_larr = substr($v, 2);
 			$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST:'.$name_larr.']', $data);
 		}
 
+		// LOGIC processing
+		// [isplugin <NAME>] .. [/isplugin] - content will be shown only if plugin <NAME> is active
 		preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr);
 		foreach ($parr[0] as $k => $v) {
 			$data = str_replace($v,getPluginStatusActive($parr[1][$k])?$parr[2][$k]:'', $data);
 		}
 
+		// [isntplugin <NAME>] .. [/ispntlugin] - content will be shown only if plugin <NAME> is NOT active
 		preg_match_all('/\[isnplugin (.+?)\](.+?)\[\/isnplugin\]/is', $data, $parr);
 		foreach ($parr[0] as $k => $v) {
 			$data = str_replace($v,getPluginStatusActive($parr[1][$k])?'':$parr[2][$k], $data);
 		}
 
+		// Special variable {plugin_<NAME>...} ({plugin_ads}, {plugin_ads_var1} for plugin ads) - will be showed only if plugin <NAME> is active
 		preg_match_all('/(?<=\{)plugin_(.*?)(?=\})/i', $data, $parr);
 
 		foreach ($parr[0] as $k => $v) {
@@ -147,7 +152,8 @@ class tpl {
 			}
 		}
 
-		if ($vars['vars']) {
+		// Process variables
+		if (isset($vars['vars']) && is_array($vars['vars'])) {
 			foreach ($vars['vars'] as $id => $var) {
 				if (substr($id,0,1) == '[') {
 					$data = str_replace($id, $var, $data);
@@ -158,6 +164,7 @@ class tpl {
 			}
 		}
 
+		// Process regular expressions
 		if (isset($vars['regx']) && is_array($vars['regx'])) {
 			foreach ($vars['regx'] as $id => $var) {
 				$data = preg_replace($id, $var, $data);

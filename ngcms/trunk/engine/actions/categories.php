@@ -139,7 +139,7 @@ function category_add() {
 		return;
 	}
 
-	$SQL['alt']		= strtolower($parse->translit(str_replace(" ", "_",  $SQL['alt']?$SQL['alt']:$SQL['name'])));
+	$SQL['alt']		= strtolower($parse->translit($SQL['alt']?$SQL['alt']:$SQL['name'], 1));
 
 	if (is_array($mysql->record("select * from ".prefix."_category where lower(alt) = ".db_squote(strtolower($SQL['alt']))))) {
 			msg(array("type" => "error", "text" => $lang['msge_exists'], "info" => $lang['msgi_exists']));

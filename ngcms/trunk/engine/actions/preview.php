@@ -27,7 +27,7 @@ function showPreview() {
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
 	}
 	$SQL['title'] = $_REQUEST['title'];
-	$SQL['alt_name'] = $parse->translit( trim($_REQUEST['alt_name']?$_REQUEST['alt_name']:$_REQUEST['title']));
+	$SQL['alt_name'] = $parse->translit(trim($_REQUEST['alt_name']?$_REQUEST['alt_name']:$_REQUEST['title']));
 
 	// Fetch MASTER provided categories
 	$catids = array ();

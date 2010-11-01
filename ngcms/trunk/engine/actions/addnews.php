@@ -42,7 +42,7 @@ function news_add(){
 	// Rewrite `\r\n` to `\n`
 	$content = str_replace("\r\n", "\n", $content);
 
-	$alt_name = $parse->translit( trim($_REQUEST['alt_name']), 1);
+	$alt_name = $parse->translit(trim($_REQUEST['alt_name']), 1);
 
 	// Check title
 	if ( (!strlen(trim($title))) || (!strlen(trim($content))) ) {
