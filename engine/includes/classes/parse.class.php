@@ -418,6 +418,7 @@ class parse {
 	}
 
 	function translit($content, $allowDash = 0) {
+		// $allowDash is not used any more
 
 		$utf2enS = array('À' => 'a', 'Á' => 'b', 'Â' => 'v', 'Ã' => 'g', '¥' => 'g', 'Ä' => 'd', 'Å' => 'e', '¨' => 'jo', 'ª' => 'e', 'Æ' => 'zh', 'Ç' => 'z', 'È' => 'i', '²' => 'i', 'É' => 'i', '¯' => 'i', 'Ê' => 'k', 'Ë' => 'l', 'Ì' => 'm', 'Í' => 'n', 'Î' => 'o', 'Ï' => 'p', 'Ð' => 'r', 'Ñ' => 's', 'Ò' => 't', 'Ó' => 'u', '¡' => 'u', 'Ô' => 'f', 'Õ' => 'h', 'Ö' => 'c', '×' => 'ch', 'Ø' => 'sh', 'Ù' => 'sz', 'Ú' => '', 'Û' => 'y', 'Ü' => '', 'Ý' => 'e', 'Þ' => 'yu', 'ß' => 'ya');
 		$utf2enB = array('à' => 'a', 'á' => 'b', 'â' => 'v', 'ã' => 'g', '´' => 'g', 'ä' => 'd', 'å' => 'e', '¸' => 'jo', 'º' => 'e', 'æ' => 'zh', 'ç' => 'z', 'è' => 'i', '³' => 'i', 'é' => 'i', '¿' => 'i', 'ê' => 'k', 'ë' => 'l', 'ì' => 'm', 'í' => 'n', 'î' => 'o', 'ï' => 'p', 'ð' => 'r', 'ñ' => 's', 'ò' => 't', 'ó' => 'u', '¢' => 'u', 'ô' => 'f', 'õ' => 'h', 'ö' => 'c', '÷' => 'ch', 'ø' => 'sh', 'ù' => 'sz', 'ú' => '', 'û' => 'y', 'ü' => '', 'ý' => 'e', 'þ' => 'yu', 'ÿ' => 'ya', '&quot;' => '', '&amp;' => '', 'µ' => 'u', '¹' => 'num');
@@ -425,11 +426,10 @@ class parse {
 		$content = trim(strip_tags($content));
 		$content = strtr($content, $utf2enS);
 		$content = strtr($content, $utf2enB);
-		$content = preg_replace("/\s+/ms", "_", $content);
-		$content = preg_replace("/[ ]+/", "_", $content);
+		$content = preg_replace("/\s+/ms", "-", $content);
+		$content = preg_replace("/[ ]+/", "-", $content);
 
-		$cut = ($allowDash)?"/[^a-z0-9_\-\.]+/mi":"/[^a-z0-9_\.]+/mi";
-		$content = preg_replace($cut, "", $content);
+		$content = preg_replace("/[^a-z0-9_\-\.]+/mi", "", $content);
 
 		return $content;
 	}

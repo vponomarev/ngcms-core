@@ -1087,6 +1087,8 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 				generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['author'], 'id' => $row['author_id']));
 
 	$tvars['vars']['author'] = "<a href=\"".$alink."\" target=\"_blank\">".$row['author']."</a>";
+	$tvars['vars']['author_link'] = $alink;
+	$tvars['vars']['author_name'] = $row['author'];
 
 	$nlink = newsGenerateLink($row);
 
@@ -1221,8 +1223,8 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		}
 
 	} else {
-		$tvars['regx']["'\\[full-link\\].*?\\[/full-link\\]'si"] = '';
-		$tvars['regx']["'\\[link\\](.*?)\\[/link\\]'si"] = '$1';
+		$tvars['regx']["#\[full-link\].*?\[/full-link\]#si"] = '';
+		$tvars['regx']["#\[link\](.*?)\[/link\]#si"] = '$1';
 	}
 
 	$tvars['vars']['pinned']	=	($row['pinned']) ? "news_pinned" : "";
