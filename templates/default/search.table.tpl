@@ -1,4 +1,4 @@
-<form method="GET" action="{form_url}">
+<form method="get" action="{form_url}">
 <table border="0" width="100%" id="table1" cellspacing="0" cellpadding="0">
 	<tr>
 		<td>
