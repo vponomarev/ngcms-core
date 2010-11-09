@@ -281,7 +281,7 @@ function generate_restorepw_page($params, $values = array(), $msg = '') {
 				$tvars['vars']['input'].= '<option value="'.secure_html($oid).'"'.($param['value']==$oid?' selected':'').'>'.secure_html($oval).'</option>';
 			}
 			$tvars['vars']['input'].='</select>';
-		} else if ($param['type'] = 'manual') {
+		} else if ($param['type'] == 'manual') {
 			$tvars['vars']['input'] = $param['manual'];
 		}
 
@@ -395,7 +395,7 @@ function coreLogin(){
 	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login())) {
 		coreLoginAction($row, $redirect);
 	} else {
-		coreLoginAction(($row == 'ERR:NEED.ACTIVATE'?$row:''));
+		coreLoginAction(($row == 'ERR:NEED.ACTIVATE'?$row:''), $redirect);
 	}
 }
 
