@@ -109,39 +109,73 @@ class tpl {
 		if (isset($params['codeExec']) && $params['codeExec'])
 			$data = (eval(' ?>'.$this->data[$nn].'<?php '));
 
-		preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr);
-
-		// Show language variables
-		foreach ($larr[0] as $k => $v) {
-			$name_larr = substr($v, 2);
-			$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST:'.$name_larr.']', $data);
+		if (preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr)) {
+			// Show language variables
+			foreach ($larr[0] as $k => $v) {
+				$name_larr = substr($v, 2);
+				$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST:'.$name_larr.']', $data);
+			}
 		}
 
 		// LOGIC processing
 		// [isplugin <NAME>] .. [/isplugin] - content will be shown only if plugin <NAME> is active
-		preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr);
-		foreach ($parr[0] as $k => $v) {
-			$data = str_replace($v,getPluginStatusActive($parr[1][$k])?$parr[2][$k]:'', $data);
+		if (preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr)) {
+			foreach ($parr[0] as $k => $v) {
+				$data = str_replace($v,getPluginStatusActive($parr[1][$k])?$parr[2][$k]:'', $data);
+			}
 		}
 
 		// [isntplugin <NAME>] .. [/ispntlugin] - content will be shown only if plugin <NAME> is NOT active
-		preg_match_all('/\[isnplugin (.+?)\](.+?)\[\/isnplugin\]/is', $data, $parr);
-		foreach ($parr[0] as $k => $v) {
-			$data = str_replace($v,getPluginStatusActive($parr[1][$k])?'':$parr[2][$k], $data);
+		if (preg_match_all('/\[isnplugin (.+?)\](.+?)\[\/isnplugin\]/is', $data, $parr)) {
+			foreach ($parr[0] as $k => $v) {
+				$data = str_replace($v,getPluginStatusActive($parr[1][$k])?'':$parr[2][$k], $data);
+			}
 		}
 
 		// Special variable {plugin_<NAME>...} ({plugin_ads}, {plugin_ads_var1} for plugin ads) - will be showed only if plugin <NAME> is active
-		preg_match_all('/(?<=\{)plugin_(.*?)(?=\})/i', $data, $parr);
+		if (preg_match_all('/(?<=\{)plugin_(.*?)(?=\})/i', $data, $parr)) {
+			foreach ($parr[0] as $k => $v) {
+				$name_parr = substr($v, 7);
+				if (preg_match('/^(.+)\_/', $name_parr, $match))
+					$name_parr = $match[1];
 
-		foreach ($parr[0] as $k => $v) {
-			$name_parr = substr($v, 7);
-			if (preg_match('/^(.+)\_/', $name_parr, $match))
-				$name_parr = $match[1];
-
-			if (!getPluginStatusActive($name_parr)) {
-				$data = str_replace('{'.$v.'}', '', $data);
+				if (!getPluginStatusActive($name_parr)) {
+					$data = str_replace('{'.$v.'}', '', $data);
+				}
 			}
 		}
+
+		// - Special display for different handlers
+		// [ifhandler:<Plugin>:<Handler] .. [/ifhandler]
+		// [ifhabdler:<Plugin>] .. [/ifhandler]
+		if (preg_match_all('#\[if(n){0,1}handler\:(.+?)(\:(.*?)){0,1}](.+?)\[\/ifhandler\]#is', $data, $parr, PREG_SET_ORDER)) {
+			//print "<pre>PMC:".var_export($parr, true)."</pre><br/>\n";
+			//print "<pre>CH:".var_export($CurrentHandler, true)."</pre><br/>\n";
+
+			foreach ($parr as $k => $v) {
+				// 0 - catched text
+				// 1 - 'n' for NOT expression, else - ''
+				// 2 - Plugin
+				// 3 - starts with ':' if Handler is defined
+				// 4 - Handler
+				// 5 - content of the block
+				$filterHandler = strlen($v[3])?1:0;
+				$filterNegativeFlag = ($v[1] == 'n')?1:0;
+				$filterState = (
+					($v[2] == $CurrentHandler['pluginName']) &&
+					(
+						($filterHandler && ($v[4] == $CurrentHandler['handlerName']) || (!$filterHandler))
+					));
+				if ($filterNegativeFlag) {
+					$filterResult = !$filterState;
+				} else {
+					$filterResult = $filterState;
+				}
+				$data = str_replace($v[0], $filterResult?$v[5]:'', $data);
+				//print "<pre>F> `".$v[0]."` => ".($filterResult?'FOUND':'-')."</pre>\n";
+			}
+		}
+
 
 		if ($PHP_SELF && $PHP_SELF == "admin.php") {
 			preg_match_all('/(?<=\{)c_(.*?)(?=\})/i', $data, $carr);
