@@ -36,6 +36,7 @@ $skin_header = <<<HTML
 <link rel="stylesheet" href="$skins_url/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="$skins_url/ftr_panel.css" type="text/css" />
 <script type="text/javascript" src="$config[admin_url]/includes/js/functions.js"></script>
+<script type="text/javascript" src="$config[admin_url]/includes/js/admin.js"></script>
 </head>
 <body>
 <table border="0" width="1000" align="center" cellspacing="0" cellpadding="0">

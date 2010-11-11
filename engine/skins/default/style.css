@@ -774,3 +774,10 @@ border-bottom: 1px solid #eee;
 	background-color: #E8E8E8;
 }
 
+
+/* Show/Hide elements for plugins admin panel */
+.admGroup { }
+.admGroup .title { }
+.admGroup .content { display: block; }
+
+

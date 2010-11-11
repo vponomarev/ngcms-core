@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: extrainst.inc.php
 // Description: Functions required for plugin managment scripts
 // Author: Vitaly Ponomarev
@@ -99,6 +99,12 @@ function generate_config_page($module, $params, $values = array()) {
   			$line .= mkParamLine($entry);
   		}
   		$tvars['vars'] = array('title' => $param['title'], 'entries' => $line);
+  		if (isset($param['toggle']) && $param['toggle']) {
+  			$tvars['regx']['#\[toggle\](.+?)\[\/toggle\]#is'] = '$1';
+  			$tvars['vars']['toggle_mode'] = (isset($param['toggle.mode']) && ($param['toggle.mode'] == 'false'))?'none':'block';
+  		} else {
+  			$tvars['regx']['#\[toggle\](.+?)\[\/toggle\]#is'] = '';
+  		}
   		$tpl -> vars('group', $tvars);
   		$entries .= $tpl -> show('group', $tvars);
   		//$entries .= $line;
