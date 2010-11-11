@@ -32,3 +32,26 @@ function setCookie (name, value, expires, path, domain, secure) {
       return true;
 }
 
+function toggleAdminGroup(ref) {
+ // Decide to find parent node for this block
+ var maxIter = 5;
+ var node = ref;
+
+ while(maxIter) {
+  if (node.className == 'admGroup') { break; }
+  node = node.parentNode;
+  maxIter--;
+ }
+ if (!maxIter) { alert('Scripting Error'); }
+
+
+ for (var i = 0; i < node.childNodes.length; i++) {
+	var item = node.childNodes[i];
+ 	if (item.className == 'content') {
+ 		mode = (item.style.display == 'none')?1:0;
+		item.style.display = mode?'block':'none';
+		break;
+	}
+ }	
+}
+
