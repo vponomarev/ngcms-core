@@ -5,18 +5,33 @@
 //
 
 function compatRedirector() {
-	global $mysql, $catz;
+	global $mysql, $catz, $config;
 	$uri = $_SERVER['REQUEST_URI'];
 
+	$homePrefix = '';
+	if (preg_match('#^http\:\/\/.+?\/(.+)$#', $config['home_url'], $p)) {
+		$homePrefix = $p[1];
+	}
 	//print "<pre>".var_export($_SERVER, true)."</pre>";
 
-	if (preg_match('#^\/\?#', $uri, $null)) {
+	if (preg_match('#^\/\?#', $uri, $null) || ($homePrefix && preg_match('#^\/'.$homePrefix.'\/\?#', $uri, $null))) {
 		// Наш клиент
 		//print "GET PARAMS:<br/>\n<pre>".var_export($_GET, true)."</pre>";
 
 		if (isset($_GET['category']) && isset($_GET['altname'])) {
 			// Полная новость, находим её
 			if ($nrow = $mysql->record("select * from ".prefix."_news where alt_name=".db_squote($_GET['altname']))) {
+				$link = newsGenerateLink($nrow, false, 0, true);
+				//print "Redirect: ".$link;
+				header("Location: ".$link);
+			} else {
+				//print "Unknown news";
+				header("Location: /");
+			}
+			exit;
+		} else if (isset($_GET['id'])) {
+			// Полная новость, находим её
+			if ($nrow = $mysql->record("select * from ".prefix."_news where id=".db_squote($_GET['id']))) {
 				$link = newsGenerateLink($nrow, false, 0, true);
 				//print "Redirect: ".$link;
 				header("Location: ".$link);
