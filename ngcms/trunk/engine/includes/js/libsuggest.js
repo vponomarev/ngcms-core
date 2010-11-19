@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 004 ( 2010-10-02)                                                              //
+// Build: 05 ( 2010-11-20)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -60,7 +60,12 @@ var ngSuggest = function(fieldID, params) {
 	if (!this.searchDIV) {
 		this.searchDIV = document.createElement('div');
 
-		document.body.appendChild(this.searchDIV);
+		//document.body.appendChild(this.searchDIV);
+		var iDiv = document.createElement('div');
+		iDiv.style.position = 'relative';
+		this.field.parentNode.appendChild(iDiv);
+		iDiv.appendChild(this.searchDIV);
+
 	}
 	if (this.opts.sClass)
 		this.searchDIV.className = this.opts.sClass;
@@ -82,8 +87,10 @@ var ngSuggest = function(fieldID, params) {
 	this.loader = (this.opts.lId && document.getElementById(this.opts.lId)) ? document.getElementById(this.opts.lId) : null;
 
 	// Now let's setup correctly DIV position
-	this.searchDIV.style.left	= this.DOMelementPosX(this.field)+'px';
-	this.searchDIV.style.top	= (this.DOMelementPosY(this.field)+this.field.clientHeight+4)+'px';
+	//this.searchDIV.style.left	= this.DOMelementPosX(this.field)+'px';
+	//this.searchDIV.style.top	= (this.DOMelementPosY(this.field)+this.field.clientHeight+4)+'px';
+	this.searchDIV.style.left	= '0px';
+	this.searchDIV.style.top	= '3px';
 
 	this.field.onkeypress 	= function(event){ return pointer.onKeyPress(event); }
 	this.field.onkeyup 		= function(event){ return pointer.onKeyUp(event); }
@@ -363,8 +370,10 @@ ngSuggest.prototype.callAJAX = function() {
 ngSuggest.prototype.DOMelementPosX = function(obj) {
     var curleft = 0;
     if (obj.offsetParent) {
-        while (1) {
+        while (1) { 
+	    var clo = curleft;
             curleft+=obj.offsetLeft;
+	    //alert('CL: '+clo+' + '+obj.offsetLeft+'['+obj.offsetParent+'] = '+(clo+obj.offsetLeft)+' ('+curleft+')'); 
             if (!obj.offsetParent) {
                 break;
             }
