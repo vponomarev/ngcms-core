@@ -49,7 +49,7 @@ function toggleAdminGroup(ref) {
 	var item = node.childNodes[i];
  	if (item.className == 'content') {
  		mode = (item.style.display == 'none')?1:0;
-		item.style.display = mode?'block':'none';
+		item.style.display = mode?'':'none';
 		break;
 	}
  }	
