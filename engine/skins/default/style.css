@@ -778,6 +778,6 @@ border-bottom: 1px solid #eee;
 /* Show/Hide elements for plugins admin panel */
 .admGroup { }
 .admGroup .title { }
-.admGroup .content { display: block; }
+.admGroup .content { }
 
 
