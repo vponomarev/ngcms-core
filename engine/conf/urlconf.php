@@ -532,6 +532,32 @@ $urlLibrary = array (
         'russian' => 'Отображение статической страницы',
       ),
     ),
+    'print' => 
+    array (
+      'vars' => 
+      array (
+        'altname' => 
+        array (
+          'matchRegex' => '.+?',
+          'descr' => 
+          array (
+            'russian' => 'Альт. имя статической страницы',
+          ),
+        ),
+        'id' => 
+        array (
+          'matchRegex' => '\\d{1,4}',
+          'descr' => 
+          array (
+            'russian' => 'ID статической страницы',
+          ),
+        ),
+      ),
+      'descr' => 
+      array (
+        'russian' => 'Печать статической страницы',
+      ),
+    ),
   ),
   'search' => 
   array (
@@ -543,6 +569,27 @@ $urlLibrary = array (
       'descr' => 
       array (
         'russian' => 'Страница поиска',
+      ),
+    ),
+  ),
+  'a_test' => 
+  array (
+    '' => 
+    array (
+      'vars' => 
+      array (
+        'action' => 
+        array (
+          'matchRegex' => '.+?',
+          'descr' => 
+          array (
+            'russian' => 'Super action',
+          ),
+        ),
+      ),
+      'descr' => 
+      array (
+        'russian' => 'Super description',
       ),
     ),
   ),

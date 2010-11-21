@@ -46,7 +46,8 @@ function userEditForm(){
 		'info'			=>	secure_html($row['info']),
 		'id'			=>	$id,
 		'last'			=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('l, j Q Y - H:i', $row['last']),
-		'ip'			=>	$row['ip']
+		'ip'			=>	$row['ip'],
+		'token'			=> genUToken('admin.users'),
 	);
 
 //	if (is_array($PFILTERS['p_uprofile']))

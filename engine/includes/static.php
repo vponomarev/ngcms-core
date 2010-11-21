@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: static.php
 // Description: Static pages display sub-engine
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -16,7 +16,7 @@ $lang = LoadLang('static', 'site');
 // * id			- page ID
 // * altname	- alt. name of the page
 function showStaticPage($params) {
-	global $config, $tpl, $mysql, $userROW, $parse, $template, $lang, $SYSTEM_FLAGS, $PFILTERS;
+	global $config, $tpl, $mysql, $userROW, $parse, $template, $lang, $SYSTEM_FLAGS, $PFILTERS, $SUPRESS_TEMPLATE_SHOW;
 
 	load_extras('static');
 
@@ -66,20 +66,35 @@ function showStaticPage($params) {
 		$tvars['regx']["'\\[del-static\\].*?\\[/del-static\\]'si"] = "";
 	}
 
+	$tvars['vars']['[print-link]']	=	"<a href=\"".generatePluginLink('static', 'print', array('id' => $row['id'], 'altname' => $params['altname']), array(), true, $page)."\">";
+	$tvars['vars']['[/print-link]']	=	"</a>";
+
 	if (is_array($PFILTERS['static']))
 		foreach ($PFILTERS['static'] as $k => $v) { $v->showStatic($row['id'], $row, $tvars, array()); }
 
 	exec_acts('static', $row);
 
 	if (!$row['template']) {
-		$row['template'] = "static/default";
+		$templateName = "static/default";
 	} else {
-		$row['template'] = 'static/'.$row['template'];
+		$templateName = 'static/'.$row['template'];
 	}
 
-	$tpl -> template($row['template'], tpl_dir.$config['theme']);
-	$tpl -> vars($row['template'], $tvars);
-	$template['vars']['mainblock'] .= $tpl -> show($row['template']);
+	// Check for print mode
+	if ($params['print'] && file_exists(tpl_dir.$config['theme'].'/static/'.($row['template']?$row['template']:'default').'.print.tpl')) {
+		$templateName.= '.print';
+		$SUPRESS_TEMPLATE_SHOW = true;
+	}
+
+	// Check for OWN main.tpl for static page
+	if (($row['flags'] & 4) && file_exists(tpl_dir.$config['theme'].'/static/'.($row['template']?$row['template']:'default').'.main.tpl')) {
+		$SYSTEM_FLAGS['template.main.name'] = ($row['template']?$row['template']:'default').'.main';
+		$SYSTEM_FLAGS['template.main.path'] = tpl_dir.$config['theme'].'/static';
+	}
+
+	$tpl -> template($templateName, tpl_dir.$config['theme']);
+	$tpl -> vars($templateName, $tvars);
+	$template['vars']['mainblock'] .= $tpl -> show($templateName);
 
 	// Set meta tags for news page
 	$SYSTEM_FLAGS['meta']['description'] = $row['description'];
