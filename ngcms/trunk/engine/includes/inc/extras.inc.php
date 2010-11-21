@@ -891,7 +891,7 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
 			switch ($handlerName) {
 				default:
 					include_once root.'includes/static.php';
-					$cResult = showStaticPage(array('id' => intval($params['id']), 'altname' => $params['altname'], 'FFC' => $skip['FFC']));
+					$cResult = showStaticPage(array('id' => intval($params['id']), 'altname' => $params['altname'], 'FFC' => $skip['FFC'], 'print' => (($handlerName == 'print')?true:false)));
 					if (!$cResult && $skip['FFC']) {
 						$skip['fail'] = 1;
 					}

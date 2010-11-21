@@ -185,6 +185,7 @@ function staticListTemplates($default = ''){
 	$output = '<option value=""></option>';
 
 	foreach ($list as $fn) {
+		if (preg_match('#\.(print|main)$#', $fn)) { continue; }
 		$output .= '<option value="'.$fn.'"'.(($fn==$default)?' selected="selected"':'').'>'.$fn.'</option>';
 	}
 	return $output;
@@ -231,6 +232,7 @@ function addStaticForm(){
 		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
 	}
 
+	$tvars['vars']['disable_flag_main']	= $flock?'disabled':'';
 	$tvars['vars']['disable_flag_raw']	= $flock?'disabled':'';
 	$tvars['vars']['disable_flag_html'] = $flock?'disabled':'';
 	$tvars['vars']['flag_approve']		= 'checked="checked"';
@@ -302,20 +304,20 @@ function addStatic(){
 	$SQL['flags'] = 0;
 	switch ($userROW['status']) {
 		case 1:		// admin can do anything
-			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
+			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0) + ($_REQUEST['flag_MAIN']?4:0);
 			break;
 
-		case 2:		// Editor. Check if we have permissions
+		case 2:		// Editor. Check if we have permissions (only admin can have own mainpage)
 			if (!$config['htmlsecure_2'])
 				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
 			break;
 
-		case 3:		// Journalists. Check if we have permissions
+		case 3:		// Journalists. Check if we have permissions (only admin can have own mainpage)
 			if (!$config['htmlsecure_3'])
 				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
 			break;
 
-		case 4:		// Commentors. Check if we have permissions
+		case 4:		// Commentors. Check if we have permissions (only admin can have own mainpage)
 			if (!$config['htmlsecure_4'])
 				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
 			break;
@@ -395,6 +397,7 @@ function editStaticForm(){
 	// Additional flags
 	$tvars['vars']['ifraw']		=	($row['flags'] & 1) ? 'checked' : '';
 	$tvars['vars']['ifhtml']	=	($row['flags'] & 2) ? 'checked' : '';
+	$tvars['vars']['ifmain']	=	($row['flags'] & 4) ? 'checked' : '';
 
 	$flock = 0;
 	switch ($userROW['status']) {
@@ -402,6 +405,7 @@ function editStaticForm(){
 		case 3:		if ($config['htmlsecure_3']) $flock = 1;	break;
 		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
 	}
+	$tvars['vars']['disable_flag_main']	= ($userROW['status'] > 1)?'disabled':'';
 	$tvars['vars']['disable_flag_raw']	= $flock?'disabled':'';
 	$tvars['vars']['disable_flag_html']	= $flock?'disabled':'';
 
@@ -466,7 +470,7 @@ function editStatic(){
 	$SQL['flags'] = 0;
 	switch ($userROW['status']) {
 		case 1:		// admin can do anything
-			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
+			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0) + ($_REQUEST['flag_MAIN']?4:0);;
 			break;
 
 		case 2:		// Editor. Check if we have permissions
