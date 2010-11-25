@@ -192,7 +192,7 @@ function changeActive(name) {
    <label><input type="checkbox" name="pinned" value="1" {ifpin} class="check" id="pinned" /> {l_add_pinned}</label><br />
    <label><input type="checkbox" name="favorite" value="1" {iffav} class="check" id="favorite" /> {l_add_favorite}</label><br />
    <label><input type="checkbox" name="setViews" value="1" class="check" id="setViews" /> {l_set_views}:</label> <input type="text" size="4" name="views" value="{views}" /><br />
-   <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" checked="checked" {ifhtml} {disable_flag_html} /> {l_flag_html}</label>{flags_lost}<br />
+   <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {ifhtml} {disable_flag_html} /> {l_flag_html}</label>{flags_lost}<br />
    <label><input type="checkbox" name="flag_RAW" value="1" {ifraw} class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label> {flags_lost}
    [comments]<hr/>{l_comments:mode.header}: <select name="allow_com"><option value="0"{acom:0}>{l_comments:mode.disallow}<option value="1"{acom:1}>{l_comments:mode.allow}<option value="2"{acom:2}>{l_comments:mode.default}</select>[/comments]<br />
   </div>
