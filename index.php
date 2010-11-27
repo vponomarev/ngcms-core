@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
 // Name: index.php
 // Description: core index file
 // Author: NGCMS project team
@@ -9,6 +9,12 @@
 
 
 @include_once 'engine/core.php';
+
+// Check for FATAL error with include
+if (!function_exists('gzip')) {
+ print "<html><head><title>FATAL EXECUTION ERROR</title></head><body><div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), execution halted!</span></div></body></html>";
+ die;
+}
 gzip();
 
 
