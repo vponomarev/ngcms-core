@@ -19,7 +19,7 @@
 $blockName = $_REQUEST['id'];
 
 // Determine captcha number to show
-$cShowNumber = 1234;
+$cShowNumber = 'n/c';
 
 if (($blockName != '')&&(isset($_SESSION['captcha.'.$blockName]))) {
 	$cShowNumber = $_SESSION['captcha.'.$blockName];
