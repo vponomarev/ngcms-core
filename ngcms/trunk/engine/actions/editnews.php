@@ -729,6 +729,7 @@ if ($action == "editnews") {
 		$tvars['vars']['allcats']	=	@GetAllCategories($cats).' &nbsp;';
 		$tvars['regx']['#\[attach\](.*?)\[\/attach\]#is']	=	($row['num_files']>0)?'$1':'';
 		$tvars['vars']['attach_count'] = $row['num_files'];
+		$tvars['regx']['#\[mainpage\](.*?)\[\/mainpage\]#is']	=	($row['mainpage']>0)?'$1':'';
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
