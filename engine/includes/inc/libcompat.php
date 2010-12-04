@@ -87,6 +87,13 @@ function compatRedirector() {
 			//print "Redirect: ".$link;
 			header("Location: ".$link);
 			exit;
+		} else if (isset($_GET['cstart'])) {
+			$params['page'] = intval($_GET['cstart']);
+
+			$link = generateLink('news', 'main', $params);
+
+			header("Location: ".$link);
+			exit;
 		}
 	}
 }
