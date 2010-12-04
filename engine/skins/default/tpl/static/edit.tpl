@@ -3,7 +3,11 @@
 var currentInputAreaID = 'content';
 </script>
 
-<form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_static_title_edit}</td>
+</tr>
+</table><form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type=hidden name="area" value="" />
 </form>
 
@@ -16,7 +20,7 @@ var currentInputAreaID = 'content';
 
 <table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
-<td style="background: #F0F0F0; padding: 3px;">&nbsp;
+<td>&nbsp;
 </td>
 </tr>
 <tr><td>
@@ -26,7 +30,7 @@ var currentInputAreaID = 'content';
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
   <tr>
    <td width="10"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
-   <td width="100">{l_title}:</td>
+   <td width="100"><span class="f15">{l_title}</span></td>
    <td><input type="text" class="important" size="79" name="title" value="{title}" tabindex="1" /></td>
   </tr>
   <tr>
@@ -57,23 +61,31 @@ var currentInputAreaID = 'content';
 </table>
 
 </td>
-<td id="rightBar" width="300" valign="top" style="background: #F0F0F0; padding-left: 3px; padding-top: 3px;">
+<td id="rightBar" width="300" valign="top">
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>{l_editor.configuration}</td>
-  </tr>
-  <tr><td></td><td><label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="flag_HTML" {ifhtml} value="1" class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label></td></tr>
-  <tr><td></td><td><label><input type="checkbox" name="flag_RAW" {ifraw} value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label></td></tr>
-  <tr><td colspan=2>&nbsp;</td></tr>
-  <tr>
-   <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
-   <td>{l_editor.template}</td>
+   <td><span class="f15">{l_editor.configuration}</span></td>
   </tr>
   <tr><td></td><td>
-  	<select name="template" style="width: 200px;" value="{template}">{templateopts}</select>
+  <div class="list">
+  <label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label><br/>
+  <label><input type="checkbox" name="flag_HTML" {ifhtml} value="1" class="check" id="flag_HTML" {disable_flag_html} /> {l_flag_html}</label><br/>
+  <label><input type="checkbox" name="flag_RAW" {ifraw} value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label>
+  </div>
+  
+  </td></tr>
+<!--  <tr><td colspan=2>&nbsp;</td></tr> -->
+  <tr>
+   <td><img src="{skins_url}/images/nav.png" hspace="0" alt="" /></td>
+   <td><span class="f15">{l_editor.template}</span></td>
+  </tr>
+  <tr><td></td><td>
+  	<div class="list">
+	<select name="template" style="width: 200px;" value="{template}">{templateopts}</select><br/><br/>
+	<label><input type="checkbox" name="flag_MAIN" {ifmain} value="1" class="check" id="flag_MAIN" {disable_flag_main} /> {l_flag_main}</label>
+	</div>
   </td></tr>
  </table>
 </td>
