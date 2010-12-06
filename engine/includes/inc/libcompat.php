@@ -19,7 +19,7 @@ function compatRedirector() {
 		//print "GET PARAMS:<br/>\n<pre>".var_export($_GET, true)."</pre>";
 		if (isset($_GET['action']) && ($_GET['action'] == 'static')) {
 			if (isset($_GET['altname'])) {
-				if ($srow = $mysql->record("select * from ".prefix."_static where alt_name=".db_squote($_GET['altname']))) {
+				if ($row = $mysql->record("select * from ".prefix."_static where alt_name=".db_squote($_GET['altname']))) {
 					$link = checkLinkAvailable('static', '')?
 								generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id']), array(), false, true):
 								generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']), false, true);
