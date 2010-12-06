@@ -31,6 +31,20 @@ function compatRedirector() {
 			exit;
 		}
 
+		if (isset($_GET['action']) && ($_GET['action'] == 'users')) {
+			if (isset($_GET['user'])) {
+				if ($row = $mysql->record("select * from ".uprefix."_users where name=".db_squote($_GET['user']))) {
+					$link = checkLinkAvailable('uprofile', 'show')?
+												generateLink('uprofile', 'show', array('name' => $row['name'], 'id' => $row['id'])):
+												generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['name'], 'id' => $row['id']));
+					header("Location: ".$link);
+					exit;
+				}
+			}
+			header("Location: ".home);
+			exit;
+		}
+
 
 		if (isset($_GET['category']) && isset($_GET['altname'])) {
 			// Полная новость, находим её
