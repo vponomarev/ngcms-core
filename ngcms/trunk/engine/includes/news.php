@@ -67,6 +67,14 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 			}
 			return false;
 		}
+
+		// Save some significant news flags for plugin processing
+		$SYSTEM_FLAGS['news']['db.id'] = $row['id'];
+		$SYSTEM_FLAGS['news']['db.categories'] = array();
+		foreach (explode(',', $row['catid']) as $cid) {
+			if (isset($catmap[$cid]))
+				array_push($SYSTEM_FLAGS['news']['db.categories'], intval($cid));
+		}
 	}
 
 	if ($callingParams['setCurrentCategory']) {
@@ -306,7 +314,7 @@ function newsProcessFilter($conditions) {
 //		'overrideTemplatePath' => alternative path for searching of template
 //		'customCategoryTemplate' => flag automatically override custom category templates
 //			[!!!] USES CUSTOM TEMPLATE FOR FIRST CATEGORY FROM NEWS [!!!]
-//		'regenShortNews' => 
+//		'regenShortNews' =>
 //			'mode' 		=> If we should generate `on the fly` short news from long one
 //				* ''		- Leave short news as is [ default ]
 //				* 'auto'	- Generate ShortNews from long only if ShortNews is empty
