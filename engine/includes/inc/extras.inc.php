@@ -235,6 +235,7 @@ function loadPlugin($pluginName, $actionList = '*') {
 	global $PLUGINS, $timer;
 
 	$plugList = getPluginsActiveList();
+	$loadCount = 0;
 
 	// Don't load if plugin is not activated
 	if (!$plugList['active'][$pluginName])
@@ -265,7 +266,7 @@ function loadPlugin($pluginName, $actionList = '*') {
 	}
 
 	$PLUGINS['loaded'][$pluginName] = 1;
-	return true;
+	return $loadCount;
 }
 
 //

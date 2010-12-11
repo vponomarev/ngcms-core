@@ -1550,3 +1550,22 @@ function genUToken($identity = ''){
 
 	return md5($line);
 }
+
+// Converse array charset
+// $direction:
+//		0	- Win1251	=> UTF-8
+//		1	- UTF-8		=> Win1251
+//	$data
+function arrayCharsetConvert($direction, $data) {
+	if (!is_array($data))
+		return iconv($direction?'UTF-8':'Windows-1251', $direction?'Windows-1251':'UTF-8', $data);
+
+	$result = array();
+	foreach ($data as $k => $v) {
+		$result[iconv($direction?'UTF-8':'Windows-1251', $direction?'Windows-1251':'UTF-8', $k)] = is_array($v)?arrayCharsetConvert($direction, $v):iconv($direction?'UTF-8':'Windows-1251', $direction?'Windows-1251':'UTF-8', $v);
+	}
+	return $result;
+}
+
+
+
