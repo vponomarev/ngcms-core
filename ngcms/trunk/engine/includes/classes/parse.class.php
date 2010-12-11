@@ -432,6 +432,7 @@ class parse {
 		$content = preg_replace("/[ ]+/", "-", $content);
 
 		$content = preg_replace("/[^a-z0-9_\-\.]+/mi", "", $content);
+		$content = preg_replace("#-(-)+#", "-", $content);
 
 		return $content;
 	}

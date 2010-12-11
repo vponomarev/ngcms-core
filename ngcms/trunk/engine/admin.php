@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
 // Name: admin.php
 // Description: administration panel
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -19,7 +19,8 @@ if (!defined('NGCMS')) die ('HAL');
 //define('DEBUG', 1);
 
 if (defined('DEBUG')) {
-	print "HTTP CALL PARAMS: <pre>"; var_dump($_REQUEST); print "</pre><br>\n";
+	print "HTTP CALL PARAMS: <pre>"; var_dump(array('GET' => $_GET, 'POST' => $_POST, 'COOKIE' => $_COOKIE)); print "</pre><br>\n";
+	print "SERVER PARAMS: <pre>"; var_dump($_SERVER); print "</pre><br>\n";
 }
 
 // Check for REQUIRED PHP EXTENSIONS
@@ -29,6 +30,9 @@ foreach (array('iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule =>
 		die();
 	}
 }
+
+
+// !! Allow to do POST requests only from home domain !!
 
 $PHP_SELF = "admin.php";
 
