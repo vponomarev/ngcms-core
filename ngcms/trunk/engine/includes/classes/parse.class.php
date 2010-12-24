@@ -124,13 +124,18 @@ class parse {
 
 		if (!$config['use_bbcodes']) return $content;
 
-		$content	=	preg_replace("#\[code\](.+?)\[/code\]#is", "<pre>$1</pre>",$content);
+		// Special BB tag [code] - blocks all other tags inside
+		while (preg_match("#\[code\](.+?)\[/code\]#ies", $content, $res)) {
+			$content = str_replace($res[0], '<pre>'.str_replace(array('[', '<'), array('&#91;', '&lt;'), $res[1]).'</pre>', $content);
+		}
+
+		//$content	=	preg_replace("#\[code\](.+?)\[/code\]#is", "<pre>$1</pre>",$content);
 
 		$content	=	preg_replace("#\[quote\]\s*(.*?)\s*\[/quote\]#is", "<blockquote><b>".$lang['bb_quote']."</b><br />$1</blockquote>",$content);
 		$content	=	preg_replace("#\[quote=(.*?)\]\s*(.*?)\s*\[/quote\]#is","<blockquote><b>$1 ".$lang['bb_wrote']."</b><br />$2</blockquote>",$content);
 
 		$content	=	preg_replace("#\[acronym\]\s*(.*?)\s*\[/acronym\]#is", "<acronym>$1</acronym>",$content);
-		$content	=	preg_replace("#\[acronym=(.*?)\]\s*(.*?)\s*\[/acronym\]#is","<acronym title=\"$1\">$2</acronym>",$content);
+		$content	=	preg_replace('#\[acronym=([^\"]+?)\]\s*(.*?)\s*\[/acronym\]#is',"<acronym title=\"$1\">$2</acronym>",$content);
 
 		$content	=	preg_replace("#\[email\]\s*([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\[/email\]#i", "<a href=\"mailto:$1\">$1</a>", $content);
 		$content	=	preg_replace("#\[email\s*=\s*\&quot\;([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\&quot\;\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
