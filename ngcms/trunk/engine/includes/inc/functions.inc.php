@@ -1169,10 +1169,10 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 
 	// Make conversion
 	if ($config['blocks_for_reg'])		{ $short = $parse -> userblocks($short);	$full = $parse -> userblocks($full); }
+	if ($config['use_bbcodes'])			{ $short = $parse -> bbcodes($short);		$full = $parse -> bbcodes($full); }
 	if ($config['use_htmlformatter'] && (!($row['flags'] & 1)))	{
 		$short = $parse -> htmlformatter($short);	$full = $parse -> htmlformatter($full);
 	}
-	if ($config['use_bbcodes'])			{ $short = $parse -> bbcodes($short);		$full = $parse -> bbcodes($full); }
 	if ($config['use_smilies'])			{ $short = $parse -> smilies($short);		$full = $parse -> smilies($full); }
 	if (1 && templateLoadVariables()) 	{
 
