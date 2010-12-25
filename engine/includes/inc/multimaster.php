@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2007 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
 // Name: multimaster.php
 // Description: multidomain mastering
 // Author: Vitaly A Ponomarev, vp7@mail.ru
@@ -60,15 +60,17 @@ function multi_multisites(){
 
 
 function multi_multidomains() {
- global $config, $siteDomainName, $multiDomainName, $multimaster, $multiconfig, $multimaster;
+ global $config, $siteDomainName, $multiDomainName, $multimaster, $multiconfig, $multimaster, $SYSTEM_FLAGS;
 
  $newdomain = '';
+ $SYSTEM_FLAGS['mydomains'] = array();
 
  // Анализируем параметр конфига mydomains
  $domlist = NULL;
  if ($config['mydomains']) {
 	$domlist = explode("\n",$config['mydomains']);
  	if (!is_array($domlist)) return 0;
+ 	$SYSTEM_FLAGS['mydomains'] = $domlist;
  	foreach ($domlist as $domain) {
  		$domain = trim($domain);
  		if (($_SERVER['SERVER_NAME'] == $domain)||($_SERVER['HTTP_HOST'] == $domain)) {
@@ -83,7 +85,16 @@ function multi_multidomains() {
  if (!$newdomain) {
  	// Если заданы хосты в mydomains, то выбираем первый. Иначе - выбираем хост выбранный в мультисайте
  	if (is_array($domlist)) { $newdomain = $domlist[0]; }
- 	else { $newdomain = $siteDomainName; }
+ 	else {
+ 		if ($siteDomainName) {
+ 			$newdomain = $siteDomainName;
+ 			$SYSTEM_FLAGS['mydomains'] = array($newdomain);
+ 		} else {
+ 			// Если имя хоста так и не нашли, то берём данные с сервера
+ 			$newdomain = $_SERVER['HTTP_HOST'];
+ 			$SYSTEM_FLAGS['mydomains'] = array($newdomain);
+ 		}
+ 	}
  }
 
  //
