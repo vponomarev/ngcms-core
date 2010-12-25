@@ -120,7 +120,7 @@ class parse {
 	}
 
 	function bbcodes($content) {
-		global $lang, $config, $userROW;
+		global $lang, $config, $userROW, $SYSTEM_FLAGS;
 
 		if (!$config['use_bbcodes']) return $content;
 
@@ -332,6 +332,22 @@ class parse {
 
 				// Now let's compose a resulting URL
 				$outkeys [] = 'href="'.$urlREF.'"';
+
+				// Check if we have external URL
+				$flagExternalURL = false;
+
+				$dn = parse_url($urlREF);
+				if (strlen($dn['host']) && !in_array($dn['host'], $SYSTEM_FLAGS['mydomains'])) { $flagExternalURL = true; }
+
+				// Check for rel=nofollow request for external links
+
+				if ($config['url_external_nofollow'] && $flagExternalURL) {
+					$outkeys [] = 'rel="nofollow"';
+				}
+
+				if ($config['url_external_target_blank'] && $flagExternalURL && !isset($keys['target'])) {
+					$outkeys [] = 'target="_blank"';
+				}
 
 				// Now parse allowed tags and add it into output line
 				foreach ($keys as $kn => $kv) {
