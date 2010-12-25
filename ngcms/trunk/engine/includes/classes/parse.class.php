@@ -261,6 +261,9 @@ class parse {
 			$content = str_replace($rsrc, $rdest, $content);
 		}
 
+		// Авто-подсветка URL'ов в тексте новости [ пользуемся обработчиком тега [url] ]
+		$content	=	preg_replace("#(^|\s)((http|https|news|ftp)://\w+[^\s\[\]\<]+)#i", "$1[url]$2[/url]", $content);
+
 
 		// Process URLS
 		// Possible format:
@@ -371,9 +374,6 @@ class parse {
 
         // Обработка кириллических символов для украинского языка
         $content	=	str_replace(array('[CYR_I]', '[CYR_i]', '[CYR_E]', '[CYR_e]', '[CYR_II]', '[CYR_ii]'), array('&#1030;', '&#1110;', '&#1028;', '&#1108;', '&#1031;', '&#1111;'), $content);
-
-		// Авто-подсветка URL'ов в тексте новости
-		$content	=	preg_replace("#(^|\s)((http|https|news|ftp)://\w+[^\s\[\]\<]+)#i", "$1<a href='$2' target='_blank'>$2</a>", $content);
 
 		while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#ies", $content, $res)) {
 			$nl = $this->color(array('style' => $res[1], 'text' => $res[2]));
