@@ -274,7 +274,7 @@ function generate_restorepw_page($params, $values = array(), $msg = '') {
 		if ($param['type'] == 'text') {
 			$tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
 		} else if (($param['type'] == 'input')||($param['type'] == 'password')||($param['type'] == 'hidden')) {
-			$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="'.$param['type'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].' value="'.secure_html($param['value']).'">';
+			$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="'.(($param['type'] == 'input')?'text':$param['type']).'" title="'.secure_html($param['title']).'" '.$param['html_flags'].' value="'.secure_html($param['value']).'" />';
 		} else if ($param['type'] == 'select') {
 			$tvars['vars']['input'] = '<select name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>';
 			foreach ($param['values'] as $oid => $oval) {
