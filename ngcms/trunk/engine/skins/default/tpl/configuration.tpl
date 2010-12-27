@@ -205,6 +205,14 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry1">{l_libcompat}<br /><small>{l_libcompat_desc}</small></td>
 <td class="contentEntry2" valign="middle">{libcompat}</td>
 </tr>
+<tr>
+<td class="contentEntry1">{l_url_external_nofollow}<br /><small>{l_url_external_nofollow_desc}</small></td>
+<td class="contentEntry2" valign="middle">{url_external_nofollow}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_url_external_target_blank}<br /><small>{l_url_external_target_blank_desc}</small></td>
+<td class="contentEntry2" valign="middle">{url_external_target_blank}</td>
+</tr>
 </table>
 </div>
 
