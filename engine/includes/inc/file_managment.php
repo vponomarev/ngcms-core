@@ -174,7 +174,7 @@ function manage_upload($type){
 				if (is_array($sz = $imanager->get_size($dir.$subdirectory.'/'.$up[1]))) {
 					$fmanager->get_limits($type);
 
-					
+
 					// Gather filesize for thumbinals
 					$thumb_size_x = 0;
 					$thumb_size_y = 0;
@@ -344,8 +344,21 @@ function manage_showlist($type) {
 		$entries = "<tr><td colspan=7><p align=center><b>".$lang['not_found']."</b></p></td></tr>";
 	}
 
-	$dirlist	=	ListDirs($type.'s', false, 0);
-	$dirlistcat	=	ListDirs($type.'s', $_REQUEST['category']);
+	// Check if dir exists
+	$dName = ($type == 'image')?images_dir:files_dir;
+	if (!is_dir($dName) || !is_readable($dName)) {
+		msg(array(
+		'type' => 'error',
+		'text' => str_replace('{dirname}', $dName, $lang['error.dir.'.$type.'s']),
+		'info' => str_replace('{dirname}', $dName, $lang['error.dir.'.$type.'s#desc'])),
+		1);
+
+		$dirlist	= 'n/a';
+		$dirlistcat	= 'n/a';
+	} else {
+		$dirlist	=	ListDirs($type.'s', false, 0);
+		$dirlistcat	=	ListDirs($type.'s', $_REQUEST['category']);
+	}
 
 	$tpl -> template('table', tpl_actions.$mod);
 	$tvars['vars'] = array(

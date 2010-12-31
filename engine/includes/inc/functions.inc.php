@@ -708,7 +708,11 @@ function ListDirs($folder, $category = false, $alllink = true) {
 	$select = '<select name="category">'.($alllink?'<option value="">- '.$lang['all'] .' -</option>':'');
 
 	if (($dir = @opendir($wdir)) === FALSE) {
-		msg(array('type' => 'error', 'text' => str_replace('{dirname}', $wdir, $lang['msge_nodir'])), 1);
+		msg(array(
+			'type' => 'error',
+			'text' => str_replace('{dirname}', $wdir, $lang['error.nodir']),
+			'info' => str_replace('{dirname}', $wdir, $lang['error.nodir#desc'])),
+			1);
 		return false;
 	}
 
