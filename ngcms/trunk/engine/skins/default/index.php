@@ -37,6 +37,7 @@ $skin_header = <<<HTML
 <link rel="stylesheet" href="$skins_url/ftr_panel.css" type="text/css" />
 <script type="text/javascript" src="$config[admin_url]/includes/js/functions.js"></script>
 <script type="text/javascript" src="$config[admin_url]/includes/js/admin.js"></script>
+<script type="text/javascript" src="$config[admin_url]/includes/js/jquery-1.4.4.min.js"></script>
 </head>
 <body>
 <table border="0" width="1000" align="center" cellspacing="0" cellpadding="0">
@@ -74,7 +75,7 @@ $skin_footer = <<<HTML
         <li><a href="$PHP_SELF?mod=configuration" class="add_system_option">Настройка системы<small>Настройка системы</small></a></li>
         <li id="alertpanel"><a href="http://ngcms.ru/forum/profile.php?id=23" target="_blank" class="rocket">Дизайн- RocketBoy</a></li>
         <li id="chatpanel"><a href="http://ngcms.ru/forum/" target="_blank" class="chat">Форум тех. поддержки</a></li>
-        
+
     </ul>
 </div>
 </td>
