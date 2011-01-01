@@ -16,6 +16,7 @@ function CatTree() {
 	global $mysql, $tpl, $out, $cat_tree, $lang, $config;
 
 	foreach ($mysql->select("select * from ".prefix."_category order by posorder") as $row) {
+		//
 		$tvars['vars'] = array(
 			'php_self'	=>	$PHP_SELF,
 			'rid'		=>	$row['id'],
