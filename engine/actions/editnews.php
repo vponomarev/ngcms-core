@@ -73,7 +73,6 @@ function editNews() {
 	// Rewrite `\r\n` to `\n`
 	$content = str_replace("\r\n", "\n", $content);
 
-	$alt_name	= $_REQUEST['alt_name'];
 
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):'')))) {
@@ -86,11 +85,19 @@ function editNews() {
 		return;
 	}
 
-	$alt_name = $parse->translit(trim(trim($alt_name)?$alt_name:$title), 1);
+	// Check if alt name was changed
+	$alt_name	= $_REQUEST['alt_name'];
+	if ($alt_name != $row['alt_name']) {
+		// Check for allowed chars in alt name
+		if (!$parse->nameCheck($alt_name)) {
+			msg(array("type" => "error", "text" => $lang['err.altname.wrong']));
+			return;
+		}
+	}
 
 	// Check if we try to use duplicate alt_name
 	if (is_array($mysql->record("select * from ".prefix."_news where alt_name=".db_squote($alt_name)." and id <> ".db_squote($row['id'])." limit 1"))) {
-		msg(array("type" => "error", "text" => $lang['msge_dupaltname']));
+		msg(array("type" => "error", "text" => $lang['err.altname.dup']));
 		return;
 	}
 
