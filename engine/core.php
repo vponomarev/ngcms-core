@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -13,7 +13,7 @@
 // Global variables definition
 //
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache;
 
@@ -34,6 +34,7 @@ $AUTH_CAPABILITIES = array();
 $PPAGES = array();			// plugin's pages
 $PFILTERS = array();		// filtering plugins
 $RPCFUNC = array();		// RPC functions
+$RPCADMFUNC = array();		// RPC admin functions
 
 $SUPRESS_TEMPLATE_SHOW	= 0;
 $SUPRESS_MAINBLOCK_SHOW	= 0;

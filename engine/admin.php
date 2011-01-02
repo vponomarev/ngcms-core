@@ -1,11 +1,15 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
 // Name: admin.php
 // Description: administration panel
 // Author: Vitaly Ponomarev, Alexey Zinchenko
 //
+
+// Administrative panel filters
+$AFILTERS = array();
+
 
 @include_once 'core.php';
 
@@ -88,9 +92,6 @@ if ($userROW['status'] > 3) {
 //
 
 define('ADMIN', 1);
-
-// Administrative panel filters
-$AFILTERS = array();
 
 // Load library
 require_once('./includes/inc/lib_admin.php');

@@ -101,7 +101,7 @@ function reServerSubmit() {
  var linkTX = new sack();
  linkTX.requestFile = 'rpc.php';
  linkTX.setVar('json', '1');
- linkTX.setVar('methodName', 'rewrite.submit');
+ linkTX.setVar('methodName', 'admin.rewrite.submit');
  linkTX.setVar('params', dOut);
  linkTX.method='POST';
  linkTX.onComplete = function() {
