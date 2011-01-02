@@ -438,6 +438,10 @@ class parse {
 		return preg_replace($find, $replace, $content);
 	}
 
+	function nameCheck($name){
+		return preg_match('#^[a-z0-9\_\-\.]+$#mi', $name);
+	}
+
 	function translit($content, $allowDash = 0) {
 		// $allowDash is not used any more
 
