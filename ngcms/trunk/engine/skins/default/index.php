@@ -19,7 +19,7 @@ if (is_array($userROW)) {
 
 $skins_url = skins_url;
 
-$h_active_options = ($mod=='options')?' class="active"':'';
+$h_active_options = (in_array($mod, array('options', 'categories', 'static')))?' class="active"':'';
 $h_active_extras = (($mod=='extra-config')||($mod=='extras'))?' class="active"':'';
 $h_active_addnews = ($mod=='addnews')?' class="active"':'';
 $h_active_editnews = ($mod=='editnews')?' class="active"':'';

@@ -1,7 +1,7 @@
 <form method="post" action="{php_self}?mod=categories">
 <table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
-<td width="100%" colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" /><a href="?mod=categories">{l_categories_title}</a> &#8594; {l_editing}</td>
+<td width="100%" colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" /><a href="?mod=categories">{l_categories_title}</a> &#8594; {l_editing} "{name}"</td>
 </tr>
 <tr>
 <td width="100%" colspan="5">&nbsp;</td>
@@ -54,9 +54,12 @@
 </tr>
 <tr>
 <td width="70%" class="contentEntry1">{l_orderby}</td>
-<td width="30%" class="contentEntry2">{orderlist}</td>	
+<td width="30%" class="contentEntry2">{orderlist}</td>
 </tr>
-{extend}
+<tr>
+<td width="70%" class="contentEntry1" valign="top">{l_category.info}<br/><small>{l_category.info#desc}</small></td>
+<td width="30%" class="contentEntry2"><textarea id="info" name="info" cols="70" rows="5">{info}</textarea></td>
+</tr>{extend}
 <tr>
 <td width="100%" colspan="2">&nbsp;</td>
 </tr>

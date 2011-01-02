@@ -29,11 +29,12 @@ CREATE TABLE `XPREFIX_category` (
   `parent` int(10) default '0',
   `description` text,
   `keywords` text,
+  `info` text,
   `icon` varchar(255) NOT NULL,
   `alt_url` text,
   `orderby` varchar(30) default 'id desc',
   `posts` int default 0,
-  `posorder` int default 0,
+  `posorder` int default 999,
   `poslevel` int default 0,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM;

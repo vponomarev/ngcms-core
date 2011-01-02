@@ -225,6 +225,7 @@ function systemInit() {
 var aSuggest = new ngSuggest('an', 
 								{
 									'localPrefix'	: '{localPrefix}',
+									'reqMethodName'	: 'core.users.search',
 									'lId'		: 'suggestLoader',
 									'hlr'		: 'true',
 									'iMinLen'	: 1,

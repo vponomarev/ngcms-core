@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
 // Name: rpc.php
 // Description: Service functions controller
 // Author: Vitaly Ponomarev
@@ -28,6 +28,22 @@ loadActionHandlers('rpc');
 loadActionHandlers('rpc:'.(is_array($userROW)?'active':'inactive'));
 
 
+// Function to preload ADMIN rpc funcs
+function loadAdminRPC($mod) {
+	if (in_array($mod, array('categories'))) {
+		@include_once('./actions/'.$mod.'.rpc.php');
+		return true;
+	}
+	return false;
+}
+
+// Register RPC ADMIN function
+function rpcRegisterAdminFunction($name, $instance, $permanent = false) {
+	global $RPCADMFUNC;
+	$RPCADMFUNC[$name] = $instance;
+}
+
+
 
 //
 // We support two types of RPC calls: HTTP/JSON-RPC and XML-RPC
@@ -44,26 +60,29 @@ if (isset($_REQUEST['json'])) {
 // HTTP/JSON-RPC processor
 //
 function processJSON(){
-	global $RPCFUNC;
+	global $RPCFUNC, $RPCADMFUNC;
 
 	// Decode passed params
 	$params = json_decode($_POST['params'], true);
 
 	$methodName = (isset($_POST['methodName']))?$_POST['methodName']:(isset($_GET['methodName'])?$_GET['methodName']:'');
 	switch ($methodName) {
-		case 'rewrite.submit':		$out = rpcRewriteSubmit($params); break;
-		case 'admin.users.search':	$out = rpcAdminUsersSearch($params); break;
+		case 'admin.rewrite.submit':	$out = rpcRewriteSubmit($params); break;
+		case 'core.users.search':	$out = rpcAdminUsersSearch($params); break;
 		default:
 			if (isset($RPCFUNC[$methodName])) {
 				$out = call_user_func($RPCFUNC[$methodName], $params);
-			} else if (preg_match('#^plugin\.(.+?)\.', $methodName, $m) && loadPlugin($m[1], 'rpc') && isset($RPCFUNC[$methodName])) {
+			} else if (preg_match('#^plugin\.(.+?)\.#', $methodName, $m) && loadPlugin($m[1], 'rpc') && isset($RPCFUNC[$methodName])) {
 				// If method "plugin.NAME.something" is called, try to load action "rpc" for plugin "NAME"
 				$out = call_user_func($RPCFUNC[$methodName], $params);
+			} else if (preg_match('#^admin\.(.+?)\.#', $methodName, $m) && loadAdminRPC($m[1]) && isset($RPCADMFUNC[$methodName])) {
+				// If method "plugin.NAME.something" is called, try to load action "rpc" for plugin "NAME"
+				$out = call_user_func($RPCADMFUNC[$methodName], $params);
 			} else {
 				$out = rpcDefault($params); break;
 			}
 	}
-
+	//print "<pre>JSON OUTPUT: ".json_encode($out)."</pre>";
 	// Print output
 	print json_encode($out);
 }
