@@ -23,8 +23,13 @@ function admCategoryList($retMode = 0) {
 	// Prepare list of rows
 	$tpl -> template('entries', tpl_actions.'categories');
 
-	foreach ($mysql->select("select * from ".prefix."_category order by posorder") as $row) {
-		//
+	// Fetch list of categories
+	$cList = $mysql->select("select * from ".prefix."_category order by posorder");
+	$cLen  = count($cList);
+
+	// Go through this list
+	foreach ( $cList as $num => $row) {
+		// Prepare data for template
 		$tvars['vars'] = array(
 			'php_self'	=>	$PHP_SELF,
 			'rid'		=>	$row['id'],
@@ -42,11 +47,12 @@ function admCategoryList($retMode = 0) {
 		// Prepare position
 		$tvars['vars']['cutter'] = '';
 		if ($row['poslevel'] > 0) {
-			$tvars['vars']['cutter'] = str_repeat('<img alt="-" height="100%" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
+			$tvars['vars']['cutter'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
 		} else {
 			$tvars['vars']['cutter'] = '';
 		}
-		$tvars['vars']['cutter'] = $tvars['vars']['cutter'] .'<img alt="-" ""src="'.skins_url.'/images/catmenu/join.gif" />';
+		$tvars['vars']['cutter'] = $tvars['vars']['cutter'] .
+			'<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen-1) || ($cList[$num]['poslevel'] > $cList[$num+1]['poslevel'])))?'bottom':'').'.gif" />';
 		$tvars['regx']['#\[news\](.*?)\[\/news\]#is'] = ($row['posts']>0)?'$1':'';
 
 		$tpl -> vars('entries', $tvars);
