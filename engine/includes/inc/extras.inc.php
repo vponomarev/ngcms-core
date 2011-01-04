@@ -759,7 +759,7 @@ function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '', $b
 	$tsb = ((($skin != '')||($block != ''))?'/':'').
 			($skin?'skins/'.$skin:'').
 			((($skin != '') && ($block != ''))?'/':'').
-			($block?$skin:'');
+			($block?$block:'');
 
 
 	$tpath = array();
