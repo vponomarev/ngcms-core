@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: extras.inc.php
 // Description: NGCMS extras managment functions
 // Author: Vitaly Ponomarev
@@ -737,25 +737,40 @@ function cacheRetrieveFile($fname, $expire, $plugin = '') {
 // Routine that helps plugin to locate template files. It checks if required file
 // exists in "global template" dir
 //
-// $tname		- template names (in string array)
+// $tname		- template names (in string array or single name)
 // $plugin		- plugin name
-// $localSource	- flag if function should work in "local only" mode, i.e.
+// $localSource		- flag if function should work in "local only" mode, i.e.
 //				  that all files are in own plugin dir
-// $skin - skin name in plugin dir ( plugins/PLUGIN/tpl/skin/ )
+// $skin		- skin name in plugin dir ( plugins/PLUGIN/tpl/skin/ )
+// $block		- name of subdir within current template/block
 
-function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '') {
+function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '', $block = '') {
 	global $config;
+
+	// Check if $tname is correct
+	if (!is_array($tname)) {
+		if ($tname == '') {
+			return array();
+		}
+		$tname = array($tname);
+	}
+
+	// Text SKIN+BLOCK
+	$tsb = ((($skin != '')||($block != ''))?'/':'').
+			($skin?'skins/'.$skin:'').
+			((($skin != '') && ($block != ''))?'/':'').
+			($block?$skin:'');
+
 
 	$tpath = array();
 	foreach ($tname as $fn) {
 		$fnc = (substr($fn, 0, 1) == ':')?substr($fn,1):($fn.'.tpl');
-		if (!$localsource && is_readable(tpl_site.'plugins/'.$plugin.'/'.$fnc)) {
-			$tpath[$fn] = tpl_site.'plugins/'.$plugin.'/';
-			$tpath['url:'.$fn] = tpl_url.'/plugins/'.$plugin;
-		} else if (is_readable(extras_dir.'/'.$plugin.'/tpl/'.($skin?'skins/'.$skin.'/':'').$fnc)) {
-//		} else {
-			$tpath[$fn] = extras_dir.'/'.$plugin.'/tpl/'.($skin?'skins/'.$skin.'/':'');
-			$tpath['url:'.$fn] = admin_url.'/plugins/'.$plugin.'/tpl'.($skin?'/skins/'.$skin:'');
+		if (!$localsource && is_readable(tpl_site.'plugins/'.$plugin.$tsb.'/'.$fnc)) {
+			$tpath[$fn] = tpl_site.'plugins/'.$plugin.$tsb.'/';
+			$tpath['url:'.$fn] = tpl_url.'/plugins/'.$plugin.$tsb;
+		} else if (is_readable(extras_dir.'/'.$plugin.'/tpl'.$tsb.'/'.$fnc)) {
+			$tpath[$fn] = extras_dir.'/'.$plugin.'/tpl'.$tsb.'/';
+			$tpath['url:'.$fn] = admin_url.'/plugins/'.$plugin.'/tpl'.$tsb;
 		}
 	}
 	return $tpath;
