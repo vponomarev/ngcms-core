@@ -229,6 +229,14 @@ font: normal 11px tahoma, sans-serif;
 color: #fff;
 }
 
+.contRow4 TD {
+padding: 5px;
+background:#B3D3EF url(images/1px.png) repeat-x;
+border: 1px solid #A7C5DF;
+font: normal 11px tahoma, sans-serif;
+color: #EFF7FF;
+}
+
 .contentEntry1 small {
 color: #666; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; font-size: 10px;
 }

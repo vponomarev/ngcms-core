@@ -31,6 +31,7 @@ function admCategoryList($retMode = 0) {
 	foreach ( $cList as $num => $row) {
 		// Prepare data for template
 		$tvars['vars'] = array(
+			'token'		=>	genUToken('admin.categories'),
 			'php_self'	=>	$PHP_SELF,
 			'rid'		=>	$row['id'],
 			'name'		=>	$row['name'],
@@ -175,8 +176,13 @@ function admCategoriesRPCmodify($params) {
 	}
 
 	// Scan incoming params
-	if (!is_array($params) || !isset($params['mode']) || !isset($params['id'])) {
-		return array('status' => 0, 'errorCode' => 999, 'errorText' => 'Wrong params type');
+	if (!is_array($params) || !isset($params['mode']) || !isset($params['id']) || !isset($params['token'])) {
+		return array('status' => 0, 'errorCode' => 4, 'errorText' => 'Wrong params type');
+	}
+
+	// Check for security token
+	if ($params['token'] != genUToken('admin.categories')) {
+		return array('status' => 0, 'errorCode' => 5, 'errorText' => 'Wrong security code');
 	}
 
 	// Check if category exists

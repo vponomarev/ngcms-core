@@ -2,6 +2,8 @@
 <script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
 <script type="text/javascript">
 // Process RPC requests for categories
+var categoryUToken = '{token}';
+
 function categoryModifyRequest(cmd, cid) {
 	var rpcCommand = '';
 	var rpcParams = [];
@@ -10,7 +12,7 @@ function categoryModifyRequest(cmd, cid) {
 		case 'down':
 		case 'del':
 			rpcCommand = 'admin.categories.modify';
-			rpcParams = {'mode' : cmd, 'id' : cid};
+			rpcParams = {'mode' : cmd, 'id' : cid, 'token' : categoryUToken };
 			break;
 	}
 	if (rpcCommand == '') {
