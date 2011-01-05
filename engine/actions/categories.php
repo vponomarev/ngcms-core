@@ -51,6 +51,7 @@ function admCategoryAddForm(){
 		'php_self'	=>	$PHP_SELF,
 		'parent'	=>	makeCategoryList(array('name' => 'parent', 'doempty' => 1, 'resync' => ($_REQUEST['action']?1:0))),
 		'orderlist'	=>	OrderList(''),
+		'token'		=> genUToken('admin.categories'),
 		'tpl_list'	=> $tpl_list
 	);
 
@@ -91,16 +92,39 @@ function admCategoryAdd() {
 
 	$category		= intval($_REQUEST['category']);
 
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.categories'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+	}
+
 	if (!$SQL['name']) {
 		msg(array("type" => "error", "text" => $lang['msge_name'], "info" => $lang['msgi_name']));
 		return;
 	}
 
-	$SQL['alt']		= strtolower($parse->translit($SQL['alt']?$SQL['alt']:$SQL['name'], 1));
+	// IF alt name is set:
+	if ($SQL['alt'] != '') {
+		// - check for allowed chars
+		if (!$parse->nameCheck($SQL['alt'])) {
+			// ERROR
+			msg(array("type" => "error", "text" => $lang['category.err.wrongalt'], "info" => $lang['category.err.wrongalt#desc']));
+			return;
+		}
 
-	if (is_array($mysql->record("select * from ".prefix."_category where lower(alt) = ".db_squote($SQL['alt'])))) {
-		msg(array("type" => "error", "text" => $lang['msge_exists'], "info" => $lang['msgi_exists']));
-		return;
+		// - check for duplicate alt name
+		if (is_array($mysql->record("select * from ".prefix."_category where lower(alt) = ".db_squote($SQL['alt'])))) {
+			msg(array("type" => "error", "text" => $lang['category.err.dupalt'], "info" => $lang['category.err.dupalt#desc']));
+			return;
+		}
+	} else {
+		// alt name was not set, generate new alt name in automatic mode
+		$SQL['alt']		= strtolower($parse->translit($SQL['name']));
+
+		$i = '';
+		while ( is_array($mysql->record("select id from ".prefix."_category where alt = ".db_squote($SQL['alt'].$i)." limit 1")) ) {
+			$i++;
+		}
+		$SQL['alt'] = $SQL['alt'].$i;
 	}
 
 	if ($config['meta']) {
@@ -169,6 +193,7 @@ function admCategoryEditForm(){
 		'show.link'		=>  $showLink,
 		'tpl_list'		=>	$tpl_list,
 		'info'			=>	secure_html($row['info']),
+		'token'			=> genUToken('admin.categories'),
 	);
 
 	if ($config['meta']) {
@@ -192,7 +217,7 @@ function admCategoryEditForm(){
 // ///////////////////////////////////////////////////////////////////////////
 //
 function admCategoryEdit(){
-	global $mysql, $lang, $config, $catz, $catmap, $AFILTERS;
+	global $mysql, $lang, $config, $parse, $catz, $catmap, $AFILTERS;
 
 	$SQL			= array();
 	$SQL['name']	= secure_html($_REQUEST['name']);
@@ -210,6 +235,12 @@ function admCategoryEdit(){
 
 	$catid			= intval($_REQUEST['catid']);
 
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.categories'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
+
 	if (!$SQL['name'] || !$catid || (!is_array($SQLold = $catz[$catmap[$catid]]))) {
 		msg(array("type" => "error", "text" => $lang['msge_name'], "info" => $lang['msgi_name']));
 		return;
@@ -220,6 +251,22 @@ function admCategoryEdit(){
 		return;
 	}
 
+	// Check alt name in case it was changed
+	if ($SQL['alt'] != $catid) {
+		// - check for allowed chars
+		if (!$parse->nameCheck($SQL['alt'])) {
+			// ERROR
+			msg(array("type" => "error", "text" => $lang['category.err.wrongalt'], "info" => $lang['category.err.wrongalt#desc']));
+			return;
+		}
+
+		// - check for duplicate alt name
+		if (is_array($mysql->record("select * from ".prefix."_category where (id <> ".db_squote($catid).") and (lower(alt) = ".db_squote($SQL['alt']).")"))) {
+			msg(array("type" => "error", "text" => $lang['category.err.dupalt'], "info" => $lang['category.err.dupalt#desc']));
+			return;
+		}
+
+	}
 
 	if ($config['meta']) {
 		$SQL['description']	= secure_html(trim($_REQUEST['description']));

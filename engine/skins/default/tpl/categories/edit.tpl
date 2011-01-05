@@ -1,4 +1,5 @@
 <form method="post" action="{php_self}?mod=categories">
+<input type="hidden" name="token" value="{token}"/>
 <table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
 <td width="100%" colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" /><a href="?mod=categories">{l_categories_title}</a> &#8594; {l_editing} "{name}"</td>

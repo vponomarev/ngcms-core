@@ -54,7 +54,7 @@ $skin_header = <<<HTML
 	<span${h_active_pm}><a href="$PHP_SELF?mod=pm" title="$lang[pm_t]">$lang[pm]</a> [ $newpm ]</span>
 	<span><a href="$PHP_SELF?action=logout" title="$lang[logout_t]">$lang[logout]</a></span>
 </div>
-<div style="text-align : left;">
+<div id="adminDataBlock" style="text-align : left;">
 HTML;
 
 
