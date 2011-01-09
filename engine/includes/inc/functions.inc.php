@@ -1572,4 +1572,22 @@ function arrayCharsetConvert($direction, $data) {
 }
 
 
+// Check if user $user have access to identity $identity with mode $mode
+// $identity - array with element characteristics
+// 	* plugin	- id of plugin
+//	* item		- id of item in plugin
+//  * ds		- id of Date Source (if applicable)
+//	* ds_id		- id of item from DS (if applicable)
+// $user - user record or null if access is checked for current user
+// $mode - access mode:
+//		'read'
+//		'write'
+// $way	 - way for content access
+//			'rpc' - via rpc
+//			'' - default access via site
+function checkPermission($identity, $user = null, $mode = '') {
+	global $userROW;
 
+	//if ($identity['item'] == 'modify') return false;
+	return true;
+}
