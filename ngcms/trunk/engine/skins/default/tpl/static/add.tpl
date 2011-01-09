@@ -5,13 +5,14 @@ var currentInputAreaID = 'content';
 
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_static_title_add}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=static">{l_static_title}</a> &#8594; {l_static_title_add}</td>
 </tr>
 </table><form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type=hidden name="area" value="" />
 </form>
 
 <form name="form" id="postForm" method="post" action="{php_self}?mod=static" target="_self">
+<input type="hidden" name="token" value="{token}"/>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>

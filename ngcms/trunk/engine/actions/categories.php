@@ -107,6 +107,7 @@ function admCategoryAdd() {
 	// Check for security token
 	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.categories'))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
 	}
 
 	if (!$SQL['name']) {
