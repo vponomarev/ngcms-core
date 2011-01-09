@@ -1,4 +1,4 @@
-<form method="post" action="{php_self}?mod=categories">
+<form method="post" action="{php_self}?mod=categories" enctype="multipart/form-data">
 <input type="hidden" name="token" value="{token}"/>
 <table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr>
@@ -46,8 +46,18 @@
 <td width="30%" class="contentEntry2">{parent}</td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{l_icon}</td>
+<td width="70%" class="contentEntry1">{l_icon}<br/><small>URL картинки, используемой в качестве иконки категории</small></td>
 <td width="30%" class="contentEntry2"><input type="text" size="40" name="icon" value="{icon}" maxlength="255" /></td>
+</tr>
+<tr>
+<td width="70%" class="contentEntry1">Прикрепленная иконка<br/><small>Вы можете прикрепить изображение-иконку непосредственно к категории.<br/>Данное поле имеет приоритет.</small></td>
+<td width="30%" class="contentEntry2">
+[is.attach]<div id="previewImage"><img src="{attach_url}"/>
+<br/>
+<input type="checkbox" name="image_del" value="1"> <label for="image_del">удалить иконку</label></div>
+<br/>[/is.attach]
+<input type="file" size="40" name="image" />
+</td>
 </tr>
 <tr>
 <td width="70%" class="contentEntry1">{l_alt_url}</td>
@@ -65,10 +75,10 @@
 <td width="100%" colspan="2">&nbsp;</td>
 </tr>
 <tr align="center">
-<td width="100%" colspan="2" class="contentEdit">
+<td width="100%" colspan="2" class="contentEdit">[perm.modify]
 <input type="submit" value="{l_save}" class="button" /> <input type="button" class="button" value="{l_cancel}" onclick="document.location='admin.php?mod=categories';" />
 <input type="hidden" name="action" value="doedit" />
-<input type="hidden" name="catid" value="{catid}" />
+<input type="hidden" name="catid" value="{catid}" />[/perm.modify]
 </td>
 </tr>
 </table>

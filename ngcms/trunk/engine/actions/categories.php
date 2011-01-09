@@ -40,6 +40,12 @@ function listSubdirs($dir) {
 function admCategoryAddForm(){
 	global $mysql, $tpl, $mod, $PHP_SELF, $config, $lang, $AFILTERS;
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+
 	$tpl -> template('add', tpl_actions.$mod);
 
 	$tpl_list = '<option value="">* '.$lang['cat_tpldefault']." *</option>\n";
@@ -91,6 +97,12 @@ function admCategoryAdd() {
 	$SQL['flags']  .= (string) (abs(intval($_REQUEST['show_link'])<=2)?abs(intval($_REQUEST['show_link'])):'0');
 
 	$category		= intval($_REQUEST['category']);
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
 
 	// Check for security token
 	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.categories'))) {
@@ -149,7 +161,56 @@ function admCategoryAdd() {
 	foreach ($SQL as $k => $v)
 		$SQLout[$k] = db_squote($v);
 
+	// Add new record into SQL table
 	$mysql->query("insert into ".prefix."_category (".join(", ", array_keys($SQLout)).") values (".join(", ", array_values($SQLout)).")");
+	$rowID = $mysql->record("select LAST_INSERT_ID() as id");
+
+	$fmanager = new file_managment();
+	$imanager = new image_managment();
+
+	// Check if new image was attached
+	if (isset($_FILES) && isset($_FILES['image']) && is_array($_FILES['image']) && isset($_FILES['image']['error']) && ($_FILES['image']['error'] == 0)) {
+		// new file is uploaded
+		$up = $fmanager->file_upload(array('dsn' => true, 'linked_ds' => 2, 'linked_id' => $rowID['id'], 'type' => 'image', 'http_var' => 'image', 'http_varnum' => 0));
+		//print "OUT: <pre>".var_export($up, true)."</pre>";
+		if (is_array($up)) {
+			// Image is uploaded. Let's update image params
+			//print "<pre>UPLOADED. ret:".var_export($up, true)."</pre>";
+
+			$img_width = 0;
+			$img_height = 0;
+			$img_preview = 0;
+			$img_pwidth = 0;
+			$img_pheight = 0;
+
+			if (is_array($sz = $imanager->get_size($config['attach_dir'].$up[2].'/'.$up[1]))) {
+				//print "<pre>IMG SIZE. ret:".var_export($sz, true)."</pre>";
+
+				$img_width = $sz[1];
+				$img_height = $sz[2];
+
+				$tsz = intval($config['thumb_size']);
+				if (($tsz < 10)||($tsz > 1000)) $tsz = 150;
+				$thumb = $imanager->create_thumb($config['attach_dir'].$up[2], $up[1], $tsz,$tsz, $config['thumb_quality']);
+				if ($thumb) {
+					$img_preview = 1;
+					$img_pwidth = $thumb[0];
+					$img_pheight = $thumb[1];
+					//print "<pre>THUMB CREATED. ret:".var_export($thumb, true)."</pre>";
+				}
+			}
+
+			// Update table 'images'
+			$mysql->query("update ".prefix."_images set width=".db_squote($img_width).", height=".db_squote($img_height).", preview=".db_squote($img_preview).", p_width=".db_squote($img_pwidth).", p_height=".db_squote($img_pheight)." where id = ".db_squote($up[0]));
+
+			// Update table 'categories'
+			$mysql->query("update ".prefix."_category set image_id = ".db_squote($up[0])." where id = ".db_squote($rowID['id']));
+		}
+
+	}
+
+
+	// Report about adding new category
 	msg(array("text" => $lang['msgo_added']));
 }
 
@@ -160,8 +221,15 @@ function admCategoryAdd() {
 function admCategoryEditForm(){
 	global $mysql, $lang, $mod, $tpl, $config, $AFILTERS;
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'details')) && !checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+	$permModify		= checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'));
+
 	$catid = intval($_REQUEST['catid']);
-	if (!is_array($row=$mysql->record("select * from ".prefix."_category where id = ".db_squote($catid)))) {
+	if (!is_array($row=$mysql->record("select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `".prefix."_category` as nc left join `".prefix."_images` ni on nc.image_id = ni.id where nc.id = ".db_squote($catid)." order by nc.posorder asc", 1))) {
 		msg(array("type" => "error", "text" => $lang['msge_id'], "info" => sprintf($lang['msgi_id'], $PHP_SELF.'?mod=categories')));
 		return;
 	}
@@ -196,6 +264,17 @@ function admCategoryEditForm(){
 		'token'			=> genUToken('admin.categories'),
 	);
 
+	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
+
+	// Check for attached images
+	if ($row['icon_id']) {
+		$tvars['regx']['#\[is\.attach\](.*?)\[\/is\.attach\]#is'] = '$1';
+		$tvars['vars']['attach_url'] = $config['attach_url'].'/'.$row['icon_folder'].'/'.($row['icon_preview']?'thumb/':'').$row['icon_name'];
+
+	} else {
+		$tvars['regx']['#\[is\.attach\](.*?)\[\/is\.attach\]#is'] = '';
+	}
+
 	if ($config['meta']) {
 		$tvars['vars']['[meta]']	=	'';
 		$tvars['vars']['[/meta]']	=	'';
@@ -219,6 +298,8 @@ function admCategoryEditForm(){
 function admCategoryEdit(){
 	global $mysql, $lang, $config, $parse, $catz, $catmap, $AFILTERS;
 
+	//print "<pre>POST DATA:\n".var_export($_POST, true)."\n\nFILES: ".var_export($_FILES, true)."</pre>";
+
 	$SQL			= array();
 	$SQL['name']	= secure_html($_REQUEST['name']);
 	$SQL['info']	= secure_html($_REQUEST['info']);
@@ -234,6 +315,12 @@ function admCategoryEdit(){
 	$SQL['flags']  .= (string) (abs(intval($_REQUEST['show_link'])<=2)?abs(intval($_REQUEST['show_link'])):'0');
 
 	$catid			= intval($_REQUEST['catid']);
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
 
 	// Check for security token
 	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.categories'))) {
@@ -272,6 +359,57 @@ function admCategoryEdit(){
 		$SQL['description']	= secure_html(trim($_REQUEST['description']));
 		$SQL['keywords']	= secure_html(trim($_REQUEST['keywords']));
 	}
+
+
+	$fmanager = new file_managment();
+	$imanager = new image_managment();
+
+	// Check is existent image should be deleted
+	if (isset($_POST['image_del']) && $_POST['image_del'] && ($SQLold['image_id'])) {
+		$fmanager->file_delete(array('type' => 'image', 'id' => $SQLold['image_id']));
+		$SQL['image_id'] = 0;
+	}
+
+
+	// Check if new image was attached
+	if (isset($_FILES) && (!$SQL['image_id']) && isset($_FILES['image']) && is_array($_FILES['image']) && isset($_FILES['image']['error']) && ($_FILES['image']['error'] == 0)) {
+		// new file is uploaded
+		$up = $fmanager->file_upload(array('dsn' => true, 'linked_ds' => 2, 'linked_id' => $catid, 'type' => 'image', 'http_var' => 'image', 'http_varnum' => 0));
+		//print "OUT: <pre>".var_export($up, true)."</pre>";
+		if (is_array($up)) {
+			// Image is uploaded. Let's update image params
+			//print "<pre>UPLOADED. ret:".var_export($up, true)."</pre>";
+
+			$img_width = 0;
+			$img_height = 0;
+			$img_preview = 0;
+			$img_pwidth = 0;
+			$img_pheight = 0;
+
+			if (is_array($sz = $imanager->get_size($config['attach_dir'].$up[2].'/'.$up[1]))) {
+				//print "<pre>IMG SIZE. ret:".var_export($sz, true)."</pre>";
+
+				$img_width = $sz[1];
+				$img_height = $sz[2];
+
+				$tsz = intval($config['thumb_size']);
+				if (($tsz < 10)||($tsz > 1000)) $tsz = 150;
+				$thumb = $imanager->create_thumb($config['attach_dir'].$up[2], $up[1], $tsz,$tsz, $config['thumb_quality']);
+				if ($thumb) {
+					$img_preview = 1;
+					$img_pwidth = $thumb[0];
+					$img_pheight = $thumb[1];
+					//print "<pre>THUMB CREATED. ret:".var_export($thumb, true)."</pre>";
+				}
+			}
+
+			// Update SQL records
+			$mysql->query("update ".prefix."_images set width=".db_squote($img_width).", height=".db_squote($img_height).", preview=".db_squote($img_preview).", p_width=".db_squote($img_pwidth).", p_height=".db_squote($img_pheight)." where id = ".db_squote($up[0]));
+			$SQL['image_id'] = $up[0];
+		}
+
+	}
+
 
 	$pluginNoError = 1;
 	if (is_array($AFILTERS['categories']))

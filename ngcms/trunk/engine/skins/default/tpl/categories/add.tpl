@@ -1,4 +1,4 @@
-<form method="post" action="{php_self}?mod=categories">
+<form method="post" action="{php_self}?mod=categories" enctype="multipart/form-data">
 <input type="hidden" name="token" value="{token}"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
@@ -39,8 +39,14 @@
 <td width="50%" class="contentEntry2"><select name="tpl">{tpl_list}</select></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_icon}</td>
+<td width="50%" class="contentEntry1">{l_icon}<br/><small>URL картинки, используемой в качестве иконки категории</small></td>
 <td width="50%" class="contentEntry2"><input type="text" size="40" name="icon" maxlength="255" /></td>
+</tr>
+<tr>
+<td width="70%" class="contentEntry1">Прикрепленная иконка<br/><small>Вы можете прикрепить изображение-иконку непосредственно к категории.<br/>Данное поле имеет приоритет.</small></td>
+<td width="30%" class="contentEntry2">
+<input type="file" size="40" name="image" />
+</td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_alt_url}</td>
