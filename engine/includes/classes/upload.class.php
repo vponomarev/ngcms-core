@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: upload.class.php
 // Description: Files/Images upload managment
 // Author: Vitaly Ponomarev
@@ -276,7 +276,7 @@ class file_managment {
 			// Create record in SQL DB (or replace old)
 			$mysql->query("insert into ".prefix."_".$this->tname." (name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id) values (".db_squote($fname).", 1,".db_squote($origFname).",".db_squote($dir1.'/'.$dir2.'/'.$xDir).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.", ".db_squote($param['linked_ds']).", ".db_squote($param['linked_id']).")");
 			$rowID = $mysql->record("select LAST_INSERT_ID() as id");
-			return is_array($rowID)?array($rowID['id'], $fname):0;
+			return is_array($rowID)?array($rowID['id'], $fname, $dir1.'/'.$dir2.'/'.$xDir):0;
 		}
 
 		// Create random prefix if requested
@@ -341,11 +341,11 @@ class file_managment {
 		// Create record in SQL DB (or replace old)
 		if ($replace_id) {
 			$mysql->query("update ".prefix."_".$this->tname." set name= ".db_squote($fname).", folder=".db_squote($param['category']).", date=unix_timestamp(now()), user=".db_squote($userROW['name']).", owner_id=".db_squote($userROW['id'])." where id = ".$replace_id);
-			return array($replace_id, $fname);
+			return array($replace_id, $fname, $wCategory);
 		} else {
 			$mysql->query("insert into ".prefix."_".$this->tname." (name, orig_name, folder, date, user, owner_id, category) values (".db_squote($fname).",".db_squote($origFname).",".db_squote($param['category']).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.")");
 			$rowID = $mysql->record("select LAST_INSERT_ID() as id");
-			return is_array($rowID)?array($rowID['id'], $fname):0;
+			return is_array($rowID)?array($rowID['id'], $fname, $wCategory):0;
 		}
 	}
 

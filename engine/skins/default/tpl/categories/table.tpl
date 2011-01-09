@@ -78,7 +78,7 @@ function categoryModifyRequest(cmd, cid) {
 {cat_tree}
 </tbody>
 <tfoot>
-<tr><td colspan="8" class="contentEdit" align="right">&nbsp; <form method="get" action=""><input type="hidden" name="mod" value="categories"/><input type="hidden" name="action" value="add"/><input type="submit" value="Добавить категорию" class="button" /></form></td></tr>
+<tr><td colspan="8" class="contentEdit" align="right">&nbsp; [perm.modify]<form method="get" action=""><input type="hidden" name="mod" value="categories"/><input type="hidden" name="action" value="add"/><input type="submit" value="Добавить категорию" class="button" /></form>[/perm.modify]</td></tr>
 </tfoot>
 </table>
 

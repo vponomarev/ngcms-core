@@ -10,6 +10,8 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+// Load library
+@include_once root.'includes/classes/upload.class.php';
 
 // ////////////////////////////////////////////////////////////////////////////
 // Processing functions :: show list of categories
@@ -19,6 +21,24 @@ if (!defined('NGCMS')) die ('HAL');
 //			2 - return only cat_tree from function
 function admCategoryList($retMode = 0) {
 	global $mysql, $tpl, $PHP_SELF, $config, $lang, $AFILTERS;
+
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'view'))) {
+		switch ($retMode) {
+			case 1:
+				return msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 2);
+			case 2:
+				return false;
+			default:
+				msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+				return;
+		}
+	}
+
+	// Determine user's permissions
+	$permModify		= checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'));
+	$permDetails	= checkPermission(array('plugin' => '#admin.categories', 'item' => 'details'));
 
 	// Prepare list of rows
 	$tpl -> template('entries', tpl_actions.'categories');
@@ -45,6 +65,9 @@ function admCategoryList($retMode = 0) {
 							generateLink('core', 'plugin', array('plugin' => 'news', 'handler' => 'by.category'), array('category' => $row['alt'], 'catid' => $row['id']), false, true)),
 		);
 
+		$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is']	= $permModify?'$1':'';
+		$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is']	= $permDetails?'$1':'';
+
 		// Prepare position
 		$tvars['vars']['cutter'] = '';
 		if ($row['poslevel'] > 0) {
@@ -63,6 +86,9 @@ function admCategoryList($retMode = 0) {
 
 	// Prepare main template
 	$tvars['vars']['cat_tree'] = $cat_tree;
+
+	// Check for permissions for adding new category
+	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
 
 	$tpl -> template('table', tpl_actions.'categories');
 	$tpl -> vars('table', $tvars);
@@ -170,6 +196,12 @@ function admCategoriesRPCmodify($params) {
 	global $userROW, $mysql, $catmap, $catz;
 
 	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+		// ACCESS DENIED
+		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
+	}
+
+	// Check for permissions
 	if (!is_array($userROW) || ($userROW['status'] != 1)) {
 		// ACCESS DENIED
 		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
@@ -186,9 +218,11 @@ function admCategoriesRPCmodify($params) {
 	}
 
 	// Check if category exists
-	if (!isset($catmap[intval($params['id'])])) {
+	if (!isset($catmap[$params['id']])) {
 		return array('status' => 0, 'errorCode' => 10, 'errorText' => 'Category does not exist');
 	}
+	$row = $catz[$catmap[$params['id']]];
+
 	switch ($params['mode']) {
 		// Delete category
 		case 'del':
@@ -207,6 +241,13 @@ function admCategoriesRPCmodify($params) {
 			// Fine, now we can delete category!
 			// * Delete
 			$mysql->query("delete from ".prefix."_category where id = ".intval($params['id']));
+
+			// Delete attached files (if any)
+			if ($row['image_id']) {
+				$fmanager = new file_managment();
+				$fmanager->file_delete(array('type' => 'image', 'id' => $row['image_id']));
+			}
+
 			// * Reorder
 			admCategoryReorder();
 			// * Rewrite page content

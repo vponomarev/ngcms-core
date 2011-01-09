@@ -186,7 +186,7 @@ $mysql = new mysql;
 $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
 $timer->registerEvent('DB connection established');
 
-foreach ($mysql->select("select * from `".prefix."_category` order by posorder asc", 1) as $row) {
+foreach ($mysql->select("select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `".prefix."_category` as nc left join `".prefix."_images` ni on nc.image_id = ni.id order by nc.posorder asc", 1) as $row) {
 	$catz[$row['alt']] = $row;
 	$catmap[$row['id']] = $row['alt'];
 }
