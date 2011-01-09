@@ -58,7 +58,7 @@ function categoryModifyRequest(cmd, cid) {
 </script>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width="100%" colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=options"><a href="?mod=categories">{l_categories_title}</a></td>
+<td width="100%" colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=categories">{l_categories_title}</a></td>
 </tr>
 </table>
 <div id="list">

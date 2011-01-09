@@ -1,10 +1,10 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: static.php
 // Description: Manage static pages
-// Author: Vitaly Ponomarev, Alexey Zinchenko
+// Author: Vitaly Ponomarev
 //
 
 // Protect against hack attempts
@@ -49,7 +49,18 @@ if ($action == "add") {
 // Show list of static pages
 //
 function listStatic() {
-	global $tpl, $mysql, $mod, $userROW, $config;
+	global $tpl, $mysql, $mod, $userROW, $lang, $config;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'view'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Determine user's permissions
+	$permModify		= checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'));
+	$permDetails	= checkPermission(array('plugin' => '#admin.static', 'item' => 'details'));
+
 
 	$per_page	= intval($_REQUEST['per_page']);
 	if (($per_page < 2)||($per_page > 500)) $per_page = 20;
@@ -58,7 +69,7 @@ function listStatic() {
 	if ($pageNo < 1)	$pageNo = 1;
 
 	$query = array();
-	$query['sql']		= "select * from ".prefix."_static order by id desc limit ".(($pageNo - 1)* $per_page).", ".$per_page;
+	$query['sql']		= "select * from ".prefix."_static order by title limit ".(($pageNo - 1)* $per_page).", ".$per_page;
 	$query['count']		= "select count(*) as cnt from ".prefix."_static ";
 
 	$tpl -> template('entries', tpl_actions.$mod);
@@ -70,7 +81,9 @@ function listStatic() {
 		$tvars['vars'] = array(
 			'php_self'	=>	$PHP_SELF,
 			'home'		=>	home,
-			'id'		=>	$row['id']
+			'id'		=>	$row['id'],
+			'alt_name'	=>	$row['alt_name'],
+			'template'	=>	($row['template']=='')?'--':$row['template'],
 		);
 
 		if (strlen($row['title']) > 70) {
@@ -81,19 +94,25 @@ function listStatic() {
 					generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id']), array(), false, true):
 					generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']), false, true);
 
-		$tvars['vars']['url']		= '<a href="'.$link.'" target="_blank">'.$link.'</a>';
+		$tvars['vars']['url']		= $row['approve']?('<a href="'.$link.'" target="_blank">'.$link.'</a>'):'';
 		$tvars['vars']['title']		= str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
 		$tvars['vars']['status']	=	($row['approve']) ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
+
+		$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is'] = $permDetails?'$1':'';
+		$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
 
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
 	}
 	unset($tvars);
 
+	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
+
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
 		'per_page'		=>	$per_page,
-		'entries'		=>	$entries
+		'entries'		=>	$entries,
+		'token'			=> genUToken('admin.static'),
 	);
 
 	if (!$nCount) {
@@ -102,7 +121,7 @@ function listStatic() {
 		$tvars['vars']['entries']		=	'';
 		$tvars['vars']['pagesss']		=	'';
 	} else {
-		$tvars['regx']["'\\[no-static\\].*?\\[/no-static\\]'si"] = '';
+		$tvars['regx']["#\[no-static\].*?\[/no-static\]#si"] = '';
 
 		$cnt = $mysql->record($query['count']);
 		$all_count_rec = $cnt['cnt'];
@@ -136,6 +155,18 @@ function listStatic() {
 function massStaticModify($setValue, $langParam, $tag ='') {
 	global $mysql, $lang;
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.static'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
+
 	$selected = $_REQUEST['selected'];
 
 	if (!$selected) {
@@ -155,6 +186,18 @@ function massStaticModify($setValue, $langParam, $tag ='') {
 //
 function massStaticDelete() {
 	global $mysql, $lang, $PFILTERS;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.static'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	$selected = $_REQUEST['selected'];
 
@@ -203,6 +246,7 @@ function addStaticForm(){
 		'php_self'			=>	$PHP_SELF,
 		'quicktags'			=>	QuickTags('currentInputAreaID', 'static'),
 		'templateopts'		=> staticListTemplates(''),
+		'token'				=> genUToken('admin.static'),
 	);
 
 	if ($config['use_smilies']) {
@@ -255,6 +299,18 @@ function addStaticForm(){
 //
 function addStatic(){
 	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.static'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	$title = $_REQUEST['title'];
 	$content = $_REQUEST['content'];
@@ -355,6 +411,7 @@ function editStaticForm(){
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
+	$permModify		= checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'));
 
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
@@ -366,8 +423,10 @@ function editStaticForm(){
 		'template'			=>	$row['template'],
 		'templateopts'		=> staticListTemplates($row['template']),
 		'description'		=>	$row['description'],
-		'keywords'			=>	$row['keywords']
+		'keywords'			=>	$row['keywords'],
+		'token'			=> genUToken('admin.static'),
 	);
+	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
 
 	if ($config['use_smilies']) {
 		$tvars['vars']['smilies'] = InsertSmilies('content', 20);
@@ -425,6 +484,18 @@ function editStaticForm(){
 //
 function editStatic(){
 	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.static'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	$id			=	intval($_REQUEST['id']);
 	$title		=	$_REQUEST['title'];
