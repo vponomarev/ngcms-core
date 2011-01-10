@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: consts.inc.php
 // Description: Initializing global consts
 // Author: Alexey Zinchenko, Vitaly Ponomarev
@@ -13,7 +13,7 @@ define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.2 Release + SVN [SVN646+]');
+@define('engineVersion', '0.9.2 Release + SVN [SVN729+]');
 
 @define('prefix', $config['prefix']);
 @define('home', $config['home_url']);
@@ -41,14 +41,6 @@ define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO
 
 @define('extras_dir', root.'plugins', true);
 
-@define('id',		intval($_REQUEST['id']));
-@define('year',		intval($_REQUEST['year']));
-@define('month',	intval($_REQUEST['month']));
-@define('day',		intval($_REQUEST['day']));
-@define('category', mysql_escape_string(strip_tags(preg_replace('[([/]+)$]', '', $_GET['category']))));
-@define('altname' , mysql_escape_string(strip_tags(preg_replace('[([/]+)$]', '', $_GET['altname']))));
-@define('user',		mysql_escape_string(strip_tags(preg_replace('[([/]+)$]', '', $_GET['user']))));
-@define('future_news', "postdate < ".time());
 
 @define('conf_pactive', confroot.'plugins.php', true);
 @define('conf_pconfig', confroot.'plugdata.php', true);
