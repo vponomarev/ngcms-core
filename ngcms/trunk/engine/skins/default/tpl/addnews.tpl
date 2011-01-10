@@ -44,7 +44,7 @@ function changeActive(name) {
 <form id="postForm" name="form" ENCTYPE="multipart/form-data" method="post" action="{php_self}" target="_self">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_addnews_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=editnews">{l_news_title}</a> &#8594; {l_addnews_title}</td>
 </tr>
 </table>
 

@@ -44,7 +44,7 @@ function changeActive(name) {
 
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_editnews_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=editnews">{l_news_title}</a> &#8594; {l_editnews_title} "{title}"</td>
 </tr>
 </table>
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
