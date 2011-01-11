@@ -3,7 +3,7 @@
 
 //
 // Global variable: ID of current active input area
-[edit.split]var currentInputAreaID = 'content.short';[/edit.split][edit.nosplit]var currentInputAreaID = 'content';[/edit.nosplit]
+[edit.split]var currentInputAreaID = 'ng_news_content_short';[/edit.split][edit.nosplit]var currentInputAreaID = 'ng_news_content';[/edit.nosplit]
 
 function ChangeOption(optn) {
 	document.getElementById('maincontent').style.display 	= (optn == 'maincontent')?"block":"none";
@@ -33,11 +33,11 @@ function changeActive(name) {
  if (name == 'full') {
 	document.getElementById('container.content.full').className  = 'contentActive';
 	document.getElementById('container.content.short').className = 'contentInactive';
-	currentInputAreaID = 'content.full';
+	currentInputAreaID = 'ng_news_content_full';
  } else {
 	document.getElementById('container.content.short').className = 'contentActive';
 	document.getElementById('container.content.full').className  = 'contentInactive';
-	currentInputAreaID = 'content.short';
+	currentInputAreaID = 'ng_news_content_short';
  }
 }
 </script>
@@ -81,12 +81,12 @@ function changeActive(name) {
   <tr>
    <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
 [edit.split]
-    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="content_short" id="content.short" rows="10" tabindex="2">{content.short}</textarea></div>
+    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="content_short" id="ng_news_content_short" rows="10" tabindex="2">{content.short}</textarea></div>
 [extended.more]    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{l_editor.divider}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value="{content.delimiter}"/></td></tr></table>[/extended.more]
-    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="content_full" id="content.full" rows="10" tabindex="2">{content.full}</textarea></div>
+    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="content_full" id="ng_news_content_full" rows="10" tabindex="2">{content.full}</textarea></div>
 [/edit.split]
 [edit.nosplit]
-    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="content" id="content" rows="10" tabindex="2">{content}</textarea></div>
+    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" id="content" rows="10" tabindex="2">{content}</textarea></div>
 [/edit.nosplit]
 	</td>
   </tr>
