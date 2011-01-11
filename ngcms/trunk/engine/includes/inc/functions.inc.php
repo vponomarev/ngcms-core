@@ -1580,14 +1580,35 @@ function arrayCharsetConvert($direction, $data) {
 //	* ds_id		- id of item from DS (if applicable)
 // $user - user record or null if access is checked for current user
 // $mode - access mode:
-//		'read'
-//		'write'
+//		'view'
+//		'details'
+//		'modify'
 // $way	 - way for content access
 //			'rpc' - via rpc
 //			'' - default access via site
-function checkPermission($identity, $user = null, $mode = '') {
+function checkPermission($identity, $user = null, $mode = '', $way = '') {
 	global $userROW;
 
-	//if ($identity['item'] == 'modify') return false;
+//	if (($identity['plugin'] == '#admin') && ($identity['item'] == 'users') && ($mode == 'modify')) return false;
+//	if (($identity['plugin'] == '#admin') && ($identity['item'] == 'users') && ($mode == 'details')) return false;
+	//if (($identity['plugin'] == '#admin.static') && ($identity['item'] == 'details')) return false;
 	return true;
+}
+
+
+// Generate record in System LOG for security audit and logging of changes
+// $identity - array of params for identification if object
+// 	* plugin	- id of plugin
+//	* item		- id of item in plugin
+//  * ds		- id of Date Source (if applicable)
+//	* ds_id		- id of item from DS (if applicable)
+// $action	- array of params to identify action
+//	* action	- id of action
+//	* list		- list of changed fields
+// $user	- user record or null if access is checked for current user
+// $status	- array of params to identify resulting status
+//	* [0]	- state [ 0 - fail, 1 - ok ]
+//	* [1]	- text value CODE of error (if have error)
+function ngSYSLOG($identity, $action, $user, $status){
+	//print "<pre>ngSYSLOG: ".var_export($identity, true)."\n".var_export($action, true)."\n".var_export($user, true)."\n".var_export($status, true)."</pre>";
 }

@@ -24,7 +24,7 @@ function admCategoryList($retMode = 0) {
 
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'view'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'view')) {
 		switch ($retMode) {
 			case 1:
 				return msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 2);
@@ -37,8 +37,8 @@ function admCategoryList($retMode = 0) {
 	}
 
 	// Determine user's permissions
-	$permModify		= checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'));
-	$permDetails	= checkPermission(array('plugin' => '#admin.categories', 'item' => 'details'));
+	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify');
+	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'details');
 
 	// Prepare list of rows
 	$tpl -> template('entries', tpl_actions.'categories');
@@ -196,7 +196,7 @@ function admCategoriesRPCmodify($params) {
 	global $userROW, $mysql, $catmap, $catz;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify')) {
 		// ACCESS DENIED
 		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
 	}

@@ -52,14 +52,14 @@ function listStatic() {
 	global $tpl, $mysql, $mod, $userROW, $lang, $config;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'view'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'view')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		return;
 	}
 
 	// Determine user's permissions
-	$permModify		= checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'));
-	$permDetails	= checkPermission(array('plugin' => '#admin.static', 'item' => 'details'));
+	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify');
+	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'details');
 
 
 	$per_page	= intval($_REQUEST['per_page']);
@@ -156,7 +156,7 @@ function massStaticModify($setValue, $langParam, $tag ='') {
 	global $mysql, $lang;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		return;
 	}
@@ -188,7 +188,7 @@ function massStaticDelete() {
 	global $mysql, $lang, $PFILTERS;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		return;
 	}
@@ -301,7 +301,7 @@ function addStatic(){
 	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		return;
 	}
@@ -406,12 +406,20 @@ function editStaticForm(){
 	global $lang, $parse, $mysql, $config, $tpl, $mod, $PFILTERS, $tvars, $userROW;
 	global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute;
 
+	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify');
+	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'details');
+
+	if (!$permModify && !$permDetails) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_static where id = ".db_squote($_REQUEST['id'])))) {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
-	$permModify		= checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'));
 
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
@@ -486,7 +494,7 @@ function editStatic(){
 	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.static', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		return;
 	}

@@ -5,11 +5,11 @@ function ChangeOption(selectedOption) {
 	document.getElementById('addbutton').style.display	= "none";
 
 	if (selectedOption == 'list') 	 {
-		document.getElementById('list').style.display		= ""; 
+		document.getElementById('list').style.display		= "";
 		document.getElementById('addbutton').style.display	= "none";
 	}
 	if (selectedOption == 'adduser') {
-		document.getElementById('adduser').style.display	= ""; 
+		document.getElementById('adduser').style.display	= "";
 		document.getElementById('addbutton').style.display	= "";
 	}
 }
@@ -18,7 +18,7 @@ var fInitStatus = false;
 
 function updateAction() {
 	mode = document.forms['form_users'].action.value;
-	
+
 	if (mode == 'massSetStatus') {
 		if (!fInitStatus) {
 			document.forms['form_users'].newstatus.value = '4';
@@ -32,27 +32,27 @@ function updateAction() {
 
 function validateAction() {
 	mode = document.forms['form_users'].action.value;
-	
+
 	if (mode == '') {
 		alert('Необходимо выбрать действие!');
 		return;
 	}
-	
+
 	if ((mode == 'massSetStatus')&&(document.forms['form_users'].newstatus.value < 1)) {
 		alert('{l_msge_setstatus}');
 		return;
 	}
-	
+
 	document.forms['form_users'].submit();
 }
 
 </script>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_users_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=users">{l_users_title}</a></td>
 </tr>
 </table>
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
+[perm.modify]<table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
 <td width="100%" class="contentNav" align="center" valign="top">
 <input type="button" onmousedown="javascript:ChangeOption('list')" value="{l_users}" class="navbutton" />
@@ -60,7 +60,7 @@ function validateAction() {
 </td>
 </tr>
 </table>
-<br />
+<br />[/perm.modify]
 <table id="list" border="0" width="100%" cellspacing="0" cellpadding="0" align="center" class="content">
 <tr>
 <td>
@@ -87,6 +87,7 @@ function validateAction() {
 <!-- Mass actions form: BEGIN -->
 <form method="GET" name="form_users" id="form_users" action="{php_self}">
 <input type="hidden" name="mod" value="users" />
+<input type="hidden" name="token" value="{token}"/>
 <input type="hidden" name="name" value="{name}" />
 <input type="hidden" name="how" value="{how_value}" />
 <input type="hidden" name="sort" value="{sort_value}" />
@@ -105,7 +106,7 @@ function validateAction() {
 [comments]<td width="10%">{l_listhead.comments}</td>[/comments]
 <td width="15%">{l_status}</td>
 <td width="5%">&nbsp;</td>
-<td width="5%"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" /></td>
+<td width="5%">[perm.modify]<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" />[/perm.modify]</td>
 </tr>
 {entries}
 <tr>
@@ -113,6 +114,7 @@ function validateAction() {
 </tr>
 <tr align="center">
 <td colspan="9" class="contentEdit" align="right" valign="top">
+[perm.modify]
 <div style="text-align: left;">
 {l_action}: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
  <option value="" style="background-color: #E0E0E0;">-- {l_action} --</option>
@@ -128,6 +130,7 @@ function validateAction() {
 <input type="button" class="button" value="{l_submit}" onclick="validateAction();" />
 <br/>
 </div>
+[/perm.modify]
 </td>
 </tr>
 <tr>
@@ -144,8 +147,9 @@ function validateAction() {
 </table>
 
 
-<form method="post" action="{php_self}?mod=users">
+[perm.modify]<form method="post" action="{php_self}?mod=users">
 <input type="hidden" name="action" value="add" />
+<input type="hidden" name="token" value="{token}"/>
 <table id="adduser" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
 <td width="50%" class="contentEntry1">{l_name}</td>
@@ -182,3 +186,4 @@ function validateAction() {
 </tr>
 </table>
 </form>
+[/perm.modify]

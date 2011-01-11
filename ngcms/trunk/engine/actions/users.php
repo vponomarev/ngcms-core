@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: users.php
 // Description: manage users
 // Author: Vitaly Ponomarev
@@ -18,9 +18,21 @@ $lang = LoadLang('users', 'admin');
 function userEditForm(){
 	global $mysql, $lang, $tpl, $mod, $PFILTERS;
 
-	$id = $_REQUEST['id'];
+	$id = intval($_REQUEST['id']);
+
+	// Determine user's permissions
+	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify');
+	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'details');
+
+	// Check for permissions
+	if (!$permModify && !$permDetails) {
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(0, 'SECURITY.PERM'));
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
 
 	if (!($row = $mysql->record("select * from ".uprefix."_users where id=".db_squote($id)))) {
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(0, 'NOT.FOUND'));
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
@@ -49,6 +61,7 @@ function userEditForm(){
 		'ip'			=>	$row['ip'],
 		'token'			=> genUToken('admin.users'),
 	);
+	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
 
 //	if (is_array($PFILTERS['p_uprofile']))
 //		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfile($row['id'], $row, $tvars); }
@@ -56,6 +69,7 @@ function userEditForm(){
 
 	$tpl -> template('edit', tpl_actions.$mod);
 	$tpl -> vars('edit', $tvars);
+	ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(1));
 	echo $tpl -> show('edit');
 }
 
@@ -65,17 +79,45 @@ function userEditForm(){
 function userEdit(){
 	global $mysql, $lang, $tpl, $mod;
 
-	$id = $_REQUEST['id'];
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(0, 'SECURITY.PERM'));
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.users'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(0, 'SECURITY.TOKEN'));
+		return;
+	}
+
+	$id = intval($_REQUEST['id']);
 
 	// Check if user exists
 	if (!($row = $mysql->record("select * from ".uprefix."_users where id=".db_squote($id)))) {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(0, 'NOT.FOUND'));
 		return;
 	}
 
-	$pass = ($_REQUEST['editpassword']) ? EncodePassword($_REQUEST['editpassword']) : '';
+	$pass = ($_REQUEST['password']) ? EncodePassword($_REQUEST['password']) : '';
 
-	$mysql->query("update ".uprefix."_users set `status`=".db_squote($_REQUEST['editlevel']).", `site`=".db_squote($_REQUEST['editsite']).", `icq`=".db_squote($_REQUEST['editicq']).", `where_from`=".db_squote($_REQUEST['editfrom']).", `info`=".db_squote($_REQUEST['editabout']).", `mail`=".db_squote($_REQUEST['editmail']).($pass?", `pass`=".db_squote($pass):'')." where id=".db_squote($row['id']));
+	// Prepare a list of changed params
+	$cList = array();
+	foreach (array('level', 'site', 'icq', 'where_from', 'info', 'mail') as $k) {
+		if ($row[$k] != $_REQUEST[$k]) {
+			$cList[$k] = array($row[$k], $_REQUEST[$k]);
+		}
+	}
+	if ($pass) {
+		$cList['pass'] = array('****', '****');
+	}
+
+	ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm', 'list' => $cList), null, array(1));
+
+	$mysql->query("update ".uprefix."_users set `status`=".db_squote($_REQUEST['status']).", `site`=".db_squote($_REQUEST['site']).", `icq`=".db_squote($_REQUEST['icq']).", `where_from`=".db_squote($_REQUEST['where_from']).", `info`=".db_squote($_REQUEST['info']).", `mail`=".db_squote($_REQUEST['mail']).($pass?", `pass`=".db_squote($pass):'')." where id=".db_squote($row['id']));
 	msg(array("text" => $lang['msgo_edituser']));
 }
 
@@ -84,6 +126,18 @@ function userEdit(){
 // Add new user
 function userAdd(){
 	global $mysql, $lang, $tpl, $mod;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.users'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	$regusername	= trim($_REQUEST['regusername']);
 	$regemail		= trim($_REQUEST['regemail']);
@@ -112,6 +166,18 @@ function userAdd(){
 function userMassActivate(){
 	global $mysql, $lang;
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.users'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
+
 	$selected_users = $_REQUEST['selected_users'];
 	if (!$selected_users) {
 		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
@@ -127,6 +193,18 @@ function userMassActivate(){
 // Bulk action: LOCK selected users
 function userMassLock(){
 	global $mysql, $lang;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.users'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	$selected_users = $_REQUEST['selected_users'];
 	if (!$selected_users) {
@@ -146,6 +224,18 @@ function userMassLock(){
 // Bulk action: set status to selected users
 function userMassSetStatus(){
 	global $mysql, $lang, $userROW;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.users'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	$selected_users = $_REQUEST['selected_users'];
 	if (!$selected_users) {
@@ -174,6 +264,18 @@ function userMassSetStatus(){
 // Bulk action: delete selected users
 function userMassDelete(){
 	global $mysql, $lang, $userROW, $config;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.users'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	$selected_users = $_REQUEST['selected_users'];
 	if (!$selected_users || !is_array($selected_users)) {
@@ -209,6 +311,18 @@ function userMassDelete(){
 function userMassDeleteInactive(){
 	global $mysql, $lang, $userROW;
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.users'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
+
 	$today = time();
 
 	$mysql->query("DELETE FROM ".uprefix."_users WHERE ((last IS NULL) OR (last='')) AND ((reg + 86400) < $today) AND (news < 1)");
@@ -221,6 +335,17 @@ function userMassDeleteInactive(){
 function userList(){
 	global $mysql, $lang, $tpl, $mod, $userROW;
 	global $news_per_page, $start_from;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'view')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return;
+	}
+
+	// Determine user's permissions
+	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify');
+	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'details');
+
 
 	$available_orders = array('name' => 'name', 'reg' => 'regdate', 'last' => 'last_login', 'status' => 'status');
 	$rsort = $_REQUEST['sort']?$_REQUEST['sort']:'reg';
@@ -262,6 +387,9 @@ function userList(){
 
 		$tvars['regx']['#\[mass\](.+?)\[\/mass\]#is'] = ($row['status'] == 1)?'':'$1';
 		$tvars['regx']['#\[link_news\](.+?)\[\/link_news\]#is'] = ($row['news'] > 0)?'$1':'';
+
+		$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = ($permModify)?'$1':'';
+		$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is'] = ($permModify|$permDetails)?'$1':'';
 
 		// Disable flag for comments if plugin 'comments' is not installed
 		$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
@@ -320,7 +448,11 @@ function userList(){
 		'sort_value'	=> htmlspecialchars($_REQUEST['sort']),
 		'page_value'	=> htmlspecialchars($_REQUEST['page']),
 		'per_page_value'	=> htmlspecialchars($_REQUEST['per_page']),
+		'token'			=> genUToken('admin.users'),
 	);
+
+	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = ($permModify)?'$1':'';
+	$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is'] = ($permModify|$permDetails)?'$1':'';
 
 	// Disable flag for comments if plugin 'comments' is not installed
 	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';

@@ -41,7 +41,7 @@ function admCategoryAddForm(){
 	global $mysql, $tpl, $mod, $PHP_SELF, $config, $lang, $AFILTERS;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
@@ -99,7 +99,7 @@ function admCategoryAdd() {
 	$category		= intval($_REQUEST['category']);
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
@@ -223,11 +223,13 @@ function admCategoryEditForm(){
 	global $mysql, $lang, $mod, $tpl, $config, $AFILTERS;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'details')) && !checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify');
+	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'details');
+
+	if (!$permModify && !$permDetails) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
-	$permModify		= checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'));
 
 	$catid = intval($_REQUEST['catid']);
 	if (!is_array($row=$mysql->record("select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `".prefix."_category` as nc left join `".prefix."_images` ni on nc.image_id = ni.id where nc.id = ".db_squote($catid)." order by nc.posorder asc", 1))) {
@@ -318,7 +320,7 @@ function admCategoryEdit(){
 	$catid			= intval($_REQUEST['catid']);
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin.categories', 'item' => 'modify'))) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
