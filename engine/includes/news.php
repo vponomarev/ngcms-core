@@ -532,7 +532,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 // Default "show news" function
 function showNews($handlerName, $params) {
- global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW;
+ global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse;
  // preload plugins
  load_extras('news');
 
@@ -644,7 +644,57 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => array('category' => $catmap[$category]), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.category'), 'xparams' => array('category' => $catmap[$category]), 'paginator' => array('page', 1, false));
 
-			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
+			// Generate news content
+			$newsContent = news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
+
+			// Check if template 'news.table.tpl' exists [first check custom category template (if set), after that - common template for the whole site
+			$ntTemplatePath = '';
+			$ntTemplateFound = false;
+			if ($currentCategory['tpl'] && file_exists(tpl_dir.$config['theme'].'/'.$currentCategory['tpl'].'/news.table.tpl')) {
+				$ntTemplateFound	= true;
+				$ntTemplatePath		= tpl_dir.$config['theme'].'/'.$currentCategory['tpl'];
+			} else if (file_exists(tpl_dir.$config['theme'].'/news.table.tpl')) {
+				$ntTemplateFound	= true;
+				$ntTemplatePath		= tpl_dir.$config['theme'];
+			}
+
+			if ($ntTemplateFound) {
+				$tpl->template('news.table', $ntTemplatePath);
+				$tnvars = array('vars' => array(
+					'category.id'	=> $currentCategory['id'],
+					'category.alt'	=> secure_html($currentCategory['alt']),
+					'category.name'	=> secure_html($currentCategory['name']),
+					'category.info'	=> ($config['use_bbcodes'])?$parse -> bbcodes($currentCategory['info']):$currentCategory['info'],
+					'entries'		=> $newsContent,
+				));
+
+				if ($currentCategory['image_id'] && $currentCategory['icon_id']) {
+					$tnvars['regx']['#\[icon\](.*?)\[\/icon\]#is'] = '$1';
+					$tnvars['vars']['icon.url']				= $config['attach_url'].'/'.$currentCategory['icon_folder'].'/'.$currentCategory['icon_name'];;
+					$tnvars['vars']['icon.width']			= $row['icon_width'];
+					$tnvars['vars']['icon.height']			= $row['icon_height'];
+					if ($currentCategory['icon_preview']) {
+						$tnvars['regx']['#\[icon\.preview\](.*?)\[\/icon.preview\]#is'] = '$1';
+						$tnvars['regx']['#\[icon\.nopreview\](.*?)\[\/icon.nopreview\]#is'] = '';
+						$tnvars['vars']['icon.preview.url']		= $config['attach_url'].'/'.$currentCategory['icon_folder'].'/thumb/'.$currentCategory['icon_name'];;
+						$tnvars['vars']['icon.preview.width']	= $currentCategory['icon_pwidth'];
+						$tnvars['vars']['icon.preview.height']	= $currentCategory['icon_pheight'];
+					} else {
+						$tnvars['regx']['#\[icon\.preview\](.*?)\[\/icon.preview\]#is'] = '';
+						$tnvars['regx']['#\[icon\.nopreview\](.*?)\[\/icon.nopreview\]#is'] = '$1';
+					}
+				} else {
+					$tnvars['regx']['#\[icon\](.*?)\[\/icon\]#is'] = '';
+					$tnvars['regx']['#\[icon\.preview\](.*?)\[\/icon.preview\]#is'] = '';
+					$tnvars['regx']['#\[icon\.nopreview\](.*?)\[\/icon.nopreview\]#is'] = '';
+				}
+
+				$tpl->vars('news.table', $tnvars);
+				$template['vars']['mainblock'] .= $tpl->show('news.table');
+			} else {
+				$template['vars']['mainblock'] .= $newsContent;
+			}
+
 			break;
 
 		case 'by.day':
