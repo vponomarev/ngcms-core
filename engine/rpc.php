@@ -156,8 +156,15 @@ function rpcAdminUsersSearch($params){
 	}
 
 	$searchName = iconv('UTF-8', 'Windows-1251', $params);
-	// Return a list of users
-	$SQL = 'select name, news from '.uprefix.'_users where name like '.db_squote('%'.$searchName.'%').' and news > 0 order by news desc limit 20';
+
+	// Check search mode
+	// ! - show TOP users by posts
+	if ($searchName == '!') {
+		$SQL = 'select name, news from '.uprefix.'_users where news > 0 order by news desc limit 20';
+	} else {
+		// Return a list of users
+		$SQL = 'select name, news from '.uprefix.'_users where name like '.db_squote('%'.$searchName.'%').' and news > 0 order by news desc limit 20';
+	}
 
 	// Scan incoming params
 	$output = array();
