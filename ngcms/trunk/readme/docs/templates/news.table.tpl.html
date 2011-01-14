@@ -1,0 +1,56 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3>Шаблон news.table.tpl</h3>
+<br/>
+Шаблон отвечает за генерацию страницы конкретной категории.<br/>
+<font color="red">Шаблон не является обязательным - при его отсутствии на его место выводится содержимое переменной <b>{entries}</b></font><br/>
+<br/>
+<br/>
+
+<h3>Доступные блоки/переменные</h3>
+Блоки:
+<ul>
+ <li><b>[icon]</b> ... <b>[/icon]</b> - содержимое блока выводится в случае, если у категории есть <u>загруженное</u> изображение-иконка</li>
+ <li><b>[icon.preview]</b> ... <b>[/icon.preview]</b> - содержимое блока выводится в случае, если у загруженного изображения-иконки есть уменьшенная копия</li>
+ <li><b>[icon.nopreview]</b> ... <b>[/icon.nopreview]</b> - содержимое блока выводится в случае, если у загруженного изображения-иконки уменьшенной копии нет</li>
+</ul>
+
+Переменные:
+<ul>
+ <li><b>{category.id}</b> - ID категории</li>
+ <li><b>{category.alt}</b> - альтернативное имя категории</li>
+ <li><b>{category.name}</b> - наименование категории</li>
+ <li><b>{category.info}</b> - информационный блок категории (с поддержкой BB кодов)</li>
+ <li><b>{icon.url}</b> - URL изображения-иконки</li>
+ <li><b>{icon.width}</b> - Ширина (в пикселях) изображения-иконки</li>
+ <li><b>{icon.height}</b> - Высота (в пикселях) изображения-иконки</li>
+ <li><b>{icon.preview.url}</b> - URL <i>уменьшенной копии</i> изображения-иконки</li>
+ <li><b>{icon.preview.width}</b> - Ширина (в пикселях) <i>уменьшенной копии</i> изображения-иконки</li>
+ <li><b>{icon.preview.height}</b> - Высота (в пикселях) <i>уменьшенной копии</i> изображения-иконки</li>
+ <li><b>{entries}</b> - отображаемый список новостей в категории</li>
+</ul>
+<br/>
+
+
+<br/>
+<h3>Пример заполнения шаблона</h3>
+<br/>
+В примере показан минимально набор для полнофункциональной работы (с учётом использования плагина <b>comments</b>):
+<div class="pre">
+<pre>
+&lt;h2>{category.name}&lt;/h2>
+[icon]
+[icon.preview]&lt;a href="{icon.url}" target="_blank">[/icon.preview]
+&lt;img src="[icon.preview]{icon.preview.url}[/icon.preview][icon.nopreview]{icon.url}[/icon.nopreview]" align="left"/>
+[icon.preview]&lt;/a>[/icon.preview]
+{category.info}
+
+{entries}
+</pre>
+</div>
+
+</body>
+</html>
