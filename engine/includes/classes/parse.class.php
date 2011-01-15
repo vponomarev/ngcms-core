@@ -173,6 +173,8 @@ class parse {
 		// vspace
 		// align: 'left', 'right', 'center'
 		// class: anything
+		// alt: anything
+		// title: anything
 
 		if (preg_match_all("#\[img(\=| *)(.*?)\](.*?)\[\/img\]#is", $content, $pcatch, PREG_SET_ORDER)) {
 			$rsrc = array();
@@ -250,6 +252,7 @@ class parse {
 							$outkeys [] = $kn.'="'.$v.'"';
 							break;
 						case 'alt':
+						case 'title':
 							$v = str_replace(array("\"", '[', ']', ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'),array("'",'%5b', '%5d', ''),$kv);
 							$outkeys [] = $kn.'="'.$v.'"';
 							break;
