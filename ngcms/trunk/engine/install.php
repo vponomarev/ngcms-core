@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
 // Name: install.php
 // Description: System installer
 // Author: Vitaly Ponomarev
@@ -649,17 +649,20 @@ function doInstall() {
 		// Создаём таблицы в mySQL
 		// 1. Проверяем наличие пересекающихся таблиц
 		// 1.1. Загружаем список таблиц из БД
-		$list = mysql_list_tables($_POST['reg_dbname']);
 
-		if (!$list) {
+		$list = array();
+
+		if (!($query = @mysql_query("show tables")) {
 			array_push($ERROR, 'Внутренняя ошибка SQL при получении списка таблиц БД. Обратитесь к автору проект за разъяснениями.');
 			$error = 1;
 			break;
 		}
 
-		while ($row = mysql_fetch_row($list)) {
-			$SQL_table[$row[0]] = '1';
+		$SQL_table = array();
+		while($item = mysql_fetch_array($query, MYSQL_NUM)) {
+			$SQL_table[$item[0]] = 1;
 		}
+
 
 		// 1.2. Парсим список таблиц
 		$dbsql = explode(';',file_get_contents('trash/tables.sql'));
