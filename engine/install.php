@@ -652,7 +652,7 @@ function doInstall() {
 
 		$list = array();
 
-		if (!($query = @mysql_query("show tables")) {
+		if (!($query = @mysql_query("show tables"))) {
 			array_push($ERROR, '¬нутренн€€ ошибка SQL при получении списка таблиц Ѕƒ. ќбратитесь к автору проект за разъ€снени€ми.');
 			$error = 1;
 			break;
