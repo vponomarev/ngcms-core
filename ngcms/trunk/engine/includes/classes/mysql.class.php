@@ -125,18 +125,23 @@ class mysql {
 	}
 
 	// check if table exists
-	function table_exists($table) {
-
-		if (is_array($this->table_list)) {
+	function table_exists($table, $forceReload = 0) {
+		// Check if data are already saved
+		if (is_array($this->table_list)  && !$forceReload) {
 			return $this->table_list[$table]?1:0;
 		}
-		$list = mysql_list_tables($this->conn_db, $this->connect);
-		if (!$list) { return 0; }
 
 		$this->table_list=array();
-		while ($row = mysql_fetch_row($list)) {
-			$this->table_list[$row[0]]=1;
+
+		if (!($query = @mysql_query("show tables", $this->connect))) {
+			$this->errorReport('select', $sql);
+			return false;
 		}
+
+		while($item = mysql_fetch_array($query, MYSQL_NUM)) {
+			$this->table_list[$item[0]] = 1;
+		}
+
 		return $this->table_list[$table]?1:0;
 	}
 
