@@ -64,7 +64,7 @@ $skin_footer = <<<HTML
 <div class="clear_ftr"></div>
 <div id="footpanel">
     <ul id="mainpanel">
-        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2010 <strong>Next Generation</strong> CMS <small>Сайт разработчика</small></a></li>
+        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2011 <strong>Next Generation</strong> CMS <small>Сайт разработчика</small></a></li>
         <li><a href="$PHP_SELF?mod=addnews" class="add_news">Добавить новость<small>Добавить новость</small></a></li>
         <li><a href="$PHP_SELF?mod=editnews" class="add_edit">Редактировать<small>Редактировать</small></a></li>
         <li><a href="$PHP_SELF?mod=images" class="add_images">Изображения<small>Изображения</small></a></li>
