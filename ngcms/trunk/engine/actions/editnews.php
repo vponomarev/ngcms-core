@@ -64,10 +64,10 @@ function editNews() {
 			// Disable `new line` + protect from XSS
 			$ed = '<!--more="'.str_replace(array("\r", "\n", '"'), '', $_REQUEST['content_delimiter']).'"-->';
 		}
-		$content = $_REQUEST['content_short'].(($_REQUEST['content_full'] != '')?$ed.$_REQUEST['content_full']:'');
+		$content = $_REQUEST['ng_news_content_short'].(($_REQUEST['ng_news_content_full'] != '')?$ed.$_REQUEST['ng_news_content_full']:'');
 
 	} else {
-		$content = $_REQUEST['content'];
+		$content = $_REQUEST['ng_news_content'];
 	}
 
 	// Rewrite `\r\n` to `\n`
@@ -257,9 +257,18 @@ function editNewsForm() {
 	$id			= $_REQUEST['id'];
 
 	// Try to find news that we're trying to edit
-	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):'')))) {
+	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):''),1))) {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
+	}
+
+	// Join attached images / files to record
+	if ($row['num_files']) {
+		$row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
+	}
+
+	if ($row['num_images']) {
+		$row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_images where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
 	}
 
 	$cats = explode(",", $row['catid']);
@@ -370,16 +379,20 @@ function editNewsForm() {
 
 	// Check for attached files
 	$attaches_entries = '';
+	$attachNumber = 0;
 	if ($row['num_files']) {
 		// Yeah! We have some attached files
 		$tpl->template('attach.file', tpl_actions.$mod);
 
 		$num = 0;
-		foreach ($mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')') as $arow) {
-			$num++;
+		foreach ($row['#files'] as $arow) {
+			// Skip files, that are attached by plugins
+			if ($arow['plugin'] != '') continue;
+
+			$attachNumber++;
 			$avars = array('vars' => array(
 				'id'	=> $arow['id'],
-				'num'	=> $num,
+				'num'	=> $attachNumber,
 				'date'	=> $arow['date'],
 				'orig_name'	=> $arow['orig_name'],
 			));
@@ -398,7 +411,7 @@ function editNewsForm() {
 	}
 
 	$tvars['vars']['attach_entries'] = $attach_entries;
-	$tvars['vars']['attach_count'] = '('.($num?$num:$lang['noa']).')';
+	$tvars['vars']['attach_count'] = '('.($attachNumber?$attachNumber:$lang['noa']).')';
 
 	exec_acts('editnews_entry', $row['xfields'], '');
 	exec_acts('editnews_form');

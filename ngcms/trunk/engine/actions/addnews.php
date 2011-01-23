@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: addnews.php
 // Description: Adding news (ADMIN or ON-SITE)
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -33,10 +33,10 @@ function news_add(){
 			// Disable `new line` + protect from XSS
 			$ed = '<!--more="'.str_replace(array("\r", "\n", '"'), '', $_REQUEST['content_delimiter']).'"-->';
 		}
-		$content = $_REQUEST['content_short'].(($_REQUEST['content_full'] != '')?$ed.$_REQUEST['content_full']:'');
+		$content = $_REQUEST['ng_news_content_short'].(($_REQUEST['ng_news_content_full'] != '')?$ed.$_REQUEST['ng_news_content_full']:'');
 
 	} else {
-		$content = $_REQUEST['content'];
+		$content = $_REQUEST['ng_news_content'];
 	}
 
 	// Rewrite `\r\n` to `\n`
