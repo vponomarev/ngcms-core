@@ -86,7 +86,7 @@ function changeActive(name) {
     <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" id="ng_news_content_full" rows="10" tabindex="2">{content.full}</textarea></div>
 [/edit.split]
 [edit.nosplit]
-    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" id="content" rows="10" tabindex="2">{content}</textarea></div>
+    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" id="ng_news_content" rows="10" tabindex="2">{content}</textarea></div>
 [/edit.nosplit]
 	</td>
   </tr>
@@ -187,7 +187,7 @@ function changeActive(name) {
   </tr>
   <tr><td></td><td>
   <div class="list">
-   <label><input type="checkbox" name="approve" value="1" {ifapp} class="check" id="approve" /> {l_approve}</label><br />
+[options]   <label><input type="checkbox" name="approve" value="1" {ifapp} class="check" id="approve" /> {l_approve}</label><br />
    <label><input type="checkbox" name="mainpage" value="1" {ifmp} class="check" id="mainpage" /> {l_mainpage}</label><br />
    <label><input type="checkbox" name="pinned" value="1" {ifpin} class="check" id="pinned" /> {l_add_pinned}</label><br />
    <label><input type="checkbox" name="favorite" value="1" {iffav} class="check" id="favorite" /> {l_add_favorite}</label><br />
@@ -196,6 +196,7 @@ function changeActive(name) {
    <label><input type="checkbox" name="flag_RAW" value="1" {ifraw} class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label> {flags_lost}
    [comments]<hr/>{l_comments:mode.header}: <select name="allow_com"><option value="0"{acom:0}>{l_comments:mode.disallow}<option value="1"{acom:1}>{l_comments:mode.allow}<option value="2"{acom:2}>{l_comments:mode.default}</select>[/comments]<br />
   </div>
+[/options]
   </td></tr>
 
  </table>
