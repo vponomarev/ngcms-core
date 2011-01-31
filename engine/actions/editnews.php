@@ -85,8 +85,29 @@ function editNews() {
 		return;
 	}
 
-	// Check if alt name was changed
+	// Manage alt name
 	$alt_name	= $_REQUEST['alt_name'];
+	// Check if alt name should be generated again
+	if (trim($alt_name) == '') {
+		$alt_name = strtolower($parse->translit(trim($title), 1));
+		// Make a conversion:
+		// * '.'  to '_'
+		// * '__' to '_' (several to one)
+		// * Delete leading/finishing '_'
+		$alt_name = preg_replace(array('/\./', '/(_{2,20})/', '/^(_+)/', '/(_+)$/'), array('_', '_'), $alt_name);
+
+		// Make alt_name equal to '_' if it appear to be blank after conversion
+		if ($alt_name == '') $alt_name = '_';
+
+		$i = '';
+		while ( is_array($mysql->record("select id from ".prefix."_news where alt_name = ".db_squote($alt_name.$i)." limit 1")) ) {
+			$i++;
+		}
+		$alt_name = $alt_name.$i;
+	}
+
+
+	// Check if alt name was changed
 	if ($alt_name != $row['alt_name']) {
 		// Check for allowed chars in alt name
 		if (!$parse->nameCheck($alt_name)) {
@@ -157,6 +178,10 @@ function editNews() {
 		if (getPluginStatusInstalled('comments'))
 			$SQL['allow_com'] = $row['allow_com'];
 	}
+
+	// Load list of attached images/files
+	$row['#files']	= $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
+	$row['#images']	= $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_images where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
 
 	exec_acts('editnews', $id);
 
@@ -263,13 +288,13 @@ function editNewsForm() {
 	}
 
 	// Join attached images / files to record
-	if ($row['num_files']) {
+	//if ($row['num_files']) {
 		$row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
-	}
+	//}
 
-	if ($row['num_images']) {
+	//if ($row['num_images']) {
 		$row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_images where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
-	}
+	//}
 
 	$cats = explode(",", $row['catid']);
 	$content = $row['content'];
