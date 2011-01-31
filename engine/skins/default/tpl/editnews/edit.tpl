@@ -15,7 +15,7 @@ function ChangeOption(optn) {
 }
 function preview(){
  var form = document.getElementById("form");
- if (form.content[edit.split]_short[/edit.split].value == '' || form.title.value == '') {
+ if (form.ng_news_content[edit.split]_short[/edit.split].value == '' || form.title.value == '') {
   alert('{l_msge_preview}');
   return false;
  }
