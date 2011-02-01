@@ -118,7 +118,7 @@ $tvars['vars'] = array(
 	'users'				=>	$mysql->result("SELECT count(id) FROM ".uprefix."_users"),
 	'users_unact'		=>	$users_unact,
 	'images'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_images"),
-	'files'				=>	$mysql->result("SELECT id FROM ".prefix."_files"),
+	'files'				=>	$mysql->result("SELECT count(id) FROM ".prefix."_files"),
 	'categories'		=>	$mysql->result("SELECT count(id) FROM ".prefix."_category"),
 	'admin_note'		=>	($note) ? $note : $lang['no_notes']
 );
