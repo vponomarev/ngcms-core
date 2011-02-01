@@ -768,6 +768,9 @@ function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '', $b
 		if (!$localsource && is_readable(tpl_site.'plugins/'.$plugin.$tsb.'/'.$fnc)) {
 			$tpath[$fn] = tpl_site.'plugins/'.$plugin.$tsb.'/';
 			$tpath['url:'.$fn] = tpl_url.'/plugins/'.$plugin.$tsb;
+		} else	if (!$localsource && is_readable(tpl_site.'plugins/'.$plugin.($block?('/'.$block):'').'/'.$fnc)) {
+			$tpath[$fn] = tpl_site.'plugins/'.$plugin.($block?('/'.$block):'').'/';
+			$tpath['url:'.$fn] = tpl_url.'/plugins/'.$plugin.($block?('/'.$block):'');
 		} else if (is_readable(extras_dir.'/'.$plugin.'/tpl'.$tsb.'/'.$fnc)) {
 			$tpath[$fn] = extras_dir.'/'.$plugin.'/tpl'.$tsb.'/';
 			$tpath['url:'.$fn] = admin_url.'/plugins/'.$plugin.'/tpl'.$tsb;
