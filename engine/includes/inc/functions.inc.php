@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: functions.php
 // Description: Common system functions
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -980,7 +980,22 @@ function GetCategories($catid, $plain = false) {
 //
 // New category menu generator
 function generateCategoryMenu(){
-	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS;
+	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS, $TemplateCache;
+
+	// Load template variables
+	templateLoadVariables(true);
+	$markers = $TemplateCache['site']['#variables']['category_tree'];
+
+	if (!isset($markers['class.active']))
+		$markers['class.active'] = 'active_cat';
+
+	if (!isset($markers['class.inactive']))
+		$markers['class.inactive'] = '';
+
+	if (!isset($markers['mark.default']))
+		$markers['mark.default'] = '&#8212;';
+
+
 
 	$result = '';
 	$tpl -> template('categories', tpl_site);
@@ -988,9 +1003,9 @@ function generateCategoryMenu(){
 		if (!substr($v['flags'],0,1)) continue;
 
 		$tvars['vars'] = array(
-			'if_active'	=>	(isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id']))?'active_cat':'',
+			'if_active'	=>	(isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id']))?$markers['class.active']:$markers['class.inactive'],
 			'link'		=>	($v['alt_url'] == '')?generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])):$v['alt_url'],
-			'mark'		=>	str_repeat('&#8212;', $v['poslevel']),
+			'mark'		=>	isset($markers['mark.level.'.$v['poslevel']])?$markers['mark.level.'.$v['poslevel']]:str_repeat($markers['mark.default'], $v['poslevel']),
 			'level'		=>	$v['poslevel'],
 			'cat'		=>	$v['name'],
 			'counter'	=>	($config['category_counters'] && $v['posts'])?('['.$v['posts'].']'):'',
