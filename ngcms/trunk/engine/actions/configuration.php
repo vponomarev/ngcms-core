@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: configuration.php
 // Description: Configuration managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -23,13 +23,14 @@ if ($subaction == "save" && !is_null($save_con)) {
 
 	$fcData = "<?php\n".'$config = '.var_export($save_con, true)."\n;?>";
 
-	if (($fcHandler = fopen(confroot.'config.php', 'w')) !== NULL) {
+	$fcHandler = @fopen(confroot.'config.php', 'w');
+	if ($fcHandler) {
 		fwrite($fcHandler, $fcData);
 		fclose($fcHandler);
 
 		msg(array("text" => $lang['msgo_saved']));
 	} else {
-		msg(array("text" => $lang['msge_saved']));
+		msg(array("type" => 'error', "text" => $lang['msge_save_error'], "info" => $lang['msge_save_error#desc']));
 	}
 }
 

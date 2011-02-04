@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: extrainst.inc.php
 // Description: Functions required for plugin managment scripts
 // Author: Vitaly Ponomarev
@@ -133,17 +133,17 @@ function commit_plugin_config_changes($module, $params) {
 	        	if (is_array($param['entries'])) {
 	        		foreach ($param['entries'] as $gparam) {
 					if ($gparam['name'] && (!$gparam['nosave'])) {
-						extra_set_param($module, $gparam['name'], $_POST[$gparam['name']].'');
+						pluginSetVariable($module, $gparam['name'], $_POST[$gparam['name']].'');
 					}
 	        		}
 	        	}
 	        } else if ($param['name'] && (!$param['nosave'])) {
-			extra_set_param($module, $param['name'], $_POST[$param['name']].'');
+			pluginSetVariable($module, $param['name'], $_POST[$param['name']].'');
 		}
 	}
 
 	// Save config
-	extra_commit_changes();
+	pluginsSaveConfig();
 }
 
 // Load params sent by POST request in plugin configuration
