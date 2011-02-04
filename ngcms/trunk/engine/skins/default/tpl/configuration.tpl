@@ -20,6 +20,7 @@ function ChangeOption(selectedOption) {
 </script>
 
 <form method="post" action="{php_self}?mod=configuration&amp;subaction=save">
+<input type="hidden" name="token" value="{token}"/>
 <input type=hidden name="selectedOption" id="selectedOption" />
 
 <!-- Navigation bar -->
