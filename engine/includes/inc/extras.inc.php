@@ -418,15 +418,23 @@ function extra_set_param($module, $var, $value) { return pluginSetVariable($modu
 //
 // Save configuration parameters of plugins (should be called after pluginSetVariable)
 //
-function pluginsSaveConfig(){
-	global $PLUGINS;
+function pluginsSaveConfig($suppressNotify = false){
+	global $PLUGINS, $lang;
 
-	if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig())
+	if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig()) {
+		if (!$suppressNotify) {
+			msg(array("type" => "error", "text" => str_replace('{name}', conf_pconfig, $lang['error.config.read']), "info" => $lang['error.config.read#desc']));
+		}
 		return false;
+	}
 
 	//
-	if (!($fconfig = @fopen(conf_pconfig, 'w')))
+	if (!($fconfig = @fopen(conf_pconfig, 'w'))) {
+		if (!$suppressNotify) {
+			msg(array("type" => "error", "text" => str_replace('{name}', conf_pconfig, $lang['error.config.write']), "info" => $lang['error.config.write#desc']));
+		}
 		return false;
+	}
 
 	fwrite($fconfig, serialize($PLUGINS['config']));
 	fclose($fconfig);
