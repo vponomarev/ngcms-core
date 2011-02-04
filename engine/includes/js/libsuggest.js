@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 05 ( 2010-11-20)                                                              //
+// Build: 06 ( 2011-02-04)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -355,7 +355,7 @@ ngSuggest.prototype.callAJAX = function() {
 			pointer.suggestShow(true);
 		}
 		} else {
-		alert('TX.fail: HTTP code '+linkTX.responseStatus[0]);
+		alert('TX.fail: HTTP code '+linkTX.responseStatus[0]+' for URL "'+linkTX.requestFile+'"');
 		}
 	}
 	this.loaderShow(true);
@@ -370,10 +370,10 @@ ngSuggest.prototype.callAJAX = function() {
 ngSuggest.prototype.DOMelementPosX = function(obj) {
     var curleft = 0;
     if (obj.offsetParent) {
-        while (1) { 
+        while (1) {
 	    var clo = curleft;
             curleft+=obj.offsetLeft;
-	    //alert('CL: '+clo+' + '+obj.offsetLeft+'['+obj.offsetParent+'] = '+(clo+obj.offsetLeft)+' ('+curleft+')'); 
+	    //alert('CL: '+clo+' + '+obj.offsetLeft+'['+obj.offsetParent+'] = '+(clo+obj.offsetLeft)+' ('+curleft+')');
             if (!obj.offsetParent) {
                 break;
             }
