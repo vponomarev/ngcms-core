@@ -31,11 +31,11 @@ function changeActive(name) {
  if (name == 'full') {
 	document.getElementById('container.content.full').className  = 'contentActive';
 	document.getElementById('container.content.short').className = 'contentInactive';
-	currentInputAreaID = 'content.full';
+	currentInputAreaID = 'ng_news_content_full';
  } else {
 	document.getElementById('container.content.short').className = 'contentActive';
 	document.getElementById('container.content.full').className  = 'contentInactive';
-	currentInputAreaID = 'content.short';
+	currentInputAreaID = 'ng_news_content_short';
  }
 }
 </script>
