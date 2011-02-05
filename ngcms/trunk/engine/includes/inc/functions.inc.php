@@ -744,7 +744,7 @@ function MakeDropDown($options, $name, $selected = "FALSE") {
 }
 
 
-function LoadLang($what, $where = '') {
+function LoadLang($what, $where = '', $area = '') {
 	global $config, $lang;
 
 	$where = ($where) ? '/'.$where : '';
@@ -753,7 +753,13 @@ function LoadLang($what, $where = '') {
 		$toinc = root.'lang/english/'.$where.'/'.$what.'.ini';
 	}
 	if (file_exists($toinc)) {
-		$lang = (!is_array($lang)) ? parse_ini_file($toinc, true) : array_merge($lang, parse_ini_file($toinc, true));
+		$content = parse_ini_file($toinc, true);
+		if (!is_array($lang)) { $lang = array(); }
+		if ($area) {
+			$lang[$area] = $content;
+		} else {
+			$lang = array_merge($lang, $content);
+		}
 	}
 	return $lang;
 }
@@ -1434,6 +1440,18 @@ if (!function_exists('json_encode'))
     }
   }
 }
+
+//
+// Add json_decode() support for PHP < 5.2.0
+//
+if (!function_exists('json_decode')) {
+	function json_decode($json, $assoc = false) {
+		include_once root.'includes/classes/json.php';
+		$jclass = new Services_JSON($assoc?SERVICES_JSON_LOOSE_TYPE:0);
+		return $jclass->decode($json);
+	}
+}
+
 
 // Parse params
 function parseParams($paramLine){
