@@ -31,6 +31,7 @@ CREATE TABLE `XPREFIX_category` (
   `keywords` text,
   `info` text,
   `icon` varchar(255) NOT NULL,
+  `image_id` int default '0',
   `alt_url` text,
   `orderby` varchar(30) default 'id desc',
   `posts` int default 0,
@@ -80,8 +81,11 @@ CREATE TABLE `XPREFIX_files` (
   `category` int(10) default '0',
   `linked_ds` int(10) default 0,
   `linked_id` int(10) default 0,
+  `plugin` char(30) default '',
+  `pidentity` char(30) default '',
   `storage` int(1) default 0,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `link` (`linked_ds`, `linked_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
@@ -120,8 +124,11 @@ CREATE TABLE `XPREFIX_images` (
   `category` int(10) default '0',
   `linked_ds` int(10) default 0,
   `linked_id` int(10) default 0,
+  `plugin` char(30) default '',
+  `pidentity` char(30) default '',
   `storage` int(1) default 0,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  KEY `link` (`linked_ds`, `linked_id`)
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
