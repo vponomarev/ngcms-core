@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: ipban.php
 // Description: IP BAN configuration procedures
 // Author: Vitaly Ponomarev
@@ -10,14 +10,27 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
-$lang = LoadLang('ipban', 'admin');
-
+LoadLang('ipban', 'admin', 'ipban');
 
 //
 // Add record into IPBAN list
 //
 function ipban_add() {
 	global $mysql, $lang;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'ipban'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
+		return false;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.ipban'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'ipban'), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));
+		return false;
+	}
 
 	// Check params
 	$ip = trim($_REQUEST['ip']);
@@ -58,13 +71,13 @@ function ipban_add() {
 			// OK. Check if record already exists
 			if (is_array($mysql->record("select addr from ".prefix."_ipban where addr_start=".db_squote(sprintf("%u", $addr_start))." and addr_stop=".db_squote(sprintf("%u", $addr_stop))))) {
 				// Duplicated
-				msg(array("type" => "error", "text" => $lang['msge.exist']));
+				msg(array("type" => "error", "text" => $lang['ipban']['msge.exist']));
 				return;
 			}
 			$mysql->query("insert into ".prefix."_ipban (addr, atype, addr_start, addr_stop, netlen, flags, createDate, reason, hitcount) values (".db_squote($ip).", ".db_squote($atype).", ".db_squote(sprintf("%u", $addr_start)).", ".db_squote(sprintf("%u", $addr_stop)).", ".db_squote(sprintf("%u", $net_len)).", ".db_squote($flags).", now(), ".db_squote($reason).", 0)");
-			msg(array("text" => str_replace('{ip}', $ip, $lang['msg.blocked'])));
+			msg(array("text" => str_replace('{ip}', $ip, $lang['ipban']['msg.blocked'])));
 	} else {
-		msg(array("type" => "error", "text" => $lang['msge.fields'], "info" => $lang['msgi.fields']));
+		msg(array("type" => "error", "text" => $lang['ipban']['msge.fields'], "info" => $lang['ipban']['msgi.fields']));
 	}
 }
 
@@ -75,15 +88,29 @@ function ipban_add() {
 function ipban_delete() {
 	global $mysql, $lang;
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'ipban'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
+		return false;
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.ipban'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'ipban'), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));
+		return false;
+	}
+
 	$id = intval($_REQUEST['id']);
 
 	// Fetch record
 	if (is_array($row=$mysql->record("select * from ".prefix."_ipban where id = ".$id))) {
 		// Record found. Delete it
 		$mysql->query("delete from ".prefix."_ipban where id = ".$id);
-		msg(array("text" => str_replace('{ip}', $row['addr'], $lang['msg.unblocked'])));
+		msg(array("text" => str_replace('{ip}', $row['addr'], $lang['ipban']['msg.unblocked'])));
 	} else {
-		msg(array("type" => "error", "text" => $lang['msg.notfound']));
+		msg(array("type" => "error", "text" => $lang['ipban']['msg.notfound']));
 	}
 }
 
@@ -92,11 +119,19 @@ function ipban_delete() {
 // Show all records
 //
 function ipban_list() {
-	global $tpl, $mysql, $lang, $mod;
+	global $mysql, $lang, $mod, $twig;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'list')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'ipban'), array('action' => 'list'), null, array(0, 'SECURITY.PERM'));
+		return false;
+	}
 
 	$accessMAP = array ('A', 'R', 'U', 'C');
 
-	$tpl -> template('entries', tpl_actions.$mod);
+	$xEntries = array();
+
 	foreach ($mysql->select("select * from ".prefix."_ipban order by addr") as $row) {
 		$accessLine = '';
 		for ($i = 0; $i < 4; $i++) {
@@ -108,25 +143,30 @@ function ipban_list() {
 			}
 		}
 
-		$tvars['vars'] = array(
+		$xEntry = array(
 			'php_self'	=>	$PHP_SELF,
 			'id'		=>	$row['id'],
 			'ip'		=>	$row['addr'],
 			'whoisip'	=>	array_shift(split('/', $row['addr'])),
-			'atype'		=> ($row['atype']?' /net':''),
+			'atype'		=>	($row['atype']?' /net':''),
 			'mode'		=>	'',
 			'descr'		=>	$row['reason']==''?'-':$row['reason'],
-			'type'		=> $accessLine,
+			'type'		=>	$accessLine,
 			'hitcount'	=>	($row['hitcount']),
 		);
-		$tpl -> vars('entries', $tvars);
-		$entries .= $tpl -> show('entries');
+
+		$xEntries [] = $xEntry;
 	}
 
-	$tpl -> template('table', tpl_actions.$mod);
-	$tvars['vars'] = array('php_self' => $PHP_SELF, 'entries' => $entries, 'iplock' => $_REQUEST['iplock']);
-	$tpl -> vars('table', $tvars);
-	echo $tpl -> show('table');
+	$tVars = array(
+		'php_self'	=> $PHP_SELF,
+		'entries'	=> $xEntries,
+		'iplock'	=> $_REQUEST['iplock'],
+		'token'		=>	genUToken('admin.ipban'),
+	);
+
+	$xt = $twig->loadTemplate('skins/default/tpl/ipban.tpl');
+	echo $xt->render($tVars);
 }
 
 

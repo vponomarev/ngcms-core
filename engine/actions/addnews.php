@@ -223,7 +223,7 @@ function news_add(){
 
 	// Notify plugins about adding new news
 	if (is_array($PFILTERS['news']))
-	foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
+		foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
 
 	exec_acts('addnews_', $id);
 	msg(array("text" => $lang['msgo_added'], "info" => sprintf($lang['msgi_added'], admin_url.'/admin.php?mod=editnews&action=editnews&id='.$id, admin_url.'/admin.php?mod=editnews')));

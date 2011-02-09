@@ -13,7 +13,9 @@ if (!defined('NGCMS')) die ('HAL');
 @include_once root.'includes/classes/upload.class.php';
 
 
-$lang = LoadLang('editnews', 'admin');
+LoadLang('editnews', 'admin');
+LoadLang('editnews', 'admin', 'editnews');
+
 $situation = "news";
 
 $SQL = array();
@@ -636,6 +638,11 @@ if ($action == "editnews") {
 		case 'do_mass_com_approve'  :	massNewsModify( array('allow_com' => 1),	'msgo_capproved',	'capprove');   break;
 		case 'do_mass_delete'       :	massNewsDelete(); break;
 	}
+	listNewsForm();
+}
+
+function listNewsForm() {
+	global $mysql, $lang, $twig, $tpl;
 
 	// Search filters
 	$fSearchLine		= $_REQUEST['sl'];
@@ -748,47 +755,49 @@ if ($action == "editnews") {
 	if (($pageNo > $countPages)&&($pageNo > 1))
 		$pageNo = $countPages;
 
-	$tpl -> template('entries', tpl_actions.$mod);
+	$newsEntries = array();
 
 	$sqlResult = $sqlQ." LIMIT ".(($pageNo - 1)* $fRPP).",".$fRPP;
 	foreach ($mysql->select($sqlResult) as $row) {
-		$i++;
-		$allow_com	=	$row['allow_com'];
 		$cats		=	explode(",", $row['catid']);
 
-		$tvars['vars'] = array(
-			'php_self'	=>	$PHP_SELF,
-			'home'		=>	home,
-			'newsid'	=>	$row['id'],
-			'userid'	=>	$row['author_id'],
-			'username'	=>	$row['author'],
-			'comments'	=> ($row['com'])?$row['com']:''
+		$newsEntry = array(
+			'php_self'		=> $PHP_SELF,
+			'home'			=> home,
+			'newsid'		=> $row['id'],
+			'userid'		=> $row['author_id'],
+			'username'		=> $row['author'],
+			'comments'		=> isset($row['com'])?$row['com']:'',
+			'attach_count'	=> $row['num_files'],
+			'itemdate'		=> date("d.m.Y",$row['postdate']),
+			'allcats'		=> @GetAllCategories($cats).' &nbsp;',
+			'title'			=> secure_html((strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title']),
+
+			'flags'			=> array(
+				'comments'		=> getPluginStatusInstalled('comments')?true:false,
+				'status'		=> $row['approve']?true:false,
+				'mainpage'		=> $row['mainpage']?true:false,
+			)
 		);
-		$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
-		$showtitle = (strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title'];
-		$tvars['vars']['title'] = secure_html($showtitle);
+		if (is_array($PFILTERS['news']))
+			foreach ($PFILTERS['news'] as $k => $v) {
+				$v->listNewsForm($id, $row, $tVars);
+			}
 
-		$tvars['vars']['status']	=	($row['approve'] == "1") ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
-		$tvars['vars']['itemdate']	=	date("d.m.Y",$row['postdate']);
-		$tvars['vars']['allcats']	=	@GetAllCategories($cats).' &nbsp;';
-		$tvars['regx']['#\[attach\](.*?)\[\/attach\]#is']	=	($row['num_files']>0)?'$1':'';
-		$tvars['vars']['attach_count'] = $row['num_files'];
-		$tvars['regx']['#\[mainpage\](.*?)\[\/mainpage\]#is']	=	($row['mainpage']>0)?'$1':'';
-
-		$tpl -> vars('entries', $tvars);
-		$entries .= $tpl -> show('entries');
 		$entries_showed ++;
-
+		$newsEntries []= $newsEntry;
 	}
-	$tvars = array();
-
-	$tvars['vars'] = array(
+	$tVars = array(
 		'php_self'		=>	$PHP_SELF,
 		'rpp'			=>	$fRPP,
-		'entries'		=>	$entries,
+		'entries'		=>	$newsEntries,
 		'sortlist'		=>	makeSortList($_REQUEST['sort']),
-		'statuslist'	=> 	'<option value="1"'.(($fStatus==1)?' selected':'').'>'.$lang['smode_unpublished'].'</option><option value="2"'.(($fStatus==2)?' selected':'').'>'.$lang['smode_published'].'</option>'
+		'statuslist'	=> 	'<option value="1"'.(($fStatus==1)?' selected':'').'>'.$lang['smode_unpublished'].'</option><option value="2"'.(($fStatus==2)?' selected':'').'>'.$lang['smode_published'].'</option>',
+		'flags'			=> array(
+			'comments'		=> getPluginStatusInstalled('comments')?true:false,
+			'allow_modify'	=> ($userROW['status'] <= 2)?true:false,
+		),
 	);
 
 	foreach ($mysql->select("SELECT DISTINCT FROM_UNIXTIME(postdate,'%b %Y') as monthes, COUNT(id) AS cnt FROM ".prefix."_news GROUP BY monthes ORDER BY postdate DESC") as $row){
@@ -802,26 +811,13 @@ if ($action == "editnews") {
 			$ifselected = "selected";
 		}
 
-		$tvars['vars']['selectdate'] .= "<option value=\"$post_date[en]\" $ifselected>$post_date[ru]</option>";
+		$tVars['selectdate'] .= "<option value=\"$post_date[en]\" $ifselected>$post_date[ru]</option>";
 	}
 
-	$tvars['vars']['category_select'] = makeCategoryList(array('doall' => 1, 'selected' => $category, 'style' => 'width: 200px;'));
+	$tVars['category_select'] = makeCategoryList(array('doall' => 1, 'selected' => $category, 'style' => 'width: 200px;'));
 
-	if ($userROW['status'] < 3) {
-		foreach($mysql->select("select id, status, news, name from ".uprefix."_users where news>0 ".($authorid?"or id=".db_squote($authorid):'')." order by name") as $row){
-			$tvars['vars']['authorlist'] .= "<option value=\"".$row['id']."\"".($row['id']==$authorid?' selected':'').">".$row['name']." [".$row['news']."]</option>\n";
-		}
-	}
-
-	if ($entries_showed == "0") {
-		$tvars['vars']['[no-news]']		=	'';
-		$tvars['vars']['[/no-news]']	=	'';
-		$tvars['vars']['entries']		=	'';
-		$tvars['vars']['pagesss']		=	'';
-	}
-	else {
-		$tvars['regx']["'\\[no-news\\].*?\\[/no-news\\]'si"] = '';
-		$tvars['vars']['pagesss'] = generateAdminPagelist(
+	if ($entries_showed) {
+		$tVars['pagesss'] = generateAdminPagelist(
 				array(
 					'maxNavigations' => 30,
 					'current' => $pageNo,
@@ -836,36 +832,18 @@ if ($action == "editnews") {
 							($fDateStopText != ''?'&dr2='.$fDateStopText:'').
 							($fCategoryId != ''?'&category='.$fCategoryId:'').
 							($fStatus != ''?'&status='.$fStatus:'').
-						//	($_REQUEST['category']?'&category='.$_REQUEST['category']:'').
-						//	($_REQUEST['sort']?'&sort='.$_REQUEST['sort']:'').
-						//	($postdate?'&postdate='.$postdate:'').
-						//	($authorid?'&authorid='.$authorid:'').
-						//	($status_mode?'&status_mode='.$status_mode:'').
 							'&page=%page%'
 						));
 	}
 
-	if($userROW['status'] <= 2) {
-		$tvars['vars']['[actions]'] = '';
-		$tvars['vars']['[/actions]'] = '';
-	}
-	else {
-		$tvars['regx']["'\\[actions\\].*?\\[/actions\\]'si"] = '';
-	}
+	$tVars['an'] = secure_html($fAuthorName);
+	$tVars['sl'] = secure_html($fSearchLine);
+	$tVars['st.selected0'] = !$fSearchType?' selected="selected"':'';
+	$tVars['st.selected1'] =  $fSearchType?' selected="selected"':'';
+	$tVars['dr1'] = $fDateStartText;
+	$tVars['dr2'] = $fDateStopText;
+	$tVars['localPrefix'] = localPrefix;
 
-	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
-
-	$tvars['vars']['an'] = secure_html($fAuthorName);
-	$tvars['vars']['sl'] = secure_html($fSearchLine);
-	$tvars['vars']['st.selected0'] = !$fSearchType?' selected="selected"':'';
-	$tvars['vars']['st.selected1'] =  $fSearchType?' selected="selected"':'';
-	$tvars['vars']['dr1'] = $fDateStartText;
-	$tvars['vars']['dr2'] = $fDateStopText;
-	$tvars['vars']['localPrefix'] = localPrefix;
-
-	exec_acts('editnews_list');
-
-	$tpl -> template('table', tpl_actions.$mod);
-	$tpl -> vars('table', $tvars);
-	echo $tpl -> show('table');
+	$xt = $twig->loadTemplate('skins/default/tpl/editnews/table.tpl');
+	echo $xt->render($tVars);
 }

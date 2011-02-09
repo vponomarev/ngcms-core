@@ -73,7 +73,7 @@ function populateCfg() {
 
 
 // ================================================================
-// Editors functions 
+// Editors functions
 // ================================================================
 
 //
@@ -101,6 +101,7 @@ function reServerSubmit() {
  var linkTX = new sack();
  linkTX.requestFile = 'rpc.php';
  linkTX.setVar('json', '1');
+ linkTX.setVar('token', '{token}');
  linkTX.setVar('methodName', 'admin.rewrite.submit');
  linkTX.setVar('params', dOut);
  linkTX.method='POST';
@@ -119,10 +120,10 @@ function reServerSubmit() {
   		alert('Error ('+resTX['errorCode']+'): '+resTX['errorText']);
   	} else {
   		alert('{l_fmsg.save.done}');
-  	}	
+  	}
   } else {
   	alert('{l_fmsg.save.httperror} '+linkTX.responseStatus[0]);
-  }	
+  }
  }
  linkTX.runAJAX();
 }
@@ -189,7 +190,7 @@ function reEditRow(id) {
 
  // Get values from this row
  reSetData(id, dData[id].pluginName, dData[id].handlerName, dData[id].regex, dData[id].flagPrimary, dData[id].flagFailContinue, dData[id].flagDisabled);
- 
+
  currentEditRow = id;
  document.getElementById('re.row.'+currentEditRow).style.background = '#ecf3f7';
 
@@ -204,7 +205,7 @@ function reDeleteRow(id) {
  if (confirm('{l_fmsg.edit.rowdel_confirm} '+id)) {
   // Delete with renumbering
   var dCounter = document.getElementById('cfg.body').rows.length-1;
-  
+
   for (var i = id; i < dCounter; i++) {
    dData[i] = dData[i+1];
    dData[i]['id'] = i;
@@ -246,7 +247,7 @@ function reMoveDown(id) {
   return false;
  }
  var dCounter = document.getElementById('cfg.body').rows.length;
- 
+
  // Самую последнюю строчку некуда двигать
  if ((id+1) >= dCounter) {
   return false;
@@ -284,7 +285,7 @@ function reCancelEdit() {
 function reSubmitEdit() {
  // Check mode: add or edit
  var recNo = document.getElementById('row.id').innerHTML;
- 
+
  // Populate control object
  var rd = Object();
  rd['pluginName']  = document.getElementById('ed.pluginName').value;
@@ -321,7 +322,7 @@ function reSubmitEdit() {
 {
 
  populateCfg();
- 
+
  var pluginName;
  var tmp;
 
