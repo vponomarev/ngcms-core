@@ -2,7 +2,7 @@
 
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: rewrite.php
 // Description: Managing rewrite rules
 // Author: Vitaly Ponomarev
@@ -10,6 +10,15 @@
 
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
+
+// Check for permissions
+if (!checkPermission(array('plugin' => '#admin', 'item' => 'rewrite'), null, 'details')) {
+	msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+	ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'details'), null, array(0, 'SECURITY.PERM'));
+	return false;
+}
+
+
 
 @include_once 'includes/classes/uhandler.class.php';
 $ULIB = new urlLibrary();
@@ -70,6 +79,7 @@ $tpl->vars('entry', array());
 $tvars['vars']['json.config']	= json_encode($jconfig);
 $tvars['vars']['json.data']		= json_encode($jdata);
 $tvars['vars']['json.template']	= json_encode($tpl->show('entry'));
+$tvars['vars']['token']			= genUToken('admin.rewrite');
 
 $tpl -> template('rewrite', tpl_actions);
 $tpl -> vars('rewrite', $tvars);

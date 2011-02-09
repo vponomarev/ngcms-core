@@ -68,6 +68,20 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 			return false;
 		}
 
+		// Fetch attached images/files (if any)
+		if ($row['num_files']) {
+			$row['#files'] = $mysql->select("select * from ".prefix."_files where linked_ds = 1 and linked_id = ".db_squote($row['id']));
+		} else {
+			$row['#files'] = array();
+		}
+
+		if ($row['num_images']) {
+			$row['#images'] = $mysql->select("select * from ".prefix."_images where linked_ds = 1 and linked_id = ".db_squote($row['id']));
+		} else {
+			$row['#images'] = array();
+		}
+
+
 		// Save some significant news flags for plugin processing
 		$SYSTEM_FLAGS['news']['db.id'] = $row['id'];
 		$SYSTEM_FLAGS['news']['db.categories'] = array();

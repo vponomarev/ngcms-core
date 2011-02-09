@@ -739,7 +739,7 @@ function doInstall() {
 			array_push($LOG,'Àêòèâàöèÿ ïîëüçîâàòåëÿ-àäìèíèñòğàòîğà ... OK');
 		}
 		// 1.6 Ñîõğàíÿåì êîíôèãóğàöèîííóş ïåğåìåííóş database.engine.version
-		@mysql_query("insert into `".$_POST['reg_dbprefix']."_config` (name, value) values ('database.engine.version', '0.9.1 Release')");
+		@mysql_query("insert into `".$_POST['reg_dbprefix']."_config` (name, value) values ('database.engine.version', '0.9.2 Release+SVN')");
 
 		// Âû÷èùàåì ëèøíèé ïåğåâîä ñòğîêè èç 'home_url'
 		if (substr($_POST['home_url'], -1, 1) == '/')
@@ -818,6 +818,7 @@ function doInstall() {
 			'auth_db' => 'basic',
 			'crypto_salt' => substr(md5(uniqid(rand(),1)),0,8),
 			'404_mode' => 0,
+			'debug' => 1,
 			'UUID' => md5(mt_rand().mt_rand()).md5(mt_rand().mt_rand()),
 		);
 

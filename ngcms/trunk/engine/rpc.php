@@ -106,6 +106,18 @@ function rpcRewriteSubmit($params) {
 		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
 	}
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'rewrite'), null, 'modify')) {
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
+		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied (perm)');
+	}
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.rewrite'))) {
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));
+		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied (token)');
+	}
+
 	@include_once 'includes/classes/uhandler.class.php';
 	$ULIB = new urlLibrary();
 	$ULIB->loadConfig();

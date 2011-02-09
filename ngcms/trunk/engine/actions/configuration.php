@@ -18,7 +18,7 @@ $lang		= LoadLang('configuration', 'admin');
 function systemConfigSave(){
 	global $lang, $config;
 
-	// Check for token
+	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		ngSYSLOG(array('plugin' => '#admin', 'item' => 'configuration', 'ds_id' => $id), array('action' => 'saveConfig'), null, array(0, 'SECURITY.PERM'));

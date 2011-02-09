@@ -479,7 +479,7 @@ width: 200px;
  line-height: 25px;
  padding: 15px 10px 0 100px;
  margin: 5px 0;
- height: 79px;
+ min-height: 79px;
 }
 
 .sysmsg_common .info a {

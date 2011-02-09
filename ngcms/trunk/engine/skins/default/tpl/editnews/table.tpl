@@ -1,26 +1,26 @@
-<script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
-<script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
-<script type="text/javascript" src="{admin_url}/includes/js/libsuggest.js"></script>
+<script type="text/javascript" src="{{ admin_url }}/includes/js/ajax.js"></script>
+<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
+<script type="text/javascript" src="{{ admin_url }}/includes/js/libsuggest.js"></script>
 <script language="javascript" type="text/javascript">
 <!--
-							
+
 function addEvent(elem, type, handler){
   if (elem.addEventListener){
     elem.addEventListener(type, handler, false)
   } else {
     elem.attachEvent("on"+type, handler)
   }
-} 
+}
 
 // DateEdit filter
 function filter_attach_DateEdit(id) {
 	var field = document.getElementById(id);
 	if (!field)
 		return false;
-	
+
 	if (field.value == '')
 		field.value = 'DD.MM.YYYY';
-	
+
 	field.onfocus = function(event) {
 		var ev = event ? event : window.event;
 		var elem = ev.target ? ev.target : ev.srcElement;
@@ -31,7 +31,7 @@ function filter_attach_DateEdit(id) {
 		return true;
 	}
 
-	
+
 	field.onkeypress = function(event) {
 		var ev = event ? event : window.event;
 		var keyCode = ev.keyCode ? ev.keyCode : ev.charCode;
@@ -45,13 +45,13 @@ function filter_attach_DateEdit(id) {
 		else if (navigator.appName == 'Microsoft Internet Explorer') { isIE = true; }
 		else if (navigator.appName == 'Opera') { isOpera = true; }
 		else { /* alert('Unknown navigator: `'+navigator.appName+'`'); */ }
-		
+
 		//document.getElementById('debugWin').innerHTML = 'keyPress('+ev.keyCode+':'+ev.charCode+')['+(ev.shiftKey?'S':'.')+(ev.ctrlKey?'C':'.')+(ev.altKey?'A':'.')+']<br/>' + document.getElementById('debugWin').innerHTML;
-		
+
 		// FF - onKeyPress captures functional keys. Skip anything with charCode = 0
 		if (isMozilla && !ev.charCode)
 			return true;
-		
+
 		// Opera - dumb browser, don't let us to determine some keys
 		if (isOpera) {
 			var ek = '';
@@ -62,8 +62,8 @@ function filter_attach_DateEdit(id) {
 			if (!ev.keyCode) return true;
 			if (!ev.which) return true;
 		}
-		
-		
+
+
 		// Don't block CTRL / ALT keys
 		if (ev.altKey || ev.ctrlKey || !keyCode)
 			return true;
@@ -71,7 +71,7 @@ function filter_attach_DateEdit(id) {
 		// Allow to input only digits [0..9] and dot [.]
 		if (((keyCode >= 48) && (keyCode <= 57)) || (keyCode == 46))
 			return true;
-		
+
 		return false;
 	}
 
@@ -91,11 +91,11 @@ function filter_attach_DateEdit(id) {
 </div>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=editnews">{l_news_title}</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=editnews"> {{ lang.editnews['news_title'] }}</a></td>
 </tr>
 </table>
 
-<form action="{php_self}?mod=editnews" method="post" name="options_bar">
+<form action="{{ php_self }}?mod=editnews" method="post" name="options_bar">
 <table width="1000" border="0" cellspacing="0" cellpadding="0" class="editfilter">
   <tr>
 <!--Block 1--><td rowspan="2">
@@ -103,52 +103,52 @@ function filter_attach_DateEdit(id) {
   <tr>
     <td valign="top" >
     <label>Поиск</label>
-    <input name="sl" type="text" class="bfsearch" value="{sl}"/> <select name="st"><option value="0" {st.selected0}>заголовок</option><option value="1" {st.selected1}>текст</option></select>
+    <input name="sl" type="text" class="bfsearch" value="{{ sl }}"/> <select name="st"><option value="0" {{ st.selected0 }}>заголовок</option><option value="1" {{ st.selected1 }}>текст</option></select>
     </td>
   </tr>
   <tr>
     <td>
-    <label>{l_author}</label>
-    <input name="an" id="an" class="bfauthor" type="text"  value="{an}" autocomplete="off" /> <span id="suggestLoader" style="width: 20px; visibility: hidden;"><img src="{skins_url}/images/loading.gif"/></span>
+    <label>{{ lang.editnews.author }}</label>
+    <input name="an" id="an" class="bfauthor" type="text"  value="{{ an }}" autocomplete="off" /> <span id="suggestLoader" style="width: 20px; visibility: hidden;"><img src="{{ skins_url }}/images/loading.gif"/></span>
     </td>
   </tr>
 </table>
 
-</td><!--/Block 1--> 
+</td><!--/Block 1-->
 
 <!--Block 2--><td rowspan="2">
 <table border="0" cellspacing="0" cellpadding="0" class="filterblock">
   <tr>
     <td valign="top">
     <label>Дата</label>
-    с:&nbsp; <input type="text" name="dr1" value="{dr1}" class="bfdate"/>&nbsp;&nbsp; по&nbsp;&nbsp; <input type="text" name="dr2" value="{dr2}" class="bfdate"/>
+    с:&nbsp; <input type="text" name="dr1" value="{{ dr1 }}" class="bfdate"/>&nbsp;&nbsp; по&nbsp;&nbsp; <input type="text" name="dr2" value="{{ dr2 }}" class="bfdate"/>
     </td>
   </tr>
   <tr>
     <td>
-    <label>{l_category}</label>
-    {category_select}
+    <label>{{ lang.editnews['category'] }}</label>
+    {{ category_select }}
     </td>
   </tr>
 </table>
 
 </td><!--/Block 2-->
-    
+
 <!--Block 3--><td valign="top" >
 <table border="0" cellspacing="0" cellpadding="0" class="filterblock2">
   <tr>
     <td valign="top" >
     <label>Статус</label>
-    <select name="status" class="bfstatus"><option value="">{l_smode_all}</option>{statuslist}</select>
+    <select name="status" class="bfstatus"><option value="">{{ lang.editnews['smode_all'] }}</option>{{ statuslist }}</select>
     </td>
     <td align="right" valign="top"  >
     <label>На странице</label>
-    <input name="rpp" value="{rpp}" type="text" size="3" />
+    <input name="rpp" value="{{ rpp }}" type="text" size="3" />
     </td>
   </tr>
   <tr>
     <td colspan="2">
-    <label class="left">{l_sort}</label>&nbsp;&nbsp;<select name="sort" class="bfsortlist">{sortlist}</select>
+    <label class="left">{{ lang.editnews['sort'] }}</label>&nbsp;&nbsp;<select name="sort" class="bfsortlist">{{ sortlist }}</select>
     </td>
   </tr>
 </table>
@@ -156,7 +156,7 @@ function filter_attach_DateEdit(id) {
 </td>
   </tr>
   <tr>
-    <td><input type="submit" value="{l_do_show}" class="filterbutton"  /></td>
+    <td><input type="submit" value="{{ lang.editnews['do_show'] }}" class="filterbutton"  /></td>
   </tr>
 </table>
 </form>
@@ -164,45 +164,58 @@ function filter_attach_DateEdit(id) {
 
 <br />
 <!-- List of news start here -->
-<form action="{php_self}?mod=editnews" method="post" name="editnews">
+<form action="{{ php_self }}?mod=editnews" method="post" name="editnews">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left" class="contHead">
-<td width="5%" nowrap>{l_postid_short}</td>
-<td width="10%"  nowrap>{l_date}</td>
+<td width="5%" nowrap>{{ lang.editnews['postid_short'] }}</td>
+<td width="10%"  nowrap>{{ lang.editnews['date'] }}</td>
 <td width="16">&nbsp;</td>
-<td width="45%" >{l_title}</td>
-[comments]<td width="10%" >{l_listhead.comments}</td>[/comments]
-<td width="25%">{l_category}</td>
-<td width="10%">{l_author}</td>
+<td width="45%" >{{ lang.editnews['title'] }}</td>
+{% if flags.comments %}<td width="10%" >{{ lang.editnews['listhead.comments'] }}</td>{% endif %}
+<td width="25%">{{ lang.editnews['category'] }}</td>
+<td width="10%">{{ lang.editnews['author'] }}</td>
 <td width="5%">&nbsp;</td>
-<td width="5%"><input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(editnews)" /></td>
+<td width="5%"><input class="check" type="checkbox" name="master_box" title="{{ lang.editnews['select_all'] }}" onclick="javascript:check_uncheck_all(editnews)" /></td>
 </tr>
-[no-news]<tr><td colspan="6"><p>- {l_not_found} -</p></td></tr>[/no-news]
-{entries}
+{% for entry in entries %}
+<tr align="left" >
+	<td width="5%" class="contentEntry1">{{ entry.newsid }}</td>
+	<td width="10%" class="contentEntry1">{{ entry.itemdate }}</td>
+	<td width="16" class="contentEntry1" cellspacing=0 cellpadding=0 style="padding:0; margin:0;">{% if item.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="Main"/> {% endif %}</td>
+	<td width="45%" class="contentEntry1">{% if (entry.attach_count > 0) %}<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="{l_attach.count}: {{ entry.attach_count }}"/> {% endif %}<a href="{{ php_self }}?mod=editnews&amp;action=editnews&amp;id={{ entry.newsid }}">{{ entry.title }}</a></td>
+	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:center;">{{ entry.comments }}</td>
+	{% endif %}<td class="contentEntry1">{{ entry.allcats }}</td>
+	<td class="contentEntry1"><a href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ entry.userid }}">{{ entry.username }}</a></td>
+	<td class="contentEntry1">{% if entry.flags.status %}<img src="{{ skins_url }}/images/yes.png" alt="{{ lang.approved }}" />{% else %}<img src="{{ skins_url }}/images/no.png" alt="{{ lang.unapproved }}" />{% endif %} </td>
+	<td class="contentEntry1"><input name="selected_news[]" value="{{ entry.newsid }}" class="check" type="checkbox" /></td>
+</tr>
+{% else %}
+<tr><td colspan="6"><p>- {{ lang.editnews['not_found'] }} -</p></td></tr>
+{% endfor %}
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
 
-[actions]
+{% if flags.allow_modify %}
 <tr align="center">
 <td colspan="8" class="contentEdit" align="right" valign="top">
 <div style="text-align: left;">
-{l_action}: <select name="subaction" style="font: 12px Verdana, Courier, Arial; width: 230px;">
-<option value="">-- {l_action} --</option>
-<option value="do_mass_approve">{l_approve}</option>
-<option value="do_mass_forbidden">{l_forbidden}</option>
+{{ lang.editnews['action'] }}: <select name="subaction" style="font: 12px Verdana, Courier, Arial; width: 230px;">
+<option value="">-- {{ lang.editnews['action'] }} --</option>
+<option value="do_mass_approve">{{ lang.editnews['approve'] }}</option>
+<option value="do_mass_forbidden">{{ lang.editnews['forbidden'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
-<option value="do_mass_mainpage">{l_massmainpage}</option>
-<option value="do_mass_unmainpage">{l_massunmainpage}</option>
+<option value="do_mass_mainpage">{{ lang.editnews['massmainpage'] }}</option>
+<option value="do_mass_unmainpage">{{ lang.editnews['massunmainpage'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
-<option value="do_mass_currdate">{l_modify.mass.currdate}</option>
+<option value="do_mass_currdate">{{ lang.editnews['modify.mass.currdate'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
-[comments]<option value="do_mass_com_approve">{l_com_approve}</option>
-<option value="do_mass_com_forbidden">{l_com_forbidden}</option>
-<option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>[/comments]
-<option value="do_mass_delete">{l_delete}</option>
+{% if flags.comments %}<option value="do_mass_com_approve">{{ lang.editnews['com_approve'] }}</option>
+<option value="do_mass_com_forbidden">{{ lang.editnews['com_forbidden'] }}</option>
+<option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>{% endif %}
+<option value="do_mass_delete">{{ lang.editnews['delete'] }}</option>
 </select>
-<input type="submit" value="{l_submit}" class="button" />
+<input type="submit" value="{{ lang.editnews['submit'] }}" class="button" />
 <input type="hidden" name="mod" value="editnews" />
 <br/>
 </div>
@@ -211,9 +224,9 @@ function filter_attach_DateEdit(id) {
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
-[/actions]
+{% endif %}
 <tr>
-<td align="center" colspan="8" class="contentHead">{pagesss}</td>
+<td align="center" colspan="8" class="contentHead">{{ pagesss }}</td>
 </tr>
 </table>
 </form>
@@ -222,9 +235,9 @@ function filter_attach_DateEdit(id) {
 <!--
 // INIT NEW SUGGEST LIBRARY [ call only after full document load ]
 function systemInit() {
-var aSuggest = new ngSuggest('an', 
+var aSuggest = new ngSuggest('an',
 								{
-									'localPrefix'	: '{localPrefix}',
+									'localPrefix'	: '{{ localPrefix }}',
 									'reqMethodName'	: 'core.users.search',
 									'lId'		: 'suggestLoader',
 									'hlr'		: 'true',
@@ -250,6 +263,3 @@ filter_attach_DateEdit('dr1');
 filter_attach_DateEdit('dr2');
 -->
 </script>
-
-
-

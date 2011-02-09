@@ -36,7 +36,7 @@ class tpl {
 		if (!is_file($fname)) {
 			die(sprintf(str_replace('{fname}', $fname, $lang['fatal.tpl.lost'], $fname)));
 		}
-
+		
 		$fp		=	fopen($fname,'r');
 		$data	=	filesize($fname)?fread($fp,filesize($fname)):'';
 		fclose($fp);

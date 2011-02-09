@@ -106,6 +106,8 @@ class file_managment {
 	// *  url			- upload URL instead of file
 	// *  manualfile	- file name for manual upload
 	// *  manualtmp		- TEMP file where manual uploaded file is [temporally] stored
+	// * plugin		- ID of plugin that owns this file
+	// * pidentity	- ID of plugin's identity that owns this file
 	function file_upload($param){
 		global $config, $lang, $mysql, $userROW;
 
@@ -274,7 +276,9 @@ class file_managment {
 			chmod($wDir.'/'.$fname, 0644);
 
 			// Create record in SQL DB (or replace old)
-			$mysql->query("insert into ".prefix."_".$this->tname." (name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id) values (".db_squote($fname).", 1,".db_squote($origFname).",".db_squote($dir1.'/'.$dir2.'/'.$xDir).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.", ".db_squote($param['linked_ds']).", ".db_squote($param['linked_id']).")");
+			$mysql->query("insert into ".prefix."_".$this->tname." ".
+				"(name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id, plugin, pidentity) ".
+				"values (".db_squote($fname).", 1,".db_squote($origFname).",".db_squote($dir1.'/'.$dir2.'/'.$xDir).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.", ".db_squote($param['linked_ds']).", ".db_squote($param['linked_id']).", ".db_squote($param['plugin']).", ".db_squote($param['pidentity']).")");
 			$rowID = $mysql->record("select LAST_INSERT_ID() as id");
 			return is_array($rowID)?array($rowID['id'], $fname, $dir1.'/'.$dir2.'/'.$xDir):0;
 		}
@@ -340,7 +344,13 @@ class file_managment {
 
 		// Create record in SQL DB (or replace old)
 		if ($replace_id) {
-			$mysql->query("update ".prefix."_".$this->tname." set name= ".db_squote($fname).", folder=".db_squote($param['category']).", date=unix_timestamp(now()), user=".db_squote($userROW['name']).", owner_id=".db_squote($userROW['id'])." where id = ".$replace_id);
+			$mysql->query("update ".prefix."_".$this->tname." set ".
+					"name= ".db_squote($fname).", ".
+					"folder=".db_squote($param['category']).", ".
+					"date=unix_timestamp(now()), ".
+					"user=".db_squote($userROW['name']).", ".
+					"owner_id=".db_squote($userROW['id']).
+					" where id = ".$replace_id);
 			return array($replace_id, $fname, $wCategory);
 		} else {
 			$mysql->query("insert into ".prefix."_".$this->tname." (name, orig_name, folder, date, user, owner_id, category) values (".db_squote($fname).",".db_squote($origFname).",".db_squote($param['category']).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.")");
@@ -708,6 +718,7 @@ class image_managment{
 	// * stamp			- FLAG if we need to add a stamp
 	// ** stampfile		- filename of stamp file
 	// ** stamp_transparency - %% of transparency of added stamp [ default: 40 ]
+	// ** stamp_noerror	- don't generate an error if it was not possible to add stamp
 	// * shadow			- FLAG if we need to add a shadow
 	// * outquality		- with what quality we should write resulting file (for JPEG) [ default: 80 ]
 	// * outfile		- filename to write a result [ default: original file ]
@@ -755,7 +766,9 @@ class image_managment{
 		if ($param['stamp']) {
 			// LOAD STAMP IMAGE
 			if (!file_exists($param['stampfile']) || !is_array($sz=@getimagesize($param['stampfile']))) {
-				msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
+				if (!$param['stamp_noerror']) {
+					msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
+				}
 				return 0;
 			}
 
@@ -785,7 +798,9 @@ class image_managment{
 			}
 
 			if (!$stamp) {
-				msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
+				if (!$param['stamp_noerror']) {
+					msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
+				}
 				return;
 			}
 
@@ -793,7 +808,9 @@ class image_managment{
 			$destX = $origX - $stampX - 10;
 			$destY = $origY - $stampY - 10;
 			if (($destX<0)||($destY<0)) {
-				msg(array("type" => "error", "text" => $lang['upload.error.stampsize']));
+				if (!$param['stamp_noerror']) {
+					msg(array("type" => "error", "text" => $lang['upload.error.stampsize']));
+				}
 				return;
 			}
 

@@ -36,6 +36,10 @@ class NewsFilter {
 	// Edit Notifier [ adfter successful editing ]
 	function editNewsNotify($newsID, $SQLnews, &$SQLnew, &$tvars) { return 1; }
 
+	// List news form generator [ in admin panel ]
+	function listNewsForm($newsID, $SQLnews, &$tvars) { return 1; }
+
+
 	// ### Delete news interceptor ###
 	// Delete news call
 	function deleteNews($newsID, $SQLnews) { return 1; }
