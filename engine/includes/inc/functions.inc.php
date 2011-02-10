@@ -829,8 +829,15 @@ function LoadPluginLang($plugin, $file, $group = '', $prefix = '', $delimiter = 
 
 	// merge values
 	if (is_array($plugin_lang)) {
-		foreach ($plugin_lang as $p => $v) {
-			$lang[$prefix.$delimiter.$p] = $v;
+		// Delimiter = '#' - special delimiter, make a separate array
+		if ($delimiter == '#') {
+			$lang[$prefix] = $plugin_lang;
+		} else if (($delimiter == '')&&($prefix == '')) {
+			$lang = $lang + $plugin_lang;
+		} else {
+			foreach ($plugin_lang as $p => $v) {
+				$lang[$prefix.$delimiter.$p] = $v;
+			}
 		}
 	}
 	return 1;
