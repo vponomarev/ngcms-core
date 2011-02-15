@@ -16,23 +16,6 @@ $AFILTERS = array();
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
-
-// Preload TWIG engine
-require_once root.'includes/classes/Twig/Autoloader.php';
-Twig_Autoloader::register();
-
-global $twig, $twigLoader;
-$twigLoader = new Twig_Loader_NGCMS(root);
-$twig = new Twig_Environment($twigLoader, array(
-  'cache' => root.'cache/twig/',
-  'auto_reload' => true,
-  'autoescape' => false,
-));
-$twig->addGlobalRef('lang', $lang);
-$twig->addGlobal('skins_url', skins_url);
-$twig->addGlobal('admin_url', admin_url);
-
-
 @header("Cache-Control: no-store, no-cache, must-revalidate");
 @header("Cache-Control: post-check=0, pre-check=0", false);
 @header("Pragma: no-cache");

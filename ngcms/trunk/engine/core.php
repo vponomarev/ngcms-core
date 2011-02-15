@@ -173,6 +173,34 @@ if ( ( !file_exists(confroot.'config.php') ) || ( filesize(confroot.'config.php'
 	exit;
 }
 
+// Preload TWIG engine
+require_once root.'includes/classes/Twig/Autoloader.php';
+Twig_Autoloader::register();
+
+global $twig, $twigLoader;
+$twigLoader = new Twig_Loader_NGCMS(root);
+$twig = new Twig_Environment($twigLoader, array(
+  'cache' => root.'cache/twig/',
+  'auto_reload' => true,
+  'autoescape' => false,
+));
+$twig->addGlobalRef('lang', $lang);
+$twig->addGlobal('skins_url', skins_url);
+$twig->addGlobal('admin_url', admin_url);
+
+// Mark list of active plugins
+{
+	$painfo = getPluginsActiveList();
+	$pactive= array();
+	foreach ($painfo['active'] as $k) {
+		$pactive[$k] = true;
+	}
+	$twig->addGlobal('pactive', $pactive);
+}
+
+$timer->registerEvent('Template engine is activated');
+
+
 // Give domainName to URL handler engine for generating absolute links
 $UHANDLER->setOptions(array('domainPrefix' => $config['home_url']));
 
