@@ -184,19 +184,12 @@ $twig = new Twig_Environment($twigLoader, array(
   'auto_reload' => true,
   'autoescape' => false,
 ));
-$twig->addGlobalRef('lang', $lang);
-$twig->addGlobal('skins_url', skins_url);
-$twig->addGlobal('admin_url', admin_url);
-
-// Mark list of active plugins
-{
-	$painfo = getPluginsActiveList();
-	$pactive= array();
-	foreach ($painfo['active'] as $k) {
-		$pactive[$k] = true;
-	}
-	$twig->addGlobal('pactive', $pactive);
-}
+$twig->addGlobalRef('lang',		$lang);
+$twig->addGlobalRef('handler',	$CurrentHandler);
+$twig->addGlobal('skins_url',	skins_url);
+$twig->addGlobal('tpl_url',		tpl_url);
+$twig->addGlobal('admin_url',	admin_url);
+$twig->addFunction('pluginIsActive', new Twig_Function_Function('getPluginStatusActive'));
 
 $timer->registerEvent('Template engine is activated');
 
