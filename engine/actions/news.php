@@ -1040,7 +1040,7 @@ function addNewsForm($retry = ''){
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1)),
 		'JEV'				=> $retry,
 		'smilies'			=> ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'',
-		'tags'				=> ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'',
+		'quicktags'			=> ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'',
 		'flags'				=> array(
 			'edit_split'		=> $config['news.edit.split']?true:false,
 			'options'			=> ($userROW['status'] < 3)?true:false,
