@@ -13,16 +13,19 @@ if (is_array($userROW)) {
 	if ($userROW['status'] == 1 || $userROW['status'] == 2) {
 		$unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
 		if ($unapp)
-			$unapproved = ' [ <a href="?mod=editnews&amp;status=1"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
+			$unapproved = ' [ <a href="?mod=news&amp;status=1"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
 	}
 }
 
 $skins_url = skins_url;
 
+$mod = $_REQUEST['mod'];
+$action = $_REQUEST['action'];
+
 $h_active_options = (in_array($mod, array('options', 'categories', 'static')))?' class="active"':'';
 $h_active_extras = (($mod=='extra-config')||($mod=='extras'))?' class="active"':'';
-$h_active_addnews = ($mod=='addnews')?' class="active"':'';
-$h_active_editnews = ($mod=='editnews')?' class="active"':'';
+$h_active_addnews = (($mod=='news')&&($action=='add'))?' class="active"':'';
+$h_active_editnews = (($mod=='news')&&($action!='add'))?' class="active"':'';
 $h_active_images = ($mod=='images')?' class="active"':'';
 $h_active_files = ($mod=='files')?' class="active"':'';
 $h_active_pm = ($mod=='pm')?' class="active"':'';
