@@ -129,6 +129,10 @@ function systemConfigEditForm(){
 		'sql_error'					=>	MakeDropDown(array(0 => $lang['sql_error_0'],   1 =>$lang['sql_error_1'],    2 => $lang['sql_error_2']), "save_con[sql_error_show]",  $config['sql_error_show']),
 		'url_external_nofollow'		=>	MakeDropDown(array(0 => $lang['noa'], 1 => $lang['yesa']),  "save_con[url_external_nofollow]", $config['url_external_nofollow']),
 		'url_external_target_blank'	=>	MakeDropDown(array(0 => $lang['noa'], 1 => $lang['yesa']),  "save_con[url_external_target_blank]", $config['url_external_target_blank']),
+		'photos_thumb_size_x'		=>	isset($config['photos_thumb_size_x'])?intval($config['photos_thumb_size_x']):intval($config['photos_thumb_size']),
+		'photos_thumb_size_y'		=>	isset($config['photos_thumb_size_y'])?intval($config['photos_thumb_size_y']):intval($config['photos_thumb_size']),
+		'thumb_size_x'				=>	isset($config['thumb_size_x'])?intval($config['thumb_size_x']):intval($config['thumb_size']),
+		'thumb_size_y'				=>	isset($config['thumb_size_y'])?intval($config['thumb_size_y']):intval($config['thumb_size']),
 		'token'						=> genUToken('admin.configuration'),
 	);
 

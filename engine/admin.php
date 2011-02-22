@@ -101,23 +101,23 @@ load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = array(
-	'configuration'	=>	'1',
+	'configuration'		=>	'1',
 	'dbo'			=>	'1',
 	'extras'		=>	'1',
-	'extra-config'	=>	'1',
-	'statistics'	=>	'1',
+	'extra-config'		=>	'1',
+	'statistics'		=>	'1',
 	'templates'		=>	'1',
 	'users'			=>	'1',
 	'rewrite'		=>	'1',
 	'static'		=>	'1',
 
-	'categories'	=>	'2',
-	'editcomments'	=>	'2',
+	'editcomments'		=>	'2',
 	'ipban'			=>	'2',
 	'options'		=>	'2',
 
-	'addnews'		=>	'3',
-	'editnews'		=>	'3',
+	'categories'		=>	'2',
+	'news'			=>	'3',
+
 	'files'			=>	'3',
 	'images'		=>	'3',
 	'pm'			=>	'3',

@@ -1,9 +1,7 @@
 <script type="text/javascript">
 //
 // Global variable: ID of current active input area
-[edit.split]var currentInputAreaID = 'ng_news_content_short';[/edit.split][edit.nosplit]var currentInputAreaID = 'ng_news_content';[/edit.nosplit]
-
-
+{% if (flags.edit_split) %}var currentInputAreaID = 'ng_news_content_short';{% else %}var currentInputAreaID = 'ng_news_content';{% endif %}
 function ChangeOption(optn) {
 	document.getElementById('maincontent').style.display = (optn == 'maincontent')?"block":"none";
 	document.getElementById('additional').style.display  = (optn == 'additional')?"block":"none";
@@ -13,8 +11,8 @@ function ChangeOption(optn) {
 function preview(){
 
  var form = document.getElementById("postForm");
- if (form.ng_news_content[edit.split]_short[/edit.split].value == '' || form.title.value == '') {
-  alert('{l_msge_preview}');
+ if (form.ng_news_content{% if (flags.edit_split) %}_short{% endif %}.value == '' || form.title.value == '') {
+  alert('{{ lang.addnews['msge_preview'] }}');
   return false;
  }
 
@@ -42,10 +40,10 @@ function changeActive(name) {
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type="hidden" name="area" value="" />
 </form>
-<form id="postForm" name="form" ENCTYPE="multipart/form-data" method="post" action="{php_self}" target="_self">
+<form id="postForm" name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" target="_self">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=editnews">{l_news_title}</a> &#8594; {l_addnews_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.addnews['news_title'] }}</a> &#8594; {{ lang.addnews['addnews_title'] }}</td>
 </tr>
 </table>
 
@@ -56,10 +54,10 @@ function changeActive(name) {
 
 <table border="0" cellspacing="1" cellpadding="0" width="98%">
 <tr>
-<td class="contentNav" align="center">
-<input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_bar.maincontent}" class="navbutton" />
-<input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_bar.additional}" class="navbutton" />
-<input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{l_bar.attaches}" class="navbutton" />
+<td class="contentNav" align="left">
+<input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{{ lang.addnews['bar.maincontent'] }}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('additional')" value="{{ lang.addnews['bar.additional'] }}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{{ lang.addnews['bar.attaches'] }}" class="navbutton" />
 </td>
 </tr>
 <tr><td>
@@ -68,39 +66,38 @@ function changeActive(name) {
 <div id="maincontent" style="display: block;">
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
   <tr>
-   <td width="10"><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
-   <td width="100"><span class="f15">{l_title}</span></td>
+   <td width="10"><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
+   <td width="100"><span class="f15">{{ lang.addnews['title'] }}</span></td>
    <td><input type="text" class="important" size="79" name="title" value="" tabindex="1" /></td>
   </tr>
   <tr>
-   <td valign="top" colspan=3>{quicktags}<br /> {smilies}<br />
-[edit.split]
+   <td valign="top" colspan=3>{{ quicktags }}<br /> {{ smilies }}<br />
+{% if (flags.edit_split) %}
     <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" id="ng_news_content_short" rows="10" tabindex="2"></textarea></div>
-[extended.more]    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{l_editor.divider}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value=""/></td></tr></table>[/extended.more]
+{% if (flags.extended_more) %}    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{{ lang.addnews['editor.divider'] }}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value=""/></td></tr></table>{% endif %}
     <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" id="ng_news_content_full" rows="10" tabindex="2"></textarea></div>
-[/edit.split]
-[edit.nosplit]
+{% else %}
     <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" id="ng_news_content" rows="10" tabindex="2"></textarea></div>
-[/edit.nosplit]
+{% endif %}
 
    </tr>
   <tr>
-   <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
-   <td>{l_alt_name}:</td>
+   <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
+   <td>{{ lang.addnews['alt_name'] }}:</td>
    <td><input type="text" name="alt_name" value="" size="60" tabindex="3" /></td>
   </tr>
-[meta]
+{% if (flags.meta) %}
   <tr>
-   <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
-   <td>{l_description}:</td>
+   <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
+   <td>{{ lang.addnews['description'] }}:</td>
    <td><input type="text" name="description" value="" size="60" tabindex="4" /></td>
   </tr>
   <tr>
-   <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
-   <td>{l_keywords}:</td>
+   <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
+   <td>{{ lang.addnews['keywords'] }}:</td>
    <td><input type="text" name="keywords" value="" size="60" tabindex="5" /></td>
   </tr>
-[/meta]
+{% endif %}
 </table>
 </div>
 
@@ -109,22 +106,23 @@ function changeActive(name) {
 <div id="additional" style="display: none;">
 <table border="0" cellspacing="1" cellpadding="0" width="100%">
 <tr>
-<td class="contentHead"><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{l_custom_date}</label></td>
+<td class="contentHead"><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{{ lang.addnews['custom_date'] }}</label></td>
 </tr>
 <tr>
-<td class="contentEntry1">{changedate}</td>
+<td class="contentEntry1">{{ changedate }}</td>
 </tr>
-[isplugin xfields]{plugin_xfields}[/isplugin]
-[isplugin nsched]{nsched}[/isplugin]
-[isplugin finance]{finance}[/isplugin]
-[isplugin tags]{plugin_tags}[/isplugin]
+{% if (pluginIsActive('xfields')) %}{{ plugin.xfields }}{% endif %}
+{% if (pluginIsActive('nsched')) %}{{ plugin.nsched }}{% endif %}
+{% if (pluginIsActive('finance')) %}{{ plugin.finance }}{% endif %}
+{% if (pluginIsActive('tags')) %}{{ plugin.tags }}{% endif %}
+{% if (pluginIsActive('tracker')) %}{{ plugin.tracker }}{% endif %}
 </table>
 </div>
 
 <!-- ATTACHES -->
 <div id="attaches" style="display: none;">
 <br/>
-<span class="f15">{l_attach.list}</span>
+<span class="f15">{{ lang.addnews['attach.list'] }}</span>
 <table width="100%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
 <tr class="contHead"><td>#</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
@@ -145,7 +143,7 @@ function attachAddRow() {
 	// Add cells
 	row.insertCell(0).innerHTML = '*';
 	row.insertCell(1).innerHTML = 'New file';
-	
+
 	// Add file input
 	var el = document.createElement('input');
 	el.setAttribute('type', 'file');
@@ -163,7 +161,7 @@ function attachAddRow() {
 	el.setAttribute('value', '-');
 	row.insertCell(3).appendChild(el);
 }
-// Add first row 
+// Add first row
 var attachAbsoluteRowID = 0;
 attachAddRow();
 -->
@@ -179,43 +177,47 @@ attachAddRow();
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
    <td width="20"></td>
-   <td><span class="f15">{l_category}</span></td>
+   <td><span class="f15">{{ lang.addnews['category'] }}</span></td>
   </tr>
   <tr>
-   <td></td><td><div class="list">{mastercat}</div></td>
+   <td></td><td><div class="list">{{ mastercat }}</div></td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
-   <td><span class="f15">{l_editor.extcat}</span></td>
+   <td><span class="f15">{{ lang.addnews['editor.extcat'] }}</span></td>
   </tr>
   <tr>
    <td></td><td>
-   <div style="overflow: auto; height: 150px;" class="list">{extcat}</div>
-   
+   <div style="overflow: auto; height: 150px;" class="list">{{ extcat }}</div>
+
    </td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
-   <td><span class="f15">{l_editor.configuration}</span></td>
+   <td><span class="f15">{{ lang.addnews['editor.configuration'] }}</span></td>
   </tr>
   <tr>
-  
-  
+
+
   <td></td><td>
   <div class="list">
-  <label><input type="checkbox" name="approve" value="1" class="check" id="approve" {flag_approve} /> {l_approve}</label><br />
-  <label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {flag_mainpage} /> {l_mainpage}</label><br />
-  <label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {flag_pinned} /> {l_add_pinned}</label><br />
-  <label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {flag_favorite} /> {l_add_favorite}</label><br />
-  
-  <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" checked="checked" {disable_flag_html} /> {l_flag_html}</label><br />
-  <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {disable_flag_raw} /> {l_flag_raw}</label><br />
-   [comments]<hr/>{l_comments:mode.header}: <select name="allow_com"><option value="0"{acom:0}>{l_comments:mode.disallow}<option value="1"{acom:1}>{l_comments:mode.allow}<option value="2"{acom:2}>{l_comments:mode.default}</select>[/comments]<br />
+  <label><input type="checkbox" name="approve" value="1" class="check" id="approve" {% if (flags.approve) %}checked="checked"{% else %}disabled{% endif %} /> {{ lang.addnews['approve'] }}</label><br />
+  <label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {% if (flags.mainpage) %}checked="checked"{% else %}disabled{% endif %}  /> {{ lang.addnews['mainpage'] }}</label><br />
+  <label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {% if (flags.pinned) %}{% else %}disabled{% endif %}  /> {{ lang.addnews['add_pinned'] }}</label><br />
+  <label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {% if (flags.favorite) %}{% else %}disabled{% endif %}  /> {{ lang.addnews['add_favorite'] }}</label><br />
+
+  <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags['html.disabled']) %}disabled{% else %}checked="checked"{% endif %} /> {{ lang.addnews['flag_html'] }}</label><br />
+  <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW"  {% if (flags['raw.disabled']) %}disabled{% endif %} /> {{ lang.addnews['flag_raw'] }}</label><br />
+   {% if (pluginIsActive('comments')) %}<hr/>{{ lang['comments:mode.header'] }}:
+   <select name="allow_com">
+   	<option value="0"{{ plugin.comments['acom:0'] }}>{{ lang['comments:mode.disallow'] }}
+   	<option value="1"{{ plugin.comments['acom:1'] }}>{{ lang['comments:mode.allow'] }}
+   	<option value="2"{{ plugin.comments['acom:2'] }}>{{ lang['comments:mode.default'] }}
+   </select>
+   {% endif %}<br />
   </div>
-  
-  
   </tr>
  </table>
 
@@ -228,11 +230,11 @@ attachAddRow();
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr align="center">
 <td width="100%" class="contentEdit" align="center" valign="top">
-<input type="hidden" name="subaction" value="add" />
-<input type="hidden" name="mod" value="addnews" />
-<input type="hidden" name="save" value="" />
-<input type="button" value="{l_preview}" class="button" onclick="return preview();" />
-<input type="submit" value="{l_addnews}" class="button" />
+<input type="hidden" name="mod" value="news" />
+<input type="hidden" name="action" value="add" />
+<input type="hidden" name="subaction" value="submit" />
+<input type="button" value="{{ lang.addnews['preview'] }}" class="button" onclick="return preview();" />
+<input type="submit" value="{{ lang.addnews['addnews'] }}" class="button" />
 </td>
 </tr>
 </table>
@@ -240,7 +242,7 @@ attachAddRow();
 
 <script language="javascript" type="text/javascript">
 // Restore variables if needed
-var jev = {JEV};
+var jev = {{ JEV }};
 var form = document.getElementById('postForm');
 for (i in jev) {
  //try { alert(i+' ('+form[i].type+')'); } catch (err) {;}
@@ -248,7 +250,7 @@ for (i in jev) {
  	for (j in jev[i]) {
  		//alert(i+'['+j+'] = '+ jev[i][j]);
  		try { form[i+'['+j+']'].value = jev[i][j]; } catch (err) {;}
- 	}	
+ 	}
  } else {
   try {
    if ((form[i].type == 'text')||(form[i].type == 'textarea')||(form[i].type == 'select-one')) {

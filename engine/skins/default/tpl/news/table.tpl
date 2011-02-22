@@ -91,11 +91,11 @@ function filter_attach_DateEdit(id) {
 </div>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=editnews"> {{ lang.editnews['news_title'] }}</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news"> {{ lang.editnews['news_title'] }}</a></td>
 </tr>
 </table>
 
-<form action="{{ php_self }}?mod=editnews" method="post" name="options_bar">
+<form action="{{ php_self }}?mod=news" method="post" name="options_bar">
 <table width="1000" border="0" cellspacing="0" cellpadding="0" class="editfilter">
   <tr>
 <!--Block 1--><td rowspan="2">
@@ -164,7 +164,9 @@ function filter_attach_DateEdit(id) {
 
 <br />
 <!-- List of news start here -->
-<form action="{{ php_self }}?mod=editnews" method="post" name="editnews">
+<form action="{{ php_self }}?mod=news" method="post" name="editnews">
+<input type="hidden" name="mod" value="news" />
+<input type="hidden" name="action" value="manage" />
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left" class="contHead">
 <td width="5%" nowrap>{{ lang.editnews['postid_short'] }}</td>
@@ -181,9 +183,9 @@ function filter_attach_DateEdit(id) {
 <tr align="left" >
 	<td width="5%" class="contentEntry1">{{ entry.newsid }}</td>
 	<td width="10%" class="contentEntry1">{{ entry.itemdate }}</td>
-	<td width="16" class="contentEntry1" cellspacing=0 cellpadding=0 style="padding:0; margin:0;">{% if item.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="Main"/> {% endif %}</td>
+	<td width="16" class="contentEntry1" cellspacing=0 cellpadding=0 style="padding:0; margin:0;">{% if entry.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="Main"/> {% endif %}</td>
 	<td width="45%" class="contentEntry1">{% if (entry.attach_count > 0) %}<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="{l_attach.count}: {{ entry.attach_count }}"/> {% endif %}<a href="{{ php_self }}?mod=editnews&amp;action=editnews&amp;id={{ entry.newsid }}">{{ entry.title }}</a></td>
-	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:center;">{{ entry.comments }}</td>
+	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:center;">{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
 	{% endif %}<td class="contentEntry1">{{ entry.allcats }}</td>
 	<td class="contentEntry1"><a href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ entry.userid }}">{{ entry.username }}</a></td>
 	<td class="contentEntry1">{% if entry.flags.status %}<img src="{{ skins_url }}/images/yes.png" alt="{{ lang.approved }}" />{% else %}<img src="{{ skins_url }}/images/no.png" alt="{{ lang.unapproved }}" />{% endif %} </td>
@@ -202,21 +204,20 @@ function filter_attach_DateEdit(id) {
 <div style="text-align: left;">
 {{ lang.editnews['action'] }}: <select name="subaction" style="font: 12px Verdana, Courier, Arial; width: 230px;">
 <option value="">-- {{ lang.editnews['action'] }} --</option>
-<option value="do_mass_approve">{{ lang.editnews['approve'] }}</option>
-<option value="do_mass_forbidden">{{ lang.editnews['forbidden'] }}</option>
+<option value="mass_approve">{{ lang.editnews['approve'] }}</option>
+<option value="mass_forbidden">{{ lang.editnews['forbidden'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
-<option value="do_mass_mainpage">{{ lang.editnews['massmainpage'] }}</option>
-<option value="do_mass_unmainpage">{{ lang.editnews['massunmainpage'] }}</option>
+<option value="mass_mainpage">{{ lang.editnews['massmainpage'] }}</option>
+<option value="mass_unmainpage">{{ lang.editnews['massunmainpage'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
-<option value="do_mass_currdate">{{ lang.editnews['modify.mass.currdate'] }}</option>
+<option value="mass_currdate">{{ lang.editnews['modify.mass.currdate'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
 {% if flags.comments %}<option value="do_mass_com_approve">{{ lang.editnews['com_approve'] }}</option>
-<option value="do_mass_com_forbidden">{{ lang.editnews['com_forbidden'] }}</option>
+<option value="mass_com_forbidden">{{ lang.editnews['com_forbidden'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>{% endif %}
-<option value="do_mass_delete">{{ lang.editnews['delete'] }}</option>
+<option value="mass_delete">{{ lang.editnews['delete'] }}</option>
 </select>
 <input type="submit" value="{{ lang.editnews['submit'] }}" class="button" />
-<input type="hidden" name="mod" value="editnews" />
 <br/>
 </div>
 </td>
