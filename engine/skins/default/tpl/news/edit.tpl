@@ -14,7 +14,7 @@ function ChangeOption(optn) {
 	document.getElementById('rightBar').style.display	= (optn == 'comments')?"none":"";{% endif %}
 }
 function preview(){
- var form = document.getElementById("form");
+ var form = document.getElementById("postForm");
  if (form.ng_news_content{% if (flags.edit_split) %}_short{% endif %}.value == '' || form.title.value == '') {
   alert('{l_msge_preview}');
   return false;
@@ -50,7 +50,7 @@ function changeActive(name) {
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type=hidden name="area" value="" />
 </form>
-<form name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" id="form">
+<form name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" id="postForm">
 <input type="hidden" name="mod" value="news"/>
 <input type="hidden" name="action" value="edit"/>
 <input type="hidden" name="subaction" value="submit"/>

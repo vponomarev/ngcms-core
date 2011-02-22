@@ -25,7 +25,7 @@
      <td width="100%" class="contentEntry1"><img src="{skins_url}/images/1px.png" width="16" height="16" hspace="8" alt="" /><a href="{php_self}?mod=news&action=add" title="{l_news.add}">{l_news.add}</a></td>
     </tr>
     <tr>
-     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/1px.png" width="16" height="16" hspace="8" alt="" /><a href="{php_self}?mod=news&action=edit" title="{l_news.edit}">{l_news.edit}</a></td>
+     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/1px.png" width="16" height="16" hspace="8" alt="" /><a href="{php_self}?mod=news" title="{l_news.edit}">{l_news.edit}</a></td>
     </tr>
    </table>
   </td>
