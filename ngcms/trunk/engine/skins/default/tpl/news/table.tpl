@@ -184,7 +184,7 @@ function filter_attach_DateEdit(id) {
 	<td width="5%" class="contentEntry1">{{ entry.newsid }}</td>
 	<td width="10%" class="contentEntry1">{{ entry.itemdate }}</td>
 	<td width="16" class="contentEntry1" cellspacing=0 cellpadding=0 style="padding:0; margin:0;">{% if entry.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="Main"/> {% endif %}</td>
-	<td width="45%" class="contentEntry1">{% if (entry.attach_count > 0) %}<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="{l_attach.count}: {{ entry.attach_count }}"/> {% endif %}<a href="{{ php_self }}?mod=editnews&amp;action=editnews&amp;id={{ entry.newsid }}">{{ entry.title }}</a></td>
+	<td width="45%" class="contentEntry1">{% if (entry.attach_count > 0) %}<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="{l_attach.count}: {{ entry.attach_count }}"/> {% endif %}<a href="{{ php_self }}?mod=news&amp;action=edit&amp;id={{ entry.newsid }}">{{ entry.title }}</a></td>
 	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:center;">{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
 	{% endif %}<td class="contentEntry1">{{ entry.allcats }}</td>
 	<td class="contentEntry1"><a href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ entry.userid }}">{{ entry.username }}</a></td>
