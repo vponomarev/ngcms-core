@@ -104,7 +104,7 @@ class StaticFilter {
 
 	// ### Delete static page interceptor ###
 	// Delete static call
-	function deleteStatic($staticID, $SQLnews) { return 1; }
+	function deleteStatic($staticID, $SQLstatic) { return 1; }
 
 	// ### SHOW static interceptor ###
 	// Show static call :: preprocessor (call directly after news fetch)

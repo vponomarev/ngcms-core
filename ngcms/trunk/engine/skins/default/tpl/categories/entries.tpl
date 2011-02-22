@@ -4,6 +4,6 @@
 <td>{alt}</td>
 <td>{show_main}</td>
 <td>{template}</td>
-<td><a href="admin.php?mod=editnews&amp;category={rid}">{news}</a></td>
+<td><a href="admin.php?mod=news&amp;category={rid}">{news}</a></td>
 <td>[perm.modify]<a href="#" onclick="categoryModifyRequest('del', {rid});"><img title="{l_delete}" alt="{l_delete}" src="/engine/skins/default/images/delete.gif" /></a>[/perm.modify]</td>
 </tr>

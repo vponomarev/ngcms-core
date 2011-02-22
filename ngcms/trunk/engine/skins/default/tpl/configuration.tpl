@@ -357,7 +357,7 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_photos_thumb_size}<br /><small>{l_photos_thumb_size_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[photos_thumb_size]' value='{c_photos_thumb_size}' style="width: 40px" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[photos_thumb_size_x]' value='{photos_thumb_size_x}' style="width: 40px" /> x <input type="text" name='save_con[photos_thumb_size_y]' value='{photos_thumb_size_y}' style="width: 40px" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_user_aboutsize}<br /><small>{l_user_aboutsize_desc}</small></td>
@@ -397,7 +397,7 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_thumb_size}<br /><small>{l_thumb_size_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[thumb_size]' value='{c_thumb_size}' size="6" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[thumb_size_x]' value='{thumb_size_x}' size="6" /> x <input type="text" name='save_con[thumb_size_y]' value='{thumb_size_y}' size="6" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_thumb_quality}<br /><small>{l_thumb_quality_desc}</small></td>

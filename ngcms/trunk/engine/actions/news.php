@@ -15,20 +15,19 @@ if (!defined('NGCMS')) die ('HAL');
 
 LoadLang('editnews', 'admin');
 LoadLang('editnews', 'admin', 'editnews');
+LoadLang('addnews', 'admin', 'addnews');
 
-$situation = "news";
-
-$SQL = array();
-
-//
-// Выполнение редактирования новости
-//
+// ======================================================================================================
+// Edit news
+// ======================================================================================================
 function editNews() {
 	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW, $catz, $catmap;
+
 
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
 	// 1 = HTML enable	[if set, HTML codes may be used in news]
+	$SQL = array();
 
 	$SQL['flags'] = 0;
 	switch ($userROW['status']) {
@@ -166,19 +165,12 @@ function editNews() {
 		$SQL['favorite']  = intval($_REQUEST['favorite']);
 		$SQL['pinned']    = intval($_REQUEST['pinned']);
 
-		// Use flag 'allow comments' only in case when plugin 'comments' is installed
-		if (getPluginStatusInstalled('comments'))
-			$SQL['allow_com'] = intval($_REQUEST['allow_com']);
-
 		if ($_REQUEST['setViews'])
 			$SQL['views'] = intval($_REQUEST['views']);
 	} else {
 		foreach (array('mainpage', 'approve', 'favorite', 'pinned') as $v) {
 			$SQL[$v] = $row[$v];
 		}
-
-		if (getPluginStatusInstalled('comments'))
-			$SQL['allow_com'] = $row['allow_com'];
 	}
 
 	// Load list of attached images/files
@@ -274,11 +266,11 @@ function editNews() {
 }
 
 
-//
-// Форма редактирования новости
-//
+// ======================================================================================================
+// Edit news form
+// ======================================================================================================
 function editNewsForm() {
-	global $lang, $parse, $mysql, $config, $tpl, $mod, $PFILTERS, $tvars, $userROW;
+	global $lang, $parse, $mysql, $config, $PFILTERS, $tvars, $userROW, $twig;
 
 	// Get news id
 	$id			= $_REQUEST['id'];
@@ -301,8 +293,7 @@ function editNewsForm() {
 	$cats = explode(",", $row['catid']);
 	$content = $row['content'];
 
-	$tvars = array();
-	$tvars['vars'] = array(
+	$tVars = array(
 		'php_self'			=>	$PHP_SELF,
 		'changedate'		=>	ChangeDate($row['postdate'], 1),
 		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
@@ -310,7 +301,7 @@ function editNewsForm() {
 		'allcats'			=>	@GetAllCategories($cats),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
-		'content'			=>  secure_html($content),
+		'content'			=>  array(),
 		'alt_name'			=>	$row['alt_name'],
 		'avatar'			=>	$row['avatar'],
 		'description'		=>	secure_html($row['description']),
@@ -323,67 +314,41 @@ function editNewsForm() {
 		'author_page'		=>  checkLinkAvailable('uprofile', 'show')?
 									generateLink('uprofile', 'show', array('name' => $row['author'], 'id' => $row['author_id'])):
 									generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['author'], 'id' => $row['author_id'])),
-
+		'smilies'			=> $config['use_smilies']?InsertSmilies('', 20, 'currentInputAreaID'):'',
+		'quicktags'			=> $config['use_bbcodes']?QuickTags('currentInputAreaID', 'news'):'',
+		'flags'				=> array(
+			'edit_split'		=> $config['news.edit.split']?true:false,
+			'meta'				=> $config['meta']?true:false,
+			'options'			=> ($userROW['status'] < 3)?true:false,
+			'mainpage'			=> $row['mainpage']?true:false,
+			'favorite'			=> $row['favorite']?true:false,
+			'approve'			=> $row['approve']?true:false,
+			'pinned'			=> $row['pinned']?true:false,
+			'raw'				=> ($row['flags'] & 1),
+			'html'				=> ($row['flags'] & 2),
+			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
+		)
 	);
 
 
 	// Generate data for content input fields
 	if ($config['news.edit.split']) {
-		$tvars['vars']['content.delimiter'] = '';
+		$tVars['content']['delimiter'] = '';
 		if (preg_match('#^(.*?)<!--more-->(.*?)$#si', $row['content'], $match)) {
-			$tvars['vars']['content.short'] = secure_html($match[1]);
-			$tvars['vars']['content.full'] = secure_html($match[2]);
+			$tVars['content']['short'] = secure_html($match[1]);
+			$tVars['content']['full'] = secure_html($match[2]);
 		} else if (preg_match('#^(.*?)<!--more=\"(.*?)\"-->(.*?)$#si', $row['content'], $match)) {
-			$tvars['vars']['content.short'] = secure_html($match[1]);
-			$tvars['vars']['content.full'] = secure_html($match[3]);
-			$tvars['vars']['content.delimiter'] = secure_html($match[2]);
+			$tVars['content']['short'] = secure_html($match[1]);
+			$tVars['content']['full'] = secure_html($match[3]);
+			$tVars['content']['delimiter'] = secure_html($match[2]);
 		} else {
-			$tvars['vars']['content.short'] = secure_html($row['content']);
-			$tvars['vars']['content.full'] = '';
+			$tVars['content']['short'] = secure_html($row['content']);
+			$tVars['content']['full'] = '';
 		}
-		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '$1';
-		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '';
-
 	} else {
-		$tvars['vars']['content'] = secure_html($row['content']);
-		$tvars['regx']['#\[edit\.split\](.+?)\[\\/edit\.split\]#is']		= '';
-		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\\/edit\.nosplit\]#is']	= '$1';
+		$tVars['content']['short'] = secure_html($row['content']);
 	}
 
-	// Extended <!--more--> support
-	$tvars['regx']['#\[extended\.more\](.*?)\[\/extended\.more\]#is']		= ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?'$1':'';
-
-	if ($config['use_smilies']) {
-		$tvars['vars']['smilies'] = InsertSmilies('', 20, 'currentInputAreaID');
-	} else {
-		$tvars['vars']['smilies'] = '';
-	}
-
-	if ($config['use_bbcodes']) {
-		$tvars['vars']['quicktags'] = QuickTags('currentInputAreaID', 'news');
-	} else {
-		$tvars['vars']['quicktags'] = '';
-	}
-
-	if ($userROW['status'] < 3) {
-		$tvars['vars']['[options]'] = '';
-		$tvars['vars']['[/options]'] = '';
-	} else {
-		$tvars['regx']["'\[options\].*?\[/options\]'si"] = '';
-	}
-
-	$tvars['vars']['ifmp']		=	($row['mainpage'])  ? 'checked="checked"' : '';
-	$tvars['vars']['iffav']		=	($row['favorite'])  ? 'checked="checked"' : '';
-	$tvars['vars']['ifapp']		=	($row['approve'])   ? 'checked="checked"' : '';
-	$tvars['vars']['ifpin']		=	($row['pinned'])    ? 'checked="checked"' : '';
-	$tvars['vars']['ifraw']		=	($row['flags'] & 1) ? 'checked="checked"' : '';
-	$tvars['vars']['ifhtml']	=	($row['flags'] & 2) ? 'checked="checked"' : '';
-
-//	$tvars['vars']['ifch']		=	($row['allow_com']) ? 'checked="checked"' : '';
-
-
-	// Disable flag for comments if plugin 'comments' is not installed
-	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
 	$flock = 0;
 	switch ($userROW['status']) {
@@ -392,24 +357,14 @@ function editNewsForm() {
 		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
 	}
 
-	$tvars['vars']['disable_flag_raw']	= $flock?'disabled':'';
-	$tvars['vars']['disable_flag_html']	= $flock?'disabled':'';
-	$tvars['vars']['flags_lost']		= $flock?'[<font color=red>'.$lang['flags_lost'].'</font>]':'';
-
-	//
-	if ($config['meta']) {
-		$tvars['vars']['[meta]'] = '';
-		$tvars['vars']['[/meta]'] = '';
-	} else{
-		$tvars['regx']["'\[meta\].*?\[/meta\]'si"] = '';
-	}
+	$tVars['falgs']['raw.disabled']		= $flock?true:false;
+	$tVars['flags']['html.disabled']	= $flock?true:false;
 
 	// Check for attached files
-	$attaches_entries = '';
+	$attachEntries = array();
 	$attachNumber = 0;
+
 	if ($row['num_files']) {
-		// Yeah! We have some attached files
-		$tpl->template('attach.file', tpl_actions.$mod);
 
 		$num = 0;
 		foreach ($row['#files'] as $arow) {
@@ -417,38 +372,35 @@ function editNewsForm() {
 			if ($arow['plugin'] != '') continue;
 
 			$attachNumber++;
-			$avars = array('vars' => array(
+			$attachEntry = array(
 				'id'	=> $arow['id'],
 				'num'	=> $attachNumber,
 				'date'	=> $arow['date'],
 				'orig_name'	=> $arow['orig_name'],
-			));
+			);
 
 			// Check if file exists
 			$fname = ($arow['storage']?$config['attach_dir']:$config['files_dir']).$arow['folder'].'/'.$arow['name'];
 			if (file_exists($fname) && ($fsize = @filesize($fname))) {
-				$avars['vars']['filesize'] = Formatsize($fsize);
-				$avars['vars']['url'] = (($arow['storage'])?($config['attach_url']):($config['files_url'])).'/'.$arow['folder'].'/'.$arow['name'];
+				$attachEntry['filesize'] = Formatsize($fsize);
+				$attachEntry['url'] = (($arow['storage'])?($config['attach_url']):($config['files_url'])).'/'.$arow['folder'].'/'.$arow['name'];
 			} else {
-				$avars['vars']['filesize'] = '<font color="red">n/a</font>';
+				$attachEntry['filesize'] = '<font color="red">n/a</font>';
 			}
-			$tpl->vars('attach.file', $avars);
-			$attach_entries .= $tpl->show('attach.file');
+			$attachEntries []= $attachEntry;
 		}
 	}
-
-	$tvars['vars']['attach_entries'] = $attach_entries;
-	$tvars['vars']['attach_count'] = '('.($attachNumber?$attachNumber:$lang['noa']).')';
+	$tVars['attachEntries'] = $attachEntries;
+	$tVars['attachCount'] = $attachNumber;
 
 	exec_acts('editnews_entry', $row['xfields'], '');
 	exec_acts('editnews_form');
 
 	if (is_array($PFILTERS['news']))
-		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsForm($id, $row, $tvars); }
+		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsForm($id, $row, $tVars); }
 
-	$tpl -> template('edit', tpl_actions.$mod);
-	$tpl -> vars('edit', $tvars);
-	echo $tpl -> show('edit');
+	$xt = $twig->loadTemplate('skins/default/tpl/news/edit.tpl');
+	echo $xt->render($tVars);
 }
 
 //
@@ -613,36 +565,11 @@ function makeSortList($selected) {
 }
 
 
-// #=======================================#
-// # Action selection                      #
-// #=======================================#
-
-$action		=	$_REQUEST['action'];
-$subaction	=	$_REQUEST['subaction'];
-
-
-if ($action == "editnews") {
-	if ($subaction == "doeditnews") { editNews(); }
-	editNewsForm();
-} elseif ($action == "do_mass_com_delete") {
-	massCommentDelete();
-} else {
-	switch($subaction) {
-		case 'do_mass_currdate'		:	$curdate = time() + ($config['date_adjust'] * 60);
-										massNewsModify( array('postdate' => $curdate),	'msgo_currdate',	'capprove');   break;
-		case 'do_mass_approve'      :	massNewsModify( array('approve'   => 1),	'msgo_approved',	'approve');    break;
-		case 'do_mass_mainpage'     :	massNewsModify( array('mainpage'  => 1),	'msgo_mainpaged',	'mainpage');   break;
-		case 'do_mass_unmainpage'   :	massNewsModify( array('mainpage'  => 0),	'msgo_unmainpage',	'unmainpage'); break;
-		case 'do_mass_forbidden'    :	massNewsModify( array('approve'   => 0),	'msgo_forbidden',	'forbidden');  break;
-		case 'do_mass_com_forbidden':	massNewsModify( array('allow_com' => 0),	'msgo_cforbidden',	'cforbidden'); break;
-		case 'do_mass_com_approve'  :	massNewsModify( array('allow_com' => 1),	'msgo_capproved',	'capprove');   break;
-		case 'do_mass_delete'       :	massNewsDelete(); break;
-	}
-	listNewsForm();
-}
-
+// ======================================================================================================
+// List news
+// ======================================================================================================
 function listNewsForm() {
-	global $mysql, $lang, $twig, $tpl;
+	global $mysql, $lang, $twig, $tpl, $catz, $catmap;
 
 	// Search filters
 	$fSearchLine		= $_REQUEST['sl'];
@@ -739,7 +666,7 @@ function listNewsForm() {
 
 	// Perform search
 	if ($fSearchLine != '') {
-			array_push($conditions, ($fSearchType?'content':'title')." like ".db_squote('%'.$fSearchLine.'%'));
+		array_push($conditions, ($fSearchType?'content':'title')." like ".db_squote('%'.$fSearchLine.'%'));
 	}
 
 	$sqlQPart = "from ".prefix."_news ".(count($conditions)?"where ".implode(" AND ", $conditions):'').' '.$fSort;
@@ -772,6 +699,7 @@ function listNewsForm() {
 			'itemdate'		=> date("d.m.Y",$row['postdate']),
 			'allcats'		=> @GetAllCategories($cats).' &nbsp;',
 			'title'			=> secure_html((strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title']),
+			'link'			=> newsGenerateLink($row, false, 0, true),
 
 			'flags'			=> array(
 				'comments'		=> getPluginStatusInstalled('comments')?true:false,
@@ -818,22 +746,22 @@ function listNewsForm() {
 
 	if ($entries_showed) {
 		$tVars['pagesss'] = generateAdminPagelist(
-				array(
-					'maxNavigations' => 30,
-					'current' => $pageNo,
-					'count' => $countPages,
-					'url' => admin_url.
-							'/admin.php?mod=editnews&action=list'.
-							($fRPP?'&rpp='.$fRPP:'').
-							($fAuthorName != ''?'&an='.$fAuthorName:'').
-							($fSearchLine != ''?'&sl='.$fSearchLine:'').
-							($fSearchType != ''?'&st='.$fSearchType:'').
-							($fDateStartText != ''?'&dr1='.$fDateStartText:'').
-							($fDateStopText != ''?'&dr2='.$fDateStopText:'').
-							($fCategoryId != ''?'&category='.$fCategoryId:'').
-							($fStatus != ''?'&status='.$fStatus:'').
-							'&page=%page%'
-						));
+		array(
+			'maxNavigations' => 30,
+			'current' => $pageNo,
+			'count' => $countPages,
+			'url' => admin_url.
+					'/admin.php?mod=editnews&action=list'.
+					($fRPP?'&rpp='.$fRPP:'').
+					($fAuthorName != ''?'&an='.$fAuthorName:'').
+					($fSearchLine != ''?'&sl='.$fSearchLine:'').
+					($fSearchType != ''?'&st='.$fSearchType:'').
+					($fDateStartText != ''?'&dr1='.$fDateStartText:'').
+					($fDateStopText != ''?'&dr2='.$fDateStopText:'').
+					($fCategoryId != ''?'&category='.$fCategoryId:'').
+					($fStatus != ''?'&status='.$fStatus:'').
+					'&page=%page%'
+				));
 	}
 
 	$tVars['an'] = secure_html($fAuthorName);
@@ -844,6 +772,389 @@ function listNewsForm() {
 	$tVars['dr2'] = $fDateStopText;
 	$tVars['localPrefix'] = localPrefix;
 
-	$xt = $twig->loadTemplate('skins/default/tpl/editnews/table.tpl');
+	// Prepare category menu
+	{
+		$cList = $mysql->select("select * from ".prefix."_category order by posorder");
+		$cLen  = count($cList);
+
+		$tcRecs = array();
+		// Go through this list
+		foreach ( $cList as $num => $row) {
+			// Prepare data for template
+			$tcRec = array(
+				'id'		=>	$row['id'],
+				'name'		=>	$row['name'],
+				'posts'		=>	$row['posts'],
+				'alt'		=>	$row['alt'],
+				'alt_url'	=>	$row['alt_url'],
+				'flags'		=>	array(
+					'selected'	=> (isset($_REQUEST['category']) && ($row['id'] == $_REQUEST['category']))?true:false,
+				),
+			);
+
+			// Prepare position
+			$tcRec['cutter'] = '';
+			if ($row['poslevel'] > 0) {
+				$tcRec['cutter'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
+			} else {
+				$tcRec['cutter'] = '';
+			}
+			$tcRec['cutter'] = $tcRec['cutter'] .
+				'<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen-1) || ($cList[$num]['poslevel'] > $cList[$num+1]['poslevel'])))?'bottom':'').'.gif" />';
+
+			$tcRecs []= $tcRec;
+		}
+	}
+
+	$tVars['catmenu'] = $tcRecs;
+	$tVars['cat_active'] = ((isset($_REQUEST['category']) && (isset($catmap[intval($_REQUEST['category'])]))))?intval($_REQUEST['category']):0;
+
+	$xt = $twig->loadTemplate('skins/default/tpl/news/table.tpl');
 	echo $xt->render($tVars);
 }
+
+
+
+// ======================================================================================================
+// Add news
+// ======================================================================================================
+function addNews(){
+	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config, $catz, $catmap;
+
+	$title = $_REQUEST['title'];
+
+	// Fill content
+	$content	= '';
+
+	// Check if EDITOR SPLIT feature is activated
+	if ($config['news.edit.split']) {
+		// Prepare delimiter
+		$ed = '<!--more-->';
+		if ($config['extended_more'] && ($_REQUEST['content_delimiter'] != '')) {
+			// Disable `new line` + protect from XSS
+			$ed = '<!--more="'.str_replace(array("\r", "\n", '"'), '', $_REQUEST['content_delimiter']).'"-->';
+		}
+		$content = $_REQUEST['ng_news_content_short'].(($_REQUEST['ng_news_content_full'] != '')?$ed.$_REQUEST['ng_news_content_full']:'');
+
+	} else {
+		$content = $_REQUEST['ng_news_content'];
+	}
+
+	// Rewrite `\r\n` to `\n`
+	$content = str_replace("\r\n", "\n", $content);
+
+	$alt_name = $parse->translit(trim($_REQUEST['alt_name']), 1);
+
+	// Check title
+	if ( (!strlen(trim($title))) || (!strlen(trim($content))) ) {
+		msg(array("type" => "error", "text" => $lang['addnews']['msge_fields'], "info" => $lang['addnews']['msgi_fields']));
+		return 0;
+	}
+
+	$SQL['title'] = $title;
+
+	// Check for dup if alt_name is specified
+	if ($alt_name) {
+		if ( is_array($mysql->record("select id from ".prefix."_news where alt_name = ".db_squote($alt_name)." limit 1")) ) {
+			msg(array("type" => "error", "text" => $lang['addnews']['msge_alt_name'], "info" => $lang['addnews']['msgi_alt_name']));
+			return;
+		}
+		$SQL['alt_name'] = $alt_name;
+	} else {
+		// Generate uniq alt_name if no alt_name specified
+		$alt_name = strtolower($parse->translit(trim($title), 1));
+		// Make a conversion:
+		// * '.'  to '_'
+		// * '__' to '_' (several to one)
+		// * Delete leading/finishing '_'
+		$alt_name = preg_replace(array('/\./', '/(_{2,20})/', '/^(_+)/', '/(_+)$/'), array('_', '_'), $alt_name);
+
+		// Make alt_name equal to '_' if it appear to be blank after conversion
+		if ($alt_name == '') $alt_name = '_';
+
+		$i = '';
+		while ( is_array($mysql->record("select id from ".prefix."_news where alt_name = ".db_squote($alt_name.$i)." limit 1")) ) {
+			$i++;
+		}
+		$SQL['alt_name'] = $alt_name.$i;
+	}
+
+	if ($_REQUEST['customdate']) {
+		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
+	} else {
+		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
+	}
+
+	$SQL['editdate'] = $SQL['postdate'];
+
+	// Fetch MASTER provided categories
+	$catids = array ();
+	if (intval($_POST['category']) && isset($catmap[intval($_POST['category'])])) {
+		$catids[intval($_POST['category'])] = 1;
+	}
+
+	// Fetch ADDITIONAL provided categories
+	foreach ($_POST as $k => $v) {
+		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
+			$catids[$match[1]] = 1;
+	}
+
+	if ($config['meta']) {
+		$SQL['description']	= $_REQUEST['description'];
+		$SQL['keywords']	= $_REQUEST['keywords'];
+	}
+
+	$SQL['author']		= $userROW['name'];
+	$SQL['author_id']	= $userROW['id'];
+	$SQL['catid']		= implode(",", array_keys($catids));
+
+	// Variable FLAGS is a bit-variable:
+	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
+	// 1 = HTML enable	[if set, HTML codes may be used in news]
+
+	$SQL['flags'] = 0;
+	switch ($userROW['status']) {
+		case 1:		// admin can do anything
+			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
+			break;
+
+		case 2:		// Editor. Check if we have permissions
+			if (!$config['htmlsecure_2'])
+				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
+			break;
+
+		case 3:		// Journalists. Check if we have permissions
+			if (!$config['htmlsecure_3'])
+				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
+			break;
+
+		case 4:		// Commentors. Check if we have permissions
+			if (!$config['htmlsecure_4'])
+				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
+			break;
+	}
+
+	// This actions are allowed only for admins & Edtiors
+	if (($userROW['status'] == 1)||($userROW['status'] == 2)) {
+		$SQL['mainpage']	= intval($_REQUEST['mainpage']);
+		$SQL['approve']		= intval($_REQUEST['approve']);
+		$SQL['favorite']	= intval($_REQUEST['favorite']);
+		$SQL['pinned']		= intval($_REQUEST['pinned']);
+	}
+
+	$SQL['content']		= $content;
+
+	exec_acts('addnews');
+
+	$pluginNoError = 1;
+	if (is_array($PFILTERS['news']))
+		foreach ($PFILTERS['news'] as $k => $v) {
+			if (!($pluginNoError = $v->addNews($tvars, $SQL))) {
+				msg(array("type" => "error", "text" => str_replace('{plugin}', $k, $lang['addnews']['msge_pluginlock'])));
+				break;
+			}
+		}
+
+	if (!$pluginNoError) {
+		return 0;
+	}
+
+	$vnames = array(); $vparams = array();
+	foreach ($SQL as $k => $v) { $vnames[]  = $k; $vparams[] = db_squote($v); }
+
+	$mysql->query("insert into ".prefix."_news (".implode(",",$vnames).") values (".implode(",",$vparams).")");
+	$id = $mysql->result("SELECT LAST_INSERT_ID() as id");
+
+	// Update category / user posts counter [ ONLY if news is approved ]
+	if ($SQL['approve']) {
+		if (count($catids)) {
+			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(", ",array_keys($catids)).")");
+			foreach (array_keys($catids) as $catid) {
+				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".db_squote($id).", ".db_squote($catid).")");
+			}
+		}
+		$mysql->query("update ".uprefix."_users set news=news+1 where id=".$SQL['author_id']);
+	}
+
+
+	// Now let's manage attached files
+	$fmanager = new file_managment();
+
+	$flagUpdateAttachCount = false;
+
+	// Delete files (if needed)
+	foreach ($_POST as $k => $v) {
+		if (preg_match('#^delfile_(\d+)$#', $k, $match)) {
+			$fmanager->file_delete(array('type' => 'file', 'id' => $match[1]));
+			$flagUpdateAttachCount = true;
+		}
+	}
+
+	//print "<pre>".var_export($_FILES, true)."</pre>";
+	// PREPARE a list for upload
+	if (is_array($_FILES['userfile']['name']))
+		foreach($_FILES['userfile']['name'] as $i => $v) {
+			if ($v == '')
+				continue;
+
+			$flagUpdateAttachCount = true;
+			//
+			$up = $fmanager->file_upload(array('dsn' => true, 'linked_ds' => 1, 'linked_id' => $id, 'type' => 'file', 'http_var' => 'userfile', 'http_varnum' => $i));
+			//print "OUT: <pre>".var_export($up, true)."</pre>";
+			if (!is_array($up)) {
+				// Error uploading file
+				// ... show error message ...
+			}
+		}
+
+	// Update attach count if we need this
+	if ($flagUpdateAttachCount) {
+		$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+		$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+
+		$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
+		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
+	}
+
+	// Notify plugins about adding new news
+	if (is_array($PFILTERS['news']))
+		foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
+
+	exec_acts('addnews_', $id);
+	msg(array("text" => $lang['addnews']['msgo_added'], "info" => sprintf($lang['addnews']['msgi_added'], admin_url.'/admin.php?mod=news&action=edit&id='.$id, admin_url.'/admin.php?mod=news')));
+
+	return 1;
+}
+
+
+// ======================================================================================================
+// Add news form
+// ======================================================================================================
+function addNewsForm($retry = ''){
+	global $lang, $mysql, $config, $userROW, $PFILTERS, $tpl, $twig;
+
+	$tVars = array(
+		'php_self'			=> $PHP_SELF,
+		'changedate'		=> ChangeDate(),
+		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0)),
+		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1)),
+		'JEV'				=> $retry,
+		'smilies'			=> ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'',
+		'tags'				=> ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'',
+		'flags'				=> array(
+			'edit_split'		=> $config['news.edit.split']?true:false,
+			'options'			=> ($userROW['status'] < 3)?true:false,
+			'meta'				=> $config['meta']?true:false,
+			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
+		),
+	);
+
+	$flock = 0;
+	switch ($userROW['status']) {
+		case 2:		if ($config['htmlsecure_2']) $flock = 1;	break;
+		case 3:		if ($config['htmlsecure_3']) $flock = 1;	break;
+		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
+	}
+
+	$tVars['falgs']['raw.disabled']		= $flock?true:false;
+	$tVars['flags']['html.disabled']	= $flock?true:false;
+
+	// Configure flags
+	$tVars['flags']['mainpage']  = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
+	$tVars['flags']['approve']   = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
+	$tVars['flags']['favorite']  = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
+	$tVars['flags']['pinned']    = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
+
+	// Generate data for content input fields
+	if ($config['news.edit.split']) {
+		$tvars['regx']['#\[edit\.split\](.+?)\[\/edit\.split\]#is']		= '$1';
+		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\/edit\.nosplit\]#is']	= '';
+	} else {
+		$tvars['regx']['#\[edit\.split\](.+?)\[\/edit\.split\]#is']		= '';
+		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\/edit\.nosplit\]#is']	= '$1';
+	}
+
+	// Disable flag for comments if plugin 'comments' is not installed
+	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
+
+	// Run interceptors
+	if (is_array($PFILTERS['news']))
+		foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsForm($tVars); }
+
+	$xt = $twig->loadTemplate('skins/default/tpl/news/add.tpl');
+	echo $xt->render($tVars);
+}
+
+
+
+
+// #==============================================================================#
+// # Action selection                                                             #
+// #==============================================================================#
+
+$action		=	$_REQUEST['action'];
+$subaction	=	$_REQUEST['subaction'];
+
+// Main execution block
+do {
+	// Manage "ADD" mode
+	if ($action == "add") {
+		$replay = false;
+		if ($subaction == "submit") {
+			if (!addNews()) {
+				$replay = true;
+			}
+		}
+		addNewsForm($replay?json_encode(arrayCharsetConvert(0, $_POST)):null);
+		break;
+	}
+
+	if ($action == "edit") {
+		if ($subaction == "submit") {
+			editNews();
+		}
+		if ($subaction == "mass_com_delete") {
+			massCommentDelete();
+		}
+		editNewsForm();
+		break;
+	}
+
+	if ($action == "manage") {
+		switch($subaction) {
+			case 'mass_currdate'	:	$curdate = time() + ($config['date_adjust'] * 60);
+										massNewsModify( array('postdate' => $curdate),	'msgo_currdate',	'capprove');	break;
+			case 'mass_approve'      :	massNewsModify( array('approve'   => 1),	'msgo_approved',	'approve');			break;
+			case 'mass_mainpage'     :	massNewsModify( array('mainpage'  => 1),	'msgo_mainpaged',	'mainpage');		break;
+			case 'mass_unmainpage'   :	massNewsModify( array('mainpage'  => 0),	'msgo_unmainpage',	'unmainpage');		break;
+			case 'mass_forbidden'    :	massNewsModify( array('approve'   => 0),	'msgo_forbidden',	'forbidden');		break;
+			case 'mass_com_forbidden':	massNewsModify( array('allow_com' => 0),	'msgo_cforbidden',	'cforbidden');		break;
+			case 'mass_com_approve'  :	massNewsModify( array('allow_com' => 1),	'msgo_capproved',	'capprove');		break;
+			case 'mass_delete'       :	massNewsDelete();	break;
+		}
+	}
+	listNewsForm();
+
+} while (false);
+
+/*
+if ($action == "editnews") {
+	if ($subaction == "doeditnews") { editNews(); }
+	editNewsForm();
+} elseif ($action == "do_mass_com_delete") {
+	massCommentDelete();
+} else {
+	switch($subaction) {
+		case 'do_mass_currdate'		:	$curdate = time() + ($config['date_adjust'] * 60);
+										massNewsModify( array('postdate' => $curdate),	'msgo_currdate',	'capprove');   break;
+		case 'do_mass_approve'      :	massNewsModify( array('approve'   => 1),	'msgo_approved',	'approve');    break;
+		case 'do_mass_mainpage'     :	massNewsModify( array('mainpage'  => 1),	'msgo_mainpaged',	'mainpage');   break;
+		case 'do_mass_unmainpage'   :	massNewsModify( array('mainpage'  => 0),	'msgo_unmainpage',	'unmainpage'); break;
+		case 'do_mass_forbidden'    :	massNewsModify( array('approve'   => 0),	'msgo_forbidden',	'forbidden');  break;
+		case 'do_mass_com_forbidden':	massNewsModify( array('allow_com' => 0),	'msgo_cforbidden',	'cforbidden'); break;
+		case 'do_mass_com_approve'  :	massNewsModify( array('allow_com' => 1),	'msgo_capproved',	'capprove');   break;
+		case 'do_mass_delete'       :	massNewsDelete(); break;
+	}
+	listNewsForm();
+}
+*/

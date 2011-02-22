@@ -140,9 +140,11 @@ function manage_upload($type){
 				}
 
 				if ($mkThumb) {
-					$tsz = intval($config['thumb_size']);
-					if (($tsz < 10)||($tsz > 1000)) $tsz = 150;
-					$thumb = $imanager->create_thumb($config['images_dir'].$subdirectory, $up[1], $tsz,$tsz, $config['thumb_quality']);
+					$tsx = intval($config['thumb_size_x'])?intval($config['thumb_size_x']):intval($config['thumb_size']);
+					$tsy = intval($config['thumb_size_y'])?intval($config['thumb_size_y']):intval($config['thumb_size']);
+					if (($tsx < 10)||($tsx > 1000)) $tsx = 150;
+					if (($tsy < 10)||($tsy > 1000)) $tsy = 150;
+					$thumb = $imanager->create_thumb($config['images_dir'].$subdirectory, $up[1], $tsx,$tsy, $config['thumb_quality']);
 					if ($thumb) {
 						// If we created thumb - check if we need to transform it
 						$stampThumb  = ($mkStamp  && $config['stamp_place'] && ($stampFileName != ''))?1:0;
