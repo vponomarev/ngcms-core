@@ -20,7 +20,7 @@ function preview(){
  form.target = "_blank";
  form.submit();
 
- form.mod.value = "addnews";
+ form.mod.value = "news";
  form.target = "_self";
  return true;
 }

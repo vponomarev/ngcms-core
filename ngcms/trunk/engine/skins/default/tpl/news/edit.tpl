@@ -44,7 +44,7 @@ function changeActive(name) {
 
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a> &#8594; {{ lang.editnews['editnews_title'] }} "<a href="?mod=news&action=news&id={{ id }}">{{ title }}</a>"</td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a> &#8594; {{ lang.editnews['editnews_title'] }} "<a href="?mod=news&action=edit&id={{ id }}">{{ title }}</a>"</td>
 </tr>
 </table>
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">

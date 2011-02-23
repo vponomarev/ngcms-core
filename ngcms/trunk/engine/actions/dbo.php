@@ -103,21 +103,27 @@ function systemDboModify() {
 			$mysql->query("update ".prefix."_category set posts = ".intval($ccount[$key['id']])." where id = ".$key['id']);
 		}
 
-		foreach ($mysql->select("select n.id, count(c.id) as cid from ".prefix."_news n left join ".prefix."_comments c on c.post=n.id group by n.id") as $row) {
-			$mysql->query("update ".prefix."_news set com=".$row['cid']." where id = ".$row['id']);
-	  	}
+		// Check if we can update comments counters
+		$haveComments = $mysql->table_exists(prefix."_comments")?true:false;
+
+		if ($haveComments) {
+			foreach ($mysql->select("select n.id, count(c.id) as cid from ".prefix."_news n left join ".prefix."_comments c on c.post=n.id group by n.id") as $row) {
+				$mysql->query("update ".prefix."_news set com=".$row['cid']." where id = ".$row['id']);
+			}
+		}
 
 	  	// Обновляем счетчик постов у юзеров
-	  	$mysql->query("update ".prefix."_users set news = 0, com = 0");
+	  	$mysql->query("update ".prefix."_users set news = 0".($haveComments?", com = 0":""));
 	  	foreach ($mysql->select("select author_id, count(*) as cnt from ".prefix."_news group by author_id") as $row) {
 	  		$mysql->query("update ".uprefix."_users set news=".$row['cnt']." where id = ".$row['author_id']);
 	  	}
 
-	  	// Обновляем счетчик комментариев у юзеров
-	  	foreach ($mysql->select("select author_id, count(*) as cnt from ".prefix."_comments group by author_id") as $row) {
-	  		$mysql->query("update ".uprefix."_users set com=".$row['cnt']." where id = ".$row['author_id']);
-	  	}
-
+		if ($haveComments) {
+		  	// Обновляем счетчик комментариев у юзеров
+		  	foreach ($mysql->select("select author_id, count(*) as cnt from ".prefix."_comments group by author_id") as $row) {
+		  		$mysql->query("update ".uprefix."_users set com=".$row['cnt']." where id = ".$row['author_id']);
+		  	}
+		}
 		// Обновляем кол-во приложенных файлов/изображений к новостям
 		$mysql->query("update ".prefix."_news set num_files = 0, num_images = 0");
 		foreach ($mysql->select("select linked_id, count(id) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) group by linked_id") as $row) {
