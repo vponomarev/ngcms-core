@@ -125,7 +125,7 @@ function changeActive(name) {
 <span class="f15">{{ lang.addnews['attach.list'] }}</span>
 <table width="100%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
 <thead>
-<tr class="contHead"><td>#</td><td width="80">Date</td><td>FileName</td><td width="90">Size</td><td width="40">DEL</td></tr>
+<tr class="contHead"><td>#</td><td width="80">{{ lang.editnews['attach.date'] }}</td><td>{{ lang.editnews['attach.filename'] }}</td><td width="90">{{ lang.editnews['attach.size'] }}</td><td width="40">DEL</td></tr>
 </thead>
 <tbody>
 <!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
@@ -142,7 +142,7 @@ function attachAddRow() {
 
 	// Add cells
 	row.insertCell(0).innerHTML = '*';
-	row.insertCell(1).innerHTML = 'New file';
+	row.insertCell(1).innerHTML = '{{ lang.editnews['attach.new_file'] }}';
 
 	// Add file input
 	var el = document.createElement('input');
@@ -185,7 +185,7 @@ attachAddRow();
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
-   <td><span class="f15">{{ lang.addnews['editor.extcat'] }}</span></td>
+   <td><span class="f15">{{ lang['editor.extcat'] }}</span></td>
   </tr>
   <tr>
    <td></td><td>
@@ -196,7 +196,7 @@ attachAddRow();
   <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
-   <td><span class="f15">{{ lang.addnews['editor.configuration'] }}</span></td>
+   <td><span class="f15">{{ lang['editor.configuration'] }}</span></td>
   </tr>
   <tr>
 
