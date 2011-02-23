@@ -47,12 +47,10 @@ function GetFiles($dir, $path, $list = false) {
 		}
 	}
 	closedir($fo);
-
 	return array('files' => $files, 'directories' => $directories);
 }
 
 function GetFilesArray($theme, $where) {
-
 	if ($where == "actions") { $path = root.'skins/'.$theme.'/tpl'; }
 	elseif ($where == "extras") { $path = root.'plugins/'; }
 	elseif ($where == "site") { $path = tpl_dir.$theme; }
@@ -63,7 +61,6 @@ function GetFilesArray($theme, $where) {
 }
 
 function GetFilesGlobal($theme, $where) {
-
 	if ($where == "actions") { $path = root.'skins/'.$theme; }
 	elseif ($where == "site") { $path = tpl_dir.$theme; }
 
@@ -88,7 +85,6 @@ function GetThemes($where, $select = true) {
 
 		$whats .= '<option value="'.$dir['name'].'"'.$selected.'>'.$dir['name'].'</option>';
 	}
-
 	return ($select ? $whats : $array);
 }
 
@@ -271,29 +267,6 @@ if ($action == "edit") {
 
 	$tpl -> template('entries', tpl_actions.$mod);
 
-	$templates	=	GetFilesArray($skin, 'actions');
-
-	sort($templates['files']);
-
-	foreach ($templates['files'] as $file) {
-		$tvarz['vars'] = array(
-			'php_self'	=>	$PHP_SELF,
-			'filename'	=>	($file['dir'] ? $file['dir'] : '').$file['name'],
-			'theme'		=>	'',
-			'where'		=>	'actions',
-			'skin'		=>	$skin
-		);
-
-		$tvarz['regx']["'\\[if-delete\\].*?\\[/if-delete\\]'si"] = '';
-		$tvarz['regx']["'\\[if-rename\\].*?\\[/if-rename\\]'si"] = '';
-		$tvarz['regx']["'\\[if-new\\].*?\\[/if-new\\]'si"] = '';
-
-		$tpl -> vars('entries', $tvarz);
-		$tvars['vars']['entries_actions'] .= $tpl -> show('entries');
-	}
-
-	unset($tvarz);
-
 	// Load data for plugins
 	$templates	=	GetFilesArray('', 'extras');
 	sort($templates['files']);
@@ -343,12 +316,12 @@ if ($action == "edit") {
 			$tvarz['regx']["'\\[if-rename\\].*?\\[/if-rename\\]'si"] = '';
 		}
 
-		if (($file['name'] == "news.full.tpl" || $file['name'] == "news.short.tpl" || $file['name'] == "comments.form.tpl" || $file['name'] == "comments.show.tpl" || $file['name'] == "rss.tpl" || $file['name'] == "print.tpl") && !$file['dir']) {
-			$tvarz['vars']['[if-new]'] = '';
-			$tvarz['vars']['[/if-new]'] = '';
-		} else {
+	//	if (($file['name'] == "news.full.tpl" || $file['name'] == "news.short.tpl" || $file['name'] == "comments.form.tpl" || $file['name'] == "comments.show.tpl" || $file['name'] == "rss.tpl" || $file['name'] == "print.tpl") && !$file['dir']) {
+	//		$tvarz['vars']['[if-new]'] = '';
+	//		$tvarz['vars']['[/if-new]'] = '';
+	//	} else {
 			$tvarz['regx']["'\\[if-new\\].*?\\[/if-new\\]'si"] = '';
-		}
+	//	}
 
 		$tpl -> vars('entries', $tvarz);
 		$tvars['vars']['entries_site'] .= $tpl -> show('entries');
