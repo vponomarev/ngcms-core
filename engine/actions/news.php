@@ -455,9 +455,9 @@ function massCommentDelete(){
 	}
 	//
 	if ($countRequested == $countDeleted) {
-		msg(array("text" => $lang['msg.comdel.ok'], 'info' => str_replace(array('{cnt_req}', '{edit_link}'), array($countRequested, $PHP_SELF.'?mod=editnews&action=editnews&id='.$postid), $lang['msg.comdel.ok#descr'])));
+		msg(array("text" => $lang['msg.comdel.ok'], 'info' => str_replace(array('{cnt_req}', '{edit_link}'), array($countRequested, $PHP_SELF.'?mod=news&action=edit&id='.$postid), $lang['msg.comdel.ok#descr'])));
 	} else {
-		msg(array("text" => $lang['msg.comdel.fail'], 'info' => str_replace(array('{cnt_req}', '{cnt_deleted}', '{cnt_blocked}', '{cnt_lost}', '{edit_link}'), array($countRequested, $countDeleted, $countBlocked, $countLost, $PHP_SELF.'?mod=editnews&action=editnews&id='.$postid), $lang['msg.comdel.fail#descr'])));
+		msg(array("text" => $lang['msg.comdel.fail'], 'info' => str_replace(array('{cnt_req}', '{cnt_deleted}', '{cnt_blocked}', '{cnt_lost}', '{edit_link}'), array($countRequested, $countDeleted, $countBlocked, $countLost, $PHP_SELF.'?mod=news&action=edit&id='.$postid), $lang['msg.comdel.fail#descr'])));
 	}
 }
 
@@ -570,6 +570,12 @@ function makeSortList($selected) {
 // ======================================================================================================
 function listNewsForm() {
 	global $mysql, $lang, $twig, $tpl, $catz, $catmap;
+
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, 'view')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+
 
 	// Search filters
 	$fSearchLine		= $_REQUEST['sl'];
@@ -751,7 +757,7 @@ function listNewsForm() {
 			'current' => $pageNo,
 			'count' => $countPages,
 			'url' => admin_url.
-					'/admin.php?mod=editnews&action=list'.
+					'/admin.php?mod=news'.
 					($fRPP?'&rpp='.$fRPP:'').
 					($fAuthorName != ''?'&an='.$fAuthorName:'').
 					($fSearchLine != ''?'&sl='.$fSearchLine:'').
@@ -1038,7 +1044,7 @@ function addNewsForm($retry = ''){
 		'changedate'		=> ChangeDate(),
 		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1)),
-		'JEV'				=> $retry,
+		'JEV'				=> $retry?$retry:'{}',
 		'smilies'			=> ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'',
 		'quicktags'			=> ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'',
 		'flags'				=> array(

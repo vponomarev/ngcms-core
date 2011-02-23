@@ -142,9 +142,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 	// Show edit/detele news buttons
 	if (is_array($userROW) && ($row['author_id'] == $userROW['id'] || $userROW['status'] == "1" || $userROW['status'] == "2")) {
-		$tvars['vars']['[edit-news]'] = "<a href=\"".admin_url."/admin.php?mod=editnews&amp;action=editnews&amp;id=".$row['id']."\" target=\"_blank\">";
+		$tvars['vars']['[edit-news]'] = "<a href=\"".admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id']."\" target=\"_blank\">";
 		$tvars['vars']['[/edit-news]'] = "</a>";
-		$tvars['vars']['[del-news]'] = "<a onclick=\"confirmit('".admin_url."/admin.php?mod=editnews&amp;subaction=do_mass_delete&amp;selected_news[]=".$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
+		$tvars['vars']['[del-news]'] = "<a onclick=\"confirmit('".admin_url."/admin.php?mod=news&amp;subaction=do_mass_delete&amp;selected_news[]=".$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
 		$tvars['vars']['[/del-news]'] = "</a>";
 	} else {
 		$tvars['regx']["'\\[edit-news\\].*?\\[/edit-news\\]'si"] = "";
@@ -438,9 +438,9 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		}
 
 		if (is_array($userROW) && ($userROW['id'] == $row['author_id'] || ($userROW['status'] == 1 || $userROW['status'] == 2))) {
-			$tvars['vars']['[edit-news]'] = "<a href=\"".admin_url."/admin.php?mod=editnews&amp;action=editnews&amp;id=".$row['id']."\" target=\"_blank\">";
+			$tvars['vars']['[edit-news]'] = "<a href=\"".admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id']."\" target=\"_blank\">";
 			$tvars['vars']['[/edit-news]'] = "</a>";
-			$tvars['vars']['[del-news]'] = "<a onclick=\"confirmit('".admin_url."/admin.php?mod=editnews&amp;subaction=do_mass_delete&amp;selected_news[]=".$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
+			$tvars['vars']['[del-news]'] = "<a onclick=\"confirmit('".admin_url."/admin.php?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;selected_news[]=".$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
 			$tvars['vars']['[/del-news]'] = "</a>";
 		} else {
 			$tvars['regx']["'\[edit-news\].*?\[/edit-news\]'si"] = "";
