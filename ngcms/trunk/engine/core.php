@@ -13,7 +13,7 @@
 // Global variables definition
 //
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache;
 
@@ -41,6 +41,17 @@ $SUPRESS_MAINBLOCK_SHOW	= 0;
 
 $SYSTEM_FLAGS = array();	// internal system global flags
 $TemplateCache = array();
+
+// List of DataSources
+$DSlist = array(
+	'news' 				=> 1,
+	'categories'		=> 2,
+	'comments'			=> 3,
+	'users'				=> 4,
+	'files'				=> 10,
+	'images'			=> 11,
+	'#xfields:tdata'	=> 51,
+);
 
 // Configure error display mode
 @error_reporting (E_ALL ^ E_NOTICE);
@@ -76,7 +87,14 @@ if (get_magic_quotes_gpc()) {
 	fix_magic_quotes();
 }
 
+// Start session
 @session_start();
+
+// Manage trackID cookie - can be used for plugins that don't require authentication,
+// but need to track user according to his ID
+if (!isset($_COOKIE['ngTrackID'])) {
+	@setcookie('ngTrackID', md5(md5(uniqid(rand(),1))), time()+86400*365);
+}
 
 //
 // Global variables configuration arrays
@@ -187,7 +205,6 @@ $twig = new Twig_Environment($twigLoader, array(
 $twig->addGlobalRef('lang',		$lang);
 $twig->addGlobalRef('handler',	$CurrentHandler);
 $twig->addGlobal('skins_url',	skins_url);
-$twig->addGlobal('tpl_url',		tpl_url);
 $twig->addGlobal('admin_url',	admin_url);
 $twig->addFunction('pluginIsActive', new Twig_Function_Function('getPluginStatusActive'));
 
@@ -281,6 +298,15 @@ $timer->registerEvent('ALL core-related plugins are executed');
 // Define last consts
 @define('tpl_site', site_root.'templates/'.$config['theme'].'/');
 @define('tpl_url', home.'/templates/'.$config['theme']);
+
+$twigLoader->setPaths(array(tpl_site, root));
+
+// Now we have tpl_url const and can transfer it to TWIG:
+$twig->addGlobal('tpl_url',		tpl_url);
+
+// Add tpl_url path into list of allowed paths
+$twigLoader->setPaths(array(tpl_site, root));
+
 
 // Lang files are loaded _after_ executing core scripts. This is done for switcher plugin
 $lang	=	LoadLang('common');
