@@ -518,6 +518,18 @@ class urlHandler {
 				if (!isset($h['callback']))
 					$h['callback'] = '_MASTER_URL_PROCESSOR';
 
+				// Set configured vars
+				if (isset($h['rstyle']['setVars']) && is_array($h['rstyle']['setVars']))
+					foreach ($h['rstyle']['setVars'] as $k => $v) {
+						if (is_array($v)) {
+							if ($v[0] == 0) {
+								$result[$k] = $v[1];
+							} else if (($v[0] == 1) && isset($result[$v[1]])) {
+								$result[$k] = $result[$v[1]];
+							}
+						}
+					}
+
 				$skip = array ('FFC' => $h['flagFailContinue']?true:false);
 				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, &$skip);
 
