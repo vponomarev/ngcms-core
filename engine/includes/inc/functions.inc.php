@@ -993,7 +993,7 @@ function GetCategories($catid, $plain = false) {
 //
 // New category menu generator
 function generateCategoryMenu(){
-	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS, $TemplateCache;
+	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS, $TemplateCache, $twig;
 
 	// Load template variables
 	templateLoadVariables(true);
@@ -1009,8 +1009,68 @@ function generateCategoryMenu(){
 		$markers['mark.default'] = '&#8212;';
 
 
-
 	$result = '';
+
+	// Deremine working mode - old or new
+	// If template 'news.categories' exists - use `new way`, else - old
+
+	if (file_exists(tpl_site.'news.categories.tpl')) {
+
+		$tVars = array();
+
+		$tEntries = array();
+		foreach($catz as $k => $v){
+			if (!substr($v['flags'],0,1)) continue;
+
+			$tEntry = array(
+				'id'	=> $v['id'],
+				'cat'	=> $v['name'],
+				'link'		=>	($v['alt_url'] == '')?generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])):$v['alt_url'],
+				'mark'		=>	isset($markers['mark.level.'.$v['poslevel']])?$markers['mark.level.'.$v['poslevel']]:str_repeat($markers['mark.default'], $v['poslevel']),
+				'level'		=>	$v['poslevel'],
+				'cat'		=>	$v['name'],
+				'counter'	=>	$v['posts'],
+				'icon'		=>	$v['icon'],
+
+				'flags'		=> array(
+					'active'	=>	(isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id']))?true:false,
+					'counter'	=>	($config['category_counters'] && $v['posts'])?true:false,
+				)
+			);
+			$tEntries []= $tEntry;
+		}
+
+		// Update `hasChildren` and `closeLevel_X` flags for items
+		for ($i = 0; $i < count($tEntries); $i++) {
+			$tEntries[$i]['flags']['hasChildren'] = true;
+			if (($i == (count($tEntris)-1)) || ($tEntries[$i]['level'] >= $tEntries[$i+1]['level'])) {
+				// Mark that this is last item in this level
+				$tEntries[$i]['flags']['hasChildren'] = false;
+
+				// Mark all levels that are closed after this item
+				if ($i == (count($tEntries)-1)) {
+				//if ($i == 26) {
+					for ($x = 0; $x <= $tEntries[$i]['level']; $x++) {
+						$tEntries[$i]['flags']['closeLevel_'.$x] = true;
+					}
+				} else {
+					for ($x = $tEntries[$i+1]['level']; $x <= $tEntries[$i]['level']; $x++) {
+						$tEntries[$i]['flags']['closeLevel_'.$x] = true;
+					}
+				}
+				$tEntries[$i]['flags']['closeToLevel'] = intval($tEntries[$i+1]['level']);
+			}
+
+		}
+		$tVars['entries'] = $tEntries;
+		$xt = $twig->loadTemplate('news.categories.tpl');
+		return $xt->render($tVars);
+
+	}
+
+
+
+
 	$tpl -> template('categories', tpl_site);
 	foreach($catz as $k => $v){
 		if (!substr($v['flags'],0,1)) continue;
