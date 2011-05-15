@@ -664,9 +664,9 @@ function showNews($handlerName, $params) {
 			// Check if template 'news.table.tpl' exists [first check custom category template (if set), after that - common template for the whole site
 			$ntTemplatePath = '';
 			$ntTemplateFound = false;
-			if ($currentCategory['tpl'] && file_exists(tpl_dir.$config['theme'].'/'.$currentCategory['tpl'].'/news.table.tpl')) {
+			if ($currentCategory['tpl'] && file_exists(tpl_dir.$config['theme'].'/ncustom/'.$currentCategory['tpl'].'/news.table.tpl')) {
 				$ntTemplateFound	= true;
-				$ntTemplatePath		= tpl_dir.$config['theme'].'/'.$currentCategory['tpl'];
+				$ntTemplatePath		= tpl_dir.$config['theme'].'/ncustom/'.$currentCategory['tpl'];
 			} else if (file_exists(tpl_dir.$config['theme'].'/news.table.tpl')) {
 				$ntTemplateFound	= true;
 				$ntTemplatePath		= tpl_dir.$config['theme'];
