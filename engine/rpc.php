@@ -91,7 +91,7 @@ function processJSON(){
 //
 //
 function rpcDefault() {
-	return array('status' => 0, 'errorCode' => 1, 'errorText' => 'No command specified');
+	return array('status' => 0, 'errorCode' => 1, 'errorText' => 'No command specified [rpcDefault]');
 }
 
 //

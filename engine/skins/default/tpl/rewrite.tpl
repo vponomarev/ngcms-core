@@ -17,8 +17,7 @@
 </tbody>
 <!-- ROW FOR EDITING / ADDING -->
 
-<tr id="row.editRow" valign="top" class="contHead" >
-
+<tr id="row.editRow" valign="top" class="rewriteEditLine">
  <td width="1px">&nbsp;</td>
  <td id="row.id" width="24px" >*</td>
  <td id="row.pluginName">*&nbsp;</td>
@@ -30,6 +29,17 @@
  <td id="row.flags"><input id="ed.flagPrimary" type="checkbox"/> <input id="ed.flagFailContinue" type="checkbox"/> <input id="ed.flagDisabled" type="checkbox"/></td>
  <td nowrap><input type="button" onclick="reSubmitEdit();" id="ed.button" value="Add" class="button"  style="padding: 2px 2px;" /> <input type="button" id="ed.bcancel" onclick="reCancelEdit();" class="button" style="padding: 2px 2px;" value="Cancel"/></td>
 </tr>
+<tr id="row.editRow2" valign="top" class="rewriteEditLine">
+<td colspan="4">&nbsp;</td>
+<td colspan="2">
+Переопределение значений переменных:
+<table width="100%">
+<tr><td>altname</td><td width="20"><input type="checkbox"></td><td><input type="text"/></td></tr>
+</table>
+</td>
+<td colspan="2">&nbsp;</td>
+</tr>
+
 
 </table>
 

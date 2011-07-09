@@ -177,13 +177,20 @@ border-top: 3px solid #dadada;
 }
 
 .contentHead {
-
 padding: 8px 5px 13px 5px;
 font: normal 15px Trebuchet MS, Arial, Helvetica, sans-serif;
 color: #333;
-
 border-bottom: 3px solid #54a1c1;
 }
+
+.rewriteEditLine {
+padding: 8px 5px 13px 5px;
+font: normal 15px Trebuchet MS, Arial, Helvetica, sans-serif;
+color: #333;
+background-color: #E0FFFF;
+border-bottom: 3px solid #54a1c1;
+}
+.rewriteEditLine TD { padding-top: 3px; }
 
 .contentEntry1 {
 padding: 5px;

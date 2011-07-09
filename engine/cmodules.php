@@ -144,7 +144,6 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 	}
 
 	if ($config['use_captcha']) {
-		@session_register('captcha');
 		$_SESSION['captcha'] = rand(00000, 99999);
 		$tvars['vars']['captcha'] = '';
 		$tvars['regx']["'\[captcha\](.*?)\[/captcha\]'si"] = '$1';
@@ -295,7 +294,6 @@ function generate_restorepw_page($params, $values = array(), $msg = '') {
 	}
 
 	if ($config['use_captcha']) {
-		@session_register('captcha');
 		$_SESSION['captcha'] = rand(00000, 99999);
 		$tvars['vars']['captcha'] = '';
 		$tvars['regx']["'\[captcha\](.*?)\[/captcha\]'si"] = '$1';

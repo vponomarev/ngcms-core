@@ -882,7 +882,7 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip) {
 	loadPlugin($pluginName, 'ppages');
 
 	// Make chain-load for all plugins, that want to activate during this plugin activation
-        loadActionHandlers('action.ppages.'.$pluginName);
+    loadActionHandlers('action.ppages.'.$pluginName);
 	loadActionHandlers('plugin.'.$pluginName);
 
 	$pcall = $PPAGES[$pluginName][$handlerName];

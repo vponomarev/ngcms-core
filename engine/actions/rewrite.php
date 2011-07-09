@@ -56,13 +56,15 @@ foreach ($ULIB->CMD as $plugin => $crow) {
 $recno = 0;
 $jdata = array();
 foreach ($UH->hList as $hId) {
-	$jrow = array(	'id' => $recno,
-			'pluginName' => $hId['pluginName'],
-			'handlerName' => $hId['handlerName'],
-			'regex'	=> $hId['rstyle']['rcmd'],
-			'flagPrimary' => $hId['flagPrimary'],
-			'flagFailContinue' => $hId['flagFailContinue'],
-			'flagDisabled' => $hId['flagDisabled'],
+	$jrow = array(
+			'id'				=> $recno,
+			'pluginName'		=> $hId['pluginName'],
+			'handlerName'		=> $hId['handlerName'],
+			'regex'				=> $hId['rstyle']['rcmd'],
+			'flagPrimary'		=> $hId['flagPrimary'],
+			'flagFailContinue'	=> $hId['flagFailContinue'],
+			'flagDisabled'		=> $hId['flagDisabled'],
+			'setVars'			=> $hId['rstyle']['setVars'],
 		);
 
 	// Fetch associated command
