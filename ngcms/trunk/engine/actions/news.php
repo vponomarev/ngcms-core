@@ -81,7 +81,7 @@ function editNews() {
 		return;
 	}
 
-	if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
+	if ((!strlen(trim($title))) || ((!strlen(trim($content))) && (!$config['news_without_content']))) {
 		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
 		return;
 	}
@@ -818,6 +818,7 @@ function listNewsForm() {
 	$tVars['catmenu'] = $tcRecs;
 	$tVars['cat_active'] = ((isset($_REQUEST['category']) && (isset($catmap[intval($_REQUEST['category'])]))))?intval($_REQUEST['category']):0;
 
+	//$xt = $twig->loadTemplate('skins/default/tpl/news/table_catalog.tpl');
 	$xt = $twig->loadTemplate('skins/default/tpl/news/table.tpl');
 	echo $xt->render($tVars);
 }
@@ -855,7 +856,7 @@ function addNews(){
 	$alt_name = $parse->translit(trim($_REQUEST['alt_name']), 1);
 
 	// Check title
-	if ( (!strlen(trim($title))) || (!strlen(trim($content))) ) {
+	if ((!strlen(trim($title))) || ((!strlen(trim($content))) && (!$config['news_without_content']))) {
 		msg(array("type" => "error", "text" => $lang['addnews']['msge_fields'], "info" => $lang['addnews']['msgi_fields']));
 		return 0;
 	}

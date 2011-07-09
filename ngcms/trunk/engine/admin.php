@@ -133,7 +133,7 @@ if ($mod != 'preview') {
 
 // Default action
 if (!$mod) {
-	$mod = ($userROW['status'] == 1)?'statistics':'editnews';
+	$mod = ($userROW['status'] == 1)?'statistics':'news';
 }
 
 // Check requested module exists

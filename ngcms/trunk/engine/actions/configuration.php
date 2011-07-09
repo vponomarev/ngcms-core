@@ -98,6 +98,7 @@ function systemConfigEditForm(){
 		'use_gzip'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_gzip]", $config['use_gzip']),
 		'use_captcha'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_captcha]", $config['use_captcha']),
 		'use_cookies'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_cookies]", $config['use_cookies']),
+		'news_without_content'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[news_without_content]", $config['news_without_content']),
 		'use_sessions'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_sessions]", $config['use_sessions']),
 		'category_counters'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[category_counters]", $config['category_counters']),
 		'news.edit.split'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[news.edit.split]", $config['news.edit.split']),
