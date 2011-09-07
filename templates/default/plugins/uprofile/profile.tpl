@@ -112,13 +112,13 @@ function validate_form() {
 </tr>
 <tr>
 <td style="padding: 5px; background-color: #f9fafb;" class="entry">{l_uprofile:new_pass}</td>
-<td style="padding: 5px; background-color: #f9fafb;" class="entry"><input class="password" name="editpassword" size="40" maxlength="16" /><br /><small>{l_uprofile:pass_left}</small></td>
+<td style="padding: 5px; background-color: #f9fafb;" class="entry"><input class="password" name="editpassword" size="40" maxlength="16" autocomplete="off" /><br /><small>{l_uprofile:pass_left}</small></td>
 </tr>
 <tr>
 <td style="padding: 5px;" class="entry">{l_uprofile:oldpass}<br/><small>{l_uprofile:oldpass#desc}</small></td>
-<td style="padding: 5px;" class="entry"><input type="password" name="oldpass" value="" size="40" maxlength="10" /></td>
+<td style="padding: 5px;" class="entry"><input type="password" name="oldpass" value="" size="40" maxlength="10" autocomplete="off" /></td>
 </tr>
-<tr>
+{plugin_xfields}
 </table>
 
 <table id="additional" style="display: none;" class="content" border="0" width="100%" cellspacing="0" cellpadding="0">
