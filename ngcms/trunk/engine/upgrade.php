@@ -50,6 +50,13 @@ $query_list_092_093rc1 = array(
 	"alter table ".prefix."_files add column pidentity char(30) default ''",
 	"alter table ".prefix."_category add column image_id int default 0 after icon",
 	"alter table ".prefix."_category add column info text",
+	"insert into ".prefix."_config (name, value) values ('database.engine.version', '0.9.3.rc.1') on duplicate key update value='0.9.3.rc.1'",
+);
+
+$query_xfUpdateDB = array(
+	"alter table ".prefix."_category add column xf_group char(40) default 0",
+	"alter table ".uprefix."_users add column xfields text default null",
+	"create table ".prefix."_xfields (id int not null auto_increment, primary key(id), linked_ds int default 0, linked_id int default 0, xfields text default null)",
 );
 
 // Load plugin list
@@ -57,14 +64,24 @@ $extras	=	get_extras_list();
 // Load lang files
 $lang	=	LoadLang('extra-config', 'admin');
 
-if ($_REQUEST['update092_093rc1']) {
+if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB']) {
 	// Выполнение SQL запросов на обновление
 	print '<br/>Выполнение SQL запросов:<br/>';
 	print '<table width="80%">';
 	print '<tr><td><b>Команда</b></td><td><b>Результат</b></td></tr>';
 
 	$flag_err = false;
-	foreach ($query_list_092_093rc1 as $sql) {
+
+	$queryList = array();
+	if ($_REQUEST['update092_093rc1']) {
+		$queryList = $query_list_092_093rc1;
+	}
+
+	if ($_REQUEST['xfUpdateDB']) {
+		$queryList = array_merge($queryList, $query_xfUpdateDB);
+	}
+
+	foreach ($queryList as $sql) {
 		$res = mysql_query($sql);
 		$sqlErrorCode = 0;
 		$sqlErrorFatal = 0;
@@ -113,6 +130,14 @@ function questionare_093() {
    </small>
   </td>
   <td width='10%'><input type=checkbox name='update092_093rc1' value='1' /></td>
+ </tr>
+ <tr>
+  <td>Обновить БД плагина xfields (требуется для версии 0.10 и выше)<br/>
+   <small>Данную операцию требуется произвести единожды при установки новой версии плагина xfields, либо при общем обновлении сайта на новую версию.<br/>
+   Если плагин xfields у вас не установлен, то данная операция не требуется.
+   </small>
+  </td>
+  <td width='10%'><input type=checkbox name='xfUpdateDB' value='1' /></td>
  </tr>
  </table><br/>
  <input type='submit' value='Начать преобразование!'>

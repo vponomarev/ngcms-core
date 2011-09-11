@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: usermenu.php
 // Description: user's menu on the site
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -30,7 +30,7 @@ if (!$is_logged) {
 	// User is logged in
 	$tvars['vars'] = array(
 		'profile_link'	=>	generateLink('uprofile', 'edit'),
-		'addnews_link'	=>	$config['admin_url'].'/admin.php?mod=addnews',
+		'addnews_link'	=>	$config['admin_url'].'/admin.php?mod=news&action=add',
 		'logout_link'	=>  generateLink('core', 'logout'),
 		'name'			=>	$userROW['name'],
 		'phtumb_url'		=>	photos_url.'/'.(($userROW['photo'] != "")?'thumb/'.$userROW['photo']:'nophoto.gif'),
