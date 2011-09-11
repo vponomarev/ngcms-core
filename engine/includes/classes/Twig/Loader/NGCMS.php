@@ -57,11 +57,20 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
 
         $this->paths = array();
         foreach ($paths as $path) {
+        	// Delete last '/' if provided
+        	if ((strlen($path) > 1) && (substr($path, -1) == '/')) {
+        		$path = substr($path, 0, -1);
+        	}
+
+        	// Lowercase if using WINDOWS
+        	if (substr($path, 1, 1) == ':')
+        		$path = strtolower($path);
+
             if (!is_dir($path)) {
                 throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
             }
 
-            $this->paths[] = $path;
+            $this->paths[] = strtr($path, '\\', '/');
         }
     }
 
@@ -120,6 +129,23 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
         }
 
         $this->validateName($name);
+
+    	// Check if we try to load template by absolute path, in this case we need to be sure,
+    	// that specified path is within $this->paths
+    	if ((substr($name, 0, 1) == '/')||preg_match('#^[a-z]\:\/#', $name)) {
+    		foreach ($this->paths as $path) {
+    			if (substr($name, 0, strlen($path)+1) == ($path.'/')) {
+    				// Path found. Check for file
+    				$xname = substr($name, strlen($path)+1);
+    				$this->validateName($xname);
+    				if (is_file($path.'/'.$xname)) {
+    					return $this->cache[$name] = $path.'/'.$xname;
+    				}
+    				throw new Twig_Error_Loader(sprintf('Unable to find template [ABSOLUTE PATH] "%s" (looked into: %s).', $name, $path));
+    			}
+    		}
+    		throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
+    	}
 
         foreach ($this->paths as $path) {
             if (is_file($path.'/'.$name)) {
