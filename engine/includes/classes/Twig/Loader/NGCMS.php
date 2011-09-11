@@ -130,6 +130,11 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
 
         $this->validateName($name);
 
+    	// For windows - convert path to lowercase
+    	if (preg_match('#^[a-zA-Z]\:\/#', $name)) {
+    		$name = strtolower($name);
+    	}
+
     	// Check if we try to load template by absolute path, in this case we need to be sure,
     	// that specified path is within $this->paths
     	if ((substr($name, 0, 1) == '/')||preg_match('#^[a-z]\:\/#', $name)) {
@@ -144,7 +149,7 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
     				throw new Twig_Error_Loader(sprintf('Unable to find template [ABSOLUTE PATH] "%s" (looked into: %s).', $name, $path));
     			}
     		}
-    		throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
+    		throw new Twig_Error_Loader(sprintf('Unable to find template [ABSOLUTE PATH] "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
     	}
 
         foreach ($this->paths as $path) {
