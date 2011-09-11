@@ -252,6 +252,9 @@ function admCategoriesRPCmodify($params) {
 			admCategoryReorder();
 			// * Rewrite page content
 			$data = admCategoryList(2);
+			if ($data === false) {
+				$data = '[permission denied]';
+			}
 
 			return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'content' => arrayCharsetConvert(0,$data)));
 
