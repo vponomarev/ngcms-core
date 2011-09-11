@@ -44,7 +44,7 @@ function categoryModifyRequest(cmd, cid) {
 		 		if (resTX['content']) {
 		 			document.getElementById('admCatList').innerHTML = resTX['content'];
 		 		} else {
-		 			alert('Template error: item with id "admCatList" is not found!');
+		 			alert('Template error: no content received from server for update, server response: '+linkTX.response);
 		 		}
 		 	}
 	 } else {
