@@ -111,7 +111,11 @@ function changeActive(name) {
 <tr>
 <td class="contentEntry1">{{ changedate }}</td>
 </tr>
-{% if (pluginIsActive('xfields')) %}{{ plugin.xfields }}{% endif %}
+{% if (pluginIsActive('xfields')) %}
+<!-- XFields -->
+{{ plugin.xfields.main }}
+<!-- /XFields -->
+{% endif %}
 {% if (pluginIsActive('nsched')) %}{{ plugin.nsched }}{% endif %}
 {% if (pluginIsActive('finance')) %}{{ plugin.finance }}{% endif %}
 {% if (pluginIsActive('tags')) %}{{ plugin.tags }}{% endif %}
@@ -239,6 +243,13 @@ attachAddRow();
 </tr>
 </table>
 </form>
+
+{% if (pluginIsActive('xfields')) %}
+<!-- XFields [GENERAL] -->
+{{ plugin.xfields.general }}
+<!-- /XFields [GENERAL] -->
+{% endif %}
+
 
 <script language="javascript" type="text/javascript">
 // Restore variables if needed
