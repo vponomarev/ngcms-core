@@ -128,7 +128,11 @@ function changeActive(name) {
 
 </td>
 </tr>
-{% if (pluginIsActive('xfields')) %}{{ plugin.xfields }}{% endif %}
+{% if (pluginIsActive('xfields')) %}
+<!-- XFields -->
+{{ plugin.xfields.main }}
+<!-- /XFields -->
+{% endif %}
 {% if (pluginIsActive('nsched')) %}{{ plugin.nsched }}{% endif %}
 {% if (pluginIsActive('finance')) %}{{ plugin.finance }}{% endif %}
 {% if (pluginIsActive('tags')) %}{{ plugin.tags }}{% endif %}
@@ -265,6 +269,11 @@ function changeActive(name) {
 </table>
 </div>
 </form>
+
+{% if (pluginIsActive('xfields')) %}
+<!-- XFields [GENERAL] -->
+{{ plugin.xfields.general }}
+<!-- /XFields [GENERAL] -->
 
 
 <script language="javascript" type="text/javascript">
