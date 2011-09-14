@@ -223,6 +223,9 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 			$publish_error  = 1;
 			break;
 		}
+
+		$chgTableName = (($table['table'] == 'users')?uprefix:prefix)."_".$table['table'];
+
 		if (($table['action'] != 'create')&&
 		    ($table['action'] != 'cmodify')&&
 		    ($table['action'] != 'modify')&&
@@ -238,13 +241,13 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 			$publish_title = $lang['idbc_tdrop'];
 			$publish_title = str_replace('%table%', $table['table'], $publish_title);
 
-			if (!mysql_table_exists(prefix."_".$table['table'])) {
+			if (!mysql_table_exists($chgTableName)) {
 		                $publish_result = $lang['idbc_tnoexists'];
 				$publish_error = 1;
 				break;
 			}
 
-                	$query = "drop table ".prefix."_".$table['table'];
+                	$query = "drop table ".$chgTableName;
                 	$mysql->query($query);
 
 			array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
@@ -261,7 +264,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 			$publish_title = $lang['idbc_tmodify'];
 			$publish_title = str_replace('%table%', $table['table'], $publish_title);
 
-			if (!mysql_table_exists(prefix."_".$table['table'])) {
+			if (!mysql_table_exists($chgTableName)) {
 		                $publish_result = $lang['idbc_tnoexists'];
 				$publish_error = 1;
 				break;
@@ -272,7 +275,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 			$publish_title = $lang['idbc_tcreate'];
 			$publish_title = str_replace('%table%', $table['table'], $publish_title);
 
-			if (mysql_table_exists(prefix."_".$table['table'])) {
+			if (mysql_table_exists($chgTableName)) {
 		                $publish_result = $lang['idbc_t_alreadyexists'];
 				$publish_error = 1;
 				break;
@@ -283,7 +286,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 		if ($table['action'] == 'cmodify') {
 			$publish_title = $lang['idbc_tcmodify'];
 			$publish_title = str_replace('%table%', $table['table'], $publish_title);
-			if (!mysql_table_exists(prefix."_".$table['table'])) {
+			if (!mysql_table_exists($chgTableName)) {
 				$create_mode = 1;
 			}
 		}
@@ -315,7 +318,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 			// Check if different character set are supported [ version >= 4.1.1 ]
 			$charset = is_array($mysql->record("show variables like 'character_set_client'"))?' DEFAULT CHARSET=CP1251':'';
 
-			$query = "create table ".prefix.'_'.$table['table']." (".implode(', ',$fieldlist).($table['key']?', '.$table['key']:'').")".$charset.($table['engine']?' engine='.$table['engine']:'');
+			$query = "create table ".$chgTableName." (".implode(', ',$fieldlist).($table['key']?', '.$table['key']:'').")".$charset.($table['engine']?' engine='.$table['engine']:'');
 			$mysql->query($query);
 			array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
 		} else {
@@ -348,7 +351,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 						$publish_error = 1;
 						break;
 					}
-					$query = "alter table ".prefix.'_'.$table['table']." drop column `".$field['name']."`";
+					$query = "alter table ".$chgTableName." drop column `".$field['name']."`";
 					$mysql->query($query);
 					array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
 				}
@@ -362,16 +365,16 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 						$publish_error = 1;
 						break;
 					}
-					$query = "alter table ".prefix."_".$table['table']." add column `".$field['name']."` ".$field['type']." ".$field['params'];
+					$query = "alter table ".$chgTableName." add column `".$field['name']."` ".$field['type']." ".$field['params'];
 					$mysql->query($query);
 					array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
 					continue;
 				}
 				if ($field['action'] == 'cmodify') {
 					if (!$ft) {
-						$query = "alter table ".prefix."_".$table['table']." add column `".$field['name']."` ".$field['type']." ".$field['params'];
+						$query = "alter table ".$chgTableName." add column `".$field['name']."` ".$field['type']." ".$field['params'];
 					} else {
-						$query = "alter table ".prefix."_".$table['table']." change column `".$field['name']."` `".$field['name']."` ".$field['type']." ".$field['params'];
+						$query = "alter table ".$chgTableName." change column `".$field['name']."` `".$field['name']."` ".$field['type']." ".$field['params'];
 					}
 					$mysql->query($query);
 					array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result?$publish_result:($error?$lang['idbc_fail']:$lang['idbc_ok']))));
