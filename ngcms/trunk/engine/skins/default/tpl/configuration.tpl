@@ -69,7 +69,7 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_dbpass}<br /><small>{l_example} password</small></td>
-<td width="50%" class="contentEntry2" valign="middle"><input class="password" type="text" name='save_con[dbpasswd]' value='{c_dbpasswd}' size="40" /></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="password" type="password" name='save_con[dbpasswd]' value='{c_dbpasswd}' size="40" /></td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_dbprefix}<br /><small>{l_example} ng</small></td>
