@@ -60,6 +60,7 @@
 <td style="padding: 5px;" class="entry">{info}</td>
 </tr>
 </table>
+[xvalue_petname][xvalue_photos]
 </td>
 </tr>
 </table>
