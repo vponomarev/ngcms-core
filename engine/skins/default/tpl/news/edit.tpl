@@ -274,6 +274,7 @@ function changeActive(name) {
 <!-- XFields [GENERAL] -->
 {{ plugin.xfields.general }}
 <!-- /XFields [GENERAL] -->
+{% endif %}
 
 
 <script language="javascript" type="text/javascript">
