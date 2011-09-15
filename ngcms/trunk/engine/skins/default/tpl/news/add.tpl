@@ -98,6 +98,12 @@ function changeActive(name) {
    <td><input type="text" name="keywords" value="" size="60" tabindex="5" /></td>
   </tr>
 {% endif %}
+{% if (pluginIsActive('xfields')) %}
+<!-- XFields -->
+{{ plugin.xfields.main }}
+<!-- /XFields -->
+{% endif %}
+
 </table>
 </div>
 
@@ -113,7 +119,7 @@ function changeActive(name) {
 </tr>
 {% if (pluginIsActive('xfields')) %}
 <!-- XFields -->
-{{ plugin.xfields.main }}
+{{ plugin.xfields.extra }}
 <!-- /XFields -->
 {% endif %}
 {% if (pluginIsActive('nsched')) %}{{ plugin.nsched }}{% endif %}
