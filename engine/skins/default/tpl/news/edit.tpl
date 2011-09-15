@@ -244,6 +244,12 @@ function changeActive(name) {
 </tr>
 </table>
 </div>
+
+{% if (pluginIsActive('xfields')) %}
+<!-- XFields [GENERAL] -->
+{{ plugin.xfields.general }}
+<!-- /XFields [GENERAL] -->
+{% endif %}
 </form>
 
 <form method="post" name="commentsForm" id="commentsForm" action="{{ php_self }}?mod=news">
@@ -274,12 +280,6 @@ function changeActive(name) {
 </table>
 </div>
 </form>
-
-{% if (pluginIsActive('xfields')) %}
-<!-- XFields [GENERAL] -->
-{{ plugin.xfields.general }}
-<!-- /XFields [GENERAL] -->
-{% endif %}
 
 
 <script language="javascript" type="text/javascript">

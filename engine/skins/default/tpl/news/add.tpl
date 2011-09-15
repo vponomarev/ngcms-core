@@ -248,13 +248,13 @@ attachAddRow();
 </td>
 </tr>
 </table>
-</form>
 
 {% if (pluginIsActive('xfields')) %}
 <!-- XFields [GENERAL] -->
 {{ plugin.xfields.general }}
 <!-- /XFields [GENERAL] -->
 {% endif %}
+</form>
 
 
 <script language="javascript" type="text/javascript">
