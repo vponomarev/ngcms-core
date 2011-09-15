@@ -340,7 +340,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 					break;
 				}
 
-				$ft = get_mysql_field_type(prefix.'_'.$table['table'], $field['name']);
+				$ft = get_mysql_field_type($chgTableName, $field['name']);
 
 				if ($field['action'] == 'drop') {
 					$publish_title = $lang['idbc_drfield'];
