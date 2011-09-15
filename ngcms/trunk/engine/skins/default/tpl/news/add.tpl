@@ -100,7 +100,7 @@ function changeActive(name) {
 {% endif %}
 {% if (pluginIsActive('xfields')) %}
 <!-- XFields -->
-{{ plugin.xfields.main }}
+{{ plugin.xfields[1] }}
 <!-- /XFields -->
 {% endif %}
 
@@ -119,7 +119,7 @@ function changeActive(name) {
 </tr>
 {% if (pluginIsActive('xfields')) %}
 <!-- XFields -->
-{{ plugin.xfields.extra }}
+{{ plugin.xfields[0] }}
 <!-- /XFields -->
 {% endif %}
 {% if (pluginIsActive('nsched')) %}{{ plugin.nsched }}{% endif %}
