@@ -118,7 +118,7 @@ function validate_form() {
 <td style="padding: 5px;" class="entry">{l_uprofile:oldpass}<br/><small>{l_uprofile:oldpass#desc}</small></td>
 <td style="padding: 5px;" class="entry"><input type="password" name="oldpass" value="" size="40" maxlength="10" autocomplete="off" /></td>
 </tr>
-{plugin_xfields}
+{plugin_xfields_1}
 </table>
 
 <table id="additional" style="display: none;" class="content" border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -130,6 +130,7 @@ function validate_form() {
 <td style="padding: 5px;" class="entry">{l_uprofile:photo}</td>
 <td style="padding: 5px;" class="entry">{photo}</td>
 </tr>
+{plugin_xfields_0}
 </table>
 <br />
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
