@@ -1,5 +1,5 @@
 <div class="table">
-<table>
+<table border="1">
 	<tr>
 		<th width="45">јрт.</th>
 		<th width="80">”паковка</th>
