@@ -34,7 +34,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}',
+          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
@@ -68,7 +68,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}',
+          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
@@ -244,7 +244,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}',
+          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
@@ -331,7 +331,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}',
+          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
