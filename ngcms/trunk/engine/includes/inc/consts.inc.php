@@ -13,7 +13,7 @@ define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.2 Release + SVN [SVN765+]');
+@define('engineVersion', '0.9.2 Release + SVN [SVN834+]');
 
 @define('prefix', $config['prefix']);
 @define('home', $config['home_url']);
