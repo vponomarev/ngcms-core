@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2009-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2009-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: uhandler.class.php
 // Description: URL handler class
 // Author: Vitaly Ponomarev
@@ -395,6 +395,9 @@ class urlHandler {
 
 	// register handler
 	function registerHandler($position, $handler) {
+		if (!$this->configLoaded)
+			return false;
+
 		if ($position == 0) { array_unshift($this->hList, $handler); }
 		else if ($position == -1) { array_push($this->hList, $handler); }
 		else {
@@ -402,6 +405,55 @@ class urlHandler {
 			$this->hList = $tdata;
 		}
 		return true;
+	}
+
+	// remove handler from specific position
+	// All parameters are mondatory! $pluginName and $handlerName are added to avoid mistakes
+	// $position - position of handler in current list of handlers
+	// $pluginName - 'pluginName' value for deleted handler
+	// $handlerName - 'handlerName' value for deleted handler
+	function removeHandler($position, $pluginName, $handlerName) {
+		if (!$this->configLoaded)
+			return false;
+
+		if (isset($this->hList[$position])) {
+			// Position found. Check parameters
+			$h = $this->hList[$position];
+			if (isset($h['pluginName']) && ($h['pluginName'] == $pluginName) && isset($h['handlerName']) && ($h['handlerName'] == $handlerName)) {
+				// Yes, we can delete
+				array_splice($this->hList, $position, 1);
+
+				// Confirm success deletion
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Remove handlers for specific plugin
+	// $pluginName - name of plugin
+	// $handlerName - name of specific handler or '*' if you need to delete all handlers of this plugin
+	function removePluginHandlers($pluginName, $handlerName = '*') {
+		if (!$this->configLoaded)
+			return false;
+
+		$position = count($this->hList);
+		while ($cnt > 0) {
+			$h = $this->hList[$position];
+			if ((isset($h['pluginName'])) && ($h['pluginName'] == $pluginName) && (isset($h['handlerName'])) &&	(($handlerName == '*') || ($h['handlerName'] == $handlerName))) {
+				array_splice($this->hList, $position, 1);
+			}
+			$position--;
+		}
+		return true;
+	}
+
+	// Return current list of handlers
+	function listHandlers() {
+		if (!$this->configLoaded)
+			return false;
+
+		return $this->hList;
 	}
 
 	// Load config from DISK
