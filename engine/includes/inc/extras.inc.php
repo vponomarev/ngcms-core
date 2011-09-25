@@ -876,7 +876,7 @@ function generatePageLink($paginationParams, $page) {
 //
 //
 //
-function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip) {
+function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handlerParams) {
 	global $PPAGES, $lang, $SYSTEM_FLAGS, $CurrentHandler;
 	// Preload requested plugin
 	loadPlugin($pluginName, 'ppages');
@@ -892,7 +892,12 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip) {
 		$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_plugin'];
 
 		// Report current handler config
-		$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+		$CurrentHandler = array(
+			'pluginName' => $pluginName,
+			'handlerName' => $handlerName,
+			'params' => $params,
+			'handlerParams' => $handlerParams,
+		);
 		$req = call_user_func($pcall['func'], $params);
 		if (!is_null($req) && $skip['FFC'] && !$req) $skip['fail'] = 1;
 	} else {

@@ -549,9 +549,9 @@ class urlHandler {
 
 		$catchCount = 0;
 
-		foreach($this->hList as $h) {
+		foreach($this->hList as $hNum => $h) {
 			if ($flags['debug'])
-				print "&raquo; ".($h['flagDisabled']?'<b><font color="red">DISABLED</font></b> ':'')."Scan [".$h['pluginName']."][".$h['handlerName']."] ReGEX check [ <b><font color=blue>".$h['rstyle']['regex']." </font></b>]<br>\n";
+				print "&raquo; ".($h['flagDisabled']?'<b><font color="red">DISABLED</font></b> ':'')."Scan (".$hNum.")[".$h['pluginName']."][".$h['handlerName']."] ReGEX check [ <b><font color=blue>".$h['rstyle']['regex']." </font></b>]<br>\n";
 
 			// Skip disabled records
 			if ($h['flagDisabled'])
@@ -559,6 +559,7 @@ class urlHandler {
 
 			if (preg_match($h['rstyle']['regex'], $url, $scan)) {
 				$result = array( '0' => $scan[0]);
+				$handlerParams = array('num' => $hNum, 'value' => $h);
 
 				foreach ($scan as $k => $v)
 					if (isset($h['rstyle']['regexMap'][$k]))
@@ -583,7 +584,7 @@ class urlHandler {
 					}
 
 				$skip = array ('FFC' => $h['flagFailContinue']?true:false);
-				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, &$skip);
+				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, &$skip, $handlerParams);
 
 				if (isset($skip['fail']))
 					continue;
