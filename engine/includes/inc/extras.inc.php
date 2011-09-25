@@ -905,7 +905,7 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 	}
 }
 
-function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
+function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip, $handlerParams) {
 	global $PPAGES, $lang, $CurrentHandler;
 
 	//print "## PLUGIN CALL: <b> (".$pluginName.")</b><br/>\n";
@@ -914,7 +914,7 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
 	// Check for predefined plugins call
 	switch ($pluginName) {
 		case 'news':
-			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams);
 			switch ($handlerName) {
 				default:
 					include_once root.'includes/news.php';
@@ -923,7 +923,7 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
 			break;
 
 		case 'static':
-			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'FFC' => $SKIP['FFC']);
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'FFC' => $SKIP['FFC'], 'handlerParams' => $handlerParams);
 			switch ($handlerName) {
 				default:
 					include_once root.'includes/static.php';
@@ -935,7 +935,7 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
 			break;
 
 		case 'search':
-			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams);
 			switch ($handlerName) {
 				default:
 					include_once root.'includes/search.php';
@@ -945,11 +945,11 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
 
 
 		case 'core':
-			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params);
+			$CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams);
 			switch ($handlerName) {
 				case 'plugin':
 					// Set our own params $pluginName and $handlerName and pass it to default handler
-					_MASTER_defaultRUN($params['plugin'], isset($params['handler'])?$params['handler']:null, $params, $skip);
+					_MASTER_defaultRUN($params['plugin'], isset($params['handler'])?$params['handler']:null, $params, $skip, $handlerParams);
 					break;
 
 				case 'registration':
@@ -981,6 +981,6 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip) {
 			}
 			break;
 		default:
-			_MASTER_defaultRUN($pluginName, $handlerName, $params, $skip);
+			_MASTER_defaultRUN($pluginName, $handlerName, $params, $skip, $handlerParams);
 	}
 }
