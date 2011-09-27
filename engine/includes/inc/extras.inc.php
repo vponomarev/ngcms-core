@@ -260,8 +260,8 @@ function loadPlugin($pluginName, $actionList = '*') {
 				        $tX = $timer->stop(4);
 					include_once extras_dir.'/'.$pluginFileName;
 					$timer->registerEvent('func loadPlugin ('.$pluginName.'): preloaded file "'.$pluginFileName.'" for '.($timer->stop(4) - $tX)." sec");
-					$PLUGINS['loaded:files'][$value] = 1;
-					$loadedCount ++;
+					$PLUGINS['loaded:files'][$pluginFileName] = 1;
+					$loadCount++;
 				} else {
 					$timer->registerEvent('func loadPlugin ('.$pluginName.'): CAN\'t preload file that doesn\'t exists: "'.$pluginFileName.'"');
 				}
