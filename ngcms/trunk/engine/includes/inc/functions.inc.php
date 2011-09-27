@@ -87,7 +87,7 @@ function dbBackup($fname, $gzmode, $tlist = ''){
 	}
 
 	// Now make a header
-	$out  = "# ".str_repeat('=', 60)."\n# Backup file for `Next Generation CMS`\n# ".str_repeat('=', 60)."\n# DATE: ".gmdate("d-m-Y H:i:s", time())." GMT\n# VERSION: ".version."\n#\n";
+	$out  = "# ".str_repeat('=', 60)."\n# Backup file for `Next Generation CMS`\n# ".str_repeat('=', 60)."\n# DATE: ".gmdate("d-m-Y H:i:s", time())." GMT\n# VERSION: ".engineVersion."\n#\n";
 	$out .= "# List of tables for backup: ".join(", ", $tlist)."\n#\n";
 
 	// Write a header
@@ -1711,4 +1711,134 @@ function checkPermission($identity, $user = null, $mode = '', $way = '') {
 //	* [1]	- text value CODE of error (if have error)
 function ngSYSLOG($identity, $action, $user, $status){
 	//print "<pre>ngSYSLOG: ".var_export($identity, true)."\n".var_export($action, true)."\n".var_export($user, true)."\n".var_export($status, true)."</pre>";
+}
+
+//
+// HANDLER: Exceptions
+function ngExceptionHandler($exception) {
+?>
+<html>
+ <head>
+   <title>NGCMS Runtime exception: <?php echo get_class($exception); ?></title>
+   <style>
+	body {
+		font: 1em Georgia,"Times New Roman",serif;
+	}
+	.dmsg {
+		border: 1px #EEEEEE solid;
+		padding: 10px;
+		background-color: yellow;
+	}
+	.dtrace TBODY TD {
+		padding: 3px;
+		/*border: 1px #EEEEEE solid;*/
+		background-color: #EEEEEE;
+	}
+	.dtrace THEAD TD {
+		padding: 3px;
+		background-color: #EEEEEE;
+		font-weight: bold;
+	}
+
+   </style>
+ </head>
+ <body>
+<?php
+	print "<h1>NGCMS Runtime exception: ".get_class($exception)."</h1>\n";
+	print "<div class='dmsg'>".$exception->getMessage()."</div><br/>";
+	print "<h2>Stack trace</h2>";
+	print "<table class='dtrace'><thead><tr><td>#</td><td>Line #</td><td><i>Class</i>/Function</td><td>File name</td></tr></thead><tbody>";
+	foreach ($exception->getTrace() as $k => $v) {
+		print "<tr><td>".$k."</td><td>".$v['line']."</td><td>".(isset($v['class'])?('<i>'.$v['class'].'</i>'):$v['function'])."</td><td>".$v['file']."</td></tr>\n";
+	}
+	print "</tbody></table>";
+}
+
+//
+// HANDLER: Errors
+function ngErrorHandler($code, $message, $file, $line)
+{
+	//if (0 == error_reporting())
+	//{
+	//	return;
+	//}
+	//print "ERROR: [$code]($message)[$line]($file)<br/>\n";
+}
+
+//
+// HANDLER: Shutdown
+function ngShutdownHandler() {
+	$lastError = error_get_last();
+
+	// Activate only for fatal errors
+	$flagFatal = 0;
+
+	switch ($lastError['type']) {
+		case E_ERROR:
+		case E_PARSE:
+		case E_CORE_ERROR:
+		case E_COMPILE_ERROR:
+			$flagFatal = 1;
+			break;
+	}
+	if (!$flagFatal)
+		return true;
+?>
+<html>
+ <head>
+   <title>NGCMS Runtime error: <?php echo $lastError['message']; ?></title>
+   <style type="text/css">
+	body {
+		font: 1em Georgia,"Times New Roman",serif;
+	}
+	.dmsg {
+		border: 1px #EEEEEE solid;
+		padding: 10px;
+		background-color: yellow;
+	}
+	.dtrace TBODY TD {
+		padding: 3px;
+		/*border: 1px #EEEEEE solid;*/
+		background-color: #EEEEEE;
+	}
+	.dtrace THEAD TD {
+		padding: 3px;
+		background-color: #EEEEEE;
+		font-weight: bold;
+	}
+
+   </style>
+ </head>
+ <body>
+ <div id="hdrSpanItem"></div>
+ <script language="Javascript">
+ {
+	var i = 0;
+	var cnt = 0;
+	while (i < document.body.childNodes.length) {
+		var node = document.body.childNodes[i];
+		if (node.tagName == 'DIV') {
+			document.body.removeChild(document.body.childNodes[i]);
+			break;
+		}
+		if ((node.tagName == 'TITLE')||(node.tagName == 'STYLE')) {
+			i++;
+		} else {
+			document.body.removeChild(document.body.childNodes[i]);
+		}
+	}
+ }
+ </script>
+<?php
+	print "<h1>NGCMS Runtime error: ".$lastError['message']."</h1>\n";
+	print "<div class='dmsg'>[ ".$lastError['type']."]: ".$lastError['message']."</div><br/>";
+	print "<h2>Stack trace</h2>";
+	print "<table class='dtrace'><thead><td>Line #</td><td>File name</td></tr></thead><tbody>";
+	print "<tr><td>".$lastError['line']."</td><td>".$lastError['file']."</td></tr></tbody></table>";
+	return false;
+}
+
+function twigLocalPath($context) {
+	//print $var1->getTemplateName();
+	return $context['_templatePath'];
 }

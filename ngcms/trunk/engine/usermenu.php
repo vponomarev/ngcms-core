@@ -34,7 +34,7 @@ if (!$is_logged) {
 		'logout_link'	=>  generateLink('core', 'logout'),
 		'name'			=>	$userROW['name'],
 		'phtumb_url'		=>	photos_url.'/'.(($userROW['photo'] != "")?'thumb/'.$userROW['photo']:'nophoto.gif'),
-		'pm_new'		=>	($newpm != "0") ? '<strong>'.$newpm.'</strong>' : '0',
+		'pm_new'		=>	'0',
 		'result'		=>	($result) ? '<div style="color : #fff; padding:5px;">'.$lang['msge_login'].'</div>' : '',
 		'home_url'		=>	home,
 	);
@@ -58,7 +58,7 @@ if (!$is_logged) {
 	$tvars['regx']["'\[login\](.*?)\[/login\]'si"] = '';
 	$tvars['regx']["'\[is-logged\](.*?)\[/is-logged\]'si"] = '$1';
 	$tvars['regx']["'\[isnt-logged\](.*?)\[/isnt-logged\]'si"] = '';
-	$tvars['regx']["'\[login-err\](.*?)\[/login-err\]'si"] = ($SYSTEM_FLAGS['auth_fail'])?'$1':'';
+	$tvars['regx']["'\[login-err\](.*?)\[/login-err\]'si"] = (isset($SYSTEM_FLAGS['auth_fail']) && $SYSTEM_FLAGS['auth_fail'])?'$1':'';
 
 	$tvars['regx']["'\[if-have-perm\](.*?)\[/if-have-perm\]'si"] = ($userROW['status'] > 3)?'':'$1';
 }

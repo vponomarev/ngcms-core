@@ -195,18 +195,26 @@ if ( ( !file_exists(confroot.'config.php') ) || ( filesize(confroot.'config.php'
 require_once root.'includes/classes/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
+// Init our own exception handler
+set_exception_handler('ngExceptionHandler');
+set_error_handler('ngErrorHandler');
+register_shutdown_function('ngShutdownHandler');
+
 global $twig, $twigLoader;
 $twigLoader = new Twig_Loader_NGCMS(root);
 $twig = new Twig_Environment($twigLoader, array(
   'cache' => root.'cache/twig/',
   'auto_reload' => true,
   'autoescape' => false,
+  'base_template_class' => 'Twig_Template_NGCMS',
 ));
 $twig->addGlobalRef('lang',		$lang);
 $twig->addGlobalRef('handler',	$CurrentHandler);
 $twig->addGlobal('skins_url',	skins_url);
 $twig->addGlobal('admin_url',	admin_url);
 $twig->addFunction('pluginIsActive', new Twig_Function_Function('getPluginStatusActive'));
+
+$twig->addFunction('localPath', new Twig_Function_Function('twigLocalPath', array('needs_context' => true)));
 
 $timer->registerEvent('Template engine is activated');
 

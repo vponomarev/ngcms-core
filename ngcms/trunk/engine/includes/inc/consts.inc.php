@@ -8,7 +8,11 @@
 //
 
 // Determine current admin working directory
-define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO_EMPTY)));
+{
+	$tempVariable = preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO_EMPTY);
+	define('adminDirName', array_pop($tempVariable));
+	unset($tempVariable);
+}
 
 @define('NGCMS', true);
 
@@ -20,7 +24,6 @@ define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO
 @define('localPrefix', (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $tempMatch))?$tempMatch[2]:'');
 
 @define('home_title', $config['home_title']);
-@define('zz_url', $config['zz_url']);
 @define('admin_url', isset($config['admin_url'])?$config['admin_url']:$config['zz_url']);
 @define('files_dir', $config['files_dir']);
 @define('files_url', $config['files_url']);
@@ -32,7 +35,6 @@ define('adminDirName', array_pop(preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO
 @define('photos_url', $config['photos_url']);
 
 @define('timestamp', $config['timestamp_active']);
-@define('ctimestamp', $config['timestamp_comment']);
 @define('date_adjust', $config['date_adjust']);
 
 @define('skins_url', admin_url.'/skins/default');
