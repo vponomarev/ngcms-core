@@ -17,14 +17,14 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.2 Release + SVN [SVN834+]');
+@define('engineVersion', '0.9.2 Release + SVN [SVN846+]');
 
 @define('prefix', $config['prefix']);
 @define('home', $config['home_url']);
 @define('localPrefix', (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $tempMatch))?$tempMatch[2]:'');
 
 @define('home_title', $config['home_title']);
-@define('admin_url', isset($config['admin_url'])?$config['admin_url']:$config['zz_url']);
+@define('admin_url', $config['admin_url']);
 @define('files_dir', $config['files_dir']);
 @define('files_url', $config['files_url']);
 @define('images_dir', $config['images_dir']);

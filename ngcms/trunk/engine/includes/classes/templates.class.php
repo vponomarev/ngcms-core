@@ -26,7 +26,7 @@ class tpl {
 		if (is_dir($dir)) {
 			$this -> root = $dir;
 		} else {
-			die(sprintf($lang['msge_no_tpldir'], $dir));
+			ngFatalError(sprintf($lang['msge_no_tpldir'], $dir));
 		}
 
 		$nn		=	$name;
@@ -34,9 +34,9 @@ class tpl {
 		$fname	=	$dir.($file?$file:((substr($dir, -1) != '/'?'/':'').$name.$this->ext));
 
 		if (!is_file($fname)) {
-			die(sprintf(str_replace('{fname}', $fname, $lang['fatal.tpl.lost'], $fname)));
+			ngFatalError(sprintf(str_replace('{fname}', $fname, $lang['fatal.tpl.lost'], $fname)));
 		}
-		
+
 		$fp		=	fopen($fname,'r');
 		$data	=	filesize($fname)?fread($fp,filesize($fname)):'';
 		fclose($fp);
