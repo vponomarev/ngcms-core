@@ -34,6 +34,10 @@ function showStaticPage($params) {
 		return false;
 	}
 
+	// Save some significant news flags for plugin processing
+	$SYSTEM_FLAGS['static']['db.id'] = $row['id'];
+
+
 	if (is_array($PFILTERS['static']))
 		foreach ($PFILTERS['static'] as $k => $v) { $v->showStaticPre($row['id'], $row, array()); }
 
