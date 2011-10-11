@@ -152,11 +152,11 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_home_url}<br /><small>{l_example} http://server.com</small></td>
-<td class="contentEntry2" valign="middle"><input class="home" type="text" name='save_con[home_url]' value='{c_home_url}' size="40" /></td>
+<td class="contentEntry2" valign="middle"><input class="home" type="text" name='save_con[home_url]' value='{home_url}' size="40" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_admin_url}<br /><small>{l_example} http://server.com/engine</small></td>
-<td class="contentEntry2" valign="middle"><input class="home" type="text" name='save_con[admin_url]' value='{c_admin_url}' size="40" /></td>
+<td class="contentEntry2" valign="middle"><input class="home" type="text" name='save_con[admin_url]' value='{admin_url}' size="40" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_home_title}<br /><small>{l_example} NGcms</small></td>

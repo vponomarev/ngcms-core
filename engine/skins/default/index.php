@@ -20,7 +20,7 @@ if (is_array($userROW)) {
 $skins_url = skins_url;
 
 $mod = $_REQUEST['mod'];
-$action = $_REQUEST['action'];
+$action = isset($_REQUEST['action'])?$_REQUEST['action']:'';
 
 $h_active_options = (in_array($mod, array('options', 'categories', 'static')))?' class="active"':'';
 $h_active_extras = (($mod=='extra-config')||($mod=='extras'))?' class="active"':'';

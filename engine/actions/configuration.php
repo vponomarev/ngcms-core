@@ -62,7 +62,7 @@ function systemConfigSave(){
 //
 // Show configuration form
 function systemConfigEditForm(){
-	global $lang, $tpl, $AUTH_CAPABILITIES, $config;
+	global $lang, $tpl, $AUTH_CAPABILITIES;
 
 	// Check for token
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'details')) {
@@ -80,6 +80,10 @@ function systemConfigEditForm(){
 		if ($v['login'])	{ $auth_modules[$k] = $k;	}
 		if ($v['db'])		{ $auth_dbs[$k] = $k;		}
 	}
+
+	// Load config file from configuration
+	// Now in $config we have original version of configuration data
+	include confroot.'config.php';
 
 	$tvars['vars'] = array(
 		'php_self'					=>	$PHP_SELF,
@@ -135,6 +139,8 @@ function systemConfigEditForm(){
 		'thumb_size_x'				=>	isset($config['thumb_size_x'])?intval($config['thumb_size_x']):intval($config['thumb_size']),
 		'thumb_size_y'				=>	isset($config['thumb_size_y'])?intval($config['thumb_size_y']):intval($config['thumb_size']),
 		'token'						=> genUToken('admin.configuration'),
+		'home_url'					=> $config['home_url'],
+		'admine_url'				=> $config['admin_url'],
 	);
 
 	// Prepare file name for STAMP
