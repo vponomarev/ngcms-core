@@ -170,7 +170,7 @@ function systemConfigEditForm(){
 //
 //
 // Check if SAVE is requested and SAVE was successfull
-if (isset($_REQUEST['subaction']) && ($_REQUEST['subaction'] == "save") && systemConfigSave()) {
+if (isset($_REQUEST['subaction']) && ($_REQUEST['subaction'] == "save") && ($_SERVER['REQUEST_METHOD'] == "POST") &&systemConfigSave()) {
 	@include(confroot.'config.php');
 }
 
