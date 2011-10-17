@@ -200,21 +200,38 @@ set_exception_handler('ngExceptionHandler');
 set_error_handler('ngErrorHandler');
 register_shutdown_function('ngShutdownHandler');
 
+//
+// *** Initialize TWIG engine
+// - Reference for GLOBAL information array
+global $twigGlobal;
+$twigGlobal = array();
+
+// - Main variables
 global $twig, $twigLoader;
+
+// - Configure loader parameters
 $twigLoader = new Twig_Loader_NGCMS(root);
+
+// - Configure environment and general parameters
 $twig = new Twig_Environment($twigLoader, array(
   'cache' => root.'cache/twig/',
   'auto_reload' => true,
   'autoescape' => false,
   'base_template_class' => 'Twig_Template_NGCMS',
 ));
+
+// - Global variables [by REFERENCE]
 $twig->addGlobalRef('lang',		$lang);
 $twig->addGlobalRef('handler',	$CurrentHandler);
+$twig->addGlobalRef('global',	$twigGlobal);
+
+// - Global variables [by VALUE]
 $twig->addGlobal('skins_url',	skins_url);
 $twig->addGlobal('admin_url',	admin_url);
-$twig->addFunction('pluginIsActive', new Twig_Function_Function('getPluginStatusActive'));
 
-$twig->addFunction('localPath', new Twig_Function_Function('twigLocalPath', array('needs_context' => true)));
+// - Define functions
+$twig->addFunction('pluginIsActive',	new Twig_Function_Function('getPluginStatusActive'));
+$twig->addFunction('localPath', 		new Twig_Function_Function('twigLocalPath', array('needs_context' => true)));
 
 $timer->registerEvent('Template engine is activated');
 
@@ -307,13 +324,11 @@ $timer->registerEvent('ALL core-related plugins are executed');
 @define('tpl_site', site_root.'templates/'.$config['theme'].'/');
 @define('tpl_url', home.'/templates/'.$config['theme']);
 
+// - TWIG: Reconfigure allowed template paths - site template is also available
 $twigLoader->setPaths(array(tpl_site, root));
 
-// Now we have tpl_url const and can transfer it to TWIG:
+// - TWIG: Added global variable `tpl_url`
 $twig->addGlobal('tpl_url',		tpl_url);
-
-// Add tpl_url path into list of allowed paths
-$twigLoader->setPaths(array(tpl_site, root));
 
 
 // Lang files are loaded _after_ executing core scripts. This is done for switcher plugin
