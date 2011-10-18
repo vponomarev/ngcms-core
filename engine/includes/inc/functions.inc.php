@@ -993,7 +993,7 @@ function GetCategories($catid, $plain = false) {
 //
 // New category menu generator
 function generateCategoryMenu(){
-	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS, $TemplateCache, $twig;
+	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS, $TemplateCache, $twig, $twigLoader;
 
 	// Load template variables
 	templateLoadVariables(true);
@@ -1062,7 +1062,21 @@ function generateCategoryMenu(){
 			}
 
 		}
+
+		// Prepare conversion maps
+		$conversionConfig = array(
+			'[entries]'			=> '{% for entry in entries %}',
+			'[/entries]'		=> '{% endfor %}',
+			'[flags.active]'	=> '{% if (entry.flags.active) %}',
+			'[/flags.active]'	=> '{% endif %}',
+			'[!flags.active]'	=> '{% if (not entry.flags.active) %}',
+			'[/!flags.active]'	=> '{% endif %}',
+			'[flags.counter]'	=> '{% if (entry.flags.counter) %}',
+			'[/flags.counter]'	=> '{% endif %}',
+		);
+
 		$tVars['entries'] = $tEntries;
+		$twigLoader->setConversion('news.categories.tpl', $conversionConfig);
 		$xt = $twig->loadTemplate('news.categories.tpl');
 		return $xt->render($tVars);
 
