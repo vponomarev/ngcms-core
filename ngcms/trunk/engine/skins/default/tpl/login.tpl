@@ -28,7 +28,7 @@
     </form>
     </div>
   </div>
-  <p class="log_copyright">2008-2010 © <a href="http://ngcms.ru" target="_blank">Next Generation CMS</a></p>
+  <p class="log_copyright">2008-2011 © <a href="http://ngcms.ru" target="_blank">Next Generation CMS</a></p>
 </div>
 <!--/Login block-->
 
