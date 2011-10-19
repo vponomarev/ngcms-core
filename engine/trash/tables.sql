@@ -176,7 +176,7 @@ CREATE TABLE `XPREFIX_news` (
   `num_images` int(10) default '0',
   `editdate` int(10) NOT NULL default '0',
   `catid` varchar(255) NOT NULL default '0',
-  `xfields` text NOT NULL,
+--  `xfields` text default '',
   `description` text NOT NULL,
   `keywords` text NOT NULL,
   `rating` int(10) NOT NULL default '0',
