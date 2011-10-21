@@ -51,8 +51,9 @@ function rpcRegisterAdminFunction($name, $instance, $permanent = false) {
 
 if (isset($_REQUEST['json'])) {
 	processJSON();
+} else {
+	print "200: Method is not supported.";
 }
-
 
 
 

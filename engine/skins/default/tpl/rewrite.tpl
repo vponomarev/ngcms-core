@@ -11,7 +11,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 
 <thead>
-<tr class="contHead"><td>&nbsp;</td><td width="20">#</td><td width="70">{l_hdr.plugin}</td><td width="90">{l_hdr.action}</td><td>{l_hdr.description}</td><td>URL</td><td>{l_hdr.flags}</td><td>&nbsp;</td></tr>
+<tr class="contHead"><td>&nbsp;</td><td width="20">#</td><td width="60">{l_hdr.plugin}</td><td width="80">{l_hdr.action}</td><td>{l_hdr.description}</td><td>URL</td><td>{l_hdr.flags}</td><td>&nbsp;</td></tr>
 </thead>
 <tbody id="cfg.body">
 </tbody>
@@ -23,7 +23,7 @@
  <td id="row.pluginName">*&nbsp;</td>
  <td id="row.cmd">&nbsp;</td>
  <td id="row.description">&nbsp;</td>
- <td id="row.url"><input type="text"  id="ed.regex"/><br/>
+ <td id="row.url"><input type="text"  id="ed.regex" style="width: 90%;"/><br/>
  	{l_tbl.available_vars}:<br/><span id="ed.varlist"></span>
  </td>
  <td id="row.flags"><input id="ed.flagPrimary" type="checkbox"/> <input id="ed.flagFailContinue" type="checkbox"/> <input id="ed.flagDisabled" type="checkbox"/></td>
@@ -32,10 +32,12 @@
 <tr id="row.editRow2" valign="top" class="rewriteEditLine">
 <td colspan="4">&nbsp;</td>
 <td colspan="2">
+<!--
 Переопределение значений переменных:
 <table width="100%">
 <tr><td>altname</td><td width="20"><input type="checkbox"></td><td><input type="text"/></td></tr>
 </table>
+-->
 </td>
 <td colspan="2">&nbsp;</td>
 </tr>
