@@ -85,7 +85,7 @@ function setDisplayMode(mode) {
 <div id="pluginMenu">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_extras}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="admin.php?mod=extras">{l_extras}</a></td>
 </tr>
 </table>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
