@@ -108,6 +108,7 @@ class file_managment {
 	// *  manualtmp		- TEMP file where manual uploaded file is [temporally] stored
 	// * plugin		- ID of plugin that owns this file
 	// * pidentity	- ID of plugin's identity that owns this file
+	// * description- description for image
 	function file_upload($param){
 		global $config, $lang, $mysql, $userROW;
 
@@ -277,8 +278,8 @@ class file_managment {
 
 			// Create record in SQL DB (or replace old)
 			$mysql->query("insert into ".prefix."_".$this->tname." ".
-				"(name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id, plugin, pidentity) ".
-				"values (".db_squote($fname).", 1,".db_squote($origFname).",".db_squote($dir1.'/'.$dir2.'/'.$xDir).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.", ".db_squote($param['linked_ds']).", ".db_squote($param['linked_id']).", ".db_squote($param['plugin']).", ".db_squote($param['pidentity']).")");
+				"(name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id, plugin, pidentity, description) ".
+				"values (".db_squote($fname).", 1,".db_squote($origFname).",".db_squote($dir1.'/'.$dir2.'/'.$xDir).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.", ".db_squote($param['linked_ds']).", ".db_squote($param['linked_id']).", ".db_squote($param['plugin']).", ".db_squote($param['pidentity']).", ".db_squote($param['description']).")");
 			$rowID = $mysql->record("select LAST_INSERT_ID() as id");
 			return is_array($rowID)?array($rowID['id'], $fname, $dir1.'/'.$dir2.'/'.$xDir):0;
 		}
