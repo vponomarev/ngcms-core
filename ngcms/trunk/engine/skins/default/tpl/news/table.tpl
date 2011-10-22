@@ -169,22 +169,28 @@ function filter_attach_DateEdit(id) {
 <input type="hidden" name="action" value="manage" />
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left" class="contHead">
-<td width="5%" nowrap>{{ lang.editnews['postid_short'] }}</td>
-<td width="10%"  nowrap>{{ lang.editnews['date'] }}</td>
-<td width="16">&nbsp;</td>
+<td width="30" nowrap>{{ lang.editnews['postid_short'] }}</td>
+<td width="60"  nowrap>{{ lang.editnews['date'] }}</td>
+<td width="48">&nbsp;</td>
 <td width="45%" >{{ lang.editnews['title'] }}</td>
 {% if flags.comments %}<td width="10%" >{{ lang.editnews['listhead.comments'] }}</td>{% endif %}
 <td width="25%">{{ lang.editnews['category'] }}</td>
 <td width="10%">{{ lang.editnews['author'] }}</td>
-<td width="5%">&nbsp;</td>
+<td width="16">&nbsp;</td>
 <td width="5%"><input class="check" type="checkbox" name="master_box" title="{{ lang.editnews['select_all'] }}" onclick="javascript:check_uncheck_all(editnews)" /></td>
 </tr>
 {% for entry in entries %}
 <tr align="left" >
-	<td width="5%" class="contentEntry1">{{ entry.newsid }}</td>
-	<td width="10%" class="contentEntry1">{{ entry.itemdate }}</td>
-	<td width="16" class="contentEntry1" cellspacing=0 cellpadding=0 style="padding:0; margin:0;">{% if entry.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="Main"/> {% endif %}</td>
-	<td width="45%" class="contentEntry1">{% if (entry.attach_count > 0) %}<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="{l_attach.count}: {{ entry.attach_count }}"/> {% endif %}<a href="{{ php_self }}?mod=news&amp;action=edit&amp;id={{ entry.newsid }}">{{ entry.title }}</a></td>
+	<td width="30" class="contentEntry1">{{ entry.newsid }}</td>
+	<td width="60" class="contentEntry1">{{ entry.itemdate }}</td>
+	<td width="48" class="contentEntry1" cellspacing=0 cellpadding=0 style="padding:0; margin:0;" nowrap>
+		{% if entry.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="Main"/> {% endif %}
+		{% if (entry.attach_count > 0) %}<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="{{ lang['attach.count'] }}: {{ entry.attach_count }}"/> {% endif %}
+		{% if (entry.images_count > 0) %}<img src="{{ skins_url }}/images/img_group.png" border="0" width="16" height="16" title="{{ lang['images.count'] }}: {{ entry.images_count }}"/> {% endif %}
+	</td>
+	<td width="45%" class="contentEntry1">
+		<a href="{{ php_self }}?mod=news&amp;action=edit&amp;id={{ entry.newsid }}">{{ entry.title }}</a>
+	</td>
 	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:center;">{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
 	{% endif %}<td class="contentEntry1">{{ entry.allcats }}</td>
 	<td class="contentEntry1"><a href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ entry.userid }}">{{ entry.username }}</a></td>

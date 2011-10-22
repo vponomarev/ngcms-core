@@ -248,19 +248,20 @@ function editNews() {
 
 		}
 
-	// Update attach count if we need this
-	if ($flagUpdateAttachCount) {
-		$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-		$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-
-		$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
-		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
-
-	}
-
 	// Notify plugins about news edit completion
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->editNewsNotify($id, $row, $SQL, $tvars); }
+
+	// Update attach count if we need this
+	$numFiles	= $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+	if ($numFiles != $row['num_files']) {
+		$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
+	}
+
+	$numImages	= $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+	if ($numImages != $row['num_images']) {
+		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
+	}
 
 	msg(array("text" => $lang['msgo_edited']));
 }
@@ -705,6 +706,7 @@ function listNewsForm() {
 			'username'		=> $row['author'],
 			'comments'		=> isset($row['com'])?$row['com']:'',
 			'attach_count'	=> $row['num_files'],
+			'images_count'	=> $row['num_images'],
 			'itemdate'		=> date("d.m.Y",$row['postdate']),
 			'allcats'		=> @GetAllCategories($cats).' &nbsp;',
 			'title'			=> secure_html((strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title']),
@@ -1018,11 +1020,13 @@ function addNews(){
 		}
 
 	// Update attach count if we need this
-	if ($flagUpdateAttachCount) {
-		$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-		$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-
+	$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+	if ($numFiles) {
 		$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
+	}
+
+	$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+	if ($numImages) {
 		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
 	}
 
