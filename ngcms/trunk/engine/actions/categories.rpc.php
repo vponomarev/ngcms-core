@@ -12,6 +12,7 @@ if (!defined('NGCMS')) die ('HAL');
 
 // Load library
 @include_once root.'includes/classes/upload.class.php';
+$lang = LoadLang('categories', 'admin');
 
 // ////////////////////////////////////////////////////////////////////////////
 // Processing functions :: show list of categories
