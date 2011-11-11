@@ -29,6 +29,7 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
     {
         $this->setPaths($paths);
 	$this->templateConversion = array();
+	$this->templateConversionRegex = array();
     }
 
     /**
@@ -83,16 +84,26 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
      */
     public function getSource($name)
     {
+		// Get content
         $content = file_get_contents($this->findTemplate($name));
-	if (isset($this->templateConversion[$name]) && is_array($this->templateConversion[$name])) {
-		$tconv = $this->templateConversion[$name];
-		$content = str_replace(array_keys($tconv), array_values($tconv), $content);
-	}
-	return $content;
+
+    	// Process REGEX conversion
+		if (isset($this->templateConversionRegex[$name]) && is_array($this->templateConversionRegex[$name])) {
+			$tconv = $this->templateConversionRegex[$name];
+			$content = preg_replace(array_keys($tconv), array_values($tconv), $content);
+		}
+
+    	// Process static variable conversion
+		if (isset($this->templateConversion[$name]) && is_array($this->templateConversion[$name])) {
+			$tconv = $this->templateConversion[$name];
+			$content = str_replace(array_keys($tconv), array_values($tconv), $content);
+		}
+		return $content;
     }
 
-	public function setConversion($name, $variables) {
+	public function setConversion($name, $variables, $regexp = array()) {
 		$this->templateConversion[$name] = $variables;
+		$this->templateConversionRegex[$name] = $regexp;
 		return true;
 	}
 
