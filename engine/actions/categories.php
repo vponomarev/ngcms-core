@@ -304,8 +304,8 @@ function admCategoryEdit(){
 	//print "<pre>POST DATA:\n".var_export($_POST, true)."\n\nFILES: ".var_export($_FILES, true)."</pre>";
 
 	$SQL			= array();
-	$SQL['name']	= secure_html($_REQUEST['name']);
-	$SQL['info']	= secure_html($_REQUEST['info']);
+	$SQL['name']	= $_REQUEST['name'];
+	$SQL['info']	= $_REQUEST['info'];
 	$SQL['alt']		= trim($_REQUEST['alt']);
 	$SQL['parent']	= intval($_REQUEST['parent']);
 	$SQL['icon']	= $_REQUEST['icon'];
