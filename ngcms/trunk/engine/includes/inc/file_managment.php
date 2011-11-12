@@ -69,7 +69,7 @@ function manage_move($type){
 	}
 }
 
-// Manage image action
+// Manage file/image action
 function manage_upload($type){
 	global $config, $mysql, $fmanager, $lang;
 
@@ -232,7 +232,8 @@ function manage_showlist($type) {
 	$fmanager->get_limits($type);
 	$dir = $fmanager->dname;
 
-	array_push($filter, 'storage = 0');
+	// Show only images, that are not linked to any DataStorage
+	array_push($filter, 'linked_ds = 0');
 	$limit				= (count($filter)?"where ".join(" and ",$filter):'');
 	$query['sql']		= "select * from ".prefix."_".$fmanager->tname." ".$limit." order by date desc limit ".$start_from.", ".$npp;
 	$query['count']		= "select count(*) as cnt from ".prefix."_".$fmanager->tname." ".$limit;
@@ -267,9 +268,6 @@ function manage_showlist($type) {
 		$tvars['vars'] = array(
 			'rename'		=>	$rename,
 			'code'			=>	$html_code,
-//			'insert_file'	=>	$insert_file,
-//			'insert_thumb'	=>	$row['preview'] ? $insert_thumb : '',
-//			'insert_preview'=>  $row['preview'] ? $insert_preview : '',
 			'view_file'		=>	$view_file,
 			'view_thumb'	=>	$row['preview'] ? $row['view_thumb'] : '',
 			'file_link'		=>	$file_link,
@@ -358,6 +356,7 @@ function manage_showlist($type) {
 		$dirlist	= 'n/a';
 		$dirlistcat	= 'n/a';
 	} else {
+		$dirlistS	=	ListDirs($type.'s', false, 0, 'categorySelect');
 		$dirlist	=	ListDirs($type.'s', false, 0);
 		$dirlistcat	=	ListDirs($type.'s', $_REQUEST['category']);
 	}
@@ -367,6 +366,7 @@ function manage_showlist($type) {
 		'php_self'			=>	$PHP_SELF,
 		'dateslist'			=>	$dateslist,
 		'dirlist'			=>	$dirlist,
+		'dirlistS'			=>	$dirlistS,
 		'authorlist'		=>	$authorlist,
 		'npp'		=>	$npp,
 		'entries'			=>	$entries,

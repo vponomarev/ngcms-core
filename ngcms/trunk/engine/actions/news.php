@@ -299,7 +299,7 @@ function editNewsForm() {
 		'changedate'		=>	ChangeDate($row['postdate'], 1),
 		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array())),
-		'allcats'			=>	@GetAllCategories($cats),
+		'allcats'			=>	resolveCatNames($cats),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
 		'content'			=>  array(),
@@ -708,7 +708,7 @@ function listNewsForm() {
 			'attach_count'	=> $row['num_files'],
 			'images_count'	=> $row['num_images'],
 			'itemdate'		=> date("d.m.Y",$row['postdate']),
-			'allcats'		=> @GetAllCategories($cats).' &nbsp;',
+			'allcats'		=> resolveCatNames($cats).' &nbsp;',
 			'title'			=> secure_html((strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title']),
 			'link'			=> newsGenerateLink($row, false, 0, true),
 

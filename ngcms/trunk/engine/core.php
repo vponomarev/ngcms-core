@@ -270,6 +270,12 @@ if ($config['libcompat']) {
 // [ END compatibility mode ]
 
 //
+// Special way to pass authentication cookie via POST params
+if (!isset($_COOKIE['zz_auth']) && isset($_POST['ngAuthCookie']))
+	$_COOKIE['zz_auth'] = $_POST['ngAuthCookie'];
+
+
+//
 // Make authentication
 //
 $timer->registerEvent('Ready to load auth plugins');

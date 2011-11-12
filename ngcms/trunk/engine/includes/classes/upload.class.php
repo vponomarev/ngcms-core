@@ -109,6 +109,7 @@ class file_managment {
 	// * plugin		- ID of plugin that owns this file
 	// * pidentity	- ID of plugin's identity that owns this file
 	// * description- description for image
+	// * rpc		- flag: if set, returning result is made in RPC style [ default - not set ]
 	function file_upload($param){
 		global $config, $lang, $mysql, $userROW;
 
@@ -154,8 +155,12 @@ class file_managment {
 		}
 		// Check limits
 		if (!$this->get_limits($param['type'])) {
-			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.type'])));
-			return 0;
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 301, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{fname}', $fname, $lang['upload.error.type'])));
+			} else {
+				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.type'])));
+				return 0;
+			}
 		}
 
 		//print "PROCESS: fname=".$fname."<br> fsize=".$fsize."<br>ftype=".$ftype."<br>ftmp=".$ftmp."<br>ferr=".$ferr."<br>this->dname=".$this->dname."<br/>\n";
@@ -163,14 +168,22 @@ class file_managment {
 
 		// * File size
 		if ($fsize > $this->max_size) {
-			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.size']), "info" => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])));
-			return 0;
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 302, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{fname}', $fname, $lang['upload.error.size'])), 'errorDescription' => iconv('Windows-1251', 'UTF-8', str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])));
+			} else {
+				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.size']), "info" => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])));
+				return 0;
+			}
 		}
 
 		// Check for existance of temp file
 		if (!$ftmp || !file_exists($ftmp)) {
-			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));
-			return 0;
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 303, 'errorText' => iconv('Windows-1251', 'UTF-8', var_export($_FILES, true).str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));
+			} else {
+				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));
+				return 0;
+			}
 		}
 
 		$fil = explode(".", strtolower($fname));
@@ -178,8 +191,12 @@ class file_managment {
 
 		// * File type
 		if (array_search($ext, $this->required_type) === FALSE) {
-			msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.ext']), "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
-			return;
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 304, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{fname}', $fname, $lang['upload.error.ext'])), 'errorDescription' => iconv('Windows-1251', 'UTF-8', str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
+			} else {
+				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.ext']), "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
+				return 0;
+			}
 		}
 		// Process file name
 		$fil = trim(str_replace(array(' ','\\','/',chr(0)),array('_', ''),join(".",$fil)));
@@ -200,8 +217,12 @@ class file_managment {
 			$wDir = $config['attach_dir'];
 
 			if (!is_dir($wDir)) {
-				print "No access to directory: '".$wDir."'<br/>\n";
-				return 0;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 305, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.dsn'])));
+				} else {
+					msg(array("type" => "error", "text" => "No access to DSN directory `".$wDir."`"));
+					return 0;
+				}
 			}
 
 			// Determine storage tree
@@ -211,14 +232,22 @@ class file_managment {
 
 			$wDir .= '/'.$dir1;
 			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
-				msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
-				return 0;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 306, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+				} else {
+					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+					return 0;
+				}
 			}
 
 			$wDir .= '/'.$dir2;
 			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
-				msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
-				return 0;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 307, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+				} else {
+					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+					return 0;
+				}
 			}
 
 			// Now let's find empty slot
@@ -238,15 +267,23 @@ class file_managment {
 						continue;
 
 					// Unable to create dir
-					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.ext'])));
-					return 0;
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 308, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.ext'])));
+					} else {
+						msg(array("type" => "error", "text" => str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.ext'])));
+						return 0;
+					}
 				} else {
 					break;
 				}
 			}
 			if (!$xDir) {
-				msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots'])));
-				return 0;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 309, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots'])));
+				} else {
+					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots'])));
+					return 0;
+				}
 			}
 
 			$wDir .= '/'.$xDir;
@@ -260,16 +297,24 @@ class file_managment {
 					// Delete file
 					unlink($ftmp);
 
-					msg(array("type" => "error", "text" => $lang['upload.error.move']));
-					return 0;
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 310, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.move']));
+					} else {
+						msg(array("type" => "error", "text" => $lang['upload.error.move']));
+						return 0;
+					}
 				}
 			} else {
 				if (!move_uploaded_file($ftmp, $wDir.'/'.$fname)) {
 					// Remove empty dir
 					rmdir($wDir);
 
-					msg(array("type" => "error", "text" => $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
-					return 0;
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 311, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
+					} else {
+						msg(array("type" => "error", "text" => $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
+						return 0;
+					}
 				}
 			}
 
@@ -281,7 +326,21 @@ class file_managment {
 				"(name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id, plugin, pidentity, description) ".
 				"values (".db_squote($fname).", 1,".db_squote($origFname).",".db_squote($dir1.'/'.$dir2.'/'.$xDir).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.", ".db_squote($param['linked_ds']).", ".db_squote($param['linked_id']).", ".db_squote($param['plugin']).", ".db_squote($param['pidentity']).", ".db_squote($param['description']).")");
 			$rowID = $mysql->record("select LAST_INSERT_ID() as id");
-			return is_array($rowID)?array($rowID['id'], $fname, $dir1.'/'.$dir2.'/'.$xDir):0;
+
+			// SQL error
+			if (!is_array($rowID)) {
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 312, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.sql']));
+				} else {
+					msg(array("type" => "error", "text" => $lang['upload.error.sql']));
+					return 0;
+				}
+			}
+			if ($param['rpc']) {
+				return array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.complete']), 'data' => array('id' => $rowID['id'], 'name' => $fname, 'location' => $dir1.'/'.$dir2.'/'.$xDir));
+			} else {
+				return array($rowID['id'], $fname, $dir1.'/'.$dir2.'/'.$xDir);
+			}
 		}
 
 		// Create random prefix if requested
@@ -295,8 +354,12 @@ class file_managment {
 
 			if ($try == 100) {
 				// Can't create RAND name - all values are occupied
-				msg(array("type" => "error", "text" => $lang['upload.error.rand']));
-				return;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 312, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.rand']));
+				} else {
+					msg(array("type" => "error", "text" => $lang['upload.error.rand']));
+					return 0;
+				}
 			}
 			$fname = $prefix.'_'.$fname;
 		}
@@ -307,12 +370,20 @@ class file_managment {
 			// Found file. Check if 'replace' flag is present and user have enough privilleges
 			if ($param['replace']) {
 				if (!(($row['user'] == $userROW['name']) || ($userROW['status'] == 1) || ($userROW['status'] == 2))) {
-					msg(array("type" => "error", "text" => $lang['upload.error.perm.replace']));
-					return 0;
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 313, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.perm.replace']));
+					} else {
+						msg(array("type" => "error", "text" => $lang['upload.error.perm.replace']));
+						return 0;
+					}
 				}
 			} else {
-				msg(array("type" => "error", "text" => $lang['upload.error.exists'], "info" => $lang['upload.error.exists#info']));
-				return 0;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 314, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.exists']), 'errorDescription' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.exists#info']));
+				} else {
+					msg(array("type" => "error", "text" => $lang['upload.error.exists'], "info" => $lang['upload.error.exists#info']));
+					return 0;
+				}
 			}
 			if (is_array($row))
 				$replace_id = $row['id'];
@@ -320,9 +391,22 @@ class file_managment {
 
 		// We're ready to move file into target directory
 		if (!is_dir($this->dname.$param['category'])) {
-			// Category dir doesn't exists
-			msg(array("type" => "error", "text" => str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
-			return 0;
+			// SPECIAL processing for "default" category
+			if ($param['category'] == 'default') {
+				@mkdir($this->dname.$param['category'], 0777);
+				if ($param['type'] == 'image') {
+					@mkdir($this->dname.$subdirectory.'/thumb', 0777);
+				}
+
+			} else {
+				// Category dir doesn't exists
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 315, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
+				} else {
+					msg(array("type" => "error", "text" => str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
+					return 0;
+				}
+			}
 		}
 
 
@@ -330,13 +414,22 @@ class file_managment {
 		if ($param['manual']) {
 			if (!copy($ftmp, $this->dname.$wCategory.$fname)) {
 				unlink($ftmp);
-				msg(array("type" => "error", "text" => $lang['upload.error.move']));
-				return 0;
+
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 310, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.move']));
+				} else {
+					msg(array("type" => "error", "text" => $lang['upload.error.move']));
+					return 0;
+				}
 			}
 		} else {
 			if (!move_uploaded_file($ftmp, $this->dname.$wCategory.$fname)) {
-				msg(array("type" => "error", "text" => $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
-				return 0;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 310, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
+				} else {
+					msg(array("type" => "error", "text" => $lang['upload.error.move']. "(".$ftpm." => ".$this->dname.$wCategory.$fname.")"));
+					return 0;
+				}
 			}
 		}
 
@@ -352,11 +445,30 @@ class file_managment {
 					"user=".db_squote($userROW['name']).", ".
 					"owner_id=".db_squote($userROW['id']).
 					" where id = ".$replace_id);
-			return array($replace_id, $fname, $wCategory);
+			if ($param['rpc']) {
+				return array('status' => 1, 'errorCode' => 0, 'data' => array('id' => $rowID['id'], 'name' => $fname, 'category' => $wCategory));
+			} else {
+				return array($replace_id, $fname, $wCategory);
+			}
 		} else {
 			$mysql->query("insert into ".prefix."_".$this->tname." (name, orig_name, folder, date, user, owner_id, category) values (".db_squote($fname).",".db_squote($origFname).",".db_squote($param['category']).", unix_timestamp(now()), ".db_squote($userROW['name']).",".db_squote($userROW['id']).", ".$this->tcat.")");
 			$rowID = $mysql->record("select LAST_INSERT_ID() as id");
-			return is_array($rowID)?array($rowID['id'], $fname, $wCategory):0;
+
+
+			// SQL error
+			if (!is_array($rowID)) {
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 312, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.sql']));
+				} else {
+					msg(array("type" => "error", "text" => $lang['upload.error.sql']));
+					return 0;
+				}
+			}
+			if ($param['rpc']) {
+				return array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.complete']), 'data' => array('id' => $rowID['id'], 'name' => $fname, 'category' => $wCategory));
+			} else {
+				return array($rowID['id'], $fname, $wCategory);
+			}
 		}
 	}
 
@@ -405,8 +517,9 @@ class file_managment {
 					msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'].'/'.$row['name'], $lang['upload.error.delete'])));
 					return 0;
 				}
-				// Now try to delete empty storage directory
-				@rmdir($storageDir);
+				// Now try to delete empty storage directory [ ONLY for DSN ]
+				if ($row['storage'])
+					@rmdir($storageDir);
 			}
 
 			$mysql->query("delete from ".prefix."_".$this->tname." where id = ".db_squote($row['id']));
