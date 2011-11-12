@@ -690,7 +690,7 @@ function ListFiles($path, $ext, $showExt = 0) {
 }
 
 
-function ListDirs($folder, $category = false, $alllink = true) {
+function ListDirs($folder, $category = false, $alllink = true, $elementID = '') {
 	global $lang;
 
 	switch ($folder) {
@@ -705,7 +705,7 @@ function ListDirs($folder, $category = false, $alllink = true) {
 				return fase;
 	}
 
-	$select = '<select name="category">'.($alllink?'<option value="">- '.$lang['all'] .' -</option>':'');
+	$select = '<select '.($elementID?'id="'.$elementID.'" ':'').'name="category">'.($alllink?'<option value="">- '.$lang['all'] .' -</option>':'');
 
 	if (($dir = @opendir($wdir)) === FALSE) {
 		msg(array(
@@ -843,21 +843,17 @@ function LoadPluginLang($plugin, $file, $group = '', $prefix = '', $delimiter = 
 	return 1;
 }
 
+function resolveCatNames($idList, $split = ', ') {
+	global $catz, $catmap;
 
-function GetAllCategories($cats) {
-	global $catz;
-
-	foreach ($cats as $k => $v) {
-		foreach ($catz as $row) {
-			if ($v == $row['id']) {
-				$catline .= ", ".$row['name'];
-			}
+	$inames = array();
+	foreach ($idList as $id) {
+		if (isset($catmap[$id])) {
+			$inames []= $catz[$catmap[$id]]['name'];
 		}
 	}
-
-	return preg_replace('[^([, ]+)]', '', $catline);
+	return join($split, $inames);
 }
-
 
 function MakeRandomPassword() {
 	global $config;

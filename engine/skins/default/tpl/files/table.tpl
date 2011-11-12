@@ -1,10 +1,19 @@
+<!-- Preload uploadify engine -->
+<script type="text/javascript" src="{admin_url}/includes/js/swfobject.js"></script>
+<script type="text/javascript" src="{admin_url}/includes/js/jquery.uploadify.v2.1.4.min.js"></script>
+
+<!-- Main scripts -->
 <script type="text/javascript">
+var flagRequireReload = 0;
 function ChangeOption(selectedOption) {
 	document.getElementById('list').style.display = "none";
 	[status]document.getElementById('categories').style.display = "none";[/status]
 	document.getElementById('uploadnew').style.display = "none";
 
 	if(selectedOption == 'list') {
+		if (flagRequireReload) {
+			document.location.href = document.location.href;
+		}
 		document.getElementById('list').style.display = "";
 		document.getElementById('entries').style.display = "";
 	}
@@ -119,9 +128,11 @@ function setStatus(mode) {
 <form action='{php_self}?mod=files' method='post' enctype="multipart/form-data" name="sn">
 <input type="hidden" name="area" value="{area}" />
 <input type="hidden" name="subaction" value="upload" />
-{dirlist}&nbsp;
+{dirlistS}&nbsp;
+<span id="showRemoveAddButtoms">
 <input type="button" class="button" value='{l_delone}' onClick="RemoveFiles();return false;" />&nbsp;
 <input type="button" class="button" value='{l_onemore}' onClick="AddFiles();return false;" /><br /><br />
+</span>
 <script language="javascript" type="text/javascript">
 function AddFiles() {
 	var tbl = document.getElementById('fileup');
@@ -132,7 +143,7 @@ function AddFiles() {
 	cellRight.innerHTML = '<span style="font-size: 12px;">'+iteration+': </span>';
 
 	cellRight = row.insertCell(1);
-	
+
 	var el = document.createElement('input');
 	el.setAttribute('type', 'file');
 	el.setAttribute('name', 'userfile[' + iteration + ']');
@@ -150,17 +161,82 @@ function RemoveFiles() {
 </script>
 <table id="fileup" class="upload">
 <tr id="row">
-<td>1: </td><td><input type="file" size="30" name="userfile[0]" /></td>
+<td>1: </td><td><input type="file" id="fileUploadInput" size="30" name="userfile[0]" /></td>
 </tr>
 </table>
 <br /><br />
 <div class="list">
-  <input type=checkbox name="replace" value='replace' id=replace class='check' /> 
-  <label for=replace>{l_do_replace}</label><br />
-  <input type=checkbox name="rand" value='rand' id=rand class='check' /> <label for=rand>{l_do_rand}</label><br />
+  <input type="checkbox" name="replace" value="replace" id="flagReplace" class="check" value="1"/>
+  <label for="flagReplace">{l_do_replace}</label><br />
+  <input type="checkbox" name="rand" value='rand' id="flagRand" class="check" value="1"/> <label for="flagRand">{l_do_rand}</label><br />
 </div>
-<br /><input type="submit" value='{l_upload}' class="button" />
+<br /><input type="submit" value='{l_upload}' class="button" onclick="uploadifyDoUpload(); return false;"/>
 </form>
+
+<!-- Init UPLOADIFY engine -->
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#fileUploadInput').uploadify({
+        'uploader'  : '{admin_url}/includes/js/uploadify.swf',
+		'script'    : '{admin_url}/rpc.php?methodName=admin.files.upload',
+		'cancelImg' : '{skins_url}/images/up_cancel.png',
+		'folder'    : '',
+		'auto'      : false,
+		'multi'     : true,
+		'buttonText'  : 'Select files ...',
+		//'width'		: 200,
+		//'queueID'   : 'upImages',
+		//'queueSizeLimit' : 5,
+		'removeCompleted' : true,
+		'onInit' : function() { document.getElementById('showRemoveAddButtoms').style.display= 'none'; },
+		'onComplete' : function(ev, ID, fileObj, res, data) {
+			// Response should be in JSON format
+			var resData;
+			var resStatus = 0;
+			try {
+				resData = eval('('+res+')');
+				if (typeof(resData['status']))
+					resStatus = 1;
+			} catch (err) { alert('Error parsing JSON output. Result: '+res); }
+
+			if (!resStatus) {
+				alert('Upload resp: '+res);
+				return false;
+			}
+
+			flagRequireReload = 1;
+
+			// If upload fails
+			if (resData['status'] < 1) {
+				$('#' + $(ev.target).attr('id') + ID).append('<div>('+resData['errorCode']+') '+resData['errorText']+'</div>');
+				$('#' + $(ev.target).attr('id') + ID).css('border', '2px solid red');
+				return false;
+			} else {
+				$('#' + $(ev.target).attr('id') + ID).append('<div>'+resData['errorText']+'</div>');
+				$('#' + $(ev.target).attr('id') + ID).fadeOut(5000);
+			}
+			return true;
+		},
+		//'onSelect' : function(event, ID, fileObj) { processEvent('onSelect ('+event+', '+ID+', '+fileObj.name+' ['+fileObj.size+'])'); }
+
+	});
+});
+
+function uploadifyDoUpload() {
+	// Prepare script data
+	var scriptData = new Array();
+	scriptData['ngAuthCookie']	= getCookie('zz_auth');
+	scriptData['uploadType']	= 'file';
+	scriptData['category']		= document.getElementById('categorySelect').value;
+	scriptData['rand']			= document.getElementById('flagRand').checked?1:0;
+	scriptData['replace']		= document.getElementById('flagReplace').checked?1:0;
+
+  	$('#fileUploadInput').uploadifySettings('scriptData',scriptData,true);
+	$('#fileUploadInput').uploadifyUpload();
+
+}
+
+</script>
 
 </td>
 </tr>
@@ -191,7 +267,7 @@ function AddFiles2() {
 	cellRight.innerHTML = '<span style="font-size: 12px;">'+iteration+': </span>';
 
 	cellRight = row.insertCell(1);
-	
+
 	var el = document.createElement('input');
 	el.setAttribute('type', 'text');
 	el.setAttribute('name', 'userurl[' + iteration + ']');
@@ -215,7 +291,7 @@ function RemoveFiles2() {
 </table>
 <br />
 <div class="list">
-  <input type=checkbox name="replace" value='replace' id=replace class='check' /> 
+  <input type=checkbox name="replace" value='replace' id=replace class='check' />
   <label for=replace>{l_do_replace}</label><br />
   <input type=checkbox name="rand" value='rand' id=rand class='check' /> <label for=rand>{l_do_rand}</label><br />
 </div>
