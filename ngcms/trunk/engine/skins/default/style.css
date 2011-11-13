@@ -803,7 +803,7 @@ border-bottom: 1px solid #eee;
 	font: 11px Verdana, Geneva, sans-serif;
 	margin-top: 5px;
 	padding: 10px;
-	width: 350px;
+	width: 450px;
 }
 .uploadifyError {
 	background-color: #FDE5DD !important;
@@ -815,6 +815,13 @@ border-bottom: 1px solid #eee;
 .uploadifyQueue .completed {
 	background-color: #E5E5E5;
 }
+.uploadifyQueueItem .msg {
+}
+.uploadifyQueueItem .msgInfo {
+	font-style: italic;
+}
+
+
 .uploadifyProgress {
 	background-color: #E5E5E5;
 	margin-top: 10px;

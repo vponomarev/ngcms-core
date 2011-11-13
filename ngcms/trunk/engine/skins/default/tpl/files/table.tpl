@@ -211,7 +211,10 @@ $(document).ready(function() {
 
 			// If upload fails
 			if (resData['status'] < 1) {
-				$('#' + $(ev.target).attr('id') + ID).append('<div>('+resData['errorCode']+') '+resData['errorText']+'</div>');
+				$('#' + $(ev.target).attr('id') + ID).append('<div class="msg">('+resData['errorCode']+') '+resData['errorText']+'</div>');
+				if (typeof(resData['errorDescription']) !== 'undefined') {
+					$('#' + $(ev.target).attr('id') + ID).append('<div class="msgInfo">'+resData['errorDescription']+'</div>');
+				}
 				$('#' + $(ev.target).attr('id') + ID).css('border', '2px solid red');
 				return false;
 			} else {

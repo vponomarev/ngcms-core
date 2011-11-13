@@ -186,24 +186,29 @@ class file_managment {
 			}
 		}
 
+		// Process file name
+		if ($param['rpc']) {
+			$fname = iconv('UTF-8', 'Windows-1251', $fname);
+			//echo 'FConv: '.iconv('UTF-8', 'Windows-1251', $fil);
+		}
+
 		$fil = explode(".", strtolower($fname));
 		$ext = count($fil)?array_pop($fil):'';
 
 		// * File type
 		if (array_search($ext, $this->required_type) === FALSE) {
 			if ($param['rpc']) {
-				return array('status' => 0, 'errorCode' => 304, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{fname}', $fname, $lang['upload.error.ext'])), 'errorDescription' => iconv('Windows-1251', 'UTF-8', str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
+				return array('status' => 0, 'errorCode' => 304, 'errorText' => str_replace('{fname}', $fname, iconv('Windows-1251', 'UTF-8', $lang['upload.error.ext'])), 'errorDescription' => iconv('Windows-1251', 'UTF-8', str_replace('{ext}', join(", ",$this->required_type), $lang['upload.error.ext#info'])));
 			} else {
 				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.ext']), "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
 				return 0;
 			}
 		}
-		// Process file name
-		$fil = trim(str_replace(array(' ','\\','/',chr(0)),array('_', ''),join(".",$fil)));
 
 		$parse = new parse();
-		$fil = $parse->translit($fil);
 
+		$fil = trim(str_replace(array(' ','\\','/',chr(0)),array('_', ''),join(".",$fil)));
+		$fil = $parse->translit($fil);
 
 		$fname = $fil.($ext?'.'.$ext:'');
 
@@ -446,7 +451,7 @@ class file_managment {
 					"owner_id=".db_squote($userROW['id']).
 					" where id = ".$replace_id);
 			if ($param['rpc']) {
-				return array('status' => 1, 'errorCode' => 0, 'data' => array('id' => $rowID['id'], 'name' => $fname, 'category' => $wCategory));
+				return array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.complete']), 'data' => array('id' => $rowID['id'], 'name' => $fname, 'category' => $wCategory));
 			} else {
 				return array($replace_id, $fname, $wCategory);
 			}
