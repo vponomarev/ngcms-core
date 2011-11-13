@@ -361,6 +361,12 @@ function manage_showlist($type) {
 		$dirlistcat	=	ListDirs($type.'s', $_REQUEST['category']);
 	}
 
+	// Prepare list of available extensions
+	$listExt = '';
+	foreach (preg_split('#, *#', $config[($type == 'images'?'images':'files').'_ext']) as $eI) {
+		$listExt .= '*.'.$eI.';';
+	}
+
 	$tpl -> template('table', tpl_actions.$mod);
 	$tvars['vars'] = array(
 		'php_self'			=>	$PHP_SELF,
@@ -368,11 +374,13 @@ function manage_showlist($type) {
 		'dirlist'			=>	$dirlist,
 		'dirlistS'			=>	$dirlistS,
 		'authorlist'		=>	$authorlist,
-		'npp'		=>	$npp,
+		'npp'				=>	$npp,
 		'entries'			=>	$entries,
 		'pagesss'			=>	$pagesss,
 		'dirlistcat'		=>	$dirlistcat,
-		'npp'		=>	$npp,
+		'listExt'			=>	$listExt,
+		'descExt'			=>	$lang['uploadify_'.($type=='images'?'images':'files')],
+		'maxSize'			=>	intval($config[($type=='images'?'images':'files').'_max_size'] * 1024),
 		'area'				=>	($area) ? $area : '',
 		'shadow_mode'		=>	$config['shadow_mode']?'disabled':'',
 		'stamp_mode'		=>	$config['stamp_mode']?'disabled':'',
