@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
 // Name: statistics.php
 // Description: Generate system statistics
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -11,6 +11,17 @@
 if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('statistics', 'admin');
+
+function phpConfigGetBytes ($size_str)
+{
+	switch (substr ($size_str, -1))
+	{
+		case 'M': case 'm': return (int)$size_str * 1048576;
+		case 'K': case 'k': return (int)$size_str * 1024;
+		case 'G': case 'g': return (int)$size_str * 1073741824;
+		default: return $size_str;
+	}
+}
 
 
 // Gather information about directories
@@ -105,6 +116,7 @@ $tvars['vars'] = array(
 	'mysql_version'		=>	mysql_get_server_info(),
 	'gd_version'		=>	(isset($gd_version) && is_array($gd_version))?$gd_version["GD Version"]:'<font color="red"><b>NOT INSTALLED</b></font>',
 	'currentVersion'	=>	engineVersion,
+	'versionNotifyURL'	=>	'http://ngcms.ru/sync/version.php?ver='.urlencode(engineVersion),
 	'mysql_size'		=>	$mysql_size,
 	'allowed_size'		=>	$df,
 	'avatars'			=>	$avatars,
@@ -124,6 +136,13 @@ $tvars['vars'] = array(
 );
 
 $tvars['vars'] = $tvars['vars'] + $STATS;
+
+// Check if we have problems with limits for uploads
+$minUploadLimits = array(phpConfigGetBytes(ini_get('upload_max_filesize')), phpConfigGetBytes(ini_get('post_max_size')));
+$tvars['vars']['minUploadLimit'] = intval(min($minUploadLimits)/1024).'kb';
+
+$tvars['regx']['#\[error_size_files\](.+?)\[\/error_size_files\]#is'] = (min($minUploadLimits) < ($config['files_max_size'] * 1024))?'$1':'';
+$tvars['regx']['#\[error_size_images\](.+?)\[\/error_size_images\]#is'] = (min($minUploadLimits) < ($config['images_max_size'] * 1024))?'$1':'';
 
 // PHP errors
 $phpErrors = 0;
