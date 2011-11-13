@@ -51,7 +51,7 @@ function _modal_close() {
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_last_version}</td>
-<td width="50%" class="contentEntry2"><script type="text/javascript" language="JavaScript" src="http://ngcms.ru/sync/version.php?ver={currentVersion}"></script></td>
+<td width="50%" class="contentEntry2"><script type="text/javascript" language="JavaScript" src="{versionNotifyURL}"></script></td>
 </tr>
 </table>
 </td>
