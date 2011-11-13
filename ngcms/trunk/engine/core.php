@@ -314,6 +314,7 @@ if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHO
 
 		// - Now every TWIG template will know if user is logged in
 		$twigGlobal['flags']['isLogged'] = 1;
+		$twig->addGlobalRef('user',	$userROW);
 	}
 } else {
 	echo "Fatal error: No auth module is found.<br />To fix problem please run <i>upgrade.php</i> script<br /><br />\n";

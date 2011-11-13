@@ -10,11 +10,39 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+global $lang;
+global $userROW;
 $lang = LoadLang('usermenu', 'site');
 
 // Prepare global params for TWIG
 $tVars = array();
 $tVars['flags']['isLogged'] = $is_logged;
+
+// Prepare REGEX conversion table
+$conversionConfigRegex = array(
+		"#\[login\](.*?)\[/login\]#si"					=> '{% if (not flags.isLogged) %}$1{% endif %}',
+		"#\[isnt-logged\](.*?)\[/isnt-logged\]#si"		=> '{% if (not flags.isLogged) %}$1{% endif %}',
+		"#\[is-logged\](.*?)\[/is-logged\]#si"			=> '{% if (flags.isLogged) %}$1{% endif %}',
+		"#\[login-err\](.*?)\[/login-err\]#si"			=> '{% if (flags.loginError) %}$1{% endif %}',
+		"#\[if-have-perm\](.*?)\[/if-have-perm\]#si"	=> "{% if (global.flags.isLogged and (user['status'] <= 3)) %}$1{% endif %}",
+		"#\{l_([0-9a-zA-Z\-\_\.]+)}#"					=> "{{ lang['$1'] }}",
+);
+
+// Prepare conversion table
+$conversionConfig = array(
+		'{profile_link}'		=> '{{ profile_link }}',
+		'{addnews_link}'		=> '{{ addnews_link }}',
+		'{logout_link}'			=> '{{ logout_link }}',
+		'{phtumb_url}'			=> '{{ phtumb_url }}',
+		'{name}'				=> '{{ name }}',
+		'{result}'				=> '{{ result }}',
+		'{home_url}'			=> '{{ home_url }}',
+		'{redirect}'			=> '{{ redirect }}',
+		'{reg_link}'			=> '{{ reg_link }}',
+		'{lost_link}'			=> '{{ lost_link }}',
+		'{form_action}'			=> '{{ form_action }}',
+);
+
 
 // If not logged in
 if (!$is_logged) {
@@ -25,34 +53,15 @@ if (!$is_logged) {
 	$tVars['lost_link']				= generateLink('core', 'lostpassword');
 	$tVars['form_action']			= generateLink('core', 'login');
 	$tVars['result']				= ($result) ? '<div style="color : #fff; padding : 5px;">'.$lang['msge_login'].'</div>' : '';
-
-	// Prepare conversion table
-	$conversionConfigRegex = array(
-			"#\[login\](.*?)\[/login\]#si"					=> '{% if (not flags.isLogged) %}$1{% endif %}',
-			"#\[isnt-logged\](.*?)\[/isnt-logged\]#si"		=> '{% if (not flags.isLogged) %}$1{% endif %}',
-			"#\[is-logged\](.*?)\[/is-logged\]#si"			=> '{% if (flags.isLogged) %}$1{% endif %}',
-			"#\[login-err\](.*?)\[/login-err\]#si"			=> '{% if (flags.loginError) %}$1{% endif %}',
-	);
-
-	$conversionConfig = array(
-			'{redirect}'			=> '{{ redirect }}',
-			'{reg_link'				=> '{{ reg_link }}',
-			'{lost_link}'			=> '{{ lost_link }}',
-			'{form_action}'			=> '{{ form_action }}',
-			'{result}'				=> '{{ result }}',
-	);
 } else {
 	// User is logged in
-	$tvars['vars'] = array(
-		'profile_link'	=>	generateLink('uprofile', 'edit'),
-		'addnews_link'	=>	$config['admin_url'].'/admin.php?mod=news&action=add',
-		'logout_link'	=>  generateLink('core', 'logout'),
-		'name'			=>	$userROW['name'],
-		'phtumb_url'		=>	photos_url.'/'.(($userROW['photo'] != "")?'thumb/'.$userROW['photo']:'nophoto.gif'),
-		'pm_new'		=>	'0',
-		'result'		=>	($result) ? '<div style="color : #fff; padding:5px;">'.$lang['msge_login'].'</div>' : '',
-		'home_url'		=>	home,
-	);
+	$tVars['profile_link']				= generateLink('uprofile', 'edit');
+	$tVars['addnews_link']				= $config['admin_url'].'/admin.php?mod=news&amp;action=add';
+	$tVars['logout_link']				= generateLink('core', 'logout');
+	$tVars['name']						= $userROW['name'];
+	$tVars['phtumb_url']				= photos_url.'/'.(($userROW['photo'] != "")?'thumb/'.$userROW['photo']:'nophoto.gif');
+	$tVars['result']					= ($result) ? '<div style="color : #fff; padding:5px;">'.$lang['msge_login'].'</div>' : '';
+	$tVars['home_url']					= home;
 
 	// Generate avatar link
 	$userAvatar = '';
@@ -69,21 +78,14 @@ if (!$is_logged) {
 			}
 		}
 	}
-	$tvars['vars']['avatar_url'] = $userAvatar;
-
-	$tvars['regx']["'\[login\](.*?)\[/login\]'si"] = '';
-	$tvars['regx']["'\[is-logged\](.*?)\[/is-logged\]'si"] = '$1';
-	$tvars['regx']["'\[isnt-logged\](.*?)\[/isnt-logged\]'si"] = '';
-	$tvars['regx']["'\[login-err\](.*?)\[/login-err\]'si"] = (isset($SYSTEM_FLAGS['auth_fail']) && $SYSTEM_FLAGS['auth_fail'])?'$1':'';
-
-	$tvars['regx']["'\[if-have-perm\](.*?)\[/if-have-perm\]'si"] = ($userROW['status'] > 3)?'':'$1';
+	$tVars['avatar_url'] = $userAvatar;
 }
 
 exec_acts('usermenu');
 
-$tpl -> template('usermenu', tpl_site);
-$tpl -> vars('usermenu', $tvars);
-$template['vars']['personal_menu'] = $tpl -> show('usermenu');
+$twigLoader->setConversion('usermenu.tpl', $conversionConfig, $conversionConfigRegex);
+$xt = $twig->loadTemplate('usermenu.tpl');
+$template['vars']['personal_menu'] = $xt->render($tVars);
 
 // Add special variables `personal_menu:logged` and `personal_menu:not.logged`
 $template['vars']['personal_menu:logged'] = $is_logged ? $template['vars']['personal_menu'] : '';
