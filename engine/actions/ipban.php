@@ -147,7 +147,7 @@ function ipban_list() {
 			'php_self'	=>	$PHP_SELF,
 			'id'		=>	$row['id'],
 			'ip'		=>	$row['addr'],
-			'whoisip'	=>	array_shift(split('/', $row['addr'])),
+			'whoisip'	=>	array_shift(explode('/', $row['addr'])),
 			'atype'		=>	($row['atype']?' /net':''),
 			'mode'		=>	'',
 			'descr'		=>	$row['reason']==''?'-':$row['reason'],

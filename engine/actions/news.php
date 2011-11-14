@@ -422,7 +422,7 @@ function massCommentDelete(){
 	$countBlocked = 0;
 	$countLost    = 0;
 	foreach ($delcomid as $delid) {
-		list($comid, $author, $add_ip, $postid) = split("-", $delid);
+		list($comid, $author, $add_ip, $postid) = explode("-", $delid);
 
 		// Let's delete using only comment id ( $comid )
 		if (!is_array($crow = $mysql->record("select (select status from ".uprefix."_users u where u.id=c.author_id) as castatus, (select author_id from ".prefix."_news n where n.id=c.post) as naid, c.* from ".prefix."_comments c where c.id = ".db_squote($comid)))) {

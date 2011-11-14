@@ -280,7 +280,7 @@ function BBCodes($area = false) {
 
 function Padeg($n, $s) {
 	$n	=	abs($n);
-	$a	=	split(",", $s);
+	$a	=	explode(",", $s);
 	$l1	=	$n - ((int)($n / 10)) * 10;
 	$l2	=	$n - ((int)($n / 100)) * 100;
 
