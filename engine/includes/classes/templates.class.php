@@ -176,6 +176,19 @@ class tpl {
 			}
 		}
 
+		// - Special display for languages
+		// [iflang:<Language>] .. [/iflang]
+		if (preg_match_all('/\[iflang\:(.+?)\](.+?)\[\/iflang\]/is', $data, $parr)) {
+			foreach ($parr[0] as $k => $v) {
+				$data = str_replace($v,($config['default_lang'] == $parr[1][$k])?'$1':'', $data);
+			}
+		}
+		// [ifnlang:<Language>] .. [/ifnlang]
+		if (preg_match_all('/\[ifnlang\:(.+?)\](.+?)\[\/ifnlang\]/is', $data, $parr)) {
+			foreach ($parr[0] as $k => $v) {
+				$data = str_replace($v,($config['default_lang'] == $parr[1][$k])?'':'$1', $data);
+			}
+		}
 
 		if ($PHP_SELF && $PHP_SELF == "admin.php") {
 			preg_match_all('/(?<=\{)c_(.*?)(?=\})/i', $data, $carr);
