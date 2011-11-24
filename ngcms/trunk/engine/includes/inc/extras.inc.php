@@ -855,8 +855,8 @@ function generatePluginLink($pluginName, $handlerName, $params = array(), $xpara
 //
 // Generate link to page
 //
-function generatePageLink($paginationParams, $page) {
-	//print "generatePageLink(".var_export($paginationParams, true).";".$page.")<br/>\n";
+function generatePageLink($paginationParams, $page, $intlink = false) {
+	//print "generatePageLink(".var_export($paginationParams, true).", ".$intlink.";".$page.")<br/>\n";
 	// Generate link
 	$lparams = $paginationParams['params'];
 	$lxparams = $paginationParams['xparams'];
@@ -869,7 +869,7 @@ function generatePageLink($paginationParams, $page) {
 		}
 	}
 	//return generateLink($paginationParams['pluginName'], $paginationParams['pluginHandler'], $lparams, $lxparams);
-	return generatePluginLink($paginationParams['pluginName'], $paginationParams['pluginHandler'], $lparams, $lxparams);
+	return generatePluginLink($paginationParams['pluginName'], $paginationParams['pluginHandler'], $lparams, $lxparams, $intlink);
 }
 
 
