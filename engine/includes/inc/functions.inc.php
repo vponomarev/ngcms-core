@@ -1382,13 +1382,13 @@ function GetMetatags() {
 }
 
 // Generate pagination block
-function generatePaginationBlock($current, $start, $end, $paginationParams, $navigations){
+function generatePaginationBlock($current, $start, $end, $paginationParams, $navigations, $intlink = false){
 	$result = '';
 	for ($j=$start; $j<=$end; $j++) {
 		if ($j == $current) {
 			$result .= str_replace('%page%',$j,$navigations['current_page']);
 		} else {
-			$result .= str_replace('%page%',$j,str_replace('%link%',generatePageLink($paginationParams, $j), $navigations['link_page']));
+			$result .= str_replace('%page%',$j,str_replace('%link%',generatePageLink($paginationParams, $j, $intlink), $navigations['link_page']));
 		}
 	}
 	return $result;
@@ -1401,7 +1401,8 @@ function generatePaginationBlock($current, $start, $end, $paginationParams, $nav
 // $end					- last page in navigations
 // $maxnav				- maximum number of navigtions to show
 // $paginationParams	- pagination params [ for function generatePageLink() ]
-function generatePagination($current, $start, $end, $maxnav, $paginationParams, $navigations){
+// $intlink				- generate all '&' as '&amp;' if value is set
+function generatePagination($current, $start, $end, $maxnav, $paginationParams, $navigations, $intlink = false){
 	$pages_count = $end - $start + 1;
 	$pages = '';
 
@@ -1415,23 +1416,23 @@ function generatePagination($current, $start, $end, $maxnav, $paginationParams, 
 
 		// Situation #1: 1,2,3,4,[5],6 ... 128
 		if ($current < ($sectionSize * 2)) {
-			$pages .= generatePaginationBlock($current, 1, $sectionSize * 2, $paginationParams, $navigations);
+			$pages .= generatePaginationBlock($current, 1, $sectionSize * 2, $paginationParams, $navigations, $intlink);
 			$pages .= $navigations['dots'];
-			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations);
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations, $intlink);
 		} elseif ($current > ($pages_count - $sectionSize * 2 + 1)) {
-			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations);
+			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations, $intlink);
 			$pages .= $navigations['dots'];
-			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize*2 + 1, $pages_count, $paginationParams, $navigations);
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize*2 + 1, $pages_count, $paginationParams, $navigations, $intlink);
 		} else {
-			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations);
+			$pages .= generatePaginationBlock($current, 1, $sectionSize, $paginationParams, $navigations, $intlink);
 			$pages .= $navigations['dots'];
-			$pages .= generatePaginationBlock($current, $current-1, $current+1, $paginationParams, $navigations);
+			$pages .= generatePaginationBlock($current, $current-1, $current+1, $paginationParams, $navigations, $intlink);
 			$pages .= $navigations['dots'];
-			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations);
+			$pages .= generatePaginationBlock($current, $pages_count-$sectionSize, $pages_count, $paginationParams, $navigations, $intlink);
 		}
 	} else {
 		// If we have less then $maxnav pages
-		$pages .= generatePaginationBlock($current, 1, $pages_count, $paginationParams, $navigations);
+		$pages .= generatePaginationBlock($current, 1, $pages_count, $paginationParams, $navigations, $intlink);
 	}
 	return $pages;
 }
