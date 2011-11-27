@@ -370,6 +370,7 @@ class file_managment {
 		}
 
 		$replace_id = 0;
+		$row = '';
 		// Now we have correct filename. Let's check for dups
 		if (is_array($row = $mysql->record("select * from ".prefix."_".$this->tname." where name = ".db_squote($fname)." and folder= ".db_squote($param['category']))) || file_exists($this->dname.$wCategory.$fname)) {
 			// Found file. Check if 'replace' flag is present and user have enough privilleges
@@ -443,15 +444,22 @@ class file_managment {
 
 		// Create record in SQL DB (or replace old)
 		if ($replace_id) {
+			// Delete old THUMB (if exists)
+			if ($row['preview'] && ($param['type'] == 'image')&& is_file($this->dname.$param['category'].'/thumb/'.$row['name'])) {
+				@unlink($this->dname.$param['category'].'/thumb/'.$row['name']);
+			}
+
+
 			$mysql->query("update ".prefix."_".$this->tname." set ".
 					"name= ".db_squote($fname).", ".
 					"folder=".db_squote($param['category']).", ".
 					"date=unix_timestamp(now()), ".
 					"user=".db_squote($userROW['name']).", ".
 					"owner_id=".db_squote($userROW['id']).
+					(($param['type'] == 'image')?', preview = 0, p_width = 0, p_height = 0':'').
 					" where id = ".$replace_id);
 			if ($param['rpc']) {
-				return array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.complete']), 'data' => array('id' => $rowID['id'], 'name' => $fname, 'category' => $wCategory));
+				return array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.complete']), 'data' => array('id' => $replace_id, 'name' => $fname, 'category' => $wCategory));
 			} else {
 				return array($replace_id, $fname, $wCategory);
 			}

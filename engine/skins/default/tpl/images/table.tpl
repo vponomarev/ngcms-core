@@ -223,7 +223,7 @@ $(document).ready(function() {
 				alert('Upload resp: '+res);
 				return false;
 			}
-alert(res);
+
 			flagRequireReload = 1;
 
 			// If upload fails
