@@ -1,10 +1,20 @@
+<!-- Preload uploadify engine -->
+<script type="text/javascript" src="{admin_url}/includes/js/swfobject.js"></script>
+<script type="text/javascript" src="{admin_url}/includes/js/jquery.uploadify.v2.1.4.min.js"></script>
+
+<!-- Main scripts -->
 <script type="text/javascript">
+var flagRequireReload = 0;
 function ChangeOption(selectedOption) {
 	document.getElementById('list').style.display = "none";
 	[status]document.getElementById('categories').style.display = "none";[/status]
 	document.getElementById('uploadnew').style.display = "none";
 
 	if(selectedOption == 'list') {
+		if (flagRequireReload) {
+			document.location.href = document.location.href;
+		}
+
 		document.getElementById('list').style.display = "";
 		document.getElementById('entries').style.display = "";
 	}
@@ -121,18 +131,20 @@ function setStatus(mode) {
 <table id="uploadnew" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content">
 <tr>
 <td width="50%" valign="top" class="contentEntry1">
-<form action="{php_self}?mod=images" method="post" enctype="multipart/form-data" name="sn">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
 <td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_upload_img}</td>
 </tr>
 <tr>
 <td>
+<form action="{php_self}?mod=images" method="post" enctype="multipart/form-data" name="sn">
 <input type="hidden" name="subaction" value="upload" />
 <input type="hidden" name="area" value="{area}" />
-<br />{dirlist}&nbsp;
+<br />{dirlistS}&nbsp;
+<span id="showRemoveAddButtoms">
 <input type="button" class="button" value='{l_delone}' onClick="RemoveImages();return false;" />&nbsp;
 <input type="button" class="button" value='{l_onemore}' onClick="AddImages();return false;" /><br /><br />
+</span>
 <script language="javascript" type="text/javascript">
 function AddImages() {
 	var tbl = document.getElementById('imageup');
@@ -160,28 +172,95 @@ function RemoveImages() {
 </script>
 <table id="imageup" class="upload">
 <tr id="row">
-<td>1: </td><td><input type="file" size="60" name="userfile[0]" /></td>
+<td>1: </td><td><input type="file" size="60" id="fileUploadInput" name="userfile[0]" /></td>
 </tr>
 </table>
 
 <div class="list">
-  <input type="checkbox" name="replace" value='replace' id=replace class='check' /> 
-  <label for=replace>{l_do_replace}</label><br />
-  <input type="checkbox" name="rand" value='rand' id=rand class='check' /> 
-  <label for=rand>{l_do_rand}</label><br />
-  <input type="checkbox" name="thumb" value='thumb' id=thumb class='check' {thumb_mode}{thumb_checked}/> 
-  <label for=thumb>{l_do_preview}</label><br />
-  <input type="checkbox" name="shadow" value='shadow' id=shadow class='check' {shadow_mode}{shadow_checked} /><label for=shadow>{l_do_shadow}</label><br />
-  <input type="checkbox" name="stamp" value='stamp' id=stamp class='check' {stamp_mode}{stamp_checked} /><label for=stamp>{l_do_wmimage}</label>
+  <input type="checkbox" name="replace" value="1" id="flagReplace" class='check' />									<label for="flagReplace">{l_do_replace}</label><br />
+  <input type="checkbox" name="rand" value="1" id="flagRand" class='check' />										<label for="flagRand">{l_do_rand}</label><br />
+  <input type="checkbox" name="thumb" value="1" id="flagThumb" class='check' {thumb_mode}{thumb_checked}/>			<label for="flagThumb">{l_do_preview}</label><br />
+  <input type="checkbox" name="shadow" value="1" id="flagShadow" class='check' {shadow_mode}{shadow_checked} />		<label for="flagShadow">{l_do_shadow}</label><br />
+  <input type="checkbox" name="stamp" value="1" id="flagStamp" class='check' {stamp_mode}{stamp_checked} />			<label for="flagStamp">{l_do_wmimage}</label>
 </div></td>
 </tr>
 <tr align="center">
 <td width="100%" class="contentEdit" align="center" valign="top">
-<input type="submit" value='{l_upload}' class="button" />
+<input type="submit" value='{l_upload}' class="button" onclick="uploadifyDoUpload(); return false;" />
 </td>
 </tr>
 </table>
 </form>
+
+<!-- BEGIN: Init UPLOADIFY engine -->
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#fileUploadInput').uploadify({
+        'uploader'  : '{admin_url}/includes/js/uploadify.swf',
+		'script'    : '{admin_url}/rpc.php?methodName=admin.files.upload',
+		'cancelImg' : '{skins_url}/images/up_cancel.png',
+		'folder'    : '',
+		'fileExt'   : '{listExt}',
+		'fileDesc'  : '{descExt}',
+		'sizeLimit'	: {maxSize},
+		'auto'      : false,
+		'multi'     : true,
+		'buttonText'  : 'Select files ...',
+		'width'		: 200,
+		'removeCompleted' : true,
+		'onInit' : function() { document.getElementById('showRemoveAddButtoms').style.display= 'none'; },
+		'onComplete' : function(ev, ID, fileObj, res, data) {
+			// Response should be in JSON format
+			var resData;
+			var resStatus = 0;
+			try {
+				resData = eval('('+res+')');
+				if (typeof(resData['status']))
+					resStatus = 1;
+			} catch (err) { alert('Error parsing JSON output. Result: '+res); }
+
+			if (!resStatus) {
+				alert('Upload resp: '+res);
+				return false;
+			}
+alert(res);
+			flagRequireReload = 1;
+
+			// If upload fails
+			if (resData['status'] < 1) {
+				$('#' + $(ev.target).attr('id') + ID).append('<div class="msg">('+resData['errorCode']+') '+resData['errorText']+'</div>');
+				if (typeof(resData['errorDescription']) !== 'undefined') {
+					$('#' + $(ev.target).attr('id') + ID).append('<div class="msgInfo">'+resData['errorDescription']+'</div>');
+				}
+				$('#' + $(ev.target).attr('id') + ID).css('border', '2px solid red');
+				return false;
+			} else {
+				$('#' + $(ev.target).attr('id') + ID).append('<div>'+resData['errorText']+'</div>');
+				$('#' + $(ev.target).attr('id') + ID).fadeOut(5000);
+			}
+			return true;
+		},
+	});
+});
+
+function uploadifyDoUpload() {
+	// Prepare script data
+
+	var scriptData = new Array();
+	scriptData['ngAuthCookie']	= getCookie('zz_auth');
+	scriptData['uploadType']	= 'image';
+	scriptData['category']		= document.getElementById('categorySelect').value;
+	scriptData['rand']			= document.getElementById('flagRand').checked?1:0;
+	scriptData['replace']		= document.getElementById('flagReplace').checked?1:0;
+	scriptData['thumb']			= document.getElementById('flagThumb').checked?1:0;
+	scriptData['stamp']			= document.getElementById('flagStamp').checked?1:0;
+	scriptData['shadow']		= document.getElementById('flagShadow').checked?1:0;
+
+  	$('#fileUploadInput').uploadifySettings('scriptData',scriptData,true);
+	$('#fileUploadInput').uploadifyUpload();
+}
+</script>
+<!-- END: Init UPLOADIFY engine -->
 </td>
 
 <td width="50%" class="contentEntry1" valign="top">
@@ -203,12 +282,12 @@ function AddImages2() {
 	var lastRow = tbl.rows.length;
 	var iteration = lastRow+1;
 	var row = tbl.insertRow(lastRow);
-	
+
 	var cellRight = row.insertCell(0);
 	cellRight.innerHTML = '<span">'+iteration+': <'+'/'+'span>';
-	
+
 	cellRight = row.insertCell(1);
-	
+
 	var el = document.createElement('input');
 	el.setAttribute('type', 'text');
 	el.setAttribute('name', 'userurl[' + iteration + ']');
@@ -230,11 +309,11 @@ function RemoveImages2() {
 </table>
 
 <div class="list">
-  <input type="checkbox" name="replace" value='replace' id=replace2 class='check' /> 
+  <input type="checkbox" name="replace" value='replace' id=replace2 class='check' />
   <label for=replace2>{l_do_replace}</label><br />
-  <input type="checkbox" name="rand" value='rand' id=rand2 class='check' /> 
+  <input type="checkbox" name="rand" value='rand' id=rand2 class='check' />
   <label for=rand2>{l_do_rand}</label><br />
-  <input type="checkbox" name="thumb" value='thumb' id=thumb2 class='check'  {thumb_mode}{thumb_checked} /> 
+  <input type="checkbox" name="thumb" value='thumb' id=thumb2 class='check'  {thumb_mode}{thumb_checked} />
   <label for=thumb2>{l_do_preview}</label><br />
   <input type="checkbox" name="shadow" value='shadow' id=shadow2 class='check' {shadow_mode}{shadow_checked} /><label for=shadow2>{l_do_shadow}</label><br />
   <input type="checkbox" name="stamp" value='stamp' id=stamp2 class='check' {stamp_mode}{stamp_checked} /><label for=stamp2>{l_do_wmimage}</label>

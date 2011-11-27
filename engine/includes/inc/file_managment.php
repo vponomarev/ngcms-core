@@ -363,7 +363,7 @@ function manage_showlist($type) {
 
 	// Prepare list of available extensions
 	$listExt = '';
-	foreach (preg_split('#, *#', $config[($type == 'images'?'images':'files').'_ext']) as $eI) {
+	foreach (preg_split('#, *#', $config[($type == 'image'?'images':'files').'_ext']) as $eI) {
 		$listExt .= '*.'.$eI.';';
 	}
 

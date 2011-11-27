@@ -76,7 +76,7 @@ function populateCfg() {
   tmp = tmp + populateTemplate(dData[dID]);
 
  var tStorage = document.getElementById('temp.data');
- tStorage.innerHTML = '<table>'+tmp+'</table>';
+ tStorage.innerHTML = '<table><tbody>'+tmp+'</tbody></table>';
 
  var cParent = cbody.parentNode;
  cbody.parentNode.replaceChild(tStorage.firstChild.firstChild, cbody);
