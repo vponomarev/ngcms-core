@@ -125,7 +125,7 @@ function setStatus(mode) {
 <td>
 <br />
 
-<form action='{php_self}?mod=files' method='post' enctype="multipart/form-data" name="sn">
+<form action="{php_self}?mod=files" method="post" enctype="multipart/form-data" name="sn">
 <input type="hidden" name="area" value="{area}" />
 <input type="hidden" name="subaction" value="upload" />
 {dirlistS}&nbsp;
@@ -173,7 +173,7 @@ function RemoveFiles() {
 <br /><input type="submit" value='{l_upload}' class="button" onclick="uploadifyDoUpload(); return false;"/>
 </form>
 
-<!-- Init UPLOADIFY engine -->
+<!-- BEGIN: Init UPLOADIFY engine -->
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#fileUploadInput').uploadify({
@@ -187,9 +187,7 @@ $(document).ready(function() {
 		'auto'      : false,
 		'multi'     : true,
 		'buttonText'  : 'Select files ...',
-		//'width'		: 200,
-		//'queueID'   : 'upImages',
-		//'queueSizeLimit' : 5,
+		'width'		: 200,
 		'removeCompleted' : true,
 		'onInit' : function() { document.getElementById('showRemoveAddButtoms').style.display= 'none'; },
 		'onComplete' : function(ev, ID, fileObj, res, data) {
@@ -239,11 +237,9 @@ function uploadifyDoUpload() {
 
   	$('#fileUploadInput').uploadifySettings('scriptData',scriptData,true);
 	$('#fileUploadInput').uploadifyUpload();
-
 }
-
 </script>
-
+<!-- END: Init UPLOADIFY engine -->
 </td>
 </tr>
 </table>

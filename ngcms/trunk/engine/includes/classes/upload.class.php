@@ -729,7 +729,9 @@ class image_managment{
 		return NULL;
 	}
 
-	function create_thumb($dir, $file, $sizeX, $sizeY, $quality = 0){
+	// Params:
+	//	rpc			- flag if we're called via RPC call
+	function create_thumb($dir, $file, $sizeX, $sizeY, $quality = 0, $param){
 		global $lang;
 		$fname = $dir.'/'.$file;
 
@@ -738,20 +740,31 @@ class image_managment{
 		// Check if we have a directory for thumb
 		if (!is_dir($dir.'/thumb')) {
 			if (!@mkdir($dir.'/thumb', 0777)) {
-			msg(array("type" => "error", "text" => $lang['upload.error.sysperm.thumbdir']));
-			return false;
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 351, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.sysperm.thumbdir']));
+				}
+				msg(array("type" => "error", "text" => $lang['upload.error.sysperm.thumbdir']));
+				return false;
 			}
 		}
 
 		// Check if file exists and we can get it's image size
 		if (!file_exists($fname) || !is_array($sz=@getimagesize($fname))) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 352, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.open'].$fname));
+			}
+			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return false;
 		}
-		$origX	= $sz[0];
-		$origY	= $sz[1];
+		$origX		= $sz[0];
+		$origY		= $sz[1];
 		$origType	= $sz[2];
 
 		if (!(($sizeX>0) && ($sizeY>0) && ($origX>0) && ($origY>0))) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 353, 'errorText' => iconv('Windows-1251', 'UTF-8', 'Unable to determine image size'));
+			}
+
 			return false;
 		}
 
@@ -771,6 +784,9 @@ class image_managment{
 		}
 
 		if (!$cmd || !function_exists($cmd)) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 354, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
+			}
 			msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
 			return;
 		}
@@ -783,6 +799,9 @@ class image_managment{
 		}
 
 		if (!$img) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 355, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.open']));
+			}
 			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return false;
 		}
@@ -825,8 +844,14 @@ class image_managment{
 		@chmod($dir.'/thumb/'.$file, 0644);
 
 		if (!$res) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 356, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.thumbcreate']));
+			}
 			msg(array("type" => "error", "text" => $lang['upload.error.thumbcreate']));
 			return false;
+		}
+		if ($param['rpc']) {
+			return array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.complete']), 'data' => array('x' => $newX, 'y' => $newY));
 		}
 		return array($newX, $newY);
 	}
@@ -841,6 +866,7 @@ class image_managment{
 	// * shadow			- FLAG if we need to add a shadow
 	// * outquality		- with what quality we should write resulting file (for JPEG) [ default: 80 ]
 	// * outfile		- filename to write a result [ default: original file ]
+	// * rpc			- flag shows if call is made via RPC call
 	function image_transform($param){
 	//function add_stamp($image, $stamp, $transparency = 40, $quality = 80){
 		global $config, $lang;
@@ -848,6 +874,9 @@ class image_managment{
 		// LOAD ORIGINAL IMAGE
 		// Check if file exists and we can get it's image size
 		if (!file_exists($param['image']) || !is_array($sz=@getimagesize($param['image']))) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 401, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.open'].' '.$param['image']));
+			}
 			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return 0;
 		}
@@ -866,6 +895,9 @@ class image_managment{
 		}
 
 		if (!$cmd || !function_exists($cmd)) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 402, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
+			}
 			msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
 			return;
 		}
@@ -878,6 +910,9 @@ class image_managment{
 		}
 
 		if (!$img) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 403, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.open']));
+			}
 			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return;
 		}
@@ -886,6 +921,9 @@ class image_managment{
 			// LOAD STAMP IMAGE
 			if (!file_exists($param['stampfile']) || !is_array($sz=@getimagesize($param['stampfile']))) {
 				if (!$param['stamp_noerror']) {
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 404, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.openstamp']));
+					}
 					msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
 				}
 				return 0;
@@ -905,6 +943,9 @@ class image_managment{
 			}
 
 			if (!$cmd || !function_exists($cmd)) {
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 402, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
+				}
 				msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
 				return;
 			}
@@ -918,6 +959,9 @@ class image_managment{
 
 			if (!$stamp) {
 				if (!$param['stamp_noerror']) {
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 405, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.openstamp']));
+					}
 					msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
 				}
 				return;
@@ -928,6 +972,9 @@ class image_managment{
 			$destY = $origY - $stampY - 10;
 			if (($destX<0)||($destY<0)) {
 				if (!$param['stamp_noerror']) {
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 406, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.stampsize']));
+					}
 					msg(array("type" => "error", "text" => $lang['upload.error.stampsize']));
 				}
 				return;
@@ -986,8 +1033,15 @@ class image_managment{
 			case 6: $res = @imagebmp($img,  $param['outfile']);		break;
 		}
 		if (!$res) {
+			if ($param['rpc']) {
+				return array('status' => 0, 'errorCode' => 407, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.addstamp']));
+			}
 			msg(array("type" => "error", "text" => $lang['upload.error.addstamp']));
 			return;
+		}
+
+		if ($param['rpc']) {
+			return array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.complete']), 'data' => array('x' => $newX, 'y' => $newY));
 		}
 		return array($newX, $newY);
 	}
