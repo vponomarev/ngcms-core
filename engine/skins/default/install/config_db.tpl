@@ -45,7 +45,7 @@
 </table>
 <br/><br/>
 <table width="100%">
-<tr><td><input type="button" value="&laquo;&laquo; Назад" onclick="document.getElementById('action').value=''; form.submit();"/></td><td style="text-align: right;"><input type="submit" value="Далее &raquo;&raquo;"/></td></tr>
+<tr><td><input type="button" value="&laquo;&laquo; Назад" onclick="document.getElementById('action').value=''; form.submit();" class="filterbutton"/></td><td style="text-align: right;"><input type="submit" value="Далее &raquo;&raquo;" class="filterbutton"/></td></tr>
 </table>
 </form>
 </div>

@@ -12,7 +12,7 @@
 <div style="float: left; width: 99%;">
 <br/>
 <table width="100%">
-<tr><td width="33%"><input type="button" value="&laquo;&laquo; Назад" onclick="document.getElementById('stage').value='2'; form.submit();"/></td><td></td><td width="33%" style="text-align: right;"><input type="submit" value="Далее &raquo;&raquo;"/></td></tr>
+<tr><td width="33%"><input type="button" value="&laquo;&laquo; Назад" onclick="document.getElementById('stage').value='2'; form.submit();" class="filterbutton"/></td><td></td><td width="33%" style="text-align: right;"><input type="submit" value="Далее &raquo;&raquo;" class="filterbutton"/></td></tr>
 </table>
 </div>
 </form>

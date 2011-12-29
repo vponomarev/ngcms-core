@@ -35,7 +35,11 @@
 <div style="float: left; width: 99%;">
 <br/>
 <table width="100%">
-<tr><td width="33%"><input type="button" value="&laquo;&laquo; Назад" onclick="document.getElementById('stage').value='3'; document.getElementById('action').value='config'; form.submit();"/></td><td></td><td width="33%" style="text-align: right;"><input style="font-weight: bold;" type="submit" value="Начать установку"/></td></tr>
+<tr><td width="33%">
+<input type="button"  value="&laquo;&laquo; Назад" onclick="document.getElementById('stage').value='3';document.getElementById('action').value='config'; form.submit();"  class="filterbutton" />
+</td><td></td>
+<td width="33%" style="text-align: right;">
+<input style="font-weight: bold;" type="submit" value="Начать установку" class="filterbutton"  /></td></tr>
 </table>
 </div>
 </form>

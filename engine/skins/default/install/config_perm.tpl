@@ -12,7 +12,7 @@
 <div class="permHead">Минимальные требования скрипта</div>
 <div class="permData">
 <table width="100%" cellspacing="0" cellpadding="1">
-<tr><td>Версия PHP 5.2 и выше</td><td>{php_version}</td></tr>
+<tr><td>Версия PHP 4.3.2 и выше</td><td>{php_version}</td></tr>
 <tr><td>Версия mySQL 4.x/5.x</td><td>{sql_version}</td></tr>
 <tr><td>Поддержка сжатия ZLib</td><td>{gzip}</td></tr>
 <tr><td>Поддержка XML</td><td>{xml}</td></tr>
@@ -56,7 +56,7 @@
 {error_message}
 <br/>
 <table width="100%">
-<tr><td width="33%"><input type="button" value="&laquo;&laquo; Назад" onclick="document.getElementById('stage').value='0'; form.submit();"/></td><td align="center">[error_button]<input style="background-color: red; color: white; font-weight: bold;" type="button" value="Повторить проверку" onclick="document.getElementById('stage').value='1'; form.submit();"/>[/error_button]</td><td width="33%" style="text-align: right;"><input type="submit" value="Далее &raquo;&raquo;"/></td></tr>
+<tr><td width="33%"><input type="button" value="&laquo;&laquo; Назад" onclick="document.getElementById('stage').value='0'; form.submit();" class="filterbutton"/></td><td align="center">[error_button]<input style="background-color: red; color: white; font-weight: bold;" type="button" value="Повторить проверку" onclick="document.getElementById('stage').value='1'; form.submit();" class="filterbutton"/>[/error_button]</td><td width="33%" style="text-align: right;"><input type="submit" value="Далее &raquo;&raquo;" class="filterbutton"/></td></tr>
 </table>
 </form>
 </div>
