@@ -6,21 +6,21 @@
 <link href="{templateURL}/style.css" rel="stylesheet" type="text/css" media="screen" />
 <style type="text/css">
 .mainMenu { padding: 0px; margin: 0px; font-size: 12px; margin-bottom: 10px; }
-.mainMenu .hover { padding-left: 10px; padding-right: 10px; background-color: #D4D0C8; }
-.mainMenu TD { text-align: center; padding-left: 10px; padding-right: 10px; background-color: #FFFFFF; }
-.mainMenu .next { background: url('{templateURL}/img/toright.png') no-repeat; background-position: center; background-color: #FFFFFF; }
+.mainMenu .hover { padding-left: 10px; padding-right: 10px; background-color: #dbe4ed; color: #000;  border-bottom: #317e08 2px solid;}
+.mainMenu TD { text-align: center; padding-left: 10px; padding-right: 10px; background-color: #dbe4ed; }
+
 h1 { padding: 0px; margin: 0px; margin-left: 5px; padding-bottom: 10px; font-size: 18px; text-decoration: underline; }
 .body { margin-left: 10px; margin-right: 10px; }
 .req { color: red; font-weight: bold; vertical-align: super; }
 
-.permBlock { font-size: 15px; border: #0000AD 1px solid; }
-.permBlock .permHead { color: white; background: #0000AD; padding: 3px; }
+.permBlock { font-size: 15px; border: #dbe4ed 1px solid; }
+.permBlock .permHead { color: #000; background: #B8D9E7; padding: 3px; }
 .permBlock .permData { padding: 3px; padding-bottom: 6px; }
-.permBlock .permData table { /* background-color: white; */ }
+.permBlock .permData table {  background-color: none;  }
 .permBlock .permData TD { border-bottom: white 1px solid; padding: 3px; }
-.permBlock .permData THEAD { background-color: white; }
+.permBlock .permData THEAD { background-color: white; color: #3c9c08; }
 
-.plugTable { font-size: 12px; margin: 5px; border: #0000AD 1px solid; }
+.plugTable { font-size: 12px; margin: 5px; border: #3c9c08 1px solid; }
 .plugTable THEAD { background-color: #0000AD; color: white; }
 .plugTable TBODY { background-color: white; color: black; }
 .plugTable TBODY TD { vertical-align: top; padding: 3px; }
@@ -34,20 +34,20 @@ h1 { padding: 0px; margin: 0px; margin-left: 5px; padding-bottom: 10px; font-siz
 
 </style>
 </head>
-<body style="float: left;">
+<body>
 <script type="text/javascript" src="includes/js/functions.js"></script>
 <script type="text/javascript" src="includes/js/ajax.js"></script>
-
-<div class="header">Установка <b>N</b>ext <b>G</b>eneration <b>CMS</b></div>
+<div class="header" align="center">Установка <u>N</u>ext <u>G</u>eneration <b>CMS</b></div>
+<br />
 <table width="100%" border="0" class="mainMenu" cellspacing="0" cellpadding="0">
 <tr>
-<td width="80"{menu_begin}>Начало</td><td width="25"><img src="{templateURL}/img/toright.png"/></td>
-<td width="80"{menu_db}>Настройка БД</td><td width="25" class="next">&nbsp;</td>
-<td width="80"{menu_perm}>Проверка доступов</td><td width="25" class="next">&nbsp;</td>
-<td width="80"{menu_plugins}>Активация плагинов</td><td width="25" class="next">&nbsp;</td>
-<td width="80"{menu_template}>Выбор шаблона</td><td width="25" class="next">&nbsp;</td>
-<td width="80"{menu_common}>Общие параметры</td><td width="22" class="next">&nbsp;</td>
+<td width="80"{menu_begin}>Начало</td>
+<td width="80"{menu_db}>Настройка БД</td>
+<td width="80"{menu_perm}>Проверка доступов</td>
+<td width="80"{menu_plugins}>Активация плагинов</td>
+<td width="80"{menu_template}>Выбор шаблона</td>
+<td width="80"{menu_common}>Общие параметры</td>
 <td width="80"{menu_install}>Установка</td>
-<td ></td>
+
 </tr>
 </table>

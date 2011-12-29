@@ -64,7 +64,7 @@ $ERR[general_error_info]
 <td width="50%" class="contentEntry2"><input type="text" size="40" name="reg_dbadminpass" value="$DATA[reg_dbadminpass]"></td>
 </tr>
 <tr class="even">
-<td colspan="2"><input type=button value="Проверить подключение к серверу БД" class="button" onclick="check_connection();">&nbsp;<br>
+<td colspan="2"><input type=button value="Проверить подключение к серверу БД" class="filterbutton" onclick="check_connection();">&nbsp;<br>
 </tr>
 <tr class="odd">
 <td colspan="2">&nbsp;</td>
@@ -88,7 +88,7 @@ $ERR[general_error_info]
 <td width="50%" class="contentEntry2"><input type="text" size="40" name="reg_email" value="$DATA[reg_email]"></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1" colspan="2"><input type="submit" value="Продолжить установку!" class="button" /></td>
+<td width="50%" class="contentEntry1" colspan="2"><input type="submit" value="Продолжить установку!" class="filterbutton"  /></td>
 </tr>
 </table>
 </p>
