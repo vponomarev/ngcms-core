@@ -21,11 +21,12 @@ function userEditForm(){
 	$id = intval($_REQUEST['id']);
 
 	// Determine user's permissions
-	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify');
-	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'details');
+	$perm			= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, array('modify', 'details'));
+	$permModify		= $perm['modify'];
+	$permDetails	= $perm['details'];
 
 	// Check for permissions
-	if (!$permModify && !$permDetails) {
+	if (!$perm['modify'] && !$perm['details']) {
 		ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(0, 'SECURITY.PERM'));
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		return;
@@ -61,7 +62,7 @@ function userEditForm(){
 		'ip'			=>	$row['ip'],
 		'token'			=> genUToken('admin.users'),
 	);
-	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
+	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $perm['modify']?'$1':'';
 
 //	if (is_array($PFILTERS['p_uprofile']))
 //		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfile($row['id'], $row, $tvars); }
@@ -212,9 +213,9 @@ function userMassLock(){
 		return;
 	}
 
-	// Lock all users (excluding admins)
+	// Lock all users (excluding admins) and log them out!
 	foreach ($selected_users as $id) {
-		$mysql->query("update ".uprefix."_users set activation=".db_squote(MakeRandomPassword())." where (id=".db_squote($id).") and (status <> 1)");
+		$mysql->query("update ".uprefix."_users set activation=".db_squote(MakeRandomPassword()).", authcookie='' where (id=".db_squote($id).") and (status <> 1)");
 	}
 	msg(array("text" => $lang['msgo_lock']));
 }
