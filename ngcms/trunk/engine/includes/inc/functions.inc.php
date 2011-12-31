@@ -561,16 +561,17 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null) {
 
 // makeCategoryList - make <SELECT> list of categories
 // Params: set via named array
-// * name      - name field of <SELECT>
-// * selected  - ID of category to be selected or array of IDs to select (in list mode)
-// * skip      - ID of category to skip or array of IDs to skip
-// * doempty   - add empty category to the beginning ("no category"), value = 0
-// * doall     - all category named "ALL" to the beginning, value is empty
-// * nameval   - use DB field "name" instead of ID in HTML option value
-// * resync    - flag, if set - we make additional lookup into database for new category list
-// * checkarea - flag, if set - generate a list of checkboxes instead of <SELECT>
-// * class     - HTML class name
-// * style     - HTML style
+// * name      		- name field of <SELECT>
+// * selected  		- ID of category to be selected or array of IDs to select (in list mode)
+// * skip      		- ID of category to skip or array of IDs to skip
+// * doempty   		- add empty category to the beginning ("no category"), value = 0
+// * doall     		- all category named "ALL" to the beginning, value is empty
+// * nameval   		- use DB field "name" instead of ID in HTML option value
+// * resync    		- flag, if set - we make additional lookup into database for new category list
+// * checkarea	 	- flag, if set - generate a list of checkboxes instead of <SELECT>
+// * class     		- HTML class name
+// * style     		- HTML style
+// * disabledarea	- mark all entries (for checkarea) as disabled [for cases when extra categories are not allowed]
 function makeCategoryList($params = array()){
 	global $catz, $lang, $mysql;
 
@@ -598,7 +599,17 @@ function makeCategoryList($params = array()){
 	foreach($catz as $k => $v){
 		if (in_array($v['id'], $params['skip'])) { continue; }
 		if (isset($params['checkarea']) && $params['checkarea']) {
-			$out .= str_repeat('&#8212; ', $v['poslevel']).'<label><input type="checkbox" name="'.$name.'_'.$v['id'].'" value="1"'.((isset($params['selected']) && is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').(($v['alt_url'] != '')?' disabled="disabled"':'').'/> '.$v['name']."</label><br/>\n";
+			$out .= str_repeat('&#8212; ', $v['poslevel']).
+					'<label><input type="checkbox" name="'.
+					$name.
+					'_'.
+					$v['id'].
+					'" value="1"'.
+					((isset($params['selected']) && is_array($params['selected']) && in_array($v['id'], $params['selected']))?' checked="checked"':'').
+					(((($v['alt_url'] != '')||(isset($params['disabledarea']) && $params['disabledarea'])))?' disabled="disabled"':'').
+					'/> '.
+					$v['name'].
+					"</label><br/>\n";
 		} else {
 			$out.="<option value=\"".((isset($params['nameval']) && $params['nameval'])?$v['name']:$v['id'])."\"".((isset($params['selected']) && ($v['id']==$params['selected']))?' selected="selected"':'').($v['alt_url'] != ''?' disabled="disabled" style="background: #c41e3a;"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
 		}
@@ -1693,19 +1704,125 @@ function arrayCharsetConvert($direction, $data) {
 // $mode - access mode:
 //		'view'
 //		'details'
-//		'modify'
+//		'modify'/
+//		.. here can be any other modes, but view/details/modify are most commonly used
 // $way	 - way for content access
 //			'rpc' - via rpc
 //			'' - default access via site
 function checkPermission($identity, $user = null, $mode = '', $way = '') {
-	global $userROW;
+	global $userROW, $PERM;
+	//$xDEBUG = true;
+	$xDEBUG = false;
 
-//	if (($identity['plugin'] == '#admin') && ($identity['item'] == 'users') && ($mode == 'modify')) return false;
-//	if (($identity['plugin'] == '#admin') && ($identity['item'] == 'users') && ($mode == 'details')) return false;
-	//if (($identity['plugin'] == '#admin.static') && ($identity['item'] == 'details')) return false;
-	return true;
+	if ($xDEBUG) {
+		print "checkPermission[".$identity['plugin'].",".$identity['item'].",".$mode."] = ";
+	}
+
+	// Determine user's groups
+	$uGroup = (isset($user) && isset($user['status']))?$user['status']:$userROW['status'];
+
+	// Check if permissions for this group exists. Break if no.
+	if (!isset($PERM[$uGroup])) {
+		if ($xDEBUG) {
+			print " => FALSE[1]<br/>\n";
+		}
+		return false;
+	}
+
+	//return true;
+
+	// Now let's check for possible access
+	// - access group
+	$ag	= '';
+	if (isset($PERM[$uGroup][$identity['plugin']])) {
+		// Plugin found
+		$ag = $identity['plugin'];
+	} elseif (isset($PERM[$uGroup]['*'])) {
+		// Perform default action
+		$ag = '*';
+	} else {
+		// No such group [plugin] and no default action, return FALSE
+		if ($xDEBUG) {
+			print " => FALSE[2]<br/>\n";
+		}
+		return false;
+	}
+	if ($xDEBUG) {
+		print "[AG=$ag]";
+	}
+	// - access item
+	$ai = '';
+	if (isset($PERM[$uGroup][$ag][$identity['item']])) {
+		// Plugin found
+		$ai = $identity['item'];
+	} elseif (isset($PERM[$uGroup][$ag]['*'])) {
+		// Perform default action
+		$ai = '*';
+	} else {
+		// No such group [plugin] and no default action, return FALSE
+		if ($xDEBUG) {
+			print " => FALSE[3]<br/>\n";
+		}
+		return false;
+	}
+
+	if ($xDEBUG) {
+		print "[AI=$ai]";
+	}
+
+	// Ok, now we located item and can return requested mode
+	$mList = is_array($mode)?$mode:array($mode);
+	$mStatus = array();
+
+	foreach ($mList as $mKey) {
+		// The very default - DENY
+		$iStatus = false;
+		if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag][$ai]) && isset($PERM[$uGroup][$ag][$ai][$mKey])) {
+			// Check specific mode
+			$iStatus = $PERM[$uGroup][$ag][$ai][$mKey];
+		} else if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag][$ai]) && isset($PERM[$uGroup][$ag][$ai]['*'])) {
+			// Ckeck '*' under specifig Group/Item
+			$iStatus = $PERM[$uGroup][$ag][$ai]['*'];
+		} else if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag]['*']) && isset($PERM[$uGroup][$ag]['*']['*'])) {
+			// Check '*' under specific Group
+			$iStatus = $PERM[$uGroup][$ag]['*']['*'];
+		} else if (isset($PERM[$uGroup]['*']) && isset($PERM[$uGroup]['*']['*']) && isset($PERM[$uGroup]['*']['*']['*'])) {
+			// Check '*' under current UserGroupID
+			$iStatus = $PERM[$uGroup]['*']['*']['*'];
+		}
+		$mStatus[$mKey] = $iStatus;
+	}
+
+	if ($xDEBUG) {
+		print " => ".var_export($mStatus, true)."<br/>\n";
+	}
+
+	// Now check return mode and return
+	return is_array($mode)?$mStatus:$mStatus[$mode];
 }
 
+// Load permissions
+function loadPermissions(){
+	global $PERM, $confPerm;
+
+	// If configuration file exists
+	if (is_file(confroot.'perm.php')) {
+		// Try to load it
+		include confroot.'perm.php';
+
+		// Update GLOBAL variable $PERM
+		$PERM = $confPerm;
+	} else {
+		// Fill $PERM variable with DEFAULT values
+		if (is_file(confroot.'perm.default.php')) {
+			include confroot.'perm.default.php';
+			$PERM = $confPerm;
+		} else {
+			print "Fatal error: Cannot load DEFAULT permissions for users!";
+			die();
+		}
+	}
+}
 
 // Generate record in System LOG for security audit and logging of changes
 // $identity - array of params for identification if object

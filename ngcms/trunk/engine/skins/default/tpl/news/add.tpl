@@ -8,8 +8,12 @@ function ChangeOption(optn) {
 	document.getElementById('attaches').style.display    = (optn == 'attaches')?"block":"none";
 }
 
-function preview(){
+function approveMode(mode) {
+	document.getElementById('approve').value = mode;
+	return true;
+}
 
+function preview(){
  var form = document.getElementById("postForm");
  if (form.ng_news_content{% if (flags.edit_split) %}_short{% endif %}.value == '' || form.title.value == '') {
   alert('{{ lang.addnews['msge_preview'] }}');
@@ -111,12 +115,14 @@ function changeActive(name) {
 <!-- ADDITIONAL -->
 <div id="additional" style="display: none;">
 <table border="0" cellspacing="1" cellpadding="0" width="100%">
+{% if not flags['customdate.disabled'] %}
 <tr>
 <td class="contentHead"><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{{ lang.addnews['custom_date'] }}</label></td>
 </tr>
 <tr>
 <td class="contentEntry1">{{ changedate }}</td>
 </tr>
+{% endif %}
 {% if (pluginIsActive('xfields')) %}
 <!-- XFields -->
 {{ plugin.xfields[0] }}
@@ -193,6 +199,7 @@ attachAddRow();
    <td></td><td><div class="list">{{ mastercat }}</div></td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
+{% if flags['multicat.show'] %}
   <tr>
    <td></td>
    <td><span class="f15">{{ lang['editor.extcat'] }}</span></td>
@@ -200,10 +207,10 @@ attachAddRow();
   <tr>
    <td></td><td>
    <div style="overflow: auto; height: 150px;" class="list">{{ extcat }}</div>
-
    </td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
+{% endif %}
   <tr>
    <td></td>
    <td><span class="f15">{{ lang['editor.configuration'] }}</span></td>
@@ -213,13 +220,12 @@ attachAddRow();
 
   <td></td><td>
   <div class="list">
-  <label><input type="checkbox" name="approve" value="1" class="check" id="approve" {% if (flags.approve) %}checked="checked"{% else %}disabled{% endif %} /> {{ lang.addnews['approve'] }}</label><br />
-  <label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {% if (flags.mainpage) %}checked="checked"{% else %}disabled{% endif %}  /> {{ lang.addnews['mainpage'] }}</label><br />
-  <label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {% if (flags.pinned) %}{% else %}disabled{% endif %}  /> {{ lang.addnews['add_pinned'] }}</label><br />
-  <label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {% if (flags.favorite) %}{% else %}disabled{% endif %}  /> {{ lang.addnews['add_favorite'] }}</label><br />
+  <label><input type="checkbox" name="mainpage" value="1" class="check" id="mainpage" {% if (flags.mainpage) %}checked="checked" {% endif %}{% if flags['mainpage.disabled'] %}disabled {% endif %}  /> {{ lang.addnews['mainpage'] }}</label><br />
+  <label><input type="checkbox" name="pinned" value="1" class="check" id="pinned" {% if (flags.pinned) %}checked="checked" {% endif %}{% if flags['pinned.disabled'] %}disabled {% endif %}  /> {{ lang.addnews['add_pinned'] }}</label><br />
+  <label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {% if (flags.favorite) %}checked="checked" {% endif %}{% if flags['favorite.disabled'] %}disabled {% endif %}  /> {{ lang.addnews['add_favorite'] }}</label><br />
 
-  <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags['html.disabled']) %}disabled{% else %}checked="checked"{% endif %} /> {{ lang.addnews['flag_html'] }}</label><br />
-  <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW"  {% if (flags['raw.disabled']) %}disabled{% endif %} /> {{ lang.addnews['flag_raw'] }}</label><br />
+  <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags['html.disabled']) %}disabled {% endif %}{% if flags['html'] %}checked="checked"{% endif %} /> {{ lang.addnews['flag_html'] }}</label><br />
+  <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {% if (flags['html.disabled']) %}disabled {% endif %}{% if flags['html'] %}checked="checked"{% endif %}  /> {{ lang.addnews['flag_raw'] }}</label><br />
    {% if (pluginIsActive('comments')) %}<hr/>{{ lang['comments:mode.header'] }}:
    <select name="allow_com">
    	<option value="0"{{ plugin.comments['acom:0'] }}>{{ lang['comments:mode.disallow'] }}
@@ -237,14 +243,22 @@ attachAddRow();
 
 
 <br />
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr align="center">
-<td width="100%" class="contentEdit" align="center" valign="top">
 <input type="hidden" name="mod" value="news" />
 <input type="hidden" name="action" value="add" />
 <input type="hidden" name="subaction" value="submit" />
-<input type="button" value="{{ lang.addnews['preview'] }}" class="button" onclick="return preview();" />
-<input type="submit" value="{{ lang.addnews['addnews'] }}" class="button" />
+<input type="hidden" name="approve" id="approve" value="0"/>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr align="center">
+<td width="30%" class="contentEditW" align="center" valign="top">
+	<input type="button" value="{{ lang.addnews['preview'] }}" class="button" onclick="return preview();" /> &nbsp; &nbsp;
+	<input type="submit" value="Сохранить черновик" class="button" onclick="return approveMode(-1);" /> &nbsp; &nbsp; &nbsp;
+</td>
+<td width="30%" class="contentEditW" align="center" valign="top">
+	<input type="submit" value="Отправить на модерацию" class="button" onclick="return approveMode(0);" /> &nbsp; &nbsp; &nbsp;
+</td>
+<td width="40%" class="contentEditW" align="center" valign="top">
+{% if flags['can_publish'] %}	<input type="submit" value="Опубликовать" class="button" onclick="return approveMode(1);" />{% else %} &nbsp; {% endif %}
 </td>
 </tr>
 </table>

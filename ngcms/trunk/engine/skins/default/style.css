@@ -176,6 +176,25 @@ color: #444;
 border-top: 3px solid #dadada;
 }
 
+.contentEditW {
+padding: 8px 5px 13px 5px;
+background: #ebebeb;
+color: #444;
+border-top: 3px solid #dadada;
+}
+
+.contentEditErr {
+padding: 8px 5px 13px 5px;
+background: #ebebeb;
+color: #444;
+border: 3px solid red;
+}
+
+.contentEditErr .errMessage {
+ color: red;
+}
+
+
 .contentHead {
 padding: 8px 5px 13px 5px;
 font: normal 15px Trebuchet MS, Arial, Helvetica, sans-serif;
@@ -489,15 +508,22 @@ width: 200px;
  min-height: 79px;
 }
 
+.sysmsg_common .info {
+ padding: 7px 0 0 0;
+ line-height: 18px;
+ font-size: 12px;
+ font-family:Tahoma, Geneva, sans-serif;
+ letter-spacing: normal;
+}
+
 .sysmsg_common .info a {
  padding: 7px 0 0 0;
  line-height: 18px;
  font-size: 12px;
  font-family:Tahoma, Geneva, sans-serif;
  letter-spacing: normal;
-
-
 }
+
 .sysmsg_common .info a:hover {
  padding: 5px;
  background:url(images/w20.png) repeat;
