@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: lib_admin.php
 // Description: Libraries for admin panel
 // Author: Vitaly Ponomarev
@@ -18,15 +18,41 @@
 // Return value: number of successfully updated news
 //
 function massModifyNews($list, $setValue, $permCheck = true) {
-	global $mysql, $lang, $PFILTERS, $catmap;
+	global $mysql, $lang, $PFILTERS, $catmap, $userROW;
 
 	// Check if we have anything to update
 	if (!is_array($list))
 		return -1;
 
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'personal.modify',
+		'personal.modify.published',
+		'personal.publish',
+		'personal.unpublish',
+		'personal.delete',
+		'personal.delete.published',
+		'personal.mainpage',
+		'personal.pinned',
+		'personal.customdate',
+		'other.view',
+		'other.modify',
+		'other.modify.published',
+		'other.publish',
+		'other.unpublish',
+		'other.delete',
+		'other.delete.published',
+		'other.html',
+		'other.mainpage',
+		'other.pinned',
+		'other.customdate',
+	));
+
 
 	$nList = array();
 	$nData = array();
+
+	$results = array();
 
 	if (isset($list['data'])) {
 		$recList = $list['data'];
@@ -37,22 +63,55 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 
 		$recList = $mysql->select("select * from ".prefix."_news where id in (".join(", ", $SNQ).")");
 	} else {
-		return -1;
+		return array();
 	}
 
 	// Scan RECORDS and prepare output
 	foreach ($recList as $rec) {
 		// SKIP records if user has not enougt permissions
 		if ($permCheck) {
-			if (($rec['status'] > 1) && ($rec['author_id'] != $userROW['id']))
-				continue;
+			$isOwn = ($rec['author_id'] == $userROW['id'])?1:0;
+			$permGroupMode = $isOwn?'personal':'other';
+
+			// Manage `PUBLISHED` field
+			$ic = 0;
+			if (isset($setValue['approve'])) {
+				if ((($rec['approve'] == 1)&&($setValue['approve'] != 1) && (!$perm[$permGroupMode.'.unpublish']))||
+					(($rec['approve'] < 1)&&($setValue['approve'] == 1) && (!$perm[$permGroupMode.'.publish']))) {
+					$results []= '#'.$rec['id'].' ('.$rec['title'].') - '.$lang['perm.denied'];
+					continue;
+				}
+				$ic++;
+			}
+
+			// Manage `MAINPAGE` flag
+			if (isset($setValue['mainpage'])) {
+				if (!$perm[$permGroupMode.'.mainpage']) {
+					$results []= '#'.$rec['id'].' ('.$rec['title'].') - '.$lang['perm.denied'];
+					continue;
+				}
+				$ic++;
+			}
+
+			// Check if we have other options except MAINPAGE/APPROVE
+			if (count($setValue) > $ic) {
+				if (!$perm[$permGroupMode.'.modify'.(($rec['approve'] == 1)?'.published':'')]) {
+					$results []= '#'.$rec['id'].' ('.$rec['title'].') - '.$lang['perm.denied'];
+					continue;
+				}
+			}
+
+//			if (($rec['status'] > 1) && ($rec['author_id'] != $userROW['id']))
+//				continue;
 		}
+		$results []= '#'.$rec['id'].' ('.$rec['title'].') - Ok';
+
 		$nList[]= $rec['id'];
 		$nData[$rec['id']] = $rec;
 	}
 
 	if (!count($nList))
-		return 0;
+		return $results;
 
 
 	// Convert $setValue into SQL string
@@ -107,5 +166,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 	// Call plugin filters [ NOTIFY ABOUT MODIFICATION ]
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->massModifyNewsNotify($nList, $setValue, $nData); }
-	return count($nList);
+
+	//return count($nList);
+	return $results;
 }

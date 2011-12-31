@@ -13,7 +13,7 @@
 // Global variables definition
 //
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache;
 
@@ -33,8 +33,10 @@ $AUTH_CAPABILITIES = array();
 
 $PPAGES = array();			// plugin's pages
 $PFILTERS = array();		// filtering plugins
-$RPCFUNC = array();		// RPC functions
+$RPCFUNC = array();			// RPC functions
 $RPCADMFUNC = array();		// RPC admin functions
+
+$PERM = array();			// PERMISSIONS
 
 $SUPRESS_TEMPLATE_SHOW	= 0;
 $SUPRESS_MAINBLOCK_SHOW	= 0;
@@ -280,6 +282,9 @@ if (!isset($_COOKIE['zz_auth']) && isset($_POST['ngAuthCookie']))
 //
 $timer->registerEvent('Ready to load auth plugins');
 load_extras('auth');
+
+// Load user's permissions DB
+loadPermissions();
 $timer->registerEvent('Auth plugins are loaded');
 
 // Set prefix for users DB

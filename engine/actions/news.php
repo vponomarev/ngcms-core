@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: editnews.php
 // Description: News managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -23,35 +23,66 @@ LoadLang('addnews', 'admin', 'addnews');
 function editNews() {
 	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW, $catz, $catmap;
 
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'personal.view',
+		'personal.modify',
+		'personal.modify.published',
+		'personal.publish',
+		'personal.unpublish',
+		'personal.delete',
+		'personal.delete.published',
+		'personal.html',
+		'personal.mainpage',
+		'personal.pinned',
+		'personal.favorite',
+		'personal.setviews',
+		'personal.multicat',
+		'personal.customdate',
+		'other.view',
+		'other.modify',
+		'other.modify.published',
+		'other.publish',
+		'other.unpublish',
+		'other.delete',
+		'other.delete.published',
+		'other.html',
+		'other.mainpage',
+		'other.pinned',
+		'other.favorite',
+		'other.setviews',
+		'other.multicat',
+		'other.customdate'
+	));
+
+	$id			= $_REQUEST['id'];
+
+	// Try to find news that we're trying to edit
+	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id)))) {
+		msg(array("type" => "error", "text" => $lang['msge_not_found']));
+		return;
+	}
+
+
+	$isOwn = ($row['author_id'] == $userROW['id'])?1:0;
+	$permGroupMode = $isOwn?'personal':'other';
+
+
+	// Check permissions
+	if (!$perm[$permGroupMode.'.modify'.(($row['approve'] == 1)?'.published':'')]) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+
+
 
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
 	// 1 = HTML enable	[if set, HTML codes may be used in news]
 	$SQL = array();
 
-	$SQL['flags'] = 0;
-	switch ($userROW['status']) {
-		case 1:		// admin can do anything
-			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
+	$SQL['flags']	= ($perm[$permGroupMode.'.html'])?(($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0)):0;
 
-		case 2:		// Editor. Check if we have permissions
-			if (!$config['htmlsecure_2'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 3:		// Journalists. Check if we have permissions
-			if (!$config['htmlsecure_3'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 4:		// Commentors. Check if we have permissions
-			if (!$config['htmlsecure_4'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-	}
-
-	$id			= $_REQUEST['id'];
 	$title		= $_REQUEST['title'];
 
 	// Fill content
@@ -75,12 +106,7 @@ function editNews() {
 	$content = str_replace("\r\n", "\n", $content);
 
 
-	// Try to find news that we're trying to edit
-	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):'')))) {
-		msg(array("type" => "error", "text" => $lang['msge_not_found']));
-		return;
-	}
-
+	// Check if we have content
 	if ((!strlen(trim($title))) || ((!strlen(trim($content))) && (!$config['news_without_content']))) {
 		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
 		return;
@@ -135,10 +161,12 @@ function editNews() {
 		$catids[intval($_POST['category'])] = 1;
 	}
 
-	// Fetch ADDITIONAL provided categories
-	foreach ($_POST as $k => $v) {
-		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
-			$catids[$match[1]] = 1;
+	// Fetch ADDITIONAL provided categories [if allowed]
+	if ($perm[$permGroupMode.'.multicat']) {
+		foreach ($_POST as $k => $v) {
+			if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
+				$catids[$match[1]] = 1;
+		}
 	}
 
 	if ($config['meta']) {
@@ -146,10 +174,12 @@ function editNews() {
 		$SQL['keywords']    = $_REQUEST['keywords'];
 	}
 
-	if ($_REQUEST['setdate_custom']) {
-		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
-	} else if ($_REQUEST['setdate_current']) {
-		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
+	if ($perm[$permGroupMode.'.customdate']) {
+		if ($_REQUEST['setdate_custom']) {
+			$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
+		} else if ($_REQUEST['setdate_current']) {
+			$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
+		}
 	}
 
 	$SQL['title']     = $title;
@@ -159,19 +189,23 @@ function editNews() {
 	$SQL['catid']     = implode(",", array_keys($catids));
 
 	// Change this parameters if user have enough access level
-	if ($userROW['status'] < 3) {
-		$SQL['mainpage']  = intval($_REQUEST['mainpage']);
-		$SQL['approve']   = intval($_REQUEST['approve']);
-		$SQL['favorite']  = intval($_REQUEST['favorite']);
-		$SQL['pinned']    = intval($_REQUEST['pinned']);
+	$SQL['mainpage']	= ($perm[$permGroupMode]	&& intval($_REQUEST['mainpage']))?1:0;
+	$SQL['pinned']		= ($perm[$permGroupMode.'.pinned']		&& intval($_REQUEST['pinned']))?1:0;
+	$SQL['favorite']	= ($perm[$permGroupMode.'.favorite']	&& intval($_REQUEST['favorite']))?1:0;
 
-		if ($_REQUEST['setViews'])
-			$SQL['views'] = intval($_REQUEST['views']);
-	} else {
-		foreach (array('mainpage', 'approve', 'favorite', 'pinned') as $v) {
-			$SQL[$v] = $row[$v];
-		}
+	switch (intval($_REQUEST['approve'])) {
+		case -1:	$SQL['approve'] = -1;								break;
+		case 0:		$SQL['approve'] = 0;								break;
+		case 1:		$SQL['approve'] = (($row['approve'] == 1)||(($row['approve'] < 1) && ($perm[$permGroupMode.'.publish'])))?1:0;
+					break;
+		default:	$SQL['approve']	= 0;
 	}
+
+
+	if ($perm[$permGroupMode.'.setviews'] && $_REQUEST['setViews']) {
+		$SQL['views'] = intval($_REQUEST['views']);
+	}
+
 
 	// Load list of attached images/files
 	$row['#files']	= $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
@@ -198,18 +232,18 @@ function editNews() {
 	$mysql->query("update ".prefix."_news set ".implode(", ",$SQLparams)." where id = ".db_squote($id));
 
 	// Update category posts counters
-	if ($row['approve'] && sizeof($oldcatids)) {
+	if (($row['approve'] == 1) && sizeof($oldcatids)) {
 		$mysql->query("update ".prefix."_category set posts=posts-1 where id in (".implode(",",array_keys($oldcatids)).")");
 	}
 
 	$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($id));
 
-	// Check if we need to update user's counters
-	if ($row['approve'] != $SQL['approve']) {
-		$mysql->query("update ".uprefix."_users set news=news".($row['approve']?'-':'+')."1 where id=".$row['author_id']);
+	// Check if we need to update user's counters [ only if news was or will be published ]
+	if (($row['approve'] != $SQL['approve']) && (($row['approve'] == 1)||($SQL['approve'] == 1))) {
+		$mysql->query("update ".uprefix."_users set news=news".(($row['approve'] == 1)?'-':'+')."1 where id=".$row['id']);
 	}
 
-	if ($SQL['approve']) {
+	if ($SQL['approve'] == 1) {
 		if (sizeof($catids)) {
 			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(",",array_keys($catids)).")");
 			foreach (array_keys($catids) as $catid) {
@@ -273,23 +307,61 @@ function editNews() {
 function editNewsForm() {
 	global $lang, $parse, $mysql, $config, $PFILTERS, $tvars, $userROW, $twig;
 
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'personal.view',
+		'personal.modify',
+		'personal.modify.published',
+		'personal.publish',
+		'personal.unpublish',
+		'personal.delete',
+		'personal.delete.published',
+		'personal.html',
+		'personal.mainpage',
+		'personal.pinned',
+		'personal.favorite',
+		'personal.setviews',
+		'personal.multicat',
+		'personal.customdate',
+		'other.view',
+		'other.modify',
+		'other.modify.published',
+		'other.publish',
+		'other.unpublish',
+		'other.delete',
+		'other.delete.published',
+		'other.html',
+		'other.mainpage',
+		'other.pinned',
+		'other.favorite',
+		'other.setviews',
+		'other.multicat',
+		'other.customdate',
+	));
+
 	// Get news id
 	$id			= $_REQUEST['id'];
 
 	// Try to find news that we're trying to edit
-	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id).(($userROW['status'] > 2)?" and author_id = ".db_squote($userROW['id']):''),1))) {
+	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id),1))) {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 		return;
 	}
 
-	// Join attached images / files to record
-	//if ($row['num_files']) {
-		$row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
-	//}
+	$isOwn = ($row['author_id'] == $userROW['id'])?1:0;
+	$permGroupMode = $isOwn?'personal':'other';
 
-	//if ($row['num_images']) {
-		$row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_images where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
-	//}
+
+	// Check permissions
+	if (!$perm[$permGroupMode.'.view']) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+
+	// Load attached files/images
+	$row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
+	$row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_images where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
+
 
 	$cats = explode(",", $row['catid']);
 	$content = $row['content'];
@@ -298,7 +370,7 @@ function editNewsForm() {
 		'php_self'			=>	$PHP_SELF,
 		'changedate'		=>	ChangeDate($row['postdate'], 1),
 		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
-		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array())),
+		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array(), 'disabledarea' => !$perm[$permGroupMode.'.multicat'])),
 		'allcats'			=>	resolveCatNames($cats),
 		'id'				=>	$row['id'],
 		'title'				=>	secure_html($row['title']),
@@ -317,19 +389,42 @@ function editNewsForm() {
 									generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['author'], 'id' => $row['author_id'])),
 		'smilies'			=> $config['use_smilies']?InsertSmilies('', 20, 'currentInputAreaID'):'',
 		'quicktags'			=> $config['use_bbcodes']?QuickTags('currentInputAreaID', 'news'):'',
+		'approve'			=> $row['approve'],
 		'flags'				=> array(
 			'edit_split'		=> $config['news.edit.split']?true:false,
 			'meta'				=> $config['meta']?true:false,
 			'options'			=> ($userROW['status'] < 3)?true:false,
 			'mainpage'			=> $row['mainpage']?true:false,
 			'favorite'			=> $row['favorite']?true:false,
-			'approve'			=> $row['approve']?true:false,
 			'pinned'			=> $row['pinned']?true:false,
+			'can_mainpage'		=> $perm[$permGroupMode.'.mainpage']?true:false,
+			'can_pinned'		=> $perm[$permGroupMode.'.pinned']?true:false,
 			'raw'				=> ($row['flags'] & 1),
 			'html'				=> ($row['flags'] & 2),
 			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
+			'editable'			=> (($perm[$permGroupMode.'.modify'.(($row['approve'] == 1)?'.published':'')]) || ($perm[$permGroupMode.'.unpublish']))?true:false,
+			'deleteable'		=> ($perm[$permGroupMode.'.delete'.(($row['approve'] == 1)?'.published':'')])?true:false,
+			'html.lost'			=> (($row['flags'] & 2) && (!$perm[$permGroupMode.'.html']))?1:0,
+			'mainpage.lost'		=> (($row['mainpage']) && (!$perm[$permGroupMode.'.mainpage']))?true:false,
+			'pinned.lost'		=> (($row['pinned']) && (!$perm[$permGroupMode.'.pinned']))?true:false,
+			'publish.lost'		=> (($row['approve'] == 1) && (!$perm[$permGroupMode.'.modify.published']))?true:false,
+			'favorite.lost'		=> (($row['favorite']) && (!$perm[$permGroupMode.'.favorite']))?true:false,
+			'multicat.lost'		=> ((count($cats)>1) && (!$perm[$permGroupMode.'.multicat']))?true:false,
+			'html.disabled'		=> (!$perm[$permGroupMode.'.html'])?true:false,
+			'customdate.disabled'	=> (!$perm[$permGroupMode.'.customdate'])?true:false,
+			'mainpage.disabled'	=> (!$perm[$permGroupMode.'.mainpage'])?true:false,
+			'pinned.disabled'	=> (!$perm[$permGroupMode.'.pinned'])?true:false,
+			'favorite.disabled'	=> (!$perm[$permGroupMode.'.favorite'])?true:false,
+			'setviews.disabled'	=> (!$perm[$permGroupMode.'.setviews'])?true:false,
+			'multicat.disabled'	=> (!$perm[$permGroupMode.'.multicat'])?true:false,
 		)
 	);
+
+	$tVars['flags']['can_publish']		= ((($row['approve'] == 1) && ($perm[$permGroupMode.'.modify.published']))  || (($row['approve'] < 1) && $perm[$permGroupMode.'.publish']))?1:0;
+	$tVars['flags']['can_unpublish']	= (($row['approve'] < 1)   || ($perm[$permGroupMode.'.unpublish']))?1:0;
+	$tVars['flags']['can_draft']		= (($row['approve'] == -1) || ($perm[$permGroupMode.'.unpublish']))?1:0;
+
+	$tVars['flags']['params.lost']		= ($tVars['flags']['publish.lost'] || $tVars['flags']['html.lost'] || $tVars['flags']['mainpage.lost'] || $tVars['flags']['pinned.lost'] || $tVars['flags']['multicat.lost'])?1:0;
 
 
 	// Generate data for content input fields
@@ -349,17 +444,6 @@ function editNewsForm() {
 	} else {
 		$tVars['content']['short'] = secure_html($row['content']);
 	}
-
-
-	$flock = 0;
-	switch ($userROW['status']) {
-		case 2:		if ($config['htmlsecure_2']) $flock = 1;	break;
-		case 3:		if ($config['htmlsecure_3']) $flock = 1;	break;
-		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
-	}
-
-	$tVars['falgs']['raw.disabled']		= $flock?true:false;
-	$tVars['flags']['html.disabled']	= $flock?true:false;
 
 	// Check for attached files
 	$attachEntries = array();
@@ -480,7 +564,7 @@ function massNewsModify($setValue, $langParam, $auto = false) {
 	}
 
 	$result = massModifyNews(array('id' => $selected_news), $setValue, true);
-	msg(array("text" => $lang[$langParam]));
+	msg(array("text" => $lang[$langParam], "info" => join("<br/>\n", $result)));
 }
 
 
@@ -488,14 +572,24 @@ function massNewsModify($setValue, $langParam, $auto = false) {
 // Mass news delete
 //
 function massNewsDelete() {
-	global $mysql, $lang, $PFILTERS;
+	global $mysql, $lang, $PFILTERS, $userROW;
 
 	$selected_news = $_REQUEST['selected_news'];
 
-	if (!$selected_news){
+	if ((!is_array($selected_news))||(!count($selected_news))) {
 		msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
 		return;
 	}
+
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'personal.delete',
+		'personal.delete.published',
+		'other.delete',
+		'other.delete.published',
+	));
+
+	$results = array();
 
 	// Scan list of news to be deleted
 	foreach ($selected_news as $id) {
@@ -505,11 +599,20 @@ function massNewsDelete() {
 			continue;
 		}
 
+		// Check for permissions
+		$isOwn = ($nrow['author_id'] == $userROW['id'])?1:0;
+		$permGroupMode = $isOwn?'personal':'other';
+
+		if (!$perm[$permGroupMode.'.delete'.(($nrow['approve'] == 1)?'.published':'')]) {
+			$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - '.$lang['perm.denied'];
+			continue;
+		}
+
 		if (is_array($PFILTERS['news']))
 			foreach ($PFILTERS['news'] as $k => $v) { $v->deleteNews($nrow['id'], $nrow); }
 
 		// Update counters only if news is published
-		if ($nrow['approve']) {
+		if ($nrow['approve'] == 1) {
 			if ($nrow['catid']) {
 				$oldcatsql = array();
 				foreach(explode(",",$nrow['catid']) as $key) {
@@ -553,8 +656,9 @@ function massNewsDelete() {
 			$fmanager->file_delete(array('type' => 'image', 'id' => $frec['id']));
 		}
 
+		$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - Ok';
 	}
-	msg(array("text" => $lang['msgo_deleted']));
+	msg(array("text" => $lang['msgo_deleted'], "info" => join("<br/>\n", $results)));
 }
 
 function makeSortList($selected) {
@@ -573,9 +677,27 @@ function makeSortList($selected) {
 // List news
 // ======================================================================================================
 function listNewsForm() {
-	global $mysql, $lang, $twig, $tpl, $catz, $catmap;
+	global $mysql, $lang, $twig, $tpl, $catz, $catmap, $userROW;
 
-	if (!checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, 'view')) {
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'view',
+		'personal.list',
+		'personal.view',
+		'personal.publish',
+		'personal.unpublish',
+		'personal.delete',
+		'personal.delete.published',
+		'other.list',
+		'other.view',
+		'other.publish',
+		'other.unpublish',
+		'other.delete',
+		'personal.delete.published',
+	));
+
+	// Check if we have view access
+
+	if (!$perm['view'] || (!$perm['personal.list'] && !$perm['other.list'])) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
@@ -624,20 +746,17 @@ function listNewsForm() {
 	}
 	$fSort = ' order by '.($fSort?$fSort:'id desc');
 
-
-	// Users with status >= 3 can see only their own news
+	// Check if user selected personal filter
 	$fAuthorId = 0;
-	if ($userROW['status'] >= 3)	{ $fAuthorId = intval($userROW['id']); }
-	else {
-		// But another's can set AuthorID manually for filtering (callback from users list)
-		if ($_REQUEST['aid']) {
-			// Try to fetch userName
-			if ($urow = $mysql->record("select id, name from ".uprefix."_users where id = ".db_squote($_REQUEST['aid']))) {
-				$fAuthorId = $urow['id'];
-				$fAuthorName = $urow['name'];
-			}
+	if ($_REQUEST['aid']) {
+		// Try to fetch userName
+		if ($urow = $mysql->record("select id, name from ".uprefix."_users where id = ".db_squote($_REQUEST['aid']))) {
+			$fAuthorId = $urow['id'];
+			$fAuthorName = $urow['name'];
 		}
 	}
+
+
 
 	// Set default value for `Records Per Page` parameter
 	if (($fRPP < 2)||($fRPP > 2000))
@@ -670,6 +789,13 @@ function listNewsForm() {
 		array_push($conditions, "author = ".db_squote($fAuthorName));
 	}
 
+	if (!$perm['other.list'])
+		array_push($conditions, "author_id = ".intval($userROW['id']));
+
+	if (!$perm['personal.list'])
+		array_push($conditions, "author_id <> ".intval($userROW['id']));
+
+
 	if ($fStatus)
 		array_push($conditions, "approve = ".(($fStatus == 1)?'0':'1'));
 
@@ -683,6 +809,7 @@ function listNewsForm() {
 	$sqlQCount = "select count(id) as cid ".$sqlQPart;
 	$sqlQ = "select * ".$sqlQPart;
 
+	// print "SQL: $sqlQ";
 
 	$cnt = $mysql->record($sqlQCount);
 	$countNews = $cnt['cid'];
@@ -711,11 +838,12 @@ function listNewsForm() {
 			'allcats'		=> resolveCatNames($cats).' &nbsp;',
 			'title'			=> secure_html((strlen($row['title']) > 70)?substr($row['title'],0,70)." ...":$row['title']),
 			'link'			=> newsGenerateLink($row, false, 0, true),
-
+			'state'			=> $row['approve'],
 			'flags'			=> array(
 				'comments'		=> getPluginStatusInstalled('comments')?true:false,
-				'status'		=> $row['approve']?true:false,
+				'status'		=> ($row['approve'] == 1)?true:false,
 				'mainpage'		=> $row['mainpage']?true:false,
+				'editable'		=> ($row['author_id'] == $userROW['id'])&&($perm['personal.view'])||($row['author_id'] != $userROW['id'])&&($perm['other.view']),
 			)
 		);
 
@@ -833,6 +961,37 @@ function listNewsForm() {
 function addNews(){
 	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config, $catz, $catmap;
 
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'add',
+		'add.approve',
+		'add.mainpage',
+		'add.pinned',
+		'add.favorite',
+		'add.html',
+		'personal.view',
+		'personal.modify',
+		'personal.modify.published',
+		'personal.publish',
+		'personal.unpublish',
+		'personal.delete',
+		'personal.delete.published',
+		'personal.html',
+		'personal.mainpage',
+		'personal.pinned',
+		'personal.favorite',
+		'personal.setviews',
+		'personal.multicat',
+		'personal.customdate',
+	));
+
+	// Check permissions
+	if (!$perm['add']) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+
+
 	$title = $_REQUEST['title'];
 
 	// Fill content
@@ -891,7 +1050,7 @@ function addNews(){
 		$SQL['alt_name'] = $alt_name.$i;
 	}
 
-	if ($_REQUEST['customdate']) {
+	if ($_REQUEST['customdate'] && $perm['personal.customdate']) {
 		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
@@ -905,10 +1064,12 @@ function addNews(){
 		$catids[intval($_POST['category'])] = 1;
 	}
 
-	// Fetch ADDITIONAL provided categories
-	foreach ($_POST as $k => $v) {
-		if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
-			$catids[$match[1]] = 1;
+	// Fetch ADDITIONAL provided categories [if allowed]
+	if ($perm['personal.multicat']) {
+		foreach ($_POST as $k => $v) {
+			if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
+				$catids[$match[1]] = 1;
+		}
 	}
 
 	if ($config['meta']) {
@@ -924,34 +1085,22 @@ function addNews(){
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
 	// 1 = HTML enable	[if set, HTML codes may be used in news]
 
-	$SQL['flags'] = 0;
-	switch ($userROW['status']) {
-		case 1:		// admin can do anything
-			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 2:		// Editor. Check if we have permissions
-			if (!$config['htmlsecure_2'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 3:		// Journalists. Check if we have permissions
-			if (!$config['htmlsecure_3'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 4:		// Commentors. Check if we have permissions
-			if (!$config['htmlsecure_4'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
+	if ($perm['personal.html']) {
+		$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
+	} else {
+		$SQL['flags']	=	0;
 	}
 
-	// This actions are allowed only for admins & Edtiors
-	if (($userROW['status'] == 1)||($userROW['status'] == 2)) {
-		$SQL['mainpage']	= intval($_REQUEST['mainpage']);
-		$SQL['approve']		= intval($_REQUEST['approve']);
-		$SQL['favorite']	= intval($_REQUEST['favorite']);
-		$SQL['pinned']		= intval($_REQUEST['pinned']);
+
+	$SQL['mainpage']	= intval($_REQUEST['mainpage']) && $perm['personal.mainpage'];
+	$SQL['favorite']	= intval($_REQUEST['favorite']) && $perm['personal.favorite'];
+	$SQL['pinned']		= intval($_REQUEST['pinned']) && $perm['personal.pinned'];
+
+	switch (intval($_REQUEST['approve'])) {
+		case -1:	$SQL['approve'] = -1;								break;
+		case 0:		$SQL['approve'] = 0;								break;
+		case 1:		$SQL['approve'] = $perm['personal.publish']?1:0;	break;
+		default:	$SQL['approve']	= 0;
 	}
 
 	$SQL['content']		= $content;
@@ -978,7 +1127,7 @@ function addNews(){
 	$id = $mysql->result("SELECT LAST_INSERT_ID() as id");
 
 	// Update category / user posts counter [ ONLY if news is approved ]
-	if ($SQL['approve']) {
+	if ($SQL['approve'] == 1) {
 		if (count($catids)) {
 			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(", ",array_keys($catids)).")");
 			foreach (array_keys($catids) as $catid) {
@@ -1047,6 +1196,36 @@ function addNews(){
 function addNewsForm($retry = ''){
 	global $lang, $mysql, $config, $userROW, $PFILTERS, $tpl, $twig;
 
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'add',
+		'add.approve',
+		'add.mainpage',
+		'add.pinned',
+		'add.favorite',
+		'add.html',
+		'personal.view',
+		'personal.modify',
+		'personal.modify.published',
+		'personal.publish',
+		'personal.unpublish',
+		'personal.delete',
+		'personal.delete.published',
+		'personal.html',
+		'personal.mainpage',
+		'personal.pinned',
+		'personal.favorite',
+		'personal.setviews',
+		'personal.multicat',
+		'personal.customdate',
+	));
+
+	// Check permissions
+	if (!$perm['add']) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+
 	$tVars = array(
 		'php_self'			=> $PHP_SELF,
 		'changedate'		=> ChangeDate(),
@@ -1056,28 +1235,24 @@ function addNewsForm($retry = ''){
 		'smilies'			=> ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'',
 		'quicktags'			=> ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'',
 		'flags'				=> array(
+			'mainpage'			=> $perm['add.mainpage'] && $perm['personal.mainpage'],
+			'favorite'			=> $perm['add.favorite'] && $perm['personal.favorite'],
+			'pinned'			=> $perm['add.pinned'] && $perm['personal.pinned'],
+			'html'				=> $perm['add.html'] && $perm['personal.html'],
+			'mainpage.disabled'	=> !$perm['personal.mainpage'],
+			'favorite.disabled'	=> !$perm['personal.favorite'],
+			'pinned.disabled'	=> !$perm['personal.pinned'],
 			'edit_split'		=> $config['news.edit.split']?true:false,
 			'options'			=> ($userROW['status'] < 3)?true:false,
 			'meta'				=> $config['meta']?true:false,
+			'html.disabled'		=> !$perm['personal.html'],
+			'customdate.disabled'	=> !$perm['personal.customdate'],
+			'multicat.show'		=> $perm['personal.multicat'],
 			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
+			'can_publish'		=> $perm['personal.publish'],
 		),
 	);
 
-	$flock = 0;
-	switch ($userROW['status']) {
-		case 2:		if ($config['htmlsecure_2']) $flock = 1;	break;
-		case 3:		if ($config['htmlsecure_3']) $flock = 1;	break;
-		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
-	}
-
-	$tVars['falgs']['raw.disabled']		= $flock?true:false;
-	$tVars['flags']['html.disabled']	= $flock?true:false;
-
-	// Configure flags
-	$tVars['flags']['mainpage']  = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
-	$tVars['flags']['approve']   = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
-	$tVars['flags']['favorite']  = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
-	$tVars['flags']['pinned']    = (($userROW['status'] == 1)||($userROW['status'] == 2))?true:false;
 
 	// Generate data for content input fields
 	if ($config['news.edit.split']) {

@@ -44,7 +44,7 @@ function changeActive(name) {
 
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a> &#8594; {{ lang.editnews['editnews_title'] }} "<a href="?mod=news&action=edit&id={{ id }}">{{ title }}</a>"</td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a> &#8594; {{ lang.editnews['editnews_title'] }} "<a href="?mod=news&action=edit&id={{ id }}">{{ title }}</a>" ({% if (approve == -1) %}{{ lang['state.draft'] }}{% elseif (approve == 0) %}{{ lang['state.unpublished'] }}{% else %}{{ lang['state.published'] }}{% endif %})</td>
 </tr>
 </table>
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
@@ -120,19 +120,19 @@ function changeActive(name) {
 <!-- ADDITIONAL -->
 <div id="additional" style="display: none;">
 <table border="0" cellspacing="1" cellpadding="0" width="98%">
+{% if not flags['customdate.disabled'] %}
 <tr>
 <td class="contentHead"><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" />{{ lang.editnews['date.manage'] }}</td>
 </tr>
 <tr>
 <td class="contentEntry1">
-
 <table cellspacing=1 cellpadding=1 style="font: 11px verdana, sans-serif;">
 <tr><td><input type="checkbox" name="setdate_custom" id="setdate_custom" value="1" class="check" onclick="document.getElementById('setdate_current').checked=false;" /></td><td><label for="setdate_custom">{{ lang.editnews['date.setdate'] }}</label></td><td><span id="cdate">{{ changedate }}</span></td></tr>
 <tr><td><input type="checkbox" name="setdate_current" id="setdate_current" value="1" class="check" onclick="document.getElementById('setdate_custom').checked=false;" /></td><td><label for="setdate_current">{{ lang.editnews['date.setcurrent'] }}</label> &nbsp;</td><td>&nbsp;</td>
 </table>
-
 </td>
 </tr>
+{% endif %}
 {% if (pluginIsActive('xfields')) %}
 <!-- XFields -->
 {{ plugin.xfields[0] }}
@@ -206,13 +206,13 @@ function changeActive(name) {
   </tr>
   <tr><td></td><td>
   <div class="list">
-{% if (flags.options) %}   <label><input type="checkbox" name="approve" value="1" {% if (flags.approve) %}checked="checked"{% endif %} class="check" id="approve" /> {{ lang.editnews['approve'] }}</label><br />
-   <label><input type="checkbox" name="mainpage" value="1" {% if (flags.mainpage) %}checked="checked"{% endif %} class="check" id="mainpage" /> {{ lang.editnews['mainpage'] }}</label><br />
-   <label><input type="checkbox" name="pinned" value="1" {% if (flags.pinned) %}checked="checked"{% endif %} class="check" id="pinned" /> {{ lang.editnews['add_pinned'] }}</label><br />
-   <label><input type="checkbox" name="favorite" value="1" {% if (flags.favorite) %}checked="checked"{% endif %} class="check" id="favorite" /> {{ lang.editnews['add_favorite'] }}</label><br />
-   <label><input type="checkbox" name="setViews" value="1" class="check" id="setViews" /> {{ lang.editnews['set_views'] }}:</label> <input type="text" size="4" name="views" value="{{ views }}" /><br />
-   <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags.html) %}checked="checked"{% endif %} {% if (flags['html.disabled']) %}disabled{% endif %} /> {{ lang.editnews['flag_html'] }}</label> {% if (flags['html.disabled']) %}[<font color=red>{{ lang.editnews['flags_lost'] }}</font>]{% endif %}<br />
-   <label><input type="checkbox" name="flag_RAW" value="1" {% if (flags.raw) %}checked="checked"{% endif %} class="check" id="flag_RAW" {% if (flags['raw.disabled']) %}disabled{% endif %} /> {{ lang.editnews['flag_raw'] }}</label> {% if (flags['raw.disabled']) %}[<font color=red>{{ lang.editnews['flags_lost'] }}</font>]{% endif %}
+{% if (flags.options) %}  <!-- <label><input type="checkbox" name="approve" value="1" {% if (flags.approve) %}checked="checked"{% endif %} class="check" id="approve" /> {{ lang.editnews['approve'] }}</label><br /> -->
+   <label><input type="checkbox" name="mainpage" value="1" {% if (flags.mainpage) %}checked="checked"{% endif %} class="check" id="mainpage" {% if (flags['mainpage.disabled']) %}disabled{% endif %} /> {{ lang.editnews['mainpage'] }}</label><br />
+   <label><input type="checkbox" name="pinned" value="1" {% if (flags.pinned) %}checked="checked"{% endif %} class="check" id="pinned" {% if (flags['pinned.disabled']) %}disabled{% endif %} /> {{ lang.editnews['add_pinned'] }}</label><br />
+   <label><input type="checkbox" name="favorite" value="1" {% if (flags.favorite) %}checked="checked"{% endif %} class="check" id="favorite"  {% if (flags['favorite.disabled']) %}disabled{% endif %} /> {{ lang.editnews['add_favorite'] }}</label><br />
+   <label><input type="checkbox" name="setViews" value="1" class="check" id="setViews" {% if (flags['setviews.disabled']) %}disabled{% endif %} /> {{ lang.editnews['set_views'] }}:</label> <input type="text" size="4" name="views" value="{{ views }}"  {% if (flags['setviews.disabled']) %}disabled{% endif %}/><br />
+   <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags.html) %}checked="checked"{% endif %} {% if (flags['html.disabled']) %}disabled{% endif %} /> {{ lang.editnews['flag_html'] }}</label><br />
+   <label><input type="checkbox" name="flag_RAW" value="1" {% if (flags.raw) %}checked="checked"{% endif %} class="check" id="flag_RAW" {% if (flags['html.disabled']) %}disabled{% endif %} /> {{ lang.editnews['flag_raw'] }}</label> {% if (flags['raw.disabled']) %}[<font color=red>{{ lang.editnews['flags_lost'] }}</font>]{% endif %}
    {% if (pluginIsActive('comments')) %}<hr/>{{ lang['comments:mode.header'] }}:
    <select name="allow_com">
     <option value="0"{{ plugin.comments['acom:0'] }}>{{ lang['comments:mode.disallow'] }}
@@ -234,13 +234,39 @@ function changeActive(name) {
 
 <div id="showEditNews" style="display: block;">
 <table id="edit" width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr align="center">
-<td width="100%" class="contentEdit" align="center" valign="top">
+{% if flags['params.lost'] %}
+<tr><td colspan="3" class="contentEditErr">
+Обратите снимание - у вас недостаточно прав для полноценного редактирования новости.<br/>
+При сохранении будут произведены следующие изменения:<br/><br/>
+{% if flags['publish.lost'] %}<div class="errMessage">&#8594; Новость будет снята с публикации</div>{% endif %}
+{% if flags['html.lost'] %}<div class="errMessage">&#8594; В новости будет запрещено использование HTML тегов и автоформатирование</div>{% endif %}
+{% if flags['mainpage.lost'] %}<div class="errMessage">&#8594; Новость будет убрана с главной страницы</div>{% endif %}
+{% if flags['pinned.lost'] %}<div class="errMessage">&#8594; С новости будет снято прикрепление</div>{% endif %}
+{% if flags['favorite.lost'] %}<div class="errMessage">&#8594; Новость будет удалена из закладок администратора</div>{% endif %}
+{% if flags['multicat.lost'] %}<div class="errMessage">&#8594; Из новости будут удалены все дополнительные категории</div>{% endif %}
+</td></tr>
+{% endif %}
+<tr>
+<td width="150" class="contentEditW" align="left" valign="top"><input type="button" value="{{ lang.editnews['preview'] }}" class="button" onClick="preview()" /> </td>
+<td class="contentEditW" align="center" valign="top">
 <input type="hidden" name="id" value="{{ id }}" />
-<input type="button" value="{{ lang.editnews['preview'] }}" class="button" onClick="preview()" />
-<input type="submit" value="{{ lang.editnews['do_editnews'] }}" accesskey="s" class="button" />&nbsp;
+{% if flags.editable %}
+Статус новости:
+<select size="1" disabled>
+	<option>{% if (approve == -1) %}{{ lang['state.draft'] }}{% elseif (approve == 0) %}{{ lang['state.unpublished'] }}{% else %}{{ lang['state.published'] }}{% endif %}</option>
+</select> &#8594;
+<select size="1" name="approve" id="approve">
+{% if flags.can_draft %}	<option value="-1" {% if (approve == -1) %}selected="selected"{% endif %}>{{ lang['state.draft'] }}</option>{% endif %}
+{% if flags.can_unpublish %}		<option value="0" {% if (approve == 0) %}selected="selected"{% endif %}>{{ lang['state.unpublished'] }}</option>{% endif %}
+{% if flags.can_publish %}		<option value="1" {% if (approve == 1) %}selected="selected"{% endif %}>{{ lang['state.published'] }}</option>{% endif %}
+</select>
+<input type="submit" value="{{ lang.editnews['do_editnews'] }}" accesskey="s" class="button" />&nbsp;{% endif %}
+</td>
+{% if flags.deleteable %}
+<td class="contentEditW" align="right" valign="top" width="150">
 <input type="button" value="{{ lang.editnews['delete'] }}" onClick="confirmit('{{ php_self }}?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;selected_news[]={{ id }}', '{{ lang.editnews['sure_del'] }}')" class="button" />
 </td>
+{% endif %}
 </tr>
 </table>
 </div>

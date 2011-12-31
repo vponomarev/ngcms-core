@@ -68,6 +68,7 @@ function admRPCFilesUpload($params){
 		$stampFileName = root.'trash/'.$config['wm_image'];
 	}
 
+	$thumb = '';
 	if ($mkThumb) {
 		$tsx = intval($config['thumb_size_x'])?intval($config['thumb_size_x']):intval($config['thumb_size']);
 		$tsy = intval($config['thumb_size_y'])?intval($config['thumb_size_y']):intval($config['thumb_size']);
