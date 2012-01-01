@@ -44,7 +44,7 @@ $confPerm = array(
 			'*'							=> true,
 		),
 		'*'			=> array(
-			'*'			=> false,
+			'*'			=> true,
 		),
 	),
 	'*'	=> array(
