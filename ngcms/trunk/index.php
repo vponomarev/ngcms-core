@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
 // Name: index.php
 // Description: core index file
 // Author: NGCMS project team
@@ -213,6 +213,9 @@ if ($config['debug']) {
 // ===================================================================
 // Make page output
 // ===================================================================
+// 0. Calculate memory PEAK usage
+$template['vars']['memPeakUsage'] = sprintf("%7.3f", (memory_get_peak_usage()/1024/1024));
+
 // 1. Determine template name & path
 $mainTemplateName = isset($SYSTEM_FLAGS['template.main.name']) ? $SYSTEM_FLAGS['template.main.name'] : 'main';
 $mainTemplatePath = isset($SYSTEM_FLAGS['template.main.path']) ? $SYSTEM_FLAGS['template.main.path'] : tpl_site;
@@ -235,4 +238,7 @@ if (!$SUPRESS_TEMPLATE_SHOW) {
 
 // Call maintanance actions
 exec_acts('maintenance');
-if ($config['auto_backup'] == "1") { AutoBackup(); }
+if ($config['auto_backup'] == "1") { 
+	AutoBackup(true);
+}
+
