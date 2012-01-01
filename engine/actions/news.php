@@ -189,7 +189,7 @@ function editNews() {
 	$SQL['catid']     = implode(",", array_keys($catids));
 
 	// Change this parameters if user have enough access level
-	$SQL['mainpage']	= ($perm[$permGroupMode]	&& intval($_REQUEST['mainpage']))?1:0;
+	$SQL['mainpage']	= ($perm[$permGroupMode.'.mainpage']	&& intval($_REQUEST['mainpage']))?1:0;
 	$SQL['pinned']		= ($perm[$permGroupMode.'.pinned']		&& intval($_REQUEST['pinned']))?1:0;
 	$SQL['favorite']	= ($perm[$permGroupMode.'.favorite']	&& intval($_REQUEST['favorite']))?1:0;
 
