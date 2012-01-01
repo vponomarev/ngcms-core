@@ -170,3 +170,75 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 	//return count($nList);
 	return $results;
 }
+
+// Generate backup for table list. If no list is given - backup ALL tables with system prefix
+function dbBackup($fname, $gzmode, $tlist = ''){
+	global $mysql;
+
+	if ($gzmode && (!function_exists('gzopen')))
+		$gzmode = 0;
+
+	if ($gzmode)	$fh = gzopen($fname, "w");
+	else			$fh = fopen($fname, "w");
+
+	if ($fh === false)
+		return 0;
+
+	// Generate a list of tables for backup
+	if (!is_array($tlist)) {
+		$tlist = array();
+
+		foreach ($mysql->select("show tables like '".prefix."_%'") as $tn)
+			$tlist [] = $tn[0];
+	}
+
+	// Now make a header
+	$out  = "# ".str_repeat('=', 60)."\n# Backup file for `Next Generation CMS`\n# ".str_repeat('=', 60)."\n# DATE: ".gmdate("d-m-Y H:i:s", time())." GMT\n# VERSION: ".engineVersion."\n#\n";
+	$out .= "# List of tables for backup: ".join(", ", $tlist)."\n#\n";
+
+	// Write a header
+	if ($gzmode)	gzwrite($fh, $out);
+	else			fwrite($fh, $out);
+
+	// Now, let's scan tables
+	foreach ($tlist as $tname) {
+		// Fetch create syntax for table and after - write table's content
+		if (is_array($csql = $mysql->record("show create table `".$tname."`"))) {
+			$out  = "\n#\n# Table `".$tname."`\n#\n";
+			$out .= "DROP TABLE IF EXISTS `".$tname."`;\n";
+			$out .= $csql[1].";\n";
+
+			if ($gzmode)	gzwrite($fh, $out);
+			else			fwrite($fh, $out);
+
+			// Now let's make content of the table
+			$query = mysql_query("select * from `".$tname."`", $mysql->connect);
+			$rowNo = 0;
+			while ($row = mysql_fetch_row($query)) {
+				$out = "insert into `".$tname."` values (";
+				$rowNo++;
+				$colNo = 0;
+				foreach ($row as $v)
+					$out .= (($colNo++)?', ':'').db_squote($v);
+				$out .= ");\n";
+
+				if ($gzmode)	gzwrite($fh, $out);
+				else			fwrite($fh, $out);
+			}
+
+			$out = "# Total records: $rowNo\n";
+
+			if ($gzmode)	gzwrite($fh, $out);
+			else			fwrite($fh, $out);
+		} else {
+			$out = "#% Error fetching information for table `$tname`\n";
+
+			if ($gzmode)	gzwrite($fh, $out);
+			else			fwrite($fh, $out);
+		}
+	}
+	if ($gzmode)	gzclose($fh);
+	else			fclose($fh);
+
+	return 1;
+}
