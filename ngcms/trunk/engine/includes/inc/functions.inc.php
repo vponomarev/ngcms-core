@@ -64,100 +64,70 @@ function gzip() {
 	}
 }
 
-
-// Generate backup for table list. If no list is given - backup ALL tables with system prefix
-function dbBackup($fname, $gzmode, $tlist = ''){
-	global $mysql;
-
-	if ($gzmode && (!function_exists('gzopen')))
-		$gzmode = 0;
-
-	if ($gzmode)	$fh = gzopen($fname, "w");
-	 else			$fh = fopen($fname, "w");
-
-	if ($fh === false)
-		return 0;
-
-	// Generate a list of tables for backup
-	if (!is_array($tlist)) {
-		$tlist = array();
-
-		foreach ($mysql->select("show tables like '".prefix."_%'") as $tn)
-			$tlist [] = $tn[0];
-	}
-
-	// Now make a header
-	$out  = "# ".str_repeat('=', 60)."\n# Backup file for `Next Generation CMS`\n# ".str_repeat('=', 60)."\n# DATE: ".gmdate("d-m-Y H:i:s", time())." GMT\n# VERSION: ".engineVersion."\n#\n";
-	$out .= "# List of tables for backup: ".join(", ", $tlist)."\n#\n";
-
-	// Write a header
-	if ($gzmode)	gzwrite($fh, $out);
-	 else			fwrite($fh, $out);
-
-	// Now, let's scan tables
-	foreach ($tlist as $tname) {
-		// Fetch create syntax for table and after - write table's content
-		if (is_array($csql = $mysql->record("show create table `".$tname."`"))) {
-			$out  = "\n#\n# Table `".$tname."`\n#\n";
-			$out .= "DROP TABLE IF EXISTS `".$tname."`;\n";
-			$out .= $csql[1].";\n";
-
-			if ($gzmode)	gzwrite($fh, $out);
-			 else			fwrite($fh, $out);
-
-			// Now let's make content of the table
-			$query = mysql_query("select * from `".$tname."`", $mysql->connect);
-			$rowNo = 0;
-			while ($row = mysql_fetch_row($query)) {
-				$out = "insert into `".$tname."` values (";
-				$rowNo++;
-				$colNo = 0;
-				foreach ($row as $v)
-					$out .= (($colNo++)?', ':'').db_squote($v);
-				$out .= ");\n";
-
-				if ($gzmode)	gzwrite($fh, $out);
-				 else			fwrite($fh, $out);
-			}
-
-			$out = "# Total records: $rowNo\n";
-
-			if ($gzmode)	gzwrite($fh, $out);
-			 else			fwrite($fh, $out);
-		} else {
-			$out = "#% Error fetching information for table `$tname`\n";
-
-			if ($gzmode)	gzwrite($fh, $out);
-			 else			fwrite($fh, $out);
-		}
-	}
-	if ($gzmode)	gzclose($fh);
-	 else			fclose($fh);
-
-	return 1;
-}
-
+// Generate BACKUP of DB
 function AutoBackup() {
 	global $config;
 
-	$backupFile = root."cache/last_backup.tmp";
+	$backupFlagFile		= root."cache/last_backup.tmp";
+	$backupMarkerFile	= root."cache/last_backup_marker.tmp";
 
-	$last_backup	=	@file_get_contents($backupFile);
+	// Load `Last Backup Date` from $backupFlagFile
+	$last_backup	=	intval(@file_get_contents($backupFlagFile));
 	$time_now		=	time();
 
+	// Check if last backup was too much time ago
 	if ($time_now > ($last_backup + $config['auto_backup_time'] * 3600)) {
-	        // Try to open temp file for writing
-	        $fx = is_file($backupFile)?@fopen($backupFile,"r+"):@fopen($backupFile,"w+");
-	        if ($fx) {
+		// Yep, we need a backup.
+		// ** Manage marker file
+		$flagDoProcess = false;
+
+		// -> Try to create marker
+		if (($fm = fopen($backupMarkerFile, 'x')) !== FALSE) {
+			// Created, write CALL time
+			fwrite($fm, $time_now);
+			fclose($fm);
+
+			$flagDoProcess = true;
+		} else {
+			// Marker already exists, check creation time
+			$markerTime	=	intval(@file_get_contents($backupMarkerFile));
+
+			// TTL for marker is 5 min
+			if ($time_now > ($markerTime + 180)) {
+				// Delete OLD marker, create ours
+				if (unlink($backupMarkerFile) && (($fm = fopen($backupMarkerFile, 'x')) !== FALSE)) {
+					// Created, write CALL time
+					fwrite($fm, $time_now);
+					fclose($fm);
+
+					$flagDoProcess = true;
+				}
+			}
+		}
+
+		// Do not run if another session is running
+		if (!$flagDoProcess) {
+			return;
+		}
+
+		// Try to open temp file for writing
+		$fx = is_file($backupFlagFile)?@fopen($backupFlagFile,"r+"):@fopen($backupFlagFile,"w+");
+		if ($fx) {
 			$filename	=	root."backups/backup_".date("Y_m_d_H_i", $time_now).".gz";
 
+        	// Load library
+	        require_once(root.'/includes/inc/lib_admin.php');
+
 			// We need to create file with backup
-			dbBackup($filename, 1);
+	    	dbBackup($filename, 1);
 
 			rewind($fx);
 			fwrite($fx, $time_now);
 			ftruncate($fx,ftell($fx));
 		}
+
+		// Delete marker
+		@unlink($backupMarkerFile);
 	}
 }
 
