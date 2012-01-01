@@ -65,7 +65,8 @@ function gzip() {
 }
 
 // Generate BACKUP of DB
-function AutoBackup() {
+// * $delayed - flag if call should be delayed for 30 mins (for cases of SYSCRON / normal calls)
+function AutoBackup($delayed = false) {
 	global $config;
 
 	$backupFlagFile		= root."cache/last_backup.tmp";
@@ -76,7 +77,7 @@ function AutoBackup() {
 	$time_now		=	time();
 
 	// Check if last backup was too much time ago
-	if ($time_now > ($last_backup + $config['auto_backup_time'] * 3600)) {
+	if ($time_now > ($last_backup + $config['auto_backup_time'] * 3600 + ($delayed?30*60:0))) {
 		// Yep, we need a backup.
 		// ** Manage marker file
 		$flagDoProcess = false;
