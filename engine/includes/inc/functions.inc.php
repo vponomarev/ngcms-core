@@ -1607,7 +1607,7 @@ function printHTTPheaders() {
 function error404(){
 	global $config, $tpl, $template, $SYSTEM_FLAGS, $lang;
 
-	@header('HTTP/1.1 404 Not found');
+	@header($_SERVER['SERVER_PROTOCOL']. ' 404 Not Found');
 	switch ($config['404_mode']) {
 		// HTTP error 404
 		case 2:
