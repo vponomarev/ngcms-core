@@ -408,7 +408,49 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	$nCount = 0;
 	$output = '';
 
-	foreach ($mysql->select($query['result']) as $row) {
+	// Call `SELECT` query
+	$selectResult = $mysql->select($query['result']);
+
+	// Prepare TOTAL data for plugins
+	// = count		- count of fetched news
+	// = result		- result of the query (array)
+	// = ids		- array with IDs of fetched news
+
+	$callingParams['query'] = array(
+		'count'		=> count($selectResult),
+		'result'	=> $selectResult,
+	);
+
+	// Reference for LINKED images
+	$callingParams['linkedImages'] = array(
+		'ids'	=> array(),
+		'data'	=> array(),
+	);
+
+	// List of news that have linked images
+	$nilink = array();
+
+	foreach ($selectResult as $row) {
+		$callingParams['query']['ids'][] = $row['id'];
+		if ($row['num_images'])
+			$nilink []= $row['id'];
+	}
+
+	// Load linked images
+	if (count($nilink)) {
+		foreach ($mysql->select("select * from ".prefix."_images where (linked_ds = 1) and (linked_id in (".join(", ", $nilink)."))", 1) as $nirow) {
+			$callingParams['linkedImages']['ids'] []= $nirow['id'];
+			$callingParams['linkedImages']['data'][$nirow['id']] = $nirow;
+		}
+	}
+
+	// Execute filters
+	if (is_array($PFILTERS['news']))
+		foreach ($PFILTERS['news'] as $k => $v) { $v->onBeforeShowlist($callingParams); }
+
+
+	// Main processing cycle
+	foreach ($selectResult as $row) {
 		$i++;
 		$nCount++;
 
