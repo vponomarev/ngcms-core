@@ -132,24 +132,29 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 	if (isset($setValue['approve'])) {
 		// Update user's news counters
 		foreach ($nData as $nid => $ndata) {
-			if ($ndata['approve'] != $setValue['approve'])
-				$mysql->query("update ".uprefix."_users set news=news".($ndata['approve']?'-':'+')."1 where id = ".intval($ndata['author_id']));
+			if (($ndata['approve'] == 1) && ($setValue['approve'] != 1)) {
+				$mysql->query("update ".uprefix."_users set news=news-1 where id = ".intval($ndata['author_id']));
+			} else if (($ndata['approve'] != 1) && ($setValue['approve'] == 1)) {
+				$mysql->query("update ".uprefix."_users set news=news+1 where id = ".intval($ndata['author_id']));
+			}
 		}
 
 		// DeApprove news
-		if (!$setValue['approve']) {
-			// Count categories & counters to decrease
+		if ($setValue['approve'] < 1) {
+			// Count categories & counters to decrease - we have this news currently in _news_map because this news are marked as published
 			foreach ($mysql->select("select categoryID, count(newsID) as cnt from ".prefix."_news_map where newsID in (".join(", ", $nList).") group by categoryID") as $crec) {
 				$mysql->query("update ".prefix."_category set posts=posts-".intval($crec['cnt'])." where id = ".intval($crec['categoryID']));
 			}
 
 			// Delete news map
 			$mysql->query("delete from ".prefix."_news_map where newsID in (".join(", ", $nList).")");
-		} else {
+		} else if ($setValue['approve'] == 1) {
 			// Approve news
 			$clist = array();
 			foreach ($nData as $nr) {
-				if ($nr['approve']) continue;
+				// Skip already published news
+				if ($nr['approve'] == 1) continue;
+
 				// Calculate list
 				foreach (explode(",", $nr['catid']) as $cid) {
 					if (!isset($catmap[$cid])) continue;
