@@ -2,7 +2,7 @@
 
 //
 // Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
-// Name: editnews.php
+// Name: news.php
 // Description: News managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
 //
@@ -240,7 +240,7 @@ function editNews() {
 
 	// Check if we need to update user's counters [ only if news was or will be published ]
 	if (($row['approve'] != $SQL['approve']) && (($row['approve'] == 1)||($SQL['approve'] == 1))) {
-		$mysql->query("update ".uprefix."_users set news=news".(($row['approve'] == 1)?'-':'+')."1 where id=".$row['id']);
+		$mysql->query("update ".uprefix."_users set news=news".(($row['approve'] == 1)?'-':'+')."1 where id=".$row['author_id']);
 	}
 
 	if ($SQL['approve'] == 1) {
@@ -988,7 +988,7 @@ function addNews(){
 	// Check permissions
 	if (!$perm['add']) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
-		return;
+		return 0;
 	}
 
 
@@ -1028,7 +1028,7 @@ function addNews(){
 	if ($alt_name) {
 		if ( is_array($mysql->record("select id from ".prefix."_news where alt_name = ".db_squote($alt_name)." limit 1")) ) {
 			msg(array("type" => "error", "text" => $lang['addnews']['msge_alt_name'], "info" => $lang['addnews']['msgi_alt_name']));
-			return;
+			return 0;
 		}
 		$SQL['alt_name'] = $alt_name;
 	} else {
