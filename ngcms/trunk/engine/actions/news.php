@@ -393,7 +393,6 @@ function editNewsForm() {
 		'flags'				=> array(
 			'edit_split'		=> $config['news.edit.split']?true:false,
 			'meta'				=> $config['meta']?true:false,
-			'options'			=> ($userROW['status'] < 3)?true:false,
 			'mainpage'			=> $row['mainpage']?true:false,
 			'favorite'			=> $row['favorite']?true:false,
 			'pinned'			=> $row['pinned']?true:false,
@@ -1243,7 +1242,6 @@ function addNewsForm($retry = ''){
 			'favorite.disabled'	=> !$perm['personal.favorite'],
 			'pinned.disabled'	=> !$perm['personal.pinned'],
 			'edit_split'		=> $config['news.edit.split']?true:false,
-			'options'			=> ($userROW['status'] < 3)?true:false,
 			'meta'				=> $config['meta']?true:false,
 			'html.disabled'		=> !$perm['personal.html'],
 			'customdate.disabled'	=> !$perm['personal.customdate'],

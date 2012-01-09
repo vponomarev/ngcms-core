@@ -206,7 +206,6 @@ function changeActive(name) {
   </tr>
   <tr><td></td><td>
   <div class="list">
-{% if (flags.options) %}  <!-- <label><input type="checkbox" name="approve" value="1" {% if (flags.approve) %}checked="checked"{% endif %} class="check" id="approve" /> {{ lang.editnews['approve'] }}</label><br /> -->
    <label><input type="checkbox" name="mainpage" value="1" {% if (flags.mainpage) %}checked="checked"{% endif %} class="check" id="mainpage" {% if (flags['mainpage.disabled']) %}disabled{% endif %} /> {{ lang.editnews['mainpage'] }}</label><br />
    <label><input type="checkbox" name="pinned" value="1" {% if (flags.pinned) %}checked="checked"{% endif %} class="check" id="pinned" {% if (flags['pinned.disabled']) %}disabled{% endif %} /> {{ lang.editnews['add_pinned'] }}</label><br />
    <label><input type="checkbox" name="favorite" value="1" {% if (flags.favorite) %}checked="checked"{% endif %} class="check" id="favorite"  {% if (flags['favorite.disabled']) %}disabled{% endif %} /> {{ lang.editnews['add_favorite'] }}</label><br />
@@ -221,7 +220,6 @@ function changeActive(name) {
    </select>
    {% endif %}<br />
   </div>
-{% endif %}
   </td></tr>
 
  </table>
