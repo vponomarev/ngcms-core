@@ -187,8 +187,13 @@ $parse	=	new parse;
 $tpl	=	new tpl;
 $lang	=	array();
 
+// Check if we have config file
 if ( ( !file_exists(confroot.'config.php') ) || ( filesize(confroot.'config.php')<10 ) ) {
-	@header("Location: ".adminDirName."/install.php");
+	if (preg_match("#^(.*?)(\/index\.php|\/engine\/admin\.php)$#", $_SERVER['PHP_SELF'], $ms)) {
+		@header("Location: ".$ms[1]."/engine/install.php");
+	} else {
+		@header("Location: ".adminDirName."/install.php");
+	}
 	echo "You should run install script first";
 	exit;
 }
