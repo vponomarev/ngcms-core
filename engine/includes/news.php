@@ -411,14 +411,23 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	// Call `SELECT` query
 	$selectResult = $mysql->select($query['result']);
 
+	// List of pages
+	$newsCount = $mysql->result($query['count']);
+	$pages_count = ceil($newsCount / $showNumber);
+
+
 	// Prepare TOTAL data for plugins
 	// = count		- count of fetched news
+	// = totalCount	- total count of news
+	// = pagesCount	- total count of pages that will be displayed
 	// = result		- result of the query (array)
 	// = ids		- array with IDs of fetched news
 
 	$callingParams['query'] = array(
-		'count'		=> count($selectResult),
-		'result'	=> $selectResult,
+		'count'			=> count($selectResult),
+		'result'		=> $selectResult,
+		'totalCount'	=> $newsCount,
+		'pagesCount'	=> $pages_count,
 	);
 
 	// Reference for LINKED images
@@ -552,10 +561,6 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$prev = 0;
 		$no_prev = true;
 	}
-
-	// List of pages
-	$newsCount = $mysql->result($query['count']);
-	$pages_count = ceil($newsCount / $showNumber);
 
 	$maxNavigations 		= $config['newsNavigationsCount'];
 	if ($maxNavigations < 1)
