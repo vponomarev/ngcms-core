@@ -106,7 +106,7 @@ function multi_multidomains() {
  $newdomain = trim($newdomain);
  $newdomainid = trim($multiDomainName);
  if ($newdomain) {
-	 foreach (array('home_url', 'admin_url', 'avatars_url', 'photos_url', 'images_url', 'files_url', 'avatars_dir', 'photos_dir', 'images_dir', 'files_dir') as $vn) {
+	 foreach (array('home_url', 'admin_url', 'avatars_url', 'photos_url', 'images_url', 'files_url', 'avatars_dir', 'photos_dir', 'images_dir', 'files_dir', 'attach_url', 'attach_dir') as $vn) {
 		$config[$vn] = str_replace('{domain}',$newdomain,$config[$vn]);
  		$config[$vn] = str_replace('{domainid}', $newdomainid, $config[$vn]);
  	}
