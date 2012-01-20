@@ -5,9 +5,9 @@
 <tr><td><input type="radio" name="template" value="{name}"{checked}/></td>
 <td width="230"><a target="_blank" href="{templateURL}/{name}/{image}"><img border=0 src="{templateURL}/{name}/{imagepreview}"/></a></td>
 <td valign="top" style="padding-top:15px; font-size:11px;"><br/>
-<b>Автор:</b>&nbsp; &nbsp; <u>{author}</u><br/>
-<b>Версия:</b>&nbsp; &nbsp;{version}<br/>
-<b>Выпуск:</b>&nbsp;  {reldate}
+<b>{l_template.author}:</b>&nbsp; &nbsp; <u>{author}</u><br/>
+<b>{l_template.version}:</b>&nbsp; &nbsp;{version}<br/>
+<b>{l_template.reldate}:</b>&nbsp;  {reldate}
 </td>
 </tr>
 </table>

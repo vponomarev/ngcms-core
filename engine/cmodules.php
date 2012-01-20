@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: cmodules.php
 // Description: Common CORE modules
 // Author: Vitaly Ponomarev
@@ -406,4 +406,82 @@ function coreLogout(){
 	unset($userROW);
 	unset($username);
 	$is_logged = false;
+}
+
+
+//
+function coreAddNews() {
+	if ($_SERVER['REQUEST_METHOD'] != "POST") {
+		coreAddNewsForm(null);
+	} else {
+		// Load library
+		require_once(root.'/includes/inc/lib_admin.php');
+
+		LoadLang('addnews', 'admin', 'addnews');
+
+		$o = addNews(array('onsite' => yes));
+		if (!$o) {
+			coreAddNewsForm(json_encode(arrayCharsetConvert(0, $_POST)));
+		}
+	}
+}
+
+// Form for adding news
+function coreAddNewsForm($retry = ''){
+	global $userROW, $twig, $lang, $template, $config, $PHP_SELF;
+
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'add.onsite',
+		'add.approve',
+		'add.mainpage',
+		'add.pinned',
+		'add.favorite',
+		'add.html',
+		'personal.publish',
+		'personal.html',
+		'personal.mainpage',
+		'personal.pinned',
+		'personal.favorite',
+		'personal.setviews',
+		'personal.multicat',
+		'personal.customdate',
+	));
+
+	// Check if current user have permission to add news
+	if (!$perm['add.onsite']) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']));
+		return;
+	}
+	LoadLang('addnews', 'admin', 'addnews');
+
+	$tVars = array(
+		'php_self'			=> $PHP_SELF,
+		'changedate'		=> ChangeDate(),
+		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0)),
+		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1)),
+		'JEV'				=> $retry?$retry:'{}',
+		'smilies'			=> ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'',
+		'quicktags'			=> ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'',
+		'flags'				=> array(
+			'mainpage'			=> $perm['add.mainpage'] && $perm['personal.mainpage'],
+			'favorite'			=> $perm['add.favorite'] && $perm['personal.favorite'],
+			'pinned'			=> $perm['add.pinned'] && $perm['personal.pinned'],
+			'html'				=> $perm['add.html'] && $perm['personal.html'],
+			'mainpage.disabled'	=> !$perm['personal.mainpage'],
+			'favorite.disabled'	=> !$perm['personal.favorite'],
+			'pinned.disabled'	=> !$perm['personal.pinned'],
+			'edit_split'		=> $config['news.edit.split']?true:false,
+			'meta'				=> $config['meta']?true:false,
+			'html.disabled'		=> !$perm['personal.html'],
+			'customdate.disabled'	=> !$perm['personal.customdate'],
+			'multicat.show'		=> $perm['personal.multicat'],
+			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
+			'can_publish'		=> $perm['personal.publish'],
+		),
+	);
+
+	$xt = $twig->loadTemplate(tpl_site.'/news.add.tpl');
+	$template['vars']['mainblock'] .= $xt->render($tVars);
+
 }

@@ -34,7 +34,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
+          'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
@@ -68,7 +68,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
+          'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
@@ -244,7 +244,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
+          'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
@@ -331,7 +331,7 @@ $urlLibrary = array (
         ),
         'catid' => 
         array (
-          'matchRegex' => '\\d{1,4}(?:\-[0-9\-]+)?',
+          'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
           'descr' => 
           array (
             'russian' => 'ID категории',
@@ -462,6 +462,16 @@ $urlLibrary = array (
       'descr' => 
       array (
         'russian' => '¬ыход с сайта',
+      ),
+    ),
+    'addnews' => 
+    array (
+      'vars' => 
+      array (
+      ),
+      'descr' => 
+      array (
+        'russian' => 'ƒобавление новости (с сайта)',
       ),
     ),
   ),

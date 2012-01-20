@@ -674,3 +674,24 @@ border : 1px solid #eeeeef;
 .timeProfiler TD {
 	background-color: #E8E8E8;
 }	
+
+.nadd_f15 { font-size: 15px; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; font-weight: normal;}
+.nadd_list { background:#ecf3f7 url(images/1px.png) repeat-x; border:#e4ecf0 1px solid; padding: 10px; margin: 10px 0 10px 0;}
+<!-- .nadd_list label { line-height: 8px; } -->
+
+.contentActive {
+ border: #CCCCCC 1px solid;
+ font: normal 11px Tahoma,sans-serif;
+ margin: 0px;
+ padding: 0px;
+ margin-bottom: 3px;
+ background: #CCCCCC;
+}
+
+.contentInactive {
+ border: #FFFFFF 1px solid;
+ font: normal 11px Tahoma,sans-serif;
+ margin: 0px;
+ padding: 0px;
+ margin-bottom: 3px;
+}

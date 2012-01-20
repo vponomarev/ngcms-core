@@ -79,12 +79,6 @@ $template['vars']["[/sitelock]"] = "";
 // Core URL processing block
 //
 
-// Prepare variable with access URL
-$systemAccessURL = $_SERVER['REQUEST_URI'];
-if (($tmp_pos = strpos($systemAccessURL, '?')) !== FALSE) {
- $systemAccessURL = substr($systemAccessURL, 0, $tmp_pos);
-}
-
 // /////////////////////////////////////////////////////////// //
 // You may modify variable $systemAccessURL here (for hacks)   //
 // /////////////////////////////////////////////////////////// //

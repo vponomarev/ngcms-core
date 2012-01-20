@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -13,7 +13,7 @@
 // Global variables definition
 //
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $systemAccessURL;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache;
 
@@ -154,6 +154,13 @@ foreach ($confArray['htvars.int'] as $vname) {
 
 //print "GLOBAL SET VARIABLE (id): ".$id."<br/>\n";
 
+// Prepare variable with access URL
+$systemAccessURL = $_SERVER['REQUEST_URI'];
+if (($tmp_pos = strpos($systemAccessURL, '?')) !== FALSE) {
+ $systemAccessURL = substr($systemAccessURL, 0, $tmp_pos);
+}
+
+
 @include_once root.'includes/inc/multimaster.php';
 
 multi_multisites();
@@ -239,6 +246,7 @@ $twig->addGlobalRef('global',	$twigGlobal);
 // - Global variables [by VALUE]
 $twig->addGlobal('skins_url',	skins_url);
 $twig->addGlobal('admin_url',	admin_url);
+$twig->addGlobal('currentURL',	$systemAccessURL);
 
 // - Define functions
 $twig->addFunction('pluginIsActive',	new Twig_Function_Function('getPluginStatusActive'));
