@@ -35,6 +35,7 @@ function editNews() {
 		'personal.html',
 		'personal.mainpage',
 		'personal.pinned',
+		'personal.catpinned',
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
@@ -49,6 +50,7 @@ function editNews() {
 		'other.html',
 		'other.mainpage',
 		'other.pinned',
+		'other.catpinned',
 		'other.favorite',
 		'other.setviews',
 		'other.multicat',
@@ -191,6 +193,7 @@ function editNews() {
 	// Change this parameters if user have enough access level
 	$SQL['mainpage']	= ($perm[$permGroupMode.'.mainpage']	&& intval($_REQUEST['mainpage']))?1:0;
 	$SQL['pinned']		= ($perm[$permGroupMode.'.pinned']		&& intval($_REQUEST['pinned']))?1:0;
+	$SQL['catpinned']	= ($perm[$permGroupMode.'.catpinned']	&& intval($_REQUEST['catpinned']))?1:0;
 	$SQL['favorite']	= ($perm[$permGroupMode.'.favorite']	&& intval($_REQUEST['favorite']))?1:0;
 
 	switch (intval($_REQUEST['approve'])) {
@@ -319,6 +322,7 @@ function editNewsForm() {
 		'personal.html',
 		'personal.mainpage',
 		'personal.pinned',
+		'personal.catpinned',
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
@@ -333,6 +337,7 @@ function editNewsForm() {
 		'other.html',
 		'other.mainpage',
 		'other.pinned',
+		'other.catpinned',
 		'other.favorite',
 		'other.setviews',
 		'other.multicat',
@@ -396,8 +401,10 @@ function editNewsForm() {
 			'mainpage'			=> $row['mainpage']?true:false,
 			'favorite'			=> $row['favorite']?true:false,
 			'pinned'			=> $row['pinned']?true:false,
+			'catpinned'			=> $row['catpinned']?true:false,
 			'can_mainpage'		=> $perm[$permGroupMode.'.mainpage']?true:false,
 			'can_pinned'		=> $perm[$permGroupMode.'.pinned']?true:false,
+			'can_catpinned'		=> $perm[$permGroupMode.'.catpinned']?true:false,
 			'raw'				=> ($row['flags'] & 1),
 			'html'				=> ($row['flags'] & 2),
 			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
@@ -406,6 +413,7 @@ function editNewsForm() {
 			'html.lost'			=> (($row['flags'] & 2) && (!$perm[$permGroupMode.'.html']))?1:0,
 			'mainpage.lost'		=> (($row['mainpage']) && (!$perm[$permGroupMode.'.mainpage']))?true:false,
 			'pinned.lost'		=> (($row['pinned']) && (!$perm[$permGroupMode.'.pinned']))?true:false,
+			'catpinned.lost'	=> (($row['catpinned']) && (!$perm[$permGroupMode.'.catpinned']))?true:false,
 			'publish.lost'		=> (($row['approve'] == 1) && (!$perm[$permGroupMode.'.modify.published']))?true:false,
 			'favorite.lost'		=> (($row['favorite']) && (!$perm[$permGroupMode.'.favorite']))?true:false,
 			'multicat.lost'		=> ((count($cats)>1) && (!$perm[$permGroupMode.'.multicat']))?true:false,
@@ -413,6 +421,7 @@ function editNewsForm() {
 			'customdate.disabled'	=> (!$perm[$permGroupMode.'.customdate'])?true:false,
 			'mainpage.disabled'	=> (!$perm[$permGroupMode.'.mainpage'])?true:false,
 			'pinned.disabled'	=> (!$perm[$permGroupMode.'.pinned'])?true:false,
+			'catpinned.disabled'=> (!$perm[$permGroupMode.'.catpinned'])?true:false,
 			'favorite.disabled'	=> (!$perm[$permGroupMode.'.favorite'])?true:false,
 			'setviews.disabled'	=> (!$perm[$permGroupMode.'.setviews'])?true:false,
 			'multicat.disabled'	=> (!$perm[$permGroupMode.'.multicat'])?true:false,
@@ -423,7 +432,7 @@ function editNewsForm() {
 	$tVars['flags']['can_unpublish']	= (($row['approve'] < 1)   || ($perm[$permGroupMode.'.unpublish']))?1:0;
 	$tVars['flags']['can_draft']		= (($row['approve'] == -1) || ($perm[$permGroupMode.'.unpublish']))?1:0;
 
-	$tVars['flags']['params.lost']		= ($tVars['flags']['publish.lost'] || $tVars['flags']['html.lost'] || $tVars['flags']['mainpage.lost'] || $tVars['flags']['pinned.lost'] || $tVars['flags']['multicat.lost'])?1:0;
+	$tVars['flags']['params.lost']		= ($tVars['flags']['publish.lost'] || $tVars['flags']['html.lost'] || $tVars['flags']['mainpage.lost'] || $tVars['flags']['pinned.lost'] || $tVars['flags']['catpinned.lost'] || $tVars['flags']['multicat.lost'])?1:0;
 
 
 	// Generate data for content input fields
@@ -977,6 +986,7 @@ function addNewsForm($retry = ''){
 		'personal.html',
 		'personal.mainpage',
 		'personal.pinned',
+		'personal.catpinned',
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
@@ -1001,10 +1011,12 @@ function addNewsForm($retry = ''){
 			'mainpage'			=> $perm['add.mainpage'] && $perm['personal.mainpage'],
 			'favorite'			=> $perm['add.favorite'] && $perm['personal.favorite'],
 			'pinned'			=> $perm['add.pinned'] && $perm['personal.pinned'],
+			'catpinned'			=> $perm['add.catpinned'] && $perm['personal.catpinned'],
 			'html'				=> $perm['add.html'] && $perm['personal.html'],
 			'mainpage.disabled'	=> !$perm['personal.mainpage'],
 			'favorite.disabled'	=> !$perm['personal.favorite'],
 			'pinned.disabled'	=> !$perm['personal.pinned'],
+			'catpinned.disabled'	=> !$perm['personal.catpinned'],
 			'edit_split'		=> $config['news.edit.split']?true:false,
 			'meta'				=> $config['meta']?true:false,
 			'html.disabled'		=> !$perm['personal.html'],
@@ -1014,19 +1026,6 @@ function addNewsForm($retry = ''){
 			'can_publish'		=> $perm['personal.publish'],
 		),
 	);
-
-
-	// Generate data for content input fields
-	if ($config['news.edit.split']) {
-		$tvars['regx']['#\[edit\.split\](.+?)\[\/edit\.split\]#is']		= '$1';
-		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\/edit\.nosplit\]#is']	= '';
-	} else {
-		$tvars['regx']['#\[edit\.split\](.+?)\[\/edit\.split\]#is']		= '';
-		$tvars['regx']['#\[edit\.nosplit\](.+?)\[\/edit\.nosplit\]#is']	= '$1';
-	}
-
-	// Disable flag for comments if plugin 'comments' is not installed
-	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
 
 	// Run interceptors
 	if (is_array($PFILTERS['news']))

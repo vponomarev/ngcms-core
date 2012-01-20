@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: news.php
 // Description: News display sub-engine
 // Author: Vitaly Ponomarev
@@ -343,6 +343,10 @@ function newsProcessFilter($conditions) {
 //			'count' - count of found news
 //			'data'  - data to be showed
 //		'searchFlag'	=> flag if we want to use non-mondatory template 'news.search.tpl' [!!only for style = 'short' !!]
+//		'pin'	-	Way of sorting for PINNED news
+//			0	-	`pinned` (for MainPage)
+//			1	-	`catpinned`	(for Categories page)
+//			2	-	without taking PIN into account
 //
 function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
@@ -394,7 +398,13 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	if (!in_array($orderBy, array('id desc', 'id asc', 'postdate desc', 'postdate asc', 'title desc', 'title asc')))
 		$orderBy = 'id desc';
 
-	$orderBy = 'pinned desc, '.$orderBy;
+	switch ($callingParams['pin']) {
+		case 1:		$orderBy = 'catpinned desc, '.$orderBy;	break;
+		case 2:		break;
+		default:	$orderBy = 'pinned desc, '.$orderBy;	break;
+	}
+
+	//$orderBy = 'pinned desc, '.$orderBy;
 	$query['orderby'] = " order by ".$orderBy." limit ".$limit_start.",".$limit_count;
 
 	// ===================================================================
@@ -704,6 +714,9 @@ function showNews($handlerName, $params) {
 			$paginationParams = checkLinkAvailable('news', 'by.category')?
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => array('category' => $catmap[$category]), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.category'), 'xparams' => array('category' => $catmap[$category]), 'paginator' => array('page', 1, false));
+
+			// Sort news for `category` mode
+			$callingParams['pin'] = 1;
 
 			// Generate news content
 			$newsContent = news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
