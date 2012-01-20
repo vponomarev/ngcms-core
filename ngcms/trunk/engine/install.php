@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
 // Name: install.php
 // Description: System installer
 // Author: Vitaly Ponomarev
@@ -27,6 +27,17 @@ if ( ( @fopen(confroot.'config.php','r') ) && ( filesize(confroot.'config.php') 
 // =============================================================
 // Fine, we're ready to start installation
 // =============================================================
+
+// Determine user's language (support only RUSSIAN/ENGLISH)
+$currentLanguage = 'russian';
+if ($_REQUEST['language'] == 'english') {
+	$currentLanguage = 'english';
+}
+
+// Load language variables
+global $lang;
+$lang = parse_ini_file(root.'lang/'.$currentLanguage.'/install.ini', true);
+
 
 @include_once 'includes/classes/templates.class.php';
 $tpl	=	new tpl;
@@ -95,26 +106,26 @@ include_once root."includes/inc/extrainst.inc.php";
 			$res = call_user_func('plugin_'.$pName.'_install', 'autoapply');
 
 			if ($res) {
-				array_push($LOG, "Установка плагина <b>".$pName."</b> ... OK");
+				array_push($LOG, $lang['msg.plugin.installation']." <b>".$pName."</b> ... OK");
 			} else {
-				array_push($ERROR, "Установка плагина <b>".$pName."</b> ... ERROR");
+				array_push($ERROR, $lang['msg.plugin.installation']." <b>".$pName."</b> ... ERROR");
 				$error = 1;
 				break;
 			}
 		}
-		array_push($LOG, "Активация плагина <b>".$pName."</b> ... ".(pluginSwitch($pName, 'on')?'OK':'ERROR'));
+		array_push($LOG, $lang['msg.plugin.activation']." <b>".$pName."</b> ... ".(pluginSwitch($pName, 'on')?'OK':'ERROR'));
 	}
 
 	print '<div class="body"><p style="width: 99%;">';
 	foreach ($LOG as $line) { print $line."<br />\n"; }
 	if ($error) {
 		foreach ($ERROR as $errText) {
-			print '<div class="errorDiv"><b><u>Ошибка</u>!</b><br/>'.$errText.'</div>';
+			print '<div class="errorDiv"><b><u>'.$lang['msg.error'].'</u>!</b><br/>'.$errText.'</div>';
 		}
 
-		print '<div class="warningDiv">Неожиданная ошибка установки. Пожалуйста, обратитесь к разработчикам</div>';
+		print '<div class="warningDiv">'.$lang['msg.errorInfo'].'</div>';
 	} else {
-		print '<br/><br/><b>Установка успешно заверешена!</b><br/>Для проведения дальнейших настроек перейдите, пожалуйста, <a href="'.$homeURL.$adminDirName.'/">по этой ссылке</a>.';
+		print $lang['msg.complete1'].', <a href="'.$homeURL.$adminDirName.'/">'.$lang['msg.complete2'].'</a>.';
 	}
 	print '</p></div>';
 }
@@ -147,7 +158,7 @@ function doWelcome() {
  // Load license
  $license = @file_get_contents(root.'../license.html');
  if (!$license) {
- 	$license = '<b>Ошибка!</b><br/>Не удалось загрузить лицензионный файл!';
+ 	$license = $lang['msg.nolicense'];
  	$tvars['vars']['ad'] = 'disabled="disabled" ';
  } else {
  	$tvars['vars']['ad'] = '';
@@ -186,7 +197,7 @@ function doConfig() {
 }
 
 function doConfig_db($check) {
-        global $tvars, $tpl, $templateDir, $SQL_VERSION;
+        global $tvars, $tpl, $templateDir, $SQL_VERSION, $lang;
 
         $myparams = array('action', 'stage', 'reg_dbhost', 'reg_dbname', 'reg_dbuser', 'reg_dbpass', 'reg_dbprefix', 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass');
         $DEFAULT = array( 'reg_dbhost' => 'localhost', 'reg_dbprefix' => 'ng' );
@@ -203,7 +214,7 @@ function doConfig_db($check) {
     	$error = 0;
     	foreach (array('reg_dbhost', 'reg_dbname', 'reg_dbuser') as $k) {
     		if (!strlen($_POST[$k])) {
-    			$tvars['vars']['err:'.$k] = '<font color="red">НЕОБХОДИМО ЗАПОЛНИТЬ</font>';
+    			$tvars['vars']['err:'.$k] = $lang['error.notfilled'];
     			$error++;
     		}
 		}
@@ -213,7 +224,7 @@ function doConfig_db($check) {
 		if ($_POST['reg_autocreate']) {
 			// Check for user filled
 			if (!strlen($_POST['reg_dbadminuser'])) {
-				$tvars['vars']['err:reg_dbadminuser'] = '<font color="red">При выборе режима `автосоздание...` Вам необходимо заполнить это поле</font>';
+				$tvars['vars']['err:reg_dbadminuser'] = '<font color="red">'.$lang['err.reg_dbadminuser'].'</font>';
 				$error++;
 			}
 			$ac = 1;
@@ -222,14 +233,14 @@ function doConfig_db($check) {
 		// Try to connect
 		if (!$error) {
 			if (($link = @mysql_connect($_POST['reg_dbhost'], $_POST['reg_db'.($ac?'admin':'').'user'], $_POST['reg_db'.($ac?'admin':'').'pass'])) === FALSE) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">Ошибка подключения к серверу БД "'.$_POST['reg_dbhost'].'":<br/> ('.mysql_errno().') '.mysql_error().'</div>';
+				$tvars['vars']['error_message'] = '<div class="errorDiv">'.$lang['error.dbconnect'].' "'.$_POST['reg_dbhost'].'":<br/> ('.mysql_errno().') '.mysql_error().'</div>';
 				$error = 1;
 			}
 		}
 		// Try to fetch SQL version
 		if (!$error) {
 			if (($sqlf = @mysql_query("show variables like 'version'", $link)) === FALSE) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">Ошибка определения версии сервера БД "'.$_POST['reg_dbhost'].'":<br/> ('.mysql_errno().') '.mysql_error().'</div>';
+				$tvars['vars']['error_message'] = '<div class="errorDiv">'.$lang['err.dbversion'].' "'.$_POST['reg_dbhost'].'":<br/> ('.mysql_errno().') '.mysql_error().'</div>';
 				$error = 1;
 			} else {
 				$sqlr = mysql_fetch_array($sqlf);
@@ -269,7 +280,7 @@ function doConfig_db($check) {
 
 
 function doConfig_perm() {
-        global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $SQL_VERSION;
+        global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $SQL_VERSION, $lang;
 	$tvars['vars']['menu_perm'] = ' class="hover"';
 	printHeader();
 
@@ -284,7 +295,7 @@ function doConfig_perm() {
 		$adminDirName.'/cache/', $adminDirName.'/conf/');
 	foreach ($permList as $dir) {
 		$perms = (($x=@fileperms($installDir.'/'.$dir))===FALSE)?'n/a':(decoct($x) % 1000);
-		$chmod .= '<tr><td>./'.$dir.'</td><td>'.$perms.'</td><td>'.(is_writable($installDir.'/'.$dir)?'Разрешен':'<font color="red"><b>Нет доступа</b></font>').'</td></tr>';
+		$chmod .= '<tr><td>./'.$dir.'</td><td>'.$perms.'</td><td>'.(is_writable($installDir.'/'.$dir)?$lang['perm.access.on']:'<font color="red"><b>'.$lang['perm.access.off'].'</b></font>').'</td></tr>';
 		if (!is_writable($installDir.'/'.$dir))
 			$error++;
 	}
@@ -292,7 +303,7 @@ function doConfig_perm() {
 	$tvars['vars']['chmod'] = $chmod;
 
 	// PHP Version
-	if (version_compare(phpversion(), '4.3.2') < 0) {
+	if (version_compare(phpversion(), '5.2') < 0) {
 		$tvars['vars']['php_version'] = '<font color="red">'.phpversion().'</font>';
 		$error = 1;
 	} else {
@@ -314,25 +325,25 @@ function doConfig_perm() {
 
 	// GZIP support
 	if (extension_loaded('zlib') && function_exists('ob_gzhandler')) {
-		$tvars['vars']['gzip'] = 'Да';
+		$tvars['vars']['gzip'] = $lang['perm.yes'];
 	} else {
-		$tvars['vars']['gzip'] = '<font color="red">Нет</font>';
+		$tvars['vars']['gzip'] = '<font color="red">'.$lang['perm.no'].'</font>';
 		$error = 1;
 	}
 
 	// XML support
 	if (function_exists('xml_parser_create')) {
-		$tvars['vars']['xml'] = 'Да';
+		$tvars['vars']['xml'] = $lang['perm.yes'];
 	} else {
-		$tvars['vars']['xml'] = '<font color="red">Нет</font>';
+		$tvars['vars']['xml'] = '<font color="red">'.$lang['perm.no'].'</font>';
 		$error = 1;
 	}
 
 	// GD support
 	if (function_exists('imagecreatetruecolor')) {
-		$tvars['vars']['gdlib'] = 'Да';
+		$tvars['vars']['gdlib'] = $lang['perm.yes'];
 	} else {
-		$tvars['vars']['gdlib'] = '<font color="red">Нет</font>';
+		$tvars['vars']['gdlib'] = '<font color="red">'.$lang['perm.no'].'</font>';
 		$error = 1;
 	}
 
@@ -343,20 +354,20 @@ function doConfig_perm() {
 
 	// * flags that should be turned off
 	foreach (array('register_globals', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase') as $flag) {
-		$tvars['vars']['flag:'.$flag]     = ini_get($flag)?'<font color="red">Включено</font>':'Отключено';
+		$tvars['vars']['flag:'.$flag]     = ini_get($flag)?'<font color="red">'.$lang['perm.php.on'].'</font>':$lang['perm.php.off'];
 		if (ini_get($flag)) { $warning++; }
 	}
 	// * flags that should be turned on
 	foreach (array('allow_call_time_pass_reference') as $flag) {
-		$tvars['vars']['flag:'.$flag]     = ini_get($flag)?'Включено':'<font color="red">Отключено</font>';
+		$tvars['vars']['flag:'.$flag]     = ini_get($flag)?$lang['perm.php.on']:'<font color="red">'.$lang['perm.php.off'].'</font>';
 		if (!ini_get($flag)) { $warning++; }
 	}
 
 	if ($error) {
-		$tvars['vars']['error_message'] .= '<div class="errorDiv"><b><u>Ошибка</u>!</b><br/>Ваш хостинг не соответствует минимальным требованиям системы.<br/>Вы можете продолжить инсталляцию на свой страх и риск, но следует учитывать, что велика вероятность неверной работы. Попробуйте изменить настройки Вашего хостинга или сменить хостинг-провайдера.</div>';
+		$tvars['vars']['error_message'] .= '<div class="errorDiv">'.$lang['perm.error'].'</div>';
 	}
 	if ($warning) {
-		$tvars['vars']['error_message'] .= '<div class="warningDiv"><b><u>Внимание</u>!</b><br/>Некоторые настройки Вашего хостинг-провайдера отличаются от рекомендованных.<br/>Система сможет самостоятельно решить проблемы, но эффективность работы будет снижена.<br/>Рекомендуем по возможности установить параметры в соответствии с требованиями системы.</div>';
+		$tvars['vars']['error_message'] .= '<div class="warningDiv">'.$lang['perm.warning'].'</div>';
 	}
 
 	$tvars['regx']["'\[error_button\](.*?)\[/error_button\]'si"] = ($error || $warning)?'$1':'';
@@ -518,7 +529,7 @@ function doConfig_templates() {
 }
 
 function doConfig_common() {
-        global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $SQL_VERSION, $homeURL;
+        global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $SQL_VERSION, $homeURL, $lang;
 	$tvars['vars']['menu_common'] = ' class="hover"';
 	printHeader();
 
@@ -532,7 +543,7 @@ function doConfig_common() {
 
 	// Preconfigure some paratemers
 	if (!isset($_POST['home_url']))		$_POST['home_url'] = $homeURL;
-	if (!isset($_POST['home_title']))	$_POST['home_title'] = 'Заголовок вашего сайта';
+	if (!isset($_POST['home_title']))	$_POST['home_title'] = $lang['common.title.default'];
 
 	foreach (array('admin_login', 'admin_password', 'admin_email', 'home_url', 'home_title') as $k) {
 		$tvars['vars'][$k] = isset($_POST[$k])?htmlspecialchars($_POST[$k]):'';
@@ -571,11 +582,11 @@ function doInstall() {
 		// Stage #01 - Try to create config files
 		foreach ( array('config.php', 'plugins.php', 'plugdata.php') as $k) {
 			if (($frec[$k] = fopen(confroot.$k, 'w')) == NULL) {
-				array_push($ERROR, 'Не удалось создать конфигурационный файл <b>'.$k.'</b><br/>Возможно этот файл уже существует (в этом случае Вам необходимо его удалить) или скрипту не хватает прав доступа.');
+				array_push($ERROR, $lang['err.createconfig1'].' <b>'.$k.'</b><br/>'.$lang['err.createconfig2']);
 				$error = 1;
 				break;
 			}
-			array_push($LOG, 'Создание файла "<b>'.$k.'</b>" ... OK');
+			array_push($LOG, $lang['msg.fcreating'].' "<b>'.$k.'</b>" ... OK');
 		}
 		array_push($LOG, '');
 

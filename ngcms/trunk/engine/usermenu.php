@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: usermenu.php
 // Description: user's menu on the site
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -25,7 +25,7 @@ $conversionConfigRegex = array(
 		"#\[is-logged\](.*?)\[/is-logged\]#si"			=> '{% if (flags.isLogged) %}$1{% endif %}',
 		"#\[login-err\](.*?)\[/login-err\]#si"			=> '{% if (flags.loginError) %}$1{% endif %}',
 		"#\[if-have-perm\](.*?)\[/if-have-perm\]#si"	=> "{% if (global.flags.isLogged and (user['status'] <= 3)) %}$1{% endif %}",
-		"#\{l_([0-9a-zA-Z\-\_\.]+)}#"					=> "{{ lang['$1'] }}",
+//		"#\{l_([0-9a-zA-Z\-\_\.\#]+)}#"					=> "{{ lang['$1'] }}",
 );
 
 // Prepare conversion table

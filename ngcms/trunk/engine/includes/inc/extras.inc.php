@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: extras.inc.php
 // Description: NGCMS extras managment functions
 // Author: Vitaly Ponomarev
@@ -921,8 +921,8 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip, $handlerParams) {
 	global $PPAGES, $lang, $CurrentHandler;
 
-	//print "## PLUGIN CALL: <b> (".$pluginName.")</b><br/>\n";
-	//print "<pre>".var_export($params, tru)."</pre><br/>\n";
+	//print "## PLUGIN CALL: <b> (".$pluginName.", ".$handlerName.")</b><br/>\n";
+	//print "<pre>".var_export($params, true)."</pre><br/>\n";
 
 	// Check for predefined plugins call
 	switch ($pluginName) {
@@ -983,6 +983,11 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip, $hand
 				case 'login':
 					include_once root.'cmodules.php';
 					coreLogin();
+					break;
+
+				case 'addnews':
+					include_once root.'cmodules.php';
+					coreAddNews();
 					break;
 
 				case 'logout':

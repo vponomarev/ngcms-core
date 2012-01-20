@@ -12,6 +12,13 @@ $ULIB->loadConfig();
 $UHANDLER = new urlHandler();
 $UHANDLER->loadConfig();
 
+$ULIB->registerCommand('core', 'addnews',
+		array ('vars' => array(),
+				'descr'	=> array ('russian' => 'Добавление новости (с сайта)'),
+		)
+);
+
+/*
 
 $ULIB->registerCommand('core', 'plugin',
 		array ('vars' =>
@@ -186,7 +193,7 @@ $ULIB->registerCommand('search', '',
 				'descr'	=> array ('russian' => 'Страница поиска'),
 		)
 );
-
+*/
 
 // ---------------------------------
 /*

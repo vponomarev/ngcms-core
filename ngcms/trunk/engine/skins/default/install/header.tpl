@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru" dir="ltr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-<title>Установка Next Generation CMS</title>
+<title>{l_header.title}</title>
 <link href="{templateURL}/style.css" rel="stylesheet" type="text/css" media="screen" />
 <style type="text/css">
 .mainMenu { padding: 0px; margin: 0px; font-size: 12px; margin-bottom: 10px; }
@@ -37,17 +37,17 @@ h1 { padding: 0px; margin: 0px; margin-left: 5px; padding-bottom: 10px; font-siz
 <body>
 <script type="text/javascript" src="includes/js/functions.js"></script>
 <script type="text/javascript" src="includes/js/ajax.js"></script>
-<div class="header" align="center">Установка <u>N</u>ext <u>G</u>eneration <b>CMS</b></div>
+<div class="header" align="center">{l_header.headtitle}</div>
 <br />
 <table width="100%" border="0" class="mainMenu" cellspacing="0" cellpadding="0">
 <tr>
-<td width="80"{menu_begin}>Начало</td>
-<td width="80"{menu_db}>Настройка БД</td>
-<td width="80"{menu_perm}>Проверка доступов</td>
-<td width="80"{menu_plugins}>Активация плагинов</td>
-<td width="80"{menu_template}>Выбор шаблона</td>
-<td width="80"{menu_common}>Общие параметры</td>
-<td width="80"{menu_install}>Установка</td>
+<td width="80"{menu_begin}>{l_header.menu.begin}</td>
+<td width="80"{menu_db}>{l_header.menu.db}</td>
+<td width="80"{menu_perm}>{l_header.menu.perm}</td>
+<td width="80"{menu_plugins}>{l_header.menu.plugins}</td>
+<td width="80"{menu_template}>{l_header.menu.template}</td>
+<td width="80"{menu_common}>{l_header.menu.common}</td>
+<td width="80"{menu_install}>{l_header.menu.install}</td>
 
 </tr>
 </table>

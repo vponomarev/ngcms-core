@@ -262,6 +262,10 @@ function addNews($mode = array()){
 		$mode['onsite'] = false;
 	}
 
+	// Load required library
+	@include_once root.'includes/classes/upload.class.php';
+
+
 	// Load permissions
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
 		'add',
