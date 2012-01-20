@@ -285,6 +285,7 @@ function addNews($mode = array()){
 		'personal.html',
 		'personal.mainpage',
 		'personal.pinned',
+		'personal.catpinned',
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
@@ -400,12 +401,13 @@ function addNews($mode = array()){
 		$SQL['flags']	=	0;
 	}
 
-	// This functions are not available in onsite mode
-	if (!$mode['onsite']) {
+//	// This functions are not available in onsite mode
+//	if (!$mode['onsite']) {
 		$SQL['mainpage']	= intval($_REQUEST['mainpage']) && $perm['personal.mainpage'];
 		$SQL['favorite']	= intval($_REQUEST['favorite']) && $perm['personal.favorite'];
 		$SQL['pinned']		= intval($_REQUEST['pinned']) && $perm['personal.pinned'];
-	}
+		$SQL['catpinned']	= intval($_REQUEST['catpinned']) && $perm['personal.catpinned'];
+//	}
 
 	switch (intval($_REQUEST['approve'])) {
 		case -1:	$SQL['approve'] = -1;								break;
