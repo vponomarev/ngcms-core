@@ -23,6 +23,7 @@ function compatRedirector() {
 					$link = checkLinkAvailable('static', '')?
 								generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id']), array(), false, true):
 								generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']), false, true);
+					header('HTTP/1.1 301 Moved permanently');
 					header("Location: ".$link);
 					exit;
 				}
@@ -37,6 +38,7 @@ function compatRedirector() {
 					$link = checkLinkAvailable('uprofile', 'show')?
 												generateLink('uprofile', 'show', array('name' => $row['name'], 'id' => $row['id'])):
 												generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['name'], 'id' => $row['id']));
+					header('HTTP/1.1 301 Moved permanently');
 					header("Location: ".$link);
 					exit;
 				}
@@ -51,9 +53,11 @@ function compatRedirector() {
 			if ($nrow = $mysql->record("select * from ".prefix."_news where alt_name=".db_squote($_GET['altname']))) {
 				$link = newsGenerateLink($nrow, false, 0, true);
 				//print "Redirect: ".$link;
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".$link);
 			} else {
 				//print "Unknown news";
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".home);
 			}
 			exit;
@@ -62,9 +66,11 @@ function compatRedirector() {
 			if ($nrow = $mysql->record("select * from ".prefix."_news where id=".db_squote($_GET['id']))) {
 				$link = newsGenerateLink($nrow, false, 0, true);
 				//print "Redirect: ".$link;
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".$link);
 			} else {
 				//print "Unknown news";
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".home);
 			}
 			exit;
@@ -78,9 +84,11 @@ function compatRedirector() {
 
 				$link = generateLink('news', 'by.category', $params);
 				//print "Redirect: ".$link;
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".$link);
 			} else {
 				//print "Unknown category";
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".home);
 			}
 			exit;
@@ -93,6 +101,7 @@ function compatRedirector() {
 
 				$link = generateLink('news', 'by.day', $params);
 				//print "Redirect: ".$link;
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".$link);
 				exit;
 			}
@@ -103,6 +112,7 @@ function compatRedirector() {
 
 				$link = generateLink('news', 'by.month', $params);
 				//print "Redirect: ".$link;
+				header('HTTP/1.1 301 Moved permanently');
 				header("Location: ".$link);
 				exit;
 			}
@@ -113,6 +123,7 @@ function compatRedirector() {
 
 			$link = generateLink('news', 'by.year', $params);
 			//print "Redirect: ".$link;
+			header('HTTP/1.1 301 Moved permanently');
 			header("Location: ".$link);
 			exit;
 		} else if (isset($_GET['cstart'])) {
@@ -120,6 +131,7 @@ function compatRedirector() {
 
 			$link = generateLink('news', 'main', $params);
 
+			header('HTTP/1.1 301 Moved permanently');
 			header("Location: ".$link);
 			exit;
 		}
