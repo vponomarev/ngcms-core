@@ -30,6 +30,7 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
         $this->setPaths($paths);
 	$this->templateConversion = array();
 	$this->templateConversionRegex = array();
+	$this->templateOptions = array();
     }
 
     /**
@@ -87,6 +88,34 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
 		// Get content
         $content = file_get_contents($this->findTemplate($name));
 
+	// Process BASIC conversion
+	if (!isset($this->templateOptions[$name]) || !is_array($this->templateOptions[$name]) || isset($this->templateOptions[$name]) || (!$this->templateOptions[$name]['nobasic'])) {
+		// Enabled
+		// - static conversion
+		$content = preg_replace(
+			array(
+				"#\{l_([0-9a-zA-Z\-\_\.\#]+)}#",
+			),
+			array(
+				"{{ lang['$1'] }}",
+			),
+			$content);
+
+		// - dynamic conversion
+		// -- [isplugin] + [isnplugin]
+		$content = preg_replace_callback(
+			"#\[is(n){0,1}plugin (.+?)\](.+?)\[\/isplugin\]#is",
+			create_function('$m','return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";'),
+			$content);
+
+		// -- [ifhander:<Plugin>] + [ifhandler:<Plugin>:<Handler>] + [ifnhander:<Plugin>] + [ifnhandler:<Plugin>:<Handler>]
+		$content = preg_replace_callback(
+			"#\[if(n){0,1}handler (.+?)\](.+?)\[\/if(n){0,1}handler\]#is",
+			create_function('$m','return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";'),
+			$content);
+
+	}
+
     	// Process REGEX conversion
 		if (isset($this->templateConversionRegex[$name]) && is_array($this->templateConversionRegex[$name])) {
 			$tconv = $this->templateConversionRegex[$name];
@@ -101,9 +130,10 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
 		return $content;
     }
 
-	public function setConversion($name, $variables, $regexp = array()) {
-		$this->templateConversion[$name] = $variables;
-		$this->templateConversionRegex[$name] = $regexp;
+	public function setConversion($name, $variables, $regexp = array(), $options = array()) {
+		$this->templateConversion[$name]		= $variables;
+		$this->templateConversionRegex[$name]	= $regexp;
+		$this->templateOptions[$name]			= $options;
 		return true;
 	}
 
