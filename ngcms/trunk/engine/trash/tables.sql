@@ -186,7 +186,6 @@ CREATE TABLE `XPREFIX_news` (
   KEY `news_title` (`title`),
   KEY `news_postdate` (`postdate`),
   KEY `news_editdate` (`editdate`),
-  KEY `news_catid` (`catid`),
   KEY `news_view` (`views`),
   KEY `news_archive` (`favorite`, `approve`),
   KEY `news_main` (`pinned`,`postdate`,`approve`,`mainpage`),
