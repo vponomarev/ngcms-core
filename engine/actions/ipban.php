@@ -59,7 +59,7 @@ function ipban_add() {
 		// Check mask
 		$lbmask = decbin($lmask);
 		if (!preg_match('#^1+0+$#', $lbmask, $null)) {
-			msg(array("type" => "error", "text" => $lang['msge.fields'], "info" => $lang['msgi.fields']));
+			msg(array("type" => "error", "text" => $lang['ipban']['msge.mask'], "info" => $lang['ipban']['msge.mask#desc']));
 			return;
 		}
 
@@ -67,6 +67,7 @@ function ipban_add() {
 		$addr_stop  = $laddr | (~$lmask);
 		$net_len	= $addr_stop-$addr_start;
 	}
+
 	if ($result) {
 			// OK. Check if record already exists
 			if (is_array($mysql->record("select addr from ".prefix."_ipban where addr_start=".db_squote(sprintf("%u", $addr_start))." and addr_stop=".db_squote(sprintf("%u", $addr_stop))))) {
@@ -122,9 +123,9 @@ function ipban_list() {
 	global $mysql, $lang, $mod, $twig;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'list')) {
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'view')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
-		ngSYSLOG(array('plugin' => '#admin', 'item' => 'ipban'), array('action' => 'list'), null, array(0, 'SECURITY.PERM'));
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'ipban'), array('action' => 'view'), null, array(0, 'SECURITY.PERM'));
 		return false;
 	}
 
@@ -163,6 +164,9 @@ function ipban_list() {
 		'entries'	=> $xEntries,
 		'iplock'	=> $_REQUEST['iplock'],
 		'token'		=>	genUToken('admin.ipban'),
+		'flags'		=>	array(
+			'permModify' => checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'modify')?true:false,
+		),
 	);
 
 	$xt = $twig->loadTemplate('skins/default/tpl/ipban.tpl');

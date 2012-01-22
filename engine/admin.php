@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
 // Name: admin.php
 // Description: administration panel
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -101,22 +101,22 @@ load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = array(
-	'configuration'		=>	'1',
+	'configuration'	=>	'1',
 	'dbo'			=>	'1',
 	'extras'		=>	'1',
-	'extra-config'		=>	'1',
-	'statistics'		=>	'1',
+	'extra-config'	=>	'1',
+	'statistics'	=>	'1',
 	'templates'		=>	'1',
 	'users'			=>	'1',
 	'rewrite'		=>	'1',
 	'static'		=>	'1',
 
-	'editcomments'		=>	'2',
-	'ipban'			=>	'2',
+	'editcomments'	=>	'2',
+	'ipban'			=>	99,
 	'options'		=>	'2',
 
-	'categories'		=>	'2',
-	'news'			=>	'3',
+	'categories'	=>	99,
+	'news'			=>	99,
 
 	'files'			=>	'3',
 	'images'		=>	'3',
