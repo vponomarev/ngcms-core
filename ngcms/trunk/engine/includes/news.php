@@ -784,7 +784,20 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => array('day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.day'), 'xparams' => array('day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year), 'paginator' => array('page', 1, false));
 
-			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
+			// Use extended return mode
+			$callingParams['extendedReturn'] = true;
+			$output = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
+
+			// Check if there're output data
+			if ($output['count'] > 0) {
+				$template['vars']['mainblock'] .= $output['data'];
+			} else {
+				// No data, stop execution
+				if (!$params['FFC']) {
+					error404();
+				}
+				return false;
+			}
 			break;
 
 		case 'by.month':
@@ -799,7 +812,20 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => array('month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.month'), 'xparams' => array('month' => sprintf('%02u', $month), 'year' => $year), 'paginator' => array('page', 1, false));
 
-			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
+			// Use extended return mode
+			$callingParams['extendedReturn'] = true;
+			$output = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
+
+			// Check if there're output data
+			if ($output['count'] > 0) {
+				$template['vars']['mainblock'] .= $output['data'];
+			} else {
+				// No data, stop execution
+				if (!$params['FFC']) {
+					error404();
+				}
+				return false;
+			}
 			break;
 
 		case 'by.year':
@@ -813,7 +839,20 @@ function showNews($handlerName, $params) {
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.year', 'params' => array('year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
 		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.year'), 'xparams' => array('year' => $year), 'paginator' => array('page', 1, false));
 
-			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,1,1,$year), mktime(23,59,59,12,31,$year))), $paginationParams, $callingParams);
+			// Use extended return mode
+			$callingParams['extendedReturn'] = true;
+			$output = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,1,1,$year), mktime(23,59,59,12,31,$year))), $paginationParams, $callingParams);
+
+			// Check if there're output data
+			if ($output['count'] > 0) {
+				$template['vars']['mainblock'] .= $output['data'];
+			} else {
+				// No data, stop execution
+				if (!$params['FFC']) {
+					error404();
+				}
+				return false;
+			}
 			break;
 	}
 
