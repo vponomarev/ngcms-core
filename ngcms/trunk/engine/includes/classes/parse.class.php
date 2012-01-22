@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: parse.class.php
 // Description: Parsing and formatting routines
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -458,7 +458,7 @@ class parse {
 		$content = str_replace(array(' - '), array('-'), $content);
 		$content = preg_replace("/\s+/ms", "-", $content);
 		$content = preg_replace("/[ ]+/", "-", $content);
-print "translit([".$content."]) call [$allowSlash]<br/>\n";
+
 		$content = preg_replace("/[^a-z0-9_\-\.".($allowSlash?'\/':'')."]+/mi", "", $content);
 		$content = preg_replace("#-(-)+#", "-", $content);
 
