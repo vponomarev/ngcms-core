@@ -482,22 +482,22 @@ function addNews($mode = array()){
 					// ... show error message ...
 				}
 			}
-
-		// Update attach count if we need this
-		$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-		if ($numFiles) {
-			$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
-		}
-
-		$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
-		if ($numImages) {
-			$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
-		}
 	}
 
 	// Notify plugins about adding new news
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) { $v->addNewsNotify($tvars, $SQL, $id); }
+
+	// Update attach count if we need this
+	$numFiles = $mysql->result("select count(*) as cnt from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+	if ($numFiles) {
+		$mysql->query("update ".prefix."_news set num_files = ".intval($numFiles)." where id = ".db_squote($id));
+	}
+
+	$numImages = $mysql->result("select count(*) as cnt from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($id).")");
+	if ($numImages) {
+		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
+	}
 
 	exec_acts('addnews_', $id);
 	msg(array("text" => $lang['addnews']['msgo_added'], "info" => sprintf($lang['addnews']['msgi_added'], admin_url.'/admin.php?mod=news&action=edit&id='.$id, admin_url.'/admin.php?mod=news')));
