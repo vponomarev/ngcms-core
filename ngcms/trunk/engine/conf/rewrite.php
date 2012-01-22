@@ -376,7 +376,7 @@ $handlerList = array (
         ),
         1 => 
         array (
-          0 => 1,
+          0 => 2,
           1 => 'altname',
           2 => 0,
         ),

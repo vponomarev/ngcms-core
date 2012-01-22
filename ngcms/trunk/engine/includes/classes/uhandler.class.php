@@ -300,7 +300,7 @@ class urlHandler {
 				case '1':	if ($rcmd[$pos] == '}') {
 								// End of the variable
 								$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-								$genmap[] = array(1, $text, $variative);
+								$genmap[] = array($cmd['vars'][$text]['isSecure']?2:1, $text, $variative);
 								$dataStartPos = $pos+1;
 								$state = 0;
 								break;
@@ -641,7 +641,11 @@ class urlHandler {
 		$url = array();
 		foreach ($hRec['rstyle']['genrMAP'] as $rec) {
 			if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
-				$url[] = $rec[0]?urlencode($params[$rec[1]]):$rec[1];
+				switch ($rec[0]) {
+					case 0:	$url[] = $rec[1]; break;
+					case 1: $url[] = urlencode($params[$rec[1]]); break;
+					case 2: $url[] = $params[$rec[1]]; break;
+				}
 			}
 		}
 
