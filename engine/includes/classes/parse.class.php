@@ -455,7 +455,7 @@ class parse {
 		$content = strtr($content, $utf2enS);
 		$content = strtr($content, $utf2enB);
 
-		$content = str_replace(array(' - ', '_'), array('-', '-'), $content);
+		$content = str_replace(array(' - '), array('-'), $content);
 		$content = preg_replace("/\s+/ms", "-", $content);
 		$content = preg_replace("/[ ]+/", "-", $content);
 
