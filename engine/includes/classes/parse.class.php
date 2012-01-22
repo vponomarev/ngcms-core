@@ -445,7 +445,7 @@ class parse {
 		return preg_match('#^[a-z0-9\_\-\.]+$#mi', $name);
 	}
 
-	function translit($content, $allowDash = 0) {
+	function translit($content, $allowDash = 0, $allowSlash = 0) {
 		// $allowDash is not used any more
 
 		$utf2enS = array('À' => 'a', 'Á' => 'b', 'Â' => 'v', 'Ã' => 'g', '¥' => 'g', 'Ä' => 'd', 'Å' => 'e', '¨' => 'jo', 'ª' => 'e', 'Æ' => 'zh', 'Ç' => 'z', 'È' => 'i', '²' => 'i', 'É' => 'i', '¯' => 'i', 'Ê' => 'k', 'Ë' => 'l', 'Ì' => 'm', 'Í' => 'n', 'Î' => 'o', 'Ï' => 'p', 'Ð' => 'r', 'Ñ' => 's', 'Ò' => 't', 'Ó' => 'u', '¡' => 'u', 'Ô' => 'f', 'Õ' => 'h', 'Ö' => 'c', '×' => 'ch', 'Ø' => 'sh', 'Ù' => 'sz', 'Ú' => '', 'Û' => 'y', 'Ü' => '', 'Ý' => 'e', 'Þ' => 'yu', 'ß' => 'ya');
@@ -458,8 +458,8 @@ class parse {
 		$content = str_replace(array(' - '), array('-'), $content);
 		$content = preg_replace("/\s+/ms", "-", $content);
 		$content = preg_replace("/[ ]+/", "-", $content);
-
-		$content = preg_replace("/[^a-z0-9_\-\.]+/mi", "", $content);
+print "translit([".$content."]) call [$allowSlash]<br/>\n";
+		$content = preg_replace("/[^a-z0-9_\-\.".($allowSlash?'\/':'')."]+/mi", "", $content);
 		$content = preg_replace("#-(-)+#", "-", $content);
 
 		return $content;

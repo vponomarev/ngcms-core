@@ -522,6 +522,7 @@ $urlLibrary = array (
       array (
         'altname' => 
         array (
+          'isSecure' => 1,
           'matchRegex' => '.+?',
           'descr' => 
           array (

@@ -316,7 +316,7 @@ function addStatic(){
 	$content = $_REQUEST['content'];
 	$content = str_replace("\r\n", "\n", $content);
 
-	$alt_name = strtolower($parse->translit( trim($_REQUEST['alt_name']),1));
+	$alt_name = strtolower($parse->translit( trim($_REQUEST['alt_name']),1, 1));
 
 
 	if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
@@ -508,7 +508,7 @@ function editStatic(){
 	$id			=	intval($_REQUEST['id']);
 	$title		=	$_REQUEST['title'];
 	$content	=	$_REQUEST['content'];
-	$alt_name	=	$parse->translit(trim($_REQUEST['alt_name']),1);
+	$alt_name	=	$parse->translit(trim($_REQUEST['alt_name']),1, 1);
 
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_static where id=".db_squote($id)))) {
