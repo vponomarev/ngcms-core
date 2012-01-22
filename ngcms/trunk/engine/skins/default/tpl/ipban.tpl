@@ -4,7 +4,7 @@
 <td width="66%" style="padding-right:10px;" valign="top">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" /><a href="admin.php?mod=ipban">{{ lang.ipban['hdr.list'] }}</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" /><a href="admin.php?mod=ipban">{{ lang.ipban['hdr.list'] }}</a></td>
 </tr>
 
 <tr align="left" class="contHead">
@@ -20,7 +20,7 @@
 <td class=contentEntry1>{{ entry.hitcount }}</td>
 <td class=contentEntry1>{{ entry.type }}</td>
 <td class=contentEntry1>{{ entry.descr }}</td>
-<td class=contentEntry1><a href="{{ php_self }}?mod=ipban&amp;action=del&amp;id={{ entry.id }}&amp;token={{ token }}"><img src="{{skins_url}}/images/delete.gif" hspace="8" alt="{{ lang.ipban['act.unblock'] }}" title="{{ lang.ipban['act.unblock'] }}" /></a></td>
+<td class=contentEntry1>{% if flags.permModify %}<a href="{{ php_self }}?mod=ipban&amp;action=del&amp;id={{ entry.id }}&amp;token={{ token }}"><img src="{{skins_url}}/images/delete.gif" hspace="8" alt="{{ lang.ipban['act.unblock'] }}" title="{{ lang.ipban['act.unblock'] }}" /></a>{% endif %}</td>
 </tr>
 {% endfor %}
 
@@ -28,6 +28,7 @@
 </table>
 </td>
 <td width="33%" style="padding-left:5px;" valign="top">
+{% if flags.permModify %}
 <form name="form" method="post" action="{{php_self}}?mod=ipban">
 <input type="hidden" name="token" value="{{token}}"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -48,6 +49,7 @@
 </tr>
 </table>
 </form>
+{% endif %}
 </td>
 </tr>
 </table>
