@@ -57,13 +57,21 @@ function listStatic() {
 		return;
 	}
 
+	// Load admin page based cookies
+	$admCookie = admcookie_get();
+
 	// Determine user's permissions
 	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify');
 	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'details');
 
 
-	$per_page	= intval($_REQUEST['per_page']);
+	$per_page	= isset($_REQUEST['per_page'])?intval($_REQUEST['per_page']):intval($admCookie['static']['pp']);
 	if (($per_page < 2)||($per_page > 500)) $per_page = 20;
+
+	// - Save into cookies current value
+	$admCookie['static']['pp'] = $per_page;
+	admcookie_set($admCookie);
+
 
 	$pageNo		= intval($_REQUEST['page']);
 	if ($pageNo < 1)	$pageNo = 1;

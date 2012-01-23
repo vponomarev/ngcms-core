@@ -10,7 +10,7 @@
 // Administrative panel filters
 $AFILTERS = array();
 
-
+// Load core
 @include_once 'core.php';
 
 // Protect against hack attempts
@@ -19,6 +19,9 @@ if (!defined('NGCMS')) die ('HAL');
 @header("Cache-Control: no-store, no-cache, must-revalidate");
 @header("Cache-Control: post-check=0, pre-check=0", false);
 @header("Pragma: no-cache");
+
+// Activate output buffer
+ob_start();
 
 //define('DEBUG', 1);
 

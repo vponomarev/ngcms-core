@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: users.php
 // Description: manage users
 // Author: Vitaly Ponomarev
@@ -343,6 +343,9 @@ function userList(){
 		return;
 	}
 
+	// Load admin page based cookies
+	$admCookie = admcookie_get();
+
 	// Determine user's permissions
 	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify');
 	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'details');
@@ -354,9 +357,14 @@ function userList(){
 
 	$name = ($_REQUEST['name'] != '')?("'%".mysql_real_escape_string($_REQUEST['name'])."%'"):'';
 
-	$per_page	= intval($_REQUEST['per_page']);
+	$per_page	= isset($_REQUEST['per_page'])?intval($_REQUEST['per_page']):intval($admCookie['users']['pp']);
 	if (($per_page < 1)||($per_page > 500))
 		$per_page = 30;
+
+	// - Save into cookies current value
+	$admCookie['users']['pp'] = $per_page;
+	admcookie_set($admCookie);
+
 
 	$pageNo = intval($_REQUEST['page']);
 	if (!$pageNo)
