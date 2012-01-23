@@ -704,12 +704,13 @@ function listNewsForm() {
 	));
 
 	// Check if we have view access
-
 	if (!$perm['view'] || (!$perm['personal.list'] && !$perm['other.list'])) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
 
+	// Load admin page based cookies
+	$admCookie = admcookie_get();
 
 	// Search filters
 	$fSearchLine		= $_REQUEST['sl'];
@@ -739,9 +740,6 @@ function listNewsForm() {
 	// Status
 	$fStatus		= intval($_REQUEST['status']);
 
-	// Records Per Page
-	$fRPP			= intval($_REQUEST['rpp']);
-
 	// Sort mode
 	$fSort = '';
 	switch($_REQUEST['sort']){
@@ -765,10 +763,16 @@ function listNewsForm() {
 	}
 
 
-
-	// Set default value for `Records Per Page` parameter
+	// Records Per Page
+	// - Load
+	$fRPP			= isset($_REQUEST['rpp'])?intval($_REQUEST['rpp']):intval($admCookie['news']['pp']);
+	// - Set default value for `Records Per Page` parameter
 	if (($fRPP < 2)||($fRPP > 2000))
 		$fRPP = 20;
+
+	// - Save into cookies current value
+	$admCookie['news']['pp'] = $fRPP;
+	admcookie_set($admCookie);
 
 	// Determine requested page number
 	$pageNo		= intval($_REQUEST['page'])?$_REQUEST['page']:0;
@@ -805,7 +809,7 @@ function listNewsForm() {
 
 
 	if ($fStatus)
-		array_push($conditions, "approve = ".(($fStatus == 1)?'0':'1'));
+		array_push($conditions, "approve = ".(intval($fStatus)-2));
 
 
 	// Perform search
@@ -868,7 +872,9 @@ function listNewsForm() {
 		'rpp'			=>	$fRPP,
 		'entries'		=>	$newsEntries,
 		'sortlist'		=>	makeSortList($_REQUEST['sort']),
-		'statuslist'	=> 	'<option value="1"'.(($fStatus==1)?' selected':'').'>'.$lang['smode_unpublished'].'</option><option value="2"'.(($fStatus==2)?' selected':'').'>'.$lang['smode_published'].'</option>',
+		'statuslist'	=> 	'<option value="1"'.(($fStatus==1)?' selected':'').'>'.$lang['smode_draft'].'</option>'.
+							'<option value="2"'.(($fStatus==2)?' selected':'').'>'.$lang['smode_unpublished'].'</option>'.
+							'<option value="3"'.(($fStatus==3)?' selected':'').'>'.$lang['smode_published'].'</option>',
 		'flags'			=> array(
 			'comments'		=> getPluginStatusInstalled('comments')?true:false,
 			'allow_modify'	=> ($userROW['status'] <= 2)?true:false,

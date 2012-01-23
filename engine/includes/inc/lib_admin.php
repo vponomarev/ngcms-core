@@ -504,3 +504,15 @@ function addNews($mode = array()){
 
 	return 1;
 }
+
+function admcookie_get(){
+	if (isset($_COOKIE['ng_adm']) && is_array($x = unserialize($_COOKIE['ng_adm'])))
+		return $x;
+
+	return array();
+}
+
+function admcookie_set($x = array()) {
+	return setcookie('ng_adm', serialize($x), time() + 365*86400);
+	return setcookie('ng_adm', serialize($x), time() + 365*86400);
+}

@@ -197,14 +197,20 @@ function manage_upload($type){
 function manage_showlist($type) {
 	global $config, $mysql, $tpl, $mod, $lang, $userROW, $fmanager, $langMonths;
 
+	// Load admin page based cookies
+	$admCookie = admcookie_get();
 
 	$cstart		= abs(intval($_REQUEST['page'])?intval($_REQUEST['page']):0);
 	$start_from	= abs(intval($_REQUEST['start_from'])?intval($_REQUEST['start_from']):0);
 
 	if (!$cstart) { $cstart = 1; }
-	$npp = intval($_REQUEST['npp']);
+	$npp = isset($_REQUEST['npp'])?intval($_REQUEST['npp']):intval($admCookie[$type]['pp']);
 	if (($npp < 1)||($npp > 500))
 		$npp = 20;
+
+	// - Save into cookies current value
+	$admCookie[$type]['pp'] = $npp;
+	admcookie_set($admCookie);
 
 	if (!$start_from) $start_from = ($cstart - 1)*$npp;
 
