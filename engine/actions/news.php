@@ -735,7 +735,9 @@ function listNewsForm() {
 	}
 
 	// Category
-	$fCategoryId	= intval($_REQUEST['category']);
+	$fCategoryId	= NULL;
+	if ($_REQUEST['category'] != '')
+		$fCategoryId = intval($_REQUEST['category']);
 
 	// Status
 	$fStatus		= intval($_REQUEST['status']);
@@ -784,8 +786,10 @@ function listNewsForm() {
 	$entries_showed	=	'0';
 
 	$conditions = array();
-	if ($fCategoryId)
-		array_push($conditions, "catid regexp '[[:<:]](".intval($fCategoryId).")[[:>:]]'");
+	if (!is_null($fCategoryId)) {
+		array_push($conditions, "catid ".($fCategoryId?("regexp '[[:<:]](".intval($fCategoryId).")[[:>:]]'"):(' = ""')));
+
+	}
 
 	if ($fDateStart) {
 		array_push($conditions, "postdate >= ".intval($fDateStart));
@@ -895,7 +899,7 @@ function listNewsForm() {
 		$tVars['selectdate'] .= "<option value=\"$post_date[en]\" $ifselected>$post_date[ru]</option>";
 	}
 
-	$tVars['category_select'] = makeCategoryList(array('doall' => 1, 'selected' => $category, 'style' => 'width: 200px;'));
+	$tVars['category_select'] = makeCategoryList(array('doall' => 1, 'dowithout' => 1, 'selected' => $fCategoryId, 'style' => 'width: 200px;'));
 
 	if ($entries_showed) {
 		$tVars['pagesss'] = generateAdminPagelist(
