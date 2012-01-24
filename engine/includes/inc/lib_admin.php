@@ -290,6 +290,7 @@ function addNews($mode = array()){
 		'personal.setviews',
 		'personal.multicat',
 		'personal.customdate',
+		'personal.altname',
 	));
 
 
@@ -322,8 +323,6 @@ function addNews($mode = array()){
 	// Rewrite `\r\n` to `\n`
 	$content = str_replace("\r\n", "\n", $content);
 
-	$alt_name = $parse->translit(trim($_REQUEST['alt_name']), 1);
-
 	// Check title
 	if ((!strlen(trim($title))) || ((!strlen(trim($content))) && (!$config['news_without_content']))) {
 		msg(array("type" => "error", "text" => $lang['addnews']['msge_fields'], "info" => $lang['addnews']['msgi_fields']));
@@ -333,7 +332,10 @@ function addNews($mode = array()){
 	$SQL['title'] = $title;
 
 	// Check for dup if alt_name is specified [ alt name can't be specified during `onsite` add ]
-	if ($alt_name && (!$mode['onsite'])) {
+	$alt_name = ($perm['personal.altname'] && isset($_REQUEST['alt_name']))?$parse->translit(trim($_REQUEST['alt_name']), 1):'';
+
+
+	if ($alt_name) {
 		if ( is_array($mysql->record("select id from ".prefix."_news where alt_name = ".db_squote($alt_name)." limit 1")) ) {
 			msg(array("type" => "error", "text" => $lang['addnews']['msge_alt_name'], "info" => $lang['addnews']['msgi_alt_name']));
 			return 0;
@@ -359,7 +361,7 @@ function addNews($mode = array()){
 	}
 
 	// Custom date[ only while adding via admin panel ]
-	if ($_REQUEST['customdate'] && $perm['personal.customdate'] && (!$mode['onsite'])) {
+	if (isset($_REQUEST['customdate']) && $_REQUEST['customdate'] && $perm['personal.customdate']) {
 		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);

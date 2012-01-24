@@ -985,11 +985,6 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip, $hand
 					coreLogin();
 					break;
 
-				case 'addnews':
-					include_once root.'cmodules.php';
-					coreAddNews();
-					break;
-
 				case 'logout':
 					include_once root.'cmodules.php';
 					coreLogout();

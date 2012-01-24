@@ -31,6 +31,11 @@ form, label, input {
 margin: 0px;
 padding: 0px;
 }
+
+input:disabled {
+background : #ABCCCC url(./images/no.png) no-repeat top right;
+}
+
 legend { font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; font-size: 13px; font-weight: bold; color:#1f7ce6;}
 fieldset { border:#ccc 1px solid; margin: 0 0 15px 0;}
 #cdate input {
