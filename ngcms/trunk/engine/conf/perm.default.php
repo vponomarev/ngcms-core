@@ -29,6 +29,7 @@ $confPerm = array(
 			'personal.setviews'			=> true,
 			'personal.multicat'			=> true,
 			'personal.customdate'		=> true,
+			'personal.altname'			=> true,
 			'other.list'				=> true,
 			'other.view'				=> true,
 			'other.modify'				=> true,
@@ -45,6 +46,7 @@ $confPerm = array(
 			'other.setviews'			=> true,
 			'other.multicat'			=> true,
 			'other.customdate'			=> true,
+			'other.altname'				=> true,
 			'*'							=> true,
 		),
 		'categories'	=> array(
@@ -93,6 +95,7 @@ $confPerm = array(
 			'personal.setviews'			=> true,
 			'personal.multicat'			=> true,
 			'personal.customdate'		=> true,
+			'personal.altname'			=> true,
 			'other.list'				=> true,
 			'other.view'				=> true,
 			'other.modify'				=> true,
@@ -109,6 +112,7 @@ $confPerm = array(
 			'other.setviews'			=> true,
 			'other.multicat'			=> true,
 			'other.customdate'			=> true,
+			'other.altname'				=> true,
 			'*'							=> false,
 		),
 		'categories'	=> array(
@@ -149,6 +153,7 @@ $confPerm = array(
 			'personal.setviews'			=> false,
 			'personal.multicat'			=> true,
 			'personal.customdate'		=> false,
+			'personal.altname'			=> true,
 			'*'							=> false,
 		),
 		'categories'	=> array(
@@ -189,6 +194,7 @@ $confPerm = array(
 			'personal.setviews'			=> false,
 			'personal.multicat'			=> true,
 			'personal.customdate'		=> false,
+			'personal.altname'			=> false,
 			'*'							=> false,
 		),
 

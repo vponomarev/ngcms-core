@@ -85,11 +85,13 @@ function changeActive(name) {
 {% endif %}
 
    </tr>
+{% if not flags['altname.disabled'] %}
   <tr>
    <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
    <td>{{ lang.addnews['alt_name'] }}:</td>
    <td><input type="text" name="alt_name" value="" size="60" tabindex="3" /></td>
   </tr>
+{% endif %}
 {% if (flags.meta) %}
   <tr>
    <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>

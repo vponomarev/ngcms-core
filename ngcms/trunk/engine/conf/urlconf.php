@@ -464,16 +464,6 @@ $urlLibrary = array (
         'russian' => 'Выход с сайта',
       ),
     ),
-    'addnews' => 
-    array (
-      'vars' => 
-      array (
-      ),
-      'descr' => 
-      array (
-        'russian' => 'Добавление новости (с сайта)',
-      ),
-    ),
   ),
   'uprofile' => 
   array (

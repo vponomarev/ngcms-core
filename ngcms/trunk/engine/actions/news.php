@@ -40,6 +40,7 @@ function editNews() {
 		'personal.setviews',
 		'personal.multicat',
 		'personal.customdate',
+		'personal.altname',
 		'other.view',
 		'other.modify',
 		'other.modify.published',
@@ -54,7 +55,8 @@ function editNews() {
 		'other.favorite',
 		'other.setviews',
 		'other.multicat',
-		'other.customdate'
+		'other.customdate',
+		'other.altname',
 	));
 
 	$id			= $_REQUEST['id'];
@@ -115,40 +117,45 @@ function editNews() {
 	}
 
 	// Manage alt name
-	$alt_name	= $_REQUEST['alt_name'];
-	// Check if alt name should be generated again
-	if (trim($alt_name) == '') {
-		$alt_name = strtolower($parse->translit(trim($title), 1));
-		// Make a conversion:
-		// * '.'  to '_'
-		// * '__' to '_' (several to one)
-		// * Delete leading/finishing '_'
-		$alt_name = preg_replace(array('/\./', '/(_{2,20})/', '/^(_+)/', '/(_+)$/'), array('_', '_'), $alt_name);
+	if ($perm[$permGroupMode.'.altname'] && isset($_REQUEST['alt_name'])) {
+		$alt_name	= $_REQUEST['alt_name'];
+		// Check if alt name should be generated again
+		if (trim($alt_name) == '') {
+			$alt_name = strtolower($parse->translit(trim($title), 1));
+			// Make a conversion:
+			// * '.'  to '_'
+			// * '__' to '_' (several to one)
+			// * Delete leading/finishing '_'
+			$alt_name = preg_replace(array('/\./', '/(_{2,20})/', '/^(_+)/', '/(_+)$/'), array('_', '_'), $alt_name);
 
-		// Make alt_name equal to '_' if it appear to be blank after conversion
-		if ($alt_name == '') $alt_name = '_';
+			// Make alt_name equal to '_' if it appear to be blank after conversion
+			if ($alt_name == '') $alt_name = '_';
 
-		$i = '';
-		while ( is_array($mysql->record("select id from ".prefix."_news where alt_name = ".db_squote($alt_name.$i)." limit 1")) ) {
-			$i++;
+			$i = '';
+			while ( is_array($mysql->record("select id from ".prefix."_news where alt_name = ".db_squote($alt_name.$i)." limit 1")) ) {
+				$i++;
+			}
+			$alt_name = $alt_name.$i;
 		}
-		$alt_name = $alt_name.$i;
-	}
 
+		// Check if alt name was changed
+		if ($alt_name != $row['alt_name']) {
+			// Check for allowed chars in alt name
+			if (!$parse->nameCheck($alt_name)) {
+				msg(array("type" => "error", "text" => $lang['err.altname.wrong']));
+				return;
+			}
+		}
 
-	// Check if alt name was changed
-	if ($alt_name != $row['alt_name']) {
-		// Check for allowed chars in alt name
-		if (!$parse->nameCheck($alt_name)) {
-			msg(array("type" => "error", "text" => $lang['err.altname.wrong']));
+		// Check if we try to use duplicate alt_name
+		if (is_array($mysql->record("select * from ".prefix."_news where alt_name=".db_squote($alt_name)." and id <> ".db_squote($row['id'])." limit 1"))) {
+			msg(array("type" => "error", "text" => $lang['err.altname.dup']));
 			return;
 		}
-	}
 
-	// Check if we try to use duplicate alt_name
-	if (is_array($mysql->record("select * from ".prefix."_news where alt_name=".db_squote($alt_name)." and id <> ".db_squote($row['id'])." limit 1"))) {
-		msg(array("type" => "error", "text" => $lang['err.altname.dup']));
-		return;
+
+	} else {
+		$alt_name = $row['alt_name'];
 	}
 
 	// Generate SQL old cats list
@@ -327,6 +334,7 @@ function editNewsForm() {
 		'personal.setviews',
 		'personal.multicat',
 		'personal.customdate',
+		'personal.altname',
 		'other.view',
 		'other.modify',
 		'other.modify.published',
@@ -342,6 +350,7 @@ function editNewsForm() {
 		'other.setviews',
 		'other.multicat',
 		'other.customdate',
+		'other.altname',
 	));
 
 	// Get news id
@@ -425,6 +434,7 @@ function editNewsForm() {
 			'favorite.disabled'	=> (!$perm[$permGroupMode.'.favorite'])?true:false,
 			'setviews.disabled'	=> (!$perm[$permGroupMode.'.setviews'])?true:false,
 			'multicat.disabled'	=> (!$perm[$permGroupMode.'.multicat'])?true:false,
+			'altname.disabled'	=> (!$perm[$permGroupMode.'.altname'])?true:false,
 		)
 	);
 
@@ -1001,6 +1011,7 @@ function addNewsForm($retry = ''){
 		'personal.setviews',
 		'personal.multicat',
 		'personal.customdate',
+		'personal.altname',
 	));
 
 	// Check permissions
@@ -1034,6 +1045,7 @@ function addNewsForm($retry = ''){
 			'multicat.show'		=> $perm['personal.multicat'],
 			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
 			'can_publish'		=> $perm['personal.publish'],
+			'altname.disabled'	=> (!$perm[$permGroupMode.'.altname'])?true:false,
 		),
 	);
 
