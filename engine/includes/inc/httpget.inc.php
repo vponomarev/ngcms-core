@@ -2,7 +2,7 @@
 
 //
 // Configurable HTTP GET with timeout support
-// (c) Vitaly Ponomarev, revision: 2009.11.04
+// (c) Vitaly Ponomarev, revision: 2012.01.26
 //
 
 class http_get {
@@ -26,6 +26,7 @@ class http_get {
 	        if ((strtolower($proto) != 'get') && (strtolower($proto) != 'post')) { return false; }
 		list ($host, $port, $path) = http_get::parse_url($url);
 		if (!$host) { return ''; }
+		if (!function_exists('fsockopen')) { return false; }
 		$fp = @fsockopen($host, $port, $errno, $errstr, $timeout);
 		if (!$fp) { return false; }
 		socket_set_timeout($fp, $timeout);
