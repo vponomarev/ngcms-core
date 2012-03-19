@@ -350,6 +350,23 @@ function zzMail($to, $subject, $message, $filename = false, $mail_from = false, 
 function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from = false, $ctype = 'text/html') {
 	global $lang, $config;
 
+	// Include new PHP mailer class
+	@include_once root.'includes/classes/phpmailer/class.phpmailer.php';
+	$mail	= new phpmailer;
+
+	$mail->CharSet	= 'Windows-1251';
+	$mail->FromName	= 'NGCMS sender';
+	$mail->From		= (!$mail_from) ? "mailbot@".str_replace("www.", "", $_SERVER['SERVER_NAME']) : $mail_from;
+	$mail->Subject	= $subject;
+	$mail->Body		= $message;
+	$mail->AddAddress($to, $to);
+	if (($filename !== false) && (is_file($filename))) {
+		$mail->AddAttachment($filename);
+	}
+
+	return $mail->Send();
+
+
 	$mail_from	=	(!$mail_from) ? "mailbot@".str_replace("www.", "", $_SERVER['SERVER_NAME']) : $mail_from;
 	$uniqid		=	md5(uniqid(time()));
 
