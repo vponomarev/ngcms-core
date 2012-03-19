@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: configuration.php
 // Description: Configuration managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
