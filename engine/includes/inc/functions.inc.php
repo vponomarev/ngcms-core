@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: functions.php
 // Description: Common system functions
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -355,8 +355,16 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 	$mail	= new phpmailer;
 
 	$mail->CharSet	= 'Windows-1251';
+
+	// Fill `sender` field
 	$mail->FromName	= 'NGCMS sender';
-	$mail->From		= (!$mail_from) ? "mailbot@".str_replace("www.", "", $_SERVER['SERVER_NAME']) : $mail_from;
+	if ($config['mailfrom_name'])	{	$mail->FromName	= $config['mailfrom_name']; 	}
+	if ($mail_from) 				{	$mail->From		= $mail_from;			}
+	else if ($config['mailfrom'])	{	$mail->From		= $config['mailfrom'];	}
+	else {
+		$mail->From = "mailbot@".str_replace("www.", "", $_SERVER['SERVER_NAME']);
+	}
+
 	$mail->Subject	= $subject;
 	$mail->Body		= $message;
 	$mail->AddAddress($to, $to);
