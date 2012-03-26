@@ -167,6 +167,14 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle"><input class="email" type="text" name='save_con[admin_mail]' value='{c_admin_mail}' size="40" /></td>
 </tr>
 <tr>
+<td class="contentEntry1">{l_mailfrom_name}<br /><small>{l_example} Administrator</small></td>
+<td class="contentEntry2" valign="middle"><input class="mailfrom_name" type="text" name='save_con[mailfrom_name]' value='{c_mailfrom_name}' size="40" /></td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_mailfrom}<br /><small>{l_example} mailbot@server.com</small></td>
+<td class="contentEntry2" valign="middle"><input class="mailfrom" type="text" name='save_con[mailfrom]' value='{c_mailfrom}' size="40" /></td>
+</tr>
+<tr>
 <td class="contentEntry1">{l_lock}<br /><small>{l_lock_desc}</small></td>
 <td class="contentEntry2" valign="middle">{lock}</td>
 </tr>
