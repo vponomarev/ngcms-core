@@ -367,6 +367,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 
 	$mail->Subject	= $subject;
 	$mail->Body		= $message;
+	$mail->ContentType	= $ctype;
 	$mail->AddAddress($to, $to);
 	if (($filename !== false) && (is_file($filename))) {
 		$mail->AddAttachment($filename);
