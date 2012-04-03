@@ -1168,7 +1168,7 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = f
 
 
 	// Get full news link
-	$params = array('category' => $clist, 'catid' => $ilist, 'altname' => $row['alt_name'], 'id' => $row['id'], 'year' => date('Y',$row['postdate']), 'month' => date('m', $row['postdate']), 'day' => date('d', $row['postdate']));
+	$params = array('category' => $clist, 'catid' => $ilist, 'altname' => $row['alt_name'], 'id' => $row['id'], 'zid' => sprintf('%04u', $row['id']), 'year' => date('Y',$row['postdate']), 'month' => date('m', $row['postdate']), 'day' => date('d', $row['postdate']));
 	if ($page)
 		$params['page'] = $page;
 

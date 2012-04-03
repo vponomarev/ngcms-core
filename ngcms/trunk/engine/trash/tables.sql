@@ -205,6 +205,7 @@ CREATE TABLE `XPREFIX_news` (
 CREATE TABLE `XPREFIX_news_map` (
   `newsID` int(11) default NULL,
   `categoryID` int(11) default NULL,
+  `dt` datetime default NULL,
   KEY `newsID` (`newsID`),
   KEY `categoryID` (`categoryID`)
 ) ENGINE=MyISAM;

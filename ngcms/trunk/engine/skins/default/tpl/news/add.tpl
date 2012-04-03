@@ -45,6 +45,7 @@ function changeActive(name) {
 <input type="hidden" name="area" value="" />
 </form>
 <form id="postForm" name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" target="_self">
+<input type="hidden" name="token" value="{{ token }}"/>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
 <td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.addnews['news_title'] }}</a> &#8594; {{ lang.addnews['addnews_title'] }}</td>

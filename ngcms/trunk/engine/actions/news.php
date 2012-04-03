@@ -111,6 +111,7 @@ function editNewsForm() {
 		'smilies'			=> $config['use_smilies']?InsertSmilies('', 20, 'currentInputAreaID'):'',
 		'quicktags'			=> $config['use_bbcodes']?QuickTags('currentInputAreaID', 'news'):'',
 		'approve'			=> $row['approve'],
+		'token'				=> genUToken('admin.news.edit'),
 		'flags'				=> array(
 			'edit_split'		=> $config['news.edit.split']?true:false,
 			'meta'				=> $config['meta']?true:false,
@@ -297,93 +298,7 @@ function massNewsModify($setValue, $langParam, $auto = false) {
 // Mass news delete
 //
 function massNewsDelete() {
-	global $mysql, $lang, $PFILTERS, $userROW;
-
-	$selected_news = $_REQUEST['selected_news'];
-
-	if ((!is_array($selected_news))||(!count($selected_news))) {
-		msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
-		return;
-	}
-
-	// Load permissions
-	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
-		'personal.delete',
-		'personal.delete.published',
-		'other.delete',
-		'other.delete.published',
-	));
-
-	$results = array();
-
-	// Scan list of news to be deleted
-	foreach ($selected_news as $id) {
-		// Fetch news
-		if (!is_array($nrow = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id)))) {
-			// Skip ID's of non-existent news
-			continue;
-		}
-
-		// Check for permissions
-		$isOwn = ($nrow['author_id'] == $userROW['id'])?1:0;
-		$permGroupMode = $isOwn?'personal':'other';
-
-		if (!$perm[$permGroupMode.'.delete'.(($nrow['approve'] == 1)?'.published':'')]) {
-			$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - '.$lang['perm.denied'];
-			continue;
-		}
-
-		if (is_array($PFILTERS['news']))
-			foreach ($PFILTERS['news'] as $k => $v) { $v->deleteNews($nrow['id'], $nrow); }
-
-		// Update counters only if news is published
-		if ($nrow['approve'] == 1) {
-			if ($nrow['catid']) {
-				$oldcatsql = array();
-				foreach(explode(",",$nrow['catid']) as $key) {
-					$oldcatsql[] = "id = ".db_squote($key);
-				}
-				$mysql->query("update ".prefix."_category set posts=posts-1 where ".implode(" or ",$oldcatsql));
-			}
-
-			// Update user's posts counter
-			if ($nrow['author_id']) {
-				$mysql->query("update ".uprefix."_users set news=news-1 where id=".$nrow['author_id']);
-			}
-		}
-
-		// Delete comments (with updating user's comment counter) [ if plugin comments is installed ]
-		if (getPluginStatusInstalled('comments')) {
-			foreach ($mysql->select("select * from ".prefix."_comments where post=".$nrow['id']) as $crow) {
-				if ($nrow['author_id']) {
-					$mysql->query("update ".uprefix."_users set com=com-1 where id=".$crow['author_id']);
-				}
-			}
-			$mysql->query("delete from ".prefix."_comments WHERE post=".db_squote($nrow['id']));
-		}
-
-		$mysql->query("delete from ".prefix."_news where id=".db_squote($nrow['id']));
-		$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($nrow['id']));
-
-		// Notify plugins about news deletion
-		if (is_array($PFILTERS['news']))
-			foreach ($PFILTERS['news'] as $k => $v) { $v->deleteNewsNotify($nrow['id'], $nrow); }
-
-		// Delete attached news/files if any
-		$fmanager = new file_managment();
-		// ** Files
-		foreach ($mysql->select("select * from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($nrow['id']).")") as $frec) {
-			$fmanager->file_delete(array('type' => 'file', 'id' => $frec['id']));
-		}
-
-		// ** Images
-		foreach ($mysql->select("select * from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($nrow['id']).")") as $frec) {
-			$fmanager->file_delete(array('type' => 'image', 'id' => $frec['id']));
-		}
-
-		$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - Ok';
-	}
-	msg(array("text" => $lang['msgo_deleted'], "info" => join("<br/>\n", $results)));
+	massDeleteNews($_REQUEST['selected_news']);
 }
 
 function makeSortList($selected) {
@@ -735,6 +650,7 @@ function addNewsForm($retry = ''){
 		'JEV'				=> $retry?$retry:'{}',
 		'smilies'			=> ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'',
 		'quicktags'			=> ($config['use_bbcodes'])?QuickTags('currentInputAreaID', 'news'):'',
+		'token'				=> genUToken('admin.news.add'),
 		'flags'				=> array(
 			'mainpage'			=> $perm['add.mainpage'] && $perm['personal.mainpage'],
 			'favorite'			=> $perm['add.favorite'] && $perm['personal.favorite'],

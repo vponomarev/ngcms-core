@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: upgrade.php
 // Description: Upgrade NGCMS 0.9.2 => 0.9.3
 // Author: Vitaly Ponomarev
@@ -59,12 +59,15 @@ $query_xfUpdateDB = array(
 	"create table ".prefix."_xfields (id int not null auto_increment, primary key(id), linked_ds int default 0, linked_id int default 0, xfields text default null)",
 );
 
+$query_list_093svn = array(
+"alter table ".prefix."_news_map add column dt datetime default NULL",
+);
 // Load plugin list
 $extras	=	get_extras_list();
 // Load lang files
 $lang	=	LoadLang('extra-config', 'admin');
 
-if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB']) {
+if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['update093svn']) {
 	// Выполнение SQL запросов на обновление
 	print '<br/>Выполнение SQL запросов:<br/>';
 	print '<table width="80%">';
@@ -79,6 +82,10 @@ if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB']) {
 
 	if ($_REQUEST['xfUpdateDB']) {
 		$queryList = array_merge($queryList, $query_xfUpdateDB);
+	}
+
+	if ($_REQUEST['update093svn']) {
+		$queryList = array_merge($queryList, $query_list_093svn);
 	}
 
 	foreach ($queryList as $sql) {
@@ -130,6 +137,13 @@ function questionare_093() {
    </small>
   </td>
   <td width='10%'><input type=checkbox name='update092_093rc1' value='1' /></td>
+ </tr>
+ <tr>
+  <td>Выполнить обновление структуры БД 0.9.3 Release => 0.9.3 SVN+<br/>
+   <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 970<br/>
+   </small>
+  </td>
+  <td width='10%'><input type=checkbox name='update093svn' value='1' /></td>
  </tr>
  <tr>
   <td>Обновить БД плагина xfields (требуется для версии 0.10 и выше)<br/>

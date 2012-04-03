@@ -51,6 +51,7 @@ function changeActive(name) {
 <input type=hidden name="area" value="" />
 </form>
 <form name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" id="postForm">
+<input type="hidden" name="token" value="{{ token }}"/>
 <input type="hidden" name="mod" value="news"/>
 <input type="hidden" name="action" value="edit"/>
 <input type="hidden" name="subaction" value="submit"/>
