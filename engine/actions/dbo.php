@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: dbo.php
 // Description: Database managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -84,10 +84,10 @@ function systemDboModify() {
 		// Обновляем счётчики в категориях
 		$ccount = array();
 		$nmap = '';
-		foreach ($mysql->select("select id, catid from ".prefix."_news where approve=1") as $row) {
+		foreach ($mysql->select("select id, catid, postdate, editdate from ".prefix."_news where approve=1") as $row) {
 			foreach (explode(",",$row['catid']) as $key) {
 			        if (!$key) { continue; }
-			        $nmap .= '('.$row['id'].','.$key.'),';
+			        $nmap .= '('.$row['id'].','.$key.',from_unixtime('.(($row['editdate']>$row['postdate'])?$row['editdate']:$row['postdate']).')),';
 				if (!$ccount[$key]) { $ccount[$key] = 1; } else { $ccount[$key]+=1; }
 			}
 		}
@@ -96,7 +96,7 @@ function systemDboModify() {
 		$mysql->query("truncate table ".prefix."_news_map");
 
 		if (strlen($nmap))
-			$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values ".substr($nmap,0,-1));
+			$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values ".substr($nmap,0,-1));
 
 		// Update category news counters
 		foreach ($catz as $key) {

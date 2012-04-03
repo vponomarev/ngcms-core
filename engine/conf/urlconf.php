@@ -116,10 +116,18 @@ $urlLibrary = array (
         ),
         'id' => 
         array (
-          'matchRegex' => '\\d{1,4}',
+          'matchRegex' => '\\d{1,7}',
           'descr' => 
           array (
             'russian' => 'ID новости',
+          ),
+        ),
+        'zid' => 
+        array (
+          'matchRegex' => '\\d{4,7}',
+          'descr' => 
+          array (
+            'russian' => 'ID новости с ведущими нулями (4 цифры)',
           ),
         ),
       ),

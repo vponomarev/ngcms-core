@@ -1,3 +1,4 @@
+#d#n#w#r#_ip 192.168.1.125
 #
 # Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
 # Name: .htaccess
@@ -12,12 +13,12 @@ order allow,deny
 deny from all
 </files>
 
-#php_flag register_globals off
-#php_flag magic_quotes_gpc off
-#php_flag magic_quotes_runtime off
-#php_flag magic_quotes_sybase off
-#php_flag allow_call_time_pass_reference on
-#php_value session.use_trans_sid 0
+php_flag register_globals off
+php_flag magic_quotes_gpc off
+php_flag magic_quotes_runtime off
+php_flag magic_quotes_sybase off
+php_flag allow_call_time_pass_reference on
+php_value session.use_trans_sid 0
 
 RewriteEngine On
 #RewriteBase /

@@ -159,7 +159,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 				foreach (explode(",", $nr['catid']) as $cid) {
 					if (!isset($catmap[$cid])) continue;
 					$clist[$cid]++;
-					$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".intval($nr['id']).", ".intval($cid).")");
+					$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".intval($nr['id']).", ".intval($cid).", from_unixtime(".(($nr['editdate']>$nr['postdate'])?$nr['editdate']:$nr['postdate'])."))");
 				}
 			}
 			foreach ($clist as $cid => $cv) {
@@ -175,6 +175,107 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 	//return count($nList);
 	return $results;
 }
+
+
+//
+// Mass news delete function
+// $list		- array with news identities
+// $permCheck	- flag if permissions should be checked (0 - don't check, 1 - check if current user have required rights)
+//
+// Return value: number of successfully updated news
+//
+function massDeleteNews($list, $permCheck = true) {
+	global $mysql, $lang, $PFILTERS, $userROW;
+
+	$selected_news = $_REQUEST['selected_news'];
+
+	if ((!is_array($list))||(!count($list))) {
+		msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
+		return;
+	}
+
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'personal.delete',
+		'personal.delete.published',
+		'other.delete',
+		'other.delete.published',
+	));
+
+	$results = array();
+
+	// Scan list of news to be deleted
+	foreach ($list as $id) {
+		// Fetch news
+		if (!is_array($nrow = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id)))) {
+			// Skip ID's of non-existent news
+			continue;
+		}
+
+		// Check for permissions
+		$isOwn = ($nrow['author_id'] == $userROW['id'])?1:0;
+		$permGroupMode = $isOwn?'personal':'other';
+
+		if ((!$perm[$permGroupMode.'.delete'.(($nrow['approve'] == 1)?'.published':'')]) && $permCheck) {
+			$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - '.$lang['perm.denied'];
+			continue;
+		}
+
+		if (is_array($PFILTERS['news']))
+			foreach ($PFILTERS['news'] as $k => $v) { $v->deleteNews($nrow['id'], $nrow); }
+
+		// Update counters only if news is published
+		if ($nrow['approve'] == 1) {
+			if ($nrow['catid']) {
+				$oldcatsql = array();
+				foreach(explode(",",$nrow['catid']) as $key) {
+					$oldcatsql[] = "id = ".db_squote($key);
+				}
+				$mysql->query("update ".prefix."_category set posts=posts-1 where ".implode(" or ",$oldcatsql));
+			}
+
+			// Update user's posts counter
+			if ($nrow['author_id']) {
+				$mysql->query("update ".uprefix."_users set news=news-1 where id=".$nrow['author_id']);
+			}
+		}
+
+		// Delete comments (with updating user's comment counter) [ if plugin comments is installed ]
+		if (getPluginStatusInstalled('comments')) {
+			foreach ($mysql->select("select * from ".prefix."_comments where post=".$nrow['id']) as $crow) {
+				if ($nrow['author_id']) {
+					$mysql->query("update ".uprefix."_users set com=com-1 where id=".$crow['author_id']);
+				}
+			}
+			$mysql->query("delete from ".prefix."_comments WHERE post=".db_squote($nrow['id']));
+		}
+
+		$mysql->query("delete from ".prefix."_news where id=".db_squote($nrow['id']));
+		$mysql->query("delete from ".prefix."_news_map where newsID = ".db_squote($nrow['id']));
+
+		// Notify plugins about news deletion
+		if (is_array($PFILTERS['news']))
+			foreach ($PFILTERS['news'] as $k => $v) { $v->deleteNewsNotify($nrow['id'], $nrow); }
+
+		// Delete attached news/files if any
+		$fmanager = new file_managment();
+		// ** Files
+		foreach ($mysql->select("select * from ".prefix."_files where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($nrow['id']).")") as $frec) {
+			$fmanager->file_delete(array('type' => 'file', 'id' => $frec['id']));
+		}
+
+		// ** Images
+		foreach ($mysql->select("select * from ".prefix."_images where (storage=1) and (linked_ds=1) and (linked_id=".db_squote($nrow['id']).")") as $frec) {
+			$fmanager->file_delete(array('type' => 'image', 'id' => $frec['id']));
+		}
+
+		$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - Ok';
+	}
+	msg(array("text" => $lang['msgo_deleted'], "info" => join("<br/>\n", $results)));
+}
+
+
+
 
 // Generate backup for table list. If no list is given - backup ALL tables with system prefix
 function dbBackup($fname, $gzmode, $tlist = ''){
@@ -260,6 +361,12 @@ function addNews($mode = array()){
 
 	// Load required library
 	@include_once root.'includes/classes/upload.class.php';
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.add'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 
 	// Load permissions
@@ -438,7 +545,7 @@ function addNews($mode = array()){
 		if (count($catids)) {
 			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(", ",array_keys($catids)).")");
 			foreach (array_keys($catids) as $catid) {
-				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".db_squote($id).", ".db_squote($catid).")");
+				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".db_squote($id).", ".db_squote($catid).", now())");
 			}
 		}
 		$mysql->query("update ".uprefix."_users set news=news+1 where id=".$SQL['author_id']);
@@ -546,6 +653,12 @@ function editNews($mode = array()) {
 	));
 
 	$id			= $_REQUEST['id'];
+
+	// Check for security token
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id)))) {
@@ -751,7 +864,7 @@ function editNews($mode = array()) {
 		if (sizeof($catids)) {
 			$mysql->query("update ".prefix."_category set posts=posts+1 where id in (".implode(",",array_keys($catids)).")");
 			foreach (array_keys($catids) as $catid) {
-				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID) values (".db_squote($id).", ".db_squote($catid).")");
+				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".db_squote($id).", ".db_squote($catid).", from_unixtime(".intval($SQL['editdate'])."))");
 			}
 		}
 	}
