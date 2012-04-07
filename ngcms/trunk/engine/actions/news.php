@@ -222,6 +222,12 @@ function massCommentDelete(){
 
 	$delcomid = $_REQUEST['delcomid'];
 
+	// Check for security token
+	if ($permCheck && (!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
+
 	if (!$delcomid || !count($delcomid)){
 		msg(array("type" => "error", "text" => $lang['msge_selectcom'], "info" => $lang['msgi_selectcom']));
 		return;
@@ -559,6 +565,7 @@ function listNewsForm() {
 	$tVars['st.selected1'] =  $fSearchType?' selected="selected"':'';
 	$tVars['dr1'] = $fDateStartText;
 	$tVars['dr2'] = $fDateStopText;
+	$tVars['token'] = genUToken('admin.news.edit');
 	$tVars['localPrefix'] = localPrefix;
 
 	// Prepare category menu
