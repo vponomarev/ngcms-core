@@ -57,6 +57,7 @@ function changeActive(name) {
 <input type=hidden name="area" value="" />
 </form>
 <form name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" id="postForm">
+<input type="hidden" name="token" value="{{ token }}"/>
 <input type="hidden" name="mod" value="news"/>
 <input type="hidden" name="action" value="edit"/>
 <input type="hidden" name="subaction" value="submit"/>
@@ -184,7 +185,7 @@ function changeActive(name) {
 </td>
 {% if flags.deleteable %}
 <td class="contentEditW" align="right" valign="top" width="150">
-<input type="button" value="{{ lang.editnews['delete'] }}" onClick="confirmit('{{ php_self }}?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;selected_news[]={{ id }}', '{{ lang.editnews['sure_del'] }}')" class="button" />
+<input type="button" value="{{ lang.editnews['delete'] }}" onClick="confirmit('{{ deleteURL }}', '{{ lang.editnews['sure_del'] }}')" class="button" />
 </td>
 {% endif %}
 </tr>

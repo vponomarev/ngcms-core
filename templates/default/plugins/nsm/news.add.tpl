@@ -19,6 +19,7 @@ function approveMode(mode) {
 </script>
 
 <form id="postForm" name="form" ENCTYPE="multipart/form-data" method="POST" action="{{ currentURL }}">
+<input type="hidden" name="token" value="{{ token }}"/>
 <input type="hidden" name="approve" id="approve" value="0"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>

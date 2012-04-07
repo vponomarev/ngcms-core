@@ -24,6 +24,12 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 	if (!is_array($list))
 		return -1;
 
+	// Check for security token
+	if ($permCheck && (!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
+
 	// Load permissions
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
 		'personal.modify',
@@ -188,6 +194,12 @@ function massDeleteNews($list, $permCheck = true) {
 	global $mysql, $lang, $PFILTERS, $userROW;
 
 	$selected_news = $_REQUEST['selected_news'];
+
+	// Check for security token
+	if ($permCheck && (!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		return;
+	}
 
 	if ((!is_array($list))||(!count($list))) {
 		msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
@@ -356,6 +368,7 @@ function dbBackup($fname, $gzmode, $tlist = ''){
 // $mode - calling mode
 //	*	'no.meta'	- disable metatags
 //	*	'no.files'	- disable files
+//	*	'no.token'	- do not check for security token
 function addNews($mode = array()){
 	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config, $catz, $catmap;
 
@@ -363,7 +376,7 @@ function addNews($mode = array()){
 	@include_once root.'includes/classes/upload.class.php';
 
 	// Check for security token
-	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.add'))) {
+	if ((!isset($mode['no.token']) || (!$mode['no.token'])) && ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.add')))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
 		return;
 	}
@@ -613,6 +626,7 @@ function addNews($mode = array()){
 // $mode - calling mode [ we can disable processing of some features/functions ]
 //	*	'no.meta'	- disable changing metatags
 //	*	'no.files'	- disable updating files
+//	*	'no.token'	- do not check for security token
 function editNews($mode = array()) {
 	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW, $catz, $catmap;
 
@@ -655,10 +669,11 @@ function editNews($mode = array()) {
 	$id			= $_REQUEST['id'];
 
 	// Check for security token
-	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit'))) {
+	if ((!isset($mode['no.token']) || (!$mode['no.token'])) && ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit')))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
 		return;
 	}
+
 
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id)))) {
