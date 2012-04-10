@@ -280,6 +280,7 @@ function changeActive(name) {
 </form>
 
 <form method="post" name="commentsForm" id="commentsForm" action="{{ php_self }}?mod=news">
+<input type="hidden" name="token" value="{{ token }}" />
 <input type="hidden" name="mod" value="news" />
 <input type="hidden" name="action" value="edit" />
 <input type="hidden" name="subaction" value="mass_com_delete" />
