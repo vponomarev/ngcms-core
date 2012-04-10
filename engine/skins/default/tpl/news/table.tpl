@@ -165,6 +165,7 @@ function filter_attach_DateEdit(id) {
 <br />
 <!-- List of news start here -->
 <form action="{{ php_self }}?mod=news" method="post" name="editnews">
+<input type="hidden" name="token" value="{{ token }}" />
 <input type="hidden" name="mod" value="news" />
 <input type="hidden" name="action" value="manage" />
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
