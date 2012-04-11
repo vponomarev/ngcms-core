@@ -146,33 +146,37 @@ class tpl {
 		}
 
 		// - Special display for different handlers
-		// [ifhandler:<Plugin>:<Handler] .. [/ifhandler]
-		// [ifhabdler:<Plugin>] .. [/ifhandler]
-		if (preg_match_all('#\[if(n){0,1}handler\:(.+?)(\:(.*?)){0,1}](.+?)\[\/ifhandler\]#is', $data, $parr, PREG_SET_ORDER)) {
+		// [ifhandler:<RULE>] .. [/ifhandler]
+		// [ifnhandler:<RULe>] .. [/ifhandler]
+		// RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
+		// ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
+		if (preg_match_all('#\[if(n){0,1}handler\:(.+?)](.+?)\[\/ifhandler\]#is', $data, $parr, PREG_SET_ORDER)) {
 			//print "<pre>PMC:".var_export($parr, true)."</pre><br/>\n";
 			//print "<pre>CH:".var_export($CurrentHandler, true)."</pre><br/>\n";
 
 			foreach ($parr as $k => $v) {
 				// 0 - catched text
 				// 1 - 'n' for NOT expression, else - ''
-				// 2 - Plugin
-				// 3 - starts with ':' if Handler is defined
-				// 4 - Handler
-				// 5 - content of the block
-				$filterHandler = strlen($v[3])?1:0;
+				// 2 - Plugin/Handler list string
+				// 3 - content of the block
 				$filterNegativeFlag = ($v[1] == 'n')?1:0;
-				$filterState = (
-					($v[2] == $CurrentHandler['pluginName']) &&
-					(
-						($filterHandler && ($v[4] == $CurrentHandler['handlerName']) || (!$filterHandler))
-					));
-				if ($filterNegativeFlag) {
-					$filterResult = !$filterState;
-				} else {
-					$filterResult = $filterState;
+
+				$ruleCatched = false;
+				foreach (preg_split("#\|#", $v[2]) as $rule) {
+					if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
+						// Specified: Plugin + Handler
+						if (($pt[1] == $CurrentHandler['pluginName']) && ($pt[2] == $CurrentHandler['handlerName'])) {
+							$ruleCatched = true;
+							break;
+						}
+					} else if ($rule == $CurrentHandler['pluginName']) {
+						$ruleCatched = true;
+						break;
+					}
 				}
-				$data = str_replace($v[0], $filterResult?$v[5]:'', $data);
-				//print "<pre>F> `".$v[0]."` => ".($filterResult?'FOUND':'-')."</pre>\n";
+				$bShowFlag = (($ruleCatched && !$filterNegativeFlag)||(!$ruleCatched && $filterNegativeFlag));
+				$data = str_replace($v[0], $bShowFlag?$v[3]:'', $data);
+				//print "<pre>F [".$CurrentHandler['pluginName'].":".$CurrentHandler['handlerName']."]> `".$v[0]."` => ".($bShowFlag?'FOUND':'-')."</pre>\n";
 			}
 		}
 
