@@ -1,3 +1,7 @@
+<div style="padding-top: 10px; padding-left: 10px; background-image: url(http://engine.ngcms.ru/templates/default/images/2z_41.gif); height: 26px;">
+<a href="{{ listURL }}">Перейти к списку ваших новостей</a>
+</div>
+
 <script type="text/javascript">
 // Global variable: ID of current active input area
 {% if (flags.edit_split) %}var currentInputAreaID = 'ng_news_content_short';{% else %}var currentInputAreaID = 'ng_news_content';{% endif %}
