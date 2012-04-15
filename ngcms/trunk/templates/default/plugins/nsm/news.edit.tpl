@@ -1,4 +1,6 @@
-
+<div style="padding-top: 10px; padding-left: 10px; background-image: url(http://engine.ngcms.ru/templates/default/images/2z_41.gif); height: 26px;">
+<a href="{{ listURL }}">Перейти к списку ваших новостей</a>
+</div>
 <script language="javascript" type="text/javascript">
 
 //
@@ -197,3 +199,26 @@ function changeActive(name) {
 	</td>
 </tr>
 </table>
+
+<script language="javascript" type="text/javascript">
+// Restore variables if needed
+var jev = {{ JEV }};
+var form = document.getElementById('postForm');
+for (i in jev) {
+ //try { alert(i+' ('+form[i].type+')'); } catch (err) {;}
+ if (typeof(jev[i]) == 'object') {
+ 	for (j in jev[i]) {
+ 		//alert(i+'['+j+'] = '+ jev[i][j]);
+ 		try { form[i+'['+j+']'].value = jev[i][j]; } catch (err) {;}
+ 	}
+ } else {
+  try {
+   if ((form[i].type == 'text')||(form[i].type == 'textarea')||(form[i].type == 'select-one')) {
+    form[i].value = jev[i];
+   } else if (form[i].type == 'checkbox') {
+    form[i].checked = (jev[i]?true:false);
+   }
+  } catch(err) {;}
+ }
+}
+</script>

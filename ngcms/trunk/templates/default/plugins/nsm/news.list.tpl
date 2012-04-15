@@ -1,5 +1,8 @@
 <h2>Список ваших новостей:</h2>
 <br/>
+<a href="{{ addURL }}">Добавить новость..</a>
+<br/>
+<br/>
 
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center" width="100%">
 <tr align="left" class="contHead">

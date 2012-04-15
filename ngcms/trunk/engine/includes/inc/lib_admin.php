@@ -935,7 +935,14 @@ function editNews($mode = array()) {
 		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
 	}
 
-	msg(array("text" => $lang['msgo_edited']));
+	// Show link to the news if it's published
+	if ($row['approve']) {
+		$nlink = newsGenerateLink($row, false, 0, true);
+		msg(array("text" => $lang['msgo_edited'], "info" => str_replace('{link}', $nlink, $lang['msgo_edited#link'])));
+
+	} else {
+		msg(array("text" => $lang['msgo_edited']));
+	}
 }
 
 
