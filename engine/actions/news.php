@@ -40,6 +40,7 @@ function editNewsForm() {
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
+		'personal.nocat',
 		'personal.customdate',
 		'personal.altname',
 		'other.view',
@@ -56,6 +57,7 @@ function editNewsForm() {
 		'other.favorite',
 		'other.setviews',
 		'other.multicat',
+		'other.nocat',
 		'other.customdate',
 		'other.altname',
 	));
@@ -84,13 +86,12 @@ function editNewsForm() {
 	$row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_images where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
 
 
-	$cats = explode(",", $row['catid']);
+	$cats = (strlen($row['catid'])>0)?explode(",", $row['catid']):array();
 	$content = $row['content'];
-
 	$tVars = array(
 		'php_self'			=>	$PHP_SELF,
 		'changedate'		=>	ChangeDate($row['postdate'], 1),
-		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
+		'mastercat'			=>	makeCategoryList(array('doempty' => ($perm[$permGroupMode.'.nocat'] || !count($cats))?1:0, 'greyempty' => !$perm['personal.nocat'], 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array(), 'disabledarea' => !$perm[$permGroupMode.'.multicat'])),
 		'allcats'			=>	resolveCatNames($cats),
 		'id'				=>	$row['id'],
@@ -143,6 +144,7 @@ function editNewsForm() {
 			'setviews.disabled'	=> (!$perm[$permGroupMode.'.setviews'])?true:false,
 			'multicat.disabled'	=> (!$perm[$permGroupMode.'.multicat'])?true:false,
 			'altname.disabled'	=> (!$perm[$permGroupMode.'.altname'])?true:false,
+			'mondatory_cat'		=> (!$perm[$permGroupMode.'.nocat'])?true:false,
 		)
 	);
 
@@ -639,6 +641,7 @@ function addNewsForm($retry = ''){
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
+		'personal.nocat',
 		'personal.customdate',
 		'personal.altname',
 	));
@@ -652,7 +655,7 @@ function addNewsForm($retry = ''){
 	$tVars = array(
 		'php_self'			=> $PHP_SELF,
 		'changedate'		=> ChangeDate(),
-		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'nameval' => 0)),
+		'mastercat'			=>	makeCategoryList(array('doempty' => 1, 'greyempty' => !$perm['personal.nocat'],'nameval' => 0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1)),
 		'JEV'				=> $retry?$retry:'{}',
 		'smilies'			=> ($config['use_smilies'])?InsertSmilies('', 20, 'currentInputAreaID'):'',
@@ -676,6 +679,7 @@ function addNewsForm($retry = ''){
 			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
 			'can_publish'		=> $perm['personal.publish'],
 			'altname.disabled'	=> (!$perm[$permGroupMode.'.altname'])?true:false,
+			'mondatory_cat'		=> (!$perm['personal.nocat'])?true:false,
 		),
 	);
 

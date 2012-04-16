@@ -404,6 +404,7 @@ function addNews($mode = array()){
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
+		'personal.nocat',
 		'personal.customdate',
 		'personal.altname',
 	));
@@ -497,6 +498,13 @@ function addNews($mode = array()){
 				$catids[$match[1]] = 1;
 		}
 	}
+
+	// Check if no categories specified and user can post news without categories
+	if ((!count($catids)) && (!$perm['personal.nocat'])) {
+		msg(array("type" => "error", "text" => $lang['addnews']['error.nocat'], "info" => $lang['addnews']['error.nocat#desc']));
+		return 0;
+	}
+
 
 	// Metatags (only for adding via admin panel)
 	if ($config['meta'] && (!isset($mode['no.meta']) || !$mode['no.meta'])) {
@@ -646,6 +654,7 @@ function editNews($mode = array()) {
 		'personal.favorite',
 		'personal.setviews',
 		'personal.multicat',
+		'personal.nocat',
 		'personal.customdate',
 		'personal.altname',
 		'other.view',
@@ -662,6 +671,7 @@ function editNews($mode = array()) {
 		'other.favorite',
 		'other.setviews',
 		'other.multicat',
+		'other.nocat',
 		'other.customdate',
 		'other.altname',
 	));
@@ -677,7 +687,7 @@ function editNews($mode = array()) {
 
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id)))) {
-		msg(array("type" => "error", "text" => $lang['msge_not_found']));
+		msg(array("type" => "error", "text" => $lang['editnews']['msge_not_found']));
 		return;
 	}
 
@@ -691,7 +701,6 @@ function editNews($mode = array()) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
-
 
 
 	// Variable FLAGS is a bit-variable:
@@ -756,14 +765,14 @@ function editNews($mode = array()) {
 		if ($alt_name != $row['alt_name']) {
 			// Check for allowed chars in alt name
 			if (!$parse->nameCheck($alt_name)) {
-				msg(array("type" => "error", "text" => $lang['err.altname.wrong']));
+				msg(array("type" => "error", "text" => $lang['editnews']['err.altname.wrong']));
 				return;
 			}
 		}
 
 		// Check if we try to use duplicate alt_name
 		if (is_array($mysql->record("select * from ".prefix."_news where alt_name=".db_squote($alt_name)." and id <> ".db_squote($row['id'])." limit 1"))) {
-			msg(array("type" => "error", "text" => $lang['err.altname.dup']));
+			msg(array("type" => "error", "text" => $lang['editnews']['err.altname.dup']));
 			return;
 		}
 	} else {
@@ -789,6 +798,12 @@ function editNews($mode = array()) {
 			if (preg_match('#^category_(\d+)$#', $k, $match) && $v && isset($catmap[intval($match[1])]))
 				$catids[$match[1]] = 1;
 		}
+	}
+
+	// Check if no categories specified and user can post news without categories
+	if ((!count($catids)) && (!$perm[$permGroupMode.'.nocat'])) {
+		msg(array("type" => "error", "text" => $lang['editnews']['error.nocat'], "info" => $lang['addnews']['error.nocat#desc']));
+		return 0;
 	}
 
 	if ($config['meta'] && (!isset($mode['no.meta']) || !$mode['no.meta'])) {
@@ -849,7 +864,7 @@ function editNews($mode = array()) {
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) {
 			if (!($pluginNoError = $v->editNews($id, $row, $SQL, $tvars))) {
-				msg(array("type" => "error", "text" => str_replace('{plugin}', $k, $lang['msge_pluginlock'])));
+				msg(array("type" => "error", "text" => str_replace('{plugin}', $k, $lang['editnews']['msge_pluginlock'])));
 				break;
 			}
 		}
@@ -938,10 +953,10 @@ function editNews($mode = array()) {
 	// Show link to the news if it's published
 	if ($row['approve']) {
 		$nlink = newsGenerateLink($row, false, 0, true);
-		msg(array("text" => $lang['msgo_edited'], "info" => str_replace('{link}', $nlink, $lang['msgo_edited#link'])));
+		msg(array("text" => $lang['editnews']['msgo_edited'], "info" => str_replace('{link}', $nlink, $lang['msgo_edited#link'])));
 
 	} else {
-		msg(array("text" => $lang['msgo_edited']));
+		msg(array("text" => $lang['editnews']['msgo_edited']));
 	}
 }
 
