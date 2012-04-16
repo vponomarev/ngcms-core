@@ -562,6 +562,7 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null) {
 // * selected  		- ID of category to be selected or array of IDs to select (in list mode)
 // * skip      		- ID of category to skip or array of IDs to skip
 // * doempty   		- add empty category to the beginning ("no category"), value = 0
+// * greyempty		- show empty category as `grey`
 // * doall     		- all category named "ALL" to the beginning, value is empty
 // * dowithout		- add "Without category" after "ALL", value = 0
 // * nameval   		- use DB field "name" instead of ID in HTML option value
@@ -583,7 +584,7 @@ function makeCategoryList($params = array()){
 		((isset($params['style']) && ($params['style'] != ''))?' style="'.$params['style'].'"':'').
 		((isset($params['class']) && ($params['class'] != ''))?' class="'.$params['class'].'"':'').
 		">\n";
-	 if (isset($params['doempty']) && $params['doempty'])		{ $out.= "<option value=\"0\">".$lang['no_cat']."</option>\n"; }
+	 if (isset($params['doempty']) && $params['doempty'])		{ $out.= "<option ".(((isset($params['greyempty']) && $params['greyempty']))?'style="background: #c41e3a;" ':'')."value=\"0\">".$lang['no_cat']."</option>\n"; }
 	 if (isset($params['doall']) && $params['doall'])			{ $out.= "<option value=\"\">".$lang['sh_all']."</option>\n"; }
 	 if (isset($params['dowithout']) && $params['dowithout'])	{ $out.= "<option value=\"0\"".(((!is_null($params['selected'])) && ($params['selected'] == 0))?' selected="selected"':'').">".$lang['sh_empty']."</option>\n"; }
 	}

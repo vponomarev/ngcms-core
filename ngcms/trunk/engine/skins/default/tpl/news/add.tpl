@@ -199,7 +199,7 @@ attachAddRow();
    <td><span class="f15">{{ lang.addnews['category'] }}</span></td>
   </tr>
   <tr>
-   <td></td><td><div class="list">{{ mastercat }}</div></td>
+   <td></td><td><div class="list">{{ mastercat }} {% if (flags.mondatory_cat) %}&nbsp; <span style="font-size: 16px; color: red;"><b>*</b></span>{% endif %}</div></td>
   </tr>
   <tr><td colspan=2>&nbsp;</td></tr>
 {% if flags['multicat.show'] %}
