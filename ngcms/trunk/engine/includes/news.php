@@ -603,7 +603,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 // Default "show news" function
 function showNews($handlerName, $params) {
- global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse;
+ global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse, $currentCategory;
  // preload plugins
  load_extras('news');
 

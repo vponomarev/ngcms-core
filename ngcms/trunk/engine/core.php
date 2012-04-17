@@ -229,6 +229,7 @@ global $twig, $twigLoader;
 
 // - Configure loader parameters
 $twigLoader = new Twig_Loader_NGCMS(root);
+$twigStringLoader = new Twig_Loader_String();
 
 // - Configure environment and general parameters
 $twig = new Twig_Environment($twigLoader, array(
@@ -250,7 +251,11 @@ $twig->addGlobal('currentURL',	$systemAccessURL);
 
 // - Define functions
 $twig->addFunction('pluginIsActive',	new Twig_Function_Function('getPluginStatusActive'));
-$twig->addFunction('localPath', 		new Twig_Function_Function('twigLocalPath', array('needs_context' => true)));
+$twig->addFunction('localPath', 	new Twig_Function_Function('twigLocalPath', array('needs_context' => true)));
+$twig->addFunction('getLang', 		new Twig_Function_Function('twigGetLang'));
+$twig->addFunction('isLang', 		new Twig_Function_Function('twigIsLang'));
+$twig->addFunction('isHandler',		new Twig_Function_Function('twigIsHandler'));
+$twig->addFunction('isCategory',	new Twig_Function_Function('twigIsCategory'));
 
 $timer->registerEvent('Template engine is activated');
 

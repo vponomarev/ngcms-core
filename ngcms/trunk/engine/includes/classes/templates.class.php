@@ -99,7 +99,7 @@ class tpl {
 	// codeExec	- flag to execute ( php eval() ) code
 	// inline	- flag: inline data. If set $nn is treated as data, not a template file name
 	function vars($nn, $vars = array(), $params = array()) {
-		global $lang, $userROW, $CurrentHandler, $config, $PHP_SELF;
+		global $lang, $userROW, $CurrentHandler, $config, $PHP_SELF, $twig;
 
 		// Prepare to calculate exec time
 		list($usec, $sec) = explode(' ', microtime());
@@ -116,6 +116,22 @@ class tpl {
 				$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST:'.$name_larr.']', $data);
 			}
 		}
+
+		// [TWIG]..[/TWIG]
+		if (preg_match_all('/\[TWIG\](.+?)\[\/TWIG\]/is', $data, $parr)) {
+			foreach ($parr[0] as $k => $v) {
+				$scode = $parr[1][$k];
+				$cacheFileName = md5($scode).'.txt';
+				$cacheFile = cacheRetrieveFile($cacheFileName, 3600, '_templates');
+				if ($cacheFile === false) {
+					cacheStoreFile($cacheFileName, $scode, '_templates');
+				}
+				$tx = $twig->loadTemplate(get_plugcache_dir('_templates').$cacheFileName);
+				$result = $tx->render($vars['vars']);
+				$data = str_replace($v,$result, $data);
+			}
+		}
+
 
 		// LOGIC processing
 		// [isplugin <NAME>] .. [/isplugin] - content will be shown only if plugin <NAME> is active
@@ -176,7 +192,6 @@ class tpl {
 				}
 				$bShowFlag = (($ruleCatched && !$filterNegativeFlag)||(!$ruleCatched && $filterNegativeFlag));
 				$data = str_replace($v[0], $bShowFlag?$v[3]:'', $data);
-				//print "<pre>F [".$CurrentHandler['pluginName'].":".$CurrentHandler['handlerName']."]> `".$v[0]."` => ".($bShowFlag?'FOUND':'-')."</pre>\n";
 			}
 		}
 
