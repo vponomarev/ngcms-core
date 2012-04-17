@@ -2042,3 +2042,61 @@ function ngFatalError($title, $description = '') {
 	print "</tbody></table></body></html>";
 	exit;
 }
+
+function twigIsLang($lang) {
+ global $config;
+
+ return ($config['default_lang']==$lang);
+}
+
+function twigGetLang() {
+ global $config;
+
+ return $config['default_lang'];
+}
+
+// Allow to have specific template configuration for different locations ($CurrentHandler global array)
+// RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
+// ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
+function twigIsHandler($rule) {
+ global $config, $CurrentHandler;
+
+	$ruleCatched = false;
+	foreach (preg_split("#\|#", $v[2]) as $rule) {
+		if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
+			// Specified: Plugin + Handler
+			if (($pt[1] == $CurrentHandler['pluginName']) && ($pt[2] == $CurrentHandler['handlerName'])) {
+				$ruleCatched = true;
+				break;
+			}
+		} else if ($rule == $CurrentHandler['pluginName']) {
+			$ruleCatched = true;
+			break;
+		}
+	}
+	return $ruleCatched;
+}
+
+function twigIsCategory($list) {
+	global $currentCategory, $catz, $catmap;
+	//print "twigCall isCategory($list):<pre>".var_export($currentCategory, true)."</pre>";
+
+	if (!isset($currentCategory)) {
+		return false;
+	}
+
+	foreach (preg_split("# *, *#", $list) as $key) {
+		if ($key == '')
+			continue;
+
+		if (ctype_digit($key)) {
+			if (isset($catmap[$key]) && is_array($currentCategory) && ($currentCategory['id'] == $key))
+				return true;
+		} else {
+			if (isset($catz[$key]) && is_array($catz[$key]) && is_array($currentCategory) && ($currentCategory['alt'] == $key))
+				return true;
+		}
+
+	}
+	return false;
+}
