@@ -84,7 +84,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 			if (isset($setValue['approve'])) {
 				if ((($rec['approve'] == 1)&&($setValue['approve'] != 1) && (!$perm[$permGroupMode.'.unpublish']))||
 					(($rec['approve'] < 1)&&($setValue['approve'] == 1) && (!$perm[$permGroupMode.'.publish']))) {
-					$results []= '#'.$rec['id'].' ('.$rec['title'].') - '.$lang['perm.denied'];
+					$results []= '#'.$rec['id'].' ('.secure_html($rec['title']).') - '.$lang['perm.denied'];
 					continue;
 				}
 				$ic++;
@@ -93,7 +93,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 			// Manage `MAINPAGE` flag
 			if (isset($setValue['mainpage'])) {
 				if (!$perm[$permGroupMode.'.mainpage']) {
-					$results []= '#'.$rec['id'].' ('.$rec['title'].') - '.$lang['perm.denied'];
+					$results []= '#'.$rec['id'].' ('.secure_html($rec['title']).') - '.$lang['perm.denied'];
 					continue;
 				}
 				$ic++;
@@ -102,7 +102,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 			// Check if we have other options except MAINPAGE/APPROVE
 			if (count($setValue) > $ic) {
 				if (!$perm[$permGroupMode.'.modify'.(($rec['approve'] == 1)?'.published':'')]) {
-					$results []= '#'.$rec['id'].' ('.$rec['title'].') - '.$lang['perm.denied'];
+					$results []= '#'.$rec['id'].' ('.secure_html($rec['title']).') - '.$lang['perm.denied'];
 					continue;
 				}
 			}
@@ -110,7 +110,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 //			if (($rec['status'] > 1) && ($rec['author_id'] != $userROW['id']))
 //				continue;
 		}
-		$results []= '#'.$rec['id'].' ('.$rec['title'].') - Ok';
+		$results []= '#'.$rec['id'].' ('.secure_html($rec['title']).') - Ok';
 
 		$nList[]= $rec['id'];
 		$nData[$rec['id']] = $rec;
@@ -229,7 +229,7 @@ function massDeleteNews($list, $permCheck = true) {
 		$permGroupMode = $isOwn?'personal':'other';
 
 		if ((!$perm[$permGroupMode.'.delete'.(($nrow['approve'] == 1)?'.published':'')]) && $permCheck) {
-			$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - '.$lang['perm.denied'];
+			$results []= '#'.$nrow['id'].' ('.secure_html($nrow['title']).') - '.$lang['perm.denied'];
 			continue;
 		}
 
@@ -281,7 +281,7 @@ function massDeleteNews($list, $permCheck = true) {
 			$fmanager->file_delete(array('type' => 'image', 'id' => $frec['id']));
 		}
 
-		$results []= '#'.$nrow['id'].' ('.$nrow['title'].') - Ok';
+		$results []= '#'.$nrow['id'].' ('.secure_html($nrow['title']).') - Ok';
 	}
 	msg(array("text" => $lang['msgo_deleted'], "info" => join("<br/>\n", $results)));
 }
