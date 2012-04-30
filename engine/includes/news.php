@@ -126,6 +126,51 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$tvars['vars']['views']		=	$row['views'];
 	$tvars['vars']['comnum']	=	$row['com'];
 
+
+	// Prepare list of linked files and images
+	$callingParams['linkedFiles'] = array();
+	$tvars['vars']['_files'] = array();
+	foreach ($row['#files'] as $k => $v) {
+		if ($v['linked_id'] == $row['id']) {
+			$callingParams['linkedFiles']['ids']  []= $v['id'];
+			$callingParams['linkedFiles']['data'] []= $v;
+			$tvars['vars']['_files'] []= array(
+				'plugin'		=> $v['plugin'],
+				'pidentity'		=> $v['pidentity'],
+				'url'			=> ($v['storage']?$config['attach_url']:$config['files_url']).'/'.$v['folder'].'/'.$v['name'],
+				'name'			=> $v['name'],
+				'origName'		=> secure_html($v['orig_name']),
+				'description'	=> secure_html($v['description']),
+			);
+		}
+	}
+
+	$callingParams['linkedFiles'] = array();
+	$tvars['vars']['_images'] = array();
+	foreach ($row['#images'] as $k => $v) {
+		if ($v['linked_id'] == $row['id']) {
+			$callingParams['linkedImages']['ids']  []= $k;
+			$callingParams['linkedImages']['data'] []= $v;
+			$tvars['vars']['_images'] []= array(
+				'plugin'		=> $v['plugin'],
+				'pidentity'		=> $v['pidentity'],
+				'url'			=> ($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/'.$v['name'],
+				'purl'			=> $v['preview']?(($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/thumb/'.$v['name']):null,
+				'width'			=> $v['width'],
+				'height'		=> $v['height'],
+				'pwidth'		=> $v['p_width'],
+				'pheight'		=> $v['p_height'],
+				'name'			=> $v['name'],
+				'origName'		=> secure_html($v['orig_name']),
+				'description'	=> secure_html($v['description']),
+				'flags'		=> array(
+					'hasPreview'	=> $v['preview'],
+				),
+			);
+		}
+	}
+
+
 	// Show icon of `MAIN` category for current news
 	$masterCatID = intval(array_shift(explode(",", $row['catid'])));
 	if (!isset($catmap[$masterCatID]))
@@ -419,7 +464,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	$output = '';
 
 	// Call `SELECT` query
-	$selectResult = $mysql->select($query['result']);
+	$selectResult = $mysql->select($query['result'], 1);
 
 	// List of pages
 	$newsCount = $mysql->result($query['count']);
@@ -440,32 +485,57 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		'pagesCount'	=> $pages_count,
 	);
 
-	// Reference for LINKED images
+	// Reference for LINKED images and files
 	$callingParams['linkedImages'] = array(
+		'ids'	=> array(),
+		'data'	=> array(),
+	);
+
+	$callingParams['linkedFiles'] = array(
 		'ids'	=> array(),
 		'data'	=> array(),
 	);
 
 	// List of news that have linked images
 	$nilink = array();
+	$nflink = array();
 
 	foreach ($selectResult as $row) {
 		$callingParams['query']['ids'][] = $row['id'];
 		if ($row['num_images'])
 			$nilink []= $row['id'];
+		if ($row['num_files'])
+			$nflink []= $row['id'];
+
 	}
 
+
 	// Load linked images
+	$linkedImages = array();
 	if (count($nilink)) {
 		foreach ($mysql->select("select * from ".prefix."_images where (linked_ds = 1) and (linked_id in (".join(", ", $nilink)."))", 1) as $nirow) {
-			$callingParams['linkedImages']['ids'] []= $nirow['id'];
-			$callingParams['linkedImages']['data'][$nirow['id']] = $nirow;
+			$linkedImages['ids'] []= $nirow['id'];
+			$linkedImages['data'][$nirow['id']] = $nirow;
+		}
+	}
+
+	// Load linked files
+	$linkedFiles = array();
+	if (count($nflink)) {
+		foreach ($mysql->select("select * from ".prefix."_files where (linked_ds = 1) and (linked_id in (".join(", ", $nflink)."))", 1) as $nirow) {
+			$linkedFiles['ids'] []= $nirow['id'];
+			$linkedFiles['data'][$nirow['id']] = $nirow;
 		}
 	}
 
 	// Execute filters
-	if (is_array($PFILTERS['news']))
+	if (is_array($PFILTERS['news'])) {
+		// Special handler for linked images/files
+		$callingParams['linkedImages']	= $linkedImages;
+		$callingParams['linkedFiles']	= $linkedFiles;
+
 		foreach ($PFILTERS['news'] as $k => $v) { $v->onBeforeShowlist($callingParams); }
+	}
 
 
 	// Main processing cycle
@@ -487,8 +557,52 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$tvars['vars']['date'] = LangDate(timestamp, $row['postdate']);
 		$tvars['vars']['views'] = $row['views'];
 
-		// Print icon if only one parent category
+		// Prepare list of linked files and images
+		$callingParams['linkedFiles'] = array();
+		$tvars['vars']['_files'] = array();
+		foreach ($linkedFiles['data'] as $k => $v) {
+			if ($v['linked_id'] == $row['id']) {
+				$callingParams['linkedFiles']['ids']  []= $v['id'];
+				$callingParams['linkedFiles']['data'] []= $v;
+				$tvars['vars']['_files'] []= array(
+					'plugin'		=> $v['plugin'],
+					'pidentity'		=> $v['pidentity'],
+					'url'			=> ($v['storage']?$config['attach_url']:$config['files_url']).'/'.$v['folder'].'/'.$v['name'],
+					'name'			=> $v['name'],
+					'origName'		=> secure_html($v['orig_name']),
+					'description'	=> secure_html($v['description']),
+				);
+			}
+		}
 
+		$callingParams['linkedFiles'] = array();
+		$tvars['vars']['_images'] = array();
+		foreach ($linkedImages['data'] as $k => $v) {
+			if ($v['linked_id'] == $row['id']) {
+				$callingParams['linkedImages']['ids']  []= $v['id'];
+				$callingParams['linkedImages']['data'] []= $v;
+				$tvars['vars']['_images'] []= array(
+					'plugin'		=> $v['plugin'],
+					'pidentity'		=> $v['pidentity'],
+					'url'			=> ($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/'.$v['name'],
+					'purl'			=> $v['preview']?(($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/thumb/'.$v['name']):null,
+					'width'			=> $v['width'],
+					'height'		=> $v['height'],
+					'pwidth'		=> $v['p_width'],
+					'pheight'		=> $v['p_height'],
+					'name'			=> $v['name'],
+					'origName'		=> secure_html($v['orig_name']),
+					'description'	=> secure_html($v['description']),
+					'flags'		=> array(
+						'hasPreview'	=> $v['preview'],
+					),
+				);
+			}
+		}
+
+		//print "LinkedFiles (".$row['id']."): <pre>".var_export($tvars['vars']['#files'], true)."</pre>";
+		//print "LinkedImages (".$row['id']."): <pre>".var_export($tvars['vars']['#images'], true)."</pre>";
+		// Print icon if only one parent category
 		if (isset($row['catid']) && $row['catid'] && !stristr(",", $row['catid']) && isset($catmap[$row['catid']]) && ($catalt = $catmap[$row['catid']]) && isset($catz[$catalt]['icon']) && $catz[$catalt]['icon']) {
 			$tvars['vars']['icon'] = $catz[$catalt]['icon'];
 			$tvars['vars']['[icon]'] = '';
