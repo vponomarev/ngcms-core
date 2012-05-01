@@ -36,7 +36,7 @@ class mysql {
 		}
 	}
 
-	function select($sql, $assocMode = 0) {
+	function select($sql, $assocMode = 1) {
 	        global $timer;
 	        if ($this->queryTimer) { $tX = $timer->stop(4); }
 
@@ -65,7 +65,7 @@ class mysql {
 		return $result;
 	}
 
-	function record($sql, $assocMode = 0) {
+	function record($sql, $assocMode = 1) {
 	        global $timer;
 	        if ($this->queryTimer) { $tX = $timer->stop(4); }
 

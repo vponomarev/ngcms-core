@@ -256,6 +256,9 @@ $twig->addFunction('getLang', 		new Twig_Function_Function('twigGetLang'));
 $twig->addFunction('isLang', 		new Twig_Function_Function('twigIsLang'));
 $twig->addFunction('isHandler',		new Twig_Function_Function('twigIsHandler'));
 $twig->addFunction('isCategory',	new Twig_Function_Function('twigIsCategory'));
+$twig->addFunction('isSet',		new Twig_Function_Function('twigIsSet', array('needs_context' => true)));
+$twig->addFunction('debugContext',	new Twig_Function_Function('twigDebugContext', array('needs_context' => true)));
+$twig->addFunction('debugValue',	new Twig_Function_Function('twigDebugValue'));
 
 $timer->registerEvent('Template engine is activated');
 

@@ -2100,3 +2100,20 @@ function twigIsCategory($list) {
 	}
 	return false;
 }
+
+function twigIsSet($context, $val) {
+	//print "call TWIG::isSet(".var_export($context, true)." || ".var_export($val, true).");<br/>";
+	//print "call TWIG::isSet(".var_export($val, true).");<br/>";
+	if ((!isset($val))||(is_array($val) && (count($val) == 0)))
+		return false;
+	return true;
+}
+
+function twigDebugValue($val) {
+	return print "<b>debugValue:</b><pre>".var_export($val, true)."</pre>";
+}
+
+function twigDebugContext($context) {
+	return print "<b>debugContext:</b><pre>".var_export($context, true)."</pre>";
+}
+
