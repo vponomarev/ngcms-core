@@ -283,7 +283,7 @@ function massDeleteNews($list, $permCheck = true) {
 
 		$results []= '#'.$nrow['id'].' ('.secure_html($nrow['title']).') - Ok';
 	}
-	msg(array("text" => $lang['msgo_deleted'], "info" => join("<br/>\n", $results)));
+	msg(array("text" => $lang['editnews']['msgo_deleted'], "info" => join("<br/>\n", $results)));
 }
 
 
@@ -369,6 +369,7 @@ function dbBackup($fname, $gzmode, $tlist = ''){
 //	*	'no.meta'	- disable metatags
 //	*	'no.files'	- disable files
 //	*	'no.token'	- do not check for security token
+//	*	'no.editurl'	- do now show URL (in admin panel) for edit news
 function addNews($mode = array()){
 	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config, $catz, $catmap;
 
@@ -622,7 +623,12 @@ function addNews($mode = array()){
 	}
 
 	exec_acts('addnews_', $id);
-	msg(array("text" => $lang['addnews']['msgo_added'], "info" => sprintf($lang['addnews']['msgi_added'], admin_url.'/admin.php?mod=news&action=edit&id='.$id, admin_url.'/admin.php?mod=news')));
+
+	$msgInfo = array("text" => $lang['addnews']['msgo_added']);
+	if (!$mode['no.editurl']) {
+		$msgInfo["info"] = sprintf($lang['addnews']['msgi_added'], admin_url.'/admin.php?mod=news&action=edit&id='.$id, admin_url.'/admin.php?mod=news');
+	}
+	msg($msgInfo);
 
 	return 1;
 }
