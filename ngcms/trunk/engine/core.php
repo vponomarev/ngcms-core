@@ -95,7 +95,7 @@ if (get_magic_quotes_gpc()) {
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
 if (!isset($_COOKIE['ngTrackID'])) {
-	@setcookie('ngTrackID', md5(md5(uniqid(rand(),1))), time()+86400*365);
+	@setcookie('ngTrackID', md5(md5(uniqid(rand(),1))), time()+86400*365, '/', '', 0, 1);
 }
 
 //
