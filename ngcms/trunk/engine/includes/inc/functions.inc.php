@@ -1191,7 +1191,7 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = f
 //	finisher	- chars that will be added into the end to indicate that this is truncated line ( default = '...' )
 //function Prepare($row, $page) {
 function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $regenShortNews = array()) {
-	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $TemplateCache, $mysql, $PHP_SELF;
+	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $currentCategory, $TemplateCache, $mysql, $PHP_SELF;
 
 	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
 
@@ -1938,9 +1938,19 @@ function ngShutdownHandler() {
    </style>
  </head>
  <body>
+<?php
+	print "<div id=\"ngErrorInformer\">";
+	print "<h1>NGCMS Runtime error: ".$lastError['message']."</h1>\n";
+	print "<div class='dmsg'>[ ".$lastError['type']."]: ".$lastError['message']."</div><br/>";
+	print "<h2>Stack trace</h2>";
+	print "<table class='dtrace'><thead><td>Line #</td><td>File name</td></tr></thead><tbody>";
+	print "<tr><td>".$lastError['line']."</td><td>".$lastError['file']."</td></tr></tbody></table>";
+	print "</div>";
+?>
  <div id="hdrSpanItem"></div>
  <script language="Javascript">
  {
+	var xc = document.getElementById('ngErrorInformer').innerHTML;
 	var i = 0;
 	var cnt = 0;
 	while (i < document.body.childNodes.length) {
@@ -1949,22 +1959,19 @@ function ngShutdownHandler() {
 			document.body.removeChild(document.body.childNodes[i]);
 			break;
 		}
-		if ((node.tagName == 'TITLE')||(node.tagName == 'STYLE')) {
+		if ((node.tagName == 'TITLE')||(node.tagName == 'STYLE')||(node.tagName == '')) {
 			i++;
 		} else {
 			document.body.removeChild(document.body.childNodes[i]);
 		}
 	}
+	document.body.innerHTML = xc;
  }
  </script>
-<?php
-	print "<h1>NGCMS Runtime error: ".$lastError['message']."</h1>\n";
-	print "<div class='dmsg'>[ ".$lastError['type']."]: ".$lastError['message']."</div><br/>";
-	print "<h2>Stack trace</h2>";
-	print "<table class='dtrace'><thead><td>Line #</td><td>File name</td></tr></thead><tbody>";
-	print "<tr><td>".$lastError['line']."</td><td>".$lastError['file']."</td></tr></tbody></table>";
+<?
 	return false;
 }
+
 
 function twigLocalPath($context) {
 	//print $var1->getTemplateName();
@@ -2078,12 +2085,29 @@ function twigIsHandler($rule) {
 }
 
 function twigIsCategory($list) {
-	global $currentCategory, $catz, $catmap;
+	global $currentCategory, $catz, $catmap, $config;
 	//print "twigCall isCategory($list):<pre>".var_export($currentCategory, true)."</pre>";
 
+	// Return false if we're not in category now
 	if (!isset($currentCategory)) {
 		return false;
 	}
+
+	// ****** Process modifiers ******
+	if ($list == '')						return true;
+	if ($list == ':id')						return $currentCategory['id'];
+	if ($list == ':alt')					return secure_html($currentCategory['alt']);
+	if ($list == ':name')					return secure_html($currentCategory['name']);
+	if ($list == ':icon')					return ($currentCategory['image_id'] && $currentCategory['icon_id'])?1:0;
+	if ($list == ':icon.url')				return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/'.$currentCategory['icon_name'];
+	if ($list == ':icon.width')				return intval($row['icon_width']);
+	if ($list == ':icon.height')			return intval($row['icon_height']);
+	if ($list == ':icon.preview')			return ($currentCategory['image_id'] && $currentCategory['icon_id'] && $currentCategory['icon_preview'])?1:0;
+	if ($list == ':icon.preview.url')		return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/thumb/'.$currentCategory['icon_name'];
+	if ($list == ':icon.preview.width')		return intval($currentCategory['icon_pwidth']);
+	if ($list == ':icon.preview.height')	return intval($currentCategory['icon_pheight']);
+
+
 
 	foreach (preg_split("# *, *#", $list) as $key) {
 		if ($key == '')
