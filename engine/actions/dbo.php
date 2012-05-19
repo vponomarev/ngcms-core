@@ -85,10 +85,15 @@ function systemDboModify() {
 		$ccount = array();
 		$nmap = '';
 		foreach ($mysql->select("select id, catid, postdate, editdate from ".prefix."_news where approve=1") as $row) {
+			$ncats = 0;
 			foreach (explode(",",$row['catid']) as $key) {
 			        if (!$key) { continue; }
+					$ncats++;
 			        $nmap .= '('.$row['id'].','.$key.',from_unixtime('.(($row['editdate']>$row['postdate'])?$row['editdate']:$row['postdate']).')),';
 				if (!$ccount[$key]) { $ccount[$key] = 1; } else { $ccount[$key]+=1; }
+			}
+			if (!$ncats) {
+				$nmap .= '('.$row['id'].',0,from_unixtime('.(($row['editdate']>$row['postdate'])?$row['editdate']:$row['postdate']).')),';
 			}
 		}
 
@@ -270,7 +275,7 @@ function systemDboForm() {
 	}
 
 	$tableList = array();
-	foreach($mysql->select("SHOW TABLES FROM `".$config['dbname']."` LIKE '".prefix."_%'") as $table) {
+	foreach($mysql->select("SHOW TABLES FROM `".$config['dbname']."` LIKE '".prefix."_%'", 0) as $table) {
 		$info		=	$mysql->record("SHOW TABLE STATUS LIKE '".$table[0]."'");
 
 		$tableInfo = array(

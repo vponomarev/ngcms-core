@@ -148,7 +148,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 		// DeApprove news
 		if ($setValue['approve'] < 1) {
 			// Count categories & counters to decrease - we have this news currently in _news_map because this news are marked as published
-			foreach ($mysql->select("select categoryID, count(newsID) as cnt from ".prefix."_news_map where newsID in (".join(", ", $nList).") group by categoryID") as $crec) {
+			foreach ($mysql->select("select categoryID, count(newsID) as cnt from ".prefix."_news_map where newsID in (".join(", ", $nList).") and categoryID > 0 group by categoryID") as $crec) {
 				$mysql->query("update ".prefix."_category set posts=posts-".intval($crec['cnt'])." where id = ".intval($crec['categoryID']));
 			}
 
@@ -162,10 +162,16 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 				if ($nr['approve'] == 1) continue;
 
 				// Calculate list
+				$ncats = 0;
 				foreach (explode(",", $nr['catid']) as $cid) {
 					if (!isset($catmap[$cid])) continue;
 					$clist[$cid]++;
+					$ncats++;
 					$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".intval($nr['id']).", ".intval($cid).", from_unixtime(".(($nr['editdate']>$nr['postdate'])?$nr['editdate']:$nr['postdate'])."))");
+				}
+				// Also put news without category into special category with ID = 0
+				if (!$ncats) {
+					$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".intval($nr['id']).", 0, from_unixtime(".(($nr['editdate']>$nr['postdate'])?$nr['editdate']:$nr['postdate'])."))");
 				}
 			}
 			foreach ($clist as $cid => $cv) {
@@ -306,7 +312,7 @@ function dbBackup($fname, $gzmode, $tlist = ''){
 	if (!is_array($tlist)) {
 		$tlist = array();
 
-		foreach ($mysql->select("show tables like '".prefix."_%'") as $tn)
+		foreach ($mysql->select("show tables like '".prefix."_%'", 0) as $tn)
 			$tlist [] = $tn[0];
 	}
 
@@ -569,7 +575,10 @@ function addNews($mode = array()){
 			foreach (array_keys($catids) as $catid) {
 				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".db_squote($id).", ".db_squote($catid).", now())");
 			}
+		} else {
+			$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".db_squote($id).", 0, now())");
 		}
+
 		$mysql->query("update ".uprefix."_users set news=news+1 where id=".$SQL['author_id']);
 	}
 
@@ -902,6 +911,8 @@ function editNews($mode = array()) {
 			foreach (array_keys($catids) as $catid) {
 				$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".db_squote($id).", ".db_squote($catid).", from_unixtime(".intval($SQL['editdate'])."))");
 			}
+		} else {
+			$mysql->query("insert into ".prefix."_news_map (newsID, categoryID, dt) values (".db_squote($id).", 0, from_unixtime(".intval($SQL['editdate'])."))");
 		}
 	}
 
