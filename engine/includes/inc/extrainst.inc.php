@@ -443,4 +443,48 @@ function generate_install_page($plugin, $text, $stype = 'install') {
 }
 
 
-?>
+//
+class permissionRuleManager {
+	private $isLoaded = false;
+	private $rules;
+
+	function load() {
+		if (is_file(confroot.'perm.rules.php')) {
+			// Try to load it
+			include confroot.'perm.rules.php';
+
+			// Update GLOBAL variable $PERM
+			if (isset($permRules)) {
+				$this->rules = $permRules;
+				$this->isLoaded = true;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function save() {
+		if (!$this->isLoaded)
+			return false;
+
+		$prData = "<?php\n".'$permRules = '.var_export($this->$rules, true)."\n;?>";
+
+		// Try to save config
+		$fcHandler = @fopen(confroot.'perm.rules.php', 'w');
+		if ($fcHandler) {
+			fwrite($fcHandler, $fcData);
+			fclose($fcHandler);
+			return true;
+		}
+		return false;
+	}
+
+	function register($plugin, $item, $mode, $title, $description) {
+	}
+
+	function getList() {
+		if (!$this->isLoaded)
+			return false;
+		return $this->rules;
+	}
+}
