@@ -100,67 +100,92 @@ function coreRegisterUser() {
 
 // Registration page generation
 function generate_reg_page($params, $values = array(), $msg = '') {
-	global $tpl, $template, $PHP_SELF, $config;
+	global $tpl, $template, $PHP_SELF, $config, $PFILTERS, $twig, $twigLoader;
+
+	$tVars = array(
+		'entries' => array(),
+		'flags'	=> array(),
+	);
 
 	$tpl -> template('registration.entries', tpl_site);
 
 	if ($msg) { msg(array("text" => $msg)); }
 
 	foreach($params as $param) {
-		$tvars['vars'] = array(
+		$tRow = array(
 			'name'	=> $param['name'],
 			'title' => $param['title'],
 			'descr' => $param['descr'],
 			'error' => '',
-			'input' => ''
+			'input' => '',
+			'flags'	=> array(),
 		);
 
 		if ($param['error']) {
-			$tvars['vars']['error'] = str_replace('%error%',$param['error'],$lang['param_error']);
+			$tRow['flags']['isError'] = true;
+			$tRow['error'] = str_replace('%error%',$param['error'],$lang['param_error']);
 		}
 		if ($values[$param['name']]) {
+			$tRow['value'] = $values[$param['name']];
 			$param['value'] = $values[$param['name']];
 		}
 
+		$tInput = '';
 		if ($param['type'] == 'text') {
-			$tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
+			$tInput = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
 		} else if ($param['type'] == 'input') {
-			$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
+			$tInput = '<input name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
 		} else if (($param['type'] == 'password')||($param['type'] == 'hidden')) {
-			$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="'.$param['type'].'" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
+			$tInput = '<input name="'.$param['name'].'" type="'.$param['type'].'" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
 		} else if ($param['type'] == 'select') {
-			$tvars['vars']['input'] = '<select name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>';
+			$tInput = '<select name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>';
 			foreach ($param['values'] as $oid => $oval) {
-				$tvars['vars']['input'].= '<option value="'.$oid.'"'.($param['value']==$oid?' selected':'').'>'.$oval.'</option>';
+				$tInput.= '<option value="'.$oid.'"'.($param['value']==$oid?' selected':'').'>'.$oval.'</option>';
 			}
-			$tvars['vars']['input'].='</select>';
+			$tInput.='</select>';
 		} else if ($param['type'] = 'manual') {
-			$tvars['vars']['input'] = $param['manual'];
+			$tInput = $param['manual'];
 		}
 
-		$tpl -> vars('registration.entries', $tvars);
-		$entries .= $tpl -> show('registration.entries');
-
+		$tRow['input'] = $tInput;
+		$tVars['entries'][] = $tRow;
 	}
 
 	if ($config['use_captcha']) {
+		$tVars['flags']['hasCaptcha'] = true;
 		$_SESSION['captcha'] = rand(00000, 99999);
-		$tvars['vars']['captcha'] = '';
-		$tvars['regx']["'\[captcha\](.*?)\[/captcha\]'si"] = '$1';
 	}
 	else {
-		$tvars['regx']["'\[captcha\](.*?)\[/captcha\]'si"] = '';
+		$tVars['flags']['hasCaptcha'] = false;
 	}
 
-	$tvars['vars'] = array();
-	$tvars['vars']['form_action'] = checkLinkAvailable('core', 'registration')?
-										generateLink('core', 'registration', array()):
-										generateLink('core', 'plugin', array('plugin' => 'core', 'handler' => 'registration'));
+	$tVars['form_action'] = checkLinkAvailable('core', 'registration')?
+								generateLink('core', 'registration', array()):
+								generateLink('core', 'plugin', array('plugin' => 'core', 'handler' => 'registration'));
 
-	$tvars['vars']['entries'] = $entries;
-	$tpl -> template('registration', tpl_site);
-	$tpl -> vars('registration', $tvars);
-	$template['vars']['mainblock'] .= $tpl -> show('registration');
+	// Prepare REGEX conversion table
+	$conversionConfigRegex = array(
+			"#\[captcha\](.*?)\[/captcha\]#si"				=> '{% if (flags.hasCaptcha) %}$1{% endif %}',
+			"#{entries}#si"									=> '{% for entry in entries %}{% include "registration.entries.tpl" %}{% endfor %}',
+	);
+
+	$conversionConfig = array(
+		'{form_action}'		=> '{{ form_action }}',
+	);
+
+	$conversionConfigEntries = array(
+		'{name}'		=> '{{ entry.name }}',
+		'{title}'		=> '{{ entry.title }}',
+		'{descr}'		=> '{{ entry.descr }}',
+		'{error}'		=> '{{ entry.error }}',
+		'{input}'		=> '{{ entry.input }}',
+	);
+
+	$twigLoader->setConversion('registration.tpl', $conversionConfig, $conversionConfigRegex);
+	$twigLoader->setConversion('registration.entries.tpl', $conversionConfigEntries);
+	$xt = $twig->loadTemplate('registration.tpl');
+	$template['vars']['mainblock'] .= $xt->render($tVars);
+
 }
 
 
