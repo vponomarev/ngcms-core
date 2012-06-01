@@ -5,6 +5,24 @@
 <script type="text/javascript">
 // Global variable: ID of current active input area
 {% if (flags.edit_split) %}var currentInputAreaID = 'ng_news_content_short';{% else %}var currentInputAreaID = 'ng_news_content';{% endif %}
+
+
+function preview(){
+ var form = document.getElementById("postForm");
+ if (form.ng_news_content{% if (flags.edit_split) %}_short{% endif %}.value == '' || form.title.value == '') {
+  alert('{l_msge_preview}');
+  return false;
+ }
+
+ form['mod'].value = "preview";
+ form.target = "_blank";
+ form.submit();
+
+ form['mod'].value = "news";
+ form.target = "_self";
+ return true;
+}
+
 function changeActive(name) {
  if (name == 'full') {
 	document.getElementById('container.content.full').className  = 'contentActive';
@@ -24,6 +42,7 @@ function approveMode(mode) {
 
 <form id="postForm" name="form" ENCTYPE="multipart/form-data" method="POST" action="{{ currentURL }}">
 <input type="hidden" name="token" value="{{ token }}"/>
+<input type="hidden" name="mod" value="news"/>
 <input type="hidden" name="approve" id="approve" value="0"/>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
@@ -116,9 +135,11 @@ function approveMode(mode) {
 <tr>
 	<td>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr align="center">
+<tr align="left"><td colspan="3">
+<input type="button" value="{{ lang.addnews['preview'] }}" class="button" onclick="return preview();" /><br/><br/>
+</tr>
+<tr align="left">
 <td width="30%" class="contentEditW" align="center" valign="top">
-<!--	<input type="button" value="{{ lang.addnews['preview'] }}" class="button" onclick="return preview();" /> &nbsp; &nbsp; -->
 	<input type="submit" value="Сохранить черновик" class="button" onclick="return approveMode(-1);" /> &nbsp; &nbsp; &nbsp;
 </td>
 <td width="30%" class="contentEditW" align="center" valign="top">
