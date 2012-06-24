@@ -229,7 +229,7 @@ $(document).ready(function() {
 function uploadifyDoUpload() {
 	// Prepare script data
 	var scriptData = new Array();
-	scriptData['ngAuthCookie']	= getCookie('zz_auth');
+	scriptData['ngAuthCookie']	= '{authcookie}';
 	scriptData['uploadType']	= 'file';
 	scriptData['category']		= document.getElementById('categorySelect').value;
 	scriptData['rand']			= document.getElementById('flagRand').checked?1:0;
