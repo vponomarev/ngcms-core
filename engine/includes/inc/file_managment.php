@@ -399,6 +399,9 @@ function manage_showlist($type) {
 
 	$tvars['regx']['#\[preview\](.+?)\[/preview\]#is'] = $_COOKIE['img_preview']?'$1':'';
 
+	// Create auth cookie
+	$tvars['vars']['authcookie'] = $userROW['authcookie'];
+
 	if ($userROW['status'] < "3") {
 		$tvars['vars']['[status]']	=	'';
 		$tvars['vars']['[/status]']	=	'';
