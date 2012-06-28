@@ -2065,11 +2065,11 @@ function twigGetLang() {
 // Allow to have specific template configuration for different locations ($CurrentHandler global array)
 // RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
 // ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
-function twigIsHandler($rule) {
+function twigIsHandler($rules) {
  global $config, $CurrentHandler;
 
 	$ruleCatched = false;
-	foreach (preg_split("#\|#", $v[2]) as $rule) {
+	foreach (preg_split("#\|#", $rules) as $rule) {
 		if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
 			// Specified: Plugin + Handler
 			if (($pt[1] == $CurrentHandler['pluginName']) && ($pt[2] == $CurrentHandler['handlerName'])) {
