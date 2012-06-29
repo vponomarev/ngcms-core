@@ -10,7 +10,7 @@
 function preview(){
  var form = document.getElementById("postForm");
  if (form.ng_news_content{% if (flags.edit_split) %}_short{% endif %}.value == '' || form.title.value == '') {
-  alert('{l_msge_preview}');
+  alert('{{ lang.nsm['err.preview'] }}');
   return false;
  }
 
