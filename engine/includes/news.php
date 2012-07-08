@@ -261,8 +261,12 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 		// Check if there is a custom mapping
 		if ($fcat && $catmap[$fcat] && ($ctname = $catz[$catmap[$fcat]]['tpl'])) {
 			// Check if directory exists
-			if (is_dir($templatePath.'/ncustom/'.$ctname))
+			if (is_dir($templatePath.'/ncustom/'.$ctname)) {
 				$templatePath = $templatePath.'/ncustom/'.$ctname;
+				if (file_exists($templatePath.'/ncustom/'.$ctname.'/main.tpl')) {
+					$SYSTEM_FLAGS['template.main.path'] = $templatePath.'/ncustom/'.$ctname;
+				}
+			}
 		}
 	}
 
