@@ -24,7 +24,7 @@ $conversionConfigRegex = array(
 		"#\[isnt-logged\](.*?)\[/isnt-logged\]#si"		=> '{% if (not flags.isLogged) %}$1{% endif %}',
 		"#\[is-logged\](.*?)\[/is-logged\]#si"			=> '{% if (flags.isLogged) %}$1{% endif %}',
 		"#\[login-err\](.*?)\[/login-err\]#si"			=> '{% if (flags.loginError) %}$1{% endif %}',
-		"#\[if-have-perm\](.*?)\[/if-have-perm\]#si"	=> "{% if (global.flags.isLogged and (user['status'] <= 3)) %}$1{% endif %}",
+		"#\[if-have-perm\](.*?)\[/if-have-perm\]#si"	=> "{% if (global.flags.isLogged and (global.user['status'] <= 3)) %}$1{% endif %}",
 //		"#\{l_([0-9a-zA-Z\-\_\.\#]+)}#"					=> "{{ lang['$1'] }}",
 );
 
