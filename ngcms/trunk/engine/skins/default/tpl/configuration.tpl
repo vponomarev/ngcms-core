@@ -236,6 +236,10 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[number]' value='{c_number}' size="6" /></td>
 </tr>
 <tr>
+<td class="contentEntry1">{l_news_multicat_url}<br /><small>{l_news_multicat_url#desc}</small></td>
+<td class="contentEntry2" valign="middle">{news_multicat_url}</td>
+</tr>
+<tr>
 <td class="contentEntry1">{l_nnavigations}<br/><small>{l_nnavigations_desc}</small></td>
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[newsNavigationsCount]' value='{c_newsNavigationsCount}' size="6" /></td>
 </tr>

@@ -1149,7 +1149,7 @@ function generateCategoryFilter(){
 // Generate link to news
 //
 function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = false) {
-	global $catmap;
+	global $catmap, $config;
 
 	// Prepare category listing
 	$clist = 'none';
@@ -1162,6 +1162,8 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = f
 				$ccats[] = $catmap[$ccatid];
 				$icats[] = $ccatid;
 			}
+			if ($config['news_multicat_url'])
+				break;
 		}
 		$clist = implode("-", $ccats);
 		$ilist = implode("-", $icats);

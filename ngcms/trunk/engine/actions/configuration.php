@@ -141,6 +141,7 @@ function systemConfigEditForm(){
 		'token'						=> genUToken('admin.configuration'),
 		'home_url'					=> $config['home_url'],
 		'admine_url'				=> $config['admin_url'],
+		'news_multicat_url'			=>	MakeDropDown(array(0 => $lang['news_multicat:0'], 1 => $lang['news_multicat:1']),  "save_con[news_multicat_url]", $config['news_multicat_url']),
 	);
 
 	// Prepare file name for STAMP
