@@ -678,7 +678,7 @@ function addNewsForm($retry = ''){
 			'multicat.show'		=> $perm['personal.multicat'],
 			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
 			'can_publish'		=> $perm['personal.publish'],
-			'altname.disabled'	=> (!$perm[$permGroupMode.'.altname'])?true:false,
+			'altname.disabled'	=> (!$perm['personal.altname'])?true:false,
 			'mondatory_cat'		=> (!$perm['personal.nocat'])?true:false,
 		),
 	);
