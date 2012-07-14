@@ -13,7 +13,7 @@
 // Global variables definition
 //
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $systemAccessURL;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache;
 

@@ -1754,10 +1754,10 @@ function checkPermission($identity, $user = null, $mode = '', $way = '') {
 	}
 	// - access item
 	$ai = '';
-	if (isset($PERM[$uGroup][$ag][$identity['item']])) {
+	if (isset($PERM[$uGroup][$ag][$identity['item']]) && ($PERM[$uGroup][$ag][$identity['item']] !== NULL)) {
 		// Plugin found
 		$ai = $identity['item'];
-	} elseif (isset($PERM[$uGroup][$ag]['*'])) {
+	} elseif (isset($PERM[$uGroup][$ag]['*']) && ($PERM[$uGroup][$ag]['*'] !== NULL)) {
 		// Perform default action
 		$ai = '*';
 	} else {
@@ -1779,16 +1779,16 @@ function checkPermission($identity, $user = null, $mode = '', $way = '') {
 	foreach ($mList as $mKey) {
 		// The very default - DENY
 		$iStatus = false;
-		if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag][$ai]) && isset($PERM[$uGroup][$ag][$ai][$mKey])) {
+		if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag][$ai]) && isset($PERM[$uGroup][$ag][$ai][$mKey]) && ($PERM[$uGroup][$ag][$ai][$mKey] !== NULL)) {
 			// Check specific mode
 			$iStatus = $PERM[$uGroup][$ag][$ai][$mKey];
-		} else if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag][$ai]) && isset($PERM[$uGroup][$ag][$ai]['*'])) {
+		} else if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag][$ai]) && isset($PERM[$uGroup][$ag][$ai]['*']) && ($PERM[$uGroup][$ag][$ai]['*'] !== NULL)) {
 			// Ckeck '*' under specifig Group/Item
 			$iStatus = $PERM[$uGroup][$ag][$ai]['*'];
-		} else if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag]['*']) && isset($PERM[$uGroup][$ag]['*']['*'])) {
+		} else if (isset($PERM[$uGroup][$ag]) && isset($PERM[$uGroup][$ag]['*']) && isset($PERM[$uGroup][$ag]['*']['*']) && ($PERM[$uGroup][$ag]['*']['*'] !== NULL)) {
 			// Check '*' under specific Group
 			$iStatus = $PERM[$uGroup][$ag]['*']['*'];
-		} else if (isset($PERM[$uGroup]['*']) && isset($PERM[$uGroup]['*']['*']) && isset($PERM[$uGroup]['*']['*']['*'])) {
+		} else if (isset($PERM[$uGroup]['*']) && isset($PERM[$uGroup]['*']['*']) && isset($PERM[$uGroup]['*']['*']['*']) && ($PERM[$uGroup]['*']['*']['*'] !== NULL)) {
 			// Check '*' under current UserGroupID
 			$iStatus = $PERM[$uGroup]['*']['*']['*'];
 		}
@@ -1805,26 +1805,58 @@ function checkPermission($identity, $user = null, $mode = '', $way = '') {
 
 // Load permissions
 function loadPermissions(){
-	global $PERM, $confPerm;
+	global $PERM, $confPerm, $confPermUser;
 
+	// 1. Load DEFAULT permission file.
+	// * if not exists - allow everything for group = 0, other's are restricted
+	$PERM = array();
+	if (is_file(confroot.'perm.default.php')) {
+		include confroot.'perm.default.php';
+		$PERM = $confPerm;
+	} else {
+		$PERM = array( '1' => array('*' => array('*' => array('*' => true))));
+	}
+
+	// 2. Load user specific config file
 	// If configuration file exists
+	$confPermUser = array();
 	if (is_file(confroot.'perm.php')) {
 		// Try to load it
 		include confroot.'perm.php';
-
-		// Update GLOBAL variable $PERM
-		$PERM = $confPerm;
-	} else {
-		// Fill $PERM variable with DEFAULT values
-		if (is_file(confroot.'perm.default.php')) {
-			include confroot.'perm.default.php';
-			$PERM = $confPerm;
-		} else {
-			print "Fatal error: Cannot load DEFAULT permissions for users!";
-			die();
-		}
 	}
+
+	// Scan user's permissions
+	if (is_array($confPermUser))
+		foreach ($confPermUser as $g => $ginfo) {
+			if (is_array($ginfo))
+				foreach ($ginfo as $p => $ainfo) {
+					if (is_array($ainfo))
+						foreach ($ainfo as $r => $rinfo) {
+							if (is_array($rinfo))
+								foreach ($rinfo as $i => $ivalue) {
+									$PERM[$g][$p][$r][$i] = $ivalue;
+								}
+						}
+				}
+		}
 }
+
+// SAVE updated user-defined permissions
+function saveUserPermissions() {
+	global $confPermUser;
+
+	$line = '<?php'."\n// NGCMS User defined permissions ()\n";
+	$line .= '$confPermUser = '. var_export($confPermUser, true)."\n;\n?>";
+
+	$fcHandler = @fopen(confroot.'perm.php', 'w');
+	if ($fcHandler) {
+		fwrite($fcHandler, $line);
+		fclose($fcHandler);
+		return true;
+	}
+	return false;
+}
+
 
 // Generate record in System LOG for security audit and logging of changes
 // $identity - array of params for identification if object
