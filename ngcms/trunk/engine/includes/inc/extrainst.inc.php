@@ -479,7 +479,42 @@ class permissionRuleManager {
 		return false;
 	}
 
-	function register($plugin, $item, $mode, $title, $description) {
+	function getPluginTree($plugin) {
+		if (!$this->isLoaded) {
+			return false;
+		}
+		return $this->rules[$plugin];
+	}
+
+	function setPluginTree($plugin, $tree) {
+		if (!$this->isLoaded) {
+			return false;
+		}
+		$this->rules[$plugin] = $tree;
+		return true;
+	}
+
+	function removePlugin($plugin) {
+		if (!$this->isLoaded || ($plugin == '#admin')) {
+			return false;
+		}
+		if (isset($this->rules[$plugin]))
+			unset($this->rules[$plugin]);
+
+		return true;
+	}
+
+	function listPlugins() {
+		if (!$this->isLoaded) {
+			return false;
+		}
+
+		$x = array();
+		foreach ($this->rules as $k => $v)
+			if ($k != '#admin')
+				$x []= $k;
+
+		return $x;
 	}
 
 	function getList() {

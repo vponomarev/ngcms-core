@@ -86,6 +86,7 @@ function changeActive(name) {
 {% endif %}
 
    </tr>
+
 {% if not flags['altname.disabled'] %}
   <tr>
    <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>

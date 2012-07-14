@@ -131,6 +131,16 @@ class StaticFilter {
 }
 
 
+// CLASS DEFINITION: core actions filter
+class CoreFilter {
+	// Register new user: FORM handler
+	function registerUserForm(&$tvars) { return 1;}
+
+	// Register new user: ACTION handler
+	function registerUser(&$tvars, &$SQL) { return 1;}
+}
+
+
 // ==================================================================
 // Categories edit interceptors
 // ==================================================================
