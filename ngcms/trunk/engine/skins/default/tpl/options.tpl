@@ -69,10 +69,10 @@
 <td width="100%" class="contentEntry1"><img src="{skins_url}/images/ipban.gif" hspace="8" alt="" /><a href="{php_self}?mod=ipban" title="{l_ipban}">{l_ipban}</a></td>
 </tr>
 <tr>
-<td width="100%" class="contentEntry1"><img src="{skins_url}/images/ipban.gif" hspace="8" alt="" /><a href="{php_self}?mod=ugroups" title="{l_ugroups}">{l_ugroups}</a></td>
+<td width="100%" class="contentEntry1"> <!-- <img src="{skins_url}/images/ipban.gif" hspace="8" alt="" /><a href="{php_self}?mod=ugroups" title="{l_ugroups}">{l_ugroups}</a> --> &nbsp;</td>
 </tr>
 <tr>
-<td width="100%" class="contentEntry1"><img src="{skins_url}/images/ipban.gif" hspace="8" alt="" /><a href="{php_self}?mod=uperm" title="{l_uperm}">{l_uperm}</a></td>
+<td width="100%" class="contentEntry1"><img src="{skins_url}/images/ipban.gif" hspace="8" alt="" /><a href="{php_self}?mod=perm" title="{l_uperm}">{l_uperm}</a></td>
 </tr>
 </table>
 </td>
