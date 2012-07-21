@@ -114,7 +114,7 @@ function generate_config_page($module, $params, $values = array()) {
   }
 
   $tpl -> template('table', tpl_actions.'extra-config');
-  $tvars['vars'] = array('entries' => $entries, 'plugin' => $module, 'php_self' => $PHP_SELF);
+  $tvars['vars'] = array('entries' => $entries, 'plugin' => $module, 'php_self' => $PHP_SELF, 'token' => genUToken('admin.extra-config'));
   $tpl -> vars('table', $tvars);
   echo $tpl -> show('table');
 }
@@ -126,6 +126,8 @@ function commit_plugin_config_changes($module, $params) {
 	// Load cofig
 	plugins_load_config();
 
+	$cfgUpdate = array();
+
 	// For each param do save data
 	foreach($params as $param) {
 		// Validate parameter if needed
@@ -134,6 +136,7 @@ function commit_plugin_config_changes($module, $params) {
 	        		foreach ($param['entries'] as $gparam) {
 					if ($gparam['name'] && (!$gparam['nosave'])) {
 						pluginSetVariable($module, $gparam['name'], $_POST[$gparam['name']].'');
+						$cfgUpdate[$gparam['name']] = $_POST[$gparam['name']].'';
 					}
 	        		}
 	        	}
@@ -144,6 +147,9 @@ function commit_plugin_config_changes($module, $params) {
 
 	// Save config
 	pluginsSaveConfig();
+
+	// Generate log
+	ngSYSLOG(array('plugin' => '#admin', 'item' => 'config#'.$module), array('action' => 'update', 'list' => $cfgUpdate), null, array(1));
 }
 
 // Load params sent by POST request in plugin configuration

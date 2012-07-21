@@ -56,6 +56,9 @@ function systemConfigSave(){
 		msg(array("type" => 'error', "text" => $lang['msge_save_error'], "info" => $lang['msge_save_error#desc']));
 		return false;
 	}
+
+	ngSYSLOG(array('plugin' => '#admin', 'item' => 'configuration', 'ds_id' => $id), array('action' => 'saveConfig', 'list' => $fcData), null, array(1, ''));
+
 	return true;
 }
 

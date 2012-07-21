@@ -37,22 +37,36 @@ $repoPluginInfo = repoSync();
 $enable  = isset($_REQUEST['enable'])?$_REQUEST['enable']:'';
 $disable = isset($_REQUEST['disable'])?$_REQUEST['disable']:'';
 
+// Check for security token
+if ($enable || $disable) {
+	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.extras'))) {
+		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras', 'ds_id' => $id), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));
+		exit;
+	}
+}
+
 if ($enable) {
 	if (pluginSwitch($enable, 'on')) {
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $enable)), null, array(1, ''));
 		msg(array("text" => sprintf($lang['msgo_is_on'], $extras[$enable]['name'])));
 	} else {
 		// generate error message
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $enable)), null, array(0, 'ERROR: '.$enable));
 		msg(array("text" => 'ERROR: '.sprintf($lang['msgo_is_on'], $extras[$id]['name'])));
 	}
 }
 
 if ($disable) {
 	if ($extras[$disable]['permanent']) {
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_off', 'list' => array('plugin' => $disable)), null, array(0, 'ERROR: PLUGIN is permanent '.$disable));
 		msg(array("text" => 'ERROR: '.sprintf($lang['msgo_is_off'], $extras[$id]['name'])));
 	} else {
 		if (pluginSwitch($disable, 'off')) {
+			ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_off', 'list' => array('plugin' => $disable)), null, array(1, ''));
 			msg(array("text" => sprintf($lang['msgo_is_off'], $extras[$id]['name'])));
 		} else {
+			ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $disable)), null, array(0, 'ERROR: '.$disable));
 			msg(array("text" => 'ERROR: '.sprintf($lang['msgo_is_off'], $extras[$id]['name'])));
 		}
 	}
@@ -113,7 +127,7 @@ foreach($extras as $id => $extra) {
 	}
 
 	$tvars['vars']['url'] = (isset($extra['config']) && $extra['config'] && (!$needinstall) && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['config']))?'<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'">'.$extra['name'].'</a>' : $extra['name'];
-	$tvars['vars']['link'] = (getPluginStatusActive($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
+	$tvars['vars']['link'] = (getPluginStatusActive($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;&amp;token='.genUToken('admin.extras').'&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;&amp;token='.genUToken('admin.extras').'&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
 
 	if ($needinstall) {
 		$tvars['vars']['link'] = '';

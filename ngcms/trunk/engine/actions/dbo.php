@@ -269,9 +269,9 @@ function systemDboForm() {
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'dbo'), null, 'details')) {
-	msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
-	ngSYSLOG(array('plugin' => '#admin', 'item' => 'dbo', 'ds_id' => $id), array('action' => 'details'), null, array(0, 'SECURITY.PERM'));
-	return false;
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'dbo', 'ds_id' => $id), array('action' => 'details'), null, array(0, 'SECURITY.PERM'));
+		return false;
 	}
 
 	$tableList = array();
