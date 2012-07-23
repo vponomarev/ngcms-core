@@ -327,7 +327,7 @@ function dbBackup($fname, $gzmode, $tlist = ''){
 	// Now, let's scan tables
 	foreach ($tlist as $tname) {
 		// Fetch create syntax for table and after - write table's content
-		if (is_array($csql = $mysql->record("show create table `".$tname."`"))) {
+		if (is_array($csql = $mysql->record("show create table `".$tname."`", -1))) {
 			$out  = "\n#\n# Table `".$tname."`\n#\n";
 			$out .= "DROP TABLE IF EXISTS `".$tname."`;\n";
 			$out .= $csql[1].";\n";
