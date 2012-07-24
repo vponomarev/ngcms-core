@@ -30,6 +30,7 @@ $conversionConfigRegex = array(
 
 // Prepare conversion table
 $conversionConfig = array(
+		'{avatar_url}'			=> '{{ avatar_url }}',
 		'{profile_link}'		=> '{{ profile_link }}',
 		'{addnews_link}'		=> '{{ addnews_link }}',
 		'{logout_link}'			=> '{{ logout_link }}',
