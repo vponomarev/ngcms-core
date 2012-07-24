@@ -40,7 +40,7 @@ function coreActivateUser() {
 
 
 function coreRegisterUser() {
-	global $ip, $lang, $config, $AUTH_METHOD, $SYSTEM_FLAGS, $userROW;
+	global $ip, $lang, $config, $AUTH_METHOD, $SYSTEM_FLAGS, $userROW, $PFILTERS, $mysql;
 
 	$lang = LoadLang('registration', 'site');
 	$SYSTEM_FLAGS['info']['title']['group']	= $lang['loc_registration'];
@@ -85,10 +85,23 @@ function coreRegisterUser() {
 		}
 
 		// Trying register
-		if (!$msg && $auth->register(&$params, $values, &$msg)) {
-			// OK
-			// ...
+		if (!$msg && ($uid = $auth->register(&$params, $values, &$msg))) {
+			// OK, fetch user record
+			if ($uid > 1) {
+				// ** COMPAT: exec action only if $uid > 1
+				$urec = $mysql->record("select * from ".uprefix."_users where id = ".intval($uid));
+
+				// LOG: Successully registered
+				ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), $urec, array(0, ''));
+
+				// Execute filters - add additional variables
+				if (is_array($urec) && is_array($PFILTERS['core.registerUser']))
+					foreach ($PFILTERS['core.registerUser'] as $k => $v) { $v->registerUserNotify($uid, $urec); }
+			}
 		} else {
+			// LOG: Successully registered
+			ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), 0, array(1, 'Registration failed'));
+
 			// Fail
 			generate_reg_page($params, $values, $msg);
 		}
@@ -111,14 +124,20 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 
 	if ($msg) { msg(array("text" => $msg)); }
 
+	// prepare variable list
 	foreach($params as $param) {
 		$tRow = array(
-			'name'	=> $param['name'],
-			'title' => $param['title'],
-			'descr' => $param['descr'],
-			'error' => '',
-			'input' => '',
-			'flags'	=> array(),
+			'name'		=> $param['name'],
+			'title'		=> $param['title'],
+			'descr'		=> $param['descr'],
+			'error'		=> '',
+			'input'		=> '',
+			'flags'		=> array(),
+			'type'		=> $param['type'],
+			'html_flags'	=> $param['html_flags'],
+			'value'		=> $param['value'],
+			'values'	=> $param['values'],
+			'manual'	=> $param['manual'],
 		);
 
 		if ($param['error']) {
@@ -129,7 +148,16 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 			$tRow['value'] = $values[$param['name']];
 			$param['value'] = $values[$param['name']];
 		}
+		$tVars['entries'][] = $tRow;
+	}
 
+
+	// Execute filters - add additional variables
+	if (is_array($PFILTERS['core.registerUser']))
+		foreach ($PFILTERS['core.registerUser'] as $k => $v) { $v->registerUserForm($tVars); }
+
+	// Generate inputs
+	foreach ($tVars['entries'] as $k => $param) {
 		$tInput = '';
 		if ($param['type'] == 'text') {
 			$tInput = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
@@ -147,8 +175,7 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 			$tInput = $param['manual'];
 		}
 
-		$tRow['input'] = $tInput;
-		$tVars['entries'][] = $tRow;
+		$tVars['entries'][$k]['input'] = $tInput;
 	}
 
 	if ($config['use_captcha']) {
@@ -356,9 +383,16 @@ function coreLoginAction($row = null, $redirect = null){
 		$is_logged_cookie	= true;
 		$is_logged			= true;
 
+		// LOG: Successully logged in
+		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), NULL, array(0, ''));
+
 		// Redirect back
 		@header('Location: '.($redirect?$redirect:home));
 	} else {
+		// LOG: Login error
+		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), 0, array(1, $row));
+
+
 		$SYSTEM_FLAGS['auth_fail'] = 1;
 		$result = true;
 		$is_logged_cookie = false;
@@ -368,7 +402,7 @@ function coreLoginAction($row = null, $redirect = null){
 		$tvars['vars']['form_action'] = generateLink('core', 'login');
 		$tvars['vars']['redirect'] = isset($_POST['redirect'])?$_POST['redirect']:$HTTP_REFERER;
 
-		if ($row == 'ERR:NEED.ACTIVATE') {
+		if (preg_match ('#^ERR:NEED.ACTIVATE#', $row, $null)) {
 			$tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '$1';
 			$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
 			$tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
@@ -414,12 +448,8 @@ function coreLogin(){
 	}
 
 	// Try to auth
-	$row = null;
-	if (($_SERVER['REQUEST_METHOD'] == 'POST') && is_array($row = $auth->login())) {
-		coreLoginAction($row, $redirect);
-	} else {
-		coreLoginAction(($row == 'ERR:NEED.ACTIVATE'?$row:''), $redirect);
-	}
+	$row = $auth->login();
+	coreLoginAction($row, $redirect);
 }
 
 function coreLogout(){
