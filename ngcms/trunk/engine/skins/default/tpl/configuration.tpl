@@ -258,6 +258,10 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle">{news.edit.split}</td>
 </tr>
 <tr>
+<td class="contentEntry1">{l_news_without_content}<br /><small>{l_news_without_content_desc}</small></td>
+<td class="contentEntry2" valign="middle">{news_without_content}</td>
+</tr>
+<tr>
 <td class="contentEntry1">{l_date_adjust}<br /><small>{l_date_adjust_desc}</small></td>
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[date_adjust]' value='{c_date_adjust}' size="6" /></td>
 </tr>
