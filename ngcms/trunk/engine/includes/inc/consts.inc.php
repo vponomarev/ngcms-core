@@ -17,7 +17,7 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.3 Release [SVN954+]');
+@define('engineVersion', '0.9.3 Release [SVN1022+]');
 
 @define('prefix', $config['prefix']);
 @define('home', $config['home_url']);

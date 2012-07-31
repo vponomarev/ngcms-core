@@ -61,6 +61,11 @@ $query_xfUpdateDB = array(
 
 $query_list_093svn = array(
 "alter table ".prefix."_news_map add column dt datetime default NULL",
+"alter table ".prefix."_news  drop index news_mainid",
+"alter table ".prefix."_news  drop index news_catid",
+"alter table ".prefix."_news   add index news_mainid (`approve`,`mainpage`,`pinned`,`id`)",
+"alter table ".prefix."_news   add index news_catid  (`approve`,`catpinned`,`id`)",
+"alter table ".prefix."_news add column catpinned tinyint(1) default '0'",
 );
 // Load plugin list
 $extras	=	get_extras_list();
