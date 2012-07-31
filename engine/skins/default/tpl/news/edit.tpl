@@ -265,7 +265,7 @@ function changeActive(name) {
 </td>
 {% if flags.deleteable %}
 <td class="contentEditW" align="right" valign="top" width="150">
-<input type="button" value="{{ lang.editnews['delete'] }}" onClick="confirmit('{{ php_self }}?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;selected_news[]={{ id }}', '{{ lang.editnews['sure_del'] }}')" class="button" />
+<input type="button" value="{{ lang.editnews['delete'] }}" onClick="confirmit('{{ php_self }}?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;selected_news[]={{ id }}&amp;token={{ token }}', '{{ lang.editnews['sure_del'] }}')" class="button" />
 </td>
 {% endif %}
 </tr>
