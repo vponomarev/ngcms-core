@@ -60,6 +60,7 @@ $query_xfUpdateDB = array(
 );
 
 $query_list_093svn = array(
+"alter table ".prefix."_news add column catpinned int default 0",
 "alter table ".prefix."_news_map add column dt datetime default NULL",
 "alter table ".prefix."_news  drop index news_mainid",
 "alter table ".prefix."_news  drop index news_catid",
@@ -145,7 +146,7 @@ function questionare_093() {
  </tr>
  <tr>
   <td>¬ыполнить обновление структуры Ѕƒ 0.9.3 Release => 0.9.3 SVN+<br/>
-   <small>ƒанную операцию требуетс€ произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 970<br/>
+   <small>ƒанную операцию требуетс€ произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 1025<br/>
    </small>
   </td>
   <td width='10%'><input type=checkbox name='update093svn' value='1' /></td>
