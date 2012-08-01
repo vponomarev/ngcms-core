@@ -25,9 +25,9 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 		return -1;
 
 	// Check for security token
-	if ($permCheck && (!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit'))) {
+	if ($permCheck && ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.news.edit')))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
-		return;
+		return -1;
 	}
 
 	// Load permissions
@@ -59,6 +59,7 @@ function massModifyNews($list, $setValue, $permCheck = true) {
 	$nData = array();
 
 	$results = array();
+	$recList = array();
 
 	if (isset($list['data'])) {
 		$recList = $list['data'];
