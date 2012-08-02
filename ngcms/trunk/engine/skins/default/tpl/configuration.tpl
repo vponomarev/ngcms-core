@@ -26,7 +26,7 @@ function ChangeOption(selectedOption) {
 <!-- Navigation bar -->
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_configuration_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=configuration">{l_configuration_title}</a></td>
 </tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -97,6 +97,21 @@ function ChangeOption(selectedOption) {
 <!-- ########## SECURYTY      ########## -->
 <div id="security" style="display: none;">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+ <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_logging}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_syslog}<br /><small>{l_syslog_desc}</small></td>
+<td class="contentEntry2" valign="middle">{syslog}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_load}<br /><small>{l_load_desc}</small></td>
+<td class="contentEntry2" valign="middle">{load}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_load_profiler}<br /><small>{l_load_profiler_desc}</small></td>
+<td class="contentEntry2" valign="middle"><input type="text" name="save_con[load_profiler]" value="{load_profiler}" /></td>
+</tr>
 <tr>
  <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_security}</td>
 </tr>
@@ -247,6 +262,11 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry1">{l_category_counters}<br /><small>{l_category_counters_desc}</small></td>
 <td class="contentEntry2" valign="middle">{category_counters}</td>
 </tr>
+<tr>
+<td class="contentEntry1">{l_news_view_counters}<br /><small>{l_news_view_counters#desc}</small></td>
+<td class="contentEntry2" valign="middle">{news_view_counters}</td>
+</tr>
+
 <!--
 <tr>
 <td class="contentEntry1">{l_category_link}<br /><small>{l_category_link_desc}</small></td>

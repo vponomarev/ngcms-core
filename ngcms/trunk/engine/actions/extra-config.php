@@ -49,7 +49,7 @@ if (!is_array($extras[$plugin])) {
 	// Check if such type of script is configured in plugin & exists
 	if (is_array($extras[$plugin]) && ($extras[$plugin][$stype]) && is_file($cfg_file)) {
 
-		// Security update: for style == 'config' and POST update action - check for token
+		// Security update: for stype == 'config' and POST update action - check for token
 		if (($stype == 'config') && ($_REQUEST['action'] == 'commit') && ($_REQUEST['token'] != genUToken('admin.extra-config'))) {
 				msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
 				ngSYSLOG(array('plugin' => '#admin', 'item' => 'config#'.$plugin), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));

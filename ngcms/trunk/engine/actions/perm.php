@@ -20,10 +20,10 @@ $pManager->load();
 
 // Prepare data
 $grp = array(
-	array('id' => 1, 'title' => 'Администратор'),
-	array('id' => 2, 'title' => 'Редактор'),
-	array('id' => 3, 'title' => 'Журналист'),
-	array('id' => 4, 'title' => 'Комментатор'),
+1 =>	array('id' => 1, 'title' => 'Администратор'),
+2 =>	array('id' => 2, 'title' => 'Редактор'),
+3 =>	array('id' => 3, 'title' => 'Журналист'),
+4 =>	array('id' => 4, 'title' => 'Комментатор'),
 );
 
 

@@ -42,6 +42,15 @@ function systemConfigSave(){
 		$save_con['UUID'] = md5(mt_rand().mt_rand()).md5(mt_rand().mt_rand());
 	}
 
+	// Manage "load_profiler" variable
+	$save_con['load_profiler'] = intval($save_con['load_profiler']);
+	if (($save_con['load_profiler'] > 0) && ($save_con['load_profiler'] < 86400)) {
+		$save_con['load_profiler'] = time() + $save_con['load_profiler'];
+	} else {
+		$save_con['load_profiler'] = 0;
+	}
+
+
 	// Prepare resulting config content
 	$fcData = "<?php\n".'$config = '.var_export($save_con, true)."\n;?>";
 
@@ -84,9 +93,15 @@ function systemConfigEditForm(){
 		if ($v['db'])		{ $auth_dbs[$k] = $k;		}
 	}
 
+
+
 	// Load config file from configuration
 	// Now in $config we have original version of configuration data
 	include confroot.'config.php';
+
+	$load_profiler = $config['load_profiler'] - time();
+	if (($load_profiler < 0)||($load_profiler > 86400))
+		$load_profiler = 0;
 
 	$tvars['vars'] = array(
 		'php_self'					=>	$PHP_SELF,
@@ -116,14 +131,18 @@ function systemConfigEditForm(){
 		'htmlsecure_3'				=>	MakeDropDown(array(0 => $lang['noa'],  1 => $lang['yesa']), "save_con[htmlsecure_3]", $config['htmlsecure_3']),
 		'htmlsecure_2'				=>	MakeDropDown(array(0 => $lang['noa'],  1 => $lang['yesa']), "save_con[htmlsecure_2]", $config['htmlsecure_2']),
 		'use_avatars'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_avatars]", $config['use_avatars']),
+		'news_view_counters'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa'], 2 => $lang['news_view_counters#2']),  "save_con[news_view_counters]", $config['news_view_counters']),
 		'avatars_gravatar'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[avatars_gravatar]", $config['avatars_gravatar']),
 		'use_photos'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_photos]", $config['use_photos']),
 		'send_notice'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[send_notice]", $config['send_notice']),
-		'remember'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[remember]", $config['remember']),
+		'remember'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[remember]", $config['remember']),
 		'auth_module'				=>	MakeDropDown($auth_modules, "save_con[auth_module]", $config['auth_module']),
-		'auth_db'					=>	MakeDropDown($auth_dbs, "save_con[auth_db]", $config['auth_db']),
-		'mydomains'					=>	$config['mydomains'],
-		'debug'						=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[debug]", $config['debug']),
+		'auth_db'				=>	MakeDropDown($auth_dbs, "save_con[auth_db]", $config['auth_db']),
+		'mydomains'				=>	$config['mydomains'],
+		'syslog'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[syslog]", $config['syslog']),
+		'load'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[load_analytics]", $config['load_analytics']),
+		'load_profiler'				=>	$load_profiler,
+		'debug'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[debug]", $config['debug']),
 		'debug_queries'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[debug_queries]", $config['debug_queries']),
 		'debug_profiler'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[debug_profiler]", $config['debug_profiler']),
 		'default_newsorder'			=>	MakeDropDown(array('id desc' => $lang['order_id_desc'], 'id asc' => $lang['order_id_asc'], 'postdate desc' => $lang['order_postdate_desc'], 'postdate asc' => $lang['order_postdate_asc'], 'title desc' => $lang['order_title_desc'], 'title asc' => $lang['order_title_asc']), "save_con[default_newsorder]", $config['default_newsorder']),

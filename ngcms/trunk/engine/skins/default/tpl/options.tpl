@@ -1,6 +1,6 @@
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_options_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=options">{l_options_title}</a></td>
 </tr>
 </table>
 
@@ -47,6 +47,9 @@
     </tr>
     <tr>
      <td width="100%" class="contentEntry1"><img src="{skins_url}/images/rewrite.gif" hspace="8" alt="" /><a href="{php_self}?mod=rewrite" title="{l_rewrite}">{l_rewrite}</a></td>
+    </tr>
+    <tr>
+     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/1px.png" hspace="8" width="16" height="16" alt="" /><a href="{php_self}?mod=cron" title="{l_cron}">{l_cron}</a></td>
     </tr>
    </table>
   </td>

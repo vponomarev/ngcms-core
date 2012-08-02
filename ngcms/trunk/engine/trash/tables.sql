@@ -279,3 +279,64 @@ CREATE TABLE `XPREFIX_users_pm` (
   PRIMARY KEY  (`pmid`),
   KEY `from_id` (`from_id`,`to_id`,`viewed`)
 ) ENGINE=MyISAM;
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Table `PREFIX_load`
+-- 
+
+CREATE TABLE `XPREFIX_load` (
+  `dt` datetime not null,
+  `hit_core` int(11),
+  `hit_plugin` int(11),
+  `hit_ppage` int(11),
+  `exectime` float,
+  `exec_core` float,
+  `exec_plugin` float,
+  `exec_ppage` float,
+  PRIMARY KEY (`dt`)
+) ENGINE=MyISAM;
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Table `PREFIX_syslog`
+-- 
+
+CREATE TABLE `XPREFIX_syslog` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `dt` DATETIME,
+  `ip` CHAR(15),
+  `plugin` CHAR(30),
+  `item` CHAR(30),
+  `ds` INT(11),
+  `ds_id` INT(11),
+  `action` CHAR(30),
+  `alist` TEXT,
+  `userid` INT(11),
+  `username` CHAR(30),
+  `status` INT(11),
+  `stext` CHAR(90),
+  PRIMARY KEY (`id`)
+)
+
+-- --------------------------------------------------------
+
+-- 
+-- Table `PREFIX_profiler`
+-- 
+
+CREATE TABLE `XPREFIX_profiler` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `dt` DATETIME NULL DEFAULT NULL,
+  `userid` INT(11) NULL DEFAULT NULL,
+  `exectime` FLOAT NULL DEFAULT NULL,
+  `memusage` FLOAT NULL DEFAULT NULL,
+  `url` CHAR(90) NULL DEFAULT NULL,
+  `tracedata` TEXT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `ondt` (`dt`)
+)
