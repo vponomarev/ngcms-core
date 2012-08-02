@@ -43,6 +43,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	global $timer;
 	global $year, $month, $day, $SUPRESS_TEMPLATE_SHOW;
 
+	// Calculate exec time
+	$tX0 = $timer->stop(4);
+
 	if (isset($callingParams['emulate']) && is_array($callingParams['emulate'])) {
 		$row = $callingParams['emulate'];
 		$callingParams['emulateMode'] = 1;
@@ -104,22 +107,23 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 
 	// preload plugins
-	load_extras('news:show');
-	load_extras('news:show:one');
+	loadActionHandlers('news:show');
+	loadActionHandlers('news:show:one');
+	loadActionHandlers('news_full');
 
 	// Calculate exec time
-        $tX1 = $timer->stop(4);
+	$tX1 = $timer->stop(4);
 
 	// Execute filters
 	if (is_array($PFILTERS['news']))
-		foreach ($PFILTERS['news'] as $k => $v) { $v->showNewsPre($row['id'], $row, $callingParams); }
+		foreach ($PFILTERS['news'] as $k => $v) {
+			$v->showNewsPre($row['id'], $row, $callingParams);
+			$timer->registerEvent('[FILTER] News->showNewsPre: call plugin ['.$k.']');
+		}
 
     $tX2 = $timer->stop(4);
-
 	$tvars = newsFillVariables($row, 1, isset($_REQUEST['page'])?$_REQUEST['page']:0, (substr($callingParams['style'], 0, 6) == 'export')?1:0);
-
 	$tX3 = $timer->stop(4);
-	$timer->registerEvent('call showNewsPre() for [ '.($tX2 - $tX1).' ] sec');
 	$timer->registerEvent('call newsFillVariables() for [ '.($tX3 - $tX2).' ] sec');
 
 	$tvars['vars']['date']		=	LangDate(timestamp, $row['postdate']);
@@ -200,20 +204,18 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$allow_comments		=	$row['allow_com'];
 	$row['views']		=	$row['views']+1;
 
-	exec_acts('news_full', '', $row, &$tvars);
-
 	// Calculate exec time
 	$tX1 = $timer->stop(4);
 
 	// Execute filters
 	if (is_array($PFILTERS['news']))
 		foreach ($PFILTERS['news'] as $k => $v) {
-			$timer->registerEvent('exec showNews // '.$k);
+			$timer->registerEvent('[FILTER] News->showNews: call plugin ['.$k.']');
 			$v->showNews($row['id'], $row, $tvars, $callingParams);
 		}
 
 	$tX2 = $timer->stop(4);
-	$timer->registerEvent('call showNews() for [ '.($tX2 - $tX1).' ] sec');
+	$timer->registerEvent('Show single news: full exec time [ '.($tX2 - $tX0).' ] sec');
 
 	// Check if we need only to export body
 	if ($callingParams['style'] == 'export_body')
@@ -227,8 +229,15 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 
 	// Update visits counter if we're not in emulation mode
-	if ((!$callingParams['emulate'])&&($callingParams['style'] == 'full')&&(intval($_REQUEST['page'])<2))
-		$mysql->query("update ".prefix."_news set views=views+1 where id = ".db_squote($row['id']));
+	if ((!$callingParams['emulate'])&&($callingParams['style'] == 'full')&&(intval($_REQUEST['page'])<2)) {
+		$cmode = intval($config['news_view_counters']);
+		if ($cmode > 1) {
+			// Delayed update of counters
+			$mysql->query("insert into ".prefix."_news_view (id, cnt) values (".db_squote($row['id']).", 1) on duplicate key update cnt = cnt + 1");
+		} else if ($cmode > 0) {
+			$mysql->query("update ".prefix."_news set views=views+1 where id = ".db_squote($row['id']));
+		}
+	}
 
 
 	// Make temlate procession - auto/manual overriding
@@ -461,8 +470,10 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 	$query['result']	=	"SELECT * FROM ".prefix."_news WHERE ".$query['filter'].$query['orderby'];
 
 	// preload plugins
-	load_extras('news:show');
-	load_extras('news:show:list');
+	loadActionHandlers('news:show');
+	loadActionHandlers('news:show:list');
+	loadActionHandlers('news_short');
+
 
 	$nCount = 0;
 	$output = '';
@@ -625,7 +636,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			$tvars['regx']["'\[edit-news\].*?\[/edit-news\]'si"] = "";
 			$tvars['regx']["'\[del-news\].*?\[/del-news\]'si"] = "";
 		}
-		exec_acts('news_short', '', $row, &$tvars);
+		//exec_acts('news_short', '', $row, &$tvars);
 
 		// Execute filters
 		if (is_array($PFILTERS['news'])) {

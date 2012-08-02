@@ -67,6 +67,13 @@ $query_list_093svn = array(
 "alter table ".prefix."_news   add index news_mainid (`approve`,`mainpage`,`pinned`,`id`)",
 "alter table ".prefix."_news   add index news_catid  (`approve`,`catpinned`,`id`)",
 "alter table ".prefix."_news add column catpinned tinyint(1) default '0'",
+"drop table if exists ".prefix."_load",
+"drop table if exists ".prefix."_syslog",
+"drop table if exists ".prefix."_profiler",
+"create table ".prefix."_load (`dt` datetime not null, `hit_core` int(11), `hit_plugin` int(11), `hit_ppage` int(11),  `exectime` float,  `exec_core` float,  `exec_plugin` float,  `exec_ppage` float,  PRIMARY KEY (`dt`))",
+"create table ".prefix."_syslog (`id` INT(11) NOT NULL AUTO_INCREMENT, `dt` DATETIME,  `ip` CHAR(15),  `plugin` CHAR(30),  `item` CHAR(30),  `ds` INT(11),  `ds_id` INT(11),  `action` CHAR(30),  `alist` TEXT,  `userid` INT(11),  `username` CHAR(30),  `status` INT(11),  `stext` CHAR(90),  PRIMARY KEY (`id`))",
+"create table ".prefix."_profiler (`id` INT(11) NOT NULL AUTO_INCREMENT,  `dt` DATETIME NULL DEFAULT NULL,  `userid` INT(11) NULL DEFAULT NULL,  `exectime` FLOAT NULL DEFAULT NULL,  `memusage` FLOAT NULL DEFAULT NULL,  `url` CHAR(90) NULL DEFAULT NULL,  `tracedata` TEXT NULL,  PRIMARY KEY (`id`),  INDEX `ondt` (`dt`))",
+
 );
 // Load plugin list
 $extras	=	get_extras_list();
@@ -146,7 +153,7 @@ function questionare_093() {
  </tr>
  <tr>
   <td>¬ыполнить обновление структуры Ѕƒ 0.9.3 Release => 0.9.3 SVN+<br/>
-   <small>ƒанную операцию требуетс€ произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 1025<br/>
+   <small>ƒанную операцию требуетс€ произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 1027<br/>
    </small>
   </td>
   <td width='10%'><input type=checkbox name='update093svn' value='1' /></td>

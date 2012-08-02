@@ -13,7 +13,7 @@
 // Global variables definition
 //
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache;
 
@@ -350,6 +350,9 @@ if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHO
 $timer->registerEvent('Auth procedure is finished');
 
 if ($is_logged) { @define('name', $userROW['name']); }
+
+// Init internal cron module
+$cron = new cronManager();
 
 // Load extras for action 'all'
 load_extras('all');

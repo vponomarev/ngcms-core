@@ -13,7 +13,7 @@ if (is_array($userROW)) {
 	if ($userROW['status'] == 1 || $userROW['status'] == 2) {
 		$unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
 		if ($unapp)
-			$unapproved = ' [ <a href="?mod=news&amp;status=1"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
+			$unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
 	}
 }
 

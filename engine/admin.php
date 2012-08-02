@@ -106,6 +106,7 @@ load_extras('admin:init');
 $permissions = array(
 	'perm'		=> 	'1',
 	'configuration'	=>	'1',
+	'cron'	=>	'1',
 	'dbo'			=>	'1',
 	'extras'		=>	'1',
 	'extra-config'	=>	'1',

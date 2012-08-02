@@ -66,7 +66,7 @@ function gzip() {
 
 // Generate BACKUP of DB
 // * $delayed - flag if call should be delayed for 30 mins (for cases of SYSCRON / normal calls)
-function AutoBackup($delayed = false) {
+function AutoBackup($delayed = false, $force = false) {
 	global $config;
 
 	$backupFlagFile		= root."cache/last_backup.tmp";
@@ -75,6 +75,11 @@ function AutoBackup($delayed = false) {
 	// Load `Last Backup Date` from $backupFlagFile
 	$last_backup	=	intval(@file_get_contents($backupFlagFile));
 	$time_now		=	time();
+
+	// Force backup if requested
+	if ($force) {
+		$last_backup = 0;
+	}
 
 	// Check if last backup was too much time ago
 	if ($time_now > ($last_backup + $config['auto_backup_time'] * 3600 + ($delayed?30*60:0))) {
@@ -1862,7 +1867,7 @@ function saveUserPermissions() {
 // $identity - array of params for identification if object
 // 	* plugin	- id of plugin
 //	* item		- id of item in plugin
-//  * ds		- id of Date Source (if applicable)
+// 	* ds		- id of Date Source (if applicable)
 //	* ds_id		- id of item from DS (if applicable)
 // $action	- array of params to identify action
 //	* action	- id of action
@@ -1872,6 +1877,28 @@ function saveUserPermissions() {
 //	* [0]	- state [ 0 - fail, 1 - ok ]
 //	* [1]	- text value CODE of error (if have error)
 function ngSYSLOG($identity, $action, $user, $status){
+	global $ip, $mysql, $userROW, $config;
+
+	if (!$config['syslog'])
+		return false;
+
+	$sVars = array(
+		'dt'		=> 'now()',
+		'ip'		=> db_squote($ip),
+		'plugin'	=> db_squote($identity['plugin']),
+		'item'		=> db_squote($identity['item']),
+		'ds'		=> intval($identity['ds']),
+		'ds_id'		=> intval($identity['ds_id']),
+		'action'	=> db_squote($action['action']),
+		'alist'		=> db_squote(serialize($action['list'])),
+		'userid'	=> is_array($user)?intval($user['id']):(($user === NULL)?intval($userROW['id']):0),
+		'username'	=> is_array($user)?db_squote($user['name']):(($user === NULL)?db_squote($userROW['name']):db_squote($user)),
+		'status'	=> intval($status[0]),
+		'stext'		=> db_squote($status[1]),
+	);
+	//print "<pre>".var_export($sVars, true)."</pre>";
+	$mysql->query("insert into ".prefix."_syslog (".join(",", array_keys($sVars)).") values (".join(",", array_values($sVars)).")");
+	//$mysql->query("insert into ".prefix."_syslog (dt, ip, plugin, item, ds, ds_id, action, alist, userid, username, status, stext) values (now(), ".db_squote($ip).",");
 	//print "<pre>ngSYSLOG: ".var_export($identity, true)."\n".var_export($action, true)."\n".var_export($user, true)."\n".var_export($status, true)."</pre>";
 }
 
@@ -2168,10 +2195,90 @@ function twigIsSet($context, $val) {
 }
 
 function twigDebugValue($val) {
-	return print "<b>debugValue:</b><pre>".var_export($val, true)."</pre>";
+	return "<b>debugValue:</b><pre>".var_export($val, true)."</pre>";
 }
 
 function twigDebugContext($context) {
-	return print "<b>debugContext:</b><pre>".var_export($context, true)."</pre>";
+	return "<b>debugContext:</b><pre>".var_export($context, true)."</pre>";
+}
+
+
+// Notify kernel about script termination, used for statistics calculation
+function coreNormalTerminate($mode = 0) {
+	global $mysql, $timer, $config, $userROW, $systemAccessURL;
+
+	$exectime = $timer->stop();
+	$now = localtime(time(), true);
+	$now_str = sprintf("%04u-%02u-%02u %02u:%02u:00", ($now['tm_year'] + 1900), ($now['tm_mon'] + 1), $now['tm_mday'], $now['tm_hour'], (intval($now['tm_min'] / 15) * 15));
+
+	// Common analytics
+	if ($config['load_analytics'] || 1) {
+		$cvar = ($mode == 0)?"core":(($mode==1)?"plugin":"ppage");
+		$mysql->query("insert into ".prefix."_load (dt, hit_core, hit_plugin, hit_ppage, exec_core, exec_plugin, exec_ppage) values (".db_squote($now_str).", ".(($mode == 0)?1:0).", ".(($mode == 1)?1:0)." , ".(($mode == 2)?1:0).", ".(($mode == 0)?$exectime:0).", ".(($mode == 1)?$exectime:0).", ".(($mode == 2)?$exectime:0).") on duplicate key update hit_".$cvar." = hit_".$cvar." + 1, exec_".$cvar." = exec_".$cvar." + ".$exectime);
+	}
+
+	// DEBUG profiler
+	if ($config['load_profiler'] > time()) {
+		$trace = array(
+			'queries'	=> $mysql->query_list,
+			'events'	=> $timer->printEvents(1),
+		);
+		$mysql->query("insert into ".prefix."_profiler (dt, userid, exectime, memusage, url, tracedata) values (now(), ".((isset($userROW) && is_array($userROW))?$userROW['id']:0).", ".$exectime.", ".sprintf("%7.3f", (memory_get_peak_usage()/1024/1024)).", ".db_squote($systemAccessURL).", ".db_squote(serialize($trace)).")");
+	}
+
+}
+
+// Update delayed news counters
+function newsUpdateDelayedCounters() {
+	global $mysql;
+
+	// Lock tables
+	$mysql->query("lock tables ".prefix."_news_view write, ".prefix."_news write");
+
+	// Read data and update counters
+	foreach ($mysql->select("select * from ".prefix."_news_view") as $vrec) {
+		$mysql->query("update ".prefix."_news set views = views + ".intval($vrec['cnt'])." where id = ".intval($vrec['id']));
+	}
+
+	// Truncate view table
+	//$mysql->query("truncate table ".prefix."_news_view");
+	// DUE TO BUG IN MYSQL - USE DELETE + OPTIMIZE
+	$mysql->query("delete from ".prefix."_news_view");
+	$mysql->query("optimize table ".prefix."_news_view");
+
+	// Unlock tables
+	$mysql->query("unlock tables");
+
+	return true;
+}
+
+// Delete old LOAD information, SYSLOG logging
+function sysloadTruncate() {
+	global $mysql;
+
+	// Store LOAD data only for 1 week
+	$mysql->query("delete from ".prefix."_load where dt < from_unixtime(unix_timestamp(now()) - 7*86400)");
+	$mysql->query("optimize table ".prefix."_load");
+
+	// Store SYSLOG data only for 1 month
+	$mysql->query("delete from ".prefix."_syslog where dt < from_unixtime(unix_timestamp(now()) - 30*86400)");
+	$mysql->query("optimize table ".prefix."_syslog");
+
+}
+
+// Process CRON job calls
+function core_cron($isSysCron, $handler) {
+	//
+	if ($handler == 'db_backup') {
+		AutoBackup($isSysCron, true);
+	}
+
+	if ($handler == 'news_views') {
+		newsUpdateDelayedCounters();
+	}
+
+	if ($handler == 'load_truncate') {
+		sysloadTruncate();
+	}
 }
 
