@@ -2212,7 +2212,7 @@ function coreNormalTerminate($mode = 0) {
 	$now_str = sprintf("%04u-%02u-%02u %02u:%02u:00", ($now['tm_year'] + 1900), ($now['tm_mon'] + 1), $now['tm_mday'], $now['tm_hour'], (intval($now['tm_min'] / 15) * 15));
 
 	// Common analytics
-	if ($config['load_analytics'] || 1) {
+	if ($config['load_analytics']) {
 		$cvar = ($mode == 0)?"core":(($mode==1)?"plugin":"ppage");
 		$mysql->query("insert into ".prefix."_load (dt, hit_core, hit_plugin, hit_ppage, exec_core, exec_plugin, exec_ppage) values (".db_squote($now_str).", ".(($mode == 0)?1:0).", ".(($mode == 1)?1:0)." , ".(($mode == 2)?1:0).", ".(($mode == 0)?$exectime:0).", ".(($mode == 1)?$exectime:0).", ".(($mode == 2)?$exectime:0).") on duplicate key update hit_".$cvar." = hit_".$cvar." + 1, exec_".$cvar." = exec_".$cvar." + ".$exectime);
 	}
