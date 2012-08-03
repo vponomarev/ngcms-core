@@ -321,7 +321,7 @@ CREATE TABLE `XPREFIX_syslog` (
   `status` INT(11),
   `stext` CHAR(90),
   PRIMARY KEY (`id`)
-)
+) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
@@ -339,4 +339,4 @@ CREATE TABLE `XPREFIX_profiler` (
   `tracedata` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `ondt` (`dt`)
-)
+) ENGINE=MyISAM;
