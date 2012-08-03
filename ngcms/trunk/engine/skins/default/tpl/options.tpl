@@ -22,10 +22,10 @@
      <td width="100%" class="contentEntry1"><img src="{skins_url}/images/categories.gif" hspace="8" alt="" /><a href="{php_self}?mod=categories" title="{l_news.categories}">{l_news.categories}</a></td>
     </tr>
     <tr>
-     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/1px.png" width="16" height="16" hspace="8" alt="" /><a href="{php_self}?mod=news&action=add" title="{l_news.add}">{l_news.add}</a></td>
+     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/add_news.png" width="16" height="16" hspace="8" alt="" /><a href="{php_self}?mod=news&action=add" title="{l_news.add}">{l_news.add}</a></td>
     </tr>
     <tr>
-     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/1px.png" width="16" height="16" hspace="8" alt="" /><a href="{php_self}?mod=news" title="{l_news.edit}">{l_news.edit}</a></td>
+     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/edit_news.png" width="16" height="16" hspace="8" alt="" /><a href="{php_self}?mod=news" title="{l_news.edit}">{l_news.edit}</a></td>
     </tr>
    </table>
   </td>
@@ -49,7 +49,7 @@
      <td width="100%" class="contentEntry1"><img src="{skins_url}/images/rewrite.gif" hspace="8" alt="" /><a href="{php_self}?mod=rewrite" title="{l_rewrite}">{l_rewrite}</a></td>
     </tr>
     <tr>
-     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/1px.png" hspace="8" width="16" height="16" alt="" /><a href="{php_self}?mod=cron" title="{l_cron}">{l_cron}</a></td>
+     <td width="100%" class="contentEntry1"><img src="{skins_url}/images/cron.png" hspace="8" width="16" height="16" alt="" /><a href="{php_self}?mod=cron" title="{l_cron}">{l_cron}</a></td>
     </tr>
    </table>
   </td>
@@ -75,7 +75,7 @@
 <td width="100%" class="contentEntry1"> <!-- <img src="{skins_url}/images/ipban.gif" hspace="8" alt="" /><a href="{php_self}?mod=ugroups" title="{l_ugroups}">{l_ugroups}</a> --> &nbsp;</td>
 </tr>
 <tr>
-<td width="100%" class="contentEntry1"><img src="{skins_url}/images/ipban.gif" hspace="8" alt="" /><a href="{php_self}?mod=perm" title="{l_uperm}">{l_uperm}</a></td>
+<td width="100%" class="contentEntry1"><img src="{skins_url}/images/uperm.png" hspace="8" alt="" /><a href="{php_self}?mod=perm" title="{l_uperm}">{l_uperm}</a></td>
 </tr>
 </table>
 </td>
