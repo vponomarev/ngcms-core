@@ -149,7 +149,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 		}
 	}
 
-	$callingParams['linkedFiles'] = array();
+	$callingParams['linkedImages'] = array();
 	$tvars['vars']['_images'] = array();
 	foreach ($row['#images'] as $k => $v) {
 		if ($v['linked_id'] == $row['id']) {
