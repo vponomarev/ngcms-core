@@ -340,3 +340,16 @@ CREATE TABLE `XPREFIX_profiler` (
   PRIMARY KEY (`id`),
   INDEX `ondt` (`dt`)
 ) ENGINE=MyISAM;
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Table `PREFIX_news_view`
+-- 
+
+CREATE TABLE `PREFIX_news_view` (
+	`id` INT(11) NOT NULL,
+	`cnt` INT(11) DEFAULT '0',
+	PRIMARY KEY (`id`)
+) ENGINE=MyISAM;
