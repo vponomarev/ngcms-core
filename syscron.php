@@ -10,8 +10,8 @@
 // Load CORE
 @include_once 'engine/core.php';
 
+// Run CRON tasks
+$cron->run(true);
 
-// Call maintanance actions
-exec_acts('maintenance');
-if ($config['auto_backup'] == "1") { AutoBackup(false); }
-
+// Terminate execution of script
+coreNormalTerminate();
