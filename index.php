@@ -230,9 +230,16 @@ if (!$SUPRESS_TEMPLATE_SHOW) {
 // Make page output
 // ===================================================================
 
-// Call maintanance actions
-exec_acts('maintenance');
-if ($config['auto_backup'] == "1") { 
-	AutoBackup(true);
-}
+// Run CRON tasks
+$cron->run();
 
+//// Call maintanance actions
+//exec_acts('maintenance');
+
+//if ($config['auto_backup'] == "1") { 
+//	AutoBackup(true);
+//}
+
+
+// Terminate execution of script
+coreNormalTerminate();
