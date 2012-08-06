@@ -424,6 +424,14 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry1">{l_images_max_size}<br /><small>{l_images_max_size_desc}</small></td>
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[images_max_size]' value='{c_images_max_size}' size="6" /></td>
 </tr>
+<tr>
+<td class="contentEntry1">{l_images_dim_action}<br /><small>{l_images_dim_action#desc}</small></td>
+<td class="contentEntry2" valign="middle">{images_dim_action}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_images_max_dim}<br /><small>{l_images_max_dim#desc}</small></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[images_max_x]' value='{c_images_max_x}' size="6" /> x <input type="text" name='save_con[images_max_y]' value='{c_images_max_y}' size="6" /></td>
+</tr>
 
 <!-- IMAGE transform control -->
 <tr><td colspan="2" class="contentHead">&nbsp;</td></tr>

@@ -38,6 +38,9 @@ class file_managment {
 		switch($type){
 			case "image":	$this->required_type = explode(",",str_replace(' ','',$config['images_ext']));
 							$this->max_size = $config['images_max_size']*1024;
+							$this->max_x	= intval($config['images_max_x']);
+							$this->max_y	= intval($config['images_max_y']);
+							$this->dim_act	= intval($config['images_dim_action']);
 							$this->tname	= "images";
 							$this->dname	= $config['images_dir'];
 							$this->uname	= $config['images_url'];
@@ -183,6 +186,48 @@ class file_managment {
 			} else {
 				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));
 				return 0;
+			}
+		}
+
+		// ** IMAGES :: Check maximum image size & resize if needed
+		if ($param['type'] == 'image') {
+			$im = new image_managment();
+			$s = $im->get_size($ftmp);
+			if (!is_array($s)) {
+				if ($param['rpc']) {
+					return array('status' => 0, 'errorCode' => 301, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{fname}', $fname, $lang['upload.error.type'])));
+				} else {
+					msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.type'])));
+					return 0;
+				}
+			}
+
+			// Check size
+			if ((($this->max_x > 0) && ($s[1] > $this->max_x)) || (($this->max_y > 0) && ($s[2] > $this->max_y))) {
+				// !! OVERSIZED !!
+				if (!$this->dim_act) {
+					// REJECT
+					if ($param['rpc']) {
+						return array('status' => 0, 'errorCode' => 317, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace(array('{fname}', '{maxx}', '{maxy}'), array($fname, $this->max_x, $this->max_y), $lang['upload.error.imgsize'])));
+					} else {
+						msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.imgsize'])));
+						return 0;
+					}
+				}
+				// Try to resize
+				$resizeResult = $im->image_transform(array('rpc' => $param['rpc'], 'image' => $ftmp, 'resize' => array('x' => $this->max_x, 'y' => $this->max_y)));
+				//return array('status' => 0, 'errorCode' => 999, 'errorText' => "X/MAXX::".$s[1]."/".$this->max_x.", Y/MAXY:".$s[2]."/".$this->max_y." NX/NY:".$resizeResult['data']['x']."/".$resizeResult['data']['y']);
+
+				// Check results
+				// ** RPC
+				if ($param['rpc'] && (!is_array($resizeResult)) || (!$resizeResult['status'])) {
+					return $resizeResult;
+				}
+				// ** Normal call
+				if (!is_array($resizeResult)) {
+					msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.imgsize'])));
+					return;
+				}
 			}
 		}
 
@@ -360,7 +405,7 @@ class file_managment {
 			if ($try == 100) {
 				// Can't create RAND name - all values are occupied
 				if ($param['rpc']) {
-					return array('status' => 0, 'errorCode' => 312, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.rand']));
+					return array('status' => 0, 'errorCode' => 313, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.rand']));
 				} else {
 					msg(array("type" => "error", "text" => $lang['upload.error.rand']));
 					return 0;
@@ -377,7 +422,7 @@ class file_managment {
 			if ($param['replace']) {
 				if (!(($row['user'] == $userROW['name']) || ($userROW['status'] == 1) || ($userROW['status'] == 2))) {
 					if ($param['rpc']) {
-						return array('status' => 0, 'errorCode' => 313, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.perm.replace']));
+						return array('status' => 0, 'errorCode' => 314, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.perm.replace']));
 					} else {
 						msg(array("type" => "error", "text" => $lang['upload.error.perm.replace']));
 						return 0;
@@ -385,7 +430,7 @@ class file_managment {
 				}
 			} else {
 				if ($param['rpc']) {
-					return array('status' => 0, 'errorCode' => 314, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.exists']), 'errorDescription' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.exists#info']));
+					return array('status' => 0, 'errorCode' => 315, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.exists']), 'errorDescription' => iconv('Windows-1251', 'UTF-8', $lang['upload.error.exists#info']));
 				} else {
 					msg(array("type" => "error", "text" => $lang['upload.error.exists'], "info" => $lang['upload.error.exists#info']));
 					return 0;
@@ -407,7 +452,7 @@ class file_managment {
 			} else {
 				// Category dir doesn't exists
 				if ($param['rpc']) {
-					return array('status' => 0, 'errorCode' => 315, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
+					return array('status' => 0, 'errorCode' => 316, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
 				} else {
 					msg(array("type" => "error", "text" => str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
 					return 0;
@@ -868,6 +913,9 @@ class image_managment{
 	// Transformate original image
 	// * image			- filename of original image
 	// * stamp			- FLAG if we need to add a stamp
+	// * resize			- Array for image resize
+	// ** x					- size X
+	// ** y					- size Y
 	// ** stampfile		- filename of stamp file
 	// ** stamp_transparency - %% of transparency of added stamp [ default: 40 ]
 	// ** stamp_noerror	- don't generate an error if it was not possible to add stamp
@@ -924,6 +972,33 @@ class image_managment{
 			msg(array("type" => "error", "text" => $lang['upload.error.open']));
 			return;
 		}
+
+		// Check if resize of original file is requested
+		if (isset($param['resize']) && is_array($param['resize']) && ($param['resize']['x'] > 0) && ($param['resize']['y'] > 0)) {
+			// Calculate ratio and new X/Y sizes
+			$ratio = min ($param['resize']['x']/$origX, $param['resize']['y']/$origY);
+			$newX = round($origX * $ratio);
+			$newY = round($origY * $ratio);
+
+			// Create image area
+			$newImg = imagecreatetruecolor($newX, $newY);
+
+			// Preserver transparency
+			if (($origType == 1) || ($origType == 3)) {
+				imagecolortransparent($newImg, imagecolorallocatealpha($newImg, 0, 0, 0, 127));
+				imagealphablending($newImg, false);
+				imagesavealpha($newImg, true);
+			}
+
+			// Resize image
+  			imagecopyresampled($newImg, $img, 0, 0, 0, 0, $newX, $newY, $origX, $origY);
+
+			// Save new information into current image
+			$img	= $newImg;
+			$origX	= $newX;
+			$origY	= $newY;
+		}
+
 
 		if ($param['stamp']) {
 			// LOAD STAMP IMAGE
