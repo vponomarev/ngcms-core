@@ -130,6 +130,7 @@ function systemConfigEditForm(){
 		'htmlsecure_4'				=>	MakeDropDown(array(0 => $lang['noa'],  1 => $lang['yesa']), "save_con[htmlsecure_4]", $config['htmlsecure_4']),
 		'htmlsecure_3'				=>	MakeDropDown(array(0 => $lang['noa'],  1 => $lang['yesa']), "save_con[htmlsecure_3]", $config['htmlsecure_3']),
 		'htmlsecure_2'				=>	MakeDropDown(array(0 => $lang['noa'],  1 => $lang['yesa']), "save_con[htmlsecure_2]", $config['htmlsecure_2']),
+		'images_dim_action'			=>	MakeDropDown(array(0 => $lang['images_dim_action#0'],  1 => $lang['images_dim_action#1']), "save_con[images_dim_action]", $config['images_dim_action']),
 		'use_avatars'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_avatars]", $config['use_avatars']),
 		'news_view_counters'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa'], 2 => $lang['news_view_counters#2']),  "save_con[news_view_counters]", $config['news_view_counters']),
 		'avatars_gravatar'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[avatars_gravatar]", $config['avatars_gravatar']),
