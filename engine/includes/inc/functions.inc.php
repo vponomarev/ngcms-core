@@ -515,49 +515,57 @@ function DirSize($directory) {
 
 // Scans directory and returns it's size and file count
 // Return array with size, count
-function directoryWalk($dir, $blackmask = null, $whitemask = null) {
- if (!is_dir($dir)) return array( -1, -1);
+function directoryWalk($dir, $blackmask = null, $whitemask = null, $returnFiles = true, $execTimeLimit = 0) {
+	$tStart = microtime(true);
+	if (!is_dir($dir)) return array( -1, -1);
 
- $size  = 0;
- $count = 0;
- $flag  = 0;
- $path  = array($dir);
- $wpath = array();
- $files = array();
- $od = array();
- $dfile = array();
- $od[1] = opendir($dir);
+	$size  = 0;
+	$count = 0;
+	$flag  = 0;
+	$path  = array($dir);
+	$wpath = array();
+	$files = array();
+	$od = array();
+	$dfile = array();
+	$od[1] = opendir($dir);
 
- while (count($path)) {
-  $level = count($path);
-  $sd    = join("/", $path );
-  $wsd   = join("/", $wpath);
-  while (($dfile[$level] = readdir($od[$level])) !== false) {
-   if (is_link($sd . '/' . $dfile[$level]) || $dfile[$level] == '.' || $dfile[$level] == '..')
-    continue;
+	while (count($path)) {
+		if (($count % 100) == 0) {
+			$tNow = microtime(true);
+			if (($tNow-$tStart) >= $execTime)
+				return array($size, $count, $files, true);
+		}
 
-   if (is_file($sd . '/' . $dfile[$level])) {
-    // Check for black list
+		$level = count($path);
+		$sd    = join("/", $path );
+		$wsd   = join("/", $wpath);
+		while (($dfile[$level] = readdir($od[$level])) !== false) {
+			if (is_link($sd . '/' . $dfile[$level]) || $dfile[$level] == '.' || $dfile[$level] == '..')
+				continue;
 
-    $size += filesize($sd . '/' . $dfile[$level]);
-    $files []= ($wsd?$wsd.'/':'').$dfile[$level];
-    $count ++;
-   } elseif (is_dir($sd . '/' . $dfile[$level])) {
-    array_push($path, $dfile[$level]);
-    array_push($wpath, $dfile[$level]);
-    $od[$level+1] = opendir(join("/", $path));
-    $flag = 1;
-    break;
-   }
-  }
-  if ($flag) {
-  	$flag = 0;
-  	continue;
-  }
-  array_pop($path);
-  array_pop($wpath);
- }
- return array($size, $count, $files);
+			if (is_file($sd . '/' . $dfile[$level])) {
+				// Check for black list
+
+				$size += filesize($sd . '/' . $dfile[$level]);
+				if ($returnFiles)
+					$files []= ($wsd?$wsd.'/':'').$dfile[$level];
+				$count ++;
+			} elseif (is_dir($sd . '/' . $dfile[$level])) {
+				array_push($path, $dfile[$level]);
+				array_push($wpath, $dfile[$level]);
+				$od[$level+1] = opendir(join("/", $path));
+				$flag = 1;
+				break;
+			}
+		}
+		if ($flag) {
+			$flag = 0;
+			continue;
+		}
+		array_pop($path);
+		array_pop($wpath);
+	}
+	return array($size, $count, $files, false);
 }
 
 

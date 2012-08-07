@@ -1,10 +1,10 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: statistics.php
 // Description: Generate system statistics
-// Author: Vitaly Ponomarev, Alexey Zinchenko
+// Author: Vitaly Ponomarev
 //
 
 // Protect against hack attempts
@@ -26,31 +26,38 @@ function phpConfigGetBytes ($size_str)
 
 // Gather information about directories
 $STATS = array();
+$timeLimit = 0;
 foreach (array('backup' => root.'backups', 'avatar' => avatars_dir, 'photo' => photos_dir, 'file' => files_dir, 'image' => images_dir) as $id => $dir) {
- if (!is_dir($dir)) {
-  // Directory do not exists
-  $STATS[$id.'_amount'] = 'n/a';
-  $STATS[$id.'_volume'] = 'n/a';
-  $STATS[$id.'_perm'] = 'n/a';
-  $STATS[$id.'_size'] = 'n/a';
- } else {
-  // Get permissions
-  $perms = @fileperms($dir);
-  $perms = ($perms === false)?'n/a':(decoct($perms) % 1000);
+	if (!is_dir($dir)) {
+		// Directory do not exists
+		$STATS[$id.'_amount'] = 'n/a';
+		$STATS[$id.'_volume'] = 'n/a';
+		$STATS[$id.'_perm'] = 'n/a';
+		$STATS[$id.'_size'] = 'n/a';
+	} else {
+		// Get permissions
+		$perms = @fileperms($dir);
+		$perms = ($perms === false)?'n/a':(decoct($perms) % 1000);
 
-  // Error - engine can't write into directory
-  if (!is_writable($dir)) {
-  	$STATS[$id.'_perm'] = '<font color="red"><b>'.$perms.'</b></font> [<a href="#" onclick="showModal('."'Неверные правила'".');">Ошибка</a>]';
-  } else {
-   $STATS[$id.'_perm'] = '<font color="green"><b>'.$perms.'</b></font>';
-  }
-  //$STATS[$id.'_perm'] = $perms;
+		// Error - engine can't write into directory
+		if (!is_writable($dir)) {
+			$STATS[$id.'_perm'] = '<font color="red"><b>'.$perms.'</b></font> [<a href="#" onclick="showModal('."'Неверные правила'".');">Ошибка</a>]';
+		} else {
+			$STATS[$id.'_perm'] = '<font color="green"><b>'.$perms.'</b></font>';
+		}
+		//$STATS[$id.'_perm'] = $perms;
 
 
-  list ($size, $count) = directoryWalk($dir);
-  $STATS[$id.'_size'] = Formatsize($size);
-  $STATS[$id.'_amount'] = $count;
- }
+		// Load list of files, ExecTimeLimit = 5 sec (don't allow to work for > 5 sec)
+		if (!$timeLimit) {
+			list ($size, $count, $null, $timeLimit) = directoryWalk($dir, null, null, false, 5);
+			$STATS[$id.'_size'] = Formatsize($size);
+			$STATS[$id.'_amount'] = $count. ($timeLimit?'<b>++</b>':'');
+		} else {
+			$STATS[$id.'_size'] = 'too much';
+			$STATS[$id.'_amount'] = 'too much';
+		}
+	}
 }
 
 if (function_exists('gd_info')) {
@@ -105,6 +112,12 @@ $tpl -> template('statistics', tpl_actions);
 $df_size = @disk_free_space(root);
 $df = ($df_size > 1) ? Formatsize($df_size) : 'n/a';
 
+// Calculate number of news
+$nCount = array();
+foreach ($mysql->select("select approve, count(*) as cnt from ".prefix."_news group by approve") as $rec) {
+	$nCount['v_'.$rec['approve']] = $rec['cnt'];
+}
+
 $news_unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
 $news_unapp = ($news_unapp == "0") ? $news_unapp : '<font color="#ff6600">'.$news_unapp.'</font>';
 $users_unact = $mysql->result("SELECT count(id) FROM ".uprefix."_users WHERE activation != ''");
@@ -116,7 +129,7 @@ $tvars['vars'] = array(
 	'mysql_version'		=>	mysql_get_server_info(),
 	'gd_version'		=>	(isset($gd_version) && is_array($gd_version))?$gd_version["GD Version"]:'<font color="red"><b>NOT INSTALLED</b></font>',
 	'currentVersion'	=>	engineVersion,
-	'versionNotifyURL'	=>	'http://ngcms.ru/sync/version.php?ver='.urlencode(engineVersion),
+	'versionNotifyURL'	=>	'http://ngcms.ru/sync/versionNew.php?ver='.urlencode(engineVersion).'&uuid='.$config['UUID'],
 	'mysql_size'		=>	$mysql_size,
 	'allowed_size'		=>	$df,
 	'avatars'			=>	$avatars,
@@ -124,8 +137,9 @@ $tvars['vars'] = array(
 	'upfiles'			=>	$upfiles,
 	'upimages'			=>	$upimages,
 	'photos'			=>	$photos,
-	'news'				=>	$mysql->result("SELECT count(id) FROM ".prefix."_news"),
-	'news_unapp'		=>	$news_unapp,
+	'news_draft'		=>	intval($nCount['v_-1']),
+	'news_unapp'		=>	intval($nCount['v_0']),
+	'news'				=>	intval($nCount['v_1']),
 	'comments'			=>	getPluginStatusInstalled('comments')?$mysql->result("SELECT count(id) FROM ".prefix."_comments"):'-',
 	'users'				=>	$mysql->result("SELECT count(id) FROM ".uprefix."_users"),
 	'users_unact'		=>	$users_unact,

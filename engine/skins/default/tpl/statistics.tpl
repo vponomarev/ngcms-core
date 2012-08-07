@@ -27,12 +27,8 @@ function _modal_close() {
 <td width="50%" class="contentEntry2">{php_os}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_php_version}</td>
-<td width="50%" class="contentEntry2">{php_version}</td>
-</tr>
-<tr>
-<td width="50%" class="contentEntry1">{l_mysql_version}</td>
-<td width="50%" class="contentEntry2">{mysql_version}</td>
+<td width="50%" class="contentEntry1">{l_php_version} / {l_mysql_version}</td>
+<td width="50%" class="contentEntry2">{php_version} / {mysql_version}</td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_gd_version}</td>
@@ -51,7 +47,11 @@ function _modal_close() {
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_last_version}</td>
-<td width="50%" class="contentEntry2"><script type="text/javascript" language="JavaScript" src="{versionNotifyURL}"></script></td>
+<td width="50%" class="contentEntry2"><span id="syncLastVersion">loading..</span></td>
+</tr>
+<tr>
+<td width="50%" class="contentEntry1">{l_svn_version}</td>
+<td width="50%" class="contentEntry2"><span id="syncSVNVersion">loading..</span></td>
 </tr>
 </table>
 </td>
@@ -72,6 +72,8 @@ function _modal_close() {
 <tr><td class="contentEntry1">{l_group_avatars}</td><td class="contentEntry1" align="right">{avatar_amount}</td><td class="contentEntry1" align="right">{avatar_size}</td><td class="contentEntry1"> &nbsp; {avatar_perm}</td></tr>
 <tr><td class="contentEntry1">{l_group_backup}</td><td class="contentEntry1" align="right">{backup_amount}</td><td class="contentEntry1" align="right">{backup_size}</td><td class="contentEntry1"> &nbsp; {backup_perm}</td></tr>
 </table>
+
+<script type="text/javascript" language="JavaScript" src="{versionNotifyURL}"></script>
 
 <br/><br/>
 
@@ -96,38 +98,42 @@ function _modal_close() {
 <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_system}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_all_cats}</td>
-<td width="50%" class="contentEntry2">{categories}</td>
+<td width="70%" class="contentEntry1">{l_all_cats}</td>
+<td width="30%" class="contentEntry2">{categories}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_all_news}</td>
-<td width="50%" class="contentEntry2">{news}</td>
+<td width="70%" class="contentEntry1">{l_all_news}</td>
+<td width="30%" class="contentEntry2"><a href="?mod=news&status=1">{news_draft}</a> / <a href="?mod=news&status=2">{news_unapp}</a> / <a href="?mod=news&status=3">{news}</a></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_all_news_unapp}</td>
-<td width="50%" class="contentEntry2">{news_unapp}</td>
+<td width="70%" class="contentEntry1">{l_all_comments}</td>
+<td width="30%" class="contentEntry2">{comments}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_all_comments}</td>
-<td width="50%" class="contentEntry2">{comments}</td>
+<td width="70%" class="contentEntry1">{l_all_users}</td>
+<td width="30%" class="contentEntry2">{users}</td>
+</tr>
+<tr>        
+<td width="70%" class="contentEntry1">{l_all_users_unact}</td>
+<td width="30%" class="contentEntry2">{users_unact}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_all_users}</td>
-<td width="50%" class="contentEntry2">{users}</td>
+<td width="70%" class="contentEntry1">{l_all_images}</td>
+<td width="30%" class="contentEntry2">{images}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_all_users_unact}</td>
-<td width="50%" class="contentEntry2">{users_unact}</td>
-</tr>
-<tr>
-<td width="50%" class="contentEntry1">{l_all_images}</td>
-<td width="50%" class="contentEntry2">{images}</td>
-</tr>
-<tr>
-<td width="50%" class="contentEntry1">{l_all_files}</td>
-<td width="50%" class="contentEntry2">{files}</td>
+<td width="70%" class="contentEntry1">{l_all_files}</td>
+<td width="30%" class="contentEntry2">{files}</td>
 </tr>
 </table>
+<!-- 
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_system}</td>
+</tr>
+<tr>
+</table>
+-->
 </td>
 </tr>
 <tr><td colspan="2">&nbsp;</td></tr>
