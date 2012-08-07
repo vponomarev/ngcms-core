@@ -532,8 +532,10 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null, $returnFiles 
 	while (count($path)) {
 		if (($count % 100) == 0) {
 			$tNow = microtime(true);
-			if (($tNow-$tStart) >= $execTime)
+			if (($execTimeLimit > 0) && (($tNow-$tStart) >= $execTimeLimit)) {
 				return array($size, $count, $files, true);
+
+			}
 		}
 
 		$level = count($path);
