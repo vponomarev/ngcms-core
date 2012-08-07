@@ -66,6 +66,12 @@ function ipban_add() {
 		$addr_start = $laddr & $lmask;
 		$addr_stop  = $laddr | (~$lmask);
 		$net_len	= $addr_stop-$addr_start;
+
+		// Check maximum net len - 255.255.0.0 (/16) - 16M IP addresses
+		if ($net_len > 16777216) {
+			msg(array("type" => "error", "text" => $lang['ipban']['msge.masklen'], "info" => $lang['ipban']['msge.masklen#desc']));
+			return;
+		}
 	}
 
 	if ($result) {
