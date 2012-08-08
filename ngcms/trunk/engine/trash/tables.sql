@@ -345,10 +345,10 @@ CREATE TABLE `XPREFIX_profiler` (
 -- --------------------------------------------------------
 
 -- 
--- Table `PREFIX_news_view`
+-- Table `XPREFIX_news_view`
 -- 
 
-CREATE TABLE `PREFIX_news_view` (
+CREATE TABLE `XPREFIX_news_view` (
 	`id` INT(11) NOT NULL,
 	`cnt` INT(11) DEFAULT '0',
 	PRIMARY KEY (`id`)
