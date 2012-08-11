@@ -6,9 +6,9 @@
 {% if (flags.edit_split) %}var currentInputAreaID = 'ng_news_content_short';{% else %}var currentInputAreaID = 'ng_news_content';{% endif %}
 
 function ChangeOption(optn) {
-	document.getElementById('maincontent').style.display 	= (optn == 'maincontent')?"block":"none";
-	document.getElementById('additional').style.display 	= (optn == 'additional')?"block":"none";
-	document.getElementById('attaches').style.display		= (optn == 'attaches')?"block":"none";
+	document.getElementById('maincontent').style.display	= (optn == 'maincontent')?"block":"none";
+	document.getElementById('additional').style.display	= (optn == 'additional')?"block":"none";
+	document.getElementById('attaches').style.display	= (optn == 'attaches')?"block":"none";
 {% if (pluginIsActive('comments')) %}	document.getElementById('comments').style.display	= (optn == 'comments')?"block":"none";
 	document.getElementById('showEditNews').style.display	= (optn == 'comments')?"none":"block";
 	document.getElementById('rightBar').style.display	= (optn == 'comments')?"none":"";{% endif %}
@@ -16,7 +16,7 @@ function ChangeOption(optn) {
 function preview(){
  var form = document.getElementById("postForm");
  if (form.ng_news_content{% if (flags.edit_split) %}_short{% endif %}.value == '' || form.title.value == '') {
-  alert('{l_msge_preview}');
+  alert('{{ lang.editnews['msge_preview'] }}');
   return false;
  }
 
@@ -42,15 +42,20 @@ function changeActive(name) {
 }
 </script>
 
+<form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
+<input type="hidden" name="area" value="" />
+</form>
+
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a> &#8594; {{ lang.editnews['editnews_title'] }} "<a href="?mod=news&action=edit&id={{ id }}">{{ title }}</a>" ({% if (approve == -1) %}{{ lang['state.draft'] }}{% elseif (approve == 0) %}{{ lang['state.unpublished'] }}{% else %}{{ lang['state.published'] }}{% endif %})</td>
+<td width=100% colspan="5" class="contentHead">
+	<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a> &#8594; {{ lang.editnews['editnews_title'] }} "<a href="?mod=news&action=edit&id={{ id }}">{{ title }}</a>" ({% if (approve == -1) %}{{ lang['state.draft'] }}{% elseif (approve == 0) %}{{ lang['state.unpublished'] }}{% else %}{{ lang['state.published'] }}{% endif %})
+</td>
 </tr>
 </table>
-<form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
-<input type=hidden name="area" value="" />
-</form>
-<form name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" id="postForm">
+
+<!-- Main content form -->
+<form id="postForm" name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" target="_self">
 <input type="hidden" name="token" value="{{ token }}"/>
 <input type="hidden" name="mod" value="news"/>
 <input type="hidden" name="action" value="edit"/>
@@ -90,7 +95,7 @@ function changeActive(name) {
     <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" id="ng_news_content" rows="10" tabindex="2">{{ content.short }}</textarea></div>
 {% endif %}
 	</td>
-  </tr>
+</tr>
   <tr>
    <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
    <td>{{ lang.editnews['alt_name'] }}:</td>
