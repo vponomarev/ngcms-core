@@ -138,6 +138,9 @@ class CoreFilter {
 
 	// Register new user: Notifier [ after successful adding ]
 	function registerUserNotify($userID, $userRec) { return 1;}
+
+	// Show usermenu
+	function showUserMenu(&$tVars) { return 1; }
 }
 
 

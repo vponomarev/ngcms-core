@@ -125,12 +125,10 @@ $template['vars']['titles'] = join(" : ", array_values($SYSTEM_FLAGS['info']['ti
 
 
 // Generate user menu
-@include_once root.'usermenu.php';
+coreUserMenu();
 
 // Generate search form
-$tpl -> template('search.form', tpl_site);
-$tpl -> vars('search.form', array('vars' => array('form_url' =>	generateLink('search', '', array()) )));
-$template['vars']['search_form'] = $tpl -> show('search.form');
+coreSearchForm();
 
 // Save 'category' variable
 $template['vars']['category'] = (isset($_REQUEST['category']) && ($_REQUEST['category'] != ''))?secure_html($_REQUEST['category']):'';
