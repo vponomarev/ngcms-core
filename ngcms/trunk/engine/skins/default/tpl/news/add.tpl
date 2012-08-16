@@ -48,7 +48,7 @@ function changeActive(name) {
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
 <td width=100% colspan="5" class="contentHead">
-	<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.addnews['news_title'] }}</a> &#8594; {{ lang.addnews['addnews_title'] }}
+	<img src="{{ skins_url }}/images/nav.gif" hspace="8" /><a href="?mod=news">{{ lang.addnews['news_title'] }}</a> &#8594; {{ lang.addnews['addnews_title'] }}
 </td>
 </tr>
 </table>
@@ -117,9 +117,9 @@ function changeActive(name) {
 <!-- /XFields -->
 {% endif %}
  </table>
+</div>
 </td></tr>
 </table>
-</div>
 
 
 <!-- ADDITIONAL -->
@@ -158,11 +158,8 @@ function changeActive(name) {
 <tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="Добавить поле" class="button" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
 </table>
 </div>
-
-</td></tr>
-</table>
-
 </td>
+
 <td id="rightBar" width="300" valign="top">
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
