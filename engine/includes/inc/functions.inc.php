@@ -2235,7 +2235,13 @@ function coreNormalTerminate($mode = 0) {
 		);
 		$mysql->query("insert into ".prefix."_profiler (dt, userid, exectime, memusage, url, tracedata) values (now(), ".((isset($userROW) && is_array($userROW))?$userROW['id']:0).", ".$exectime.", ".sprintf("%7.3f", (memory_get_peak_usage()/1024/1024)).", ".db_squote($systemAccessURL).", ".db_squote(serialize($trace)).")");
 	}
+}
 
+// Generate user redirect call and terminate execution of CMS
+function coreRedirectAndTerminate($location) {
+	@header("Location: ".$location);
+	coreNormalTerminate();
+	exit;
 }
 
 // Update delayed news counters

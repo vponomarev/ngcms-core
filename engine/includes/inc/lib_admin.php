@@ -968,11 +968,10 @@ function editNews($mode = array()) {
 		$mysql->query("update ".prefix."_news set num_images = ".intval($numImages)." where id = ".db_squote($id));
 	}
 
-	// Show link to the news if it's published
-	if ($row['approve']) {
+	// Fetch again news record and show it's link if news is published now
+	if (is_array($row = $mysql->record("select * from ".prefix."_news where id=".db_squote($id))) && ($row['approve'] > 0)) {
 		$nlink = newsGenerateLink($row, false, 0, true);
 		msg(array("text" => $lang['editnews']['msgo_edited'], "info" => str_replace('{link}', $nlink, $lang['msgo_edited#link'])));
-
 	} else {
 		msg(array("text" => $lang['editnews']['msgo_edited']));
 	}

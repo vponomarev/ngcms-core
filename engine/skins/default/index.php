@@ -50,7 +50,7 @@ $skin_header = <<<HTML
 	<span><a href="$config[home_url]" title="$lang[mainpage_t]" target="_blank">$lang[mainpage]</a></span>
 	<span${h_active_options}><a href="$PHP_SELF?mod=options" title="$lang[options_t]">$lang[options]</a></span>
 	<span${h_active_extras}><a href="$PHP_SELF?mod=extras" title="$lang[extras_t]">$lang[extras]</a></span>
-	<span${h_active_addnews}><a href="$PHP_SELF?mod=news&action=add" title="$lang[addnews_t]">$lang[addnews]</a></span>
+	<span${h_active_addnews}><a href="$PHP_SELF?mod=news&amp;action=add" title="$lang[addnews_t]">$lang[addnews]</a></span>
 	<span${h_active_editnews}><a href="$PHP_SELF?mod=news" title="$lang[editnews_t]">$lang[editnews]</a>$unapproved</span>
 	<span${h_active_images}><a href="$PHP_SELF?mod=images" title="$lang[images_t]">$lang[images]</a></span>
 	<span${h_active_files}><a href="$PHP_SELF?mod=files" title="$lang[files_t]">$lang[files]</a></span>

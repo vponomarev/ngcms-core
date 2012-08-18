@@ -33,6 +33,8 @@ $situation = "news";
 //		'overrideTemplatePath' => alternative path for searching of template
 //		'customCategoryTemplate' => automatically override custom category templates
 //		'setCurrentCategory' => update Current Category in system flags
+//		'validateCategoryID' => if specified, check if content represents correct category ID(s) for this news
+//		'validateCategoryAlt' => if specified, check if content represents correct category altname(s) for this news
 //
 //		Returns:
 //			false    - when news is not found
@@ -64,12 +66,25 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 			array_push($filter, 'postdate <= '.db_squote(mktime(23,59,59,$month?$month:12, $day?$day:31, $year)));
 		}
 
+		// Load news from DB
 		if (!is_array($row = $mysql->record("select * from ".prefix."_news where approve=1".(count($filter)?' and '.implode(" and ",$filter):'')))) {
 			if (!$params['FFC']) {
 				error404();
 			}
 			return false;
 		}
+
+		// Check if correct categories were specified [ only for SINGLE category display
+		if ((isset($callingParams['validateCategoryID']) || isset($callingParams['validateCategoryAlt']) || 1) && $config['news_multicat_url']) {
+			$nci = intval(array_shift(explode(",", $row['catid'])));
+			$nca = ($nci)?$catmap[$nci]:'none';
+
+			if ((isset($callingParams['validateCategoryID']) && ($callingParams['validateCategoryID'] != $nci)) || (isset($callingParams['validateCategoryAlt']) && ($callingParams['validateCategoryAlt'] != $nca))) {
+				$redirectURL = newsGenerateLink($row, false, 0, true);
+				coreRedirectAndTerminate($redirectURL);
+			}
+		}
+
 
 		// Fetch attached images/files (if any)
 		if ($row['num_files']) {
@@ -767,6 +782,14 @@ function showNews($handlerName, $params) {
 	} else {
 		$vars['altname'] = $_REQUEST['altname'];
 	}
+
+ 	if (isset($params['category'])) {
+ 		$callingParams['validateCategoryAlt'] = $params['category'];
+ 	}
+ 	if (isset($params['catid'])) {
+ 		$callingParams['validateCategoryID'] = $params['catid'];
+ 	}
+
 
  	// Try to show news
 	if (($row = news_showone($vars['id'], $vars['altname'], $callingParams)) !== false) {
