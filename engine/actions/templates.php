@@ -96,12 +96,12 @@ function GetThemes($where, $select = true) {
 
 // Check & clean filename
 $action			= $_REQUEST['action'];
-$filename		= str_replace(array(' ', chr(0), '/../'), '', $_REQUEST['filename']);
-$newfilename	= str_replace(array(' ', chr(0), '/../'), '', $_REQUEST['newfilename']);
+$filename		= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['filename']);
+$newfilename	= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['newfilename']);
 $skin			= 'default';
-$theme			= str_replace(array(' ', chr(0), '/../'), '', $_REQUEST['theme']);
-$theme_name		= str_replace(array(' ', chr(0), '/../'), '', $_REQUEST['theme_name']);
-$new_theme_name	= str_replace(array(' ', chr(0), '/../'), '', $_REQUEST['new_theme_name']);
+$theme			= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['theme']);
+$theme_name		= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['theme_name']);
+$new_theme_name	= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['new_theme_name']);
 
 switch($_REQUEST['where']){
 	case 'extras':
