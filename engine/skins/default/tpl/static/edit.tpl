@@ -101,7 +101,7 @@ var currentInputAreaID = 'content';
 <input type="hidden" name="subaction" value="doedit" />
 <input type="hidden" name="action" value="edit" />
 [perm.modify]<input type="submit" value="{l_do_editnews}" accesskey="s" class="button" />&nbsp;
-<input type="button" value="{l_delete}" onClick="confirmit('{php_self}?mod=static&subaction=do_mass_delete&selected[]={id}', '{l_sure_del}')" class="button" />[/perm.modify]
+<input type="button" value="{l_delete}" onClick="confirmit('{php_self}?mod=static&token={token}&subaction=do_mass_delete&selected[]={id}', '{l_sure_del}')" class="button" />[/perm.modify]
 </td>
 </tr>
 </table>
