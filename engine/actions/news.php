@@ -63,7 +63,7 @@ function editNewsForm() {
 	));
 
 	// Get news id
-	$id			= $_REQUEST['id'];
+	$id			= intval($_REQUEST['id']);
 
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_news where id = ".db_squote($id),1))) {
