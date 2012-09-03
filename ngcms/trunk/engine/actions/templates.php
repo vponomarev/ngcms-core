@@ -103,6 +103,11 @@ $theme			= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['theme']);
 $theme_name		= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['theme_name']);
 $new_theme_name	= str_replace(array(' ', chr(0), '/'), '', $_REQUEST['new_theme_name']);
 
+if ($theme == '..') {
+	$theme = 'default';
+	$theme_name = 'default';
+}
+
 switch($_REQUEST['where']){
 	case 'extras':
 	case 'site': $where = $_REQUEST['where']; break;
