@@ -260,7 +260,7 @@ if ($_REQUEST['update092rc1_092']) {
 	print '<tr><td><b>Команда</b></td><td><b>Результат</b></td></tr>';
 
 	$flag_err = false;
-	foreach ($query_list_092rc_092 as $sql) {
+	foreach ($query_list_092rc1_092 as $sql) {
 		$res = mysql_query($sql);
 		print '<tr><td>'.$sql.'</td><td>'.($res?'OK':'<font color="red"><b>FAIL</b></font>').'</td></tr>'."\n";
 		if (!$res) {
