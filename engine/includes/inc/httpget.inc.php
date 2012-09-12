@@ -21,7 +21,7 @@ class http_get {
 		return array($host, $port, $path);
 	}
 
-	function request($proto, $url, $params = '', $timeout = 3, $referer = 0) {
+	function request($proto, $url, $params = '', $timeout = 5, $referer = 0) {
 	        // Open TCP connection
 	        if ((strtolower($proto) != 'get') && (strtolower($proto) != 'post')) { return false; }
 		list ($host, $port, $path) = http_get::parse_url($url);
@@ -41,7 +41,7 @@ class http_get {
 			$ext = implode($elist);
 		} else {
 			$ext = $params;
-		}	
+		}
 
 		// Send header
 		if (strtolower($proto) == 'get') {
@@ -50,11 +50,17 @@ class http_get {
 			fputs($fp,"POST /$path HTTP/1.1\r\nHost: $host\r\nConnection: close\r\nContent-length: ".strlen($ext)."\r\n".($referer?('Referer: http://'.$_SERVER['HTTP_HOST']."/\r\n"):'')."User-Agent: PHPfetcher class 20091104 (designed for: http://ngcms.ru/)\r\n"."\r\n$ext");
 		}
 
+		// Set stream timeout
+		stream_set_timeout($fp, $timeout);
+		$fi = stream_get_meta_data($fp);
+
 		// Try to read data, not more than 1 Mb
 		$maxchunks = 128; $chunk = 0; $dsize = 0; $dmaxsize = 1024 * 1024;
 		$data = '';
-		while (!feof($fp)) {
+		while ((!feof($fp)) && (!$fi['timed_out'])) {
 			$in = fread($fp, 128 * 1024);
+			$fi = stream_get_meta_data($fp);
+
 			$dsize += strlen($in);
 			$data .= $in;
 
@@ -62,6 +68,12 @@ class http_get {
 			$chunk++;
 		}
 		fclose($fp);
+
+		// Check if connection was closed due to timeout
+		if ($fi['timed_out']) {
+			return false;
+		}
+
 
 		// Try to parse data
 		if ($pos = strpos($data, "\r\n\r\n")) {
