@@ -775,10 +775,14 @@ function showNews($handlerName, $params) {
 	$vars = array('id' => 0, 'altname' => '');
 	if (isset($params['id'])) {
 		$vars['id'] = $params['id'];
+	} else if (isset($params['zid'])) {
+		$vars['id'] = $params['zid'];
 	} else if (isset($params['altname'])) {
 		$vars['altname'] = $params['altname'];
 	} else if (isset($_REQUEST['id'])) {
 		$vars['id'] = intval($_REQUEST['id']);
+	} else if (isset($_REQUEST['zid'])) {
+		$vars['id'] = intval($_REQUEST['zid']);
 	} else {
 		$vars['altname'] = $_REQUEST['altname'];
 	}

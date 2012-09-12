@@ -306,6 +306,14 @@ $urlLibrary = array (
             'russian' => 'ID íîâîñòè',
           ),
         ),
+        'zid' => 
+        array (
+          'matchRegex' => '\\d{4,7}',
+          'descr' => 
+          array (
+            'russian' => 'ID íîâîñòè ñ âåäóùèìè íóëÿìè (4 öèôğû)',
+          ),
+        ),
       ),
       'descr' => 
       array (
