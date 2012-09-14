@@ -77,7 +77,7 @@ $query_list_091fp1_092rc1 = array(
 );
 
 $query_list_092rc1_092 = array(
-	'update '.uprefix.' users set activation=\'\'',
+	'update '.uprefix.'_users set activation=\'\'',
 	'alter table '.prefix.'_category add column allow_com int default 2',
 );
 
@@ -312,7 +312,7 @@ function questionare_0971() {
  <tr>
   <td>Выполнить обновление структуры БД 0.9.2 Release Candidate 1 => 0.9.2 Release<br/>
   <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.1 Release Candidate 1 до версии 0.9.2</td>
-  <td width='10%'><input type=checkbox name='update02rc1_092' value='1' /></td>
+  <td width='10%'><input type=checkbox name='update092rc1_092' value='1' /></td>
  </tr>
 
  </table><br/>
