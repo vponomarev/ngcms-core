@@ -148,6 +148,11 @@ function editNewsForm() {
 		)
 	);
 
+	// Generate link for published news
+	if ($row['approve'] == 1) {
+		$tVars['link'] = newsGenerateLink($row, false, 0, true);
+	}
+
 	$tVars['flags']['can_publish']		= ((($row['approve'] == 1) && ($perm[$permGroupMode.'.modify.published']))  || (($row['approve'] < 1) && $perm[$permGroupMode.'.publish']))?1:0;
 	$tVars['flags']['can_unpublish']	= (($row['approve'] < 1)   || ($perm[$permGroupMode.'.unpublish']))?1:0;
 	$tVars['flags']['can_draft']		= (($row['approve'] == -1) || ($perm[$permGroupMode.'.unpublish']))?1:0;
