@@ -33,6 +33,7 @@ $situation = "news";
 //		'overrideTemplatePath' => alternative path for searching of template
 //		'customCategoryTemplate' => automatically override custom category templates
 //		'setCurrentCategory' => update Current Category in system flags
+//		'addCanonicalLink'	=> if specified, rel="canonical" will be added into {htmlvars}
 //		'validateCategoryID' => if specified, check if content represents correct category ID(s) for this news
 //		'validateCategoryAlt' => if specified, check if content represents correct category altname(s) for this news
 //
@@ -41,7 +42,7 @@ $situation = "news";
 //			data     - when news is found && export is used
 //			news row - when news is found
 function news_showone($newsID, $alt_name, $callingParams = array()) {
-	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $template, $parse, $vars, $lang, $SYSTEM_FLAGS, $PFILTERS;
+	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $template, $parse, $vars, $lang, $SYSTEM_FLAGS, $PFILTERS, $EXTRA_HTML_VARS;
 	global $timer;
 	global $year, $month, $day, $SUPRESS_TEMPLATE_SHOW;
 
@@ -72,6 +73,11 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 				error404();
 			}
 			return false;
+		}
+
+		// Check if canonical link should be added
+		if ($callingParams['addCanonicalLink']) {
+			$EXTRA_HTML_VARS []= array('type' => 'plain', 'data' => '<link rel="canonical" href="'.newsGenerateLink($row, false, 0, true).'"/>');
 		}
 
 		// Check if correct categories were specified [ only for SINGLE category display
@@ -794,6 +800,7 @@ function showNews($handlerName, $params) {
  		$callingParams['validateCategoryID'] = $params['catid'];
  	}
 
+	$callingParams['addCanonicalLink'] = true;
 
  	// Try to show news
 	if (($row = news_showone($vars['id'], $vars['altname'], $callingParams)) !== false) {
