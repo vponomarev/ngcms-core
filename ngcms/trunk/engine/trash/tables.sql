@@ -218,6 +218,7 @@ CREATE TABLE `XPREFIX_news_map` (
 
 CREATE TABLE `XPREFIX_static` (
   `id` int(11) NOT NULL auto_increment,
+  `postdate` int(10) NOT NULL default '0',
   `title` varchar(255) default NULL,
   `content` text,
   `alt_name` varchar(255) default '',

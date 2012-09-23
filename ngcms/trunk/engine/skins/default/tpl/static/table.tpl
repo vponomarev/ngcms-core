@@ -17,8 +17,9 @@
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left" class="contHead">
 <td width="45%">{l_title}</td>
-<td>Альтернативное имя</td>
-<td>Шаблон</td>
+<td width="100">{l_list.date}</td>
+<td>{l_list.altname}</td>
+<td>{l_list.template}</td>
 <td width="5%">[perm.modify]<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(static)" />[/perm.modify]</td>
 </tr>
 [no-static]<tr><td colspan="6"><p>- {l_not_found} -</p></td></tr>[/no-static]
