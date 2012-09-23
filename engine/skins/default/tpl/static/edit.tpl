@@ -54,6 +54,11 @@ var currentInputAreaID = 'content';
    <td>{l_keywords}:</td>
    <td><input type="text" name="keywords" value="{keywords}" size="60" tabindex="5" /></td>
   </tr>
+  <tr>
+   <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
+   <td>{l_postdate}</td>
+   <td><span id="cdate">{changedate}</span> <input name="set_postdate" type="checkbox" value="1"/> {l_set_postdate}</td>
+  </tr>
 [/meta]
 </table>
 </div>

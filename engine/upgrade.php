@@ -67,6 +67,7 @@ $query_list_093svn = array(
 "alter table ".prefix."_news   add index news_mainid (`approve`,`mainpage`,`pinned`,`id`)",
 "alter table ".prefix."_news   add index news_catid  (`approve`,`catpinned`,`id`)",
 "alter table ".prefix."_news add column catpinned tinyint(1) default '0'",
+"alter table ".prefix."_static add column postdate int default 0",
 "drop table if exists ".prefix."_load",
 "drop table if exists ".prefix."_syslog",
 "drop table if exists ".prefix."_profiler",
@@ -156,7 +157,7 @@ function questionare_093() {
  </tr>
  <tr>
   <td>¬ыполнить обновление структуры Ѕƒ 0.9.3 Release => 0.9.3 SVN+<br/>
-   <small>ƒанную операцию требуетс€ произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 1027<br/>
+   <small>ƒанную операцию требуетс€ произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 1060, либо после обновлени€ с SVN версий 1059 или младше<br/>
    </small>
   </td>
   <td width='10%'><input type=checkbox name='update093svn' value='1' /></td>

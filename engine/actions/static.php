@@ -92,6 +92,7 @@ function listStatic() {
 			'id'		=>	$row['id'],
 			'alt_name'	=>	$row['alt_name'],
 			'template'	=>	($row['template']=='')?'--':$row['template'],
+			'date'		=> 	($row['postdate']> 0) ? strftime('%d.%m.%Y %H:%M', $row['postdate']) : '',
 		);
 
 		if (strlen($row['title']) > 70) {
@@ -394,7 +395,7 @@ function addStatic(){
 	$vnames = array(); $vparams = array();
 	foreach ($SQL as $k => $v) { $vnames[]  = $k; $vparams[] = db_squote($v); }
 
-	$mysql->query("insert into ".prefix."_static (".implode(",",$vnames).") values (".implode(",",$vparams).")");
+	$mysql->query("insert into ".prefix."_static (postdate, ".implode(",",$vnames).") values (unix_timestamp(now()), ".implode(",",$vparams).")");
 	$id = $mysql->result("SELECT LAST_INSERT_ID() as id");
 
 	$link = (checkLinkAvailable('static', '')?
@@ -440,7 +441,8 @@ function editStaticForm(){
 		'templateopts'		=> staticListTemplates($row['template']),
 		'description'		=>	$row['description'],
 		'keywords'			=>	$row['keywords'],
-		'token'			=> genUToken('admin.static'),
+		'changedate'		=> ChangeDate($row['postdate'], 1),
+		'token'				=> genUToken('admin.static'),
 	);
 	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
 
@@ -548,6 +550,10 @@ function editStatic(){
 
 	$SQL['template']	= $_REQUEST['template'];
 	$SQL['approve']		= intval($_REQUEST['approve']);
+	if (isset($_POST['set_postdate']) && $_POST['set_postdate']) {
+		$SQL['postdate'] 	= mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
+	}
+
 
 
 	// Variable FLAGS is a bit-variable:
