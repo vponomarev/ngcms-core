@@ -61,45 +61,70 @@ function onUpdateSubmit() {
 	}
  	if (i > 10) { break; }
  }
-
 }
 </script>
 
+<!-- Form header -->
 <form id="permSubmit" name="permSubmit" method="POST">
 <input type="hidden" name="save" value="1"/>
 <input type="hidden" name="token" value="{{ token }}"/>
+<!-- /Form header -->
+
+
+<!-- Group menu header -->
+<div id="userTabs">
+ <ul>
+{% for group in GRP %}  <li><a href="#userTabs-{{ group.id }}">{{ group.title }}</a></li>
+{% endfor %}
+ </ul>
+
+ <!-- Group content header -->
+{% for group in GRP %}
+ <!-- Content for group [{{ group.id }}] {{ group.title }} -->
+ <div id="userTabs-{{ group.id }}">
+  <div><i>Управление правами группы пользователей: <b>{{ group.title }}</b></i></div>
+  <br/>
+
 {% for block in CONFIG %}
-<div class="pconf">
-<h1>{{ block.title }}</h1>
-{% if (block.description) %}<i>{{ block.description }}</i><br/>{% endif %}
+  <div class="pconf">
+   <h1>{{ block.title }}</h1>
+{% if (block.description) %}   <i>{{ block.description }}</i><br/>{% endif %}
 
 {% for area in block.items %}
-<h2>{{ area.title }}</h2>
-{% if (area.description) %}<i>{{ area.description }}</i><br/><br/>{% endif %}
-<table width="100%" class="content">
-<thead><tr class="contentHead"><td><b>#ID</b></td><td>Описание</td>
-{% for group in GRP %}
-<td width="90"><small>{{ group.title }}</small></td>
-{% endfor %}
-</td></thead>
+   <h2>{{ area.title }}</h2>
+{% if (area.description) %}   <i>{{ area.description }}</i><br/><br/>{% endif %}
+
+   <table width="100%" class="content">
+    <thead><tr class="contentHead"><td><b>#ID</b></td><td>Описание</td><td width="90"><small>{{ group.title }}</small></td></td></thead>
 {% for entry in area.items %}
-<tr class="contentEntry1">
-<td><i>{{entry.id}}</i></td><td>{{ entry.title }}</td>
-{% for group in GRP %}
-<td>
-	<select name="{{ entry.name }}|{{group.id}}" onchange="onUpdatePerm('{{ entry.name }}|{{group.id}}');" value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
-		<option value="-1">--</option>
-		<option value="0" {% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>Нет</option>
-		<option value="1" {% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>Да</option>
-	</select>
-	</td>
+    <tr class="contentEntry1">
+     <td><i>{{entry.id}}</i></td><td>{{ entry.title }}</td>
+     <td>
+	  <select name="{{ entry.name }}|{{group.id}}" onchange="onUpdatePerm('{{ entry.name }}|{{group.id}}');" value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
+	   <option value="-1">--</option>
+	   <option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>Нет</option>
+	   <option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>Да</option>
+	  </select>
+	 </td>
+    </tr>
 {% endfor %}
-</tr>
-{% endfor %}
-</table>
+   </table>
 <br/>
 {% endfor %}
+  </div>
+{% endfor %}
+
+ </div>
+<!-- /Content for group [{{ group.id }}] {{ group.title }} -->
 {% endfor %}
 </div>
+
+<script type="text/javascript">
+$(function(){
+  $("#userTabs").tabs();
+});
+</script>
+<br/>
+
 <input type="submit" value="Сохранить изменения" onclick="return onUpdateSubmit();" />
 </form>
