@@ -84,6 +84,15 @@ function coreRegisterUser() {
 			}
 		}
 
+		// Execute filters - check if user is allowed to register
+		if ((!$msg) && is_array($PFILTERS['core.registerUser']))
+			foreach ($PFILTERS['core.registerUser'] as $k => $v) {
+				if (!$v->registerUserNotify($params, $pmsg)) {
+					$msg = $pmsg;
+					break;
+				}
+			}
+
 		// Trying register
 		if (!$msg && ($uid = $auth->register(&$params, $values, &$msg))) {
 			// OK, fetch user record

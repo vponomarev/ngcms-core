@@ -136,6 +136,9 @@ class CoreFilter {
 	// Register new user: FORM handler
 	function registerUserForm(&$tvars) { return 1;}
 
+	// Register new user: BEFORE actual registration
+	function registerUser($params, &$msg) { return 1; }
+
 	// Register new user: Notifier [ after successful adding ]
 	function registerUserNotify($userID, $userRec) { return 1;}
 
