@@ -2156,8 +2156,13 @@ function twigIsHandler($rules) {
 }
 
 function twigIsCategory($list) {
-	global $currentCategory, $catz, $catmap, $config;
+	global $currentCategory, $catz, $catmap, $config, $CurrentHandler;
 	//print "twigCall isCategory($list):<pre>".var_export($currentCategory, true)."</pre>";
+
+	// Return if user is reading any news
+	if ($CurrentHandler['pluginName'] != 'news')													return false;
+	if (($CurrentHandler['handlerName'] == 'news') || ($CurrentHandler['handlerName'] == 'print'))	return false;
+
 
 	// Return false if we're not in category now
 	if (!isset($currentCategory)) {
@@ -2192,6 +2197,71 @@ function twigIsCategory($list) {
 				return true;
 		}
 
+	}
+	return false;
+}
+
+function twigIsNews($rules) {
+	global $catz, $catmap, $CurrentHandler, $SYSTEM_FLAGS, $CurrentCategory;
+	//print "twigCall isNews($list):<pre>".var_export($SYSTEM_FLAGS['news'], true)."</pre>";
+
+	// Return if user is not in news
+	if ($CurrentHandler['pluginName'] != 'news')														return false;
+	if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print'))		return false;
+
+	$ruleList = array('news' => array(), 'cat' => array(), 'mastercat' => array());
+	$ruleCatched = false;
+
+	// Pre-scan incoming data
+	foreach (preg_split("#\|#", $rules) as $rule) {
+		if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
+			$ruleList[$pt[1]] = $ruleList[$pt[1]] + preg_split("# *, *#", $pt[2]);
+		} else {
+			$ruleList['news'] = $ruleList['news'] + preg_split("# *, *#", $rule);
+		}
+	}
+	//print "isNews debug rules: <pre>".var_export($ruleList, true)."</pre>";
+	foreach ($ruleList as $rType => $rVal) {
+		//print "[SCAN TYPE: '$rType' with val: (".var_export($rVal, true).")]<br/>";
+		switch ($rType) {
+			// -- NEWS
+			case 'news':
+				if (!isset($SYSTEM_FLAGS['news']['db.id']))
+					continue;
+
+				foreach ($rVal as $key) {
+					if (ctype_digit($key)) {
+						if ($SYSTEM_FLAGS['news']['db.id'] == $key)
+							return true;
+					} else {
+						if ($SYSTEM_FLAGS['news']['db.alt'] == $key)
+							return true;
+					}
+				}
+				break;
+
+			// -- CATEGORY (master or any)
+			case 'mastercat':
+			case 'cat':
+				if ((!isset($SYSTEM_FLAGS['news']['db.categories'])) || ($SYSTEM_FLAGS['news']['db.categories'] == ''))
+					continue;
+
+				// List of categories from news
+				foreach ($rVal as $key) {
+					if (ctype_digit($key)) {
+						if (($rType == 'mastercat') && ($SYSTEM_FLAGS['news']['db.categories'][0] == $key))
+							return true;
+						if (($rType == 'cat') && (in_array($key, $SYSTEM_FLAGS['news']['db.categories'])))
+							return true;
+					} else {
+						if (($rType == 'mastercat') && (is_array($catz[$key])) && ($SYSTEM_FLAGS['news']['db.categories'][0] == $catz[$key]['id']))
+							return true;
+						if (($rType == 'cat') && (is_array($catz[$key])) && (in_array($catz[$key]['id'], $SYSTEM_FLAGS['news']['db.categories'])))
+							return true;
+					}
+				}
+				break;
+		}
 	}
 	return false;
 }

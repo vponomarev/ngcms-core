@@ -33,6 +33,7 @@ $situation = "news";
 //		'overrideTemplatePath' => alternative path for searching of template
 //		'customCategoryTemplate' => automatically override custom category templates
 //		'setCurrentCategory' => update Current Category in system flags
+//		'setCurrentNews'	=> update Current News in system flags
 //		'addCanonicalLink'	=> if specified, rel="canonical" will be added into {htmlvars}
 //		'validateCategoryID' => if specified, check if content represents correct category ID(s) for this news
 //		'validateCategoryAlt' => if specified, check if content represents correct category altname(s) for this news
@@ -106,13 +107,6 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 		}
 
 
-		// Save some significant news flags for plugin processing
-		$SYSTEM_FLAGS['news']['db.id'] = $row['id'];
-		$SYSTEM_FLAGS['news']['db.categories'] = array();
-		foreach (explode(',', $row['catid']) as $cid) {
-			if (isset($catmap[$cid]))
-				array_push($SYSTEM_FLAGS['news']['db.categories'], intval($cid));
-		}
 	}
 
 	if ($callingParams['setCurrentCategory']) {
@@ -123,9 +117,26 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 			$SYSTEM_FLAGS['news']['currentCategory.alt']	= $catz[$catmap[$cid]]['alt'];
 			$SYSTEM_FLAGS['news']['currentCategory.id']		= $catz[$catmap[$cid]]['id'];
 			$SYSTEM_FLAGS['news']['currentCategory.name']	= $catz[$catmap[$cid]]['name'];
+			$SYSTEM_FLAGS['news']['currentCategory.record']	= $catz[$catmap[$cid]];
+
+			$currentCategory = $catz[$catmap[$cid]];
+
 		}
 	}
 
+	if ($callingParams['setCurrentNews']) {
+		// Save some significant news flags for plugin processing
+		$SYSTEM_FLAGS['news']['db.id']			= $row['id'];
+		$SYSTEM_FLAGS['news']['db.categories']	= array();
+		foreach (explode(',', $row['catid']) as $cid) {
+			if (isset($catmap[$cid]))
+				array_push($SYSTEM_FLAGS['news']['db.categories'], intval($cid));
+		}
+
+		$SYSTEM_FLAGS['news']['db.alt']		= $row['alt_name'];
+		$SYSTEM_FLAGS['news']['db.title']	= $row['title'];
+		$SYSTEM_FLAGS['news']['db.record']	= $row;
+	}
 
 	// preload plugins
 	loadActionHandlers('news:show');
@@ -758,7 +769,7 @@ function showNews($handlerName, $params) {
  load_extras('news');
 
  // Init array with configuration parameters
- $callingParams = array('customCategoryTemplate' => 1, 'customCategoryNumber' => 1, 'setCurrentCategory' => 1);
+ $callingParams = array('customCategoryTemplate' => 1, 'customCategoryNumber' => 1, 'setCurrentCategory' => 1, 'setCurrentNews' => 1);
  $callingCommentsParams = array();
 
  // Set default template path
@@ -800,7 +811,7 @@ function showNews($handlerName, $params) {
  		$callingParams['validateCategoryID'] = $params['catid'];
  	}
 
-	$callingParams['addCanonicalLink'] = true;
+	$callingParams['addCanonicalLink']	= true;
 
  	// Try to show news
 	if (($row = news_showone($vars['id'], $vars['altname'], $callingParams)) !== false) {
