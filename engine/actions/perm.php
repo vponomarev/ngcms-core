@@ -28,8 +28,8 @@ $grp = array(
 
 
 // Show list of current permissions
-function showList() {
-	global $PERM, $pManager, $twig, $grp, $userROW, $lang;
+function showList($grp) {
+	global $PERM, $pManager, $twig, $userROW, $lang;
 
 	// ACCESS ONLY FOR ADMIN
 	if ($userROW['status'] > 1) {
@@ -187,5 +187,6 @@ function updateConfig() {
 if (($_SERVER['REQUEST_METHOD'] == "POST") && isset($_POST['save']) && ($_POST['save'] == 1)) {
 	updateConfig();
 } else {
-	showList();
+	showList($grp);
+//	showList(array('1' => array('id' => 1, 'title' => 'Администратор')));
 }
