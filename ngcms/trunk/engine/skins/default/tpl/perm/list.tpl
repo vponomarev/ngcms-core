@@ -95,7 +95,7 @@ function onUpdateSubmit() {
 {% if (area.description) %}   <i>{{ area.description }}</i><br/><br/>{% endif %}
 
    <table width="100%" class="content">
-    <thead><tr class="contentHead"><td><b>#ID</b></td><td>Описание</td><td width="90"><small>{{ group.title }}</small></td></td></thead>
+    <thead><tr class="contentHead"><td><b>#ID</b></td><td><b>Описание</b></td><td width="90"><b>Доступ</b></td></td></thead>
 {% for entry in area.items %}
     <tr class="contentEntry1">
      <td><i>{{entry.id}}</i></td><td>{{ entry.title }}</td>

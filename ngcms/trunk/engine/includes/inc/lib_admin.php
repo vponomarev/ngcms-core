@@ -486,7 +486,11 @@ function addNews($mode = array()){
 
 	// Custom date[ only while adding via admin panel ]
 	if (isset($_REQUEST['customdate']) && $_REQUEST['customdate'] && $perm['personal.customdate']) {
-		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
+		if (preg_match('#^(\d+)\.(\d+)\.(\d+) +(\d+)\:(\d+)$#', $_REQUEST['cdate'], $m)) {
+			$SQL['postdate'] = mktime($m[4], $m[5], 0, $m[2], $m[1], $m[3]) + ($config['date_adjust'] * 60);
+		}
+
+		//$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {
 		$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
 	}
@@ -832,7 +836,11 @@ function editNews($mode = array()) {
 
 	if ($perm[$permGroupMode.'.customdate']) {
 		if ($_REQUEST['setdate_custom']) {
-			$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
+			if (preg_match('#^(\d+)\.(\d+)\.(\d+) +(\d+)\:(\d+)$#', $_REQUEST['cdate'], $m)) {
+				$SQL['postdate'] = mktime($m[4], $m[5], 0, $m[2], $m[1], $m[3]) + ($config['date_adjust'] * 60);
+			}
+
+			//$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 		} else if ($_REQUEST['setdate_current']) {
 			$SQL['postdate'] = time() + ($config['date_adjust'] * 60);
 		}

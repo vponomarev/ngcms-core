@@ -133,7 +133,7 @@ function changeActive(name) {
 <tr>
 <td class="contentEntry1">
 <table cellspacing=1 cellpadding=1 style="font: 11px verdana, sans-serif;">
-<tr><td><input type="checkbox" name="setdate_custom" id="setdate_custom" value="1" class="check" onclick="document.getElementById('setdate_current').checked=false;" /></td><td><label for="setdate_custom">{{ lang.editnews['date.setdate'] }}</label></td><td><span id="cdate">{{ changedate }}</span></td></tr>
+<tr><td><input type="checkbox" name="setdate_custom" id="setdate_custom" value="1" class="check" onclick="document.getElementById('setdate_current').checked=false;" /></td><td><label for="setdate_custom">{{ lang.editnews['date.setdate'] }}</label></td><td><input type="text" id="cdate" name="cdate" value="{{ cdate }}"/></td></tr>
 <tr><td><input type="checkbox" name="setdate_current" id="setdate_current" value="1" class="check" onclick="document.getElementById('setdate_custom').checked=false;" /></td><td><label for="setdate_current">{{ lang.editnews['date.setcurrent'] }}</label> &nbsp;</td><td>&nbsp;</td>
 </table>
 </td>
@@ -150,7 +150,9 @@ function changeActive(name) {
 {% if (pluginIsActive('tracker')) %}{{ plugin.tracker }}{% endif %}
 </table>
 </div>
-
+<script language="javascript" type="text/javascript">
+$("#cdate").datetimepicker( { currentText: "{{ cdate }}", dateFormat: "dd.mm.yy", timeFormat: "hh:mm" });
+</script>
 <!-- ATTACHES -->
 <div id="attaches" style="display: none;">
 <br/>
