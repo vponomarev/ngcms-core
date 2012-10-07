@@ -121,7 +121,7 @@ function filter_attach_DateEdit(id) {
   <tr>
     <td valign="top">
     <label>Дата</label>
-    с:&nbsp; <input type="text" name="dr1" value="{{ dr1 }}" class="bfdate"/>&nbsp;&nbsp; по&nbsp;&nbsp; <input type="text" name="dr2" value="{{ dr2 }}" class="bfdate"/>
+    с:&nbsp; <input type="text" id="dr1" name="dr1" value="{{ dr1 }}" class="bfdate"/>&nbsp;&nbsp; по&nbsp;&nbsp; <input type="text" id="dr2" name="dr2" value="{{ dr2 }}" class="bfdate"/>
     </td>
   </tr>
   <tr>
@@ -240,6 +240,11 @@ function filter_attach_DateEdit(id) {
 </form>
 
 <script language="javascript" type="text/javascript">
+// Init jQueryUI datepicker
+$("#dr1").datepicker( { currentText: "{{ dr1 }}", dateFormat: "dd.mm.yy" });
+$("#dr2").datepicker( { currentText: "{{ dr2 }}", dateFormat: "dd.mm.yy" });
+
+
 <!--
 // INIT NEW SUGGEST LIBRARY [ call only after full document load ]
 function systemInit() {
