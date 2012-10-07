@@ -90,6 +90,7 @@ function editNewsForm() {
 	$content = $row['content'];
 	$tVars = array(
 		'php_self'			=>	$PHP_SELF,
+		'cdate'				=> date('d.m.Y H:i', $row['postdate']),
 		'changedate'		=>	ChangeDate($row['postdate'], 1),
 		'mastercat'			=>	makeCategoryList(array('doempty' => ($perm[$permGroupMode.'.nocat'] || !count($cats))?1:0, 'greyempty' => !$perm['personal.nocat'], 'nameval' => 0,   'selected' => count($cats)?$cats[0]:0)),
 		'extcat'			=>  makeCategoryList(array('nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats)>1)?array_slice($cats,1):array(), 'disabledarea' => !$perm[$permGroupMode.'.multicat'])),

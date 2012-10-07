@@ -39,10 +39,12 @@ $skin_header = <<<HTML
 <link rel="stylesheet" href="$skins_url/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="$skins_url/ftr_panel.css" type="text/css" />
 <link rel="stylesheet" href="$config[home_url]/lib/jqueryui/jquery-ui-1.8.24.custom.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jquery-ui-timepicker-addon.css" type="text/css"/>
 <script type="text/javascript" src="$config[home_url]/lib/functions.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/admin.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-ui-1.8.24.custom.min.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/jquery-ui-timepicker-addon.js"></script>
 </head>
 <body>
 <table border="0" width="1000" align="center" cellspacing="0" cellpadding="0">

@@ -130,7 +130,7 @@ function changeActive(name) {
 <td class="contentHead"><input type="checkbox" name="customdate" id="customdate" value="customdate" class="check" /> <label for="customdate">{{ lang.addnews['custom_date'] }}</label></td>
 </tr>
 <tr>
-<td class="contentEntry1">{{ changedate }}</td>
+<td class="contentEntry1"><input type="text" id="cdate" name="cdate" value="{{ cdate }}"/></td>
 </tr>
 {% endif %}
 {% if (pluginIsActive('xfields')) %}
@@ -144,6 +144,9 @@ function changeActive(name) {
 {% if (pluginIsActive('tracker')) %}{{ plugin.tracker }}{% endif %}
 </table>
 </div>
+<script language="javascript" type="text/javascript">
+$("#cdate").datetimepicker( { currentText: "DD.MM.YYYY HH:MM", dateFormat: "dd.mm.yy", timeFormat: "hh:mm" });
+</script>
 
 <!-- ATTACHES -->
 <div id="attaches" style="display: none;">
