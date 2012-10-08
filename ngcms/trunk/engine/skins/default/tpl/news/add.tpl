@@ -103,12 +103,12 @@ function changeActive(name) {
   <tr>
    <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
    <td>{{ lang.addnews['description'] }}:</td>
-   <td><input type="text" name="description" value="" size="60" tabindex="4" /></td>
+   <td><textarea name="description" cols="80"></textarea></td>
   </tr>
   <tr>
    <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
    <td>{{ lang.addnews['keywords'] }}:</td>
-   <td><input type="text" name="keywords" value="" size="60" tabindex="5" /></td>
+   <td><textarea name="keywords" cols="80"></textarea></td>
   </tr>
 {% endif %}
 {% if (pluginIsActive('xfields')) %}
