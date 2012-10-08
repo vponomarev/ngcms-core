@@ -57,7 +57,8 @@ var currentInputAreaID = 'content';
   <tr>
    <td><img src="{skins_url}/images/nav.png" hspace="8" alt="" /></td>
    <td>{l_postdate}</td>
-   <td><span id="cdate">{changedate}</span> <input name="set_postdate" type="checkbox" value="1"/> {l_set_postdate}</td>
+   <td><input type="text" id="cdate" name="cdate" value="{cdate}"/> <input name="set_postdate" type="checkbox" value="1"/> {l_set_postdate}<script language="javascript" type="text/javascript">$("#cdate").datetimepicker( { currentText: "{cdate}", dateFormat: "dd.mm.yy", timeFormat: "hh:mm" });</script>
+</td>
   </tr>
 [/meta]
 </table>

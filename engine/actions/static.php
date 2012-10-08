@@ -441,7 +441,7 @@ function editStaticForm(){
 		'templateopts'		=> staticListTemplates($row['template']),
 		'description'		=>	$row['description'],
 		'keywords'			=>	$row['keywords'],
-		'changedate'		=> ChangeDate($row['postdate'], 1),
+		'cdate'			=> date('d.m.Y H:i', $row['postdate']),
 		'token'				=> genUToken('admin.static'),
 	);
 	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
@@ -551,7 +551,9 @@ function editStatic(){
 	$SQL['template']	= $_REQUEST['template'];
 	$SQL['approve']		= intval($_REQUEST['approve']);
 	if (isset($_POST['set_postdate']) && $_POST['set_postdate']) {
-		$SQL['postdate'] 	= mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
+		if (preg_match('#^(\d+)\.(\d+)\.(\d+) +(\d+)\:(\d+)$#', $_REQUEST['cdate'], $m)) {
+			$SQL['postdate'] = mktime($m[4], $m[5], 0, $m[2], $m[1], $m[3]) + ($config['date_adjust'] * 60);
+		}
 	}
 
 
