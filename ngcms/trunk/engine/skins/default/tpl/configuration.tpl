@@ -139,6 +139,10 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry1">{l_sql_error}<br /><small>{l_sql_error_desc}</small></td>
 <td class="contentEntry2" valign="middle">{sql_error}</td>
 </tr>
+<tr>
+<td class="contentEntry1">{l_multiext_files}<br /><small>{l_multiext_files_desc}</small></td>
+<td class="contentEntry2" valign="middle">{multiext_files}</td>
+</tr>
 </table>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>

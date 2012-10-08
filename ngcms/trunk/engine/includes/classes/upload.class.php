@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: upload.class.php
 // Description: Files/Images upload managment
 // Author: Vitaly Ponomarev
@@ -240,14 +240,20 @@ class file_managment {
 		$fil = explode(".", strtolower($fname));
 		$ext = count($fil)?array_pop($fil):'';
 
-		// * File type
-		if (array_search($ext, $this->required_type) === FALSE) {
+
+		// * File type [ don't allow to upload PHP files in any case ]
+		if ((array_search(strtolower($ext), $this->required_type) === FALSE)||(array_search(strtolower($ext), array('php', 'pht', 'phtml', 'php3', 'php4', 'php5')) !== FALSE)) {
 			if ($param['rpc']) {
 				return array('status' => 0, 'errorCode' => 304, 'errorText' => str_replace('{fname}', $fname, iconv('Windows-1251', 'UTF-8', $lang['upload.error.ext'])), 'errorDescription' => iconv('Windows-1251', 'UTF-8', str_replace('{ext}', join(", ",$this->required_type), $lang['upload.error.ext#info'])));
 			} else {
 				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.ext']), "info" => str_replace('{ext}', join(",",$this->required_type), $lang['upload.error.ext#info'])));
 				return 0;
 			}
+		}
+
+		// Manage multiple extensions
+		if (!$config['allow_multiext']) {
+			$fil = array(join("_", $fil));
 		}
 
 		$parse = new parse();

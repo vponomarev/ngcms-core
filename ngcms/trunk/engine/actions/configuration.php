@@ -165,6 +165,7 @@ function systemConfigEditForm(){
 		'home_url'					=> $config['home_url'],
 		'admine_url'				=> $config['admin_url'],
 		'news_multicat_url'			=>	MakeDropDown(array(0 => $lang['news_multicat:0'], 1 => $lang['news_multicat:1']),  "save_con[news_multicat_url]", $config['news_multicat_url']),
+		'multiext_files'		=>	MakeDropDown(array(0 => $lang['noa'], 1 => $lang['yesa']),  "save_con[allow_multiext]", $config['allow_multiext']),
 	);
 
 	// Prepare file name for STAMP
