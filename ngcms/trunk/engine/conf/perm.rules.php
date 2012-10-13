@@ -5,6 +5,58 @@ $permRules = array(
 		'title'	=> 'Административные настройки CMS',
 		'description' => '',
 		'items' => array(
+			'system' => array(
+				'title'	=> 'Общие настройки системы',
+				'items'	=> array(
+					'admpanel.view'					=> array(	'title'	=> 'Доступ в админ-панель',								),
+					'lockedsite.view'				=> array(	'title'	=> 'Просмотр заблокированного сайта',					),
+					'*'								=> array(	'title'	=> '** Значение по умолчанию **'						),
+
+				),
+			),
+			'configuration' => array(
+				'title'	=> 'Управление глобальными настройками CMS',
+				'items'	=> array(
+					'details'					=> array(	'title'	=> 'Просмотр настроек',										),
+					'modify'					=> array(	'title'	=> 'Редактирование настроек',								),
+					'*'							=> array(	'title'	=> '** Значение по умолчанию **',							),
+
+				),
+			),
+			'static' => array(
+				'title'	=> 'Управление статическими страницами',
+				'items'	=> array(
+					'view'						=> array(	'title'	=> 'Просмотр списка',										),
+					'details'					=> array(	'title'	=> 'Просмотр конкретных статических страниц',				),
+					'modify'					=> array(	'title'	=> 'Редактирование статических страниц',					),
+//					'*'							=> array(	'title'	=> '** DEFAULT **',											),
+				),
+			),
+			'cron' => array(
+				'title'	=> 'Управление планировщиком задач',
+				'items'	=> array(
+					'details'					=> array(	'title'	=> 'Просмотр настроек планировщика задач',				),
+					'modify'					=> array(	'title'	=> 'Изменение настроек планировщика задач',					),
+				),
+			),
+			'ipban' => array(
+				'title'	=> 'Блокировка пользователей по IP адресу',
+				'items'	=> array(
+					'view'						=> array(	'title'	=> 'Просмотр списка заблокированных IP адресов',			),
+					'modify'					=> array(	'title'	=> 'Редактирование списка',									),
+//					'*'							=> array(	'title'	=> '** DEFAULT **',											),
+				),
+			),
+			'categories' => array(
+				'title'	=> 'Управление категориями',
+				'items'	=> array(
+					'view'						=> array(	'title'	=> 'Просмотр списка категорий',								),
+					'details'					=> array(	'title'	=> 'Просмотр настроек конкретных категорий',				),
+					'modify'					=> array(	'title'	=> 'Редактирование категорий',								),
+					'list.admin'				=> array(	'title' => 'Категории, в которых разрешено управление новостями', 'type' => 'listCategoriesSelector#withDefault'),
+					//					'*'							=> array(	'title'	=> '** DEFAULT **',											),
+				),
+			),
 			'news' => array(
 				'title' => 'Управление новостями',
 				'description' => 'Интерфейс управления новостями (добавление, удаление,..)',
@@ -53,32 +105,6 @@ $permRules = array(
 					'other.customdate'			=> array(	'title'	=> 'Чужие новости: Изменение даты публикации',			),
 					'other.altname'				=> array(	'title'	=> 'Чужие новости: Задание альт. имени',				),
 					'*'							=> array(	'title'	=> '** Значение по умолчанию **',							),
-				),
-			),
-			'categories' => array(
-				'title'	=> 'Управление категориями',
-				'items'	=> array(
-					'view'						=> array(	'title'	=> 'Просмотр списка категорий',								),
-					'details'					=> array(	'title'	=> 'Просмотр настроек конкретных категорий',				),
-					'modify'					=> array(	'title'	=> 'Редактирование категорий',								),
-//					'*'							=> array(	'title'	=> '** DEFAULT **',											),
-				),
-			),
-			'static' => array(
-				'title'	=> 'Управление статическими страницами',
-				'items'	=> array(
-					'view'						=> array(	'title'	=> 'Просмотр списка',										),
-					'details'					=> array(	'title'	=> 'Просмотр конкретных статических страниц',				),
-					'modify'					=> array(	'title'	=> 'Редактирование статических страниц',					),
-//					'*'							=> array(	'title'	=> '** DEFAULT **',											),
-				),
-			),
-			'ipban' => array(
-				'title'	=> 'Блокировка пользователей по IP адресу',
-				'items'	=> array(
-					'view'						=> array(	'title'	=> 'Просмотр списка заблокированных IP адресов',			),
-					'modify'					=> array(	'title'	=> 'Редактирование списка',									),
-//					'*'							=> array(	'title'	=> '** DEFAULT **',											),
 				),
 			),
 		),

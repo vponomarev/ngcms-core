@@ -79,7 +79,7 @@ function systemConfigEditForm(){
 	// Check for token
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'details')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
-		ngSYSLOG(array('plugin' => '#admin', 'item' => 'configuration', 'ds_id' => $id), array('action' => 'saveConfig'), null, array(0, 'SECURITY.PERM'));
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'configuration', 'ds_id' => $id), array('action' => 'showConfig'), null, array(0, 'SECURITY.PERM'));
 		return false;
 	}
 

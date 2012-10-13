@@ -20,6 +20,13 @@ $lang		= LoadLang('cron', 'admin', 'cron');
 function cronCommit() {
 	global $cron, $lang;
 
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'cron'), null, 'modify')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'cron'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
+		return false;
+	}
+
 	$cronLines = array();
 	foreach ($_POST['data'] as $k => $v) {
 		if (!is_array($v))
@@ -60,7 +67,14 @@ function cronCommit() {
 
 
 function cronShowForm() {
-	global $cron, $twig;
+	global $cron, $twig, $lang;
+
+	// Check for permissions
+	if (!checkPermission(array('plugin' => '#admin', 'item' => 'cron'), null, 'details')) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		ngSYSLOG(array('plugin' => '#admin', 'item' => 'cron'), array('action' => 'details'), null, array(0, 'SECURITY.PERM'));
+		return false;
+	}
 
 	$rowNum = 1;
 	$entries = array();

@@ -1,34 +1,4 @@
-<style type="text/css">
-.pconf h1 {
-	background-color: yellow;
-	margin-top: 8px;
-	margin-bottom: 3px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	margin-top: 1px;
-	margin-bottom: 1px;
-	padding-left: 5px;
-}
 
-.pconf h2 {
-	background-color: #EEEEEE;
-	padding-top: 5px;
-	padding-bottom: 5px;
-	margin-top: 1px;
-	margin-bottom: 1px;
-	padding-left: 5px;
-}
-
-.pconf .content TD {
- background-color: #F0F0F0;
-
-}
-
-.pChanged {
-	background-color: red;
-}
-
-</style>
 
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>

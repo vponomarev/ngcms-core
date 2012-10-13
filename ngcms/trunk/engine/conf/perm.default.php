@@ -3,7 +3,38 @@
 $confPerm = array(
 // Administrator
 '1'	=>	array(
+	'nsm'		=> array(
+		''		=> array(
+			'add'						=> true,
+			'list'						=> true,
+			'view'						=> true,
+			'view.draft'				=> true,
+			'view.unpublished'			=> true,
+			'view.published'			=> true,
+			'modify.draft'				=> true,
+			'modify.unpublished'		=> true,
+			'modify.published'			=> true,
+			'delete.draft'				=> true,
+			'delete.unpublished'		=> true,
+			'delete.published'			=> true,
+		),
+	),
 	'#admin'	=> array(
+		'system'		=> array(
+			'admpanel.view'		=> true,
+			'lockedsite.view'	=> true,
+			'*'					=> true,
+		),
+		'configuration'	=> array(
+			'details'		=> true,
+			'modify'		=> true,
+			'*'				=> true,
+		),
+		'cron'	=> array(
+			'details'		=> true,
+			'modify'		=> true,
+			'*'				=> true,
+		),
 		'news'		=> array(
 			'view'						=> true,
 			'add'						=> true,
