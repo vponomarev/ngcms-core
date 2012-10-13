@@ -29,7 +29,7 @@ $grp = array(
 
 // Show list of current permissions
 function showList($grp) {
-	global $PERM, $pManager, $twig, $userROW, $lang;
+	global $PERM, $pManager, $twig, $userROW, $lang, $catz;
 
 	// ACCESS ONLY FOR ADMIN
 	if ($userROW['status'] > 1) {
@@ -58,12 +58,28 @@ function showList($grp) {
 
 				if (is_array($va['items'])) {
 					foreach ($va['items'] as $ke => $ve) {
+
+						// Skip non default type
+						if (isset($ve['type']) && (preg_match('#^listCategoriesSelector#', $ve['type'], $match))) {
+							continue;
+							$dEntry	= array(
+								'id'				=> $ke,
+								'title'				=> $ve['title'],
+								'description'		=> $ve['description'],
+								'type'				=> 'listCategoriesSelector',
+								'generatedOptions'	=> makeCategoryList(array('skipDisabled' => true, 'noHeader' => true, 'doempty' => true)),
+							);
+							$dArea['items'] []= $dEntry;
+							continue;
+						}
+
 						$dEntry = array(
 							'id'			=> $ke,
 							'title'			=> $ve['title'],
 							'description'	=> $ve['description'],
 							'perm'			=> array(),
 							'name'			=> $kb.'|'.$ka.'|'.$ke,
+							'type'			=> '',
 						);
 
 						// Avoid PHP bug/feature - it replaces "." into "_". Let's use ':' instead
@@ -85,7 +101,7 @@ function showList($grp) {
 		$data []= $dBlock;
 	}
 
-
+//print "<pre><select size='10' multiple='multiple'>".makeCategoryList(array('skipDisabled' => true, 'noHeader' => true))."</select></pre>";
 	// Print template
 	$xt = $twig->loadTemplate('skins/default/tpl/perm/list.tpl');
 	print $xt->render(array(

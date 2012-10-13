@@ -81,13 +81,12 @@ if (!is_array($userROW)) {
 	exit;
 }
 
-
-// Not all of users are welcome here
-if ($userROW['status'] > 3) {
+// Check if visitor has permissions to view admin panel
+if (!checkPermission(array('plugin' => '#admin', 'item' => 'system'), null, 'admpanel.view')) {
+	ngSYSLOG(array('plugin' => '#admin', 'item' => 'system'), array('action' => 'admpanel.view'), null, array(0, 'SECURITY.PERM'));
 	@header("Location: ".home);
 	exit;
 }
-
 
 
 //
@@ -105,8 +104,8 @@ load_extras('admin:init');
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = array(
 	'perm'		=> 	'1',
-	'configuration'	=>	'1',
-	'cron'	=>	'1',
+	'configuration'	=>	99,
+	'cron'	=>	99,
 	'dbo'			=>	'1',
 	'extras'		=>	'1',
 	'extra-config'	=>	'1',
