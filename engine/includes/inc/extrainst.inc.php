@@ -186,7 +186,8 @@ function mysql_table_exists($table) {
 
 // check field params
 function get_mysql_field_type($table, $field) {
-	$result = mysql_query("SELECT * FROM $table limit 0");
+	global $mysql;
+	$result = mysql_query("SELECT * FROM $table limit 0", $mysql->connect);
 	$fields = mysql_num_fields($result);
 	for ($i=0; $i < $fields; $i++) {
 	        if (mysql_field_name($result, $i) == $field) {

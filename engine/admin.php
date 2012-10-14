@@ -103,15 +103,15 @@ load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = array(
-	'perm'		=> 	'1',
+	'perm'			=> 	'1',
 	'configuration'	=>	99,
-	'cron'	=>	99,
-	'dbo'			=>	'1',
+	'cron'			=>	99,
+	'dbo'			=>	99,
 	'extras'		=>	'1',
 	'extra-config'	=>	'1',
 	'statistics'	=>	'1',
 	'templates'		=>	'1',
-	'users'			=>	'1',
+	'users'			=>	99,
 	'rewrite'		=>	'1',
 	'static'		=>	'1',
 

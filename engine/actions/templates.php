@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: templates.php
 // Description: Manage/Edit templates
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -36,7 +36,6 @@ function GetFiles($dir, $path, $list = false) {
 			else {
 				if (!$global) {
 					if (preg_match('#\.tpl$#', $fp, $null) || preg_match('#\.css#', $fp, $null)) {
-					//if (ereg('.tpl', $fp)) {
 						$files[] = array('dir' => ($dir ? $dir : ''), 'name' => $fp);
 					}
 				}
