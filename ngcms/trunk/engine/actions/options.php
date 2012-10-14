@@ -3,9 +3,21 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
-$lang = LoadLang('options', 'admin');
+LoadLang('options', 'admin', 'options');
 
-$tpl -> template('options', tpl_actions);
-$tvars['vars'] = array('php_self' => $PHP_SELF);
-$tpl -> vars('options', $tvars);
-echo $tpl -> show('options');
+$tVars = array(
+	'php_self'	=> $PHP_SELF,
+	'perm'		=> array(
+		'static'			=> checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'view'),
+		'categories'		=> checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'view'),
+		'addnews'			=> checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, 'add'),
+		'editnews'			=> (checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, 'personal.list') || checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, 'other.list')),
+		'configuration'		=> checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'details'),
+		'dbo'				=> checkPermission(array('plugin' => '#admin', 'item' => 'dbo'), null, 'details'),
+		'cron'				=> checkPermission(array('plugin' => '#admin', 'item' => 'cron'), null, 'details'),
+		'rewrite'			=> checkPermission(array('plugin' => '#admin', 'item' => 'rewrite'), null, 'details'),
+	),
+);
+
+$xt = $twig->loadTemplate('skins/default/tpl/options.tpl');
+echo $xt->render($tVars);
