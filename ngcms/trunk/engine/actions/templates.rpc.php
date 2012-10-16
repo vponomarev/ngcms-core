@@ -255,7 +255,7 @@ function admTemplatesUpdateFile($params) {
 		return array('status' => 0, 'errorCode' => 6, 'errorText' => 'File does not exists ['.$resultFileName.']');
 	}
 
-	if (!is_file($resultFileName)) {
+	if (!is_writable($resultFileName)) {
 		return array('status' => 0, 'errorCode' => 8, 'errorText' => 'Dont have write privileges for ['.$resultFileName.']');
 	}
 
@@ -273,7 +273,7 @@ function admTemplatesUpdateFile($params) {
 		return array('status' => 1, 'errorCode' => 0, 'content' => 'Update complete ['.$resultFileName.']');
 	}
 
-	return array('status' => 0, 'errorCode' => 9, 'content' => 'Error writing into file ['.$resultFileName.']');
+	return array('status' => 0, 'errorCode' => 9, 'errorText' => 'Error writing into file ['.$resultFileName.']');
 }
 
 
