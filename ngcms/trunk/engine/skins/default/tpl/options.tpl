@@ -66,10 +66,10 @@
 </table>
 <table border="0" width="100%" cellspacing="0" cellpadding="0" style="padding-top: 5px;">
 <tr>
-<td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/users.gif" hspace="8" alt="" /><a href="{{ php_self }}?mod=users" title="{{ lang.options['users'] }}">{{ lang.options['users'] }}</a></td>
+<td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/users.gif" hspace="8" alt="" />{% if (perm.users) %}<a href="{{ php_self }}?mod=users" title="{{ lang.options['users'] }}">{% endif %}{{ lang.options['users'] }}{% if (perm.users) %}</a>{% endif %}</td>
 </tr>
 <tr>
-<td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/ipban.gif" hspace="8" alt="" /><a href="{{ php_self }}?mod=ipban" title="{{ lang.options['ipban'] }}">{{ lang.options['ipban'] }}</a></td>
+<td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/ipban.gif" hspace="8" alt="" />{% if (perm.ipban) %}<a href="{{ php_self }}?mod=ipban" title="{{ lang.options['ipban'] }}">{% endif %}{{ lang.options['ipban'] }}{% if (perm.ipban) %}</a>{% endif %}</td>
 </tr>
 <tr>
 <td width="100%" class="contentEntry1"> <!-- <img src="{{ skins_url }}/images/ipban.gif" hspace="8" alt="" /><a href="{{ php_self }}?mod=ugroups" title="{{ lang.options['ugroups'] }}">{{ lang.options['ugroups'] }}</a> --> &nbsp;</td>
@@ -96,7 +96,7 @@
 <td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/files.gif" hspace="8" alt="" /><a href="{{ php_self }}?mod=files" title="{{ lang.options['files'] }}">{{ lang.options['files'] }}</a></td>
 </tr>
 <tr>
-<td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/templates.gif" hspace="8" alt="" /><a href="{{ php_self }}?mod=templates" title="{{ lang.options['templates'] }}">{{ lang.options['templates'] }}</a></td>
+<td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/templates.gif" hspace="8" alt="" />{% if (perm.templates) %}<a href="{{ php_self }}?mod=templates" title="{{ lang.options['templates'] }}">{% endif %}{{ lang.options['templates'] }}{% if (perm.templates) %}</a>{% endif %}</td>
 </tr>
 </table>
 </td>

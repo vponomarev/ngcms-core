@@ -16,6 +16,9 @@ $tVars = array(
 		'dbo'				=> checkPermission(array('plugin' => '#admin', 'item' => 'dbo'), null, 'details'),
 		'cron'				=> checkPermission(array('plugin' => '#admin', 'item' => 'cron'), null, 'details'),
 		'rewrite'			=> checkPermission(array('plugin' => '#admin', 'item' => 'rewrite'), null, 'details'),
+		'templates'			=> checkPermission(array('plugin' => '#admin', 'item' => 'templates'), null, 'details'),
+		'ipban'				=> checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'view'),
+		'users'				=> checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'view'),
 	),
 );
 

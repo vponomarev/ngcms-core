@@ -10,7 +10,7 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
-$lang = LoadLang('templates', 'admin');
+$lang = LoadLang('templates', 'admin', 'templates');
 
 function GetFiles($dir, $path, $list = false) {
 	global $global;
@@ -88,10 +88,57 @@ function GetThemes($where, $select = true) {
 }
 
 //
+// Preload templates version files
+//
+function loadTemplateVersions(){
+	$tDir = root.'../templates';
+	$tlist = array();
+	if ($dRec = opendir($tDir)) {
+		while (($dName = readdir($dRec)) !== false) {
+			if (($dName == '.')||($dName == '..'))
+				continue;
+			if (is_dir($tDir.'/'.$dName) && file_exists($vfn = $tDir.'/'.$dName.'/version') && (filesize($vfn)) && ($vf = @fopen($vfn, 'r'))) {
+
+				$tRec = array('name' => $dName);
+				while (!feof($vf)) {
+					$line = fgets($vf);
+					if (preg_match("/^(.+?) *\: *(.+?) *$/i", trim($line), $m)) {
+						if (in_array(strtolower($m[1]), array('id', 'title', 'author', 'version', 'reldate', 'plugins', 'image', 'imagepreview')))
+							$tRec[strtolower($m[1])] = $m[2];
+					}
+				}
+				fclose($vf);
+				if (isset($tRec['id']) && isset($tRec['title']))
+					array_push($tlist, $tRec);
+			}
+		}
+		closedir($dRec);
+	}
+	return $tlist;
+}
+
+//
 // ================================================================== //
 //                              CODE                                  //
 // ================================================================== //
 //
+
+
+// ** Tasks
+// 0. List files from current template
+function templateShowList() {
+
+}
+// 1. Edit template form
+// 2. Save template
+// 3. Rename template
+// 4. Delete template
+// 5. Create new template
+// 6. Rename theme [??]
+// 7. Delete theme [??]
+// 8. Create new theme [??]
+
+
 
 // Check & clean filename
 $action			= $_REQUEST['action'];
@@ -116,7 +163,7 @@ switch($_REQUEST['where']){
 
 if ($action == "edit") {
 
-        if (substr($filename, 0, 1) == '/') $filename = substr($filename,1);
+	if (substr($filename, 0, 1) == '/') $filename = substr($filename,1);
 	switch ($where) {
 		case 'actions':	$path = root.'skins/'.$skin.'/tpl/'.$filename; break;
 		case 'site':	$path = tpl_dir.$theme.'/'.$filename; break;
@@ -140,8 +187,8 @@ if ($action == "edit") {
 	echo $tpl -> show('edit');
 } elseif ($action == "save" && $filename) {
 
-	if ($where == "actions") { $path = root.'skins/'.$skin.'/tpl/'.$filename; }
-	elseif ($where == "site") {
+	if ($where == "actions") { $path = root.'skins/'.$skin.'/tpl/'.$filename;
+	} elseif ($where == "site") {
 		$path = tpl_dir.$theme.'/'.$filename;
 
 		if ($new) {
@@ -152,6 +199,7 @@ if ($action == "edit") {
 	}
 
 	$link = 'admin.php?mod=templates&theme='.$_REQUEST['theme'];
+
 	// Try to write file
 	if (($fp = @fopen($path, 'wb+')) !== FALSE) {
 		fputs($fp, $_REQUEST['filebody']);
@@ -262,6 +310,11 @@ if ($action == "edit") {
 	msg(array("text" => $lang['msgo_tcreated']));
 } else {
 
+	$tVars = array(
+		'home_url'	=> $home,
+		'token'		=> genUToken('admin.templates'),
+	);
+
 	if (!$theme) {
 		$theme = $config['theme'];
 	}
@@ -320,12 +373,7 @@ if ($action == "edit") {
 			$tvarz['regx']["'\\[if-rename\\].*?\\[/if-rename\\]'si"] = '';
 		}
 
-	//	if (($file['name'] == "news.full.tpl" || $file['name'] == "news.short.tpl" || $file['name'] == "comments.form.tpl" || $file['name'] == "comments.show.tpl" || $file['name'] == "rss.tpl" || $file['name'] == "print.tpl") && !$file['dir']) {
-	//		$tvarz['vars']['[if-new]'] = '';
-	//		$tvarz['vars']['[/if-new]'] = '';
-	//	} else {
 			$tvarz['regx']["'\\[if-new\\].*?\\[/if-new\\]'si"] = '';
-	//	}
 
 		$tpl -> vars('entries', $tvarz);
 		$tvars['vars']['entries_site'] .= $tpl -> show('entries');
@@ -385,7 +433,11 @@ if ($action == "edit") {
 	$tpl->template('tselect', tpl_actions.$mod);
 
 	$tsel = '';
+	$tVars['siteTemplates'] = array();
+
 	foreach ($tlist as $tver) {
+		$tVars['siteTemplates'] []= $tver;
+
 		$tsv['vars'] = array(
 			'template_name'		=> $tver['name'],
 			'template_title'	=> $tver['title'],
@@ -400,39 +452,13 @@ if ($action == "edit") {
 
 	$tvars['vars']['template_select'] = $tsel;
 
+
 	$tpl -> template('table', tpl_actions.$mod);
 	$tpl -> vars('table', $tvars);
-	echo $tpl -> show('table');
+//	echo $tpl -> show('table');
+
+
+	$xt = $twig->loadTemplate('skins/default/tpl/templates/table.tpl');
+	print $xt->render($tVars);
 }
 
-
-
-//
-// Preload templates version files
-//
-function loadTemplateVersions(){
-	$tDir = root.'../templates';
-	$tlist = array();
-	if ($dRec = opendir($tDir)) {
-		while (($dName = readdir($dRec)) !== false) {
-			if (($dName == '.')||($dName == '..'))
-				continue;
-			if (is_dir($tDir.'/'.$dName) && file_exists($vfn = $tDir.'/'.$dName.'/version') && (filesize($vfn)) && ($vf = @fopen($vfn, 'r'))) {
-
-				$tRec = array('name' => $dName);
-				while (!feof($vf)) {
-					$line = fgets($vf);
-					if (preg_match("/^(.+?) *\: *(.+?) *$/i", trim($line), $m)) {
-						if (in_array(strtolower($m[1]), array('id', 'title', 'author', 'version', 'reldate', 'plugins', 'image', 'imagepreview')))
-							$tRec[strtolower($m[1])] = $m[2];
-					}
-			        }
-			        fclose($vf);
-			        if (isset($tRec['id']) && isset($tRec['title']))
-			        	array_push($tlist, $tRec);
-			}
-		}
-		closedir($dRec);
-	}
-	return $tlist;
-}
