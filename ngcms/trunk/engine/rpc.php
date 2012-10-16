@@ -30,7 +30,7 @@ loadActionHandlers('rpc:'.(is_array($userROW)?'active':'inactive'));
 
 // Function to preload ADMIN rpc funcs
 function loadAdminRPC($mod) {
-	if (in_array($mod, array('categories', 'files'))) {
+	if (in_array($mod, array('categories', 'files', 'templates'))) {
 		@include_once('./actions/'.$mod.'.rpc.php');
 		return true;
 	}
@@ -80,7 +80,7 @@ function processJSON(){
 				// If method "plugin.NAME.something" is called, try to load action "rpc" for plugin "NAME"
 				$out = call_user_func($RPCADMFUNC[$methodName], $params);
 			} else {
-				$out = rpcDefault($params); break;
+				$out = rpcDefault($methodName, $params); break;
 			}
 	}
 	//print "<pre>JSON OUTPUT: ".json_encode($out)."</pre>";
@@ -91,8 +91,8 @@ function processJSON(){
 //
 //
 //
-function rpcDefault() {
-	return array('status' => 0, 'errorCode' => 1, 'errorText' => 'No command specified [rpcDefault]');
+function rpcDefault($methodName = '', $params = array()) {
+	return array('status' => 0, 'errorCode' => 1, 'errorText' => 'rpcDefault: method ['.$methodName.'] is unknown');
 }
 
 //
@@ -102,11 +102,11 @@ function rpcRewriteSubmit($params) {
 	global $userROW;
 
 	// Check for permissions
-	if (!is_array($userROW) || ($userROW['status'] != 1)) {
-		// ACCESS DENIED
-		ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
-		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
-	}
+	//if (!is_array($userROW) || ($userROW['status'] != 1)) {
+	//	// ACCESS DENIED
+	//	ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
+	//	return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
+	//}
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'rewrite'), null, 'modify')) {
