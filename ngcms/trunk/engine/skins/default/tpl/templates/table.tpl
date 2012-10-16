@@ -108,8 +108,7 @@ function submitTemplateSelector() {
 }
 
 function submitTemplateEdit() {
-	var editedContent = new String($('#fileEditorSelector').val());
-	var originalContent = new String(ngFileContent);
+	var editedContent = $('#fileEditorSelector').val();
 
 	ngShowLoading();
 	$.post('/engine/rpc.php', { json : 1, methodName : 'admin.templates.updateFile', rndval: new Date().getTime(), params : json_encode({ template : ngTemplateName, 'file' : ngFileName, token : '{{ token }}', 'content' : editedContent }) }, function(data) {
