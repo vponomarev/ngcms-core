@@ -252,7 +252,11 @@ function admTemplatesUpdateFile($params) {
 	}
 
 	if (!is_file($resultFileName)) {
-		return array('status' => 0, 'errorCode' => 6, 'errorText' => 'File not found ['.$resultFileName.']');
+		return array('status' => 0, 'errorCode' => 6, 'errorText' => 'File does not exists ['.$resultFileName.']');
+	}
+
+	if (!is_file($resultFileName)) {
+		return array('status' => 0, 'errorCode' => 8, 'errorText' => 'Dont have write privileges for ['.$resultFileName.']');
 	}
 
 	$newData = iconv('UTF-8', 'Windows-1251', $params['content']);
@@ -263,16 +267,13 @@ function admTemplatesUpdateFile($params) {
 		return array('status' => 1, 'errorCode' => 0, 'content' => 'File was not modified');
 	}
 
-	if (($fp = @fopen($resultFileName.'.new', 'wb+')) !== FALSE) {
+	if (($fp = @fopen($resultFileName, 'wb+')) !== FALSE) {
 		fputs($fp, $newData);
 		fclose($fp);
+		return array('status' => 1, 'errorCode' => 0, 'content' => 'Update complete ['.$resultFileName.']');
 	}
 
-
-	return array('status' => 1, 'errorCode' => 0, 'content' => 'TEST UPDATE ['.$resultFileName.'] '.strlen($origData).' => '.strlen($newData));
-
-
-
+	return array('status' => 0, 'errorCode' => 9, 'content' => 'Error writing into file ['.$resultFileName.']');
 }
 
 
