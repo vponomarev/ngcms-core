@@ -32,11 +32,27 @@ $permRules = array(
 //					'*'							=> array(	'title'	=> '** DEFAULT **',											),
 				),
 			),
+			'users' => array(
+				'title'	=> 'Óïğàâëåíèå ïîëüçîâàòåëÿìè',
+				'items'	=> array(
+					//					'*'							=> array(	'title'	=> '** DEFAULT **',											),
+					'view'						=> array(	'title'	=> 'Ïğîñìîòğ ñïèñêà',										),
+					'details'					=> array(	'title'	=> 'Ïğîñìîòğ ïğîôèëÿ ïîëüçîâàòåëÿ',							),
+					'modify'					=> array(	'title'	=> 'Ğåäàêòèğîâàíèå ïğîôèëÿ ïîëüçîâàòåëÿ',					),
+				),
+			),
 			'cron' => array(
 				'title'	=> 'Óïğàâëåíèå ïëàíèğîâùèêîì çàäà÷',
 				'items'	=> array(
-					'details'					=> array(	'title'	=> 'Ïğîñìîòğ íàñòğîåê ïëàíèğîâùèêà çàäà÷',				),
+					'details'					=> array(	'title'	=> 'Ïğîñìîòğ íàñòğîåê ïëàíèğîâùèêà çàäà÷',					),
 					'modify'					=> array(	'title'	=> 'Èçìåíåíèå íàñòğîåê ïëàíèğîâùèêà çàäà÷',					),
+				),
+			),
+			'rewrite' => array(
+				'title'	=> 'Óïğàâëåíèå ôîğìàòîì ññûëîê',
+				'items'	=> array(
+					'details'					=> array(	'title'	=> 'Ïğîñìîòğ íàñòğîåê óïğàâëåíèÿ ññûëêàìè',					),
+					'modify'					=> array(	'title'	=> 'Èçìåíåíèå íàñòğîåê óïğàâëåíèÿ ññûëîê',					),
 				),
 			),
 			'ipban' => array(
@@ -104,9 +120,24 @@ $permRules = array(
 					'other.nocat'				=> array(	'title'	=> '×óæèå íîâîñòè: Ğàçìåùåíèå âíå êàòåãîğèè',			),
 					'other.customdate'			=> array(	'title'	=> '×óæèå íîâîñòè: Èçìåíåíèå äàòû ïóáëèêàöèè',			),
 					'other.altname'				=> array(	'title'	=> '×óæèå íîâîñòè: Çàäàíèå àëüò. èìåíè',				),
-					'*'							=> array(	'title'	=> '** Çíà÷åíèå ïî óìîë÷àíèş **',							),
+					'*'							=> array(	'title'	=> '** Çíà÷åíèå ïî óìîë÷àíèş **',						),
 				),
 			),
+			'dbo' => array(
+				'title'	=> 'Óïğàâëåíèå áàçîé äàííûõ',
+				'items'	=> array(
+					'details'					=> array(	'title'	=> 'Ïğîñìîòğ òåêóùåãî ñîñòîÿíèÿ áàçû äàííûõ',			),
+					'modify'					=> array(	'title'	=> 'Èçìåíåíèå â áàçå äàííûõ',							),
+				),
+			),
+			'templates' => array(
+				'title'	=> 'Óïğàâëåíèå øàáëîíàìè',
+				'items'	=> array(
+					'details'					=> array(	'title'	=> 'Ïğîñìîòğ øàáëîíîâ',									),
+					'modify'					=> array(	'title'	=> 'Èçìåíåíèå øàáëîíîâ',								),
+				),
+			),
+
 		),
 	),
 	'nsm'	=> array(

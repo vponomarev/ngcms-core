@@ -842,6 +842,18 @@ function showNews($handlerName, $params) {
 			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
 			break;
 
+		case 'all':
+			$SYSTEM_FLAGS['info']['title']['group'] = $lang['allnews'];
+			$paginationParams = checkLinkAvailable('news', 'all')?
+		    			array('pluginName' => 'news', 'pluginHandler' => 'all', 'params' => array(), 'xparams' => array(), 'paginator' => array('page', 0, false)):
+		    			array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'all'), 'xparams' => array(), 'paginator' => array('page', 1, false));
+
+			if ($config['default_newsorder'] != '')
+				$callingParams['newsOrder'] = $config['default_newsorder'];
+
+			$template['vars']['mainblock'] .= news_showlist(array(), $paginationParams, $callingParams);
+			break;
+
 		case 'by.category':
 			$category = '';
 			if (isset($params['catid'])) {

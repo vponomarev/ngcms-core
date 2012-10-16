@@ -861,3 +861,12 @@ border-bottom: 1px solid #eee;
 }
 
 h1, h2, h3, h4 { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;   font-weight: normal; text-shadow: none; margin: 0 0 10px 0; line-height: 30px;   text-rendering: optimizelegibility; }
+
+#loading-layer {
+	display : none;
+	width : 180px;
+	height : 40px;
+	background : #fff;
+	text-align : center;
+	border : 1px solid #eeeeef;
+}

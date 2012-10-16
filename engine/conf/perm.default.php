@@ -26,11 +26,16 @@ $confPerm = array(
 			'*'					=> true,
 		),
 		'configuration'	=> array(
-			'details'		=> true,
+			'details'		=> true ,
 			'modify'		=> true,
 			'*'				=> true,
 		),
 		'cron'	=> array(
+			'details'		=> true,
+			'modify'		=> true,
+			'*'				=> true,
+		),
+		'rewrite'	=> array(
 			'details'		=> true,
 			'modify'		=> true,
 			'*'				=> true,
@@ -86,6 +91,11 @@ $confPerm = array(
 			'details' => true,
 			'modify' => true,
 		),
+		'users' => array (
+			'view' => true,
+			'details' => true,
+			'modify' => true,
+		),
 		'categories'	=> array(
 			'view'						=> true,
 			'modify'					=> true,
@@ -94,6 +104,11 @@ $confPerm = array(
 		'ipban'	=> array(
 			'view'						=> true,
 			'modify'					=> true,
+		),
+		'templates'	=> array(
+			'details'		=> true,
+			'modify'		=> true,
+			'*'				=> true,
 		),
 		'*'			=> array(
 			'*'			=> true,
