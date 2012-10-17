@@ -2166,7 +2166,7 @@ function twigIsCategory($list) {
 	global $currentCategory, $catz, $catmap, $config, $CurrentHandler;
 	//print "twigCall isCategory($list):<pre>".var_export($currentCategory, true)."</pre>";
 
-	// Return if user is reading any news
+	// Return if user is not reading any news
 	if ($CurrentHandler['pluginName'] != 'news')													return false;
 	if (($CurrentHandler['handlerName'] == 'news') || ($CurrentHandler['handlerName'] == 'print'))	return false;
 
@@ -2474,4 +2474,20 @@ function coreSearchForm(){
 	$tpl -> template('search.form', tpl_site);
 	$tpl -> vars('search.form', array('vars' => array('form_url' =>	generateLink('search', '', array()) )));
 	$template['vars']['search_form'] = $tpl -> show('search.form');
+}
+
+
+// Return current news category
+function getCurrentNewsCategory() {
+	global $currentCategory, $catz, $catmap, $config, $CurrentHandler, $SYSTEM_FLAGS;
+
+	// Return if user is not reading any news
+	if (($CurrentHandler['pluginName'] != 'news')||(!isset($SYSTEM_FLAGS['news']['currentCategory.id'])))
+		return false;
+
+	// Return if user is not reading short/full news from categories
+	if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print') && ($CurrentHandler['handlerName'] != 'by.category'))
+		return false;
+
+	return array(($CurrentHandler['handlerName'] == 'by.category')?'short':'full', $SYSTEM_FLAGS['news']['currentCategory.id']);
 }

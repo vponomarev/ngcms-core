@@ -102,13 +102,6 @@ function rpcRewriteSubmit($params) {
 	global $userROW;
 
 	// Check for permissions
-	//if (!is_array($userROW) || ($userROW['status'] != 1)) {
-	//	// ACCESS DENIED
-	//	ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
-	//	return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
-	//}
-
-	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'rewrite'), null, 'modify')) {
 		ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
 		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied (perm)');
@@ -153,7 +146,9 @@ function rpcRewriteSubmit($params) {
 	foreach ($hList as $handler) {
 		$UHANDLER->registerHandler(-1, $handler);
 	}
-	$UHANDLER->saveConfig();
+	if (!$UHANDLER->saveConfig()) {
+		return array('status' => 0, 'errorCode' => 5, 'errorText' => 'Error writing to disk');
+	}
 
 	ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify', 'list' => $params), null, array(1, ''));
 
