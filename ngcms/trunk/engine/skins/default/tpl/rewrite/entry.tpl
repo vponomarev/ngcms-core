@@ -7,7 +7,7 @@
  <td class="contentEntry1" id="re.{id}.regex">{regex}</td>
  <td class="contentEntry1" id="re.{id}.flags">{flags}</td>
  <td class="contentEntry1" align="right" width="80px;">
-  <input id="btn.{id}" type="button" value="Edit" onclick="reEditRow({id});"/>
-  <input id="btn.del.{id}" type="button" value="Del" onclick="reDeleteRow({id});"/>
+  <input id="btn.{id}" type="button"class="navbutton" style="width: 30px;" value="Edit" onclick="reEditRow({id});"/>
+  <input id="btn.del.{id}" type="button" class="navbutton" style="width: 30px;" value="Del" onclick="reDeleteRow({id});"/>
  </td>
 </tr>
