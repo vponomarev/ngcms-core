@@ -1,4 +1,0 @@
-<tr align="left">
-	<td class="contentEntry1" width="50%">{filename}</td>
-	<td class="contentEntry1" width="50%"><a href="{php_self}?mod=templates&amp;action=edit&amp;filename={filename}&amp;where={where}&amp;theme={theme}&amp;skin={skin}">{l_edit}</a>[if-delete] | <a href="{php_self}?mod=templates&amp;action=delete&amp;filename={filename}&amp;theme={theme}">{l_delete}</a>[/if-delete][if-new] | <a href="{php_self}?mod=templates&amp;action=newfile&amp;filename={filename}&amp;theme={theme}" onclick="if(ren=window.prompt('{l_name}:','{name}')){ window.location.href=this.href+'&newfilename='+ren; } return false;">{l_tplnew}</a>[/if-new][if-rename] | <a href="{php_self}?mod=templates&amp;action=rename&amp;filename={filename}&amp;theme={theme}" onclick="if(ren=window.prompt('{l_name}:','{name}')){ window.location.href=this.href+'&newfilename='+ren; } return false;">{l_rename}</a>[/if-rename]</td>
-</tr>
