@@ -2491,3 +2491,24 @@ function getCurrentNewsCategory() {
 
 	return array(($CurrentHandler['handlerName'] == 'by.category')?'short':'full', $SYSTEM_FLAGS['news']['currentCategory.id']);
 }
+
+// Call plugin execution via TWIG
+function twigCallPlugin($funcName, $params) {
+	global $TWIGFUNC;
+
+	// Try to preload function if required
+	if (!isset($TWIGFUNC[$funcName])) {
+		if (preg_match("#^(.+?)\.(.+?)$", $funcName, $m)) {
+			loadPlugin($m[1], 'twig');
+		}
+	}
+
+	if (!isset($TWIGFUNC[$funcName])) {
+		print "ERROR :: callPlugin - no function [$funcName]<br/>\n";
+		return;
+	}
+
+	return call_user_func($TWIGFUNC[$funcName], $params);
+
+	print "twigCallPlugin ($funcName, ".var_export($params, true).")";
+}
