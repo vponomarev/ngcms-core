@@ -432,11 +432,14 @@ function newsProcessFilter($conditions) {
 //		'extendedReturn' => flag if we need to return an extended array:
 //			'count' - count of found news
 //			'data'  - data to be showed
+//		'extendedReturnData' => flag if 'data' should be returned as array of separate entries
+//		'extendedReturnSQL'  => flag if we need to return original SQL fetched data in extendedReturn answer as 'sql' field
 //		'searchFlag'	=> flag if we want to use non-mondatory template 'news.search.tpl' [!!only for style = 'short' !!]
 //		'pin'	-	Way of sorting for PINNED news
 //			0	-	`pinned` (for MainPage)
 //			1	-	`catpinned`	(for Categories page)
 //			2	-	without taking PIN into account
+//		'disablePagination'	- Disable generation of page information
 //
 function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
@@ -494,29 +497,35 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		default:	$orderBy = 'pinned desc, '.$orderBy;	break;
 	}
 
-	//$orderBy = 'pinned desc, '.$orderBy;
 	$query['orderby'] = " order by ".$orderBy." limit ".$limit_start.",".$limit_count;
 
-	// ===================================================================
-	$query['count']		=	"SELECT count(*) as count FROM ".prefix."_news WHERE ".$query['filter'];
-	$query['result']	=	"SELECT * FROM ".prefix."_news WHERE ".$query['filter'].$query['orderby'];
 
-	// preload plugins
-	loadActionHandlers('news:show');
-	loadActionHandlers('news:show:list');
-	loadActionHandlers('news_short');
-
-
+	// Make select / news counting queries
 	$nCount = 0;
 	$output = '';
+	$outputList = array();
+
 
 	// Call `SELECT` query
+	// * Check if we need to override query
+	if (isset($callingParams['overrideSQLquery']) && ($callingParams['overrideSQLquery'] != '')) {
+		$query['result']	=	$callingParams['overrideSQLquery'];
+		// ** FORCE TO DISABLE PAGINATION !!
+		$callingParams['disablePagination'] = true;
+	} else {
+		$query['result']	=	"SELECT * FROM ".prefix."_news WHERE ".$query['filter'].$query['orderby'];
+	}
+
 	$selectResult = $mysql->select($query['result'], 1);
 
-	// List of pages
-	$newsCount = $mysql->result($query['count']);
-	$pages_count = ceil($newsCount / $showNumber);
-
+	if (isset($callingParams['disablePagination']) && ($callingParams['disablePagination'])) {
+		$newsCount = count($selectResult);
+		$pages_count = 1;
+	} else {
+		$query['count']		=	"SELECT count(*) as count FROM ".prefix."_news WHERE ".$query['filter'];
+		$newsCount = $mysql->result($query['count']);
+		$pages_count = ceil($newsCount / $showNumber);
+	}
 
 	// Prepare TOTAL data for plugins
 	// = count		- count of fetched news
@@ -574,6 +583,17 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			$linkedFiles['data'][$nirow['id']] = $nirow;
 		}
 	}
+
+
+	// ===================================================================
+	// All information is retrieved from database.
+	// Preload plugins and take care of them.
+	loadActionHandlers('news:show');
+	loadActionHandlers('news:show:list');
+	loadActionHandlers('news_short');
+
+
+
 
 	// Execute filters
 	if (is_array($PFILTERS['news'])) {
@@ -702,8 +722,9 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 		$tpl -> template($currentTemplateName, $templatePath);
 		$tpl -> vars($currentTemplateName, $tvars);
-		$output .= $tpl -> show($currentTemplateName);
+		$outputList []= $tpl -> show($currentTemplateName);
 	}
+	$output = join('', $outputList);
 	unset($tvars);
 
 	// Return output if we're in export mode
@@ -718,42 +739,48 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$limit_start = 2;
 	}
 
-	// Make navigation bar
-	templateLoadVariables(true);
-	$navigations = $TemplateCache['site']['#variables']['navigation'];
-	$tpl -> template('pages', tpl_dir.$config['theme']);
 
-	// Prev page link
-	if ($limit_start && $nCount) {
-		$prev = floor($limit_start / $showNumber);
-		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev), $navigations['prevlink']));
-	} else {
-		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = "";
-		$prev = 0;
-		$no_prev = true;
+	// Generate pagination/navigation if it's not disabled
+	if (!(isset($callingParams['disablePagination']) && ($callingParams['disablePagination']))) {
+		templateLoadVariables(true);
+		$navigations = $TemplateCache['site']['#variables']['navigation'];
+		$tpl -> template('pages', tpl_dir.$config['theme']);
+
+		// Prev page link
+		if ($limit_start && $nCount) {
+			$prev = floor($limit_start / $showNumber);
+			$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev), $navigations['prevlink']));
+		} else {
+			$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = "";
+			$prev = 0;
+			$no_prev = true;
+		}
+
+		$maxNavigations 		= $config['newsNavigationsCount'];
+		if ($maxNavigations < 1)
+			$maxNavigations = 10;
+
+		$tvars['vars']['pages'] = generatePagination($cstart, 1, $pages_count, $maxNavigations, $paginationParams, $navigations);
+
+		// Next page link
+		if (($prev + 2 <= $pages_count) && $nCount) {
+			$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev+2), $navigations['nextlink']));
+		} else {
+			$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = "";
+			$no_next = true;
+		}
+
+		if ($nCount && ($pages_count>1)){
+			$tpl -> vars('pages', $tvars);
+			$output .= $tpl -> show('pages');
+		}
 	}
 
-	$maxNavigations 		= $config['newsNavigationsCount'];
-	if ($maxNavigations < 1)
-		$maxNavigations = 10;
-
-	$tvars['vars']['pages'] = generatePagination($cstart, 1, $pages_count, $maxNavigations, $paginationParams, $navigations);
-
-	// Next page link
-	if (($prev + 2 <= $pages_count) && $nCount) {
-		$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev+2), $navigations['nextlink']));
-	} else {
-		$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = "";
-		$no_next = true;
+	// Return result
+	if ((isset($callingParams['extendedReturn']) && $callingParams['extendedReturn'])) {
+		return array('count' => $newsCount, 'data' => (isset($callingParams['extendedReturnData']) && $callingParams['extendedReturnData'])?$outputList:$output);
 	}
-
-	if ($nCount && ($pages_count>1)){
-		$tpl -> vars('pages', $tvars);
-		$output .= $tpl -> show('pages');
-	}
-
-	// Add collected news into {mainlock}
-	return (isset($callingParams['extendedReturn']) && $callingParams['extendedReturn'])?array('count' => $newsCount, 'data' => $output):$output;
+	return $output;
 }
 
 

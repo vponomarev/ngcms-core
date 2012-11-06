@@ -1,3 +1,4 @@
+<script type="text/javascript" src="{{ admin_url }}/includes/js/libsuggest.js"></script>
 <script type="text/javascript">
 //
 // Global variable: ID of current active input area

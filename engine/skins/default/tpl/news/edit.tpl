@@ -1,4 +1,6 @@
 
+<script type="text/javascript" src="{{ home_url }}/lib/ajax.js"></script>
+<script type="text/javascript" src="{{ home_url }}/lib/libsuggest.js"></script>
 <script language="javascript" type="text/javascript">
 
 //
@@ -41,6 +43,13 @@ function changeActive(name) {
  }
 }
 </script>
+
+<!-- Hidden SUGGEST div -->
+<div id="suggestWindow" class="suggestWindow">
+<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
+<a href="#" align="right" id="suggestClose">close</a>
+</div>
+
 
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type="hidden" name="area" value="" />

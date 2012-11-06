@@ -13,7 +13,7 @@
 // Global variables definition
 //
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $TWIGFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache;
 
@@ -34,6 +34,7 @@ $AUTH_CAPABILITIES = array();
 $PPAGES = array();			// plugin's pages
 $PFILTERS = array();		// filtering plugins
 $RPCFUNC = array();			// RPC functions
+$TWIGFUNC = array();		// TWIG defined functions
 $RPCADMFUNC = array();		// RPC admin functions
 
 $PERM = array();			// PERMISSIONS
@@ -257,7 +258,8 @@ $twig->addFunction('isLang', 		new Twig_Function_Function('twigIsLang'));
 $twig->addFunction('isHandler',		new Twig_Function_Function('twigIsHandler'));
 $twig->addFunction('isCategory',	new Twig_Function_Function('twigIsCategory'));
 $twig->addFunction('isNews',		new Twig_Function_Function('twigIsNews'));
-$twig->addFunction('isSet',		new Twig_Function_Function('twigIsSet', array('needs_context' => true)));
+$twig->addFunction('callPlugin', 	new Twig_Function_Function('twigCallPlugin'));
+$twig->addFunction('isSet',			new Twig_Function_Function('twigIsSet', array('needs_context' => true)));
 $twig->addFunction('debugContext',	new Twig_Function_Function('twigDebugContext', array('needs_context' => true)));
 $twig->addFunction('debugValue',	new Twig_Function_Function('twigDebugValue'));
 

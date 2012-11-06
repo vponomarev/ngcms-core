@@ -879,6 +879,12 @@ function rpcRegisterFunction($name, $instance, $permanent = false) {
  $RPCFUNC[$name] = $instance;
 }
 
+// Register TWIG function call
+function twigRegisterFunction($pluginName, $funcName, $instance) {
+	global $TWIGFUNC;
+	$TWIGFUNC[$pluginName.'.'.$funcName] = $instance;
+}
+
 
 //
 // Check if we have handler for specified action
