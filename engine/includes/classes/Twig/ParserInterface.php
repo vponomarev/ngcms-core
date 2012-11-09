@@ -13,16 +13,16 @@
  * Interface implemented by parser classes.
  *
  * @package twig
- * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author  Fabien Potencier <fabien@symfony.com>
  */
 interface Twig_ParserInterface
 {
     /**
      * Converts a token stream to a node tree.
      *
-     * @param  Twig_TokenStream $stream A token stream instance
+     * @param Twig_TokenStream $stream A token stream instance
      *
      * @return Twig_Node_Module A node tree
      */
-    function parse(Twig_TokenStream $code);
+    public function parse(Twig_TokenStream $stream);
 }

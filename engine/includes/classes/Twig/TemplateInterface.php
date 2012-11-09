@@ -13,7 +13,7 @@
  * Interface implemented by all compiled templates.
  *
  * @package twig
- * @author  Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author  Fabien Potencier <fabien@symfony.com>
  */
 interface Twig_TemplateInterface
 {
@@ -28,19 +28,20 @@ interface Twig_TemplateInterface
      *
      * @return string The rendered template
      */
-    function render(array $context);
+    public function render(array $context);
 
     /**
      * Displays the template with the given context.
      *
      * @param array $context An array of parameters to pass to the template
+     * @param array $blocks  An array of blocks to pass to the template
      */
-    function display(array $context);
+    public function display(array $context, array $blocks = array());
 
     /**
      * Returns the bound environment for this template.
      *
      * @return Twig_Environment The current environment
      */
-    function getEnvironment();
+    public function getEnvironment();
 }
