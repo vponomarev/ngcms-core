@@ -23,9 +23,15 @@ interface Twig_FunctionInterface
      *
      * @return string The PHP code for the function
      */
-    function compile();
+    public function compile();
 
-    function needsEnvironment();
+    public function needsEnvironment();
 
-    function getSafe(Twig_Node $filterArgs);
+    public function needsContext();
+
+    public function getSafe(Twig_Node $filterArgs);
+
+    public function setArguments($arguments);
+
+    public function getArguments();
 }

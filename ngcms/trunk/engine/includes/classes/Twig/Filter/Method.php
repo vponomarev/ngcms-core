@@ -13,11 +13,12 @@
  * Represents a method template filter.
  *
  * @package    twig
- * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author     Fabien Potencier <fabien@symfony.com>
  */
 class Twig_Filter_Method extends Twig_Filter
 {
-    protected $extension, $method;
+    protected $extension;
+    protected $method;
 
     public function __construct(Twig_ExtensionInterface $extension, $method, array $options = array())
     {

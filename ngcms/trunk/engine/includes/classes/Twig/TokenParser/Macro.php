@@ -8,6 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * Defines a macro.
+ *
+ * <pre>
+ * {% macro input(name, value, type, size) %}
+ *    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value|e }}" size="{{ size|default(20) }}" />
+ * {% endmacro %}
+ * </pre>
+ */
 class Twig_TokenParser_Macro extends Twig_TokenParser
 {
     /**
@@ -20,22 +30,30 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
     public function parse(Twig_Token $token)
     {
         $lineno = $token->getLine();
-        $name = $this->parser->getStream()->expect(Twig_Token::NAME_TYPE)->getValue();
+        $stream = $this->parser->getStream();
+        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
 
         $arguments = $this->parser->getExpressionParser()->parseArguments();
 
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
         $this->parser->pushLocalScope();
         $body = $this->parser->subparse(array($this, 'decideBlockEnd'), true);
-        $this->parser->popLocalScope();
-        $this->parser->getStream()->expect(Twig_Token::BLOCK_END_TYPE);
+        if ($stream->test(Twig_Token::NAME_TYPE)) {
+            $value = $stream->next()->getValue();
 
-        $this->parser->setMacro($name, new Twig_Node_Macro($name, $body, $arguments, $lineno, $this->getTag()));
+            if ($value != $name) {
+                throw new Twig_Error_Syntax(sprintf("Expected endmacro for macro '$name' (but %s given)", $value), $stream->getCurrent()->getLine(), $stream->getFilename());
+            }
+        }
+        $this->parser->popLocalScope();
+        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+
+        $this->parser->setMacro($name, new Twig_Node_Macro($name, new Twig_Node_Body(array($body)), $arguments, $lineno, $this->getTag()));
 
         return null;
     }
 
-    public function decideBlockEnd($token)
+    public function decideBlockEnd(Twig_Token $token)
     {
         return $token->test('endmacro');
     }
@@ -43,7 +61,7 @@ class Twig_TokenParser_Macro extends Twig_TokenParser
     /**
      * Gets the tag name associated with this token parser.
      *
-     * @param string The tag name
+     * @return string The tag name
      */
     public function getTag()
     {
