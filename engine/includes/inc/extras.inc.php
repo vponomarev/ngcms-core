@@ -427,16 +427,16 @@ function exec_acts($item, $sth = '', $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $
 					$sth.=call_user_func($func['function'],$sth);
 				}
 				if ($func['arguments'] == 2) {
-					$sth.=call_user_func($func['function'],$sth, &$arg1);
+					$sth.=call_user_func($func['function'],$sth, $arg1);
 				}
 				if ($func['arguments'] == 3) {
-					$sth.=call_user_func($func['function'],$sth, &$arg1, &$arg2);
+					$sth.=call_user_func($func['function'],$sth, $arg1, $arg2);
 				}
 				if ($func['arguments'] == 4) {
-					$sth.=call_user_func($func['function'],$sth, &$arg1, &$arg2, &$arg3);
+					$sth.=call_user_func($func['function'],$sth, $arg1, $arg2, $arg3);
 				}
 				if ($func['arguments'] == 5) {
-					$sth.=call_user_func($func['function'],$sth, &$arg1, &$arg2, &$arg3, &$arg4);
+					$sth.=call_user_func($func['function'],$sth, $arg1, $arg2, $arg3, $arg4);
 				}
 				$timer->registerEvent('executeActionHandler ('.$item.'): call function "'.$func['function'].'" ['.$func['arguments'].' params] for '.($timer->stop(4) - $tX)." sec");
 			}

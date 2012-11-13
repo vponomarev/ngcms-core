@@ -37,6 +37,13 @@ $repoPluginInfo = repoSync();
 $enable  = isset($_REQUEST['enable'])?$_REQUEST['enable']:'';
 $disable = isset($_REQUEST['disable'])?$_REQUEST['disable']:'';
 
+
+if (isset($_REQUEST['debugVars']) && $_REQUEST['debugVars']) {
+	plugins_load_config();
+	print "<pre>".var_export($PLUGINS['config'], true)."</pre>";
+	exit;
+}
+
 // Check for security token
 if ($enable || $disable) {
 	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.extras'))) {

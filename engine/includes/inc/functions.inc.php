@@ -1217,7 +1217,7 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = f
 function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $regenShortNews = array()) {
 	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $currentCategory, $TemplateCache, $mysql, $PHP_SELF;
 
-	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']));
+	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']), 'flags' => array());
 
 	$alink = checkLinkAvailable('uprofile', 'show')?
 				generateLink('uprofile', 'show', array('name' => $row['author'], 'id' => $row['author_id'])):
@@ -1226,6 +1226,9 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['author'] = "<a href=\"".$alink."\" target=\"_blank\">".$row['author']."</a>";
 	$tvars['vars']['author_link'] = $alink;
 	$tvars['vars']['author_name'] = $row['author'];
+
+	// Flag: if we're in full mode
+	$tvars['flags']['fullMode']		= $fullMode?true:false;
 
 	$nlink = newsGenerateLink($row);
 
@@ -1244,6 +1247,8 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		list ($short, $full) = explode('<!--more-->', $row['content'], 2);
 		$more = '';
 	}
+	// Default page number
+	$page = 1;
 
 	// Check if long part is divided into several pages
 	if ($full && (!$disablePagination) && (strpos($full, "<!--nextpage-->") !== false)) {
@@ -1252,8 +1257,12 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 
 		$pagination		=	'';
 		$pages			=	explode("<!--nextpage-->", $full);
+		$pcount			= count($pages);
 
-		if (($pcnt = count($pages)) > 1) {
+		$tvars['vars']['pageCount']			= count($pages);
+		$tvars['vars']['page']				= $page;
+
+		if ($pcnt > 1) {
 			// Prepare VARS for pagination
 			$catid = intval(array_shift(explode(',', $row['catid'])));
 
@@ -1276,12 +1285,14 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 			if ($page > 1) {
 				$tvars['vars']['short-story'] = '';
 			}
-			$full							= $pages[$page-1];
-			$tvars['vars']['[pagination]'] = '';
-			$tvars['vars']['[/pagination]'] = '';
+			$full								= $pages[$page-1];
+			$tvars['vars']['[pagination]']		= '';
+			$tvars['vars']['[/pagination]']		= '';
+			$tvars['flags']['hasPagination']	= true;
 		}
 	} else {
 			$tvars['regx']["'\[pagination\].*?\[/pagination\]'si"] = '';
+			$tvars['flags']['hasPagination']	= false;
 	}
 
 	// Conditional blocks for full-page
@@ -1344,6 +1355,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$tvars['vars']['full-link']	= $nlink;
 
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
+		$tvars['flags']['hasFullNews'] = strlen($full)?true:false;
 		if (strlen($full)) {
 			// we have full news
 			$tvars['vars']['[fullnews]'] = '';
@@ -1368,6 +1380,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['category']	=	@GetCategories($row['catid']);
 
 	$tvars['vars']['[print-link]']	=	"<a href=\"".newsGenerateLink($row, true, $page)."\">";
+	$tvars['vars']['print-link']	=	newsGenerateLink($row, true, $page);
 	$tvars['vars']['[/print-link]']	=	"</a>";
 	$tvars['vars']['news_link']		=	$nlink;
 
@@ -1376,17 +1389,24 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['php-self']	=	$PHP_SELF;
 
 	if ($row['editdate'] > $row['postdate']) {
+		$tvars['flags']['isUpdated'] = true;
+
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '$1';
 		$tvars['vars']['update'] = LangDate($config['timestamp_updated'], $row['editdate']);
+		$tvars['vars']['updateStamp'] = $row['editdate'];
 	} else {
+		$tvars['flags']['isUpdated'] = false;
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '';
 		$tvars['vars']['update'] = '';
 	}
 
 	if ($more == '') {
+		$tvars['flags']['hasPersonalMore'] = false;
 		$tvars['vars']['[more]']	= '';
 		$tvars['vars']['[/more]']	= '';
 	} else {
+		$tvars['flags']['hasPersonalMore'] = true;
+		$tvars['vars']['personalMore'] = $more;
 		$tvars['regx']['#\[more\](.*?)\[/more\]#is'] = $more;
 	}
 

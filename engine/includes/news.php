@@ -413,6 +413,7 @@ function newsProcessFilter($conditions) {
 //			* short		- short new display
 //			* full		- full news display
 //			* export	- export data [ for plugins or so on. No counters are updated ]
+//		'twig'		=> [FLAG] Use TWIG template engine if set
 //		'plugin'  => if is called from plugin - ID of plugin
 //		'overrideTemplateName' => alternative template for display
 //		'overrideTemplatePath' => alternative path for searching of template
@@ -442,7 +443,7 @@ function newsProcessFilter($conditions) {
 //		'disablePagination'	- Disable generation of page information
 //
 function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
-	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS;
+	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS, $twig;
 	global $year, $month, $day;
 	global $timer;
 	global $SYSTEM_FLAGS, $TemplateCache;
@@ -622,6 +623,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$tvars['vars']['alternating'] = ($i%2)?'odd':'even';
 
 		$tvars['vars']['date'] = LangDate(timestamp, $row['postdate']);
+		$tvars['vars']['dateStamp'] = $row['postdate'];
 		$tvars['vars']['views'] = $row['views'];
 
 		// Prepare list of linked files and images
@@ -671,20 +673,28 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		//print "LinkedImages (".$row['id']."): <pre>".var_export($tvars['vars']['#images'], true)."</pre>";
 		// Print icon if only one parent category
 		if (isset($row['catid']) && $row['catid'] && !stristr(",", $row['catid']) && isset($catmap[$row['catid']]) && ($catalt = $catmap[$row['catid']]) && isset($catz[$catalt]['icon']) && $catz[$catalt]['icon']) {
+			$tvars['flags']['hasCategoryIcon'] = true;
 			$tvars['vars']['icon'] = $catz[$catalt]['icon'];
 			$tvars['vars']['[icon]'] = '';
 			$tvars['vars']['[/icon]'] = '';
 		} else {
+			$tvars['flags']['hasCategoryIcon'] = false;
 			$tvars['vars']['icon'] = '';
 			$tvars['regx']["'\\[icon\\].*?\\[/icon\\]'si"] = '';
 		}
 
 		if (is_array($userROW) && ($userROW['id'] == $row['author_id'] || ($userROW['status'] == 1 || $userROW['status'] == 2))) {
-			$tvars['vars']['[edit-news]'] = "<a href=\"".admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id']."\" target=\"_blank\">";
-			$tvars['vars']['[/edit-news]'] = "</a>";
-			$tvars['vars']['[del-news]'] = "<a onclick=\"confirmit('".admin_url."/admin.php?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;token=".genUToken('admin.news.edit')."&amp;selected_news[]=".$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
-			$tvars['vars']['[/del-news]'] = "</a>";
+			$tvars['flags']['canEditNews']		= true;
+			$tvars['flags']['canDeleteNews']	= true;
+			$tvars['vars']['editNewsLink']		= admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id'];
+			$tvars['vars']['[edit-news]']		= "<a href=\"".admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id']."\" target=\"_blank\">";
+			$tvars['vars']['[/edit-news]']		= "</a>";
+			$tvars['vars']['[del-news]']		= "<a onclick=\"confirmit('".admin_url."/admin.php?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;token=".genUToken('admin.news.edit')."&amp;selected_news[]=".$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
+			$tvars['vars']['deleteNewsLink']	= admin_url."/admin.php?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;token=".genUToken('admin.news.edit')."&amp;selected_news[]=".$row['id'];
+			$tvars['vars']['[/del-news]']		= "</a>";
 		} else {
+			$tvars['flags']['canEditNews'] = false;
+			$tvars['flags']['canDeleteNews'] = false;
 			$tvars['regx']["'\[edit-news\].*?\[/edit-news\]'si"] = "";
 			$tvars['regx']["'\[del-news\].*?\[/del-news\]'si"] = "";
 		}
@@ -720,12 +730,27 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			$currentTemplateName = 'news.search';
 		}
 
-		$tpl -> template($currentTemplateName, $templatePath);
-		$tpl -> vars($currentTemplateName, $tvars);
-		$outputList []= $tpl -> show($currentTemplateName);
+		$res = '';
+		if (isset($callingParams['twig'])) {
+			// Populate variables
+			$tVars = $tvars['vars'];
+			$tVars['flags'] = $tvars['flags'];
+
+			// Rende template
+			$xt = $twig->loadTemplate($templatePath.'/'.$currentTemplateName.'.tpl');
+			$res = $xt->render($tVars);
+
+		} else {
+			$tpl -> template($currentTemplateName, $templatePath);
+			$tpl -> vars($currentTemplateName, $tvars);
+			$res = $tpl -> show($currentTemplateName);
+		}
+
+		$outputList []= $res;
 	}
 	$output = join('', $outputList);
 	unset($tvars);
+	unset($tVars);
 
 	// Return output if we're in export mode
 	if ($callingParams['style'] == 'export')
