@@ -287,7 +287,7 @@ function admCategoryEditForm(){
 
 	$tvars['vars']['extend'] = '';
 	if (is_array($AFILTERS['categories']))
-		foreach ($AFILTERS['categories'] as $k => $v) { $v->editCategoryForm($catid, $row, &$tvars); }
+		foreach ($AFILTERS['categories'] as $k => $v) { $v->editCategoryForm($catid, $row, $tvars); }
 
 	$tpl -> template('edit', tpl_actions.$mod);
 	$tpl -> vars('edit', $tvars);
@@ -417,7 +417,7 @@ function admCategoryEdit(){
 	$pluginNoError = 1;
 	if (is_array($AFILTERS['categories']))
 		foreach ($AFILTERS['categories'] as $k => $v) {
-			if (!($pluginNoError = $v->editCategory($catid, $SQLold, &$SQL, $tvars))) {
+			if (!($pluginNoError = $v->editCategory($catid, $SQLold, $SQL, $tvars))) {
 				msg(array("type" => "error", "text" => str_replace('{plugin}', $k, $lang['msge_pluginlock'])));
 				break;
 			}
