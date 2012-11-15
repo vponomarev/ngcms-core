@@ -40,11 +40,13 @@ $skin_header = <<<HTML
 <link rel="stylesheet" href="$skins_url/ftr_panel.css" type="text/css" />
 <link rel="stylesheet" href="$config[home_url]/lib/jqueryui/jquery-ui-1.9.0.custom.css" type="text/css"/>
 <link rel="stylesheet" href="$config[home_url]/lib/jquery-ui-timepicker-addon.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jquery.multiselect.css" type="text/css"/>
 <script type="text/javascript" src="$config[home_url]/lib/functions.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/admin.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-ui-1.9.0.custom.min.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/jquery.multiselect.min.js"></script>
 </head>
 <body>
 <div id="loading-layer"><img src="$skins_url/images/loading.gif" alt="" /> Loading ...</div>
@@ -73,7 +75,7 @@ $skin_footer = <<<HTML
 <div id="footpanel">
     <ul id="mainpanel">
         <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2012 <strong>Next Generation</strong> CMS <small>Сайт разработчика</small></a></li>
-        <li><a href="$PHP_SELF?mod=news&action=add" class="add_news">Добавить новость<small>Добавить новость</small></a></li>
+        <li><a href="$PHP_SELF?mod=news&amp;action=add" class="add_news">Добавить новость<small>Добавить новость</small></a></li>
         <li><a href="$PHP_SELF?mod=news" class="add_edit">Редактировать<small>Редактировать</small></a></li>
         <li><a href="$PHP_SELF?mod=images" class="add_images">Изображения<small>Изображения</small></a></li>
         <li><a href="$PHP_SELF?mod=files" class="add_files">Файлы<small>Загрузить файл</small></a></li>

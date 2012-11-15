@@ -584,7 +584,7 @@ class urlHandler {
 					}
 
 				$skip = array ('FFC' => $h['flagFailContinue']?true:false);
-				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, &$skip, $handlerParams);
+				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, $skip, $handlerParams);
 
 				if (isset($skip['fail']))
 					continue;

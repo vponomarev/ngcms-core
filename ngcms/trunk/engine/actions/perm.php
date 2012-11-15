@@ -39,7 +39,9 @@ function showList($grp) {
 
 	$data = array();
 	$dvalue = array();
+	$nl1 = 0;
 	foreach ($pManager->getList() as $kb => $vb) {
+		$nl1++;
 		$dBlock = array(
 			'id'			=> $kb,
 			'title'			=> $vb['title'],
@@ -48,7 +50,9 @@ function showList($grp) {
 		);
 
 		if (is_array($vb['items'])) {
+			$nl2 = 0;
 			foreach ($vb['items'] as $ka => $va) {
+				$ln2++;
 				$dArea = array(
 					'id'			=> $ka,
 					'title'			=> $va['title'],
@@ -57,38 +61,57 @@ function showList($grp) {
 				);
 
 				if (is_array($va['items'])) {
+					$nl3 = 0;
 					foreach ($va['items'] as $ke => $ve) {
+						$nl3++;
 
-						// Skip non default type
+						// Check for type = categories
+						$isCategories = false;
 						if (isset($ve['type']) && (preg_match('#^listCategoriesSelector#', $ve['type'], $match))) {
-							continue;
+							// [[ CATEGORIES ]]
+							$isCategories = true;
+
 							$dEntry	= array(
 								'id'				=> $ke,
 								'title'				=> $ve['title'],
 								'description'		=> $ve['description'],
 								'type'				=> 'listCategoriesSelector',
-								'generatedOptions'	=> makeCategoryList(array('skipDisabled' => true, 'noHeader' => true, 'doempty' => true)),
+								'name'				=> str_replace('.', ':', $kb.'|'.$ka.'|'.$ke),
+								'generatedOptions'	=> makeCategoryList(array('skipDisabled' => true, 'noHeader' => true, 'doall' => true, 'allmarker' => '*', 'returnOptArray' => true)),
+								'uniqId'			=> 'id'.$nl1.'_'.$nl2.'_'.$nl3,
 							);
-							$dArea['items'] []= $dEntry;
-							continue;
+							//$dArea['items'] []= $dEntry;
+							//continue;
+						} else {
+							// [[ NORMAL SELECT ]]
+							$dEntry = array(
+								'id'			=> $ke,
+								'title'			=> $ve['title'],
+								'description'	=> $ve['description'],
+								'perm'			=> array(),
+								'name'			=> $kb.'|'.$ka.'|'.$ke,
+								'type'			=> '',
+							);
 						}
 
-						$dEntry = array(
-							'id'			=> $ke,
-							'title'			=> $ve['title'],
-							'description'	=> $ve['description'],
-							'perm'			=> array(),
-							'name'			=> $kb.'|'.$ka.'|'.$ke,
-							'type'			=> '',
-						);
 
 						// Avoid PHP bug/feature - it replaces "." into "_". Let's use ':' instead
 						$dEntry['name'] = str_replace('.', ':', $dEntry['name']);
 
 						foreach ($grp as $kg) {
-							$dEntry['perm'][$kg['id']] = $PERM[$kg['id']][$kb][$ka][$ke];
 							$x = $PERM[$kg['id']][$kb][$ka][$ke];
-							$dvalue[$dEntry['name'].'|'.$kg['id']] = (!isset($PERM[$kg['id']][$kb][$ka][$ke]) || ($PERM[$kg['id']][$kb][$ka][$ke] === NULL))?-1:($x?1:0);
+
+							if ($isCategories) {
+								$catArray = array();
+								foreach (explode(",", $x) as $cx) {
+									$catArray[$cx] = true;
+								}
+								$dvalue[$dEntry['name'].'|'.$kg['id']] = $catArray;
+								$dEntry['perm'][$kg['id']] = $catArray; //$PERM[$kg['id']][$kb][$ka][$ke];
+							} else {
+								$dEntry['perm'][$kg['id']] = $x; //$PERM[$kg['id']][$kb][$ka][$ke];
+								$dvalue[$dEntry['name'].'|'.$kg['id']] = (!isset($PERM[$kg['id']][$kb][$ka][$ke]) || ($PERM[$kg['id']][$kb][$ka][$ke] === NULL))?-1:($x?1:0);
+							}
 						}
 
 						$dArea['items'] []= $dEntry;
@@ -115,9 +138,24 @@ function showList($grp) {
 	);
 }
 
+function displayPermValue($value, $type) {
+	global $lang;
+
+
+	if ($type == 'listCategoriesSelector') {
+		return $value;
+	}
+
+	if ($value == -1)	return '--';
+	if ($value == 0)	return $lang['noa'];
+	if ($value == 1)	return $lang['yesa'];
+
+}
+
+
 function updateConfig() {
 	global $userROW, $lang, $PERM, $confPerm, $confPermUser, $pManager, $twig, $grp;
-
+	//print "Incoming POST: <pre>".var_export($_POST, true)."</pre>";
 	// ACCESS ONLY FOR ADMIN
 	if (($userROW['status'] > 1)) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
@@ -146,11 +184,35 @@ function updateConfig() {
 
 		//print "Rec [$k]<pre>".var_export($m, true)."</pre><br/>";
 		if (isset($pList[$m[1]]['items'][$m[2]]['items'][$m[3]])) {
+			$itemType = $pList[$m[1]]['items'][$m[2]]['items'][$m[3]]['type'];
+			$itemSubType = '';
+			if (preg_match('!^(.+?)#(.+?)$!', $itemType, $null)) {
+				$itemType = $null[1];
+				$itemSubType = $null[2];
+			}
+			$itemIsCategories = ($itemType == 'listCategoriesSelector')?true:false;
+			//print "[$itemType,$itemSubType,$itemIsCategories]";
+			// TYPE: listCategoriesSelector - own processing
+			if ($itemIsCategories) {
+				if (is_array($v)) {
+					if (in_array('*', $v)) {
+						$v = '*';
+					} else {
+						$v = join(",",$v);
+					}
+				}
+			}
+
+
 			$markValue = 99;
 			if (!isset($PERM[$m[4]][$m[1]][$m[2]][$m[3]]) || ($PERM[$m[4]][$m[1]][$m[2]][$m[3]] === NULL)) {
 				$markValue = -1;
 			} else {
-				$markValue = ($PERM[$m[4]][$m[1]][$m[2]][$m[3]])?1:0;
+				if ($itemIsCategories) {
+					$markValue = ($PERM[$m[4]][$m[1]][$m[2]][$m[3]]);
+				} else {
+					$markValue = ($PERM[$m[4]][$m[1]][$m[2]][$m[3]])?1:0;
+				}
 			}
 			if ($markValue != $v) {
 				// Save information about updates
@@ -158,8 +220,11 @@ function updateConfig() {
 					'id'		=> $m[1] .' &#8594; '.$m[2].' &#8594; '.$m[3],
 					'group'		=> $m[4],
 					'title'		=> $pList[$m[1]]['items'][$m[2]]['items'][$m[3]]['title'],
+					'type'		=> $itemType,
 					'old'		=> $markValue,
 					'new'		=> $v,
+					'displayNew'	=> displayPermValue($v, $itemType),
+					'displayOld'	=> displayPermValue($markValue, $itemType),
 				);
 
 				//print "> $k: ".$markValue.' => '.$v."<br/>";
@@ -176,8 +241,12 @@ function updateConfig() {
 					// -- delete overrided $confPermUser record
 				} else {
 					// -- SAVE new value for $confPermUser record
+					if ($itemIsCategories) {
+						$confPermUser[$m[4]][$m[1]][$m[2]][$m[3]] = $v;
+					} else {
+						$confPermUser[$m[4]][$m[1]][$m[2]][$m[3]] = ($v == -1)?NULL:($v?true:false);
+					}
 					//print "SAVE NEW $k -> $v<br/>\n";
-					$confPermUser[$m[4]][$m[1]][$m[2]][$m[3]] = ($v == -1)?NULL:($v?true:false);
 				}
 
 				//print "(".isset($PERM[$m[4]][$m[1]][$m[2]][$m[3]]).",".($PERM[$m[4]][$m[1]][$m[2]][$m[3]] === NULL).") "; print var_export($PERM[$m[4]][$m[1]][$m[2]][$m[3]]);
