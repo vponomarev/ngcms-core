@@ -379,37 +379,6 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 	}
 
 	return $mail->Send();
-
-
-	$mail_from	=	(!$mail_from) ? "mailbot@".str_replace("www.", "", $_SERVER['SERVER_NAME']) : $mail_from;
-	$uniqid		=	md5(uniqid(time()));
-
-	$headers	=	'From: '.$mail_from."\n";
-	$headers	.=	'Reply-to: '.$mail_from."\n";
-	$headers	.=	'Return-Path: '.$mail_from."\n";
-	$headers	.=	'Message-ID: <'.$uniqid.'@'.$_SERVER['SERVER_NAME'].">\n";
-	$headers	.=	'MIME-Version: 1.0'."\n";
-	$headers	.=	'Date: '.gmdate('D, d M Y H:i:s', time())."\n";
-	$headers	.=	'X-Priority: 3'."\n";
-	$headers	.=	'X-MSMail-Priority: Normal'."\n";
-	$headers	.=	'X-Mailer: '.engineName.' : '.engineVersion."\n";
-	$headers	.=	'X-MimeOLE: '.engineName.' : '.engineVersion."\n";
-	$headers	.=	'content-type: multipart/mixed;boundary="----------'.$uniqid.'"'."\n\n";
-	$headers	.=	'------------'.$uniqid."\n";
-	$headers	.=	'content-type: '.$ctype.';charset='.$lang['encoding'].''."\n";
-	$headers	.=	'content-transfer-Encoding: 8bit';
-
-	if (is_file($filename)){
-		$file		=	fopen($filename, 'rb');
-		$message	.=	"\n".'------------'.$uniqid."\n";
-		$message	.=	'Content-Type: application/octet-stream;name="'.basename($filename).'"'."\n";
-		$message	.=	'Content-Transfer-Encoding: base64'."\n";
-		$message	.=	'Content-Disposition: attachment;';
-		$message	.=	'filename="'.basename($filename).'"'."\n\n";
-		$message	.=	chunk_split(base64_encode(fread($file, filesize($filename))))."\n";
-	}
-
-	@mail($to, $subject, $message, $headers);
 }
 
 //
@@ -579,7 +548,8 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null, $returnFiles 
 // * skipDisabled	- skip disabled areas
 // * doempty   		- add empty category to the beginning ("no category"), value = 0
 // * greyempty		- show empty category as `grey`
-// * doall     		- all category named "ALL" to the beginning, value is empty
+// * doall     		- add category named "ALL" to the beginning, value is empty
+// * allMarker		- marker value for `doall`
 // * dowithout		- add "Without category" after "ALL", value = 0
 // * nameval   		- use DB field "name" instead of ID in HTML option value
 // * resync    		- flag, if set - we make additional lookup into database for new category list
@@ -588,8 +558,11 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null, $returnFiles 
 // * style     		- HTML style
 // * disabledarea	- mark all entries (for checkarea) as disabled [for cases when extra categories are not allowed]
 // * noHeader		- Don't write header (<select>..</select>) in output
+// * returnOptArray	- FLAG: if we should return OPTIONS (with values) array instead of data
 function makeCategoryList($params = array()){
 	global $catz, $lang, $mysql;
+
+	$optList = array();
 
 	if (!isset($params['skip'])) { $params['skip'] = array(); }
 	if (!is_array($params['skip'])) { $params['skip'] = $params['skip']?array($params['skip']):array(); }
@@ -603,9 +576,9 @@ function makeCategoryList($params = array()){
 				((isset($params['class']) && ($params['class'] != ''))?' class="'.$params['class'].'"':'').
 				">\n";
 		}
-	 if (isset($params['doempty']) && $params['doempty'])		{ $out.= "<option ".(((isset($params['greyempty']) && $params['greyempty']))?'style="background: #c41e3a;" ':'')."value=\"0\">".$lang['no_cat']."</option>\n"; }
-	 if (isset($params['doall']) && $params['doall'])			{ $out.= "<option value=\"\">".$lang['sh_all']."</option>\n"; }
-	 if (isset($params['dowithout']) && $params['dowithout'])	{ $out.= "<option value=\"0\"".(((!is_null($params['selected'])) && ($params['selected'] == 0))?' selected="selected"':'').">".$lang['sh_empty']."</option>\n"; }
+	 if (isset($params['doempty']) && $params['doempty'])		{ $out.= "<option ".(((isset($params['greyempty']) && $params['greyempty']))?'style="background: #c41e3a;" ':'')."value=\"0\">".$lang['no_cat']."</option>\n"; $optList []= array('k' => 0, 'v' => $lang['nocat']); }
+	 if (isset($params['doall']) && $params['doall'])			{ $out.= "<option value=\"".(isset($params['allmarker'])?$params['allmarker']:'')."\">".$lang['sh_all']."</option>\n"; $optList []= array('k' => (isset($params['allmarker'])?$params['allmarker']:''), 'v' => $lang['sh_all']);  }
+	 if (isset($params['dowithout']) && $params['dowithout'])	{ $out.= "<option value=\"0\"".(((!is_null($params['selected'])) && ($params['selected'] == 0))?' selected="selected"':'').">".$lang['sh_empty']."</option>\n"; $optList []= array('k' => 0, 'v' => $lang['sh_empty']); }
 	}
 	if (isset($params['resync']) && $params['resync'])  {
 		$catz = array();
@@ -632,6 +605,7 @@ function makeCategoryList($params = array()){
 					"</label><br/>\n";
 		} else {
 			$out.="<option value=\"".((isset($params['nameval']) && $params['nameval'])?$v['name']:$v['id'])."\"".((isset($params['selected']) && ($v['id']==$params['selected']))?' selected="selected"':'').($v['alt_url'] != ''?' disabled="disabled" style="background: #c41e3a;"':'').">".str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
+			$optList []= array('k' => ((isset($params['nameval']) && $params['nameval'])?$v['name']:$v['id']), 'v' => str_repeat('&#8212; ', $v['poslevel']).$v['name']);
 		}
 	}
 	if (!isset($params['checkarea']) || !$params['checkarea']) {
@@ -639,6 +613,10 @@ function makeCategoryList($params = array()){
 			$out.="</select>";
 		}
 	}
+
+	if (isset($params['returnOptArray']) && $params['returnOptArray'])
+		return $optList;
+
 	return $out;
 }
 
@@ -1003,11 +981,15 @@ function convert($content) {
 
 function utf2cp1251($text) { return convert($text); }
 
-function GetCategories($catid, $plain = false) {
+function GetCategories($catid, $plain = false, $firstOnly = false) {
 	global $catz, $catmap;
 
 	$catline = array();
 	$cats = is_array($catid)?$catid:explode(",", $catid);
+
+	if (count($cats) && $firstOnly) {
+		$cats = array($cats[0]);
+	}
 	foreach ($cats as $v) {
 		if (isset($catmap[$v])) {
 			$row = $catz[$catmap[$v]];
@@ -1343,6 +1325,10 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['short-story']	= $short;
 	$tvars['vars']['full-story']	= $full;
 
+	$tvars['vars']['short_story']	= $short;
+	$tvars['vars']['full_story']	= $full;
+
+
 	// Activities for short mode
 	if (!$fullMode) {
 		// Make link for full news
@@ -1376,16 +1362,23 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$tvars['regx']["#\[link\](.*?)\[/link\]#si"] = '$1';
 	}
 
-	$tvars['vars']['pinned']	=	($row['pinned']) ? "news_pinned" : "";
-	$tvars['vars']['category']	=	@GetCategories($row['catid']);
+	$tvars['vars']['pinned']			=	($row['pinned']) ? "news_pinned" : "";
+	$tvars['flags']['pinned']			= ($row['pinned'])?true:false;
 
-	$tvars['vars']['[print-link]']	=	"<a href=\"".newsGenerateLink($row, true, $page)."\">";
-	$tvars['vars']['print-link']	=	newsGenerateLink($row, true, $page);
-	$tvars['vars']['[/print-link]']	=	"</a>";
-	$tvars['vars']['news_link']		=	$nlink;
+	$tvars['vars']['category']			=	@GetCategories($row['catid']);
+
+	$tvars['vars']['masterCategory']	=	@GetCategories($row['catid'], false, true);
+
+
+	$tvars['vars']['[print-link]']		=	"<a href=\"".newsGenerateLink($row, true, $page)."\">";
+	$tvars['vars']['print-link']		=	newsGenerateLink($row, true, $page);
+	$tvars['vars']['print_link']		=	newsGenerateLink($row, true, $page);
+	$tvars['vars']['[/print-link]']		=	"</a>";
+	$tvars['vars']['news_link']			=	$nlink;
 
 
 	$tvars['vars']['news-id']	=	$row['id'];
+	$tvars['vars']['news_id']	=	$row['id'];
 	$tvars['vars']['php-self']	=	$PHP_SELF;
 
 	if ($row['editdate'] > $row['postdate']) {
@@ -2518,7 +2511,7 @@ function twigCallPlugin($funcName, $params) {
 
 	// Try to preload function if required
 	if (!isset($TWIGFUNC[$funcName])) {
-		if (preg_match("#^(.+?)\.(.+?)$", $funcName, $m)) {
+		if (preg_match("#^(.+?)\.(.+?)$#", $funcName, $m)) {
 			loadPlugin($m[1], 'twig');
 		}
 	}
