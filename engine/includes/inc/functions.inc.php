@@ -2525,3 +2525,10 @@ function twigCallPlugin($funcName, $params) {
 
 	print "twigCallPlugin ($funcName, ".var_export($params, true).")";
 }
+
+// Truncate HTML
+function twigTruncateHTML($string, $len = 70, $finisher = '') {
+	global $parse;
+
+	return $parse->truncateHTML($string, $len, $finisher);
+}
