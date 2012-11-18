@@ -975,10 +975,13 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 			'handlerParams' => $handlerParams,
 		);
 		$req = call_user_func($pcall['func'], $params);
-		if (!is_null($req) && $skip['FFC'] && !$req) $skip['fail'] = 1;
+		if (!is_null($req) && $skip['FFC'] && !$req)
+			$skip['fail'] = 1;
 	} else {
 		msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array(secure_html($handlerName), secure_html($pluginName)), $lang['plugins.nohadler'])));
+		return false;
 	}
+	return true;
 }
 
 function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip, $handlerParams) {
@@ -1059,6 +1062,12 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip, $hand
 		default:
 			_MASTER_defaultRUN($pluginName, $handlerName, $params, $skip, $handlerParams);
 	}
+
+	// Return according to SKIP value
+	if (isset($skip['fail']) && $skip['fail'])
+		return array('fail' => $skip['fail']);
+
+	return;
 }
 
 

@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2009-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2009-2012 Next Generation CMS (http://ngcms.ru/)
 // Name: uhandler.class.php
 // Description: URL handler class
 // Author: Vitaly Ponomarev
@@ -584,9 +584,8 @@ class urlHandler {
 					}
 
 				$skip = array ('FFC' => $h['flagFailContinue']?true:false);
-				call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, $skip, $handlerParams);
-
-				if (isset($skip['fail']))
+				$res = call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, $skip, $handlerParams);
+				if (is_array($res) && isset($res['fail']) && $res['fail'])
 					continue;
 
 				return ++$catchCount;
