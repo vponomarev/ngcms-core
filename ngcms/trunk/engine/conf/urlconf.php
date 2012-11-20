@@ -320,6 +320,24 @@ $urlLibrary = array (
         'russian' => 'Страница для печати полной новости',
       ),
     ),
+    'all' => 
+    array (
+      'vars' => 
+      array (
+        'page' => 
+        array (
+          'matchRegex' => '\\d{1,4}',
+          'descr' => 
+          array (
+            'russian' => 'Страница',
+          ),
+        ),
+      ),
+      'descr' => 
+      array (
+        'russian' => 'Лента новостей',
+      ),
+    ),
   ),
   'rss_export' => 
   array (
