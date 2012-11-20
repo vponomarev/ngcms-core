@@ -152,8 +152,6 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$tX3 = $timer->stop(4);
 	$timer->registerEvent('call newsFillVariables() for [ '.($tX3 - $tX2).' ] sec');
 
-	$tvars['vars']['date']		=	LangDate(timestamp, $row['postdate']);
-	$tvars['vars']['views']		=	$row['views'];
 	$tvars['vars']['comnum']	=	$row['com'];
 
 
@@ -616,9 +614,6 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 		$tvars['vars']['alternating'] = ($i%2)?'odd':'even';
 
-		$tvars['vars']['date'] = LangDate(timestamp, $row['postdate']);
-		$tvars['vars']['dateStamp'] = $row['postdate'];
-		$tvars['vars']['views'] = $row['views'];
 
 		// Prepare list of linked files and images
 		$callingParams['linkedFiles'] = array();
@@ -667,7 +662,8 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		//print "LinkedImages (".$row['id']."): <pre>".var_export($tvars['vars']['#images'], true)."</pre>";
 		// Print icon if only one parent category
 		if (isset($row['catid']) && $row['catid'] && !stristr(",", $row['catid']) && isset($catmap[$row['catid']]) && ($catalt = $catmap[$row['catid']]) && isset($catz[$catalt]['icon']) && $catz[$catalt]['icon']) {
-			$tvars['flags']['hasCategoryIcon'] = true;
+			// [TWIG] news.flags.hasCategoryIcon
+			$tvars['news']['flags']['hasCategoryIcon'] = true;
 			$tvars['vars']['icon'] = $catz[$catalt]['icon'];
 			$tvars['vars']['[icon]'] = '';
 			$tvars['vars']['[/icon]'] = '';
@@ -678,8 +674,13 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		}
 
 		if (is_array($userROW) && ($userROW['id'] == $row['author_id'] || ($userROW['status'] == 1 || $userROW['status'] == 2))) {
-			$tvars['flags']['canEditNews']		= true;
-			$tvars['flags']['canDeleteNews']	= true;
+			// [TWIG] news.flags.canEdit, news.flags.canDelete, news.url.edit, news.url.delete
+			$tvars['vars']['news']['flags']['canEdit']		= true;
+			$tvars['vars']['news']['flags']['canDelete']	= true;
+			$tvars['vars']['news']['url']['edit']			= admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id'];
+			$tvars['vars']['news']['url']['delete']			= admin_url."/admin.php?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;token=".genUToken('admin.news.edit')."&amp;selected_news[]=".$row['id'];
+
+
 			$tvars['vars']['editNewsLink']		= admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id'];
 			$tvars['vars']['[edit-news]']		= "<a href=\"".admin_url."/admin.php?mod=news&amp;action=edit&amp;id=".$row['id']."\" target=\"_blank\">";
 			$tvars['vars']['[/edit-news]']		= "</a>";
@@ -687,8 +688,8 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			$tvars['vars']['deleteNewsLink']	= admin_url."/admin.php?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;token=".genUToken('admin.news.edit')."&amp;selected_news[]=".$row['id'];
 			$tvars['vars']['[/del-news]']		= "</a>";
 		} else {
-			$tvars['flags']['canEditNews'] = false;
-			$tvars['flags']['canDeleteNews'] = false;
+			$tvars['news']['flags']['canEdit'] = false;
+			$tvars['news']['flags']['canDelete'] = false;
 			$tvars['regx']["'\[edit-news\].*?\[/edit-news\]'si"] = "";
 			$tvars['regx']["'\[del-news\].*?\[/del-news\]'si"] = "";
 		}
@@ -728,7 +729,6 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		if (isset($callingParams['twig'])) {
 			// Populate variables
 			$tVars = $tvars['vars'];
-			$tVars['flags'] = $tvars['flags'];
 
 			// Rende template
 			$xt = $twig->loadTemplate($templatePath.'/'.$currentTemplateName.'.tpl');

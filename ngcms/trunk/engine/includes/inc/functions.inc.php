@@ -1001,6 +1001,31 @@ function GetCategories($catid, $plain = false, $firstOnly = false) {
 }
 
 
+function makeCategoryInfo($ctext) {
+	global $catz, $catmap;
+
+	$list = array();
+	$cats = is_array($catid)?$catid:explode(",", $ctext);
+
+	foreach ($cats as $v) {
+		if (isset($catmap[$v])) {
+			$row = $catz[$catmap[$v]];
+			$url = generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id']));
+			$list[] = array(
+				'id'	=> $row['id'],
+				'alt'	=> $row['alt'],
+				'name'	=> $row['name'],
+				'icon'	=> $row['icon'],
+				'url'	=> $url,
+				'text'	=> '<a href="'.$url.'">'.$row['name'].'</a>',
+			);
+		}
+	}
+
+	return $list;
+}
+
+
 //
 // New category menu generator
 function generateCategoryMenu(){
@@ -1199,18 +1224,31 @@ function newsGenerateLink($row, $flagPrint = false, $page = 0, $absoluteLink = f
 function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $regenShortNews = array()) {
 	global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $currentCategory, $TemplateCache, $mysql, $PHP_SELF;
 
-	$tvars = array ( 'vars' => array( 'pagination' => '', 'title' => $row['title']), 'flags' => array());
+	$tvars = array (
+		'vars' => array(
+			'news' => array('id'	=> $row['id']),
+			'pagination' => '',
+
+		),
+		'flags' => array()
+	);
 
 	$alink = checkLinkAvailable('uprofile', 'show')?
 				generateLink('uprofile', 'show', array('name' => $row['author'], 'id' => $row['author_id'])):
 				generateLink('core', 'plugin', array('plugin' => 'uprofile', 'handler' => 'show'), array('name' => $row['author'], 'id' => $row['author_id']));
 
+	// [TWIG] news.author.*
+	$tvars['vars']['news']['author']['name']	= $row['author'];
+	$tvars['vars']['news']['author']['id']		= $row['author_id'];
+	$tvars['vars']['news']['author']['url']		= $alink;
+
+
 	$tvars['vars']['author'] = "<a href=\"".$alink."\" target=\"_blank\">".$row['author']."</a>";
 	$tvars['vars']['author_link'] = $alink;
 	$tvars['vars']['author_name'] = $row['author'];
 
-	// Flag: if we're in full mode
-	$tvars['flags']['fullMode']		= $fullMode?true:false;
+	// [TWIG] news.flags.fullMode: if we're in full mode
+	$tvars['vars']['news']['flags']['fullMode']		= $fullMode?true:false;
 
 	$nlink = newsGenerateLink($row);
 
@@ -1241,6 +1279,11 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$pages			=	explode("<!--nextpage-->", $full);
 		$pcount			= count($pages);
 
+		// [TWIG] news.pageCount, pageNumber
+		$tvars['vars']['news']['pageCount']			= count($pages);
+		$tvars['vars']['news']['pageNumber']		= $page;
+
+
 		$tvars['vars']['pageCount']			= count($pages);
 		$tvars['vars']['page']				= $page;
 
@@ -1264,17 +1307,20 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 			// Show pagination bar
 			$tvars['vars']['pagination'] = generatePagination($page, 1, $pcnt, 10, $paginationParams, $navigations);
 
+			// [TWIG] news.pagination
+			$tvars['vars']['news']['pagination'] = $tvars['vars']['pagination'];
+
 			if ($page > 1) {
 				$tvars['vars']['short-story'] = '';
 			}
 			$full								= $pages[$page-1];
 			$tvars['vars']['[pagination]']		= '';
 			$tvars['vars']['[/pagination]']		= '';
-			$tvars['flags']['hasPagination']	= true;
+			$tvars['vars']['news']['flags']['hasPagination']	= true;
 		}
 	} else {
 			$tvars['regx']["'\[pagination\].*?\[/pagination\]'si"] = '';
-			$tvars['flags']['hasPagination']	= false;
+			$tvars['vars']['news']['flags']['hasPagination']	= false;
 	}
 
 	// Conditional blocks for full-page
@@ -1296,6 +1342,10 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$title	= secure_html($title);
 	}
 	$tvars['vars']['title'] = $title;
+
+	// [TWIG] news.title
+	$tvars['vars']['news']['title'] = $row['title'];
+
 
 	// Make conversion
 	if ($config['blocks_for_reg'])		{ $short = $parse -> userblocks($short);	$full = $parse -> userblocks($full); }
@@ -1325,8 +1375,9 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['short-story']	= $short;
 	$tvars['vars']['full-story']	= $full;
 
-	$tvars['vars']['short_story']	= $short;
-	$tvars['vars']['full_story']	= $full;
+	// [TWIG] news.short, news.full
+	$tvars['vars']['news']['short']	= $short;
+	$tvars['vars']['news']['full']	= $full;
 
 
 	// Activities for short mode
@@ -1341,7 +1392,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$tvars['vars']['full-link']	= $nlink;
 
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
-		$tvars['flags']['hasFullNews'] = strlen($full)?true:false;
+		$tvars['vars']['news']['flags']['hasFullNews'] = strlen($full)?true:false;
 		if (strlen($full)) {
 			// we have full news
 			$tvars['vars']['[fullnews]'] = '';
@@ -1362,12 +1413,24 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$tvars['regx']["#\[link\](.*?)\[/link\]#si"] = '$1';
 	}
 
-	$tvars['vars']['pinned']			=	($row['pinned']) ? "news_pinned" : "";
-	$tvars['flags']['pinned']			= ($row['pinned'])?true:false;
+	$tvars['vars']['pinned']					=	($row['pinned']) ? "news_pinned" : "";
+
 
 	$tvars['vars']['category']			=	@GetCategories($row['catid']);
-
 	$tvars['vars']['masterCategory']	=	@GetCategories($row['catid'], false, true);
+
+	// [TWIG] news.categories.*
+	$tCList		= makeCategoryInfo($row['catid']);
+	$tvars['vars']['news']['categories']['count']	= count($tCList);
+	$tvars['vars']['news']['categories']['list']	= $tCList;
+	$tvars['vars']['news']['categories']['masterText']	= count($tCList)>0?$tCList[0]['text']:'';
+
+	$tCTextList = array();
+	foreach ($tCList as $tV)
+		$tCTextList []= $tV['text'];
+
+	$tvars['vars']['news']['categories']['text']	= join(", ", $tCTextList);
+
 
 
 	$tvars['vars']['[print-link]']		=	"<a href=\"".newsGenerateLink($row, true, $page)."\">";
@@ -1376,29 +1439,57 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['[/print-link]']		=	"</a>";
 	$tvars['vars']['news_link']			=	$nlink;
 
+	// [TWIG] news.url
+	$tvars['vars']['news']['url'] = array(
+		'full'		=> $nlink,
+		'print'		=> newsGenerateLink($row, true, $page),
+	);
+
+	// [TWIG] news.flags.isPinned
+	$tvars['vars']['news']['flags']['isPinned']	= ($row['pinned'])?true:false;
+
 
 	$tvars['vars']['news-id']	=	$row['id'];
 	$tvars['vars']['news_id']	=	$row['id'];
 	$tvars['vars']['php-self']	=	$PHP_SELF;
 
+	$tvars['vars']['date'] = LangDate(timestamp, $row['postdate']);
+	$tvars['vars']['views'] = $row['views'];
+
+	// [TWIG] news.date, news.dateStamp, news.views
+	$tvars['vars']['news']['date']		= LangDate(timestamp, $row['postdate']);
+	$tvars['vars']['news']['dateStamp']	= $row['postdate'];
+	$tvars['vars']['news']['views']		= $row['views'];
+
+
 	if ($row['editdate'] > $row['postdate']) {
-		$tvars['flags']['isUpdated'] = true;
+		// [TWIG] news.flags.isUpdated, news.update, news.updateStamp
+		$tvars['vars']['news']['flags']['isUpdated'] = true;
+		$tvars['vars']['news']['update'] = LangDate($config['timestamp_updated'], $row['editdate']);
+		$tvars['vars']['news']['updateStamp'] = $row['editdate'];
 
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '$1';
 		$tvars['vars']['update'] = LangDate($config['timestamp_updated'], $row['editdate']);
 		$tvars['vars']['updateStamp'] = $row['editdate'];
 	} else {
-		$tvars['flags']['isUpdated'] = false;
+		// [TWIG] news.flags.isUpdated, news.update, news.updateStamp
+		$tvars['vars']['news']['flags']['isUpdated'] = false;
+
 		$tvars['regx']['[\[update\](.*)\[/update\]]'] = '';
 		$tvars['vars']['update'] = '';
 	}
 
 	if ($more == '') {
-		$tvars['flags']['hasPersonalMore'] = false;
+		// [TWIG] news.flags.hasPersonalMore
+		$tvars['vars']['news']['flags']['hasPersonalMore'] = false;
+
 		$tvars['vars']['[more]']	= '';
 		$tvars['vars']['[/more]']	= '';
 	} else {
-		$tvars['flags']['hasPersonalMore'] = true;
+		// [TWIG] news.flags.hasPersonalMore, news.personalMore
+		$tvars['vars']['news']['flags']['hasPersonalMore'] = true;
+		$tvars['vars']['news']['personalMore'] = $more;
+
 		$tvars['vars']['personalMore'] = $more;
 		$tvars['regx']['#\[more\](.*?)\[/more\]#is'] = $more;
 	}
