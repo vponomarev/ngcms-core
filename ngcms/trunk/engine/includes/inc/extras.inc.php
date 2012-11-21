@@ -984,7 +984,7 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 	return true;
 }
 
-function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, &$skip, $handlerParams) {
+function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, $skip, $handlerParams) {
 	global $PPAGES, $lang, $CurrentHandler;
 
 	//print "## PLUGIN CALL: <b> (".$pluginName.", ".$handlerName.")</b><br/>\n";
