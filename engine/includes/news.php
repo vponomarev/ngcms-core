@@ -23,7 +23,7 @@ include_once root.'includes/inc/libnews.php';
 
 // Default "show news" function
 function showNews($handlerName, $params) {
- global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse, $currentCategory;
+ global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse, $currentCategory, $twig, $twigLoader;
  // preload plugins
  load_extras('news');
 
@@ -88,6 +88,14 @@ function showNews($handlerName, $params) {
 		foreach ($PFILTERS['news'] as $k => $v) { $v->onBeforeShow('short'); }
 	}
 
+	$tableVars = array();
+
+	$ntTemplateName		= 'news.table.tpl';
+
+	$callingParams['extendedReturn'] = true;
+	$callingParams['extendedReturnData'] = true;
+	$callingParams['entendedReturnPagination'] = true;
+
 	switch ($handlerName) {
 		case 'main':
 			$SYSTEM_FLAGS['info']['title']['group'] = $lang['mainpage'];
@@ -98,7 +106,8 @@ function showNews($handlerName, $params) {
 			if ($config['default_newsorder'] != '')
 				$callingParams['newsOrder'] = $config['default_newsorder'];
 
-			$template['vars']['mainblock'] .= news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
+			$tableVars = news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
+
 			break;
 
 		case 'all':
@@ -110,7 +119,8 @@ function showNews($handlerName, $params) {
 			if ($config['default_newsorder'] != '')
 				$callingParams['newsOrder'] = $config['default_newsorder'];
 
-			$template['vars']['mainblock'] .= news_showlist(array(), $paginationParams, $callingParams);
+			$tableVars = news_showlist(array(), $paginationParams, $callingParams);
+
 			break;
 
 		case 'by.category':
@@ -164,54 +174,14 @@ function showNews($handlerName, $params) {
 			$callingParams['pin'] = 1;
 
 			// Generate news content
-			$newsContent = news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
+			$tableVars = news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
+
+			// TABLE - prepare information about category
+			$tableVars['category']	= array_shift(makeCategoryInfo($currentCategory['id']));
 
 			// Check if template 'news.table.tpl' exists [first check custom category template (if set), after that - common template for the whole site
-			$ntTemplatePath = '';
-			$ntTemplateFound = false;
 			if ($currentCategory['tpl'] && file_exists(tpl_dir.$config['theme'].'/ncustom/'.$currentCategory['tpl'].'/news.table.tpl')) {
-				$ntTemplateFound	= true;
-				$ntTemplatePath		= tpl_dir.$config['theme'].'/ncustom/'.$currentCategory['tpl'];
-			} else if (file_exists(tpl_dir.$config['theme'].'/news.table.tpl')) {
-				$ntTemplateFound	= true;
-				$ntTemplatePath		= tpl_dir.$config['theme'];
-			}
-
-			if ($ntTemplateFound) {
-				$tpl->template('news.table', $ntTemplatePath);
-				$tnvars = array('vars' => array(
-					'category.id'	=> $currentCategory['id'],
-					'category.alt'	=> secure_html($currentCategory['alt']),
-					'category.name'	=> secure_html($currentCategory['name']),
-					'category.info'	=> ($config['use_bbcodes'])?$parse -> bbcodes($currentCategory['info']):$currentCategory['info'],
-					'entries'		=> $newsContent,
-				));
-
-				if ($currentCategory['image_id'] && $currentCategory['icon_id']) {
-					$tnvars['regx']['#\[icon\](.*?)\[\/icon\]#is'] = '$1';
-					$tnvars['vars']['icon.url']				= $config['attach_url'].'/'.$currentCategory['icon_folder'].'/'.$currentCategory['icon_name'];;
-					$tnvars['vars']['icon.width']			= $row['icon_width'];
-					$tnvars['vars']['icon.height']			= $row['icon_height'];
-					if ($currentCategory['icon_preview']) {
-						$tnvars['regx']['#\[icon\.preview\](.*?)\[\/icon.preview\]#is'] = '$1';
-						$tnvars['regx']['#\[icon\.nopreview\](.*?)\[\/icon.nopreview\]#is'] = '';
-						$tnvars['vars']['icon.preview.url']		= $config['attach_url'].'/'.$currentCategory['icon_folder'].'/thumb/'.$currentCategory['icon_name'];;
-						$tnvars['vars']['icon.preview.width']	= $currentCategory['icon_pwidth'];
-						$tnvars['vars']['icon.preview.height']	= $currentCategory['icon_pheight'];
-					} else {
-						$tnvars['regx']['#\[icon\.preview\](.*?)\[\/icon.preview\]#is'] = '';
-						$tnvars['regx']['#\[icon\.nopreview\](.*?)\[\/icon.nopreview\]#is'] = '$1';
-					}
-				} else {
-					$tnvars['regx']['#\[icon\](.*?)\[\/icon\]#is'] = '';
-					$tnvars['regx']['#\[icon\.preview\](.*?)\[\/icon.preview\]#is'] = '';
-					$tnvars['regx']['#\[icon\.nopreview\](.*?)\[\/icon.nopreview\]#is'] = '';
-				}
-
-				$tpl->vars('news.table', $tnvars);
-				$template['vars']['mainblock'] .= $tpl->show('news.table');
-			} else {
-				$template['vars']['mainblock'] .= $newsContent;
+				$ntTemplateName		= 'ncustom/'.$currentCategory['tpl'].'/'.$ntTemplateName;
 			}
 
 			break;
@@ -224,6 +194,11 @@ function showNews($handlerName, $params) {
 			if (($year < 1970)||($year > 2100)||($month < 1)||($month > 12)||($day < 1)||($day > 31))
 				return false;
 
+			$tableVars['year']		= $year;
+			$tableVars['month']		= $month;
+			$tableVars['day']		= $day;
+			$tableVars['dateStamp']	= mktime("0", "0", "0", $month, $day, $year);
+
 			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("j Q Y", mktime("0", "0", "0", $month, $day, $year));
 		    $paginationParams = checkLinkAvailable('news', 'by.day')?
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => array('day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
@@ -231,12 +206,10 @@ function showNews($handlerName, $params) {
 
 			// Use extended return mode
 			$callingParams['extendedReturn'] = true;
-			$output = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
+			$tableVars = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,$day,$year), mktime(23,59,59,$month,$day,$year))), $paginationParams, $callingParams);
 
 			// Check if there're output data
-			if ($output['count'] > 0) {
-				$template['vars']['mainblock'] .= $output['data'];
-			} else {
+			if ($tableVars['count'] <= 0) {
 				// No data, stop execution
 				if (!$params['FFC']) {
 					error404();
@@ -252,6 +225,10 @@ function showNews($handlerName, $params) {
 			if (($year < 1970)||($year > 2100)||($month < 1)||($month > 12))
 				return false;
 
+			$tableVars['year']		= $year;
+			$tableVars['month']		= $month;
+			$tableVars['dateStamp']	= mktime("0", "0", "0", $month, 1, $year);
+
 			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("F Y", mktime(0,0,0, $month, 1, $year));
 		    $paginationParams = checkLinkAvailable('news', 'by.month')?
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => array('month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
@@ -259,12 +236,10 @@ function showNews($handlerName, $params) {
 
 			// Use extended return mode
 			$callingParams['extendedReturn'] = true;
-			$output = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
+			$tableVars = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,$month,1,$year), mktime(23,59,59,$month,date("t",mktime(0,0,0,$month,1,$year)),$year))), $paginationParams, $callingParams);
 
 			// Check if there're output data
-			if ($output['count'] > 0) {
-				$template['vars']['mainblock'] .= $output['data'];
-			} else {
+			if ($tableVars['count'] <= 0) {
 				// No data, stop execution
 				if (!$params['FFC']) {
 					error404();
@@ -279,6 +254,9 @@ function showNews($handlerName, $params) {
 			if (($year < 1970)||($year > 2100))
 				return false;
 
+			$tableVars['year']		= $year;
+			$tableVars['dateStamp']	= mktime("0", "0", "0", 1, 1, $year);
+
 			$SYSTEM_FLAGS['info']['title']['group'] = LangDate("Y", mktime(0,0,0, 1, 1, $year));
 		    $paginationParams = checkLinkAvailable('news', 'by.year')?
 		    			array('pluginName' => 'news', 'pluginHandler' => 'by.year', 'params' => array('year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)):
@@ -286,12 +264,10 @@ function showNews($handlerName, $params) {
 
 			// Use extended return mode
 			$callingParams['extendedReturn'] = true;
-			$output = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,1,1,$year), mktime(23,59,59,12,31,$year))), $paginationParams, $callingParams);
+			$tableVars = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0,0,0,1,1,$year), mktime(23,59,59,12,31,$year))), $paginationParams, $callingParams);
 
 			// Check if there're output data
-			if ($output['count'] > 0) {
-				$template['vars']['mainblock'] .= $output['data'];
-			} else {
+			if ($tableVars['count'] <= 0) {
 				// No data, stop execution
 				if (!$params['FFC']) {
 					error404();
@@ -300,6 +276,15 @@ function showNews($handlerName, $params) {
 			}
 			break;
 	}
+
+	$tableVars['handler'] = $handlerName;
+
+	// Prepare news table
+	//print "[TABLE VARS]<pre>".var_export($tableVars, true)."</pre>";
+	$twigLoader->setDefaultContent('news.table.tpl', '{% for entry in data %}{{ entry }}{% endfor %} {{ pagination }}');
+	$xt = $twig->loadTemplate('news.table.tpl');
+	$template['vars']['mainblock'] .= $xt->render($tableVars);
+
 
 	// Execute filters [ onAfterShow ]
 	if (is_array($PFILTERS['news'])) {

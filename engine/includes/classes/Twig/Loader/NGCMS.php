@@ -31,6 +31,7 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
 	$this->templateConversion = array();
 	$this->templateConversionRegex = array();
 	$this->templateOptions = array();
+	$this->defaultContent = array();
     }
 
     /**
@@ -41,6 +42,14 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
     public function getPaths()
     {
         return $this->paths;
+    }
+
+    public function setDefaultContent($name, $content) {
+    	if ((substr($name, 0, 1) == '/')||preg_match('#^[a-z]\:\/#', $name)) {
+    		$this->defaultContent[$name] = $content;
+    	} else {
+    		$this->defaultContent[$this->paths[0].'/'.$name] = $content;
+    	}
     }
 
     /**
@@ -86,7 +95,13 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
     public function getSource($name)
     {
 		// Get content
-        $content = file_get_contents($this->findTemplate($name));
+    	$templateName = $this->findTemplate($name);
+
+    	if (file_exists($templateName)) {
+    		$content = file_get_contents($templateName);
+    	} else {
+    		$content = $this->defaultContent[$templateName];
+    	}
 
 	// Process BASIC conversion
 	if (!isset($this->templateOptions[$name]) || !is_array($this->templateOptions[$name]) || isset($this->templateOptions[$name]) || (!$this->templateOptions[$name]['nobasic'])) {
@@ -187,6 +202,11 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
     				if (is_file($path.'/'.$xname)) {
     					return $this->cache[$name] = $path.'/'.$xname;
     				}
+
+    				// Check for default content
+    				if ($this->defaultContent[$xname])
+    					return $this->cache[$name] = $path.'/'.$xname;
+
     				throw new Twig_Error_Loader(sprintf('Unable to find template [ABSOLUTE PATH] "%s" (looked into: %s).', $name, $path));
     			}
     		}
@@ -197,6 +217,11 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
             if (is_file($path.'/'.$name)) {
                 return $this->cache[$name] = $path.'/'.$name;
             }
+
+        	// Check for default content
+        	if ($this->defaultContent[$path.'/'.$name])
+        		return $this->cache[$$name] = $path.'/'.$name;
+
         }
 
         throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));

@@ -1002,7 +1002,7 @@ function GetCategories($catid, $plain = false, $firstOnly = false) {
 
 
 function makeCategoryInfo($ctext) {
-	global $catz, $catmap;
+	global $catz, $catmap, $config;
 
 	$list = array();
 	$cats = is_array($catid)?$catid:explode(",", $ctext);
@@ -1011,14 +1011,35 @@ function makeCategoryInfo($ctext) {
 		if (isset($catmap[$v])) {
 			$row = $catz[$catmap[$v]];
 			$url = generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id']));
-			$list[] = array(
+			$record = array(
 				'id'	=> $row['id'],
 				'alt'	=> $row['alt'],
 				'name'	=> $row['name'],
-				'icon'	=> $row['icon'],
+				'info'	=> $row['info'],
 				'url'	=> $url,
 				'text'	=> '<a href="'.$url.'">'.$row['name'].'</a>',
 			);
+			if ($row['icon_id'] && $row['icon_folder']) {
+				$record['icon']	= array(
+					'url'			=> $config['attach_url'].'/'.$row['icon_folder'].'/'.$row['icon_name'],
+					'purl'			=> $row['icon_preview']?($config['attach_url'].'/'.$row['icon_folder'].'/thumb/'.$row['icon_name']):'',
+					'width'			=> $row['icon_width'],
+					'height'		=> $row['icon_height'],
+					'pwidth'		=> $row['icon_pwidth'],
+					'pheight'		=> $row['icon_pheight'],
+					'isExtended'	=> true,
+					'hasPreview'	=> $row['icon_preview']?true:false,
+				);
+			} else if ($row['icon']) {
+				$record['icon'] = array(
+					'url'			=> $row['icon'],
+					'isExtended'	=> false,
+					'hasPreview'	=> false,
+				);
+			}
+
+
+			$list []= $record;
 		}
 	}
 
@@ -1248,7 +1269,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['author_name'] = $row['author'];
 
 	// [TWIG] news.flags.fullMode: if we're in full mode
-	$tvars['vars']['news']['flags']['fullMode']		= $fullMode?true:false;
+	$tvars['vars']['news']['flags']['isFullMode']		= $fullMode?true:false;
 
 	$nlink = newsGenerateLink($row);
 
