@@ -427,6 +427,7 @@ function newsProcessFilter($conditions) {
 //			'data'  - data to be showed
 //		'extendedReturnData' => flag if 'data' should be returned as array of separate entries
 //		'extendedReturnSQL'  => flag if we need to return original SQL fetched data in extendedReturn answer as 'sql' field
+//		'entendedReturnPagination' => flag if pagination should be returned within extendedReturn array as a variable 'pagination'
 //		'searchFlag'	=> flag if we want to use non-mondatory template 'news.search.tpl' [!!only for style = 'short' !!]
 //		'pin'	-	Way of sorting for PINNED news
 //			0	-	`pinned` (for MainPage)
@@ -730,6 +731,10 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			// Populate variables
 			$tVars = $tvars['vars'];
 
+			// Provide information about used template
+			$tVars['templateName'] = $currentTemplateName;
+			$tVars['templatePath'] = $templatePath;
+
 			// Rende template
 			$xt = $twig->loadTemplate($templatePath.'/'.$currentTemplateName.'.tpl');
 			$res = $xt->render($tVars);
@@ -760,6 +765,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 
 	// Generate pagination/navigation if it's not disabled
+	$paginationOutput = '';
 	if (!(isset($callingParams['disablePagination']) && ($callingParams['disablePagination']))) {
 		templateLoadVariables(true);
 		$navigations = $TemplateCache['site']['#variables']['navigation'];
@@ -791,13 +797,29 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 		if ($nCount && ($pages_count>1)){
 			$tpl -> vars('pages', $tvars);
-			$output .= $tpl -> show('pages');
+			$paginationOutput = $tpl -> show('pages');
 		}
+
+		if (!isset($callingParams['entendedReturnPagination']) && !$callingParams['extendedReturnPagination'])
+			$output .= $paginationOutput;
 	}
 
 	// Return result
 	if ((isset($callingParams['extendedReturn']) && $callingParams['extendedReturn'])) {
-		return array('count' => $newsCount, 'data' => (isset($callingParams['extendedReturnData']) && $callingParams['extendedReturnData'])?$outputList:$output);
+		$returnData = array(
+			'count' => $newsCount,
+			'data' => (isset($callingParams['extendedReturnData']) && $callingParams['extendedReturnData'])?$outputList:$output,
+			'pages' => array(
+				'current'	=> $cstart,
+				'total'		=> $pages_count,
+			)
+		);
+
+		if (isset($callingParams['entendedReturnPagination']) && $callingParams['entendedReturnPagination']) {
+			$returnData['pagination'] = $paginationOutput;
+		}
+
+		return $returnData;
 	}
 	return $output;
 }
