@@ -240,6 +240,8 @@ $twig = new Twig_Environment($twigLoader, array(
   'base_template_class' => 'Twig_Template_NGCMS',
 ));
 
+$twig->addExtension(new Twig_Extension_StringLoader());
+
 // - Global variables [by REFERENCE]
 $twig->addGlobalRef('lang',		$lang);
 $twig->addGlobalRef('handler',	$CurrentHandler);

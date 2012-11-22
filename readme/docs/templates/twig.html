@@ -25,6 +25,17 @@
 <br/>
 <h3>√лобальные функции</h3>
 <ul>
+ <li><b>template_from_string(<font color="blue">$variable</font>)</b> - встроенна€ TWIG функци€, позвол€ет исполн€ть TWIG шаблон из переменной/
+ 	<br/>
+ 	ѕример использовани€, позвол€ет выполнить TWIG шаблон из переменной category.info (описание категории дл€ режима работы "вывод новостей из категории") шаблона news.table.tpl:<br/>
+ 	<div class="pre">
+ 	<pre>
+	{% if (handler == 'by.category') %}
+		{% include template_from_string(category.info) %}
+	{% endif %}
+	</pre>
+	</div>
+ </li>
  <li><b>pluginIsActive(<font color="blue">$pluginName</font>)</b> - сообщает включен ли плагин <b>$pluginName</b> (1 - активен, 0 - нет), обычно используетс€ дл€ отображени€ элементов плагина только в том случае, если данный плагин включен (активен).
  	<br/>
  	ѕример, вывод€щий строку '* плагин tags активен *' в случае, если плагин tags включен в админ-панели:<br/>
