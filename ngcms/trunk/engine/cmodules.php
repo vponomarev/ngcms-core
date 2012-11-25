@@ -94,7 +94,7 @@ function coreRegisterUser() {
 			}
 
 		// Trying register
-		if (!$msg && ($uid = $auth->register(&$params, $values, &$msg))) {
+		if (!$msg && ($uid = $auth->register($params, $values, $msg))) {
 			// OK, fetch user record
 			if ($uid > 1) {
 				// ** COMPAT: exec action only if $uid > 1
@@ -250,7 +250,7 @@ function coreRestorePassword() {
 		$auth = $AUTH_METHOD[$config['auth_module']];
 		$msg = '';
 
-		if ($auth->confirm_restorepw(&$msg, $userid, $code)) {
+		if ($auth->confirm_restorepw($msg, $userid, $code)) {
 			// OK
 			msg(array("text" => $msg));
 		} else {
@@ -281,7 +281,7 @@ function coreRestorePassword() {
 		}
 
 		// Trying password recovery
-		if (($msg == '') && $auth->restorepw(&$params, $values, &$msg)) {
+		if (($msg == '') && $auth->restorepw($params, $values, $msg)) {
 			// OK
 			// ...
 		} else {
