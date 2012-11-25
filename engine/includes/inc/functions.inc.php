@@ -2581,7 +2581,7 @@ function coreUserMenu() {
 
 	// Execute filters - add additional variables
 	if (is_array($PFILTERS['core.userMenu']))
-		foreach ($PFILTERS['core.userMenu'] as $k => $v) { $v->showUserMenu(&$tVars); }
+		foreach ($PFILTERS['core.userMenu'] as $k => $v) { $v->showUserMenu($tVars); }
 
 	$twigLoader->setConversion('usermenu.tpl', $conversionConfig, $conversionConfigRegex);
 	$xt = $twig->loadTemplate('usermenu.tpl');
@@ -2614,7 +2614,7 @@ function getCurrentNewsCategory() {
 	if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print') && ($CurrentHandler['handlerName'] != 'by.category'))
 		return false;
 
-	return array(($CurrentHandler['handlerName'] == 'by.category')?'short':'full', $SYSTEM_FLAGS['news']['currentCategory.id']);
+	return array(($CurrentHandler['handlerName'] == 'by.category')?'short':'full', $SYSTEM_FLAGS['news']['currentCategory.id'], $SYSTEM_FLAGS['news']['db.id']);
 }
 
 // Call plugin execution via TWIG
