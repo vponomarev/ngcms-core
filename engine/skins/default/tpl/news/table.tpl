@@ -219,7 +219,7 @@ function filter_attach_DateEdit(id) {
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
 <option value="mass_currdate">{{ lang.editnews['modify.mass.currdate'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
-{% if flags.comments %}<option value="do_mass_com_approve">{{ lang.editnews['com_approve'] }}</option>
+{% if flags.comments %}<option value="mass_com_approve">{{ lang.editnews['com_approve'] }}</option>
 <option value="mass_com_forbidden">{{ lang.editnews['com_forbidden'] }}</option>
 <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>{% endif %}
 <option value="mass_delete">{{ lang.editnews['delete'] }}</option>
