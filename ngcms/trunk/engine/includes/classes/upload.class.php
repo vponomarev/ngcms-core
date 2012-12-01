@@ -220,7 +220,7 @@ class file_managment {
 
 				// Check results
 				// ** RPC
-				if ($param['rpc'] && (!is_array($resizeResult)) || (!$resizeResult['status'])) {
+				if ($param['rpc'] && ((!is_array($resizeResult)) || (!$resizeResult['status']))) {
 					return $resizeResult;
 				}
 				// ** Normal call
