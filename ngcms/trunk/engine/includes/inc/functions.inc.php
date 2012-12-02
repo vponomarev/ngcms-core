@@ -1263,6 +1263,10 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$tvars['vars']['news']['author']['id']		= $row['author_id'];
 	$tvars['vars']['news']['author']['url']		= $alink;
 
+	// [TWIG] number of comments
+	if (getPluginStatusActive('comments'))
+		$tvars['vars']['p']['comments']['count']	= $row['com'];
+
 
 	$tvars['vars']['author'] = "<a href=\"".$alink."\" target=\"_blank\">".$row['author']."</a>";
 	$tvars['vars']['author_link'] = $alink;
@@ -2634,8 +2638,6 @@ function twigCallPlugin($funcName, $params) {
 	}
 
 	return call_user_func($TWIGFUNC[$funcName], $params);
-
-	print "twigCallPlugin ($funcName, ".var_export($params, true).")";
 }
 
 // Truncate HTML
