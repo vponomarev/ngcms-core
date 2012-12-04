@@ -209,8 +209,8 @@ $("#cdate").datetimepicker( { currentText: "DD.MM.YYYY HH:MM", dateFormat: "dd.m
   <label><input type="checkbox" name="catpinned" value="1" class="check" id="catpinned" {% if (flags.catpinned) %}checked="checked" {% endif %}{% if flags['catpinned.disabled'] %}disabled {% endif %}  /> {{ lang.addnews['add_catpinned'] }}</label><br />
   <label><input type="checkbox" name="favorite" value="1" class="check" id="favorite" {% if (flags.favorite) %}checked="checked" {% endif %}{% if flags['favorite.disabled'] %}disabled {% endif %}  /> {{ lang.addnews['add_favorite'] }}</label><br />
 
-  <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags['html.disabled']) %}disabled {% endif %}/> {{ lang.addnews['flag_html'] }}</label><br />
-  <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {% if (flags['html.disabled']) %}disabled {% endif %}/> {{ lang.addnews['flag_raw'] }}</label><br />
+  <label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags['html.disabled']) %}disabled {% endif %} {% if (flags['html']) %}checked="checked"{% endif %}/> {{ lang.addnews['flag_html'] }}</label><br />
+  <label><input type="checkbox" name="flag_RAW" value="1" class="check" id="flag_RAW" {% if (flags['html.disabled']) %}disabled {% endif %} {% if (flags['raw']) %}checked="checked"{% endif %}/> {{ lang.addnews['flag_raw'] }}</label><br />
    {% if (pluginIsActive('comments')) %}<hr/>{{ lang['comments:mode.header'] }}:
    <select name="allow_com">
    	<option value="0"{{ plugin.comments['acom:0'] }}>{{ lang['comments:mode.disallow'] }}

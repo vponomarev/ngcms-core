@@ -673,6 +673,7 @@ function addNewsForm($retry = ''){
 			'pinned'			=> $perm['add.pinned'] && $perm['personal.pinned'],
 			'catpinned'			=> $perm['add.catpinned'] && $perm['personal.catpinned'],
 			'html'				=> $perm['add.html'] && $perm['personal.html'],
+			'raw'				=> $perm['add.raw'] && $perm['personal.html'],
 			'mainpage.disabled'	=> !$perm['personal.mainpage'],
 			'favorite.disabled'	=> !$perm['personal.favorite'],
 			'pinned.disabled'	=> !$perm['personal.pinned'],

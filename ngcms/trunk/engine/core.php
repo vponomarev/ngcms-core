@@ -246,6 +246,7 @@ $twig->addExtension(new Twig_Extension_StringLoader());
 $twig->addGlobalRef('lang',		$lang);
 $twig->addGlobalRef('handler',	$CurrentHandler);
 $twig->addGlobalRef('global',	$twigGlobal);
+$twig->addGlobalRef('system_flags', $SYSTEM_FLAGS);
 
 // - Global variables [by VALUE]
 $twig->addGlobal('skins_url',	skins_url);

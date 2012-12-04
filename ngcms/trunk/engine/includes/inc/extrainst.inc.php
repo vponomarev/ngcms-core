@@ -65,17 +65,17 @@ function generate_config_page($module, $params, $values = array()) {
 	}
 
 	if ($param['type'] == 'text') {
-		$tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.htmlspecialchars($param['value']).'</textarea>';
+		$tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.htmlspecialchars($param['value'], 0, 'cp1251').'</textarea>';
 	} else if ($param['type'] == 'input') {
-		$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.htmlspecialchars($param['value']).'" />';
+		$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.htmlspecialchars($param['value'], 0, 'cp1251').'" />';
 	} else if ($param['type'] == 'checkbox') {
 		$tvars['vars']['input'] = '<input name="'.$param['name'].'" type="checkbox" title="'.$param['title'].'" '.$param['html_flags'].' value="1"'.($param['value']?' checked':'').' />';
 	} else if ($param['type'] == 'hidden') {
-		$tvars['vars']['input'] = '<input name="'.$param['name'].'" type=hidden value="'.htmlspecialchars($param['value']).'" />';
+		$tvars['vars']['input'] = '<input name="'.$param['name'].'" type=hidden value="'.htmlspecialchars($param['value'], 0, 'cp1251').'" />';
 	} else if ($param['type'] == 'select') {
 		$tvars['vars']['input'] = '<select name="'.$param['name'].'" '.$param['html_flags'].'>';
 		foreach ($param['values'] as $oid => $oval) {
-			$tvars['vars']['input'].= '<option value="'.htmlspecialchars($oid).'"'.($param['value']==$oid?' selected':'').'>'.$oval.'</option>';
+			$tvars['vars']['input'].= '<option value="'.htmlspecialchars($oid, 0, 'cp1251').'"'.($param['value']==$oid?' selected':'').'>'.$oval.'</option>';
 		}
 		$tvars['vars']['input'].='</select>';
 	} else if ($param['type'] == 'manual') {

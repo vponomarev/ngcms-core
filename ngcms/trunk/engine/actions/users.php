@@ -421,9 +421,9 @@ function userList(){
 			'current' => $pageNo,
 			'count' => $pageCount,
 			'url' => admin_url.'/admin.php?mod=users&action=list'.
-				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name']):'').
-				($_REQUEST['how']?'&how='.htmlspecialchars($_REQUEST['how']):'').
-				($_REQUEST['per_page']?'&per_page='.intval($_REQUEST['per_page']):'').
+				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], 0, 'cp1251'):'').
+				($_REQUEST['how']?'&how='.htmlspecialchars($_REQUEST['how'], 0, 'cp1251'):'').
+				($_REQUEST['per_page']?'&per_page='.intval($_REQUEST['per_page'], 0, 'cp1251'):'').
 				'&sort='.$rsort.
 				'&page=%page%'
 		));
@@ -435,7 +435,7 @@ function userList(){
 				$npp_nav .= ' <b>[ </b>'.$i.' <b>]</b> ';
 			} else {
 				$npp_nav .= "<a href=\"$PHP_SELF?mod=users&amp;action=list&amp;name=".
-					htmlspecialchars($_REQUEST['name']).
+					htmlspecialchars($_REQUEST['name'], 0, 'cp1251').
 					"&amp;sort=".$rsort.
 					"&amp;how=".($_REQUEST['how']?'desc':'').
 					"&amp;page=".($i).($_REQUEST['per_page']?'&amp;per_page='.$per_page:'').
@@ -451,9 +451,9 @@ function userList(){
 		'npp_nav'		=>	$npp_nav,
 		'entries'		=>	$entries,
 		'per_page'		=> $per_page,
-		'name'			=> htmlspecialchars($_REQUEST['name']),
+		'name'			=> htmlspecialchars($_REQUEST['name'], 0, 'cp1251'),
 		'pagesss'		=> $pagesss,
-		'how_value'		=> htmlspecialchars($_REQUEST['how']),
+		'how_value'		=> htmlspecialchars($_REQUEST['how'], 0, 'cp1251'),
 		'sort_value'	=> htmlspecialchars($_REQUEST['sort']),
 		'page_value'	=> htmlspecialchars($_REQUEST['page']),
 		'per_page_value'	=> htmlspecialchars($_REQUEST['per_page']),
