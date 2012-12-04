@@ -190,7 +190,7 @@ function systemConfigEditForm(){
 		}
 	}
 	$tvars['vars']['multilist'] = $tmpline;
-	$tvars['vars']['defaultSection'] = (isset($_REQUEST['selectedOption']) && $_REQUEST['selectedOption'])?htmlspecialchars($_REQUEST['selectedOption']):'news';
+	$tvars['vars']['defaultSection'] = (isset($_REQUEST['selectedOption']) && $_REQUEST['selectedOption'])?htmlspecialchars($_REQUEST['selectedOption'], 0, 'cp1251'):'news';
 
 	$tpl -> vars('configuration', $tvars);
 	echo $tpl -> show('configuration');

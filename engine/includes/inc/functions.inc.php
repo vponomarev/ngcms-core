@@ -28,7 +28,7 @@ function db_dquote($string) {
 //
 function secure_html($string) {
 	if (is_array($string)) { return '[UNEXPECTED ARRAY]'; }
-	return str_replace(array("{","<", ">"), array("&#123;","&lt;", "&gt;"), htmlspecialchars($string));
+	return str_replace(array("{","<", ">"), array("&#123;","&lt;", "&gt;"), htmlspecialchars($string, 0, 'cp1251'));
 }
 
 function Formatsize($file_size) {
