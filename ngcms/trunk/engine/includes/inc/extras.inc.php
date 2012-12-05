@@ -985,10 +985,12 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 }
 
 function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, $skip, $handlerParams) {
-	global $PPAGES, $lang, $CurrentHandler;
+	global $PPAGES, $lang, $CurrentHandler, $timer;
 
 	//print "## PLUGIN CALL: <b> (".$pluginName.", ".$handlerName.")</b><br/>\n";
 	//print "<pre>".var_export($params, true)."</pre><br/>\n";
+	$timer->registerEvent("URL Processor for [".$pluginName."][".$handlerName."]");
+
 
 	// Check for predefined plugins call
 	switch ($pluginName) {

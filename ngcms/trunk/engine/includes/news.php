@@ -23,10 +23,11 @@ include_once root.'includes/inc/libnews.php';
 
 // Default "show news" function
 function showNews($handlerName, $params) {
- global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse, $currentCategory, $twig, $twigLoader;
+ global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse, $currentCategory, $twig, $twigLoader, $timer;
  // preload plugins
  load_extras('news');
-
+ $timer->registerEvent("All [news] plugins are preloaded");
+ 
  // Init array with configuration parameters
  $callingParams = array('customCategoryTemplate' => 1, 'customCategoryNumber' => 1, 'setCurrentCategory' => 1, 'setCurrentNews' => 1);
  $callingCommentsParams = array();
@@ -281,8 +282,8 @@ function showNews($handlerName, $params) {
 
 	// Prepare news table
 	//print "[TABLE VARS]<pre>".var_export($tableVars, true)."</pre>";
-	$twigLoader->setDefaultContent('news.table.tpl', '{% for entry in data %}{{ entry }}{% endfor %} {{ pagination }}');
-	$xt = $twig->loadTemplate('news.table.tpl');
+	$twigLoader->setDefaultContent($ntTemplateName, '{% for entry in data %}{{ entry }}{% endfor %} {{ pagination }}');
+	$xt = $twig->loadTemplate($ntTemplateName);
 	$template['vars']['mainblock'] .= $xt->render($tableVars);
 
 

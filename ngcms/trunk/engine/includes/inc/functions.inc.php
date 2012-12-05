@@ -28,7 +28,7 @@ function db_dquote($string) {
 //
 function secure_html($string) {
 	if (is_array($string)) { return '[UNEXPECTED ARRAY]'; }
-	return str_replace(array("{","<", ">"), array("&#123;","&lt;", "&gt;"), htmlspecialchars($string, 0, 'cp1251'));
+	return str_replace(array("{","<", ">"), array("&#123;","&lt;", "&gt;"), htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'cp1251'));
 }
 
 function Formatsize($file_size) {
@@ -2400,6 +2400,13 @@ function twigIsNews($rules) {
 		}
 	}
 	return false;
+}
+
+// Check if current user has specified permissions
+// RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
+// ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
+function twigIsPerm($rules) {
+
 }
 
 function twigIsSet($context, $val) {
