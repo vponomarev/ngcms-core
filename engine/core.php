@@ -261,6 +261,7 @@ $twig->addFunction('isLang', 		new Twig_Function_Function('twigIsLang'));
 $twig->addFunction('isHandler',		new Twig_Function_Function('twigIsHandler'));
 $twig->addFunction('isCategory',	new Twig_Function_Function('twigIsCategory'));
 $twig->addFunction('isNews',		new Twig_Function_Function('twigIsNews'));
+$twig->addFunction('isPerm',		new Twig_Function_Function('twigIsPerm'));
 $twig->addFunction('callPlugin', 	new Twig_Function_Function('twigCallPlugin'));
 $twig->addFunction('isSet',			new Twig_Function_Function('twigIsSet', array('needs_context' => true)));
 $twig->addFunction('debugContext',	new Twig_Function_Function('twigDebugContext', array('needs_context' => true)));
