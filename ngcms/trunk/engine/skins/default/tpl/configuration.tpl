@@ -179,7 +179,7 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td class="contentEntry1">{l_home_title}<br /><small>{l_example} NGcms</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[home_title]' value='{c_home_title}' size="40" /></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[home_title]' value="{home_title}" size="40" /></td>
 </tr>
 <tr>
 <td class="contentEntry1">{l_admin_mail}<br /><small>{l_example} admin@server.com</small></td>
