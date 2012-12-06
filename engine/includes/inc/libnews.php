@@ -407,10 +407,13 @@ function newsProcessFilter($conditions) {
 //			* export	- export data [ for plugins or so on. No counters are updated ]
 //		'twig'		=> [FLAG] Use TWIG template engine if set
 //		'plugin'  => if is called from plugin - ID of plugin
-//		'overrideTemplateName' => alternative template for display
+//		'overrideTemplateName' => alternative template for display [ this param overrides `customCategoryTemplate` field ]
 //		'overrideTemplatePath' => alternative path for searching of template
-//		'customCategoryTemplate' => flag automatically override custom category templates
-//			[!!!] USES CUSTOM TEMPLATE FOR FIRST CATEGORY FROM NEWS [!!!]
+//		'customCategoryTemplate' => flag if we need to have custom templates for this news
+//			* 0 - no
+//			* 1 - use template from master category of the news (1st category)
+//			* 2 - use template from current category
+//		'currentCategoryId'	=> ID of current category, required only for `customCategoryTemplate` == 2
 //		'regenShortNews' =>
 //			'mode' 		=> If we should generate `on the fly` short news from long one
 //				* ''		- Leave short news as is [ default ]
@@ -446,6 +449,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 	// Generate SQL filter for 'WHERE' using filterConditions parameter
 	$query['filter'] = newsProcessFilter(array('AND', array('DATA', 'approve', '=', '1'), $filterConditions));
+	//print "CallingParams:<pre>".var_export($callingParams, true)."</pre>";
 	//print "<pre>".var_export($filterConditions, true)."</pre>";
 	//print "<pre>".$query['filter']."</pre>";
 
@@ -709,8 +713,15 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			$templatePath = $callingParams['overrideTemplatePath'];
 		} else if (isset($callingParams['customCategoryTemplate']) && $callingParams['customCategoryTemplate']) {
 			// -> check for custom category templates
-			// Find first category
-			$fcat = array_shift(explode(",", $row['catid']));
+			// Check mode:
+			// 1 - Master category
+			// 2 - Current category
+			$fcat = $callingParams['customCategoryId'];
+			if ($callingParams['customCategoryTemplate'] == 1) {
+				// Find first category
+				$fcat = array_shift(explode(",", $row['catid']));
+			}
+
 			// Check if there is a custom mapping
 			if ($fcat && $catmap[$fcat] && ($ctname = $catz[$catmap[$fcat]]['tpl'])) {
 				// Check if directory exists

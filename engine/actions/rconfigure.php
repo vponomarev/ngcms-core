@@ -12,9 +12,11 @@ $ULIB->loadConfig();
 $UHANDLER = new urlHandler();
 $UHANDLER->loadConfig();
 
-$ULIB->registerCommand('core', 'addnews',
-		array ('vars' => array(),
-				'descr'	=> array ('russian' => 'Добавление новости (с сайта)'),
+$ULIB->registerCommand('news', 'all',
+		array ('vars' =>
+			array(	'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница')),
+			),
+			'descr'	=> array ('russian' => 'Лента новостей'),
 		)
 );
 

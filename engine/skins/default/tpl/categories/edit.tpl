@@ -42,6 +42,10 @@
 <td width="30%" class="contentEntry2"><select name="tpl">{tpl_list}</select></td>
 </tr>
 <tr>
+<td width="70%" class="contentEntry1">{l_template_mode}</td>
+<td width="30%" class="contentEntry2"><select name="template_mode">{template_mode}</select></td>
+</tr>
+<tr>
 <td width="70%" class="contentEntry1">{l_parent}</td>
 <td width="30%" class="contentEntry2">{parent}</td>
 </tr>
