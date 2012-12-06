@@ -34,6 +34,8 @@ class tpl {
 		$fname	=	$dir.($file?$file:((substr($dir, -1) != '/'?'/':'').$name.$this->ext));
 
 		if (!is_file($fname)) {
+			$this->data[$nn] = '[<b>TEMPLATE NOT FOUND</b> ('.$fname.')]';
+			return;
 			ngFatalError(sprintf(str_replace('{fname}', $fname, $lang['fatal.tpl.lost'], $fname)));
 		}
 

@@ -1003,6 +1003,12 @@ function admcookie_set($x = array()) {
 function showPreview() {
 	global $userROW, $EXTRA_CSS, $EXTRA_HTML_VARS, $PFILTERS, $tpl, $parse, $mysql, $config, $catmap;
 
+	// Load permissions
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
+		'personal.html',
+	));
+
+
 	$SQL = array( 'id' => -1 );
 	// Эмулируем работу всех штатных средств отвечающих за отображение новости.
 	// Заполняем соответствующие поля
@@ -1035,28 +1041,7 @@ function showPreview() {
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
 	// 1 = HTML enable	[if set, HTML codes may be used in news]
-
-	$SQL['flags'] = 0;
-	switch ($userROW['status']) {
-		case 1:		// admin can do anything
-			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 2:		// Editor. Check if we have permissions
-			if (!$config['htmlsecure_2'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 3:		// Journalists. Check if we have permissions
-			if (!$config['htmlsecure_3'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 4:		// Commentors. Check if we have permissions
-			if (!$config['htmlsecure_4'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-	}
+	$SQL['flags']	= ($perm['personal.html'])?(($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0)):0;
 
 	// This actions are allowed only for admins & Edtiors
 	if (($userROW['status'] == 1)||($userROW['status'] == 2)) {

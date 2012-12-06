@@ -326,16 +326,8 @@ function ChangeOption(selectedOption) {
 <td class="contentEntry2" valign="middle">{default_newsorder}</td>
 </tr>
 <tr>
-<td class="contentEntry1">{l_htmlsecure_4}<br /><small>{l_htmlsecure_4_desc}</small></td>
-<td class="contentEntry2" valign="middle">{htmlsecure_4}</td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_htmlsecure_3}</td>
-<td class="contentEntry2" valign="middle">{htmlsecure_3}</td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_htmlsecure_2}</td>
-<td class="contentEntry2" valign="middle">{htmlsecure_2}</td>
+<td class="contentEntry1">{l_template_mode}<br /><small>{l_template_mode#desc}</small></td>
+<td class="contentEntry2" valign="middle">{template_mode}</td>
 </tr>
 </table>
 </div>

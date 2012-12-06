@@ -27,9 +27,9 @@ function showNews($handlerName, $params) {
  // preload plugins
  load_extras('news');
  $timer->registerEvent("All [news] plugins are preloaded");
- 
+
  // Init array with configuration parameters
- $callingParams = array('customCategoryTemplate' => 1, 'customCategoryNumber' => 1, 'setCurrentCategory' => 1, 'setCurrentNews' => 1);
+ $callingParams = array('customCategoryTemplate' => 1, 'setCurrentCategory' => 1, 'setCurrentNews' => 1);
  $callingCommentsParams = array();
 
  // Set default template path
@@ -152,6 +152,16 @@ function showNews($handlerName, $params) {
 
 			// Set title
 			$SYSTEM_FLAGS['info']['title']['group'] = $currentCategory['name'];
+
+			// Check if `default template` for this category is set to "current category"
+			$cct = intval(substr($currentCategory['flags'], 2, 1));
+			if ($cct < 1) {
+				$cct = intval($config['template_mode']);
+				if (!$cct)
+					$cct = 1;
+			}
+			$callingParams['customCategoryTemplate'] = $cct;
+			$callingParams['currentCategoryId'] = $currentCategory['id'];
 
 			// Set meta tags for category page
 			if ($currentCategory['description'])

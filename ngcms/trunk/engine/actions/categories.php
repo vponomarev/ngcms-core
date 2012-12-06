@@ -53,12 +53,19 @@ function admCategoryAddForm(){
 		$tpl_list .= '<option value="'.secure_html($k).'"'.(($row['tpl'] == $k)?' selected="selected"':'').'>'.secure_html($k)."</option>\n";
 	}
 
+	$templateMode = '';
+	foreach (array('0', '1', '2') as $k => $v) {
+		$templateMode .= '<option value="'.$k.'"'.(($k == intval(substr($row['flags'], 2, 1)))?' selected="selected"':'').'>'.$lang['template_mode.'.$v].'</option>';
+	}
+
+
 	$tvars['vars'] = array(
 		'php_self'	=>	$PHP_SELF,
 		'parent'	=>	makeCategoryList(array('name' => 'parent', 'doempty' => 1, 'resync' => ($_REQUEST['action']?1:0))),
 		'orderlist'	=>	OrderList(''),
 		'token'		=> genUToken('admin.categories'),
-		'tpl_list'	=> $tpl_list
+		'tpl_list'	=> $tpl_list,
+		'template_mode'		=>  $templateMode,
 	);
 
 	if ($config['meta']) {
@@ -95,6 +102,7 @@ function admCategoryAdd() {
 
 	$SQL['flags']	= intval($_REQUEST['cat_show'])?'1':'0';
 	$SQL['flags']  .= (string) (abs(intval($_REQUEST['show_link'])<=2)?abs(intval($_REQUEST['show_link'])):'0');
+	$SQL['flags']  .= (string) (abs(intval($_REQUEST['template_mode'])<=2)?abs(intval($_REQUEST['template_mode'])):'0');
 
 	$category		= intval($_REQUEST['category']);
 
@@ -247,6 +255,11 @@ function admCategoryEditForm(){
 		$showLink .= '<option value="'.$k.'"'.(($k == intval(substr($row['flags'], 1, 1)))?' selected="selected"':'').'>'.$lang['link.'.$v].'</option>';
 	}
 
+	$templateMode = '';
+	foreach (array('0', '1', '2') as $k => $v) {
+		$templateMode .= '<option value="'.$k.'"'.(($k == intval(substr($row['flags'], 2, 1)))?' selected="selected"':'').'>'.$lang['template_mode.'.$v].'</option>';
+	}
+
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
 		'parent'		=> makeCategoryList(array('name' => 'parent', 'selected' => $row['parent'], 'skip' => $row['id'], 'doempty' => 1)),
@@ -262,6 +275,7 @@ function admCategoryEditForm(){
 		'tpl_value'		=>	secure_html($row['tpl']),
 		'number'		=>	$row['number'],
 		'show.link'		=>  $showLink,
+		'template_mode'		=>  $templateMode,
 		'tpl_list'		=>	$tpl_list,
 		'info'			=>	secure_html($row['info']),
 		'token'			=> genUToken('admin.categories'),
@@ -316,6 +330,7 @@ function admCategoryEdit(){
 
 	$SQL['flags']	= intval($_REQUEST['cat_show'])?'1':'0';
 	$SQL['flags']  .= (string) (abs(intval($_REQUEST['show_link'])<=2)?abs(intval($_REQUEST['show_link'])):'0');
+	$SQL['flags']  .= (string) (abs(intval($_REQUEST['template_mode'])<=2)?abs(intval($_REQUEST['template_mode'])):'0');
 
 	$catid			= intval($_REQUEST['catid']);
 
