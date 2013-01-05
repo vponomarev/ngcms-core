@@ -437,9 +437,10 @@ function newsProcessFilter($conditions) {
 //			1	-	`catpinned`	(for Categories page)
 //			2	-	without taking PIN into account
 //		'disablePagination'	- Disable generation of page information
+//		'extractEmbeddedItems'	- Extract embedded images/files from news body
 //
 function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
-	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS, $twig;
+	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS, $twig, $parse;
 	global $year, $month, $day;
 	global $timer;
 	global $SYSTEM_FLAGS, $TemplateCache;
@@ -665,6 +666,30 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 
 		//print "LinkedFiles (".$row['id']."): <pre>".var_export($tvars['vars']['#files'], true)."</pre>";
 		//print "LinkedImages (".$row['id']."): <pre>".var_export($tvars['vars']['#images'], true)."</pre>";
+
+
+		// Extract embedded images/files if requested
+		// news.embed.images	- list of URL's
+		// news.embed.imgCount	- count of extracted URL's
+
+		$tvars['vars']['news']['embed'] = array('images' => array());
+		if ($callingParams['extractEmbeddedItems']) {
+			// Join short/full news into single line
+			$tempLine = $tvars['vars']['news']['short'].$tvars['vars']['news']['full'];
+			// Scan for <img> tag
+			if (preg_match_all("#\<img (.+?)(?: *\/?)\>#", $tempLine, $m)) {
+				// Analyze all found <img> tags for parameters
+				foreach ($m[1] as $kl) {
+					$klp = $parse->parseBBCodeParams($kl);
+					// Add record if src="" parameter is set
+					if (isset($klp['src'])) {
+						$tvars['vars']['news']['embed']['images'] []= $klp['src'];
+					}
+				}
+			}
+		}
+		$tvars['vars']['news']['embed']['imgCount'] = count($tvars['vars']['news']['embed']['images']);
+
 		// Print icon if only one parent category
 		if (isset($row['catid']) && $row['catid'] && !stristr(",", $row['catid']) && isset($catmap[$row['catid']]) && ($catalt = $catmap[$row['catid']]) && isset($catz[$catalt]['icon']) && $catz[$catalt]['icon']) {
 			// [TWIG] news.flags.hasCategoryIcon
