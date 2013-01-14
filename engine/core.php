@@ -266,6 +266,7 @@ $twig->addFunction('callPlugin', 	new Twig_Function_Function('twigCallPlugin'));
 $twig->addFunction('isSet',			new Twig_Function_Function('twigIsSet', array('needs_context' => true)));
 $twig->addFunction('debugContext',	new Twig_Function_Function('twigDebugContext', array('needs_context' => true)));
 $twig->addFunction('debugValue',	new Twig_Function_Function('twigDebugValue'));
+$twig->addFunction('getCategoryTree', 	new Twig_Function_Function('twigGetCategoryTree'));
 
 $twig->addFilter('truncateHTML',	new Twig_Filter_Function('twigTruncateHTML'));
 

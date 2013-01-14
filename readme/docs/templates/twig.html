@@ -142,6 +142,24 @@
 	</pre>
 	</div>
 </li>
+ <li><b>getCategoryTree(<font color="blue">$filter</font>)</b> - выводит массив с деревом категорий в формате, описанном в шаблоне news.categories.tpl.<br/>
+  где:<br/>
+ <b>$filter</b> - фильтр выдаваемой информации:<br/>
+ <ul>
+  <li><b>не определён</b> - если переменная не определена (не передаётся в функцию), то выводится полное дерево категорий</li>
+  <li><b><font color="blue">ID</font></b> - вывести категорию и всех её детей</li>
+  <li><b>:<font color="blue">ID</font></b> - вывести всех детей заданной категории</li>
+ </ul>
+
+  	<div class="pre">
+ 	<pre>
+	&lt;!-- Выводим всех детей категории с ID=6 --&gt;
+	{% for entry in getCategoryTree(':6') %}
+		[{{entry.id}}]({{ entry.level }}) {{ entry.cat }}
+	{% endfor %}
+	</pre>
+	</div>
+</li>
 
 
 </ul>
