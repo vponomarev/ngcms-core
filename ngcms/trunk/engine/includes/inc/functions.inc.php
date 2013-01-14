@@ -1005,7 +1005,7 @@ function makeCategoryInfo($ctext) {
 	global $catz, $catmap, $config;
 
 	$list = array();
-	$cats = is_array($catid)?$catid:explode(",", $ctext);
+	$cats = is_array($ctext)?$ctext:explode(",", $ctext);
 
 	foreach ($cats as $v) {
 		if (isset($catmap[$v])) {
@@ -1049,7 +1049,7 @@ function makeCategoryInfo($ctext) {
 
 //
 // New category menu generator
-function generateCategoryMenu(){
+function generateCategoryMenu($flagReturnData = false, $treeMasterCategory = null){
 	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS, $TemplateCache, $twig, $twigLoader;
 
 	// Load template variables
@@ -1066,18 +1066,49 @@ function generateCategoryMenu(){
 		$markers['mark.default'] = '&#8212;';
 
 
-	$result = '';
-
 	// Deremine working mode - old or new
 	// If template 'news.categories' exists - use `new way`, else - old
-
-	if (file_exists(tpl_site.'news.categories.tpl')) {
+	if (file_exists(tpl_site.'news.categories.tpl') || $flagReturnData) {
 
 		$tVars = array();
-
 		$tEntries = array();
+
+		$treeSelector = array(
+			'defined'		=> false,
+			'id'			=> 0,
+			'skipDefined'	=> false,
+			'started'		=> false,
+			'level'			=> 0,
+		);
+
+		if (!is_null($treeMasterCategory) && preg_match('#^(\:){0,1}(\d+)$#', $treeMasterCategory, $m)) {
+			$treeSelector['defined']		= true;
+			$treeSelector['skipDefined']	= $m[1]?true:false;
+			$treeSelector['id']				= intval($m[2]);
+		}
+
 		foreach($catz as $k => $v){
 			if (!substr($v['flags'],0,1)) continue;
+
+			// If tree selector is active - skip unwanted entries
+			if ($treeSelector['defined']) {
+				if ($treeSelector['started']) {
+					if ($v['poslevel'] <= $treeSelector['level']) {
+						break;
+					}
+				} else {
+					if ($v['id'] == $treeSelector['id']) {
+						$treeSelector['started']	= true;
+						$treeSelector['level']		= $v['poslevel'];
+
+						if ($treeSelector['skipDefined'])
+							continue;
+					} else {
+						continue;
+					}
+				}
+			}
+
 
 			$tEntry = array(
 				'id'	=> $v['id'],
@@ -1086,6 +1117,7 @@ function generateCategoryMenu(){
 				'mark'		=>	isset($markers['mark.level.'.$v['poslevel']])?$markers['mark.level.'.$v['poslevel']]:str_repeat($markers['mark.default'], $v['poslevel']),
 				'level'		=>	$v['poslevel'],
 				'cat'		=>	$v['name'],
+				'info'		=>	$v['info'],
 				'counter'	=>	$v['posts'],
 				'icon'		=>	$v['icon'],
 
@@ -1120,6 +1152,9 @@ function generateCategoryMenu(){
 
 		}
 
+		if ($flagReturnData)
+			return $tEntries;
+
 		// Prepare conversion maps
 		$conversionConfig = array(
 			'[entries]'			=> '{% for entry in entries %}',
@@ -1139,8 +1174,8 @@ function generateCategoryMenu(){
 
 	}
 
-
-
+	// OLD STYLE menu generation
+	$result = '';
 
 	$tpl -> template('categories', tpl_site);
 	foreach($catz as $k => $v){
@@ -1169,6 +1204,11 @@ function generateCategoryMenu(){
 	}
 	return $result;
 }
+
+function twigGetCategoryTree($masterCategory = null) {
+	return generateCategoryMenu(true, $masterCategory);
+}
+
 
 //
 // make an array for filtering from text line like 'abc-def,dfg'
