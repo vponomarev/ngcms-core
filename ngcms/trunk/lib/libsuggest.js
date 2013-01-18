@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 06 ( 2011-02-04)                                                              //
+// Build: 07 ( 2013-01-19)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -26,29 +26,41 @@ var ngSuggest = function(fieldID, params) {
 	// Init parameters
 	this.opts = params ? params : {};
 
-	if (!this.opts.localPrefix)		this.opts.localPrefix	= '';				// URL prefix for system location
+	if (!this.opts.localPrefix)		this.opts.localPrefix	= '';						// URL prefix for system location
 	if (!this.opts.postURL)			this.opts.postURL	= this.opts.localPrefix + '/engine/rpc.php';		// URL where to send POST request (relative)
-	if (!this.opts.iMinLen)			this.opts.iMinLen	= 2;				// input: minimal len for search
-	if (!this.opts.sId)			this.opts.sId		= null;				// search: search DIV element ID
-	if (!this.opts.sClass)			this.opts.sClass	= 'suggestWindow';		// search: search DIV element class
-	if (!this.opts.stId)			this.opts.stId		= null;				// search table: ID
-	if (!this.opts.stClass)			this.opts.stClass	= 'suggestBlock';		// search table: class for search table
+	if (!this.opts.iMinLen)			this.opts.iMinLen	= 2;						// input: minimal len for search
+	if (!this.opts.sId)				this.opts.sId		= null;						// search: search DIV element ID
+	if (!this.opts.sClass)			this.opts.sClass	= 'suggestWindow';			// search: search DIV element class
+	if (!this.opts.stId)			this.opts.stId		= null;						// search table: ID
+	if (!this.opts.stClass)			this.opts.stClass	= 'suggestBlock';			// search table: class for search table
 	if (!this.opts.stRClass)		this.opts.stRClass	= 'suggestRowNormal';		// search table: class for normal row
 	if (!this.opts.stRHClass)		this.opts.stRHClass	= 'suggestRowHighlight';	// search table: class for HIGHLIGHTED row
-	if (!this.opts.stCols)			this.opts.stCols	= 1;				// number of columns in returning result
-	if (!this.opts.stColsClass)		this.opts.stColsClass = [];				// list of classes (1 by one) that should be applied to cols
-	if (!this.opts.stColsHLR)		this.opts.stColsHLR	= [];				// list of flags: do we need highlighing for this col
-	if (!this.opts.hlr)			this.opts.hlr 		= false;			// should we manually HighLight Results
-	if (!this.opts.reqMethodName)		this.opts.reqMethodName = 'dumb.ping';	// AJAX RPC Request method name
+	if (!this.opts.stCols)			this.opts.stCols	= 1;						// number of columns in returning result
+	if (!this.opts.stColsClass)		this.opts.stColsClass = [];						// list of classes (1 by one) that should be applied to cols
+	if (!this.opts.stColsHLR)		this.opts.stColsHLR	= [];						// list of flags: do we need highlighing for this col
+	if (!this.opts.hlr)				this.opts.hlr 		= false;					// should we manually HighLight Results
+	if (!this.opts.reqMethodName)		this.opts.reqMethodName = 'dumb.ping';		// AJAX RPC Request method name
 
-	if (!this.opts.lId)				this.opts.lId		= null;				// ID of loading layer
-	if (!this.opts.delay)			this.opts.delay		= 500;				// Delay before making AJAX request (ms)
+	if (!this.opts.lId)				this.opts.lId		= null;						// ID of loading layer
+	if (!this.opts.delay)			this.opts.delay		= 500;						// Delay before making AJAX request (ms)
 
-	if (!this.opts.cId)				this.opts.cId		= null;				// `CLOSE SUGGEST` element ID
-	if (!this.opts.cClass)			this.opts.cClass	= 'suggestClose';	// `CLOSE SUGGEST` class
+	if (!this.opts.cId)				this.opts.cId		= null;						// `CLOSE SUGGEST` element ID
+	if (!this.opts.cClass)			this.opts.cClass	= 'suggestClose';			// `CLOSE SUGGEST` class
+
+	if (!this.opts.listDelimiter)	this.opts.listDelimiter	= null;					// Delimiter for list of values. Will be used if specified, AJAX query will be made for current edited value
 
 	if (!this.opts.outputGenerator)
-		this.outputGenerator = function(obj) { return json_encode(obj.searchDest); }
+		this.outputGenerator = function(obj) {
+			var searchLine;
+			if (obj.opts.listDelimiter) {
+				searchLine = obj.searchDest.split(obj.opts.listDelimiter).pop().replace(/^\s+|\s+$/g,'');
+				//alert('Call: '+searchLine);
+			} else {
+				searchLine = obj.searchDest;
+			}
+
+			return json_encode(searchLine);
+		}
 	else
 		this.outputGenerator = this.opts.outputGenerator;
 
@@ -63,6 +75,7 @@ var ngSuggest = function(fieldID, params) {
 		//document.body.appendChild(this.searchDIV);
 		var iDiv = document.createElement('div');
 		iDiv.style.position = 'relative';
+
 		this.field.parentNode.appendChild(iDiv);
 		iDiv.appendChild(this.searchDIV);
 
@@ -258,7 +271,17 @@ ngSuggest.prototype.suggestSearch = function(text) {
 	this.timeoutID = setTimeout( function() { pointer.callAJAX() }, this.opts.delay);
 }
 
-ngSuggest.prototype.setValue = function(value) { this.field.value = value; }
+ngSuggest.prototype.setValue = function(value) {
+	// 1234567
+	if (this.opts.listDelimiter) {
+		var parts = this.field.value.split(this.opts.listDelimiter);
+		parts.pop();
+		parts.push(value);
+		this.field.value = parts.join(this.opts.listDelimiter);
+	} else {
+		this.field.value = value;
+	}
+}
 
 // perform AJAX request
 ngSuggest.prototype.callAJAX = function() {
