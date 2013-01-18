@@ -38,7 +38,7 @@ display: inline;
 		margin:0;
 		}
 	legend{padding:2px 5px;}	
-	form div{margin:.5em 0;clear:both;overflow:hidden;}
+	form div{margin:.5em 0;clear:both;/*overflow:hidden;*/}
 	form div.col{clear:none;}form div.first{clear:both;}
 	
 	input[type="text"], input[type="password"], textarea, .field, .area, select{
