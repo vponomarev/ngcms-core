@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: consts.inc.php
 // Description: Initializing global consts
 // Author: Alexey Zinchenko, Vitaly Ponomarev
@@ -17,7 +17,7 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.3 + SVN [SVN1122+]');
+@define('engineVersion', '0.9.3 + SVN [SVN1123+]');
 
 @define('prefix', $config['prefix']);
 @define('home', $config['home_url']);
