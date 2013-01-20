@@ -267,6 +267,7 @@ $twig->addFunction('isSet',			new Twig_Function_Function('twigIsSet', array('nee
 $twig->addFunction('debugContext',	new Twig_Function_Function('twigDebugContext', array('needs_context' => true)));
 $twig->addFunction('debugValue',	new Twig_Function_Function('twigDebugValue'));
 $twig->addFunction('getCategoryTree', 	new Twig_Function_Function('twigGetCategoryTree'));
+$twig->addFunction('engineMSG', 	new Twig_Function_Function('twigEngineMSG'));
 
 $twig->addFilter('truncateHTML',	new Twig_Filter_Function('twigTruncateHTML'));
 
