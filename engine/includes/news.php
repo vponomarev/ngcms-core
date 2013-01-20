@@ -292,7 +292,7 @@ function showNews($handlerName, $params) {
 
 	// Prepare news table
 	//print "[TABLE VARS]<pre>".var_export($tableVars, true)."</pre>";
-	$twigLoader->setDefaultContent($ntTemplateName, '{% for entry in data %}{{ entry }}{% endfor %} {{ pagination }}');
+	$twigLoader->setDefaultContent($ntTemplateName, '{% for entry in data %}{{ entry }}{% else %}{{ engineMSG(\'common\', lang[\'msgi_no_news\']) }}{% endfor %} {{ pagination }}');
 	$xt = $twig->loadTemplate($ntTemplateName);
 	$template['vars']['mainblock'] .= $xt->render($tableVars);
 

@@ -454,6 +454,15 @@ function msg($params, $mode = 0, $disp = -1) {
 	}
 }
 
+function TwigEngineMSG($type, $text, $info = '') {
+	$cfg = array('type' => $type);
+	if ($text)
+		$cfg['text']	= $text;
+	if ($info)
+		$cfg['info']	= $info;
+	return msg($cfg, 0, 2);
+}
+
 
 function DirSize($directory) {
 

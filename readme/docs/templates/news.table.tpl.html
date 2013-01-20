@@ -18,7 +18,11 @@
 “акже шаблон становитс€ условно-об€зательным. “еперь при его отсутствии будет считатьс€, что он содержит следующий код:</b></font>
 <div class="pre">
 <pre>
-{% for entry in data %}{{ entry }}{% endfor %} {{ pagination }}
+{% for entry in data %}
+{{ entry }}
+{% else %}
+engineMSG('common', lang['msgi_no_news'])
+{% endfor %} {{ pagination }}
 </pre>
 </div>
 “акой код полностью повтор€ет текущее (до SVN1101) поведение системы.
