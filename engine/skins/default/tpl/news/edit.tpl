@@ -92,7 +92,7 @@ function changeActive(name) {
   <tr>
    <td width="10"><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
    <td width="100"><span class="f15">{{ lang.editnews['title'] }}</span></td>
-   <td><input type="text" class="important" size="79" name="title" value="{{ title }}" tabindex="1" /></td>
+   <td><input type="text" class="important" size="79" id="newsTitle" name="title" value="{{ title }}" tabindex="1" /></td>
   </tr>
   <tr>
    <td valign="top" colspan=3>{{ quicktags }}<br /> {{ smilies }}<br />
@@ -119,7 +119,7 @@ function changeActive(name) {
   <tr>
    <td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt="" /></td>
    <td>{{ lang.editnews['keywords'] }}:</td>
-   <td><textarea name="keywords" cols="80">{{ keywords }}</textarea></td>
+   <td><textarea name="keywords" id="newsKeywords" cols="80">{{ keywords }}</textarea></td>
   </tr>
 {% endif %}
 {% if (pluginIsActive('xfields')) %}
