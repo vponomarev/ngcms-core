@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: libnews.php
 // Description: News engine shared functions
 // Author: Vitaly A Ponomarev, vp7@mail.ru
@@ -18,6 +18,7 @@
 //			* short		- short new display
 //			* full		- full news display
 //			* export	- export data [ for plugins or so on. No counters are updated ]
+//			* export_array  - export SHORT and FULL news in array [ for plugins ... ]
 //			* export_body	- export ONLY BODY short+full [ for plugins or so on... ]
 //			* export_short	- export ONLY BODY short      [ for plugins or so on... ]
 //			* export_full	- export ONLY BODY full       [ for plugins or so on... ]
@@ -250,6 +251,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 	if ($callingParams['style'] == 'export_full')
 		return $tvars['vars']['full-story'];
+
+	if ($callingParams['style'] == 'export_array')
+		return array($tvars['vars']['short-story'], $tvars['vars']['full-story']);
 
 
 	// Update visits counter if we're not in emulation mode
