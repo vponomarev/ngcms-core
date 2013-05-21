@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -15,7 +15,7 @@
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
 global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $TWIGFUNC, $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS, $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
-global $TemplateCache;
+global $TemplateCache, $siteDomainName;
 
 $PLUGINS	= array('active'	=> array(),
 			'active:loaded'	=> 0,
@@ -38,6 +38,7 @@ $TWIGFUNC = array();		// TWIG defined functions
 $RPCADMFUNC = array();		// RPC admin functions
 
 $PERM = array();			// PERMISSIONS
+$UGROUP = array();			// USER GROUPS
 
 $SUPRESS_TEMPLATE_SHOW	= 0;
 $SUPRESS_MAINBLOCK_SHOW	= 0;
@@ -89,9 +90,6 @@ if (get_magic_quotes_gpc()) {
 	@include_once root.'includes/inc/fix_magic_quotes.php';
 	fix_magic_quotes();
 }
-
-// Start session
-@session_start();
 
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
@@ -172,6 +170,13 @@ $timer->registerEvent('Config file is loaded');
 
 // Call multidomains processor
 multi_multidomains();
+//print "siteDomainName [".$siteDomainName."]<br/>\n";
+
+// Initiate session - take care about right domain name for sites with/without www. prefix
+@session_set_cookie_params(86400, '/', '');
+@session_start();
+
+
 
 @include_once root.'includes/inc/consts.inc.php';
 @include_once root.'includes/inc/functions.inc.php';
@@ -202,9 +207,12 @@ if ( ( !file_exists(confroot.'config.php') ) || ( filesize(confroot.'config.php'
 	} else {
 		@header("Location: ".adminDirName."/install.php");
 	}
-	echo "You should run install script first";
+	echo "NGCMS: Engine is not installed yet. Please run installer from /engine/install.php";
 	exit;
 }
+
+// Load user groups
+loadGroups();
 
 // Preload TWIG engine
 require_once root.'includes/classes/Twig/Autoloader.php';
@@ -226,7 +234,7 @@ $twigGlobal = array(
 );
 
 // - Main variables
-global $twig, $twigLoader;
+global $twig, $twigLoader, $twigStringLoader;
 
 // - Configure loader parameters
 $twigLoader = new Twig_Loader_NGCMS(root);

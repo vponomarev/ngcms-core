@@ -2003,12 +2003,32 @@ function checkPermission($identity, $user = null, $mode = '', $way = '') {
 	return is_array($mode)?$mStatus:$mStatus[$mode];
 }
 
+// Load user groups
+function loadGroups() {
+	global $UGROUP;
+
+	$UGROUP = array();
+	if (is_file(confroot.'ugroup.php')) {
+		include confroot.'ugroup.php';
+		$UGROUP = $confUserGroup;
+	}
+
+	// Fill default groups if not specified
+	if (!isset($UGROUP[1])) {
+		$UGROUP[1] = array('name' => 'Администратор');
+		$UGROUP[2] = array('name' => 'Редактор');
+		$UGROUP[3] = array('name' => 'Журналист');
+		$UGROUP[4] = array('name' => 'Комментатор');
+	}
+
+}
+
 // Load permissions
 function loadPermissions(){
 	global $PERM, $confPerm, $confPermUser;
 
 	// 1. Load DEFAULT permission file.
-	// * if not exists - allow everything for group = 0, other's are restricted
+	// * if not exists - allow everything for group = 1, other's are restricted
 	$PERM = array();
 	if (is_file(confroot.'perm.default.php')) {
 		include confroot.'perm.default.php';

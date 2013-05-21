@@ -18,7 +18,7 @@
 //			* short		- short new display
 //			* full		- full news display
 //			* export	- export data [ for plugins or so on. No counters are updated ]
-//			* export_array  - export SHORT and FULL news in array [ for plugins ... ]
+//			* exportVars	- export $tvars['vars'] array [ for plugins ... ]
 //			* export_body	- export ONLY BODY short+full [ for plugins or so on... ]
 //			* export_short	- export ONLY BODY short      [ for plugins or so on... ]
 //			* export_full	- export ONLY BODY full       [ for plugins or so on... ]
@@ -32,7 +32,7 @@
 //		'addCanonicalLink'	=> if specified, rel="canonical" will be added into {htmlvars}
 //		'validateCategoryID' => if specified, check if content represents correct category ID(s) for this news
 //		'validateCategoryAlt' => if specified, check if content represents correct category altname(s) for this news
-//
+//		'extractEmbeddedItems'	- Extract embedded images/files from news body
 //		Returns:
 //			false    - when news is not found
 //			data     - when news is found && export is used
@@ -115,7 +115,6 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 			$SYSTEM_FLAGS['news']['currentCategory.record']	= $catz[$catmap[$cid]];
 
 			$currentCategory = $catz[$catmap[$cid]];
-
 		}
 	}
 
@@ -229,6 +228,29 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$allow_comments		=	$row['allow_com'];
 	$row['views']		=	$row['views']+1;
 
+
+	// Extract embedded images/files if requested
+	// news.embed.images	- list of URL's
+	// news.embed.imgCount	- count of extracted URL's
+	$tvars['vars']['news']['embed'] = array('images' => array());
+	if ($callingParams['extractEmbeddedItems']) {
+		// Join short/full news into single line
+		$tempLine = $tvars['vars']['news']['short'].$tvars['vars']['news']['full'];
+		// Scan for <img> tag
+		if (preg_match_all("#\<img (.+?)(?: *\/?)\>#", $tempLine, $m)) {
+			// Analyze all found <img> tags for parameters
+			foreach ($m[1] as $kl) {
+				$klp = $parse->parseBBCodeParams($kl);
+				// Add record if src="" parameter is set
+				if (isset($klp['src'])) {
+					$tvars['vars']['news']['embed']['images'] []= $klp['src'];
+				}
+			}
+		}
+	}
+	$tvars['vars']['news']['embed']['imgCount'] = count($tvars['vars']['news']['embed']['images']);
+
+
 	// Calculate exec time
 	$tX1 = $timer->stop(4);
 
@@ -252,8 +274,8 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	if ($callingParams['style'] == 'export_full')
 		return $tvars['vars']['full-story'];
 
-	if ($callingParams['style'] == 'export_array')
-		return array($tvars['vars']['short-story'], $tvars['vars']['full-story']);
+	if ($callingParams['style'] == 'exportVars')
+		return $tvars['vars'];
 
 
 	// Update visits counter if we're not in emulation mode
