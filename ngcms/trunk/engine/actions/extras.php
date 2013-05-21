@@ -36,22 +36,36 @@ $repoPluginInfo = repoSync();
 // ==============================================================
 $enable  = isset($_REQUEST['enable'])?$_REQUEST['enable']:'';
 $disable = isset($_REQUEST['disable'])?$_REQUEST['disable']:'';
-
-
-if (isset($_REQUEST['debugVars']) && $_REQUEST['debugVars']) {
-	plugins_load_config();
-	print "<pre>".var_export($PLUGINS['config'], true)."</pre>";
-	exit;
-}
+$manage  = (isset($_REQUEST['manageConfig']) && $_REQUEST['manageConfig'] && isset($_REQUEST['action']) && ($_REQUEST['action'] == 'commit'))?true:false;
 
 // Check for security token
-if ($enable || $disable) {
+if ($enable || $disable || $manage) {
 	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.extras'))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
 		ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras', 'ds_id' => $id), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));
 		exit;
 	}
 }
+
+if (isset($_REQUEST['manageConfig']) && $_REQUEST['manageConfig']) {
+	plugins_load_config();
+
+	if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'commit')) {
+		print "TRY COMMIT";
+	}
+	$confLine = json_encode(arrayCharsetConvert(0, $PLUGINS['config']));
+	$confLine = jsonFormatter($confLine);
+
+	$tVars = array(
+		'config'	=> $confLine,
+		'token'		=> genUToken('admin.extras'),
+	);
+	$xt = $twig->loadTemplate('skins/default/tpl/extras/manage_config.tpl');
+	echo $xt->render($tVars);
+
+	exit;
+}
+
 
 if ($enable) {
 	if (pluginSwitch($enable, 'on')) {
