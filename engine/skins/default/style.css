@@ -870,3 +870,36 @@ h1, h2, h3, h4 { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;   fo
 	text-align : center;
 	border : 1px solid #eeeeef;
 }
+
+
+.ngStickerClass {
+	margin:5px;
+	padding:15px;
+	width:250px;
+}
+
+.ngStickerClassExitBTN {
+	background:url('/engine/skins/default/images/delete.gif') no-repeat;
+	width:16px;
+	height:16px;
+	float:right;
+	margin:-5px -5px 0 0;
+	cursor:pointer;
+}
+
+
+.ngStickerClassClassic {
+	border:1px solid #A7CD10;
+	background-color:#E1FAB8;
+	border-radius:15px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+}
+
+.ngStickerClassError {
+	border:1px solid #E2365C;
+	background-color:#F7C8D2;
+	border-radius:15px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+}
