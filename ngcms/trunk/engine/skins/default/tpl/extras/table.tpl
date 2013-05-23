@@ -81,7 +81,6 @@ function setDisplayMode(mode) {
  
 </script>
 
-
 <div id="pluginMenu">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
@@ -124,4 +123,9 @@ function setDisplayMode(mode) {
  document.getElementById('pTypeInactive').className		= (qShowState == 2)?'pActive':'pInactive';
  document.getElementById('pTypeUninstalled').className	= (qShowState == 3)?'pActive':'pInactive';
 
+$(document).ready(function(){
+	ngNotifySticker({note:'Загрузка страницы - успешно.', closeBTN: true});
+	ngNotifySticker({note:'Проверка доступов - ОШИБКА.', sticked: true, className: 'ngStickerClassError'});
+	ngNotifySticker({note:'Отправка сообщения в полицию - успешно.', closeBTN: true});
+});
 </script>

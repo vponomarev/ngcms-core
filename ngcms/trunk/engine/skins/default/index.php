@@ -41,12 +41,12 @@ $skin_header = <<<HTML
 <link rel="stylesheet" href="$config[home_url]/lib/jqueryui/jquery-ui-1.9.0.custom.css" type="text/css"/>
 <link rel="stylesheet" href="$config[home_url]/lib/jquery-ui-timepicker-addon.css" type="text/css"/>
 <link rel="stylesheet" href="$config[home_url]/lib/jquery.multiselect.css" type="text/css"/>
-<script type="text/javascript" src="$config[home_url]/lib/functions.js"></script>
-<script type="text/javascript" src="$config[home_url]/lib/admin.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-ui-1.9.0.custom.min.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/jquery.multiselect.min.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/functions.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/admin.js"></script>
 </head>
 <body>
 <div id="loading-layer"><img src="$skins_url/images/loading.gif" alt="" /> Loading ...</div>
