@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
 // Name: rpc.php
 // Description: Service functions controller
 // Author: Vitaly Ponomarev
@@ -68,8 +68,9 @@ function processJSON(){
 
 	$methodName = (isset($_POST['methodName']))?$_POST['methodName']:(isset($_GET['methodName'])?$_GET['methodName']:'');
 	switch ($methodName) {
-		case 'admin.rewrite.submit':	$out = rpcRewriteSubmit($params); break;
-		case 'core.users.search':	$out = rpcAdminUsersSearch($params); break;
+		case 'admin.rewrite.submit':			$out = rpcRewriteSubmit($params); break;
+		case 'core.users.search':				$out = rpcAdminUsersSearch($params); break;
+		case 'core.registration.checkParams': 	$out = coreCheckRegParams($params);break;
 		default:
 			if (isset($RPCFUNC[$methodName])) {
 				$out = call_user_func($RPCFUNC[$methodName], $params);
@@ -186,3 +187,18 @@ function rpcAdminUsersSearch($params){
 	return array('status' => 1, 'errorCode' => 0, 'data' => array($params, $output));
 }
 
+// Online check if registration params are correct (login, email,...)
+function coreCheckRegParams($params){
+	global $config, $AUTH_METHOD;
+
+	// Scan incoming params
+	if (!is_array($params)) {
+		return array('status' => 0, 'errorCode' => 999, 'errorText' => 'Wrong params type');
+	}
+
+	$auth = $AUTH_METHOD[$config['auth_module']];
+	if (method_exists($auth, 'onlineCheckRegistration')) {
+		$output = $auth->onlineCheckRegistration($params);
+	}
+	return array('status' => 1, 'errorCode' => 0, 'data' => $output);
+}
