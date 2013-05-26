@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: cmodules.php
 // Description: Common CORE modules
 // Author: Vitaly Ponomarev
@@ -149,6 +149,9 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 			'manual'	=> $param['manual'],
 		);
 
+		if (isset($param['id']) && $param['id'])
+			$tRow['id'] = $param['id'];
+
 		if ($param['error']) {
 			$tRow['flags']['isError'] = true;
 			$tRow['error'] = str_replace('%error%',$param['error'],$lang['param_error']);
@@ -169,13 +172,13 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 	foreach ($tVars['entries'] as $k => $param) {
 		$tInput = '';
 		if ($param['type'] == 'text') {
-			$tInput = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
+			$tInput = '<textarea '.((isset($param['id'])&&$param['id'])?'id="'.$param['id'].'" ':'').'name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
 		} else if ($param['type'] == 'input') {
-			$tInput = '<input name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
+			$tInput = '<input '.((isset($param['id'])&&$param['id'])?'id="'.$param['id'].'" ':'').'name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
 		} else if (($param['type'] == 'password')||($param['type'] == 'hidden')) {
-			$tInput = '<input name="'.$param['name'].'" type="'.$param['type'].'" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
+			$tInput = '<input '.((isset($param['id'])&&$param['id'])?'id="'.$param['id'].'" ':'').'name="'.$param['name'].'" type="'.$param['type'].'" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
 		} else if ($param['type'] == 'select') {
-			$tInput = '<select name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>';
+			$tInput = '<select '.((isset($param['id'])&&$param['id'])?'id="'.$param['id'].'" ':'').'name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>';
 			foreach ($param['values'] as $oid => $oval) {
 				$tInput.= '<option value="'.$oid.'"'.($param['value']==$oid?' selected':'').'>'.$oval.'</option>';
 			}
