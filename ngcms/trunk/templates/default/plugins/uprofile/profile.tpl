@@ -47,7 +47,7 @@ function validate_form() {
 			<tr>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_40.gif" width="7" height="36"></td>
-				<td background="{tpl_url}/images/2z_41.gif" width="100%">&nbsp;<b><font color="#FFFFFF">{l_uprofile:profile_of} - {name}</font></b></td>
+				<td background="{tpl_url}/images/2z_41.gif" width="100%">&nbsp;<b><font color="#FFFFFF">{l_uprofile:profile_of} {name}</font></b></td>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_44.gif" width="7" height="36"></td>
 			</tr>
