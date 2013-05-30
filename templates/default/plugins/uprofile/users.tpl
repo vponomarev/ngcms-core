@@ -1,3 +1,4 @@
+<div id="uprofileReplaceForm">
 <table border="0" width="100%" id="table1" cellspacing="0" cellpadding="0">
 	<tr>
 		<td>
@@ -5,7 +6,7 @@
 			<tr>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_40.gif" width="7" height="36"></td>
-				<td background="{tpl_url}/images/2z_41.gif" width="100%">&nbsp;<b><font color="#FFFFFF">{l_uprofile:profile_of} {user}</font></b></td>
+				<td background="{tpl_url}/images/2z_41.gif" width="100%">&nbsp;<b><font color="#FFFFFF">{l_uprofile:profile_of} {user}</font></b>{% if (user.flags.isOwnProfile) %} <b> [<a href="#" onclick="ng_uprofile_editCall(); return false;">Редактировать</a></b> ]	{% endif %}</td>
 				<td>
 				<img border="0" src="{tpl_url}/images/2z_44.gif" width="7" height="36"></td>
 			</tr>
@@ -49,7 +50,7 @@
 </tr>
 <tr>
 <td style="padding: 5px;" class="entry"><b>{l_uprofile:icq}:</b></td>
-<td style="padding: 5px;" class="entry">{icq} &nbsp; &nbsp; {icqimg}</td>
+<td style="padding: 5px;" class="entry">{icq} &nbsp; &nbsp; {icq}</td>
 </tr>
 <tr>
 <td style="padding: 5px; background-color: #f9fafb;" class="entry"><b>{l_uprofile:from}:</b></td>
@@ -60,7 +61,7 @@
 <td style="padding: 5px;" class="entry">{info}</td>
 </tr>
 </table>
-[xvalue_petname][xvalue_photos]
+{{ p.xfields.photos.value }}
 </td>
 </tr>
 </table>
@@ -84,3 +85,22 @@
 		</td>
 	</tr>
 </table>
+</div>
+{% if (user.flags.isOwnProfile) %}
+<script type="text/javascript" language="javascript">
+function ng_uprofile_editCall() {
+	$.post('/engine/rpc.php', { json : 1, methodName : 'plugin.uprofile.editForm', rndval: new Date().getTime(), params : json_encode({ 'token' : '{{ token }}' }) }, function(data) {
+		// Try to decode incoming data
+		try {
+			resTX = eval('('+data+')');
+		} catch (err) { alert('Error parsing JSON output. Result: '+linkTX.response); }
+		if (!resTX['status']) {
+			ngNotifyWindow('Error ['+resTX['errorCode']+']: '+resTX['errorText'], 'ERROR');
+		} else {
+			$('#uprofileReplaceForm').html(resTX['data']);
+		}
+	}).error(function() { ngNotifyWindow('HTTP error during request', 'ERROR'); });
+
+}
+</script>
+{% endif %}
