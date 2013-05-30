@@ -874,6 +874,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			'pages' => array(
 				'current'	=> $cstart,
 				'total'		=> $pages_count,
+				'output'	=> $paginationOutput,
 			)
 		);
 
