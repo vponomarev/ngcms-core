@@ -10,6 +10,7 @@
 <link href="{home}/rss.xml" rel="alternate" type="application/rss+xml" title="RSS" />
 <script type="text/javascript" src="{admin_url}/includes/js/functions.js"></script>
 <script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
+<script type="text/javascript" src="{admin_url}/includes/js/jquery-1.6.3.min.js"></script>
 <title>{titles}</title>
 </head>
 <body>
@@ -194,7 +195,6 @@
 {plugin_lastnews}
 </td></tr>
 [/isplugin]
-
 
 <!-- inc begin -->
 [isplugin voting]
