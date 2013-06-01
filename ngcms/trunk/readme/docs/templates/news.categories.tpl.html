@@ -116,9 +116,10 @@
 	&lt;/li&gt;
 		&lt;!-- Если после этой категории закрывается 1 или несколько уровней - выводим закрывающиеся &lt;/ul&gt; --&gt;
 		{% if isSet(entry.closeToLevel) %}
-		{% for i in entry.closeToLevel .. entry.level %}
-			&lt;/ul&gt;&lt;/li&gt;
-		{% endfor %}
+			{% for i in (entry.closeToLevel+1) .. entry.level %}
+				&lt;/ul&gt;&lt;/li&gt;
+			{% endfor %}
+		{% endif %}
 	{% endif %}
 {% endfor %}
 </pre>
