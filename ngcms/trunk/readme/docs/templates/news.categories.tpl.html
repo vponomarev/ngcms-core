@@ -66,7 +66,7 @@
 		&lt;b>
 	{% endif %}
 	{{ entry.cat }}
-	{% if (entry.flags.active) %}
+	{% if (not entry.flags.active) %}
 		&lt;/a>
 	{% else %}
 		&lt;/b>
@@ -97,7 +97,7 @@
 		&lt;b>
 	{% endif %}
 	{{ entry.cat }}
-	{% if (entry.flags.active) %}
+	{% if (not entry.flags.active) %}
 		&lt;/a>
 	{% else %}
 		&lt;/b>
