@@ -1,8 +1,8 @@
-<script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
-<script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
+<script type="text/javascript" src="{{ admin_url }}/includes/js/ajax.js"></script>
+<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
 <script type="text/javascript">
 // Process RPC requests for categories
-var categoryUToken = '{token}';
+var categoryUToken = '{{ token }}';
 
 function categoryModifyRequest(cmd, cid) {
 	var rpcCommand = '';
@@ -32,23 +32,27 @@ function categoryModifyRequest(cmd, cid) {
 			try {
 		 		resTX = eval('('+linkTX.response+')');
 		 	} catch (err) {
-		 		alert('{l_fmsg.save.json_parse_error} '+linkTX.response);
+		 		alert('{{ lang['fmsg.save.json_parse_error'] }} '+linkTX.response);
 		 		return false;
 		 	}
 
 		 	// First - check error state
 		 	if (!resTX['status']) {
 		 		// ERROR. Display it
-		 		alert('Error ('+resTX['errorCode']+'): '+resTX['errorText']);
+				ngNotifyWindow(resTX['errorCode']+': '+resTX['errorText'], 'Error');
+		 		//alert('Error ('+resTX['errorCode']+'): '+resTX['errorText']);
 		 	} else {
 		 		if (resTX['content']) {
+					if (resTX['infoText']) {
+						ngNotifySticker(resTX['infoText'], {className: resTX['infoCode']?'ngStickerClassClassic':'ngStickerClassError'});
+					}
 		 			document.getElementById('admCatList').innerHTML = resTX['content'];
 		 		} else {
 		 			alert('Template error: no content received from server for update, server response: '+linkTX.response);
 		 		}
 		 	}
 	 } else {
-	 	alert('{l_fmsg.save.httperror} '+linkTX.responseStatus[0]);
+	 	alert('{{ lang['fmsg.save.httperror'] }} '+linkTX.responseStatus[0]);
 	 }
 	}
 	linkTX.runAJAX();
@@ -58,7 +62,7 @@ function categoryModifyRequest(cmd, cid) {
 </script>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width="100%" colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=categories">{l_categories_title}</a></td>
+<td width="100%" colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=categories">{{ lang['categories_title'] }}</a></td>
 </tr>
 </table>
 <div id="list">
@@ -66,19 +70,19 @@ function categoryModifyRequest(cmd, cid) {
 <thead>
 <tr align="left" class="contHead">
 <td width="5%">#</td>
-<td>{l_title}</td>
-<td>{l_alt_name}</td>
-<td>{l_category.header.menushow}</td>
-<td>{l_category.header.template}</td>
-<td>{l_news}</td>
-<td width="160">{l_action}</td>
+<td>{{ lang['title'] }}</td>
+<td>{{ lang['alt_name'] }}</td>
+<td>{{ lang['category.header.menushow'] }}</td>
+<td>{{ lang['category.header.template'] }}</td>
+<td>{{ lang['news'] }}</td>
+<td width="160">{{ lang['action'] }}</td>
 </tr>
 </thead>
 <tbody id="admCatList">
-{cat_tree}
+{% include "skins/default/tpl/categories/entries.tpl" %}
 </tbody>
 <tfoot>
-<tr><td colspan="8" class="contentEdit" align="right">&nbsp; [perm.modify]<form method="get" action=""><input type="hidden" name="mod" value="categories"/><input type="hidden" name="action" value="add"/><input type="submit" value="Добавить категорию" class="button" /></form>[/perm.modify]</td></tr>
+<tr><td colspan="8" class="contentEdit" align="right">&nbsp; {% if (flags.canModify) %}<form method="get" action=""><input type="hidden" name="mod" value="categories"/><input type="hidden" name="action" value="add"/><input type="submit" value="Добавить категорию" class="button" /></form>{% endif %}</td></tr>
 </tfoot>
 </table>
 

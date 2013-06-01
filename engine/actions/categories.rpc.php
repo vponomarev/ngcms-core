@@ -1,9 +1,9 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: categories.rpc.php
-// Description: Externally available library for CATEGORIES manipulation
+// Description: RPC library for CATEGORIES manipulation
 // Author: Vitaly Ponomarev
 //
 
@@ -17,11 +17,11 @@ $lang = LoadLang('categories', 'admin');
 // ////////////////////////////////////////////////////////////////////////////
 // Processing functions :: show list of categories
 // ///////////////////////////////////////////////////////////////////////////
-// retMode: 0 - print returned data
-//          1 - return data from function
-//			2 - return only cat_tree from function
+// retMode: 0 - print rendered category management page
+//          1 - return rendered category management page
+//			2 - return ONLY rendered category entries
 function admCategoryList($retMode = 0) {
-	global $mysql, $tpl, $PHP_SELF, $config, $lang, $AFILTERS;
+	global $mysql, $PHP_SELF, $twig, $config, $lang, $AFILTERS;
 
 
 	// Check for permissions
@@ -41,66 +41,64 @@ function admCategoryList($retMode = 0) {
 	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify');
 	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'details');
 
-	// Prepare list of rows
-	$tpl -> template('entries', tpl_actions.'categories');
-
 	// Fetch list of categories
 	$cList = $mysql->select("select * from ".prefix."_category order by posorder");
 	$cLen  = count($cList);
 
-	// Go through this list
+	// Prepare list of categories
+	$tEntries = array();
+	$tVars = array(
+		'token'		=>	genUToken('admin.categories'),
+		'php_self'	=>	$PHP_SELF,
+		'flags'		=> array(
+			'canView'		=> $permDetails,
+			'canModify'		=> $permModify,
+		),
+	);
+
 	foreach ( $cList as $num => $row) {
 		// Prepare data for template
-		$tvars['vars'] = array(
-			'token'		=>	genUToken('admin.categories'),
-			'php_self'	=>	$PHP_SELF,
-			'rid'		=>	$row['id'],
+		$tEntry = array(
+			'id'		=>	$row['id'],
 			'name'		=>	$row['name'],
 			'alt'		=>	$row['alt'],
 			'alt_url'	=>	$row['alt_url'],
 			'show_main'	=>	intval(substr($row['flags'],0,1)) ? ('<img src="'.skins_url.'/images/yes.png" alt="'.$lang['yesa'].'" title="'.$lang['yesa'].'"/>') : ('<img src="'.skins_url.'/images/no.png" alt="'.$lang['noa'].'"/>'),
 			'template'	=>	($row['tpl'] != '')?$row['tpl']:'--',
 			'news'		=>	($row['posts']>0)?$row['posts']:'--',
-			'showcat'	=>  (checkLinkAvailable('news', 'by.category')?
+			'linkView'	=>  (checkLinkAvailable('news', 'by.category')?
 							generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id']), array(), false, true):
 							generateLink('core', 'plugin', array('plugin' => 'news', 'handler' => 'by.category'), array('category' => $row['alt'], 'catid' => $row['id']), false, true)),
+			'flags'		=> array(
+				'showMain'	=> intval(substr($row['flags'],0,1))?1:0,
+			),
 		);
 
-		$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is']	= $permModify?'$1':'';
-		$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is']	= $permDetails?'$1':'';
-
 		// Prepare position
-		$tvars['vars']['cutter'] = '';
 		if ($row['poslevel'] > 0) {
-			$tvars['vars']['cutter'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
+			$tEntry['level'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
 		} else {
-			$tvars['vars']['cutter'] = '';
+			$tEntry['level'] = '';
 		}
-		$tvars['vars']['cutter'] = $tvars['vars']['cutter'] .
+		$tEntry['level'] = $tEntry['level'] .
 			'<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen-1) || ($cList[$num]['poslevel'] > $cList[$num+1]['poslevel'])))?'bottom':'').'.gif" />';
 		$tvars['regx']['#\[news\](.*?)\[\/news\]#is'] = ($row['posts']>0)?'$1':'';
 
-		$tpl -> vars('entries', $tvars);
-		$cat_tree .= $tpl -> show('entries');
+		$tEntries []= $tEntry;
 	}
 
-
-	// Prepare main template
-	$tvars['vars']['cat_tree'] = $cat_tree;
-
-	// Check for permissions for adding new category
-	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
-
-	$tpl -> template('table', tpl_actions.'categories');
-	$tpl -> vars('table', $tvars);
+	$tVars['entries'] = $tEntries;
 
 	switch ($retMode) {
 		case 1:
-			return $tpl->show('table');
+			$xt = $twig->loadTemplate('skins/default/tpl/categories/table.tpl');
+			return $xt->render($tVars);
 		case 2:
-			return $cat_tree;
+			$xt = $twig->loadTemplate('skins/default/tpl/categories/entries.tpl');
+			return $xt->render($tVars);
 		default:
-			echo $tpl -> show('table');
+			$xt = $twig->loadTemplate('skins/default/tpl/categories/table.tpl');
+			echo $xt->render($tVars);
 	}
 }
 
@@ -113,6 +111,8 @@ function admCategoryList($retMode = 0) {
 //  * id                   -- id of category to move
 function admCategoryReorder($params = array()) {
 	global $catz, $mysql;
+
+	$moveResult = 0;
 
 	$tree[0] = array('parent' => 0, 'children' => array(), 'poslevel' => 0);
 	foreach($mysql->select("select * from ".prefix."_category order by posorder", 1) as $v){
@@ -142,12 +142,14 @@ function admCategoryReorder($params = array()) {
 			$xt = $tree[$xpc]['children'][$xps-1];
 			$tree[$xpc]['children'][$xps-1] = $tree[$xpc]['children'][$xps];
 			$tree[$xpc]['children'][$xps] = $xt;
+			$moveResult = 1;
 		}
 
 		if (($xps !== FALSE) && ($params['mode'] == 'down') && ($xps < ($xpl-1))) {
 			$xt = $tree[$xpc]['children'][$xps+1];
 			$tree[$xpc]['children'][$xps+1] = $tree[$xpc]['children'][$xps];
 			$tree[$xpc]['children'][$xps] = $xt;
+			$moveResult = 1;
 		}
 	}
 
@@ -192,6 +194,7 @@ function admCategoryReorder($params = array()) {
 		}
 		$num++;
 	}
+	return $moveResult;
 }
 function admCategoriesRPCmodify($params) {
 	global $userROW, $mysql, $catmap, $catz;
@@ -257,17 +260,17 @@ function admCategoriesRPCmodify($params) {
 				$data = '[permission denied]';
 			}
 
-			return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'content' => arrayCharsetConvert(0,$data)));
+			return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => 1, 'infoText' => 'Category was deleted', 'content' => arrayCharsetConvert(0,$data)));
 
 		// Move category UP/DOWN
 		case 'up':
 		case 'down':
-			admCategoryReorder(array('mode' => $params['mode'], 'id' => intval($params['id'])));
+			$moveResult = admCategoryReorder(array('mode' => $params['mode'], 'id' => intval($params['id'])));
 
 			// * Rewrite page content
 			$data = admCategoryList(2);
 
-			return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'content' => arrayCharsetConvert(0,$data)));
+			return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => intval($moveResult), 'infoText' => arrayCharsetConvert(0,'<img src="/engine/skins/default/images/'.$params['mode'].'.gif"/> '.$catz[$catmap[$params['id']]]['name']), 'content' => arrayCharsetConvert(0,$data)));
 
 	}
 

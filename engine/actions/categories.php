@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2011 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: categories.php
 // Description: Category management
 // Author: Vitaly Ponomarev
@@ -38,7 +38,7 @@ function listSubdirs($dir) {
 // ///////////////////////////////////////////////////////////////////////////
 //
 function admCategoryAddForm(){
-	global $mysql, $tpl, $mod, $PHP_SELF, $config, $lang, $AFILTERS;
+	global $mysql, $tpl, $twig, $mod, $PHP_SELF, $config, $lang, $AFILTERS;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify')) {
@@ -59,28 +59,23 @@ function admCategoryAddForm(){
 	}
 
 
-	$tvars['vars'] = array(
+	$tVars = array(
 		'php_self'	=>	$PHP_SELF,
 		'parent'	=>	makeCategoryList(array('name' => 'parent', 'doempty' => 1, 'resync' => ($_REQUEST['action']?1:0))),
 		'orderlist'	=>	OrderList(''),
 		'token'		=> genUToken('admin.categories'),
 		'tpl_list'	=> $tpl_list,
 		'template_mode'		=>  $templateMode,
+		'flags'		=> array(
+			'haveMeta'	=> $config['meta']?1:0,
+		),
 	);
 
-	if ($config['meta']) {
-		$tvars['vars']['[meta]']	=	'';
-		$tvars['vars']['[/meta]']	=	'';
-	} else{
-		$tvars['regx']["'\\[meta\\].*?\\[/meta\\]'si"] = "";
-	}
-	$tvars['vars']['extend'] = '';
-
 	if (is_array($AFILTERS['categories']))
-		foreach ($AFILTERS['categories'] as $k => $v) { $v->addCategoryForm($tvars); }
+		foreach ($AFILTERS['categories'] as $k => $v) { $v->addCategoryForm($tVars); }
 
-	$tpl -> vars('add', $tvars);
-	echo $tpl -> show('add');
+	$xt = $twig->loadTemplate('skins/default/tpl/categories/add.tpl');
+	echo $xt->render($tVars);
 }
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -92,6 +87,7 @@ function admCategoryAdd() {
 
 	$SQL			= array();
 	$SQL['name']	= secure_html(trim($_REQUEST['name']));
+	$SQL['info']	= $_REQUEST['info'];
 	$SQL['alt']		= trim($_REQUEST['alt']);
 	$SQL['parent']	= intval($_REQUEST['parent']);
 	$SQL['icon']	= $_REQUEST['icon'];
@@ -228,7 +224,7 @@ function admCategoryAdd() {
 // ///////////////////////////////////////////////////////////////////////////
 //
 function admCategoryEditForm(){
-	global $mysql, $lang, $mod, $tpl, $config, $AFILTERS;
+	global $mysql, $lang, $mod, $tpl, $config, $twig, $AFILTERS;
 
 	// Check for permissions
 	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify');
@@ -260,7 +256,7 @@ function admCategoryEditForm(){
 		$templateMode .= '<option value="'.$k.'"'.(($k == intval(substr($row['flags'], 2, 1)))?' selected="selected"':'').'>'.$lang['template_mode.'.$v].'</option>';
 	}
 
-	$tvars['vars'] = array(
+	$tVars = array(
 		'php_self'		=>	$PHP_SELF,
 		'parent'		=> makeCategoryList(array('name' => 'parent', 'selected' => $row['parent'], 'skip' => $row['id'], 'doempty' => 1)),
 		'catid'			=>	$row['id'],
@@ -271,41 +267,34 @@ function admCategoryEditForm(){
 		'description'	=>	secure_html($row['description']),
 		'keywords'		=>	secure_html($row['keywords']),
 		'icon'			=>	secure_html($row['icon']),
-		'check'			=>	(substr($row['flags'],0, 1))?'checked="checked"':'',
 		'tpl_value'		=>	secure_html($row['tpl']),
 		'number'		=>	$row['number'],
-		'show.link'		=>  $showLink,
-		'template_mode'		=>  $templateMode,
+		'show_link'		=>  $showLink,
+		'template_mode'	=>  $templateMode,
 		'tpl_list'		=>	$tpl_list,
 		'info'			=>	secure_html($row['info']),
 		'token'			=> genUToken('admin.categories'),
+		'flags'		=> array(
+			'haveMeta'		=> $config['meta']?1:0,
+			'canModify'		=> $permModify?1:0,
+			'showInMenu'	=> (substr($row['flags'],0, 1))?1:0,
+			'haveAttach'	=> $row['icon_id'],
+		),
 	);
 
-	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
-
-	// Check for attached images
 	if ($row['icon_id']) {
-		$tvars['regx']['#\[is\.attach\](.*?)\[\/is\.attach\]#is'] = '$1';
-		$tvars['vars']['attach_url'] = $config['attach_url'].'/'.$row['icon_folder'].'/'.($row['icon_preview']?'thumb/':'').$row['icon_name'];
-
-	} else {
-		$tvars['regx']['#\[is\.attach\](.*?)\[\/is\.attach\]#is'] = '';
+		$tVars['attach_url'] = $config['attach_url'].'/'.$row['icon_folder'].'/'.($row['icon_preview']?'thumb/':'').$row['icon_name'];
 	}
 
-	if ($config['meta']) {
-		$tvars['vars']['[meta]']	=	'';
-		$tvars['vars']['[/meta]']	=	'';
-	} else{
-		$tvars['regx']['/\[meta\].*?\[\/meta\]/si'] = '';
-	}
-
-	$tvars['vars']['extend'] = '';
 	if (is_array($AFILTERS['categories']))
-		foreach ($AFILTERS['categories'] as $k => $v) { $v->editCategoryForm($catid, $row, $tvars); }
+		foreach ($AFILTERS['categories'] as $k => $v) { $v->editCategoryForm($catid, $row, $tVars); }
 
-	$tpl -> template('edit', tpl_actions.$mod);
-	$tpl -> vars('edit', $tvars);
-	echo $tpl -> show('edit');
+	$xt = $twig->loadTemplate('skins/default/tpl/categories/edit.tpl');
+	echo $xt->render($tVars);
+
+//	$tpl -> template('edit', tpl_actions.$mod);
+//	$tpl -> vars('edit', $tvars);
+//	echo $tpl -> show('edit');
 }
 
 // ////////////////////////////////////////////////////////////////////////////

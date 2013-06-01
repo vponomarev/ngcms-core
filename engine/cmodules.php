@@ -129,8 +129,6 @@ function generate_reg_page($params, $values = array(), $msg = '') {
 		'flags'	=> array(),
 	);
 
-	$tpl -> template('registration.entries', tpl_site);
-
 	if ($msg) { msg(array("text" => $msg)); }
 
 	// prepare variable list
