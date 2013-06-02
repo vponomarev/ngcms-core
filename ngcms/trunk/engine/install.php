@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
 // Name: install.php
 // Description: System installer
 // Author: Vitaly Ponomarev
@@ -356,11 +356,6 @@ function doConfig_perm() {
 	foreach (array('register_globals', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase') as $flag) {
 		$tvars['vars']['flag:'.$flag]     = ini_get($flag)?'<font color="red">'.$lang['perm.php.on'].'</font>':$lang['perm.php.off'];
 		if (ini_get($flag)) { $warning++; }
-	}
-	// * flags that should be turned on
-	foreach (array('allow_call_time_pass_reference') as $flag) {
-		$tvars['vars']['flag:'.$flag]     = ini_get($flag)?$lang['perm.php.on']:'<font color="red">'.$lang['perm.php.off'].'</font>';
-		if (!ini_get($flag)) { $warning++; }
 	}
 
 	if ($error) {
