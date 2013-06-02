@@ -323,7 +323,7 @@ function fixdb_plugin_install($module, $params, $mode='install', $silent = false
 			}
 
 			// Check if different character set are supported [ version >= 4.1.1 ]
-			$charset = is_array($mysql->record("show variables like 'character_set_client'"))?' DEFAULT CHARSET=CP1251':'';
+			$charset = is_array($mysql->record("show variables like 'character_set_client'"))?(' DEFAULT CHARSET='.($table['charset']?$table['charset']:'CP1251')):'';
 
 			$query = "create table ".$chgTableName." (".implode(', ',$fieldlist).($table['key']?', '.$table['key']:'').")".$charset.($table['engine']?' engine='.$table['engine']:'');
 			$mysql->query($query);
