@@ -241,6 +241,7 @@ class tpl {
 		$data = str_replace('{skins_url}', skins_url, $data);
 		$data = str_replace('{tpl_url}', tpl_url, $data);
 		$data = str_replace('{admin_url}', admin_url, $data);
+		$data = str_replace('{scriptLibrary}', scriptLibrary, $data);
 
 		if (isset($params['inline']) && $params['inline'])
 			return $data;

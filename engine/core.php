@@ -390,8 +390,9 @@ $timer->registerEvent('ALL core-related plugins are executed');
 // - TWIG: Reconfigure allowed template paths - site template is also available
 $twigLoader->setPaths(array(tpl_site, root));
 
-// - TWIG: Added global variable `tpl_url`
+// - TWIG: Added global variable `tpl_url`, `scriptLibrary`
 $twig->addGlobal('tpl_url',		tpl_url);
+$twig->addGlobal('scriptLibrary',	scriptLibrary);
 
 
 // Lang files are loaded _after_ executing core scripts. This is done for switcher plugin
