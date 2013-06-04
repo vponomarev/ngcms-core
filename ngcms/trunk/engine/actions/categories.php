@@ -260,12 +260,12 @@ function admCategoryEditForm(){
 		'php_self'		=>	$PHP_SELF,
 		'parent'		=> makeCategoryList(array('name' => 'parent', 'selected' => $row['parent'], 'skip' => $row['id'], 'doempty' => 1)),
 		'catid'			=>	$row['id'],
-		'name'			=>	secure_html($row['name']),
+		'name'			=>	$row['name'],
 		'alt'			=>	secure_html($row['alt']),
 		'alt_url'		=>	secure_html($row['alt_url']),
 		'orderlist'		=>	OrderList($row['orderby'], true),
-		'description'	=>	secure_html($row['description']),
-		'keywords'		=>	secure_html($row['keywords']),
+		'description'	=>	$row['description'],
+		'keywords'		=>	$row['keywords'],
 		'icon'			=>	secure_html($row['icon']),
 		'tpl_value'		=>	secure_html($row['tpl']),
 		'number'		=>	$row['number'],
@@ -307,7 +307,7 @@ function admCategoryEdit(){
 	//print "<pre>POST DATA:\n".var_export($_POST, true)."\n\nFILES: ".var_export($_FILES, true)."</pre>";
 
 	$SQL			= array();
-	$SQL['name']	= $_REQUEST['name'];
+	$SQL['name']	= secure_html($_REQUEST['name']);
 	$SQL['info']	= $_REQUEST['info'];
 	$SQL['alt']		= trim($_REQUEST['alt']);
 	$SQL['parent']	= intval($_REQUEST['parent']);
