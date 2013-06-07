@@ -227,6 +227,8 @@ if (!$SUPRESS_TEMPLATE_SHOW) {
 // ===================================================================
 // Make page output
 // ===================================================================
+// Close opened sessions to avoid blocks
+session_write_close();
 
 // Run CRON tasks
 $cron->run();
