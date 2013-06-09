@@ -184,6 +184,9 @@ function showNews($handlerName, $params) {
 			// Sort news for `category` mode
 			$callingParams['pin'] = 1;
 
+			// Notify that we use 'pagination category' mode
+			$callingParams['paginationCategoryID'] = $currentCategory['id'];
+
 			// Generate news content
 			$tableVars = news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
 

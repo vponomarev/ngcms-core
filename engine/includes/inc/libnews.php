@@ -464,6 +464,7 @@ function newsProcessFilter($conditions) {
 //			2	-	without taking PIN into account
 //		'disablePagination'	- Disable generation of page information
 //		'extractEmbeddedItems'	- Extract embedded images/files from news body
+//		'paginationCategoryID'	- IF function is called in 'by.category' we can specify categoryID here, this will optimize 'page count' query
 //
 function news_showlist($filterConditions = array(), $paginationParams = array(), $callingParams = array()){
 	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $vars, $parse, $template, $lang, $PFILTERS, $twig, $parse;
@@ -547,7 +548,11 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$newsCount = count($selectResult);
 		$pages_count = 1;
 	} else {
-		$query['count']		=	"SELECT count(*) as count FROM ".prefix."_news WHERE ".$query['filter'];
+		if (isset($callingParams['paginationCategoryID']) && ($callingParams['paginationCategoryID'] > 0)) {
+			$query['count'] = 'SELECT count(*) FROM '.prefix.'_news_map where categoryID = '.db_squote($callingParams['paginationCategoryID']);
+		} else {
+			$query['count']		=	"SELECT count(*) as count FROM ".prefix."_news WHERE ".$query['filter'];
+		}
 		$newsCount = $mysql->result($query['count']);
 		$pages_count = ceil($newsCount / $showNumber);
 	}
