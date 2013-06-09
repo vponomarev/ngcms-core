@@ -31,7 +31,6 @@
 <tr><td>Magic Quotes GPC</td><td>{l_perm.php.off}</td><td>{flag:magic_quotes_gpc}</td></tr>
 <tr><td>Magic Quotes Runtime</td><td>{l_perm.php.off}</td><td>{flag:magic_quotes_runtime}</td></tr>
 <tr><td>Magic Quotes Sybase</td><td>{l_perm.php.off}</td><td>{flag:magic_quotes_sybase}</td></tr>
-<tr><td><small>Allow call time pass reference</small></td><td>{l_perm.php.on}</td><td>{flag:allow_call_time_pass_reference}</td></tr>
 </table>
 </div>
 </div>
