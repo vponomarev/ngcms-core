@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
 // Name: admin.php
 // Description: administration panel
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -19,6 +19,12 @@ if (!defined('NGCMS')) die ('HAL');
 @header("Cache-Control: no-store, no-cache, must-revalidate");
 @header("Cache-Control: post-check=0, pre-check=0", false);
 @header("Pragma: no-cache");
+
+// Pre-configure required global variables
+global $action, $subaction, $mod;
+$action		= isset($_REQUEST['action'])?$_REQUEST['action']:'';
+$subaction	= isset($_REQUEST['action'])?$_REQUEST['action']:'';
+$mod		= isset($_REQUEST['action'])?$_REQUEST['action']:'';
 
 // Activate output buffer
 ob_start();
