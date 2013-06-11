@@ -1,6 +1,8 @@
+
+
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" /><a href="?mod=perm">Управление правами доступа</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=perm">Управление правами доступа</a></td>
 </tr>
 </table>
 
@@ -33,7 +35,7 @@ function onUpdateSubmit() {
 </script>
 
 <!-- Form header -->
-<form id="permSubmit" name="permSubmit" method="post" action="admin.php?mod=perm">
+<form id="permSubmit" name="permSubmit" method="POST">
 <input type="hidden" name="save" value="1"/>
 <input type="hidden" name="token" value="{{ token }}"/>
 <!-- /Form header -->
@@ -59,35 +61,20 @@ function onUpdateSubmit() {
 {% if (block.description) %}   <i>{{ block.description }}</i><br/>{% endif %}
 
 {% for area in block.items %}
-   {% if (area.title != '') %}<h2>{{ area.title }}</h2>{% endif %}
+   <h2>{{ area.title }}</h2>
 {% if (area.description) %}   <i>{{ area.description }}</i><br/><br/>{% endif %}
 
    <table width="100%" class="content">
-    <thead><tr class="contHead"><td><b>#ID</b></td><td><b>Описание</b></td><td width="90"><b>Доступ</b></td></thead>
+    <thead><tr class="contHead"><td><b>#ID</b></td><td><b>Описание</b></td><td width="90"><b>Доступ</b></td></td></thead>
 {% for entry in area.items %}
     <tr class="contentEntry1">
-     <td width="180"><strong>{{entry.id}}</strong></td><td>{{ entry.title }}</td>
-     <td width="220">
-     {% if (entry.type == '') %}
-	  <select name="{{ entry.name }}|{{group.id}}" onchange="onUpdatePerm('{{ entry.name }}|{{group.id}}');">
+     <td><strong>{{entry.id}}</strong></td><td>{{ entry.title }}</td>
+     <td>
+	  <select name="{{ entry.name }}|{{group.id}}" onchange="onUpdatePerm('{{ entry.name }}|{{group.id}}');" value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
 	   <option value="-1">--</option>
 	   <option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>Нет</option>
 	   <option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>Да</option>
 	  </select>
-	  {% endif %}
-	  {% if entry.type == 'listCategoriesSelector' %}
-      <select style="width: 200px;" size="8" id="{{ entry.uniqId }}_{{ group.id }}" name="{{ entry.name }}|{{group.id}}[]" multiple="multiple">
-      <!-- {{ debugValue(entry.perm[group.id]) }} -->
-      {% for opt in entry.generatedOptions %}
-      	<option value="{{ opt.k }}"{% if (entry.perm[group.id][opt.k]) %} selected="selected"{% endif %}>{{ opt.v }}</option>
-      {% endfor %}
-      </select>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$("#{{ entry.uniqId }}_{{ group.id }}").multiselect();
-		});
-	</script>
-	  {% endif %}
 	 </td>
     </tr>
 {% endfor %}

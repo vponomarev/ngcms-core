@@ -302,7 +302,7 @@ function load_extras($action, $plugin = '') {
 				if (is_file(extras_dir.'/'.$value)) {
 				        $tX = $timer->stop(4);
 					include_once extras_dir.'/'.$value;
-					$timer->registerEvent('loadActionHandlers('.$action.'): preloaded file "'.$value.'" for '.($timer->stop(4) - $tX)." sec");
+					$timer->registerEvent('loadActionHandlers('.$action.'): preloaded file "'.$value.'" for '.round($timer->stop(4) - $tX, 4)." sec");
 					$PLUGINS['loaded:files'][$value] = 1;
 					$loadedCount ++;
 				} else {
@@ -376,14 +376,14 @@ function loadPluginLibrary($plugin, $libname = '') {
 		foreach ($list['libs'][$plugin] as $id => $file) {
 			$tX = $timer->stop(4);
 			include_once extras_dir.'/'.$list['active'][$plugin].'/'.$file;
-			$timer->registerEvent('loadPluginLibrary: '.$plugin.'.'.$id.' ['.$file.'] for '.($timer->stop(4) - $tX)." sec");
+			$timer->registerEvent('loadPluginLibrary: '.$plugin.'.'.$id.' ['.$file.'] for '.round($timer->stop(4) - $tX,4)." sec");
 		}
 		return true;
 	} else {
 		if (isset($list['libs'][$plugin][$libname])) {
 			$tX = $timer->stop(4);
 			include_once extras_dir.'/'.$list['active'][$plugin].'/'.$list['libs'][$plugin][$libname];
-			$timer->registerEvent('loadPluginLibrary: '.$plugin.' ['.$libname.'] for '.($timer->stop(4) - $tX)." sec");
+			$timer->registerEvent('loadPluginLibrary: '.$plugin.' ['.$libname.'] for '.round($timer->stop(4) - $tX, 4)." sec");
 			return true;
 		}
 		return false;
@@ -440,7 +440,7 @@ function executeActionHandler($action) {
 		foreach ($functions as $func) {
 			$tX = $timer->stop(4);
 			$output.=call_user_func($func);
-			$timer->registerEvent('executeActionHandler ('.$action.'): call function "'.$func.'" for '.($timer->stop(4) - $tX)." sec");
+			$timer->registerEvent('executeActionHandler ('.$action.'): call function "'.$func.'" for '.round($timer->stop(4) - $tX, 4)." sec");
 		}
 	}
 	return $output;

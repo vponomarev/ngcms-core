@@ -59,7 +59,7 @@ class mysql {
 			$result[] = $item;
 		}
 
-		if ($this->queryTimer) { $tX = '[ '.($timer->stop(4) - $tX).' ] '; } else { $tX = ''; }
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 
 		return $result;
@@ -83,7 +83,7 @@ class mysql {
 
 		$item = mysql_fetch_array($query, $am);
 
-		if ($this->queryTimer) { $tX = '[ '.($timer->stop(4) - $tX).' ] '; } else { $tX = ''; }
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 
 		return $item;
@@ -99,7 +99,7 @@ class mysql {
 			return array();
 		}
 
-		if ($this->queryTimer) { $tX = '[ '.($timer->stop(4) - $tX).' ] '; } else { $tX = ''; }
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 
 		return $query;
