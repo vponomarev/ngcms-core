@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: functions.php
 // Description: Common system functions
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -2773,4 +2773,12 @@ function jsonFormatter($json) {
 	}
 
 	return $result;
+}
+
+function ngLoadCategories() {
+	global $mysql, $catz, $catmap;
+	foreach ($mysql->select("select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `".prefix."_category` as nc left join `".prefix."_images` ni on nc.image_id = ni.id order by nc.posorder asc", 1) as $row) {
+		$catz[$row['alt']] = $row;
+		$catmap[$row['id']] = $row['alt'];
+	}
 }

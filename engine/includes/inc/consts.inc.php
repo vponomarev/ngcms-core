@@ -17,9 +17,10 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.3 + SVN [SVN1157+]');
+@define('engineVersion', '0.9.3 + SVN [SVN1167+]');
 
 @define('prefix', $config['prefix']);
+@define('uprefix',$config['uprefix']);
 @define('home', $config['home_url']);
 @define('scriptLibrary', $config['home_url'].'/lib');
 @define('localPrefix', (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $tempMatch))?$tempMatch[2]:'');
@@ -47,3 +48,4 @@
 
 @define('conf_pactive', confroot.'plugins.php', true);
 @define('conf_pconfig', confroot.'plugdata.php', true);
+

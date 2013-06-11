@@ -59,10 +59,12 @@ var ngSuggest = function(fieldID, params) {
 	this.searchDIV = this.opts.sId ? document.getElementById(this.opts.sId) : false;
 	if (!this.searchDIV) {
 		this.searchDIV = document.createElement('div');
-
+	
 		//document.body.appendChild(this.searchDIV);
 		var iDiv = document.createElement('div');
 		iDiv.style.position = 'relative';
+
+		iDiv.style.overflow='visible';
 		this.field.parentNode.appendChild(iDiv);
 		iDiv.appendChild(this.searchDIV);
 
