@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
 // Name: index.php
 // Description: core index file
 // Author: NGCMS project team
@@ -22,14 +22,17 @@ gzip();
 $SYSTEM_FLAGS['info']['title'] = array ();
 $SYSTEM_FLAGS['info']['title']['header'] = home_title;
 
-$template['vars'] = array(
-	'what'			=>	engineName,
-	'version'		=>	engineVersion,
-	'home'			=>	home,
-	'titles'		=>	home_title,
-	'home_title'	=>	home_title,
-	'mainblock'	=>	'',
-	'htmlvars'	=> 	'',
+// Initialize main template array
+$template = array(
+	'vars'	=> array(
+		'what'			=>	engineName,
+		'version'		=>	engineVersion,
+		'home'			=>	home,
+		'titles'		=>	home_title,
+		'home_title'	=>	home_title,
+		'mainblock'	=>	'',
+		'htmlvars'	=> 	'',
+	),
 );
 
 // ===================================================================
@@ -67,17 +70,13 @@ if ($config['lock'] && (!is_array($userROW) || (!checkPermission(array('plugin' 
 // Start generating page
 // ===================================================================
 
-// External call: before executing activity
-exec_acts('index_pre');
+// External call: before executing URL handler
+executeActionHandler('index_pre');
 
 // Deactivate block [sitelock] ... [/sitelock]
 $template['vars']["[sitelock]"] = "";
 $template['vars']["[/sitelock]"] = "";
 
-
-//
-// Core URL processing block
-//
 
 // /////////////////////////////////////////////////////////// //
 // You may modify variable $systemAccessURL here (for hacks)   //
@@ -95,26 +94,23 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 	$UHANDLER->setOptions(array('localPrefix' => $match[2]));
 $runResult = $UHANDLER->run($systemAccessURL, array('debug' => false));
 
+// [[MARKER]] URL handler execution is finished
+$timer->registerEvent('URL handler execution is finished');
 
-// If no pages are catched
+
+// Generate fatal 404 error [NOT FOUND] if URL handler didn't found any task for execution
 if (!$runResult) {
 	error404();
 }
 
-
-//$link = generateLink('core', 'plugin', array('plugin' => 'rss_export'));
-//print "URL ForWArd: ".var_export($link, true);
-//print "Config status: ".$UHANDLER->configLoaded."</br>\n";
-//print "<pre>".var_export($UHANDLER->hList, true)."</pre><br/>\n";
-
-// Run plugins
-exec_acts('index');
+// External call: after executing URL handler
+executeActionHandler('index');
 
 
 // ===================================================================
 // Generate additional informational blocks
 // ===================================================================
-$timer->registerEvent('Master activity finished');
+$timer->registerEvent('General plugins execution is finished');
 
 // Generate category menu
 $template['vars']['categories'] = generateCategoryMenu();
@@ -135,9 +131,13 @@ $template['vars']['category'] = (isset($_REQUEST['category']) && ($_REQUEST['cat
 
 
 // ====================================================================
-// PLUGIN EXEC CALL: Exec actions that should be done after main page
-// parameters were generated
-exec_acts('index_post');
+// External call: All variables for main template are generated
+// ===================================================================
+executeActionHandler('index_post');
+
+
+// ===================================================================
+// Prepare JS/CSS/RSS references
 
 // Make empty OLD STYLE variables
 $template['vars']['metatags'] = '';
@@ -178,8 +178,8 @@ if (count($htmlrow))
 	$template['vars']['htmlvars'] .= join("\n",$htmlrow);
 
 // Add support of blocks [is-logged] .. [/isnt-logged] in main template
-$template['regx']['#\[is-logged\](.+?)\[/is-logged\]#is'] = $is_logged?'$1':'';
-$template['regx']['#\[isnt-logged\](.+?)\[/isnt-logged\]#is'] = $is_logged?'':'$1';
+$template['regx']['#\[is-logged\](.+?)\[/is-logged\]#is']		= is_array($userROW)?'$1':'';
+$template['regx']['#\[isnt-logged\](.+?)\[/isnt-logged\]#is']	= is_array($userROW)?'':'$1';
 
 
 // ***** EXECUTION TIME CATCH POINT *****
@@ -203,7 +203,7 @@ if ($config['debug']) {
 
 
 // ===================================================================
-// Make page output
+// Generate template for main page
 // ===================================================================
 // 0. Calculate memory PEAK usage
 $template['vars']['memPeakUsage'] = sprintf("%7.3f", (memory_get_peak_usage()/1024/1024));
@@ -225,21 +225,13 @@ if (!$SUPRESS_TEMPLATE_SHOW) {
 
 
 // ===================================================================
-// Make page output
+// Maintanance activities
 // ===================================================================
 // Close opened sessions to avoid blocks
 session_write_close();
 
-// Run CRON tasks
+// Run CRON
 $cron->run();
-
-//// Call maintanance actions
-//exec_acts('maintenance');
-
-//if ($config['auto_backup'] == "1") {
-//	AutoBackup(true);
-//}
-
 
 // Terminate execution of script
 coreNormalTerminate();
