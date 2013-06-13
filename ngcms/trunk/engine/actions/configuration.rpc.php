@@ -27,7 +27,7 @@ function admConfigurationTestDB($params) {
 		return array('status' => 0, 'errorCode' => 1, 'errorText' => 'Permission denied');
 	}
 
-	if (!is_array($params) || !isset($params['ip']) || !isset($params['port']) || !isset($params['dbpasswd']) || !isset($params['dbname'])) {
+	if (!is_array($params) || !isset($params['dbhost']) || !isset($params['dbname']) || !isset($params['dbpasswd']) || !isset($params['dbname'])) {
 		return array('status' => 0, 'errorCode' => 2, 'errorText' => 'Wrong params type');
 	}
 
@@ -89,7 +89,6 @@ function admConfigurationTestMemcached($params) {
 		// Some problems
 		return array('status' => 0, 'errorCode' => 6, 'errorText' => 'Unexpected error - GET/SET values are not equal');
 	}
-
 	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251','UTF-8', $lang['memcached_ok'])));
 }
 
