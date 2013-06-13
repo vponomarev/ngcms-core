@@ -11,14 +11,23 @@ class mysql {
 		$this->conn_db = $db;
 		$this->queryTimer = (isset($timer) && (method_exists($timer, 'stop')));
 
-		$this->connect = @mysql_connect($host, $user, $pass, true) or die('<h1>An Error Occurred</h1><hr />Unable to connect to the database!');
+		$this->connect = @mysql_connect($host, $user, $pass, true);
+		if (!$this->connect) {
+			if (!$noerror) {
+				die('<h1>An Error Occurred</h1><hr />Unable to connect to the database!');
+			}
+			$this->error = 1;
+			return false;
+		}
 		@mysql_query("/*!40101 SET NAMES 'cp1251' */", $this->connect);
 		if (!@mysql_select_db($db)) {
 			if (!$noerror) {
 				die('<h1>An Error Occurred</h1><hr />Unable to find the database <i>'.$db.'</i>!');
 			}
-			$this->error = 1;
+			$this->error = 2;
+			return false;
 		}
+		return true;
 	}
 
 	// Report an SQL error

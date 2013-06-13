@@ -172,6 +172,10 @@ class cacheClassMemcached extends cacheClassAbstract {
 		return $this->cache->getResultCode();
 	}
 
+	function getResultMessage() {
+		return $this->cache->getResultMessage();
+	}
+
 	function getResult() {
 		return array($this->cache->getResultCode(), $this->cache->getResultMessage());
 	}

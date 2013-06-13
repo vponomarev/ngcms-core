@@ -454,6 +454,18 @@ function msg($params, $mode = 0, $disp = -1) {
 	}
 }
 
+// Generate popup sticker with information block
+// $disp - flag [display mode]:
+//		   -1 - automatic mode
+//			0 - add into mainblock
+//			1 - print
+//			2 - return as result
+function msgSticker($msg, $type = '', $disp) {
+	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("'.htmlspecialchars($msg).'"'.(($type=="error")?', {sticked: true, className: "ngStickerClassError"}':'').');</script>';
+	print $output;
+}
+
+
 function TwigEngineMSG($type, $text, $info = '') {
 	$cfg = array('type' => $type);
 	if ($text)
