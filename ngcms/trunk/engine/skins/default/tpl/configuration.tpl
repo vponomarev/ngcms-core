@@ -1,27 +1,63 @@
-<script type="text/javascript">
-function ChangeOption(selectedOption) {
- var defaultOption='system';
- var myList = new Array('db', 'security', 'system', 'news', 'users', 'images', 'files', 'auth', 'multi');
- var found = 0, i = 0;
+<script type="text/javascript" language="javascript">
+function ngCheckDB() {
+	ngShowLoading();
+	$.post('/engine/rpc.php', { 
+			json : 1, 
+			methodName : 'admin.configuration.dbCheck', 
+			rndval: new Date().getTime(), 
+			params : json_encode(
+				{ 
+					'token' : '{token}', 
+					'dbhost' : $("#db_dbhost").val(), 
+					'dbname' : $("#db_dbname").val(), 
+					'dbuser' : $("#db_dbuser").val(), 
+					'dbpasswd' : $("#db_dbpasswd").val(), 
+				}
+			) }, function(data) {
+		ngHideLoading();
+		// Try to decode incoming data
+		try {
+			resTX = eval('('+data+')');
+		} catch (err) { ngNotifyWindow('{l_rpc_jsonError} '+data, '{l_notifyWindowError}'); }
+		if (!resTX['status']) {
+			ngNotifyWindow('Error ['+resTX['errorCode']+']: '+resTX['errorText'], '{l_notifyWindowInfo}');
+		} else {
+			ngNotifyWindow(resTX['errorText'], '{l_notifyWindowInfo}');
+		}
+	}).error(function() { ngHideLoading(); ngNotifyWindow('{l_rpc_httpError}', '{l_notifyWindowError}'); });
 
- for (i=0; i<myList.length; i++) {
-  if (myList[i] == selectedOption) found = 1;
-  document.getElementById(myList[i]).style.display=(myList[i] == selectedOption?'':'none');
-  document.getElementById('b_'+myList[i]).style.fontWeight=(myList[i] == selectedOption?'bold':'normal');
- }
 
- if (!found) {
-	document.getElementById(defaultOption).style.display='';
-	document.getElementById('b_'+defaultOption).style.fontWeight='bold';
- } else {
-	document.getElementById('selectedOption').value = selectedOption;
- }
+}
+
+function ngCheckMemcached() {
+	ngShowLoading();
+	$.post('/engine/rpc.php', { 
+			json : 1, 
+			methodName : 'admin.configuration.memcachedCheck', 
+			rndval: new Date().getTime(), 
+			params : json_encode(
+				{ 
+					'token' : '{token}', 
+					'ip' : $("#memcached_ip").val(), 
+					'port' : $("#memcached_port").val(), 
+					'prefix' : $("#memcached_prefix").val(), 
+				}
+			) }, function(data) {
+		ngHideLoading();
+		// Try to decode incoming data
+		try {
+			resTX = eval('('+data+')');
+		} catch (err) { ngNotifyWindow('{l_rpc_jsonError} '+data, '{l_notifyWindowError}'); }
+		if (!resTX['status']) {
+			ngNotifyWindow('Error ['+resTX['errorCode']+']: '+resTX['errorText'], '{l_notifyWindowInfo}');
+		} else {
+			ngNotifyWindow(resTX['errorText'], '{l_notifyWindowInfo}');
+		}
+	}).error(function() { ngHideLoading(); ngNotifyWindow('{l_rpc_httpError}', '{l_notifyWindowError}'); });
+
+
 }
 </script>
-
-<form method="post" action="{php_self}?mod=configuration&amp;subaction=save">
-<input type="hidden" name="token" value="{token}"/>
-<input type=hidden name="selectedOption" id="selectedOption" />
 
 <!-- Navigation bar -->
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
@@ -29,27 +65,27 @@ function ChangeOption(selectedOption) {
 <td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=configuration">{l_configuration_title}</a></td>
 </tr>
 </table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="100%" class="contentNav" align="center" valign="top">
-<input id="b_db"       style="width:90px;"  type="button" onclick="javascript:ChangeOption('db')" value="{l_db}" class="navbutton" />
-<input id="b_security" style="width:100px;" type="button" onclick="javascript:ChangeOption('security')" value="{l_security}" class="navbutton" />
-<input id="b_system"   style="width:140px;" type="button" onclick="javascript:ChangeOption('system')" value="{l_syst}" class="navbutton" />
-<input id="b_news"     style="width:80px;"  type="button" onclick="javascript:ChangeOption('news')" value="{l_sn}" class="navbutton" />
-<input id="b_users"    style="width:100px;" type="button" onclick="javascript:ChangeOption('users')" value="{l_users}" class="navbutton" />
-<input id="b_images"   style="width:100px;" type="button" onclick="javascript:ChangeOption('images')" value="{l_img}" class="navbutton" />
-<input id="b_files"    style="width:80px;"  type="button" onclick="javascript:ChangeOption('files')" value="{l_files}" class="navbutton" />
-<input id="b_auth"     style="width:90px;"  type="button" onclick="javascript:ChangeOption('auth')" value="{l_auth}" class="navbutton" />
-<input id="b_multi"    style="width:80px;"  type="button" onclick="javascript:ChangeOption('multi')" value="{l_multi}" class="navbutton" />
-</td>
-</tr>
-</table>
 
-<br/>
+<form method="post" action="{php_self}">
+<input type="hidden" name="mod" value="configuration" />
+<input type="hidden" name="token" value="{token}"/>
+<input type=hidden name="selectedOption" id="selectedOption" />
 
-<!-- (((((((((( CONTENT BLOCK )))))))))) -->
-<!-- ########## DB            ########## -->
-<div id="db" style="display: none;">
+
+<div id="userTabs">
+ <ul>
+  <li><a href="#userTabs-db">{l_db}</a></li>
+  <li><a href="#userTabs-security">{l_security}</a></li>
+  <li><a href="#userTabs-system">{l_syst}</a></li>
+  <li><a href="#userTabs-news">{l_sn}</a></li>
+  <li><a href="#userTabs-users">{l_users}</a></li>
+  <li><a href="#userTabs-imgfiles">{l_files}/{l_img}</a></li>
+  <li><a href="#userTabs-auth">{l_auth}</a></li>
+  <li><a href="#userTabs-cache">{l_cache}</a></li>
+  <li><a href="#userTabs-multi">{l_multi}</a></li>
+</ul>
+<!-- ########################## DB TAB ########################## -->
+<div id="userTabs-db">
 <!-- TABLE DB//Connection -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
@@ -57,23 +93,27 @@ function ChangeOption(selectedOption) {
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_dbhost}<br /><small>{l_example} localhost</small></td>
-<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[dbhost]' value='{c_dbhost}' size="40" /></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[dbhost]' value='{c_dbhost}' id="db_dbhost" size="40" /></td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_dbname}<br /><small>{l_example} ng</small></td>
-<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[dbname]' value='{c_dbname}' size="40" /></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[dbname]' value='{c_dbname}' id="db_dbname" size="40" /></td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_dbuser}<br /><small>{l_example} root</small></td>
-<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[dbuser]' value='{c_dbuser}' size="40" /></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[dbuser]' value='{c_dbuser}' id="db_dbuser" size="40" /></td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_dbpass}<br /><small>{l_example} password</small></td>
-<td width="50%" class="contentEntry2" valign="middle"><input class="password" type="password" name='save_con[dbpasswd]' value='{c_dbpasswd}' size="40" /></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="password" type="password" name='save_con[dbpasswd]' value='{c_dbpasswd}' id="db_dbpasswd" size="40" /></td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{l_dbprefix}<br /><small>{l_example} ng</small></td>
 <td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[prefix]' value='{c_prefix}' size="40" /></td>
+</tr>
+<tr>
+<td width="50%" class="contentEntry1">&nbsp;</td>
+<td width="50%" class="contentEntry2"><input type="button" value="{l_btn_checkDB}" onclick="ngCheckDB(); return false;"/></td>
 </tr>
 </table>
 <!-- END: TABLE DB//Connection -->
@@ -93,9 +133,8 @@ function ChangeOption(selectedOption) {
 </table>
 <!-- END: TABLE DB//Backup -->
 </div>
-
-<!-- ########## SECURYTY      ########## -->
-<div id="security" style="display: none;">
+<!-- ########################## SECURITY TAB ########################## -->
+<div id="userTabs-security">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
  <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_logging}</td>
@@ -162,9 +201,8 @@ function ChangeOption(selectedOption) {
 </tr>
 </table>
 </div>
-
-<!-- ########## SYSTEM        ########## -->
-<div id="system" style="display: none;">
+<!-- ########################## SYSTEM TAB ########################## -->
+<div id="userTabs-system">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
  <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_syst}</td>
@@ -244,8 +282,8 @@ function ChangeOption(selectedOption) {
 </table>
 </div>
 
-<!-- ########## NEWS          ########## -->
-<div id="news" style="display: none;">
+<!-- ########################## NEWS TAB ########################## -->
+<div id="userTabs-news">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_sn}</td>
@@ -331,10 +369,8 @@ function ChangeOption(selectedOption) {
 </tr>
 </table>
 </div>
-
-
-<!-- ########## USERS         ########## -->
-<div id="users" style="display: none;">
+<!-- ########################## USERS TAB ########################## -->
+<div id="userTabs-users">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_users}</td>
@@ -397,9 +433,37 @@ function ChangeOption(selectedOption) {
 </tr>
 </table>
 </div>
-
-<!-- ########## IMAGES        ########## -->
-<div id="images" style="display: none;">
+<!-- ########################## IMAGES TAB ########################## -->
+<div id="userTabs-imgfiles">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_files}</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_files_url}<br /><small>{l_example} http://server.com/uploads/files</small></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[files_url]' value='{c_files_url}' size="40" /></td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_files_dir}<br /><small>{l_example} /home/servercom/public_html/uploads/files/</small></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[files_dir]' value='{c_files_dir}' size="40" /></td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_attach_url}<br /><small>{l_example} http://server.com/uploads/dsn</small></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[attach_url]' value='{c_attach_url}' size="40" /></td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_attach_dir}<br /><small>{l_example} /home/servercom/public_html/uploads/dsn/</small></td>
+<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[attach_dir]' value='{c_attach_dir}' size="40" /></td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_files_ext}<br /><small>{l_files_ext_desc}</small></td>
+<td class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[files_ext]' value='{c_files_ext}' size="40" /></td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_files_max_size}<br /><small>{l_files_max_size_desc}</small></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[files_max_size]' value='{c_files_max_size}' style="width: 40px" /></td>
+</tr>
+</table>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_img}</td>
@@ -472,42 +536,8 @@ function ChangeOption(selectedOption) {
 <!-- END: IMAGE transform control -->
 </table>
 </div>
-
-<!-- ########## FILES         ########## -->
-<div id="files" style="display: none;">
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-<tr>
-<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_files}</td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_files_url}<br /><small>{l_example} http://server.com/uploads/files</small></td>
-<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[files_url]' value='{c_files_url}' size="40" /></td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_files_dir}<br /><small>{l_example} /home/servercom/public_html/uploads/files/</small></td>
-<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[files_dir]' value='{c_files_dir}' size="40" /></td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_attach_url}<br /><small>{l_example} http://server.com/uploads/dsn</small></td>
-<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[attach_url]' value='{c_attach_url}' size="40" /></td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_attach_dir}<br /><small>{l_example} /home/servercom/public_html/uploads/dsn/</small></td>
-<td class="contentEntry2" valign="middle"><input class="folder" type="text" name='save_con[attach_dir]' value='{c_attach_dir}' size="40" /></td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_files_ext}<br /><small>{l_files_ext_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[files_ext]' value='{c_files_ext}' size="40" /></td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_files_max_size}<br /><small>{l_files_max_size_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[files_max_size]' value='{c_files_max_size}' style="width: 40px" /></td>
-</tr>
-</table>
-</div>
-
-<!-- ########## AUTH          ########## -->
-<div id="auth" style="display: none;">
+<!-- ########################## AUTH TAB ########################## -->
+<div id="userTabs-auth">
  <table border="0" width="100%" cellspacing="0" cellpadding="0">
  <tr>
  <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_auth}</td>
@@ -526,9 +556,8 @@ function ChangeOption(selectedOption) {
  </tr>
 </table>
 </div>
-
-<!-- ########## MULTI         ########## -->
-<div id="multi" style="display: none;">
+<!-- ########################## MULTI TAB ########################## -->
+<div id="userTabs-multi">
  <table border="0" width="100%" cellspacing="0" cellpadding="0">
  <tr>
  <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_multi_info}</td>
@@ -551,6 +580,43 @@ function ChangeOption(selectedOption) {
 </table>
 </div>
 
+<!-- ########################## CACHE TAB ########################## -->
+<div id="userTabs-cache">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+ <td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />Memcached</td>
+</tr>
+<tr>
+<td class="contentEntry1">{l_memcached_enabled}<br /><small>{l_memcached_enabled#desc}</small></td>
+<td class="contentEntry2" valign="middle">{use_memcached}</td>
+</tr>
+<tr>
+<td width="50%" class="contentEntry1">{l_memcached_ip}<br /><small>{l_example} localhost</small></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[memcached_ip]' value='{c_memcached_ip}' id="memcached_ip" size="40" /></td>
+</tr>
+<tr>
+<td width="50%" class="contentEntry1">{l_memcached_port}<br /><small>{l_example} 11211</small></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[memcached_port]' value='{c_memcached_port}' id="memcached_port" size="40" /></td>
+</tr>
+<tr>
+<td width="50%" class="contentEntry1">{l_memcached_prefix}<br /><small>{l_example} ng</small></td>
+<td width="50%" class="contentEntry2" valign="middle"><input class="important" type="text" name='save_con[memcached_prefix]' value='{c_memcached_prefix}' id="memcached_prefix" size="40" /></td>
+</tr>
+<tr>
+<td width="50%" class="contentEntry1">&nbsp;</td>
+<td width="50%" class="contentEntry2"><input type="button" value="{l_btn_checkMemcached}" onclick="ngCheckMemcached(); return false;"/></td>
+</tr>
+</table>
+</div>
+
+
+</div>
+<script type="text/javascript" language="javascript">
+$(function(){
+  $("#userTabs").tabs();
+});
+</script>
+
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
 <td>&nbsp;</td>
@@ -566,7 +632,6 @@ function ChangeOption(selectedOption) {
 </td>
 </tr>
 </table>
-<script type="text/javascript">ChangeOption('{defaultSection}');</script>
 </td>
 </tr>
 </table>

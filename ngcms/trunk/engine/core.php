@@ -258,6 +258,8 @@ $UHANDLER->setOptions(array('domainPrefix' => $config['home_url']));
 if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 	$UHANDLER->setOptions(array('localPrefix' => $match[2]));
 
+// ** Load cache engine
+@include_once root.'includes/classes/cache.class.php';
 
 // ** Load MySQL DB engine library
 @include_once root.'includes/classes/mysql.class.php';

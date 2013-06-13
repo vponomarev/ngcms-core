@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: configuration.php
 // Description: Configuration managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -16,7 +16,7 @@ $lang		= LoadLang('configuration', 'admin');
 //
 // Save system config
 function systemConfigSave(){
-	global $lang, $config;
+	global $lang, $config, $mysql;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'modify')) {
@@ -33,8 +33,18 @@ function systemConfigSave(){
 	}
 
 	$save_con	= $_REQUEST['save_con'];
-	if (is_null($save_con) || !is_array($save_con))
+	if (is_null($save_con) || !is_array($save_con)) {
 		return false;
+	}
+
+	// Check if DB connection params are correct
+	$sqlTest = new mysql();
+	if (!$sqlTest->connect($save_con['dbhost'],$save_con['dbuser'], $save_con['dbpasswd'], $save_con['dbname'], 1)) {
+		msgSticker($lang['dbcheck_error'], 'error');
+		return false;
+	};
+
+
 
 	// Save our UUID or regenerate LOST UUID
 	$save_con['UUID'] = $config['UUID'];
@@ -60,21 +70,21 @@ function systemConfigSave(){
 		fwrite($fcHandler, $fcData);
 		fclose($fcHandler);
 
-		msg(array("text" => $lang['msgo_saved']));
+		msgSticker($lang['msgo_saved']);
+		//msg(array("text" => $lang['msgo_saved']));
 	} else {
 		msg(array("type" => 'error', "text" => $lang['msge_save_error'], "info" => $lang['msge_save_error#desc']));
 		return false;
 	}
 
 	ngSYSLOG(array('plugin' => '#admin', 'item' => 'configuration', 'ds_id' => $id), array('action' => 'saveConfig', 'list' => $fcData), null, array(1, ''));
-
 	return true;
 }
 
 //
 // Show configuration form
 function systemConfigEditForm(){
-	global $lang, $tpl, $AUTH_CAPABILITIES;
+	global $lang, $tpl, $AUTH_CAPABILITIES, $PHP_SELF;
 
 	// Check for token
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'details')) {
@@ -165,6 +175,7 @@ function systemConfigEditForm(){
 		'news_multicat_url'			=>	MakeDropDown(array(0 => $lang['news_multicat:0'], 1 => $lang['news_multicat:1']),  "save_con[news_multicat_url]", $config['news_multicat_url']),
 		'multiext_files'		=>	MakeDropDown(array(0 => $lang['noa'], 1 => $lang['yesa']),  "save_con[allow_multiext]", $config['allow_multiext']),
 		'home_title'			=>	secure_html($config['home_title']),
+		'use_memcached'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[use_memcached]", $config['use_memcached']),
 	);
 
 	// Prepare file name for STAMP

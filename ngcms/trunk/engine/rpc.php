@@ -30,7 +30,7 @@ loadActionHandlers('rpc:'.(is_array($userROW)?'active':'inactive'));
 
 // Function to preload ADMIN rpc funcs
 function loadAdminRPC($mod) {
-	if (in_array($mod, array('categories', 'extras', 'files', 'templates'))) {
+	if (in_array($mod, array('categories', 'extras', 'files', 'templates', 'configuration'))) {
 		@include_once('./actions/'.$mod.'.rpc.php');
 		return true;
 	}
