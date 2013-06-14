@@ -2301,7 +2301,7 @@ function ngShutdownHandler() {
 	document.body.innerHTML = xc;
  }
  </script>
-<?
+<?php
 	return false;
 }
 

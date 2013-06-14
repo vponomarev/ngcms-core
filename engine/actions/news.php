@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: news.php
 // Description: News managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -429,7 +429,6 @@ function listNewsForm() {
 	if (!$start_from)	$start_from = ($pageNo - 1)* $news_per_page;
 
 	$i				=	$start_from;
-	$entries_showed	=	'0';
 
 	$conditions = array();
 	if (!is_null($fCategoryId)) {
@@ -494,6 +493,7 @@ function listNewsForm() {
 			'userid'		=> $row['author_id'],
 			'username'		=> $row['author'],
 			'comments'		=> isset($row['com'])?$row['com']:'',
+			'views'			=> $row['views'],
 			'attach_count'	=> $row['num_files'],
 			'images_count'	=> $row['num_images'],
 			'itemdate'		=> date("d.m.Y",$row['postdate']),
@@ -506,6 +506,7 @@ function listNewsForm() {
 				'status'		=> ($row['approve'] == 1)?true:false,
 				'mainpage'		=> $row['mainpage']?true:false,
 				'editable'		=> ($row['author_id'] == $userROW['id'])&&($perm['personal.view'])||($row['author_id'] != $userROW['id'])&&($perm['other.view']),
+				'isActive'		=> ($row['approve'] == 1)?true:false,
 			)
 		);
 
@@ -513,8 +514,6 @@ function listNewsForm() {
 			foreach ($PFILTERS['news'] as $k => $v) {
 				$v->listNewsForm($id, $row, $tVars);
 			}
-
-		$entries_showed ++;
 		$newsEntries []= $newsEntry;
 	}
 	$tVars = array(
@@ -547,7 +546,7 @@ function listNewsForm() {
 
 	$tVars['category_select'] = makeCategoryList(array('doall' => 1, 'dowithout' => 1, 'selected' => $fCategoryId, 'style' => 'width: 200px;'));
 
-	if ($entries_showed) {
+	if (count($newsEntries) > 0) {
 		$tVars['pagesss'] = generateAdminPagelist(
 		array(
 			'maxNavigations' => 30,

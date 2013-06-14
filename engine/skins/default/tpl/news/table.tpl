@@ -174,7 +174,8 @@ function filter_attach_DateEdit(id) {
 <td width="60"  nowrap>{{ lang.editnews['date'] }}</td>
 <td width="48">&nbsp;</td>
 <td width="45%" >{{ lang.editnews['title'] }}</td>
-{% if flags.comments %}<td width="10%" >{{ lang.editnews['listhead.comments'] }}</td>{% endif %}
+{% if flags.comments %}<td width="50" style=" text-align:right;"><img src="{{ skins_url }}/images/comments.gif" /></td>{% endif %}
+<td width="50" style=" text-align:right;"><img src="{{ skins_url }}/images/views.png" /></td>
 <td width="25%">{{ lang.editnews['category'] }}</td>
 <td width="10%">{{ lang.editnews['author'] }}</td>
 <td width="16">&nbsp;</td>
@@ -192,7 +193,8 @@ function filter_attach_DateEdit(id) {
 	<td width="45%" class="contentEntry1">
 		{% if entry.flags.editable %}<a href="{{ php_self }}?mod=news&amp;action=edit&amp;id={{ entry.newsid }}">{% endif %}{{ entry.title }}{% if entry.flags.editable %}</a>{% endif %}
 	</td>
-	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:center;">{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
+	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:right;">{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
+	<td class="contentEntry1" style=" text-align:right;">{% if entry.flags.isActive %}<a href="{{ entry.link }}" target="_blank">{% endif %}{% if (entry.views > 0) %}{{ entry.views }}{% else %}-{% endif %}{% if entry.flags.isActive %}</a>{% endif %}</td>
 	{% endif %}<td class="contentEntry1">{{ entry.allcats }}</td>
 	<td class="contentEntry1"><a href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ entry.userid }}">{{ entry.username }}</a></td>
 	<td class="contentEntry1">{% if (entry.state == 1) %}<img src="{{ skins_url }}/images/yes.png" alt="{{ lang['state.published'] }}" />{% elseif (entry.state == 0) %}<img src="{{ skins_url }}/images/no.png" alt="{{ lang['state.unpiblished'] }}" />{% else %}<img src="{{ skins_url }}/images/no_plug.png" alt="{{ lang['state.draft'] }}" />{% endif %} </td>
