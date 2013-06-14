@@ -1382,7 +1382,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$tvars['vars']['pageCount']			= count($pages);
 		$tvars['vars']['page']				= $page;
 
-		if ($pcnt > 1) {
+		if ($pcount > 1) {
 			// Prepare VARS for pagination
 			$catid = intval(array_shift(explode(',', $row['catid'])));
 
@@ -1400,7 +1400,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 			$navigations = $TemplateCache['site']['#variables']['navigation'];
 
 			// Show pagination bar
-			$tvars['vars']['pagination'] = generatePagination($page, 1, $pcnt, 10, $paginationParams, $navigations);
+			$tvars['vars']['pagination'] = generatePagination($page, 1, $pcount, 10, $paginationParams, $navigations);
 
 			// [TWIG] news.pagination
 			$tvars['vars']['news']['pagination'] = $tvars['vars']['pagination'];
