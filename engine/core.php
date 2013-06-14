@@ -20,7 +20,7 @@ global $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLA
 global $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
 global $TemplateCache, $siteDomainName;
-global $currentHandler, $ngTrackID;
+global $currentHandler, $ngTrackID, $ngCookieDomain;
 global $twigGlobal, $twig, $twigLoader, $twigStringLoader;
 
 
@@ -91,15 +91,17 @@ define('root', dirname(__FILE__).'/');
 define('site_root', dirname(dirname(__FILE__)).'/');
 
 
+// Define domain name for cookies
+$ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost)?$mHost[1]:$_SERVER['HTTP_HOST'];
+
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
 if (!isset($_COOKIE['ngTrackID'])) {
 	$ngTrackID = md5(md5(uniqid(rand(),1)));
-	@setcookie('ngTrackID', $ngTrackID, time()+86400*365, '/', '', 0, 1);
+	@setcookie('ngTrackID', $ngTrackID, time()+86400*365, '/', $ngCookieDomain, 0, 1);
 } else {
 	$ngTrackID = $_COOKIE['ngTrackID'];
 }
-
 
 // Initialize last variables
 $confArray = array (
@@ -154,7 +156,8 @@ multi_multidomains();
 //print "siteDomainName [".$siteDomainName."]<br/>\n";
 
 // Initiate session - take care about right domain name for sites with/without www. prefix
-@session_set_cookie_params(86400, '/', '');
+//print "<pre>".var_export($_SERVER, true).var_export($_COOKIE, true)."</pre>";
+@session_set_cookie_params(86400, '/', $ngCookieDomain);
 @session_start();
 
 // ** Load system libraries

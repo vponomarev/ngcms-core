@@ -1070,7 +1070,7 @@ function makeCategoryInfo($ctext) {
 
 //
 // New category menu generator
-function generateCategoryMenu($flagReturnData = false, $treeMasterCategory = null){
+function generateCategoryMenu($treeMasterCategory = null, $flags = array()){
 	global $mysql, $catz, $tpl, $config, $CurrentHandler, $SYSTEM_FLAGS, $TemplateCache, $twig, $twigLoader;
 
 	// Load template variables
@@ -1089,10 +1089,11 @@ function generateCategoryMenu($flagReturnData = false, $treeMasterCategory = nul
 
 	// Deremine working mode - old or new
 	// If template 'news.categories' exists - use `new way`, else - old
-	if (file_exists(tpl_site.'news.categories.tpl') || $flagReturnData) {
+	if (file_exists(tpl_site.'news.categories.tpl') || $flags['returnData']) {
 
 		$tVars = array();
 		$tEntries = array();
+		$tIDs	= array();
 
 		$treeSelector = array(
 			'defined'		=> false,
@@ -1148,6 +1149,7 @@ function generateCategoryMenu($flagReturnData = false, $treeMasterCategory = nul
 				)
 			);
 			$tEntries []= $tEntry;
+			$tIDs []= $v['id'];
 		}
 
 		// Update `hasChildren` and `closeLevel_X` flags for items
@@ -1173,8 +1175,9 @@ function generateCategoryMenu($flagReturnData = false, $treeMasterCategory = nul
 
 		}
 
-		if ($flagReturnData)
-			return $tEntries;
+		if ($flags['returnData']) {
+			return $flags['onlyID']?$tIDs:$tEntries;
+		}
 
 		// Prepare conversion maps
 		$conversionConfig = array(
@@ -1226,8 +1229,14 @@ function generateCategoryMenu($flagReturnData = false, $treeMasterCategory = nul
 	return $result;
 }
 
-function twigGetCategoryTree($masterCategory = null) {
-	return generateCategoryMenu(true, $masterCategory);
+function twigGetCategoryTree($masterCategory = null, $flags = array()) {
+	if (!is_array($flags))
+		$flags = array();
+
+	if (!isset($flags['returnData']))
+		$flags['returnData'] = true;
+
+	return generateCategoryMenu($masterCategory, $flags);
 }
 
 
@@ -2017,7 +2026,7 @@ function checkPermission($identity, $user = null, $mode = '', $way = '') {
 
 // Load user groups
 function loadGroups() {
-	global $UGROUP;
+	global $UGROUP, $config;
 
 	$UGROUP = array();
 	if (is_file(confroot.'ugroup.php')) {
@@ -2027,10 +2036,46 @@ function loadGroups() {
 
 	// Fill default groups if not specified
 	if (!isset($UGROUP[1])) {
-		$UGROUP[1] = array('name' => 'Администратор');
-		$UGROUP[2] = array('name' => 'Редактор');
-		$UGROUP[3] = array('name' => 'Журналист');
-		$UGROUP[4] = array('name' => 'Комментатор');
+		$UGROUP[1] = array(
+			'identity'	=> 'admin',
+			'langName'	=> array(
+				'russian'	=> 'Администратор',
+				'english'	=> 'Administrator',
+			),
+		);
+		$UGROUP[2] = array(
+			'identity'	=> 'editor',
+			'langName'	=> array(
+				'russian'	=> 'Редактор',
+				'english'	=> 'Editor',
+			),
+		);
+		$UGROUP[3] = array(
+			'identity'	=> 'journalist',
+			'langName'	=> array(
+				'russian'	=> 'Журналист',
+				'english'	=> 'Journalist',
+			),
+		);
+		$UGROUP[4] = array(
+			'identity'	=> 'commentator',
+			'langName'	=> array(
+				'russian'	=> 'Комментатор',
+				'english'	=> 'Commentator',
+			),
+		);
+		$UGROUP[5] = array(
+			'identity'	=> 'tester',
+			'langName'	=> array(
+				'russian'	=> 'Тестировщик',
+				'english'	=> 'Tester',
+			),
+		);
+	}
+
+	// Initialize name according to current selected language
+	foreach ($UGROUP as $id => $v) {
+		$UGROUP[$id]['name'] = (isset($UGROUP[$id]['langName'][$config['default_lang']]))?$UGROUP[$id]['langName'][$config['default_lang']]:$UGROUP[$id]['identity'];
 	}
 
 }
@@ -2425,6 +2470,7 @@ function twigIsNews($rules) {
 	// Return if user is not in news
 	if ($CurrentHandler['pluginName'] != 'news')														return false;
 	if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print'))		return false;
+	if (!isset($SYSTEM_FLAGS['news']['db.id']))			return false;
 
 	$ruleList = array('news' => array(), 'cat' => array(), 'mastercat' => array());
 	$ruleCatched = false;
