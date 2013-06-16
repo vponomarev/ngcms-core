@@ -7,6 +7,12 @@
 // Author: NGCMS project team
 //
 
+// Check for minimum supported PHP version
+if (version_compare(PHP_VERSION, '5.3.0') < 0) {
+	@header('content-type: text/html; charset=Windows-1251');
+	print "<html><head><title>NGCMS required PHP version 5.3+ / Необходима версия PHP 5.3 или выше</title></head><body><div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR / Фатальная ошибка</span><br/><br/><span style=\"font: 16px arial;\"> NGCMS requires PHP version <b>5.3+</b><br/>Please ask your hosting provider to upgrade your account</span><br/><hr/><span style=\"font: 16px arial;\"> Для работы NGCMS требуется PHP версии <b>5.3</b> или выше.<br/>Обратитесь к вашему хостинг провайдеру для обновления версии</span></div></body></html>";
+	exit;
+}
 
 @include_once 'engine/core.php';
 
