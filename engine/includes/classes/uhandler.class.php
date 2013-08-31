@@ -515,6 +515,7 @@ class urlHandler {
 
 	// RUN callback functions
 	function run($url = null, $flags = array()){
+		global $CurrentHandler;
 		// Init URL if it's not passed in params
 		if ($url == null) {
 			$url = $_SERVER['REQUEST_URI'];
