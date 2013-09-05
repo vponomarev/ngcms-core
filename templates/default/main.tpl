@@ -262,7 +262,7 @@
 			<td style="background-image:url('{tpl_url}/images/2z_83.gif');" width="100%">
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 			<tr><td class="mw_copy">
-					Copyright &copy; 2007-2013 <a title="{home_title}" href="{home}">{home_title}</a><br />Powered by <a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 
+					Copyright &copy; 2007-2014 <a title="{home_title}" href="{home}">{home_title}</a><br />Powered by <a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 
 				</td><td class="mw_copy" align=right>SQL запросов: <b>{queries}</b> | Генерация страницы: <b>{exectime}</b> сек | <b>{memPeakUsage}</b> Mb&nbsp;</td>
 			</tr>
 			</table></td>
