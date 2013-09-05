@@ -23,8 +23,8 @@ if (!defined('NGCMS')) die ('HAL');
 // Pre-configure required global variables
 global $action, $subaction, $mod;
 $action		= isset($_REQUEST['action'])?$_REQUEST['action']:'';
-$subaction	= isset($_REQUEST['action'])?$_REQUEST['action']:'';
-$mod		= isset($_REQUEST['action'])?$_REQUEST['action']:'';
+$subaction	= isset($_REQUEST['subaction'])?$_REQUEST['subaction']:'';
+$mod		= isset($_REQUEST['mod'])?$_REQUEST['mod']:'';
 
 // Activate output buffer
 ob_start();
