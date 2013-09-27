@@ -16,8 +16,12 @@ $lang = LoadLang('editcomments', 'admin');
 // List comments
 function commentsList($newsID){
 	global $mysql;
+}
 
-
+$comid = $_REQUEST['comid']?intval($_REQUEST['comid']):0;
+if(empty($comid)){
+	msg(array("type" => "error", "text" => $lang['comid_not_found']));
+	exit();
 }
 
 if ($subaction == "doeditcomment") {
@@ -47,7 +51,7 @@ if ($subaction == "deletecomment") {
 		$mysql->query("delete from ".prefix."_comments where id=".db_squote($comid));
 		$mysql->query("update ".uprefix."_users set com=com-1 where id=".db_squote($row['author_id']));
 		$mysql->query("update ".prefix."_news set com=com-1 where id=".db_squote($row['post']));
-		msg(array("text" => $lang['msgo_deleted'], "info" => sprintf($lang['msgi_deleted'], "admin.php?mod=editnews&action=editnews&id=".$newsid)));
+		msg(array("text" => $lang['msgo_deleted'], "info" => sprintf($lang['msgi_deleted'], "admin.php?mod=news&action=edit&id=".$newsid)));
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 	}
