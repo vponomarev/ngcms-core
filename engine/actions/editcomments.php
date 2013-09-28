@@ -51,7 +51,7 @@ if ($subaction == "deletecomment") {
 		$mysql->query("delete from ".prefix."_comments where id=".db_squote($comid));
 		$mysql->query("update ".uprefix."_users set com=com-1 where id=".db_squote($row['author_id']));
 		$mysql->query("update ".prefix."_news set com=com-1 where id=".db_squote($row['post']));
-		msg(array("text" => $lang['msgo_deleted'], "info" => sprintf($lang['msgi_deleted'], "admin.php?mod=news&action=edit&id=".$newsid)));
+		msg(array("text" => $lang['msgo_deleted'], "info" => sprintf($lang['msgi_deleted'], "admin.php?mod=news&action=edit&id=".$row['post'])));
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
 	}
