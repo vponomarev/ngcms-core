@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: search.php
 // Description: News search
 // Author: Vitaly Ponomarev
@@ -18,7 +18,7 @@ $lang = LoadLang('search', 'site');
 include_once root.'includes/news.php';
 
 function search_news(){
-	global $catz, $catmap, $mysql, $config, $userROW, $tpl, $parse, $template, $lang, $PFILTERS, $SYSTEM_FLAGS;
+	global $catz, $catmap, $mysql, $config, $userROW, $tpl, $parse, $template, $lang, $PFILTERS, $SYSTEM_FLAGS, $TemplateCache;
 
 	$SYSTEM_FLAGS['info']['title']['group'] = $lang['search.title'];
 
@@ -82,6 +82,15 @@ function search_news(){
 	if ($_REQUEST['page']) {
 		$callingParams['page'] = intval($_REQUEST['page']);
 	}
+
+	// Preload template configuration variables
+	templateLoadVariables();
+	// Check if template requires extracting embedded images
+	$tplVars = $TemplateCache['site']['#variables'];
+	if (isset($tplVars['configuration']) && is_array($tplVars['configuration']) && isset($tplVars['configuration']['extractEmbeddedItems']) && $tplVars['configuration']['extractEmbeddedItems']) {
+		$callingParams['extractEmbeddedItems'] = true;
+	}
+
 
 	// Call SEARCH only if search words are entered
 	if (count($search_words)) {

@@ -1672,6 +1672,47 @@ function generatePagination($current, $start, $end, $maxnav, $paginationParams, 
 }
 
 
+// Generate block with pages [ 1, 2, [3], 4, ..., 25, 26, 27 ] using default configuration of template
+function ngSitePagination($currentPage, $totalPages, $paginationParams, $navigationsCount = 0, $flagIntLink = false) {
+	global $config, $TemplateCache, $tpl;
+
+	if ($totalPages < 2)
+		return '';
+
+	templateLoadVariables(true);
+	$navigations = $TemplateCache['site']['#variables']['navigation'];
+	$tpl -> template('pages', tpl_dir.$config['theme']);
+
+	// Prev page link
+	if ($currentPage > 1) {
+		$prev = $currentPage - 1;
+		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev), $navigations['prevlink']));
+	} else {
+		$tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = "";
+		$prev = 0;
+		$no_prev = true;
+	}
+
+	$maxNavigations 		= $config['newsNavigationsCount'];
+	if ($navigationsCount < 1)
+		$navigationsCount = ($config['newsNavigationsCount'] > 2)?$config['newsNavigationsCount']:10;
+
+	$tvars['vars']['pages'] = generatePagination($currentPage, 1, $totalPages, $navigationsCount, $paginationParams, $navigations);
+
+	// Next page link
+	if (($prev + 2 <= $totalPages)) {
+		$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%',"$1",str_replace('%link%',generatePageLink($paginationParams, $prev+2), $navigations['nextlink']));
+	} else {
+		$tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = "";
+		$no_next = true;
+	}
+
+	$tpl -> vars('pages', $tvars);
+	$paginationOutput = $tpl -> show('pages');
+
+	return $paginationOutput;
+}
+
 //
 // Return user record by login
 //
@@ -2640,7 +2681,16 @@ function core_cron($isSysCron, $handler) {
 
 
 function coreUserMenu() {
-	global $lang, $userROW, $PFILTERS, $lang, $twigLoader, $twig, $template, $config, $SYSTEM_FLAGS;
+	global $lang, $userROW, $PFILTERS, $lang, $twigLoader, $twig, $template, $config, $SYSTEM_FLAGS, $TemplateCache;
+
+	// Preload template configuration variables
+	templateLoadVariables();
+
+	// Use default <noavatar> file
+	// - Check if noavatar is defined on template level
+	$tplVars = $TemplateCache['site']['#variables'];
+	$noAvatarURL = (isset($tplVars['configuration']) && is_array($tplVars['configuration']) && isset($tplVars['configuration']['noAvatarImage']) && $tplVars['configuration']['noAvatarImage'])?(tpl_url."/".$tplVars['configuration']['noAvatarImage']):(avatars_url."/noavatar.gif");
+
 
 	// Preload plugins for usermenu
 	loadActionHandlers('usermenu');
@@ -2707,9 +2757,9 @@ function coreUserMenu() {
 			} else {
 				// If gravatar integration is active, show avatar from GRAVATAR.COM
 				if ($config['avatars_gravatar']) {
-					$userAvatar = 'http://www.gravatar.com/avatar/'.md5(strtolower($userROW['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode(avatars_url."/noavatar.gif");
+					$userAvatar = 'http://www.gravatar.com/avatar/'.md5(strtolower($userROW['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode($noAvatarURL);
 				} else {
-					$userAvatar = avatars_url."/noavatar.gif";
+					$userAvatar = $noAvatarURL;
 				}
 			}
 		}
