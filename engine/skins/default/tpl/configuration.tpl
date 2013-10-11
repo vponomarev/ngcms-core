@@ -384,6 +384,13 @@ function ngCheckMemcached() {
 <td class="contentEntry2" valign="middle">{register_type}</td>
 </tr>
 <tr>
+<td class="contentEntry1">{l_user_aboutsize}<br /><small>{l_user_aboutsize_desc}</small></td>
+<td class="contentEntry2" valign="middle"><input type="text" name='save_con[user_aboutsize]' value='{c_user_aboutsize}' style="width: 40px"  /></td>
+</tr>
+<tr>
+<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_users.avatars}</td>
+</tr>
+<tr>
 <td class="contentEntry1">{l_use_avatars}<br /><small>{l_use_avatars_desc}</small></td>
 <td class="contentEntry2" valign="middle">{use_avatars}</td>
 </tr>
@@ -408,6 +415,9 @@ function ngCheckMemcached() {
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[avatar_max_size]' value='{c_avatar_max_size}' style="width: 40px" /></td>
 </tr>
 <tr>
+<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_users.photos}</td>
+</tr>
+<tr>
 <td class="contentEntry1">{l_use_photos}<br /><small>{l_use_photos_desc}</small></td>
 <td class="contentEntry2" valign="middle">{use_photos}</td>
 </tr>
@@ -426,10 +436,6 @@ function ngCheckMemcached() {
 <tr>
 <td class="contentEntry1">{l_photos_thumb_size}<br /><small>{l_photos_thumb_size_desc}</small></td>
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[photos_thumb_size_x]' value='{photos_thumb_size_x}' style="width: 40px" /> x <input type="text" name='save_con[photos_thumb_size_y]' value='{photos_thumb_size_y}' style="width: 40px" /></td>
-</tr>
-<tr>
-<td class="contentEntry1">{l_user_aboutsize}<br /><small>{l_user_aboutsize_desc}</small></td>
-<td class="contentEntry2" valign="middle"><input type="text" name='save_con[user_aboutsize]' value='{c_user_aboutsize}' style="width: 40px"  /></td>
 </tr>
 </table>
 </div>
@@ -494,7 +500,7 @@ function ngCheckMemcached() {
 </tr>
 
 <!-- IMAGE transform control -->
-<tr><td colspan="2" class="contentHead">&nbsp;</td></tr>
+<tr><td colspan="2" class="contentHead">{l_img.thumb}</td></tr>
 <tr>
 <td class="contentEntry1">{l_thumb_mode}<br /><small>{l_thumb_mode_desc}</small></td>
 <td class="contentEntry2" valign="middle">{thumb_mode}</td>
@@ -507,7 +513,7 @@ function ngCheckMemcached() {
 <td class="contentEntry1">{l_thumb_quality}<br /><small>{l_thumb_quality_desc}</small></td>
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[thumb_quality]' value='{c_thumb_quality}' size="6" /></td>
 </tr>
-<tr><td colspan="2" class="contentHead">&nbsp;</td></tr>
+<tr><td colspan="2" class="contentHead">{l_img.shadow}</td></tr>
 <tr>
 <td class="contentEntry1">{l_shadow_mode}<br /><small>{l_shadow_mode_desc}</small></td>
 <td class="contentEntry2" valign="middle">{shadow_mode}</td>
@@ -516,7 +522,7 @@ function ngCheckMemcached() {
 <td class="contentEntry1">{l_shadow_place}<br /><small>{l_shadow_place_desc}</small></td>
 <td class="contentEntry2" valign="middle">{shadow_place}</td>
 </tr>
-<tr><td colspan="2" class="contentHead">&nbsp;</td></tr>
+<tr><td colspan="2" class="contentHead">{l_img.stamp}</td></tr>
 <tr>
 <td class="contentEntry1">{l_stamp_mode}<br /><small>{l_stamp_mode_desc}</small></td>
 <td class="contentEntry2" valign="middle">{stamp_mode}</td>
