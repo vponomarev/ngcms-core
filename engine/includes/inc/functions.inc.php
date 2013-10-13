@@ -2665,9 +2665,11 @@ function sysloadTruncate() {
 
 // Process CRON job calls
 function core_cron($isSysCron, $handler) {
-	//
-	if ($handler == 'db_backup') {
-		AutoBackup($isSysCron, true);
+	global $config;
+
+	// Execute DB backup if automatic backup is enabled
+	if (($handler == 'db_backup') && (isset($config['auto_backup'])) && $config['auto_backup']) {
+		AutoBackup($isSysCron, false);
 	}
 
 	if ($handler == 'news_views') {
