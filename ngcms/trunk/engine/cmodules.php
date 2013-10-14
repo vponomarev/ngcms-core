@@ -101,15 +101,15 @@ function coreRegisterUser() {
 				$urec = $mysql->record("select * from ".uprefix."_users where id = ".intval($uid));
 
 				// LOG: Successully registered
-				ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), $urec, array(0, ''));
+				ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), $urec, array(1, ''));
 
 				// Execute filters - add additional variables
 				if (is_array($urec) && is_array($PFILTERS['core.registerUser']))
 					foreach ($PFILTERS['core.registerUser'] as $k => $v) { $v->registerUserNotify($uid, $urec); }
 			}
 		} else {
-			// LOG: Successully registered
-			ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), 0, array(1, 'Registration failed'));
+			// LOG: Registration failed
+			ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), 0, array(0, 'Registration failed'));
 
 			// Fail
 			generate_reg_page($params, $values, $msg);
@@ -394,13 +394,13 @@ function coreLoginAction($row = null, $redirect = null){
 		$is_logged			= true;
 
 		// LOG: Successully logged in
-		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), NULL, array(0, ''));
+		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), 0, array(1, ''));
 
 		// Redirect back
 		@header('Location: '.($redirect?$redirect:home));
 	} else {
 		// LOG: Login error
-		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), 0, array(1, $row));
+		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('errorInfo' => $row)), NULL, array(0, 'Login failed.'));
 
 
 		$SYSTEM_FLAGS['auth_fail'] = 1;
