@@ -394,7 +394,7 @@ function coreLoginAction($row = null, $redirect = null){
 		$is_logged			= true;
 
 		// LOG: Successully logged in
-		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), 0, array(1, ''));
+		ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), NULL, array(1, ''));
 
 		// Redirect back
 		@header('Location: '.($redirect?$redirect:home));

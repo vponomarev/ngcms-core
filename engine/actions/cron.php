@@ -61,8 +61,11 @@ function cronCommit() {
 		);
 	}
 
+	$execResult = $cron->setConfig($cronLines);
+	ngSYSLOG(array('plugin' => '#admin', 'item' => 'cron'), array('action' => 'modify', 'list' => $cronLines), null, ($execResult===true)?array(1,'Cron configuration is changed'):array(0, 'Execution error'));
+
 	//print "CRON NEW DATA:<pre>".var_export($cronLines, true)."</pre>";
-	return $cron->setConfig($cronLines);
+	return $execResult;
 };
 
 
