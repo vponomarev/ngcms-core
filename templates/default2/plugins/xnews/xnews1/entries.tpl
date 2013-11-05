@@ -1,0 +1,1 @@
+<li><a href="{{ news.url.full }}">{{ news.title }}</a></li>

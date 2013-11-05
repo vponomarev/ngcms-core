@@ -1,0 +1,1 @@
+<dl class="left">&larr; <a href="{link}" title="{title}"><strong>{title}</strong></a></dl>
