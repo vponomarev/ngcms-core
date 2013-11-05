@@ -1,1 +1,0 @@
-<li><a href="{link}">{title} [counter] <b>[ {cnt}]</b>[/counter]</a></li>
