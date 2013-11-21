@@ -229,6 +229,7 @@ $twig->addGlobalRef('system_flags', $SYSTEM_FLAGS);
 // - Global variables [by VALUE]
 $twig->addGlobal('skins_url',	skins_url);
 $twig->addGlobal('admin_url',	admin_url);
+$twig->addGlobal('home',	home);
 $twig->addGlobal('currentURL',	$systemAccessURL);
 
 // - Define functions
