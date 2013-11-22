@@ -21,7 +21,7 @@
 	<div class="label">
 		<label class="pull-left"><input type="checkbox" name="agree">
 		я ознакомилс€ с <a href="#">правилам</a> и <a href="#">услови€ми</a> и принимаю их.</label>
-		<input type="submit" value="«арегестрироватьс€" class="button pull-right">
+		<input type="submit" value="«арегистрироватьс€" class="button pull-right">
 	</div>
 </form>
 <script type="text/javascript">
