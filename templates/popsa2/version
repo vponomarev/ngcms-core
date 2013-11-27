@@ -3,7 +3,7 @@
 ;
 
 ; UNIQ template ID
-ID: Mikado-CIS
+ID: default_template_3
 ; Author name
 Author: RocketBoy
 ; Author site page
@@ -13,7 +13,7 @@ Version: 01
 ; Release date
 RelDate: 2012-02-27
 ; Template title
-Title: Default template
+Title: Default template 3
 ; List of built in templates for plugins
 Plugins: archive_v0.06, auth_basic_v0.25, auth_loginza_v0.2.1, basket_v0.05, bb_media_v0.07, breadcrumbs_v1.1, bookmarks_v2.3, calendar_v0.09, comments_v0.07, feedback_v0.20, jchat_v0.08, lastcomments_v0.09, nsm_v0.02, pm_v0.4, gsmg_v1.1, rss_export_v0.16, switcher_v0.08, tags_v0.25, uprofile_v0.10, voting_v0.16, xfields_v0.20, xnews_v0.04
 ; Size: 256 x 192, format: PNG
