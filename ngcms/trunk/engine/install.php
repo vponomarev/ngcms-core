@@ -38,7 +38,6 @@ if ($_REQUEST['language'] == 'english') {
 global $lang;
 $lang = parse_ini_file(root.'lang/'.$currentLanguage.'/install.ini', true);
 
-
 @include_once 'includes/classes/templates.class.php';
 $tpl	=	new tpl;
 
@@ -89,13 +88,16 @@ switch ($_POST['action']) {
 // If we made installations and have some pending changes
 if ($flagPendingChanges) {
 
-include_once root."core.php";
-include_once root."includes/inc/extraconf.inc.php";
-include_once root."includes/inc/extrainst.inc.php";
+	include_once root."core.php";
+	include_once root."includes/inc/extraconf.inc.php";
+	include_once root."includes/inc/extrainst.inc.php";
 
 	$LOG = array();
 	$ERROR = array();
 	$error = 0;
+
+	// Reinit INSTALL language file
+	$lang = parse_ini_file(root.'lang/'.$currentLanguage.'/install.ini', true);
 
 	// Now let's install plugins
 	// First: Load informational `version` files
@@ -125,7 +127,7 @@ include_once root."includes/inc/extrainst.inc.php";
 
 		print '<div class="warningDiv">'.$lang['msg.errorInfo'].'</div>';
 	} else {
-		print $lang['msg.complete1'].', <a href="'.$homeURL.$adminDirName.'/">'.$lang['msg.complete2'].'</a>.';
+		print $lang['msg.complete1'].' <a href="'.$homeURL.$adminDirName.'/">'.$lang['msg.complete2'].'</a>.';
 	}
 	print '</p></div>';
 }
@@ -892,9 +894,8 @@ function doInstall() {
 		}
 	} while (0);
 
-	$output = '';
-	foreach ($LOG as $line) { $output .= $line."<br />\n"; }
-
+	$output = join("<br/>\n", $LOG);
+	
 	if ($error) {
 		$output .= "<br/>\n";
 		foreach ($ERROR as $errText) {
@@ -906,6 +907,7 @@ function doInstall() {
 		$output .= '<input type="button" style="width: 230px;" value="Вернуться к настройке БД" onclick="document.getElementById(\'stage\').value=\'0\'; form.submit();"/> - если Вы что-то неверно ввели в настройках БД, то Вы можете исправить ошибку.<br/>';
 		$output .= '<input type="button" style="width: 230px;" value="Попробовать ещё раз" onclick="document.getElementById(\'action\').value=\'install\'; form.submit();"/> - если Вы самостоятельно устранили ошибку, то нажмите сюда.';
 		$output .= '</div>';
+	
 	}
 
 	$tvars['vars']['actions'] = $output;
