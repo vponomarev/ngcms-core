@@ -1034,7 +1034,7 @@ function makeCategoryInfo($ctext) {
 			$url = generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id']));
 			$record = array(
 				'id'	=> $row['id'],
-				'level'	=> $row['level'],
+				'level'	=> $row['poslevel'],
 				'alt'	=> $row['alt'],
 				'name'	=> $row['name'],
 				'info'	=> $row['info'],
