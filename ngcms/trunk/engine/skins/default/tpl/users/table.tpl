@@ -45,22 +45,23 @@ function validateAction() {
 
 	document.forms['form_users'].submit();
 }
-
 </script>
+
+
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=users">{l_users_title}</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=users">{{ lang['users_title'] }}</a></td>
 </tr>
 </table>
-[perm.modify]<table border="0" cellspacing="0" cellpadding="0" width="100%">
+{% if flags.canModify %}<table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
 <td width="100%" class="contentNav" align="center" valign="top">
-<input type="button" onmousedown="javascript:ChangeOption('list')" value="{l_users}" class="navbutton" />
-<input type="button" onmousedown="javascript:ChangeOption('adduser')" value="{l_adduser}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('list')" value="{{ lang['users'] }}" class="navbutton" />
+<input type="button" onmousedown="javascript:ChangeOption('adduser')" value="{{ lang['adduser'] }}" class="navbutton" />
 </td>
 </tr>
 </table>
-<br />[/perm.modify]
+<br />{% endif %}
 <table id="list" border="0" width="100%" cellspacing="0" cellpadding="0" align="center" class="content">
 <tr>
 <td>
@@ -68,13 +69,13 @@ function validateAction() {
 <tr>
 <td width="100%" align="left">
 <!-- Filter form: BEGIN -->
-<form method="GET" action="{php_self}">
+<form method="GET" action="{{ php_self }}">
 <input type="hidden" name="mod" value="users" />
 <input type="hidden" name="action" value="list" />
-{l_namefilter} <input type="text" name="name" value="{name}"/> &nbsp; {l_sort} <select name="sort">{sort_options}</select>
-<select name="how">{how_options}</select>
-<input style="text-align: center;" size=3 name="per_page" value="{per_page}"/>
-<input type="submit" value="{l_sortit}" class="button" />
+{{ lang['namefilter'] }} <input type="text" name="name" value="{{ name }}"/> &nbsp; {{ lang['sort'] }} <select name="sort">{{ sortType }}</select>
+<select name="how">{{ sortDirection }}</select>
+<input style="text-align: center;" size=3 name="rpp" value="{{ rpp }}"/>
+<input type="submit" value="{{ lang['sortit'] }}" class="button" />
 </form>
 <!-- Filter form: END -->
 </td>
@@ -85,59 +86,74 @@ function validateAction() {
 <tr>
 <td width="100%" valign="top">
 <!-- Mass actions form: BEGIN -->
-<form method="GET" name="form_users" id="form_users" action="{php_self}">
+<form method="GET" name="form_users" id="form_users" action="{{ php_self }}">
 <input type="hidden" name="mod" value="users" />
-<input type="hidden" name="token" value="{token}"/>
-<input type="hidden" name="name" value="{name}" />
+<input type="hidden" name="token" value="{{ token }}"/>
+<input type="hidden" name="name" value="{{ name }}" />
 <input type="hidden" name="how" value="{how_value}" />
 <input type="hidden" name="sort" value="{sort_value}" />
 <input type="hidden" name="page" value="{page_value}" />
-<input type="hidden" name="per_page" value="{per_page_value}" />
+<input type="hidden" name="per_page" value="{{ rpp }}" />
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
 <tr align="left" class="contHead">
 <td width="5%">#</td>
-<td width="20%">{l_name}</td>
-<td width="20%">{l_regdate}</td>
-<td width="20%">{l_last_login}</td>
-<td width="10%">{l_all_news2}</td>
-[comments]<td width="10%">{l_listhead.comments}</td>[/comments]
-<td width="15%">{l_status}</td>
+<td width="20%">{{ lang['name'] }}</td>
+<td width="20%">{{ lang['regdate'] }}</td>
+<td width="20%">{{ lang['last_login'] }}</td>
+<td width="10%">{{ lang['all_news2'] }}</td>
+{% if flags.haveComments %}<td width="10%">{l_listhead.comments}</td>{% endif %}
+<td width="15%">{{ lang['status'] }}</td>
 <td width="5%">&nbsp;</td>
-<td width="5%">[perm.modify]<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" />[/perm.modify]</td>
+<td width="5%">{% if flags.canModify %}<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" />{% endif %}</td>
 </tr>
-{entries}
+{% for entry in entries %}
+<tr align="left">
+<td class="contentEntry1">{{ entry.id }}</td>
+<td class="contentEntry1">{% if flags.canView %}<a href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ entry.id }}">{{ entry.name }}</a>{% else %}{{ entry.name }}{% endif %}</td>
+<td class="contentEntry1">{{ entry.regdate }}</td>
+<td class="contentEntry1">{{ entry.lastdate }}</td>
+<td class="contentEntry1">{% if entry.cntNews > 0 %}<a href="{{ php_self }}?mod=news&amp;aid={{ id }}">{{ entry.cntNews }}</a>{% else %}-{% endif %}</td>
+{% if flags.haveComments %}<td width="10%" class="contentEntry1">{% if entry.cntComments > 0 %}{{ entry.cntComments }}{% else %}-{% endif %}</td>{% endif %}
+<td class="contentEntry1">{{ entry.status }}</td>
+<td class="contentEntry1"><img src="{{ skins_url }}/images/{% if entry.flags.isActive %}yes{% else %}no{%endif %}.png" alt="{% if entry.flags.isActive %}{{ lang['active'] }}{% else %}{{ lang['unactive'] }}{%endif %}" /></td>
+<td class="contentEntry1">{% if flags.canModify %}{% if flags.canMassAction %}<input name="selected_users[]" value="{{ entry.id }}" class="check" type="checkbox" />{% endif %}{% endif %}</td>
+</tr>
+{% endfor %}
+
 <tr>
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
 <tr align="center">
 <td colspan="9" class="contentEdit" align="right" valign="top">
-[perm.modify]
+{% if flags.canModify %}
 <div style="text-align: left;">
-{l_action}: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
- <option value="" style="background-color: #E0E0E0;">-- {l_action} --</option>
- <option value="massActivate">{l_activate}</option>
- <option value="massLock">{l_lock}</option>
+{{ lang['action' }}: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
+ <option value="" style="background-color: #E0E0E0;">-- {{ lang['action'] }} --</option>
+ <option value="massActivate">{{ lang['activate'] }}</option>
+ <option value="massLock">{{ lang['lock'] }}</option>
  <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
- <option value="massDel">{l_delete}</option>
- <option value="massDelInactive">{l_delete_unact}</option>
+ <option value="massDel">{{ lang['delete'] }}</option>
+ <option value="massDelInactive">{{ lang['delete_unact'] }}</option>
  <option value="" style="background-color: #E0E0E0;" disabled="disabled">===================</option>
- <option value="massSetStatus">{l_setstatus} &raquo;</option>
+ <option value="massSetStatus">{{ lang['setstatus'] }} &raquo;</option>
 </select>
-<select name="newstatus" disabled="disabled" style="font: 12px Verdana, Courier, Arial; width: 150px;"><option value="0"></option><option value="2">2 ({l_st_2})</option><option value="3">3 ({l_st_3})</option><option value="4">4 ({l_st_4})</option></select>
-<input type="button" class="button" value="{l_submit}" onclick="validateAction();" />
+<select name="newstatus" disabled="disabled" style="font: 12px Verdana, Courier, Arial; width: 150px;">
+	<option value="0"></option><option value="2">2 ({l_st_2})</option><option value="3">3 ({l_st_3})</option><option value="4">4 ({l_st_4})</option>
+</select>
+<input type="button" class="button" value="{{ lang['submit'] }}" onclick="validateAction();" />
 <br/>
 </div>
-[/perm.modify]
+{% endif %}
 </td>
 </tr>
 <tr>
 <td width="100%" colspan="9">&nbsp;</td>
 </tr>
 <tr>
-<td align="center" colspan="9" class="contentHead">{pagesss}</td>
+<td align="center" colspan="9" class="contentHead">{{ pagination }}</td>
 </tr>
 </table>
 </form>
@@ -147,12 +163,12 @@ function validateAction() {
 </table>
 
 
-[perm.modify]<form method="post" action="{php_self}?mod=users">
+{% if flags.canModify %}<form method="post" action="{{ php_self }}?mod=users">
 <input type="hidden" name="action" value="add" />
-<input type="hidden" name="token" value="{token}"/>
+<input type="hidden" name="token" value="{{ token }}"/>
 <table id="adduser" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
-<td width="50%" class="contentEntry1">{l_name}</td>
+<td width="50%" class="contentEntry1">{{ lang['name'] }}</td>
 <td width="50%" class="contentEntry2"><input size="40" type="text" name="regusername" />
 </td>
 </tr>
@@ -186,4 +202,4 @@ function validateAction() {
 </tr>
 </table>
 </form>
-[/perm.modify]
+{% endif %}
