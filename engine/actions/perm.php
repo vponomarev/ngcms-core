@@ -18,14 +18,13 @@ if (!defined('NGCMS')) die ('HAL');
 $pManager = new permissionRuleManager();
 $pManager->load();
 
-// Prepare data
-$grp = array(
-1 =>	array('id' => 1, 'title' => 'Администратор'),
-2 =>	array('id' => 2, 'title' => 'Редактор'),
-3 =>	array('id' => 3, 'title' => 'Журналист'),
-4 =>	array('id' => 4, 'title' => 'Комментатор'),
-);
-
+// Preconfigure list of groups from global group list
+$grp = array();
+{
+	foreach ($UGROUP as $id => $v) {
+		$grp[$id] = array('id' => $id, 'title' => $v['name']);
+	}
+}
 
 // Show list of current permissions
 function showList($grp) {

@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
 // Name: users.php
 // Description: manage users
 // Author: Vitaly Ponomarev
@@ -334,8 +334,7 @@ function userMassDeleteInactive(){
 //
 // Show list of users
 function userList(){
-	global $mysql, $lang, $tpl, $mod, $userROW;
-	global $news_per_page, $start_from;
+	global $mysql, $lang, $tpl, $mod, $userROW, $UGROUP, $twig;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'view')) {
@@ -349,6 +348,7 @@ function userList(){
 	// Determine user's permissions
 	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify');
 	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'details');
+	$permMassAction	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify');
 
 
 	$available_orders = array('name' => 'name', 'reg' => 'regdate', 'last' => 'last_login', 'status' => 'status');
@@ -357,12 +357,15 @@ function userList(){
 
 	$name = ($_REQUEST['name'] != '')?("'%".mysql_real_escape_string($_REQUEST['name'])."%'"):'';
 
-	$per_page	= isset($_REQUEST['per_page'])?intval($_REQUEST['per_page']):intval($admCookie['users']['pp']);
-	if (($per_page < 1)||($per_page > 500))
-		$per_page = 30;
+	// Records Per Page
+	// - Load
+	$fRPP			= (isset($_REQUEST['rpp']) && ($_REQUEST['rpp'] != ''))?intval($_REQUEST['rpp']):intval($admCookie['users']['pp']);
+	// - Set default value for `Records Per Page` parameter
+	if (($fRPP < 2)||($fRPP > 2000))
+		$fRPP = 30;
 
 	// - Save into cookies current value
-	$admCookie['users']['pp'] = $per_page;
+	$admCookie['users']['pp'] = $fRPP;
 	admcookie_set($admCookie);
 
 
@@ -370,79 +373,74 @@ function userList(){
 	if (!$pageNo)
 		$pageNo = 1;
 
-	$limit = "limit ".(($pageNo-1)*$per_page).", ".$per_page;
+	$limit = "limit ".(($pageNo-1)*$fRPP).", ".$fRPP;
 	$where = ($name?'where name like '.$name:'');
 	$order = "order by ".(($available_orders[$rsort])?$rsort:'reg').($_REQUEST['how']?' desc':'');
 
 	$tpl -> template('entries', tpl_actions.$mod);
 	$sql = "select * from ".uprefix."_users ".$where.' '.$order.' '.$limit;
 
+	$tEntries = array();
 	foreach ($mysql->select($sql) as $row) {
-		$ls = 'st_'.$row['status'];
-		$status = $lang[$ls]?$lang[$ls]:'unknown';
+		$status = isset($UGROUP[$row['status']])?$UGROUP[$row['status']]['name']:('Unknown ['.$row['status'].']');
 
-		$tvars['vars'] = array(
-			'php_self'		=>	$PHP_SELF,
-			'name'			=>	$row['name'],
-			'news'			=>	$row['news'],
-			'comments'		=>	$row['com'],
-			'status'		=>	$status,
+		$tEntry = array(
 			'id'			=>	$row['id'],
+			'name'			=>	$row['name'],
+			'groupID'		=>	$row['status'],
+			'groupName'		=>	$status,
+			'cntNews'		=>	$row['news'],
+			'cntComments'	=>	$row['com'],
 			'regdate'		=>	LangDate('j Q Y - H:i', $row['reg']),
-			'last_login'	=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('j Q Y - H:i', $row['last'])
+			'lastdate'		=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('j Q Y - H:i', $row['last']),
+			'flags'			=>	array(
+				'isActive'		=> (!$row['activation'] || $row['activation'] == "")?1:0,
+			),
 		);
 
-		$tvars['vars']['active'] = (!$row['activation'] || $row['activation'] == "") ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['active'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unactive'].'" />';
-
-		$tvars['regx']['#\[mass\](.+?)\[\/mass\]#is'] = ($row['status'] == 1)?'':'$1';
-		$tvars['regx']['#\[link_news\](.+?)\[\/link_news\]#is'] = ($row['news'] > 0)?'$1':'';
-
-		$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = ($permModify)?'$1':'';
-		$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is'] = ($permModify|$permDetails)?'$1':'';
-
-		// Disable flag for comments if plugin 'comments' is not installed
-		$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
-
-		$tpl -> vars('entries', $tvars);
-		$entries .= $tpl -> show('entries');
+		$tEntries []= $tEntry;
 	}
 
+	$sortType = '';
 	foreach($available_orders as $k => $v){
-		$sort_options .= "<option value='$k'".(($rsort == $k)?' selected':'').">".$lang[$v]."</option>";
+		$sortType .= "<option value='$k'".(($rsort == $k)?' selected':'').">".$lang[$v]."</option>";
 	}
 
-	$how_options = "<option value=''".($_REQUEST['how']?'':' selected').">".$lang['asc']."</option><option value='desc'".($_REQUEST['how']?' selected':'').">".$lang['desc']."</option>";
+	$sortDirection = "<option value=''".($_REQUEST['how']?'':' selected').">".$lang['asc']."</option><option value='desc'".($_REQUEST['how']?' selected':'').">".$lang['desc']."</option>";
 
 	$userCount	=	$mysql->result("SELECT count(*) FROM ".uprefix."_users ".$where);
-	$pageCount	=	ceil($userCount / $per_page);
+	$pageCount	=	ceil($userCount / $fRPP);
 
 
-	$pagesss = generateAdminPagelist( array(
+	$pagination = generateAdminPagelist( array(
 			'current' => $pageNo,
 			'count' => $pageCount,
 			'url' => admin_url.'/admin.php?mod=users&action=list'.
 				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
 				($_REQUEST['how']?'&how='.htmlspecialchars($_REQUEST['how'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
-				($_REQUEST['per_page']?'&per_page='.intval($_REQUEST['per_page'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
+				($_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
 				'&sort='.$rsort.
 				'&page=%page%'
 		));
 
-	if ($pageCount > 1) {
+	$tVars	= array(
+		'php_self'		=> $PHP_SELF,
+		'rpp'			=> $fRPP,
+		'sortType'		=> $sortType,
+		'sortDirection'	=> $sortDirection,
+		'name'			=> htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'),
+		'token'			=> genUToken('admin.users'),
+		'pagination'	=> $pagination,
+		'entries'	=> $tEntries,
+		'flags'		=> 	array(
+			'canModify'	=> $permModify?1:0,
+			'canView'	=> $permDetails?1:0,
+			'canMassAction'	=> $permMassAction?1:0,
+			'haveComments'	=> getPluginStatusInstalled('comments')?1:0,
+		),
 
-		for ($i = 1; $i <= $pageCount; $i++) {
-			if ($i == $pageNo) {
-				$npp_nav .= ' <b>[ </b>'.$i.' <b>]</b> ';
-			} else {
-				$npp_nav .= "<a href=\"$PHP_SELF?mod=users&amp;action=list&amp;name=".
-					htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251').
-					"&amp;sort=".$rsort.
-					"&amp;how=".($_REQUEST['how']?'desc':'').
-					"&amp;page=".($i).($_REQUEST['per_page']?'&amp;per_page='.$per_page:'').
-					"\">".$i."</a> ";
-			}
-		}
-	}
+	);
+
 
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
@@ -460,15 +458,10 @@ function userList(){
 		'token'			=> genUToken('admin.users'),
 	);
 
-	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = ($permModify)?'$1':'';
-	$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is'] = ($permModify|$permDetails)?'$1':'';
 
-	// Disable flag for comments if plugin 'comments' is not installed
-	$tvars['regx']['#\[comments\](.*?)\[\/comments\]#is'] = getPluginStatusInstalled('comments')?'$1':'';
+	$xt = $twig->loadTemplate('skins/default/tpl/users/table.tpl');
+	echo $xt->render($tVars);
 
-	$tpl -> template('table', tpl_actions.$mod);
-	$tpl -> vars('table', $tvars);
-	echo $tpl -> show('table');
 }
 
 
