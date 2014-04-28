@@ -130,7 +130,7 @@ function validateAction() {
 <td colspan="9" class="contentEdit" align="right" valign="top">
 {% if flags.canModify %}
 <div style="text-align: left;">
-{{ lang['action' }}: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
+{{ lang['action'] }}: <select name="action" style="font: 12px Verdana, Courier, Arial; width: 230px;" onchange="updateAction();" onclick="updateAction();">
  <option value="" style="background-color: #E0E0E0;">-- {{ lang['action'] }} --</option>
  <option value="massActivate">{{ lang['activate'] }}</option>
  <option value="massLock">{{ lang['lock'] }}</option>
