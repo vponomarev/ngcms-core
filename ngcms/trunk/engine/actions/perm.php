@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: perm.php
 // Description: Permission manager
 // Author: Vitaly Ponomarev
@@ -11,8 +11,6 @@
 if (!defined('NGCMS')) die ('HAL');
 
 @include_once root.'includes/inc/extrainst.inc.php';
-
-//$lang = LoadLang('pm', 'admin');
 
 
 $pManager = new permissionRuleManager();

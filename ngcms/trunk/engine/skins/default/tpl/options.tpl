@@ -72,7 +72,7 @@
 <td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/ipban.gif" hspace="8" alt="" />{% if (perm.ipban) %}<a href="{{ php_self }}?mod=ipban" title="{{ lang.options['ipban'] }}">{% endif %}{{ lang.options['ipban'] }}{% if (perm.ipban) %}</a>{% endif %}</td>
 </tr>
 <tr>
-<td width="100%" class="contentEntry1"> <!-- <img src="{{ skins_url }}/images/ipban.gif" hspace="8" alt="" /><a href="{{ php_self }}?mod=ugroups" title="{{ lang.options['ugroups'] }}">{{ lang.options['ugroups'] }}</a> --> &nbsp;</td>
+<td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/ipban.gif" hspace="8" alt="" /><a href="{{ php_self }}?mod=ugroup" title="{{ lang.options['ugroup'] }}">{{ lang.options['ugroup'] }}</a>&nbsp;</td>
 </tr>
 <tr>
 <td width="100%" class="contentEntry1"><img src="{{ skins_url }}/images/uperm.png" hspace="8" alt="" /><a href="{{ php_self }}?mod=perm" title="{{ lang.options['uperm'] }}">{{ lang.options['uperm'] }}</a></td>
