@@ -2106,13 +2106,13 @@ function loadGroups() {
 				'english'	=> 'Commentator',
 			),
 		);
-		$UGROUP[5] = array(
-			'identity'	=> 'tester',
-			'langName'	=> array(
-				'russian'	=> 'Тестировщик',
-				'english'	=> 'Tester',
-			),
-		);
+//		$UGROUP[5] = array(
+//			'identity'	=> 'tester',
+//			'langName'	=> array(
+//				'russian'	=> 'Тестировщик',
+//				'english'	=> 'Tester',
+//			),
+//		);
 	}
 
 	// Initialize name according to current selected language
