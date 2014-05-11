@@ -378,6 +378,26 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 		$mail->AddAttachment($filename);
 	}
 
+	// Select delivery transport
+	switch ($config['mail_mode']) {
+		default:
+		case 'mail':		$mail->isMail();
+							break;
+		case 'sendmail':	$mail->isSendmail();
+							break;
+		case 'smtp':		if (!$config['mail']['smtp']['host'] || !$config['mail']['smtp']['port']) {
+								$mail->isMail();
+								break;
+							}
+							$mail->isSMTP();
+							$mail->Host = $config['mail']['smtp']['host'];
+							$mail->Port = $config['mail']['smtp']['port'];
+							$mail->SMTPAuth = ($config['mail']['smtp']['auth'])?true:false;
+							$mail->Username = $config['mail']['smtp']['login'];
+							$mail->Password = $config['mail']['smtp']['pass'];
+							break;
+	}
+
 	return $mail->Send();
 }
 
