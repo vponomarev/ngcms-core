@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: configuration.php
 // Description: Configuration managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -12,6 +12,34 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang		= LoadLang('configuration', 'admin');
 
+
+function twigmkSelect($params) {
+	$values = '';
+	if (isset($params['values']) && is_array($params['values'])) {
+		foreach ($params['values'] as $k => $v) {
+			$values.='<option value="'.$k.'"'.(($k == $params['value'])?' selected="selected"':'').'>'.$v.'</option>';
+		}
+	}
+
+	return "<select ".((isset($params['id']) && $params['id'])?'id="'.$params['id'].'" ':'').'name="'.$params['name'].'">'.$values.'</select>';
+}
+
+function twigmkSelectYN($params) {
+	global $lang;
+	$params['values'] = array(1 => $lang['yesa'], 0 => $lang['noa']);
+	return twigmkSelect($params);
+}
+
+function twigmkSelectNY($params) {
+	global $lang;
+	$params['values'] = array(0 => $lang['noa'], 1 => $lang['yesa']);
+	return twigmkSelect($params);
+}
+
+
+$twig->addFunction('mkSelect',		new Twig_Function_Function('twigmkSelect'));
+$twig->addFunction('mkSelectYN',	new Twig_Function_Function('twigmkSelectYN'));
+$twig->addFunction('mkSelectNY',	new Twig_Function_Function('twigmkSelectNY'));
 
 //
 // Save system config
@@ -84,7 +112,7 @@ function systemConfigSave(){
 //
 // Show configuration form
 function systemConfigEditForm(){
-	global $lang, $tpl, $AUTH_CAPABILITIES, $PHP_SELF;
+	global $lang, $tpl, $AUTH_CAPABILITIES, $PHP_SELF, $twig, $multiconfig;
 
 	// Check for token
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'details')) {
@@ -111,87 +139,38 @@ function systemConfigEditForm(){
 
 	$load_profiler = $config['load_profiler'] - time();
 	if (($load_profiler < 0)||($load_profiler > 86400))
-		$load_profiler = 0;
+		$config['load_profiler'] = 0;
 
-	$tvars['vars'] = array(
+	$mConfig = array();
+	foreach ($multiconfig as $k => $v) {
+		$v['key'] = $k;
+		$mConfig []= $v;
+	}
+
+
+	$tVars = array(
+		//	SYSTEM CONFIG is available via `config` variable
+		'config'					=>	$config,
+		'list'						=> array(
+			'captcha_font'				=> ListFiles('trash', 'ttf'),
+			'theme'						=> ListFiles('../templates',''),
+			'default_lang'				=> ListFiles('lang', ''),
+			'wm_image'					=> ListFiles('trash', array('gif', 'png'), 2),
+			'auth_module'				=> $auth_modules,
+			'auth_db'					=> $auth_dbs,
+		),
 		'php_self'					=>	$PHP_SELF,
 		'timestamp_active_now'		=>	LangDate($config['timestamp_active'], time()),
 		'timestamp_updated_now'		=>	LangDate($config['timestamp_updated'], time()),
-		'lock'						=>	MakeDropDown(array(1=>$lang[yesa],0=>$lang[noa]), "save_con[lock]", $config['lock']),
-		'language_selection'		=>	MakeDropDown(ListFiles('lang', ''), "save_con[default_lang]", $config['default_lang']),
-		'captcha_font'				=>	MakeDropDown(ListFiles('trash', 'ttf'), "save_con[captcha_font]", $config['captcha_font']),
-		'list_themes'				=>	MakeDropDown(ListFiles('../templates',''), "save_con[theme]", $config['theme']),
-		'users_selfregister'		=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[users_selfregister]", $config['users_selfregister']),
-		'register_type'				=>	MakeDropDown(array(0 => $lang['register_extremly'], 1 => $lang['register_simple'], 2 => $lang['register_activation'], 3 => $lang['register_manual'], 4 => $lang['register_manual_confirm']), "save_con[register_type]", $config['register_type']),
-		'blocks_for_reg'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[blocks_for_reg]", $config['blocks_for_reg']),
-		'extended_more'				=>	MakeDropDown(array(0 => $lang['noa'],  1 => $lang['yesa']), "save_con[extended_more]", $config['extended_more']),
-		'meta'						=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[meta]", $config['meta']),
-		'auto_backup'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[auto_backup]", $config['auto_backup']),
-		'use_gzip'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_gzip]", $config['use_gzip']),
-		'use_captcha'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_captcha]", $config['use_captcha']),
-		'use_cookies'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_cookies]", $config['use_cookies']),
-		'news_without_content'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[news_without_content]", $config['news_without_content']),
-		'use_sessions'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_sessions]", $config['use_sessions']),
-		'category_counters'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[category_counters]", $config['category_counters']),
-		'news.edit.split'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[news.edit.split]", $config['news.edit.split']),
-		'use_smilies'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_smilies]", $config['use_smilies']),
-		'use_bbcodes'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_bbcodes]", $config['use_bbcodes']),
-		'use_htmlformatter'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_htmlformatter]", $config['use_htmlformatter']),
-		'images_dim_action'			=>	MakeDropDown(array(0 => $lang['images_dim_action#0'],  1 => $lang['images_dim_action#1']), "save_con[images_dim_action]", $config['images_dim_action']),
-		'use_avatars'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_avatars]", $config['use_avatars']),
-		'news_view_counters'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa'], 2 => $lang['news_view_counters#2']),  "save_con[news_view_counters]", $config['news_view_counters']),
-		'avatars_gravatar'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[avatars_gravatar]", $config['avatars_gravatar']),
-		'use_photos'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[use_photos]", $config['use_photos']),
-		'send_notice'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[send_notice]", $config['send_notice']),
-		'remember'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),  "save_con[remember]", $config['remember']),
-		'auth_module'				=>	MakeDropDown($auth_modules, "save_con[auth_module]", $config['auth_module']),
-		'auth_db'				=>	MakeDropDown($auth_dbs, "save_con[auth_db]", $config['auth_db']),
-		'mydomains'				=>	$config['mydomains'],
-		'syslog'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[syslog]", $config['syslog']),
-		'load'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[load_analytics]", $config['load_analytics']),
-		'load_profiler'				=>	$load_profiler,
-		'debug'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[debug]", $config['debug']),
-		'debug_queries'				=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[debug_queries]", $config['debug_queries']),
-		'debug_profiler'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[debug_profiler]", $config['debug_profiler']),
-		'default_newsorder'			=>	MakeDropDown(array('id desc' => $lang['order_id_desc'], 'id asc' => $lang['order_id_asc'], 'postdate desc' => $lang['order_postdate_desc'], 'postdate asc' => $lang['order_postdate_asc'], 'title desc' => $lang['order_title_desc'], 'title asc' => $lang['order_title_asc']), "save_con[default_newsorder]", $config['default_newsorder']),
-		'thumb_mode'				=>	MakeDropDown(array(0 => $lang['mode_demand'], 1 => $lang['mode_forbid'], 2 => $lang['mode_always']),   "save_con[thumb_mode]",   $config['thumb_mode']),
-		'template_mode'				=>	MakeDropDown(array(1 => $lang['template_mode.1'], 2 => $lang['template_mode.2']),   "save_con[template_mode]",   $config['template_mode']),
-		'shadow_mode'				=>	MakeDropDown(array(0 => $lang['mode_demand'], 1 => $lang['mode_forbid'], 2 => $lang['mode_always']),   "save_con[shadow_mode]",  $config['shadow_mode']),
-		'shadow_place'				=>	MakeDropDown(array(0 => $lang['mode_orig'],   1 => $lang['mode_copy'],   2 => $lang['mode_origcopy']), "save_con[shadow_place]", $config['shadow_place']),
-		'stamp_mode'				=>	MakeDropDown(array(0 => $lang['mode_demand'], 1 => $lang['mode_forbid'], 2 => $lang['mode_always']),   "save_con[stamp_mode]",   $config['stamp_mode']),
-		'stamp_place'				=>	MakeDropDown(array(0 => $lang['mode_orig'],   1 =>$lang['mode_copy'],    2 => $lang['mode_origcopy']), "save_con[stamp_place]",  $config['stamp_place']),
-		'404_mode'					=>	MakeDropDown(array(0 => $lang['404.int'],     1 =>$lang['404.ext'],      2 => $lang['404.http']),      "save_con[404_mode]",     $config['404_mode']),
-		'libcompat'					=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']),      "save_con[libcompat]",     $config['libcompat']),
-		'sql_error'					=>	MakeDropDown(array(0 => $lang['sql_error_0'],   1 =>$lang['sql_error_1'],    2 => $lang['sql_error_2']), "save_con[sql_error_show]",  $config['sql_error_show']),
-		'url_external_nofollow'		=>	MakeDropDown(array(0 => $lang['noa'], 1 => $lang['yesa']),  "save_con[url_external_nofollow]", $config['url_external_nofollow']),
-		'url_external_target_blank'	=>	MakeDropDown(array(0 => $lang['noa'], 1 => $lang['yesa']),  "save_con[url_external_target_blank]", $config['url_external_target_blank']),
-		'photos_thumb_size_x'		=>	isset($config['photos_thumb_size_x'])?intval($config['photos_thumb_size_x']):intval($config['photos_thumb_size']),
-		'photos_thumb_size_y'		=>	isset($config['photos_thumb_size_y'])?intval($config['photos_thumb_size_y']):intval($config['photos_thumb_size']),
-		'thumb_size_x'				=>	isset($config['thumb_size_x'])?intval($config['thumb_size_x']):intval($config['thumb_size']),
-		'thumb_size_y'				=>	isset($config['thumb_size_y'])?intval($config['thumb_size_y']):intval($config['thumb_size']),
 		'token'						=> genUToken('admin.configuration'),
-		'home_url'					=> $config['home_url'],
-		'admine_url'				=> $config['admin_url'],
-		'news_multicat_url'			=>	MakeDropDown(array(0 => $lang['news_multicat:0'], 1 => $lang['news_multicat:1']),  "save_con[news_multicat_url]", $config['news_multicat_url']),
-		'multiext_files'		=>	MakeDropDown(array(0 => $lang['noa'], 1 => $lang['yesa']),  "save_con[allow_multiext]", $config['allow_multiext']),
-		'home_title'			=>	secure_html($config['home_title']),
-		'use_memcached'			=>	MakeDropDown(array(1 => $lang['yesa'], 0 => $lang['noa']), "save_con[use_memcached]", $config['use_memcached']),
+		'multiConfig'				=> $mConfig,
 	);
-
-	// Prepare file name for STAMP
-	$stampFileName = '';
-	if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
-		$stampFileName = $config['wm_image'].'.gif';
-	} else if (file_exists(root.'trash/'.$config['wm_image'])) {
-		$stampFileName = $config['wm_image'];
-	}
-
-	$tvars['vars']['wm_image']		= MakeDropDown(ListFiles('trash', array('gif', 'png'), 2), "save_con[wm_image]", $config['wm_image']);
-
 
 	//
 	// Fill parameters for multiconfig
 	//
+	$multiList = array();
+
 	$tmpline = '';
 	if (is_array($multiconfig)) {
 		foreach ($multiconfig as $mid => $mline) {
@@ -202,8 +181,12 @@ function systemConfigEditForm(){
 	$tvars['vars']['multilist'] = $tmpline;
 	$tvars['vars']['defaultSection'] = (isset($_REQUEST['selectedOption']) && $_REQUEST['selectedOption'])?htmlspecialchars($_REQUEST['selectedOption'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'news';
 
-	$tpl -> vars('configuration', $tvars);
-	echo $tpl -> show('configuration');
+	$xt = $twig->loadTemplate('skins/default/tpl/configuration.tpl');
+	echo $xt->render($tVars);
+
+
+//	$tpl -> vars('configuration', $tvars);
+//	echo $tpl -> show('configuration');
 }
 
 
