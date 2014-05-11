@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -215,6 +215,7 @@ $twig = new Twig_Environment($twigLoader, array(
   'cache' => root.'cache/twig/',
   'auto_reload' => true,
   'autoescape' => false,
+  'charset' => 'cp1251',
   'base_template_class' => 'Twig_Template_NGCMS',
 ));
 
