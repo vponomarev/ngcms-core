@@ -1,7 +1,7 @@
 <div class="block-title">Список ваших новостей:</div>
 <table class="table table-striped table-bordered">
-	<tr align="center">
-		<td colspan="4"><a href="{{ addURL }}">Добавить новость..</a></td>
+	<tr>
+		<th colspan="4"><a href="{{ addURL }}">Добавить новость..</a></th>
 	</tr>
 	<tr align="center">
 		<td width="40">Статус</td>

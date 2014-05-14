@@ -15,7 +15,7 @@ RelDate: 2013-08-09
 ; Template title
 Title: Default template
 ; List of built in templates for plugins
-Plugins: archive_v0.06, auth_basic_v0.25, auth_loginza_v0.2.1, bb_media_v0.07, calendar_v0.09, comments_v0.07, feedback_v0.20, nsm_v0.02, pm_v0.4, rating_v0.05, rss_export_v0.16, similar_v0.07, switcher_v0.08, tags_v0.25, top_active_users_v0.4, uprofile_v0.10, voting_v0.16, xfields_v0.20, xnews_v0.04
+Plugins: archive_v0.06, auth_basic_v0.25, auth_loginza_v0.2.1, bb_media_v0.07, calendar_v0.09, comments_v0.07, feedback_v0.20, nsm_v0.02, pm_v0.5, rating_v0.05, rss_export_v0.16, similar_v0.07, switcher_v0.08, tags_v0.25, top_active_users_v0.4, uprofile_v0.10, voting_v0.16, xfields_v0.20, xnews_v0.04
 ; Size: 256 x 192, format: PNG
 ImagePreview: img/tpl_preview.png
 ; Size: 512 x 384, format: PNG

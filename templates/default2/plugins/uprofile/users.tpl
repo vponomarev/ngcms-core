@@ -8,12 +8,13 @@
 			<table border="0" width="100%">
 				<tr>
 					<td valign="top" style="text-align: center; padding: 15px;">
-						<img src="{{ user.avatar }}" alt="{{ lang.uprofile['avatar'] }}"/><br />
+						<img src="{{ user.avatar }}" alt="{{ lang.uprofile['avatar'] }}" style="max-width: 100px; max-height: 100px;" /><br />
 						{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" alt="{{ lang.uprofile['photo'] }}" target="_blank">{% endif %}
-							<img src="{{ user.photo_thumb }}" alt=""/>
+							<img src="{{ user.photo_thumb }}" alt="{{ lang.uprofile['photo'] }}" style="max-width: 100px; max-height: 100px;" />
 						{% if (user.flags.hasPhoto) %}</a>{% endif %}
 						{% if not (global.user.status == 0) %}
 							{% if pluginIsActive('pm') %}<a href="/plugin/pm/?action=write&name={{ user.name }}">написать ЛС</a>{% endif %}
+							{% if (user.flags.isOwnProfile) %}<a href="/profile.html">редактировать</a>{% endif %}
 						{% endif %}
 					</td>
 					<td width="100%" valign="top" style="padding: 5px;">

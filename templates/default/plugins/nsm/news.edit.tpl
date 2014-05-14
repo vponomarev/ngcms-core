@@ -44,8 +44,8 @@ function changeActive(name) {
 <input type="hidden" name="subaction" value="submit"/>
 <div class="block-title">{{ lang.editnews['editnews_title'] }}:</div>
 <table class="table table-striped table-bordered">
-	<tr align="center">
-		<td colspan="4"><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></td>
+	<tr>
+		<th colspan="2"><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></th>
 	</tr>
 	<tr>
 		<td>{{ lang.editnews['title'] }}:</td>

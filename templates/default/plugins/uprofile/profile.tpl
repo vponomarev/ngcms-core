@@ -69,7 +69,7 @@
 			<input type="file" name="newphoto" class="upload" />
 		</div>
 		{% if (user.flags.hasPhoto) %}
-			<a href="{{ user.photo }}" target="_blank"><img src="{{ user.photo_thumb }}" style="margin: 5px; border: 0px; alt=""/></a><br/>
+			<a href="{{ user.photo }}" target="_blank"><img src="{{ user.photo_thumb }}" style="margin: 5px; border: 0px; max-width: 80px; max-height: 80px;" alt=""/></a><br />
 			<input type="checkbox" name="delphoto" id="delphoto" />&nbsp;{{ lang.uprofile['delete'] }}
 		{% endif %}
 	</div>
@@ -88,7 +88,7 @@
 			<input type="file" name="newavatar" class="upload" />
 		</div>
 		{% if (user.flags.hasAvatar) %}
-			<img src="{{ user.avatar }}" style="margin: 5px; border: 0px; alt=""/><br/>
+			<img src="{{ user.avatar }}" style="margin: 5px; border: 0px; max-width: 80px; max-height: 80px;" alt=""/><br />
 			<input type="checkbox" name="delavatar" id="delavatar" />&nbsp;{{ lang.uprofile['delete'] }}
 		{% endif %}
 	</div>

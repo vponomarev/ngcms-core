@@ -72,7 +72,7 @@ function add_comment(){
 		<div class="clear"></div>
 	</div>
 	[/captcha]
-	<div><textarea name="content" id="content" class="wy" rows="8" style="width:98%"></textarea></div>
+	<div>{bbcodes}<br>{smilies}<br><textarea name="content" id="content" class="wy" rows="8" style="width:98%"></textarea></div>
 	<input type="submit" class="btn btn-large btn-primary" value="{l_add}"/>
 </fieldset>
 </form>

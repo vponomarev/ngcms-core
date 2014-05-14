@@ -3,7 +3,7 @@
 <ul class="u_panel">
 	[if-have-perm]<li class="admin"><a href="{{ admin_url }}" target="_blank">{{ lang['adminpanel'] }}</a></li>
 	<li class="addnew"><a href="{{ addnews_link }}">{{ lang['addnews'] }}</a></li>[/if-have-perm]
-	{% if pluginIsActive('pm') %}<li class="pm_n"><a href="{{ p.pm.link }}"><span class="bg">ЛС ({{ p.pm.new }} / {{ p.pm.total }})</span></a></li>{% endif %}
+	{% if pluginIsActive('pm') %}<li class="pm_n"><a href="{{ p.pm.link }}"><span class="bg">ЛС ({{ p.pm.pm_unread }} / {{ p.pm.pm_all }})</span></a></li>{% endif %}
 	{% if pluginIsActive('uprofile') %}<li class="profile"><a href="{{ profile_link }}">{{ lang['myprofile'] }}</a></li>{% endif %}
 	{% if pluginIsActive('bookmarks') %}<li class="book_n"><a href="/plugin/bookmarks/">Мои закладки</a></li>{% endif %}
 	<li class="logout"><a href="{{ logout_link }}">{{ lang['logout'] }}</a></li>

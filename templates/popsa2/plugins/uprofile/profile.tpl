@@ -59,7 +59,7 @@
 			{% if (flags.photoAllowed) %}
 			<tr>
 				<td>{{ lang.uprofile['photo'] }}:</td>
-				<td class="input"><input type="file" name="newphoto" /><br />{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" target="_blank"><img src="{{ user.photo_thumb }}" style="margin: 5px; border: 0px; alt=""/></a><br/><input type="checkbox" name="delphoto" id="delphoto" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
+				<td class="input"><input type="file" name="newphoto" /><br />{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" target="_blank"><img src="{{ user.photo_thumb }}" style="margin: 5px; border: 0px; max-width: 80px; max-height: 80px;" alt=""/></a><br/><input type="checkbox" name="delphoto" id="delphoto" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
 			</tr>
 			{% else %}
 			<tr>
@@ -70,7 +70,7 @@
 			{% if (flags.avatarAllowed) %}
 			<tr>
 				<td>{{ lang.uprofile['avatar'] }}:</td>
-				<td class="input"><input type="file" name="newavatar" /><br />{% if (user.flags.hasAvatar) %}<img src="{{ user.avatar }}" style="margin: 5px; border: 0px; alt=""/><br/><input type="checkbox" name="delavatar" id="delavatar" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
+				<td class="input"><input type="file" name="newavatar" /><br />{% if (user.flags.hasAvatar) %}<img src="{{ user.avatar }}" style="margin: 5px; border: 0px; max-width: 80px; max-height: 80px;" alt=""/><br/><input type="checkbox" name="delavatar" id="delavatar" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
 			</tr>
 			{% else %}
 			<tr>

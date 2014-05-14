@@ -72,7 +72,7 @@
 			<section id="container" class="clearfix">
 				<div id="content-main">
 					{% include "slider.tpl" %}
-					{% if isHandler('news:main|news:by.category') %}
+					{% if isHandler('news:main|news:by.category|news:by.month|news:by.day') %}
 						<div class="articles full">
 							<div class="articles-switch">
 								<a href="#" id="articles-switch-1" class="articles-switch-1" onclick="javascript:save_articles_switch_one();"></a>
@@ -87,7 +87,7 @@
 					{% endif %}
 				</div>
 				<aside id="sidebar">
-					<div class="block popular-block">  
+					<div class="block popular-block">
 						<div class="block-title">Популярные статьи</div>
 						<ul class="tabs tabs-full" id="popular-news">
 							<li class="active"><a href="#tab-1" data-transitional="fade">За день</a></li>

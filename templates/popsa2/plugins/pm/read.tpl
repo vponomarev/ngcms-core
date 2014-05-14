@@ -1,32 +1,26 @@
-
+<form method="POST" action="{{ php_self }}?action=delete&pmid={{ pmid }}&location={{ location }}" style="display: inline;">
 <div class="full">
-  <h1>{l_pm:new}</h1>
-  <div class="pad20_f">
-    <div class="btn-group">
-      <a href="/plugin/pm/" class="btn">{l_pm:inbox}</a>
-      <a href="/plugin/pm/?action=outbox" class="btn">{l_pm:outbox}</a>
-    </div>
-    <div class="clear20"></div>
- <form method="POST" action="{php_self}?action=delete&pmid={pmid}&location={location}">
-<input type="hidden" name="title" value="{subject}">
-<input type="hidden" name="from" value="{from}">   
-{content}
-<div class="clear20"></div>
-<div class="btn-group">
-  <input class="btn btn-warning" type="submit" value="{l_pm:delete_one}">
+	<h1>{{ subject }} {% if (ifinbox) %}от{% endif %} {% if not (ifinbox) %}для{% endif %} {{ author }} {{ pmdate|date('Y-m-d H:i') }}</h1>
+	<div class="pad20_f">
+		<div class="btn-group">
+			<a href="/plugin/pm/">{{ lang['pm:inbox'] }}</a> | <a href="/plugin/pm/?action=outbox">{{ lang['pm:outbox'] }}</a> | <a href="{{php_self}}?action=set" align="right">{{ lang['pm:set'] }}</a>
+		</div>
+		<div class="clear20"></div>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td width="100%"><blockquote>{{content}}</blockquote></td>
+			</tr>
+			<tr>
+				<td>
+					<input class="btn btn-warning" type="submit" value="{{ lang['pm:delete_one'] }}"></form>
+					{% if (ifinbox == 1) %}
+					<form name="pm" method="POST" action="{{ php_self }}?action=reply&pmid={{ pmid }}" style="display: inline;">
+						<input class="btn" type="submit" value="{{ lang['pm:reply'] }}">
+					</form>
+					{% endif %}
+					<div class="clear20"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
- </form>   
-  
-  </div>
-</div>
-
-
- [if-inbox]
-<div class="full">
-  <div class="pad20">
-    <form name="pm" method="POST" action="{php_self}?action=reply&pmid={pmid}">
-    <input class="btn btn-large btn-primary" type="submit" value="{l_pm:reply}"></form>
-  </div>
-</div>
-[/if-inbox] 
-
