@@ -656,6 +656,10 @@ select {
 	width: 67px;
 	position: relative;
 }
+#container #mainblock #comments .comment .avatar img {
+	max-width: 70px;
+	max-height: 70px;
+}
 #container #mainblock #comments .comment .avatar .num {
 	position: absolute;
 	width: 29px;

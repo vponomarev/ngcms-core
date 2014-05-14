@@ -10,7 +10,7 @@
 				[if-have-perm]<li><a href="{{ admin_url }}" target="_blank"><b>Админ-панель</b></a></li>
 				<li><a href="{{ addnews_link }}">Добавить новость</a></li>[/if-have-perm]
 				{% if pluginIsActive('uprofile') %}<li><a href="{{ profile_link }}">Редактировать профиль</a></li>{% endif %}
-				{% if pluginIsActive('pm') %}<li><a href="{{ p.pm.link }}">Личные сообщения ({{ p.pm.new }})</a></li>{% endif %}
+				{% if pluginIsActive('pm') %}<li><a href="{{ p.pm.link }}">Личные сообщения ({{ p.pm.pm_unread }})</a></li>{% endif %}
 				<li><a href="{{ logout_link }}">Завершить сеанс</a></li>
 			</ul>
 		</div>

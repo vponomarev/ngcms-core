@@ -42,8 +42,8 @@ function approveMode(mode) {
 <input type="hidden" name="approve" id="approve" value="0"/>
 <div class="block-title">Добавление новости:</div>
 <table class="table table-striped table-bordered">
-	<tr align="center">
-		<td colspan="4"><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></td>
+	<tr>
+		<th colspan="2"><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></th>
 	</tr>
 	<tr>
 		<td>Заголовок:</td>

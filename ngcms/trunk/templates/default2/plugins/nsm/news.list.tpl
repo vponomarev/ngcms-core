@@ -5,10 +5,13 @@
 	<div style="height: 10px;"></div>
 	<div class="post-text">
 		<p>
-			<table class="nsm" border="0" width="100%">
-				<tr align="center">
-					<td colspan="4"><a href="{{ addURL }}">Добавить новость..</a></td>
+			<table border="0" width="100%">
+				<tr>
+					<th><a href="{{ addURL }}">Добавить новость..</a></th>
 				</tr>
+			</table>
+			<div style="height: 20px;"></div>
+			<table class="nsm" border="0" width="100%">
 				<tr align="center">
 					<td class="nsm_head" width="50">Статус</td>
 					<td class="nsm_head" width="70">Дата</td>

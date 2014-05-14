@@ -48,9 +48,12 @@ function approveMode(mode) {
 	<div class="post-text">
 		<p>
 			<table border="0" width="100%">
-				<tr align="left">
-					<td colspan="4"><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></td>
+				<tr>
+					<th><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></th>
 				</tr>
+			</table>
+			<div style="height: 20px;"></div>
+			<table border="0" width="100%">
 				<tr>
 					<td width="30%">Заголовок:</td>
 					<td width="70%"><input type="text" name="title" class="input" value="" /></td>

@@ -68,16 +68,16 @@
 					<td width="70%"><input class="input" type="text" name="editfrom" value="{{ user.from }}" /></td>
 				</tr>
 				<tr>
-					<td width="30%">{{ lang.uprofile['about'] }}: {{ info_sizelimit_text }}</td>
-					<td width="70%"><textarea class="textarea" name="editabout" style="width:98%; height: 80px;">{{ user.info }}</textarea></td>
+					<td width="30%">{{ lang.uprofile['about'] }}:</td>
+					<td width="70%"><textarea class="textarea" name="editabout" style="width:98%; height: 80px;">{{ user.info }}</textarea><br />{{ info_sizelimit_text }}</td>
 				</tr>
 				<tr>
 					<td width="30%">{{ lang.uprofile['new_pass'] }}:</td>
 					<td width="70%"><input class="input" type="password" name="editpassword" autocomplete="off" /><br /><small>{l_uprofile:pass_left}</small></td>
 				</tr>
 				<tr>
-					<td width="30%">{{ lang.uprofile['oldpass'] }}:<br/><small>{{ lang.uprofile['oldpass#desc'] }}</small></td>
-					<td width="70%"><input class="input" type="password" name="oldpass" value=""autocomplete="off" /></td>
+					<td width="30%">{{ lang.uprofile['oldpass'] }}:</td>
+					<td width="70%"><input class="input" type="password" name="oldpass" value=""autocomplete="off" /><br/><small>{{ lang.uprofile['oldpass#desc'] }}</small></td>
 				</tr>
 				{% if pluginIsActive('xfields') %}{{ plugin_xfields_1 }}{% endif %}
 			</table>
@@ -85,7 +85,7 @@
 				{% if (flags.photoAllowed) %}
 				<tr>
 					<td width="30%">{{ lang.uprofile['photo'] }}:</td>
-					<td width="70%"><input type="file" name="newphoto" class="input" /><br />{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" target="_blank"><img src="{{ user.photo_thumb }}" style="margin: 5px; border: 0px; alt=""/></a><br/><input type="checkbox" name="delphoto" id="delphoto" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
+					<td width="70%"><input type="file" name="newphoto" class="input" /><br />{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" target="_blank"><img src="{{ user.photo_thumb }}" style="margin: 5px; border: 0px; max-width: 80px; max-height: 80px;" alt=""/></a><br/><input type="checkbox" name="delphoto" id="delphoto" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
 				</tr>
 				{% else %}
 				<tr>
@@ -96,7 +96,7 @@
 				{% if (flags.avatarAllowed) %}
 				<tr>
 					<td width="30%">{{ lang.uprofile['avatar'] }}:</td>
-					<td width="70%"><input type="file" name="newavatar" class="input" /><br />{% if (user.flags.hasAvatar) %}<img src="{{ user.avatar }}" style="margin: 5px; border: 0px; alt=""/><br/><input type="checkbox" name="delavatar" id="delavatar" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
+					<td width="70%"><input type="file" name="newavatar" class="input" /><br />{% if (user.flags.hasAvatar) %}<img src="{{ user.avatar }}" style="margin: 5px; border: 0px; max-width: 80px; max-height: 80px;" alt=""/><br/><input type="checkbox" name="delavatar" id="delavatar" />&nbsp;{{ lang.uprofile['delete'] }}{% endif %}</td>
 				</tr>
 				{% else %}
 				<tr>

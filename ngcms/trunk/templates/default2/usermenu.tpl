@@ -2,7 +2,7 @@
 <div id="user-panel">
 	{% if pluginIsActive('uprofile') %}<span class="none"><a href="{{ profile_link }}"><img class="avatar" src="{{ avatar_url }}" alt="" /></a></span>
 	<a href="{{ profile_link }}"><span class="icon"></span>{{ lang['myprofile'] }}</a>{% endif %}
-	{% if pluginIsActive('pm') %}<a href="{{ p.pm.link }}">หั ({{ p.pm.new }})</a>{% endif %}
+	{% if pluginIsActive('pm') %}<a href="{{ p.pm.link }}">หั ({{ p.pm.pm_unread }})</a>{% endif %}
 	[if-have-perm]<a href="{{ admin_url }}" target="_blank"><b>{{ lang['adminpanel'] }}</b></a>[/if-have-perm]
 	<span class="none"><a href="{{ logout_link }}" title="{{ lang['logout'] }}" class="exit"></a></span>
 </div>

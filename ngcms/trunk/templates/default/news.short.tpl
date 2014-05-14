@@ -6,7 +6,7 @@
 		{% else %}
 			<img src="{{ tpl_url }}/img/img-none.jpg" width="315" height="161" />
 		{% endif %}
-		<div class="article-cat">{{ category }}</div>
+		<div class="article-cat">{{ news.categories.masterText }}</div>
 	</div>
 	<div class="article-title"><a href="{{ news.url.full }}">{{ news.title }}</a></div>
 	<div class="article-meta"><span>{{ news.date }}</span> | <span>{% if pluginIsActive('uprofile') %}<a href="{{ news.author.url }}">{% endif %}{{ news.author.name }}{% if pluginIsActive('uprofile') %}</a>{% endif %}</span></div>

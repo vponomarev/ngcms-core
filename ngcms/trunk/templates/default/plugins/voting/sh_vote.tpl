@@ -1,4 +1,4 @@
-<div class="block poll-block clearfix">
+<div class="block poll-block">
 	<div class="block-title">Опрос</div>
 	<div class="question">{votename}</div>
 	{votelines}
