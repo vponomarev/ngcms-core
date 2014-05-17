@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: ugroup.php
 // Description: User group management
 // Author: Vitaly Ponomarev
@@ -241,13 +241,14 @@ function ugroupCommit(){
 		msgSticker("Конфигурация успешно сохранена");
 		//msg(array("text" => $lang['msgo_saved']));
 
-		$UGROUP = $edGroup;
+		// Reload groups
+		loadGroups();
 	} else {
 		msg(array("type" => 'error', "text" => $lang['msge_save_error'], "info" => $lang['msge_save_error#desc']));
 		return false;
 	}
 
-
+	
 
 }
 
