@@ -110,6 +110,7 @@ load_extras('admin:init');
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = array(
 	'perm'			=> 	'1',
+	'ugroup'		=> 	1,
 	'configuration'	=>	99,
 	'cron'			=>	99,
 	'dbo'			=>	99,
@@ -158,6 +159,8 @@ if (isset($permissions[$mod]) && ($permissions[$mod])) {
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_mod']));
 	}
+} else {
+	msg(array("type" => "error", "text" => $lang['msge_mod']));
 }
 
 // Print skin footer (if we're not in preview mode)
