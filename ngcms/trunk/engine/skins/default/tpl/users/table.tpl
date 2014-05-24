@@ -105,7 +105,7 @@ function validateAction() {
 <td width="20%">{{ lang['last_login'] }}</td>
 <td width="10%">{{ lang['all_news2'] }}</td>
 {% if flags.haveComments %}<td width="10%">{l_listhead.comments}</td>{% endif %}
-<td width="15%">{{ lang['status'] }}</td>
+<td width="15%">{{ lang['groupName'] }}</td>
 <td width="5%">&nbsp;</td>
 <td width="5%">{% if flags.canModify %}<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" />{% endif %}</td>
 </tr>
@@ -117,7 +117,7 @@ function validateAction() {
 <td class="contentEntry1">{{ entry.lastdate }}</td>
 <td class="contentEntry1">{% if entry.cntNews > 0 %}<a href="{{ php_self }}?mod=news&amp;aid={{ id }}">{{ entry.cntNews }}</a>{% else %}-{% endif %}</td>
 {% if flags.haveComments %}<td width="10%" class="contentEntry1">{% if entry.cntComments > 0 %}{{ entry.cntComments }}{% else %}-{% endif %}</td>{% endif %}
-<td class="contentEntry1">{{ entry.status }}</td>
+<td class="contentEntry1">{{ entry.groupName }}</td>
 <td class="contentEntry1"><img src="{{ skins_url }}/images/{% if entry.flags.isActive %}yes{% else %}no{%endif %}.png" alt="{% if entry.flags.isActive %}{{ lang['active'] }}{% else %}{{ lang['unactive'] }}{%endif %}" /></td>
 <td class="contentEntry1">{% if flags.canModify %}{% if flags.canMassAction %}<input name="selected_users[]" value="{{ entry.id }}" class="check" type="checkbox" />{% endif %}{% endif %}</td>
 </tr>
@@ -141,7 +141,10 @@ function validateAction() {
  <option value="massSetStatus">{{ lang['setstatus'] }} &raquo;</option>
 </select>
 <select name="newstatus" disabled="disabled" style="font: 12px Verdana, Courier, Arial; width: 150px;">
-	<option value="0"></option><option value="2">2 ({l_st_2})</option><option value="3">3 ({l_st_3})</option><option value="4">4 ({l_st_4})</option>
+<option value="0"></option>
+{% for grp in ugroup %}
+<option value="{{ grp.id }}">{{ grp.id }} ({{ grp.name }})</option>
+{% endfor %}
 </select>
 <input type="button" class="button" value="{{ lang['submit'] }}" onclick="validateAction();" />
 <br/>
@@ -186,10 +189,9 @@ function validateAction() {
 <td width="50%" class="contentEntry1">{l_status}</td>
 <td width="50%" class="contentEntry2">
 <select name="reglevel">
-<option value="4">4 ({l_st_4})</option>
-<option selected value="3">3 ({l_st_3})</option>
-<option value="2">2 ({l_st_2})</option>
-<option value="1">1 ({l_st_1})</option>
+{% for grp in ugroup %}
+<option value="{{ grp.id }}">{{ grp.id }} ({{ grp.name }})</option>
+{% endfor %}
 </select>
 </tr>
 </table>
