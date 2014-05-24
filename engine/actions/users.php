@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: users.php
 // Description: manage users
 // Author: Vitaly Ponomarev
@@ -16,7 +16,7 @@ $lang = LoadLang('users', 'admin');
 //
 // Form: Edit user
 function userEditForm(){
-	global $mysql, $lang, $tpl, $mod, $PFILTERS;
+	global $mysql, $lang, $tpl, $mod, $PFILTERS, $UGROUP;
 
 	$id = intval($_REQUEST['id']);
 
@@ -41,9 +41,10 @@ function userEditForm(){
 //	if (is_array($PFILTERS['p_uprofile']))
 //		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfilePre($row['id'], $row, $tvars); }
 
-    for ($i = 4; $i >= 1; $i--) {
-    	$status .= ' <option value="'.$i.'"'.(($row['status'] == $i)?' selected':'').'>'.$i.' ('.$lang['st_'.$i].')</option>';
-    }
+	foreach ($UGROUP as $ugID => $ugData) {
+		$status .= ' <option value="'.$ugID.'"'.(($row['status'] == $ugID)?' selected':'').'>'.$ugID.' ('.$ugData['name'].')</option>';
+	}
+
 	//	Обрабатываем необходимые переменные для шаблона
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
@@ -224,7 +225,7 @@ function userMassLock(){
 //
 // Bulk action: set status to selected users
 function userMassSetStatus(){
-	global $mysql, $lang, $userROW;
+	global $mysql, $lang, $userROW, $UGROUP;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
@@ -248,8 +249,8 @@ function userMassSetStatus(){
 	// Determine status to set to
 	// NOTE: we CAN'T set status `ADMIN` and we can't change STATUS for ADMINS
 	$status = intval($_REQUEST['newstatus']);
-	if (($status <= 1) or ($status > 4)) {
-		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
+	if (!isset($UGROUP[$status]) || ($status <= 1)) {
+		msg(array("type" => "error", "info" => $lang['msg_massadm']));
 		return;
 	}
 
@@ -423,6 +424,18 @@ function userList(){
 				'&page=%page%'
 		));
 
+	$tUgroup = array();
+	foreach ($UGROUP as $id => $grp) {
+		$tUge		= array(
+			'id'		=> $id,
+			'identity'	=> $grp['identity'],
+			'name'		=> $grp['name'],
+		);
+
+		$tUgroup []= $tUge;
+	}
+
+
 	$tVars	= array(
 		'php_self'		=> $PHP_SELF,
 		'rpp'			=> $fRPP,
@@ -431,6 +444,7 @@ function userList(){
 		'name'			=> htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'),
 		'token'			=> genUToken('admin.users'),
 		'pagination'	=> $pagination,
+		'ugroup'		=> $tUgroup,
 		'entries'	=> $tEntries,
 		'flags'		=> 	array(
 			'canModify'	=> $permModify?1:0,
