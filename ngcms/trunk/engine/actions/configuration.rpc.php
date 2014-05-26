@@ -111,6 +111,10 @@ function admConfigurationTestEMail($params) {
 		return array('status' => 0, 'errorCode' => 1, 'errorText' => 'FROM/TO e-mail address is not specified');
 	}
 
+	if ($params['token'] != genUToken('admin.configuration')) {
+		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Wrong security code');
+	}
+
 	// Init $mail client
 	@include_once root.'includes/classes/phpmailer/class.phpmailer.php';
 	$mail	= new PHPMailer;

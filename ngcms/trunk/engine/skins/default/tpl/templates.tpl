@@ -43,10 +43,6 @@
 </table>
 </div>
 
-<link rel="stylesheet" href="{{ home }}/lib/codemirror/css/codemirror.css">
-<script type="text/javascript" src="{{ home }}/lib/codemirror/js/codemirror.js"></script>
-<script type="text/javascript" src="{{ home }}/lib/codemirror/js/syntax_highlighter.js"></script>
-
 <script type="text/javascript" src="{{ home_url }}/lib/ngFileTree.js"></script>
 <link rel="stylesheet" href="{{ home_url }}/lib/ngFileTree.css" type="text/css" media="screen" />
 <script type="text/javascript" language="javascript">
