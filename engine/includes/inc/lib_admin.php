@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: lib_admin.php
 // Description: General function for site administration calls
 // Author: Vitaly Ponomarev
@@ -538,10 +538,10 @@ function addNews($mode = array()){
 		$SQL['flags']	=	0;
 	}
 
-	$SQL['mainpage']	= intval($_REQUEST['mainpage']) && $perm['personal.mainpage'];
-	$SQL['favorite']	= intval($_REQUEST['favorite']) && $perm['personal.favorite'];
-	$SQL['pinned']		= intval($_REQUEST['pinned']) && $perm['personal.pinned'];
-	$SQL['catpinned']	= intval($_REQUEST['catpinned']) && $perm['personal.catpinned'];
+	$SQL['mainpage']	= intval(intval($_REQUEST['mainpage']) && $perm['personal.mainpage']);
+	$SQL['favorite']	= intval(intval($_REQUEST['favorite']) && $perm['personal.favorite']);
+	$SQL['pinned']		= intval(intval($_REQUEST['pinned']) && $perm['personal.pinned']);
+	$SQL['catpinned']	= intval(intval($_REQUEST['catpinned']) && $perm['personal.catpinned']);
 
 	switch (intval($_REQUEST['approve'])) {
 		case -1:	$SQL['approve'] = -1;								break;
