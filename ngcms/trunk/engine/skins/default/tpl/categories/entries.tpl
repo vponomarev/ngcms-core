@@ -11,7 +11,7 @@
 <div style="float: left;">
 {% if (flags.canView) %}<a href="admin.php?mod=categories&amp;action=edit&amp;catid={{ entry.id }}" title="ID: {{ entry.id }}">{{ entry.name }}</a>{% else %}{{ entry.name }}{% endif %}
 <br/><small><a href="{{ entry.linkView }}" title="{{ lang['site.view'] }}" target="_blank">{{ entry.linkView }}</a></small>
-</div>
+</div>{% if (entry.info|length>0) %}<div style="float: left;"><img src="{{ skins_url }}/images/comments.gif"/></div>{% endif %}
 </td>
 <td>{{ entry.alt }}</td>
 <td>

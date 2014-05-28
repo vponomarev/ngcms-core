@@ -63,6 +63,7 @@ function admCategoryList($retMode = 0) {
 			'name'		=>	$row['name'],
 			'alt'		=>	$row['alt'],
 			'alt_url'	=>	$row['alt_url'],
+			'info'		=>	$row['info'],
 			'show_main'	=>	intval(substr($row['flags'],0,1)) ? ('<img src="'.skins_url.'/images/yes.png" alt="'.$lang['yesa'].'" title="'.$lang['yesa'].'"/>') : ('<img src="'.skins_url.'/images/no.png" alt="'.$lang['noa'].'"/>'),
 			'template'	=>	($row['tpl'] != '')?$row['tpl']:'--',
 			'news'		=>	($row['posts']>0)?$row['posts']:'--',
