@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru)
 // Name: rpc.php
 // Description: Service functions controller
 // Author: Vitaly Ponomarev
@@ -62,6 +62,9 @@ if (isset($_REQUEST['json'])||isset($_GET['methodName'])) {
 //
 function processJSON(){
 	global $RPCFUNC, $RPCADMFUNC;
+
+	// Set correct content/type
+	header('Content-Type: application/json; charset=UTF-8');
 
 	// Decode passed params
 	$params = json_decode($_POST['params'], true);
