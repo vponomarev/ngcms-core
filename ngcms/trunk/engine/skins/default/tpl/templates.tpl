@@ -80,7 +80,7 @@ var ngFileTreeFunc = function(file) {
 				$('#fileEditorSelector').val(resTX['content']);
 				ngFileContent = resTX['content'];
 			}
-		}).error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
+		}, "text").error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
 }
 
 function submitTemplateSelector() {
@@ -122,7 +122,7 @@ function submitTemplateEdit() {
 		} else {
 			ngNotifyWindow(resTX['content'], 'RESULT');
 		}
-	}).error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
+	}, "text").error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
 
 
 //	ngNotifyWindow('Test MSG', 'Test Title');
