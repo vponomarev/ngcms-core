@@ -31,7 +31,7 @@ $.post('/engine/rpc.php', { json : 1, methodName : 'admin.extras.getPluginConfig
 	//$('#configAreaX').html(newline);
 	$('#configArea').val(unescape(newline));
 	//$('#configArea').val("\u0420"+"\u0415\u041a\u041b\u0410\u041c\u0410_\u041d\u0410_\u041c\u041e\u0420\u0414\u0415");
-}).error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
+}, "text").error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
 }
 
 function showContent() {

@@ -26,7 +26,7 @@ function ngCheckDB() {
 		} else {
 			ngNotifyWindow(resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
 		}
-	}).error(function() { ngHideLoading(); ngNotifyWindow('{{ lang['rpc_httpError'] }}', '{{ lang['notifyWindowError'] }}'); });
+	}, "text").error(function() { ngHideLoading(); ngNotifyWindow('{{ lang['rpc_httpError'] }}', '{{ lang['notifyWindowError'] }}'); });
 
 
 }
@@ -56,7 +56,7 @@ function ngCheckMemcached() {
 		} else {
 			ngNotifyWindow(resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
 		}
-	}).error(function() { ngHideLoading(); ngNotifyWindow('{{ lang['rpc_httpError'] }}', '{{ lang['notifyWindowError'] }}'); });
+	}, "text").error(function() { ngHideLoading(); ngNotifyWindow('{{ lang['rpc_httpError'] }}', '{{ lang['notifyWindowError'] }}'); });
 }
 
 // Send test e-mail message
@@ -96,7 +96,7 @@ function ngCheckEmail() {
 		} else {
 			ngNotifyWindow(resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
 		}
-	}).error(function() { ngHideLoading(); ngNotifyWindow('{{ lang['rpc_httpError'] }}', '{{ lang['notifyWindowError'] }}'); });
+	}, "text").error(function() { ngHideLoading(); ngNotifyWindow('{{ lang['rpc_httpError'] }}', '{{ lang['notifyWindowError'] }}'); });
 }
 
 </script>
