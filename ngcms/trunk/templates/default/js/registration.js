@@ -28,7 +28,7 @@ $(document).ready(function(){
 				$("div#reg_login").html("<span style='color:#94c37a;'>Введенный вами логин свободен и может быть использован при регистрации.</span>");
 			}
 		}
-	}).error(function() { 
+	}, "text").error(function() { 
 		alert('HTTP error during request', 'ERROR'); 
 	});
 
