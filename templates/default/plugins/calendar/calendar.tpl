@@ -11,7 +11,7 @@ function ng_calendar_walk(month, year, offset) {
 		} else {
 			$('#ngCalendarDiv').html(resTX['data']);
 		}
-	}).error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
+	}, "text").error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
 
 }
 </script>
