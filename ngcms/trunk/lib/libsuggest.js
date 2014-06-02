@@ -74,7 +74,8 @@ var ngSuggest = function(fieldID, params) {
 
 		//document.body.appendChild(this.searchDIV);
 		var iDiv = document.createElement('div');
-		iDiv.style.position = 'relative';
+	//	iDiv.style.position = 'relative';
+		this.searchDIV.style.position = 'relative';
 
 		this.field.parentNode.appendChild(iDiv);
 		iDiv.appendChild(this.searchDIV);
