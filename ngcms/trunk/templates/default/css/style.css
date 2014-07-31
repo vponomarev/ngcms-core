@@ -543,17 +543,17 @@ h1.title {
 .alert.alert-error {
     color: #a35553;
     background: #ffeeee url('../img/alert-error.png') no-repeat 15px 17px;
-    padding-left: 35px;
+	margin-left: 35px;
 }
 .alert.alert-success {
     color: #7b8862;
     background: #f7fff0 url('../img/alert-success.png') no-repeat 15px 17px;
-    padding-left: 35px;
+	margin-left: 35px;
 }
 .alert.alert-info {
     color: #607891;
     background: #f4faff url('../img/alert-info.png') no-repeat 15px 17px;
-    padding-left: 35px;
+	margin-left: 35px;
 }
 
 /* ==========================================================================
