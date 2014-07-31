@@ -217,12 +217,12 @@
 
 /* articles */
 .articles {
-    margin-left: -35px;
+    margin-left: 0px;
     margin-bottom: -15px;
     display: block;
 }
 .articles  .block-title {
-    margin-left: 35px;
+    margin-left: 0px;
     display: block;
 }
 .articles-switch {
@@ -258,7 +258,7 @@
     width: 315px;
     display: inline-block;
     vertical-align: top;
-    margin-left: 35px;
+    margin-left: 0px;
     margin-bottom: 28px;
     animation: to-static 0.1s;
 }
@@ -543,17 +543,17 @@ h1.title {
 .alert.alert-error {
     color: #a35553;
     background: #ffeeee url('../img/alert-error.png') no-repeat 15px 17px;
-	margin-left: 35px;
+	padding-left: 35px;
 }
 .alert.alert-success {
     color: #7b8862;
     background: #f7fff0 url('../img/alert-success.png') no-repeat 15px 17px;
-	margin-left: 35px;
+	padding-left: 35px;
 }
 .alert.alert-info {
     color: #607891;
     background: #f4faff url('../img/alert-info.png') no-repeat 15px 17px;
-	margin-left: 35px;
+	padding-left: 35px;
 }
 
 /* ==========================================================================
