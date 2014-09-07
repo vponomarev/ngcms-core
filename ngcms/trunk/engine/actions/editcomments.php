@@ -24,6 +24,12 @@ if(empty($comid)){
 	exit();
 }
 
+$newsid = $_REQUEST['newsid']?intval($_REQUEST['newsid']):0;
+if(empty($newsid)){
+	msg(array("type" => "error", "text" => $lang['comid_not_found']));
+	exit();
+}
+
 if ($subaction == "doeditcomment") {
 	if (!trim($_REQUEST['poster'])) {
 		msg(array("type" => "error", "text" => $lang['msge_namefield']));
