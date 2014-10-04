@@ -77,23 +77,23 @@ function ngHideLoading() {
 
 function ngNotifyWindow(msg, title) {
 
-	$("#ngNotifyWindow").remove();
-	$("body").append("<div id='ngNotifyWindow' title='" + title + "' style='display:none'><br />" + msg + "</div>");
+	$("#ngNotifyWindowDIV").remove();
+	$("body").append("<div id='ngNotifyWindowDIV' title='" + title + "' style='display:none'><br />" + msg + "</div>");
 
-	$('#ngNotifyWindow').dialog({
+	$('#ngNotifyWindowDIV').dialog({
 		autoOpen: true,
 		width: 470,
 		dialogClass: "modalfixed",
 		buttons: {
 			"Ok": function() {
 				$(this).dialog("close");
-				$("#ngNotifyWindow").remove();
+				$("#ngNotifyWindowDIV").remove();
 			}
 		}
 	});
 
 	$('.modalfixed.ui-dialog').css({position:"fixed"});
-	$('#ngNotifyWindow').dialog( "option", "position", ['0','0'] );
+	$('#ngNotifyWindowDIV').dialog( "option", "position", ['0','0'] );
 
 }
 
@@ -139,8 +139,6 @@ function ngNotifySticker(msg,o){
 		}, o.time);
 	}
 }
-
-
 $.datepicker.regional['ru'] = {
      closeText: 'Закрыть',
      prevText: '<Пред',
