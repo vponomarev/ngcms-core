@@ -83,6 +83,7 @@ function ngCheckEmail() {
 						'auth' : $("#mail_smtp_auth").val(),
 						'login': $("#mail_smtp_login").val(),
 						'pass': $("#mail_smtp_pass").val(),
+						'secure': $("#mail_smtp_secure").val(),
 					},
 				}
 			) }, function(data) {
@@ -341,6 +342,10 @@ function ngCheckEmail() {
 <tr class="useSMTP">
 <td class="contentEntry1">{{ lang['smtp_auth'] }}:<br /><small>{{ lang['smtp_auth#desc'] }}</small></td>
 <td class="contentEntry2" valign="middle">{{ mkSelectNY({'name' : 'save_con[mail][smtp][auth]', 'id' : 'mail_smtp_auth', 'value' : config['mail']['smtp']['auth'] }) }}</td>
+</tr>
+<tr class="useSMTP">
+<td class="contentEntry1">{{ lang['smtp_secure'] }}:<br /><small>{{ lang['smtp_secure#desc'] }}</small></td>
+<td class="contentEntry2" valign="middle">{{ mkSelect({'name' : 'save_con[mail][smtp][secure]', 'id' : 'mail_smtp_secure', 'value' : config['mail']['smtp']['secure'], 'values' : { '' : 'None', 'tls' : 'TLS', 'ssl' : 'SSL' } }) }}</td>
 </tr>
 <tr class="useSMTP">
 <td class="contentEntry1">{{ lang['smtp_auth_login'] }}:<br /><small>{{ lang['example'] }} email@mail.ru</small></td>

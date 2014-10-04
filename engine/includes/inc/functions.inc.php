@@ -395,6 +395,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 							$mail->SMTPAuth = ($config['mail']['smtp']['auth'])?true:false;
 							$mail->Username = $config['mail']['smtp']['login'];
 							$mail->Password = $config['mail']['smtp']['pass'];
+							$mail->SMTPSecure = $config['mail']['smtp']['secure'];
 							break;
 	}
 
@@ -1530,7 +1531,6 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	}
 
 	$tvars['vars']['pinned']					=	($row['pinned']) ? "news_pinned" : "";
-
 
 	$tvars['vars']['category']			=	@GetCategories($row['catid']);
 	$tvars['vars']['masterCategory']	=	@GetCategories($row['catid'], false, true);
