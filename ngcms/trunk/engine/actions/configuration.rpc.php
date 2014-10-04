@@ -148,6 +148,7 @@ function admConfigurationTestEMail($params) {
 						$mail->SMTPAuth = ($params['smtp']['auth'])?true:false;
 						$mail->Username = $params['smtp']['login'];
 						$mail->Password = $params['smtp']['pass'];
+						$mail->SMTPSecure = $params['smtp']['secure'];
 						$sendResult = $mail->send();
 						break;
 	}
