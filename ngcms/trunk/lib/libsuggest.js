@@ -1,7 +1,7 @@
 // ************************************************************************************ //
 // Suggest helper (c) Vitaly Ponomarev (vp7@mail.ru)                                    //
 // Specially developed for NGCMS ( http://ngcms.ru/ ), but can be used anywhere else    //
-// Build: 07 ( 2013-01-19)                                                              //
+// Build: 08 ( 2014-09-22)                                                              //
 // ************************************************************************************ //
 //
 var ngSuggest = function(fieldID, params) {
@@ -48,6 +48,7 @@ var ngSuggest = function(fieldID, params) {
 	if (!this.opts.cClass)			this.opts.cClass	= 'suggestClose';			// `CLOSE SUGGEST` class
 
 	if (!this.opts.listDelimiter)	this.opts.listDelimiter	= null;					// Delimiter for list of values. Will be used if specified, AJAX query will be made for current edited value
+	if (!this.opts.columnReturn)	this.opts.columnReturn = 0; 					// Number of column to return
 
 	if (!this.opts.outputGenerator)
 		this.outputGenerator = function(obj) {
@@ -74,8 +75,7 @@ var ngSuggest = function(fieldID, params) {
 
 		//document.body.appendChild(this.searchDIV);
 		var iDiv = document.createElement('div');
-	//	iDiv.style.position = 'relative';
-		this.searchDIV.style.position = 'relative';
+		iDiv.style.position = 'relative';
 
 		this.field.parentNode.appendChild(iDiv);
 		iDiv.appendChild(this.searchDIV);
@@ -337,7 +337,8 @@ ngSuggest.prototype.callAJAX = function() {
 				var r = sB.insertRow(-1);
 				r.onclick = function() { pointer.setValue(this.dataOutput); pointer.focusField(); pointer.suggestShow(false); }
 				r.onmouseover = function() { pointer.highlightSet(this.dataId); }
-				r.dataOutput = sReturn[i][0];
+
+				r.dataOutput = sReturn[i][pointer.opts.columnReturn];
 				r.dataId = i+1;
 
 				for (var fNo = 0; fNo < pointer.opts.stCols; fNo++) {
