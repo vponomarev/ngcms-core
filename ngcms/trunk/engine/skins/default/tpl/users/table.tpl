@@ -72,8 +72,7 @@ function validateAction() {
 <form method="GET" action="{{ php_self }}">
 <input type="hidden" name="mod" value="users" />
 <input type="hidden" name="action" value="list" />
-{{ lang['namefilter'] }} <input type="text" name="name" value="{{ name }}"/> &nbsp; {{ lang['sort'] }} <select name="sort">{{ sortType }}</select>
-<select name="how">{{ sortDirection }}</select>
+Имя: <input type="text" name="name" value="{{ name }}"/> | Группа: <select name="group"><option value="0">-- Любая --</option>{% for g in ugroup %}<option value="{{ g.id }}" {% if (group == g.id) %}selected="selected"{% endif %}>{{ g.name }}</option>{% endfor %}</select> |
 <input style="text-align: center;" size=3 name="rpp" value="{{ rpp }}"/>
 <input type="submit" value="{{ lang['sortit'] }}" class="button" />
 </form>
@@ -99,13 +98,13 @@ function validateAction() {
 <td width="100%" colspan="8">&nbsp;</td>
 </tr>
 <tr align="left" class="contHead">
-<td width="5%">#</td>
-<td width="20%">{{ lang['name'] }}</td>
-<td width="20%">{{ lang['regdate'] }}</td>
-<td width="20%">{{ lang['last_login'] }}</td>
-<td width="10%">{{ lang['all_news2'] }}</td>
+<td width="5%"><a href="{{ sortLink['i']['link'] }}">#</a> {{ sortLink['i']['sign'] }}</td>
+<td width="20%"><a href="{{ sortLink['n']['link'] }}">{{ lang['name'] }}</a> {{ sortLink['n']['sign'] }}</td>
+<td width="20%"><a href="{{ sortLink['r']['link'] }}">{{ lang['regdate'] }}</a> {{ sortLink['r']['sign'] }}</td>
+<td width="20%"><a href="{{ sortLink['l']['link'] }}">{{ lang['last_login'] }}</a> {{ sortLink['l']['sign'] }}</td>
+<td width="10%"><a href="{{ sortLink['p']['link'] }}">{{ lang['all_news2'] }}</a> {{ sortLink['p']['sign'] }}</td>
 {% if flags.haveComments %}<td width="10%">{l_listhead.comments}</td>{% endif %}
-<td width="15%">{{ lang['groupName'] }}</td>
+<td width="15%"><a href="{{ sortLink['g']['link'] }}">{{ lang['groupName'] }}</a> {{ sortLink['g']['sign'] }}</td>
 <td width="5%">&nbsp;</td>
 <td width="5%">{% if flags.canModify %}<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form_users)" />{% endif %}</td>
 </tr>

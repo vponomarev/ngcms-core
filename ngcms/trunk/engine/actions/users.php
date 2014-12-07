@@ -351,11 +351,45 @@ function userList(){
 	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'details');
 	$permMassAction	= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify');
 
+	// Sorting parameters
+	$sortOrderMap = array(
+		'i'		=> 'id',
+		'id'	=> 'id desc',
+		'n'		=> 'name',
+		'nd'	=> 'name desc',
+		'r'		=> 'reg',
+		'rd'	=> 'reg desc',
+		'l'		=> 'last',
+		'ld'	=> 'last desc',
+		'p'		=> 'news',
+		'pd'	=> 'news desc',
+		'g'		=> 'status',
+		'gd'	=> 'status desc',
+	);
 
-	$available_orders = array('name' => 'name', 'reg' => 'regdate', 'last' => 'last_login', 'status' => 'status');
-	$rsort = $_REQUEST['sort']?$_REQUEST['sort']:'reg';
+	$inSort = (isset($_REQUEST['sort']) && (isset($sortOrderMap[$_REQUEST['sort']])))?$_REQUEST['sort']:'i';
 
+	$sortLinkMap = array();
+	foreach (array('i', 'n', 'r', 'l', 'p', 'g') as $kOrder) {
+		$sRec = array();
+		$sRec['isActive'] = (($inSort == $kOrder) || ($inSort == $kOrder.'d'))?1:0;
+		if ($sRec['isActive']) {
+			$sRec['sign'] = ($inSort == $kOrder)?'&#8595;&#8595;':'&#8593;&#8593;';
+			$sRec['link'] = admin_url.'/admin.php?mod=users&action=list'.
+				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
+				($_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
+				'&sort='.$kOrder.(($inSort == $kOrder)?'d':'');
+		} else {
+			$sRec['sign'] = '';
+			$sRec['link'] = admin_url.'/admin.php?mod=users&action=list'.
+				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
+				($_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
+				'&sort='.$kOrder;
+		}
+		$sortLinkMap[$kOrder] = $sRec;
+	}
 
+	$sortValue = (isset($_REQUEST['sort']) && isset($sortOrderMap[$_REQUEST['sort']]))?$sortOrderMap[$_REQUEST['sort']]:'id';
 	$name = ($_REQUEST['name'] != '')?("'%".mysql_real_escape_string($_REQUEST['name'])."%'"):'';
 
 	// Records Per Page
@@ -374,12 +408,17 @@ function userList(){
 	if (!$pageNo)
 		$pageNo = 1;
 
-	$limit = "limit ".(($pageNo-1)*$fRPP).", ".$fRPP;
-	$where = ($name?'where name like '.$name:'');
-	$order = "order by ".(($available_orders[$rsort])?$rsort:'reg').($_REQUEST['how']?' desc':'');
+	// FILTER (where) PARAMETERS
+	$whereRules = array();
+	if (strlen($name)) {
+		$whereRules []= 'name like '.$name;
+	}
+	if (isset($_REQUEST['group']) && (intval($_REQUEST['group']) > 0)) {
+		$whereRules []= 'status = '.intval($_REQUEST['group']);
+	}
 
-	$tpl -> template('entries', tpl_actions.$mod);
-	$sql = "select * from ".uprefix."_users ".$where.' '.$order.' '.$limit;
+	$queryFilter = count($whereRules)?'where '.join(" and ", $whereRules):'';
+	$sql = "select * from ".uprefix."_users ".$queryFilter.' order by '.$sortValue.' '."limit ".(($pageNo-1)*$fRPP).", ".$fRPP;
 
 	$tEntries = array();
 	foreach ($mysql->select($sql) as $row) {
@@ -402,16 +441,11 @@ function userList(){
 		$tEntries []= $tEntry;
 	}
 
-	$sortType = '';
-	foreach($available_orders as $k => $v){
-		$sortType .= "<option value='$k'".(($rsort == $k)?' selected':'').">".$lang[$v]."</option>";
-	}
-
-	$sortDirection = "<option value=''".($_REQUEST['how']?'':' selected').">".$lang['asc']."</option><option value='desc'".($_REQUEST['how']?' selected':'').">".$lang['desc']."</option>";
-
-	$userCount	=	$mysql->result("SELECT count(*) FROM ".uprefix."_users ".$where);
+	$userCount	=	$mysql->result("SELECT count(*) FROM ".uprefix."_users ".$queryFilter);
 	$pageCount	=	ceil($userCount / $fRPP);
 
+	// Sorting flags
+	//$linkSortOrders
 
 	$pagination = generateAdminPagelist( array(
 			'current' => $pageNo,
@@ -439,13 +473,13 @@ function userList(){
 	$tVars	= array(
 		'php_self'		=> $PHP_SELF,
 		'rpp'			=> $fRPP,
-		'sortType'		=> $sortType,
-		'sortDirection'	=> $sortDirection,
 		'name'			=> htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'),
 		'token'			=> genUToken('admin.users'),
 		'pagination'	=> $pagination,
 		'ugroup'		=> $tUgroup,
-		'entries'	=> $tEntries,
+		'entries'		=> $tEntries,
+		'group'			=> isset($_REQUEST['group'])?intval($_REQUEST['group']):0,
+		'sortLink'		=> $sortLinkMap,
 		'flags'		=> 	array(
 			'canModify'	=> $permModify?1:0,
 			'canView'	=> $permDetails?1:0,
@@ -454,24 +488,6 @@ function userList(){
 		),
 
 	);
-
-
-	$tvars['vars'] = array(
-		'php_self'		=>	$PHP_SELF,
-		'sort_options'	=>	$sort_options,
-		'how_options'	=> $how_options,
-		'npp_nav'		=>	$npp_nav,
-		'entries'		=>	$entries,
-		'per_page'		=> $per_page,
-		'name'			=> htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'),
-		'pagesss'		=> $pagesss,
-		'how_value'		=> htmlspecialchars($_REQUEST['how'], ENT_COMPAT | ENT_HTML401, 'cp1251'),
-		'sort_value'	=> htmlspecialchars($_REQUEST['sort']),
-		'page_value'	=> htmlspecialchars($_REQUEST['page']),
-		'per_page_value'	=> htmlspecialchars($_REQUEST['per_page']),
-		'token'			=> genUToken('admin.users'),
-	);
-
 
 	$xt = $twig->loadTemplate('skins/default/tpl/users/table.tpl');
 	echo $xt->render($tVars);
