@@ -55,8 +55,10 @@ if(jQuery) (function($){
 					$.post(o.script, { json : 1, methodName : o.methodName, rndval: new Date().getTime(), params : json_encode({ dir: t, template : o.templateName, token : o.securityToken }) }, function(data) {
 						// Try to decode incoming data
 						try {
-							resTX = data;
-						} catch (err) { alert('Error parsing JSON output. Result: '+linkTX.response); }
+							resTX = eval('('+data+')');
+						} catch (err) { 
+							alert('Error parsing JSON output. Result: '+data); 
+						}
 						if (!resTX['status']) {
 							alert('Error ['+resTX['errorCode']+']: '+resTX['errorText']);
 						}
@@ -65,7 +67,7 @@ if(jQuery) (function($){
 						$(c).removeClass('wait').append(resTX['content']);
 						if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
 						bindTree(c);
-					});
+					}, "text");
 				}
 
 				function bindTree(t) {
