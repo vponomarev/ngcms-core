@@ -356,7 +356,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 	global $lang, $config;
 
 	// Include new PHP mailer class
-	@include_once root.'includes/classes/phpmailer/class.phpmailer.php';
+	@include_once root.'includes/classes/PHPMailer/class.phpmailer.php';
 	$mail	= new phpmailer;
 
 	$mail->CharSet	= 'Windows-1251';
@@ -482,7 +482,7 @@ function msg($params, $mode = 0, $disp = -1) {
 //			1 - print
 //			2 - return as result
 function msgSticker($msg, $type = '', $disp) {
-	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("'.htmlspecialchars($msg).'"'.(($type=="error")?', {sticked: true, className: "ngStickerClassError"}':'').');</script>';
+	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("'.htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "cp1251").'"'.(($type=="error")?', {sticked: true, className: "ngStickerClassError"}':'').');</script>';
 	print $output;
 }
 
