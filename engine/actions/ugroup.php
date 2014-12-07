@@ -238,13 +238,12 @@ function ugroupCommit(){
 		fwrite($fcHandler, $fcData);
 		fclose($fcHandler);
 
-		msgSticker("Конфигурация успешно сохранена");
-		//msg(array("text" => $lang['msgo_saved']));
+		msg(array("text" => $lang['save_done']));
 
 		// Reload groups
 		loadGroups();
 	} else {
-		msg(array("type" => 'error', "text" => $lang['msge_save_error'], "info" => $lang['msge_save_error#desc']));
+		msg(array("type" => 'error', "text" => $lang['save_error'], "info" => $lang['save_error#desc']));
 		return false;
 	}
 
