@@ -325,6 +325,10 @@ if ( (is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHO
 		$is_logged			= true;
 		$username			= $xrow['name'];
 		$userROW			= $xrow;
+		if ($config['x_ng_headers']) {
+			header("X-NG-UserID: ".intval($userROW['id']));
+			header("X-NG-Login: ".htmlentities($username));
+		}
 
 		// - Now every TWIG template will know if user is logged in
 		$twigGlobal['flags']['isLogged'] = 1;

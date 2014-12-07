@@ -182,6 +182,10 @@ function ngCheckEmail() {
  <td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['logging'] }}</td>
 </tr>
 <tr>
+<td class="contentEntry1">{{ lang['x_ng_headers'] }}<br /><small>{{ lang['x_ng_headers#desc'] }}</small></td>
+<td class="contentEntry2" valign="middle">{{ mkSelectNY({'name' : 'save_con[x_ng_headers]', 'value' : config['x_ng_headers'] }) }}</td>
+</tr>
+<tr>
 <td class="contentEntry1">{{ lang['syslog'] }}<br /><small>{{ lang['syslog_desc'] }}</small></td>
 <td class="contentEntry2" valign="middle">{{ mkSelectYN({'name' : 'save_con[syslog]', 'value' : config['syslog'] }) }}</td>
 </tr>
