@@ -708,16 +708,19 @@ function ChangeDate($time = 0, $nodiv = 0) {
 // $path		- путь по которому искать файлы
 // $ext			- [scalar/array] расширение (одно или массивом) файла
 // $showExt		- флаг: показывать ли расширение [0 - нет, 1 - показывать, 2 - использовать в значениях]
-function ListFiles($path, $ext, $showExt = 0) {
+// $silentError		- не выводить сообщение об ошибке
+function ListFiles($path, $ext, $showExt = 0, $silentError = 0) {
 
 	$list = array();
 	if (!is_array($ext))
 		$ext = array($ext);
 
-	if (!$handle = opendir($path)) {
-		echo "<p>ListFiles() execution error: Can not open directory $path</p>";
+	if (!($handle = opendir($path))) {
+		if (!$silentError)
+			echo "<p>ListFiles($path) execution error: Can't open directory</p>";
+		return ;
 	}
-
+	
 	while (($file = readdir($handle)) !== false) {
 		// Skip reserved words
 		if (($file == '.') || ($file == '..')) continue;
