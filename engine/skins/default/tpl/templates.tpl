@@ -43,8 +43,8 @@
 </table>
 </div>
 
-<script type="text/javascript" src="{{ home }}/lib/ngFileTree.js"></script>
-<link rel="stylesheet" href="{{ home }}/lib/ngFileTree.css" type="text/css" media="screen" />
+<script type="text/javascript" src="{{ home_url }}/lib/ngFileTree.js"></script>
+<link rel="stylesheet" href="{{ home_url }}/lib/ngFileTree.css" type="text/css" media="screen" />
 <script type="text/javascript" language="javascript">
 var ngTemplateName = 'default';
 var ngFileName = '';
@@ -60,7 +60,7 @@ var ngFileTreeFunc = function(file) {
 			// Try to decode incoming data
 			try {
 				resTX = eval('('+data+')');
-			} catch (err) { alert('Error parsing JSON output. Result: '+linkTX.response); }
+			} catch (err) { alert('Error parsing JSON output (mod=templates). Result: '+resTX.response); }
 			if (!resTX['status']) {
 				ngNotifyWindow('Error ['+resTX['errorCode']+']: '+resTX['errorText'], 'ERROR');
 			}
