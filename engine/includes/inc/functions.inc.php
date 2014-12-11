@@ -709,7 +709,8 @@ function ChangeDate($time = 0, $nodiv = 0) {
 // $ext			- [scalar/array] расширение (одно или массивом) файла
 // $showExt		- флаг: показывать ли расширение [0 - нет, 1 - показывать, 2 - использовать в значениях]
 // $silentError		- не выводить сообщение об ошибке
-function ListFiles($path, $ext, $showExt = 0, $silentError = 0) {
+// $returnNullOnError	- возвращать NULL при ошибке
+function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnError = 0) {
 
 	$list = array();
 	if (!is_array($ext))
@@ -718,7 +719,9 @@ function ListFiles($path, $ext, $showExt = 0, $silentError = 0) {
 	if (!($handle = opendir($path))) {
 		if (!$silentError)
 			echo "<p>ListFiles($path) execution error: Can't open directory</p>";
-		return ;
+		if ($returnNullOnError)
+			return;
+		return array();
 	}
 	
 	while (($file = readdir($handle)) !== false) {
