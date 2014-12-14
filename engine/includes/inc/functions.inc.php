@@ -1751,6 +1751,14 @@ function locateUser($login) {
 	return array();
 }
 
+function locateUserById($id) {
+	global $mysql;
+	if ($row = $mysql->record("select * from ".uprefix."_users where id = ".db_squote($id))) {
+		return $row;
+	}
+	return array();
+}
+
 
 function GetCategoryById($id) {
 	global $catz;
