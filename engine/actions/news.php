@@ -331,7 +331,7 @@ function makeSortList($selected) {
 // List news
 // ======================================================================================================
 function listNewsForm() {
-	global $mysql, $lang, $twig, $tpl, $catz, $catmap, $userROW;
+	global $mysql, $lang, $twig, $catz, $catmap, $userROW;
 
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
 		'view',
@@ -622,7 +622,7 @@ function listNewsForm() {
 // Add news form
 // ======================================================================================================
 function addNewsForm($retry = ''){
-	global $lang, $mysql, $config, $userROW, $PFILTERS, $tpl, $twig;
+	global $lang, $mysql, $config, $userROW, $PFILTERS, $twig;
 
 	// Load permissions
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(

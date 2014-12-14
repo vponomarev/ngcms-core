@@ -93,11 +93,7 @@ if ($disable) {
 	}
 }
 
-$entries = '';
-$tpl -> template('entries', tpl_actions.$mod);
-
 $pCount = array (0 => 0, 1 => 0, 2 => 0, 3 => 0);
-
 
 $tEntries = array();
 foreach($extras as $id => $extra) {

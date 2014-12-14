@@ -112,7 +112,7 @@ function systemConfigSave(){
 //
 // Show configuration form
 function systemConfigEditForm(){
-	global $lang, $tpl, $AUTH_CAPABILITIES, $PHP_SELF, $twig, $multiconfig;
+	global $lang, $AUTH_CAPABILITIES, $PHP_SELF, $twig, $multiconfig;
 
 	// Check for token
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'details')) {
@@ -120,8 +120,6 @@ function systemConfigEditForm(){
 		ngSYSLOG(array('plugin' => '#admin', 'item' => 'configuration', 'ds_id' => $id), array('action' => 'showConfig'), null, array(0, 'SECURITY.PERM'));
 		return false;
 	}
-
-	$tpl -> template('configuration', tpl_actions);
 
 	$auth_modules = array();
 	$auth_dbs = array();
@@ -183,10 +181,6 @@ function systemConfigEditForm(){
 
 	$xt = $twig->loadTemplate('skins/default/tpl/configuration.tpl');
 	echo $xt->render($tVars);
-
-
-//	$tpl -> vars('configuration', $tvars);
-//	echo $tpl -> show('configuration');
 }
 
 

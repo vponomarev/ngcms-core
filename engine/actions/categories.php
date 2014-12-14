@@ -38,15 +38,13 @@ function listSubdirs($dir) {
 // ///////////////////////////////////////////////////////////////////////////
 //
 function admCategoryAddForm(){
-	global $mysql, $tpl, $twig, $mod, $PHP_SELF, $config, $lang, $AFILTERS;
+	global $mysql, $twig, $mod, $PHP_SELF, $config, $lang, $AFILTERS;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify')) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
 		return;
 	}
-
-	$tpl -> template('add', tpl_actions.$mod);
 
 	$tpl_list = '<option value="">* '.$lang['cat_tpldefault']." *</option>\n";
 	foreach (listSubdirs(tpl_site.'ncustom/') as $k) {
@@ -83,7 +81,7 @@ function admCategoryAddForm(){
 // ///////////////////////////////////////////////////////////////////////////
 //
 function admCategoryAdd() {
-	global $mysql, $lang, $mod, $tpl, $parse, $config, $AFILTERS;
+	global $mysql, $lang, $mod, $parse, $config, $AFILTERS;
 
 	$SQL			= array();
 	$SQL['name']	= secure_html(trim($_REQUEST['name']));
@@ -224,7 +222,7 @@ function admCategoryAdd() {
 // ///////////////////////////////////////////////////////////////////////////
 //
 function admCategoryEditForm(){
-	global $mysql, $lang, $mod, $tpl, $config, $twig, $AFILTERS;
+	global $mysql, $lang, $mod, $config, $twig, $AFILTERS;
 
 	// Check for permissions
 	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify');
@@ -292,9 +290,6 @@ function admCategoryEditForm(){
 	$xt = $twig->loadTemplate('skins/default/tpl/categories/edit.tpl');
 	echo $xt->render($tVars);
 
-//	$tpl -> template('edit', tpl_actions.$mod);
-//	$tpl -> vars('edit', $tvars);
-//	echo $tpl -> show('edit');
 }
 
 // ////////////////////////////////////////////////////////////////////////////

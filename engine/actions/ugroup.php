@@ -13,7 +13,7 @@ $lang		= LoadLang('ugroup', 'admin');
 
 
 function ugroupList(){
-	global $mysql, $lang, $tpl, $mod, $userROW, $UGROUP, $twig;
+	global $mysql, $lang, $mod, $userROW, $UGROUP, $twig;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'ugroup'), null, 'view')) {
@@ -61,7 +61,7 @@ function ugroupList(){
 }
 
 function ugroupForm(){
-	global $mysql, $lang, $tpl, $mod, $PFILTERS, $twig, $UGROUP;
+	global $mysql, $lang, $mod, $PFILTERS, $twig, $UGROUP;
 
 	// ID of group for editing
 	$id = intval($_REQUEST['id']);
@@ -121,7 +121,7 @@ function ugroupForm(){
 
 
 function ugroupCommit(){
-	global $mysql, $lang, $tpl, $mod, $PFILTERS, $twig, $UGROUP;
+	global $mysql, $lang, $mod, $PFILTERS, $twig, $UGROUP;
 
 	// ID of group for editing
 	$id = intval($_REQUEST['id']);
