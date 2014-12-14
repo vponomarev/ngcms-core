@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: extras.php
 // Description: List plugins
 // Author: Vitaly Ponomarev
@@ -98,11 +98,13 @@ $tpl -> template('entries', tpl_actions.$mod);
 
 $pCount = array (0 => 0, 1 => 0, 2 => 0, 3 => 0);
 
+
+$tEntries = array();
 foreach($extras as $id => $extra) {
 	if (!isset($extra['author_uri'])) { $extra['author_uri'] = ''; }
 	if (!isset($extra['author'])) { $extra['author'] = 'Unknown'; }
 
-	$tvars['vars'] = array(
+	$tEntry = array(
 		'version'		=>	$extra['version'],
 		'description'	=>	isset($extra['description'])?$extra['description']:'',
 		'author_url'	=>	($extra['author_uri'])?('<a href="'.((strpos($extra['author_uri'], '@') !==FALSE)?'mailto:':'').$extra['author_uri'].'">'.$extra['author']."</a>"):$extra['author'],
@@ -114,12 +116,12 @@ foreach($extras as $id => $extra) {
 	);
 
 	if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] > $extra['version'])) {
-		$tvars['vars']['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&amp;id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';
+		$tEntry['new']		= '<a href="http://ngcms.ru/sync/plugins.php?action=jump&amp;id='.$extra['id'].'.html" title="'.$repoPluginInfo[$extra['id']][1].'"target="_blank"><img src="'.skins_url.'/images/new.gif" width=30 height=15/></a>';
 	} else {
-		$tvars['vars']['new'] = '';
+		$tEntry['new'] = '';
 	}
 
-	$tvars['vars']['type'] = in_array($extra['type'], array('plugin', 'module', 'filter', 'auth', 'widget', 'maintanance'))?$lang[$extra['type']]:"Undefined";
+	$tEntry['type'] = in_array($extra['type'], array('plugin', 'module', 'filter', 'auth', 'widget', 'maintanance'))?$lang[$extra['type']]:"Undefined";
 
 	//
 	// Check for permanent modules
@@ -135,45 +137,42 @@ foreach($extras as $id => $extra) {
 	}
 
 	$needinstall = 0;
-	$tvars['vars']['install'] = '';
+	$tEntry['install'] = '';
 	if (getPluginStatusInstalled($extra['id'])) {
 		if (isset($extra['deinstall']) && $extra['deinstall'] && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['deinstall'])) {
-			$tvars['vars']['install'] = '<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'&amp;stype=deinstall">'.$lang['deinstall'].'</a>';
+			$tEntry['install'] = '<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'&amp;stype=deinstall">'.$lang['deinstall'].'</a>';
 		}
 	} else {
 		if (isset($extra['install']) && $extra['install'] && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['install'])) {
-			$tvars['vars']['install'] = '<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'&amp;stype=install">'.$lang['install'].'</a>';
+			$tEntry['install'] = '<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'&amp;stype=install">'.$lang['install'].'</a>';
 			$needinstall = 1;
 		}
 	}
 
-	$tvars['vars']['url'] = (isset($extra['config']) && $extra['config'] && (!$needinstall) && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['config']))?'<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'">'.$extra['name'].'</a>' : $extra['name'];
-	$tvars['vars']['link'] = (getPluginStatusActive($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;&amp;token='.genUToken('admin.extras').'&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;&amp;token='.genUToken('admin.extras').'&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
+	$tEntry['url'] = (isset($extra['config']) && $extra['config'] && (!$needinstall) && is_file(extras_dir.'/'.$extra['dir'].'/'.$extra['config']))?'<a href="'.$PHP_SELF.'?mod=extra-config&amp;plugin='.$extra['id'].'">'.$extra['name'].'</a>' : $extra['name'];
+	$tEntry['link'] = (getPluginStatusActive($id) ? '<a href="'.$PHP_SELF.'?mod=extras&amp;&amp;token='.genUToken('admin.extras').'&amp;disable='.$id.'">'.$lang['switch_off'].'</a>' : '<a href="'.$PHP_SELF.'?mod=extras&amp;&amp;token='.genUToken('admin.extras').'&amp;enable='.$id.'">'.$lang['switch_on'].'</a>');
 
 	if ($needinstall) {
-		$tvars['vars']['link'] = '';
-		$tvars['vars']['style'] = 'pluginEntryUninstalled';
+		$tEntry['link'] = '';
+		$tEntry['style'] = 'pluginEntryUninstalled';
 		$pCount[3]++;
 	} else {
 		$pCount[1 + (!getPluginStatusActive($id))]++;
 	}
 	$pCount[0]++;
 
-	$tpl -> vars('entries', $tvars);
-	$entries .= $tpl -> show('entries');
+	$tEntries []= $tEntry;
 }
 
-$tpl -> template('table', tpl_actions.$mod);
-$tvars = array ('vars' => array(
-	'entries'			=> $entries,
+$tVars = array (
+	'entries'			=> $tEntries,
 	'cntAll'			=> $pCount[0],
 	'cntActive'			=> $pCount[1],
 	'cntInactive'		=> $pCount[2],
 	'cntUninstalled'	=> $pCount[3]
-));
-
-$tpl -> vars('table', $tvars);
-echo $tpl -> show('table');
+);
+$xt = $twig->loadTemplate(tpl_actions.$mod.'/table.tpl');
+echo $xt->render($tVars);
 
 
 

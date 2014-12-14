@@ -1,4 +1,4 @@
-<script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
+<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
 <script type="text/javascript" language="javascript">
 
 //
@@ -84,7 +84,7 @@ function setDisplayMode(mode) {
 <div id="pluginMenu">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="admin.php?mod=extras">{l_extras}</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="admin.php?mod=extras">{{ lang['extras'] }}</a></td>
 </tr>
 </table>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
@@ -92,25 +92,37 @@ function setDisplayMode(mode) {
 <tr>
 <td width=100% colspan="8" class="contentNav">
 <div id="pluginTypeMenu">
-<span id="pTypeAll" class="pInactive" onclick="setDisplayMode(0);">{l_list.all} ({cntAll})</span><span class="pSeparator">&nbsp;</span>
-<span id="pTypeActive" class="pInactive" onclick="setDisplayMode(1);">{l_list.active} ({cntActive})</span><span class="pSeparator">&nbsp;</span>
-<span id="pTypeInactive" class="pInactive" onclick="setDisplayMode(2);">{l_list.inactive} ({cntInactive})</span><span class="pSeparator">&nbsp;</span>
-<span id="pTypeUninstalled" class="pInactive" onclick="setDisplayMode(3);">{l_list.needinstall} ({cntUninstalled})</span>
+<span id="pTypeAll" class="pInactive" onclick="setDisplayMode(0);">{{ lang['list.all'] }} ({{ cntAll }})</span><span class="pSeparator">&nbsp;</span>
+<span id="pTypeActive" class="pInactive" onclick="setDisplayMode(1);">{{ lang['list.active'] }} ({{ cntActive }})</span><span class="pSeparator">&nbsp;</span>
+<span id="pTypeInactive" class="pInactive" onclick="setDisplayMode(2);">{{ lang['list.inactive'] }} ({{ cntInactive }})</span><span class="pSeparator">&nbsp;</span>
+<span id="pTypeUninstalled" class="pInactive" onclick="setDisplayMode(3);">{{ lang['list.needinstall'] }} ({{ cntUninstalled }})</span>
 </div>
 &nbsp;
 </td>
 </tr>
 <tr align="left" class="contHead">
-<td>{l_id}</td>
-<td>{l_title}</td>
-<td>{l_type}</td>
-<td>{l_version}</td>
+<td>{{ lang['id'] }}</td>
+<td>{{ lang['title'] }}</td>
+<td>{{ lang['type'] }}</td>
+<td>{{ lang['version'] }}</td>
 <td>&nbsp;</td>
-<td>{l_description}</td>
-<td>{l_author}</td>
-<td>{l_action}</td>
+<td>{{ lang['description'] }}</td>
+<td>{{ lang['author'] }}</td>
+<td>{{ lang['action'] }}</td>
 </tr>
-{entries}
+{% for entry in entries %}
+<tr align="left" class="{{ entry.style }}" id="plugin_{id}">
+	<td>{{ entry.id }} {{ entry.new }}</td>
+	<td>{{ entry.url }}</td>
+	<td>{{ entry.type }}</td>
+	<td>{{ entry.version }}</td>
+	<td nowrap>{{ entry.readme }} {{ entry.history }}</td>
+	<td>{{ entry.description }}</td>
+	<td>{{ entry.author_url }}</td>
+	<td nowrap="nowrap">{{ entry.link }} {{ entry.install }}</td>
+</tr>
+
+{% endfor %}
 </table>
 </div>
 
