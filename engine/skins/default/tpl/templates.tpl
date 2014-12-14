@@ -43,8 +43,8 @@
 </table>
 </div>
 
-<script type="text/javascript" src="{{ home_url }}/lib/ngFileTree.js"></script>
-<link rel="stylesheet" href="{{ home_url }}/lib/ngFileTree.css" type="text/css" media="screen" />
+<script type="text/javascript" src="{{ home }}/lib/ngFileTree.js"></script>
+<link rel="stylesheet" href="{{ home }}/lib/ngFileTree.css" type="text/css" media="screen" />
 <script type="text/javascript" language="javascript">
 var ngTemplateName = 'default';
 var ngFileName = '';

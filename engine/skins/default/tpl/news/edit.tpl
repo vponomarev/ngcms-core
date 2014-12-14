@@ -1,6 +1,6 @@
 
-<script type="text/javascript" src="{{ home_url }}/lib/ajax.js"></script>
-<script type="text/javascript" src="{{ home_url }}/lib/libsuggest.js"></script>
+<script type="text/javascript" src="{{ home }}/lib/ajax.js"></script>
+<script type="text/javascript" src="{{ home }}/lib/libsuggest.js"></script>
 <script language="javascript" type="text/javascript">
 
 //
