@@ -2929,7 +2929,7 @@ function ngLoadCategories() {
 }
 
 // Function for detection of UTF-8 charset
-function detectUTF8($string)
+function NGdetectUTF8($string)
 {
         return preg_match('%(?:
         [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
