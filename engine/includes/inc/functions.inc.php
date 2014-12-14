@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: functions.php
 // Description: Common system functions
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -2929,7 +2929,7 @@ function ngLoadCategories() {
 }
 
 // Function for detection of UTF-8 charset
-function NGdetectUTF8($string)
+function detectUTF8($string)
 {
         return preg_match('%(?:
         [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
