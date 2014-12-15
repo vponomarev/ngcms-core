@@ -1,17 +1,17 @@
-<script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
-<script type="text/javascript" src="{admin_url}/includes/js/admin.js"></script>
-<form method="post" action="{php_self}?mod=rewrite" name="rewriteForm" id="rewriteForm">
+<script type="text/javascript" src="{{ admin_url }}/includes/js/ajax.js"></script>
+<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
+<form method="post" action="{{ php_self }}?mod=rewrite" name="rewriteForm" id="rewriteForm">
 <span id="temp.data" style="position: absolute; display: none;"></span>
 <span id="DEBUG"></span>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_rewrite}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=rewrite">{{ lang['rewrite'] }}</a></td>
 </tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 
 <thead>
-<tr class="contHead"><td>&nbsp;</td><td width="20">#</td><td width="60">{l_hdr.plugin}</td><td width="80">{l_hdr.action}</td><td>{l_hdr.description}</td><td>URL</td><td>{l_hdr.flags}</td><td>&nbsp;</td></tr>
+<tr class="contHead"><td>&nbsp;</td><td width="20">#</td><td width="60">{{ lang['hdr.plugin'] }}</td><td width="80">{{ lang['hdr.action'] }}</td><td>{{ lang['hdr.description'] }}</td><td>URL</td><td>{{ lang['hdr.flags'] }}</td><td>&nbsp;</td></tr>
 </thead>
 <tbody id="cfg.body">
 </tbody>
@@ -24,7 +24,7 @@
  <td id="row.cmd">&nbsp;</td>
  <td id="row.description">&nbsp;</td>
  <td id="row.url"><input type="text"  id="ed.regex" style="width: 90%;"/><br/>
- 	{l_tbl.available_vars}:<br/><span id="ed.varlist"></span>
+ 	{{ lang['tbl.available_vars'] }}:<br/><span id="ed.varlist"></span>
  </td>
  <td id="row.flags"><input id="ed.flagPrimary" type="checkbox"/> <input id="ed.flagFailContinue" type="checkbox"/> <input id="ed.flagDisabled" type="checkbox"/></td>
  <td nowrap><input type="button" onclick="reSubmitEdit();" id="ed.button" value="Add" class="button"  style="padding: 2px 2px;" /> <input type="button" id="ed.bcancel" onclick="reCancelEdit();" class="button" style="padding: 2px 2px;" value="Cancel"/></td>
@@ -50,9 +50,9 @@
 <script type="text/javascript" language="javascript">
 <!--
 // Connect to configuration data
-var dConfig	= {json.config};
-var dData	= {json.data};
-var dTemplate	= {json.template};
+var dConfig		= {{ json.config }};
+var dData		= {{ json.data }};
+var dTemplate	= {{ json.template }};
 
 //
 var currentEditRow = 0;
@@ -72,6 +72,7 @@ function populateCfg() {
  var cbody = document.getElementById('cfg.body');
 
  var tmp = '';
+ var dID;
  for (dID in dData)
   tmp = tmp + populateTemplate(dData[dID]);
 
@@ -92,7 +93,7 @@ function populateCfg() {
 // Fill field "PLUGIN"
 //
 function reFillCmd(plugin) {
- var tmp;
+ var tmp, cmd;
 
  tmp = '<select name="ed.cmd" style="width: 120px;" id="ed.cmd" onchange="reUpdateDescr(document.getElementById(\'ed.pluginName\').value, this.value);">';
  if (dConfig[plugin] != null) {
@@ -113,7 +114,7 @@ function reServerSubmit() {
  var linkTX = new sack();
  linkTX.requestFile = 'rpc.php';
  linkTX.setVar('json', '1');
- linkTX.setVar('token', '{token}');
+ linkTX.setVar('token', '{{ token }}');
  linkTX.setVar('methodName', 'admin.rewrite.submit');
  linkTX.setVar('params', dOut);
  linkTX.method='POST';
@@ -121,7 +122,7 @@ function reServerSubmit() {
   if (linkTX.responseStatus[0] == 200) {
         try {
   	 resTX = eval('('+linkTX.response+')');
-  	} catch (err) { alert('{l_fmsg.save.json_parse_error} '+linkTX.response); }
+  	} catch (err) { alert('{{ lang['fmsg.save.json_parse_error'] }} '+linkTX.response); }
 
   	// First - check error state
   	if (!resTX['status']) {
@@ -131,10 +132,10 @@ function reServerSubmit() {
   		// ERROR. Display it
   		alert('Error ('+resTX['errorCode']+'): '+resTX['errorText']);
   	} else {
-  		alert('{l_fmsg.save.done}');
+  		alert('{{ lang['fmsg.save.done'] }}');
   	}
   } else {
-  	alert('{l_fmsg.save.httperror} '+linkTX.responseStatus[0]);
+  	alert('{{ lang['fmsg.save.httperror'] }} '+linkTX.responseStatus[0]);
   }
  }
  linkTX.runAJAX();
@@ -144,7 +145,7 @@ function reServerSubmit() {
 // Show correct description
 //
 function reUpdateDescr(plugin, cmd) {
- var tmp;
+ var tmp, vName;
  var rd = document.getElementById('row.description');
 // alert('reUpdateDescr('+plugin+', '+cmd+') :'+rd.innerHTML);
 
@@ -211,10 +212,10 @@ function reEditRow(id) {
 // Action on "DELETE" button click
 function reDeleteRow(id) {
  if (currentEditRow > 0) {
-  alert('{l_fmsg.edit.shouldleave}');
+  alert('{{ lang['fmsg.edit.shouldleave'] }}');
   return false;
  }
- if (confirm('{l_fmsg.edit.rowdel_confirm} '+id)) {
+ if (confirm('{{ lang['fmsg.edit.rowdel_confirm'] }} '+id)) {
   // Delete with renumbering
   var dCounter = document.getElementById('cfg.body').rows.length-1;
 
@@ -231,7 +232,7 @@ function reDeleteRow(id) {
 // Move record UP
 function reMoveUp(id) {
  if (currentEditRow > 0) {
-  alert('{l_fmsg.edit.shouldleave}');
+  alert('{{ lang['fmsg.edit.shouldleave'] }}');
   return false;
  }
  // Самую первую строчку некуда двигать
@@ -255,7 +256,7 @@ function reMoveUp(id) {
 // Move record DOWN
 function reMoveDown(id) {
  if (currentEditRow > 0) {
-  alert('{l_fmsg.edit.shouldleave}');
+  alert('{{ lang['fmsg.edit.shouldleave'] }}');
   return false;
  }
  var dCounter = document.getElementById('cfg.body').rows.length;

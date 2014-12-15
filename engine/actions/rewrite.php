@@ -2,7 +2,7 @@
 
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: rewrite.php
 // Description: Managing rewrite rules
 // Author: Vitaly Ponomarev
@@ -75,17 +75,19 @@ foreach ($UH->hList as $hId) {
 	$recno++;
 }
 
-$tpl -> template('entry', tpl_actions.'/rewrite');
-$tpl->vars('entry', array());
+$xe = $twig->loadTemplate('skins/default/tpl/rewrite/entry.tpl');
 
-$tvars['vars']['json.config']	= json_encode($jconfig);
-$tvars['vars']['json.data']		= json_encode($jdata);
-$tvars['vars']['json.template']	= json_encode($tpl->show('entry'));
-$tvars['vars']['token']			= genUToken('admin.rewrite');
+$tVars = array(
+		'json'		=> array(
+			'config'	=> json_encode($jconfig),
+			'data'		=> json_encode($jdata),
+			'template'	=> json_encode($xe->render(array())),
+		),
+		'token'			=> genUToken('admin.rewrite'),
+);
 
-$tpl -> template('rewrite', tpl_actions);
-$tpl -> vars('rewrite', $tvars);
-echo $tpl -> show('rewrite');
+$xt = $twig->loadTemplate('skins/default/tpl/rewrite.tpl');
+echo $xt->render($tVars);
 
 
 //$UH->populateHandler($ULIB, array('pluginName' => 'news', 'handlerName' => 'by.day', 'regex' => '/{year}-{month}-{day}[-page{page}].html'));
