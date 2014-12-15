@@ -16,7 +16,7 @@ $lang = LoadLang('users', 'admin');
 //
 // Form: Edit user
 function userEditForm(){
-	global $mysql, $lang, $tpl, $mod, $PFILTERS, $UGROUP;
+	global $mysql, $lang, $twig, $mod, $PFILTERS, $UGROUP;
 
 	$id = intval($_REQUEST['id']);
 
@@ -46,7 +46,7 @@ function userEditForm(){
 	}
 
 	//	Обрабатываем необходимые переменные для шаблона
-	$tvars['vars'] = array(
+	$tVars = array(
 		'php_self'		=>	$PHP_SELF,
 		'name'			=>	secure_html($row['name']),
 		'regdate'		=>	LangDate("l, j Q Y - H:i", $row['reg']),
@@ -62,24 +62,25 @@ function userEditForm(){
 		'last'			=>	(empty($row['last'])) ? $lang['no_last'] : LangDate('l, j Q Y - H:i', $row['last']),
 		'ip'			=>	$row['ip'],
 		'token'			=> genUToken('admin.users'),
+		'perm'			=> array(
+			'modify'	=> $perm['modify']?1:0,
+		),
 	);
-	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $perm['modify']?'$1':'';
 
 //	if (is_array($PFILTERS['p_uprofile']))
 //		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfile($row['id'], $row, $tvars); }
 
-
-	$tpl -> template('edit', tpl_actions.$mod);
-	$tpl -> vars('edit', $tvars);
 	ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(1));
-	echo $tpl -> show('edit');
+
+	$xt = $twig->loadTemplate('skins/default/tpl/users/edit.tpl');
+	echo $xt->render($tVars);
 }
 
 
 //
 // Edit user's profile
 function userEdit(){
-	global $mysql, $lang, $tpl, $mod;
+	global $mysql, $lang, $mod;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
@@ -127,7 +128,7 @@ function userEdit(){
 //
 // Add new user
 function userAdd(){
-	global $mysql, $lang, $tpl, $mod;
+	global $mysql, $lang, $mod;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {
@@ -335,7 +336,7 @@ function userMassDeleteInactive(){
 //
 // Show list of users
 function userList(){
-	global $mysql, $lang, $tpl, $mod, $userROW, $UGROUP, $twig;
+	global $mysql, $lang, $mod, $userROW, $UGROUP, $twig;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'view')) {
