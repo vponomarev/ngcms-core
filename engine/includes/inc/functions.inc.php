@@ -476,13 +476,27 @@ function msg($params, $mode = 0, $disp = -1) {
 }
 
 // Generate popup sticker with information block
+// $msg - Message to display
+// 		* TEXT - message text will be displayed
+//		* ARRAY - array with (TEXT, STYLE, [noSecureFlag]) for multiple messages
+// $type - message type ['', 'error']
 // $disp - flag [display mode]:
 //		   -1 - automatic mode
 //			0 - add into mainblock
 //			1 - print
 //			2 - return as result
-function msgSticker($msg, $type = '', $disp) {
-	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("'.htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "cp1251").'"'.(($type=="error")?', {sticked: true, className: "ngStickerClassError"}':'').');</script>';
+function msgSticker($msg, $type = '', $disp = -1) {
+	$lines = array();
+	if (is_array($msg)) {
+		foreach ($msg as $x) {
+			$txt = (isset($x[2]) && ($x[2]))?$x[0]:htmlspecialchars($x[1], ENT_COMPAT | ENT_HTML401, "cp1251");
+			$lines []= (isset($x[1]) && ($x[1] == 'title'))?('<b>'.$txt.'</b>'):$txt;
+		}
+	} else {
+		$lines []= htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "cp1251");
+	}
+
+	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("'.join("<br/>", $lines).'"'.(($type=="error")?', {sticked: true, className: "ngStickerClassError"}':'').');</script>';
 	print $output;
 }
 
@@ -723,7 +737,7 @@ function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnErr
 			return;
 		return array();
 	}
-	
+
 	while (($file = readdir($handle)) !== false) {
 		// Skip reserved words
 		if (($file == '.') || ($file == '..')) continue;
