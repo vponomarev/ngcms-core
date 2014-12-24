@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: static.php
 // Description: Manage static pages
 // Author: Vitaly Ponomarev
@@ -12,47 +12,16 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('static', 'admin');
 
-// #=======================================#
-// # Action selection                      #
-// #=======================================#
-
-$action		=	$_REQUEST['action'];
-$subaction	=	$_REQUEST['subaction'];
-
-
-
-if ($action == "add") {
-	if ($subaction == "doadd") {
-		addStatic();
-	}
-
-	addStaticForm();
-
-} elseif ($action == "edit") {
-	if ($subaction == "doedit") {
-		editStatic();
-	}
-
-	editStaticForm();
-} else {
-
-	switch($subaction) {
-		case 'do_mass_approve':		massStaticModify('approve = 1', 'msgo_approved',  'approve'); break;
-		case 'do_mass_forbidden':	massStaticModify('approve = 0', 'msgo_forbidden', 'forbidden'); break;
-		case 'do_mass_delete':		massStaticDelete(); break;
-	}
-	listStatic();
-}
-
 
 //
 // Show list of static pages
 //
 function listStatic() {
-	global $tpl, $mysql, $mod, $userROW, $lang, $config;
+	global $mysql, $mod, $userROW, $lang, $config, $twig;
 
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'view')) {
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('view','modify', 'details', 'publish', 'unpublish'));
+	if (!$perm['view']) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
 		return;
 	}
@@ -80,14 +49,12 @@ function listStatic() {
 	$query['sql']		= "select * from ".prefix."_static order by title limit ".(($pageNo - 1)* $per_page).", ".$per_page;
 	$query['count']		= "select count(*) as cnt from ".prefix."_static ";
 
-	$tpl -> template('entries', tpl_actions.$mod);
-
 	$nCount = 0;
+	$tEntries = array();
 	foreach ($mysql->select($query['sql']) as $row) {
 		$nCount++;
 
-		$tvars['vars'] = array(
-			'php_self'	=>	$PHP_SELF,
+		$tEntry = array(
 			'home'		=>	home,
 			'id'		=>	$row['id'],
 			'alt_name'	=>	$row['alt_name'],
@@ -103,55 +70,35 @@ function listStatic() {
 					generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id']), array(), false, true):
 					generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']), false, true);
 
-		$tvars['vars']['url']		= $row['approve']?('<a href="'.$link.'" target="_blank">'.$link.'</a>'):'';
-		$tvars['vars']['title']		= str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
-		$tvars['vars']['status']	=	($row['approve']) ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
+		$tEntry['url']		= $row['approve']?('<a href="'.$link.'" target="_blank">'.$link.'</a>'):'';
+		$tEntry['title']	= str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
+		$tEntry['status']	= ($row['approve']) ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
 
-		$tvars['regx']['#\[perm\.details\](.*?)\[\/perm\.details\]#is'] = $permDetails?'$1':'';
-		$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
-
-		$tpl -> vars('entries', $tvars);
-		$entries .= $tpl -> show('entries');
+		$tEntries []= $tEntry;
 	}
-	unset($tvars);
 
-	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
-
-	$tvars['vars'] = array(
+	$tVars = array (
 		'php_self'		=>	$PHP_SELF,
 		'per_page'		=>	$per_page,
-		'entries'		=>	$entries,
+		'entries'		=>	$tEntries,
 		'token'			=> genUToken('admin.static'),
+		'perm'			=> array(
+			'details'		=> $permDetails,
+			'modify'		=> $permModify,
+		)
 	);
 
-	if (!$nCount) {
-		$tvars['vars']['[no-static]']		=	'';
-		$tvars['vars']['[/no-static]']	=	'';
-		$tvars['vars']['entries']		=	'';
-		$tvars['vars']['pagesss']		=	'';
-	} else {
-		$tvars['regx']["#\[no-static\].*?\[/no-static\]#si"] = '';
+	$cnt = $mysql->record($query['count']);
+	$all_count_rec = $cnt['cnt'];
 
-		$cnt = $mysql->record($query['count']);
-		$all_count_rec = $cnt['cnt'];
+	$countPages = ceil($all_count_rec / $per_page);
+	$tVars['pagesss'] = generateAdminPagelist( array('current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=static&action=list'.($_REQUEST['per_page']?'&per_page='.$per_page:'').'&page=%page%'));
 
-		$countPages = ceil($all_count_rec / $per_page);
- 		$tvars['vars']['pagesss'] = generateAdminPagelist( array('current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=static&action=list'.($_REQUEST['per_page']?'&per_page='.$per_page:'').'&page=%page%'));
-
-	}
-
-	if($userROW['status'] == 1) {
-		$tvars['vars']['[actions]'] = '';
-		$tvars['vars']['[/actions]'] = '';
-	} else {
-		$tvars['regx']['#\[actions\].*?\[/actions\]#si'] = '';
-	}
 
 	exec_acts('static_list');
 
-	$tpl -> template('table', tpl_actions.$mod);
-	$tpl -> vars('table', $tvars);
-	echo $tpl -> show('table');
+	$xt = $twig->loadTemplate('skins/default/tpl/static/table.tpl');
+	echo $xt->render($tVars);
 }
 
 
@@ -226,80 +173,137 @@ function massStaticDelete() {
 	msg(array("text" => $lang['msgo_deleted']));
 }
 
-
-//
-// List available templates
-//
-function staticListTemplates($default = ''){
+// Return list of available templates
+function staticTemplateList() {
 	global $config;
 
-	$list = ListFiles(tpl_dir.$config['theme'].'/static', 'tpl');
-	$output = '<option value=""></option>';
-
-	foreach ($list as $fn) {
-		if (preg_match('#\.(print|main)$#', $fn)) { continue; }
-		$output .= '<option value="'.$fn.'"'.(($fn==$default)?' selected="selected"':'').'>'.$fn.'</option>';
+	$result = array('');
+	foreach (ListFiles(tpl_dir.$config['theme'].'/static', 'tpl') as $k) {
+		if (preg_match('#\.(print|main)$#', $k)) { continue; }
+		$result []= $k;
 	}
-	return $output;
+	return $result;
 }
 
 
 //
-// Add static page form
-//
-function addStaticForm(){
-	global $mysql, $lang, $userROW, $parse, $PFILTERS, $config, $PHP_SELF, $tpl;
-	global $mod;
+// Add/Edit static page :: FORM
+// $operationMode - mode of operation
+//	1 - Add `from the scratch`
+//	2 - Add `repeat previous attempt` (after fail)
+//	3 - Edit `from the scratch` (or after successfull add)
+//	4 - Edit `repeat previous attempt` (after tail)
+// $sID - static ID
+//	0 - autodetect
+//  x - exact static ID
+function addEditStaticForm($operationMode = 1, $sID = 0){
+	global $lang, $parse, $mysql, $config, $twig, $mod, $PFILTERS, $tvars, $userROW;
+	global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute;
 
-	$tvars['vars'] = array(
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('add', 'modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
+
+	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify');
+	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'details');
+
+	if (!$perm['modify'] && !$perm['details']) {
+		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+		return 0;
+	}
+
+
+	// Init `$editMode` variable
+	$editMode = 0;
+	$row = array();
+	$origRow = array();
+
+	$requestID = ($sID > 0)?$sID:((isset($_REQUEST['id']) && $_REQUEST['id'])?$_REQUEST['id']:0);
+
+	// EDIT
+	if (($operationMode == 3) || ($operationMode == 4)) {
+		if (!$requestID || !is_array($row = $mysql->record("select * from ".prefix."_static where id = ".db_squote($requestID)))) {
+			msgSticker($lang['msge_not_found'], 'error');
+			return 0;
+		}
+		$editMode = 1;
+		$origRow = $row;
+	}
+
+	// ADD
+	if (($operationMode == 1) || ($operationMode == 2)) {
+		// ADD mode
+		$row['id'] = 0;
+	}
+
+	// Populate `repeat previous attempt` data
+	if (($operationMode == 2) || ($operationMode == 4)) {
+		foreach (array('title', 'content', 'alt_name', 'template', 'description', 'keywords') as $k) {
+			if (isset($_REQUEST[$k]))
+				$row[$k] = $_REQUEST[$k];
+		}
+		$row['approve'] = (isset($_REQUEST['flag_published']) && $_REQUEST['flag_published'])?1:0;
+		$row['flags'] = ((isset($_REQUEST['flag_raw']) && $_REQUEST['flag_raw'])?1:0) + ((isset($_REQUEST['flag_html']) && $_REQUEST['flag_html'])?2:0) + ((isset($_REQUEST['flag_template_main']) && $_REQUEST['flag_template_main'])?4:0);
+	}
+
+	// Fill basic variables
+	$tVars = array(
 		'php_self'			=>	$PHP_SELF,
 		'quicktags'			=>	QuickTags('currentInputAreaID', 'static'),
-		'templateopts'		=> staticListTemplates(''),
 		'token'				=> genUToken('admin.static'),
+		'smilies'			=> $config['use_smilies']?InsertSmilies('content', 20):'',
+		'templateList'		=> staticTemplateList(),
+		'flags'				=> array(
+			'editMode'			=> $editMode,
+			'canAdd'			=> $perm['add'],
+			'canModify'			=> $perm['modify'],
+			'canPublish'		=> $perm['publish'],
+			'canUnpublish'		=> $perm['unpublish'],
+			'canHTML'			=> $perm['html'],
+			'canTemplate'		=> $perm['template'],
+			'canTemplateMain'	=> $perm['template.main'],
+			'meta'				=> $config['meta'],
+			'html'				=> $perm['html'],
+			'isPublished'		=> ($editMode && ($origRow['approve']))?1:0,
+		)
 	);
+	// Fill data entry
+	$tVars['data']			= array(
+			'id'				=>	$row['id'],
+			'title'				=>	secure_html($row['title']),
+			'content'			=>	secure_html($row['content']),
+			'alt_name'			=>	$row['alt_name'],
+			'template'			=>	$row['template'],
+			'description'		=>	$row['description'],
+			'keywords'			=>	$row['keywords'],
+			'cdate'				=> date('d.m.Y H:i', $row['postdate']),
+			'flag_published'		=> $row['approve'],
+			'flag_raw'				=> ($row['flags'] % 2)?1:0,
+			'flag_html'				=> (($row['flags']/2) % 2)?1:0,
+			'flag_template_main'	=> (($row['flags']/4) % 2)?1:0,
+		);
 
-	if ($config['use_smilies']) {
-		$tvars['vars']['smilies'] = InsertSmilies('content', 20);
-	} else {
-		$tvars['vars']['smilies'] = '';
+	if ($editMode && ($origRow['approve'])) {
+		$tVars['data']['url'] = (checkLinkAvailable('static', '')?
+				generateLink('static', '', array('altname' => $origRow['alt_name'], 'id' => $origRow['id']), array(), false, true):
+				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $origRow['alt_name'], 'id' => $origRow['id']), false, true));
 	}
 
-	if ($userROW['status'] < 3) {
-		$tvars['vars']['[options]'] = "";
-		$tvars['vars']['[/options]'] = "";
-	} else {
-		$tvars['regx']["'\\[options\\].*?\\[/options\\]'si"] = "";
-	}
 
-	if ($config['meta']) {
-		$tvars['vars']['[meta]'] = "";
-		$tvars['vars']['[/meta]'] = "";
-	} else {
-		$tvars['regx']["'\\[meta\\].*?\\[/meta\\]'si"] = "";
-	}
-
-	$flock = 0;
-	switch ($userROW['status']) {
-		case 2:		if ($config['htmlsecure_2']) $flock = 1;	break;
-		case 3:		if ($config['htmlsecure_3']) $flock = 1;	break;
-		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
-	}
-
-	$tvars['vars']['disable_flag_main']	= $flock?'disabled':'';
-	$tvars['vars']['disable_flag_raw']	= $flock?'disabled':'';
-	$tvars['vars']['disable_flag_html'] = $flock?'disabled':'';
-	$tvars['vars']['flag_approve']		= 'checked="checked"';
-	$tvars['vars']['template']			= '';
 
 	exec_acts('addstatic');
+	exec_acts('editstatic');
 
 	if (is_array($PFILTERS['static']))
-		foreach ($PFILTERS['static'] as $k => $v) { $v->addStaticForm($tvars); }
+		foreach ($PFILTERS['static'] as $k => $v) {
+			if ($editMode) {
+				$v->editStaticForm($row['id'], $row, $tVars);
+			} else {
+				$v->addStaticForm($row['id'], $row, $tVars);
+			}
+		}
 
-
-	$tpl -> template('add', tpl_actions.$mod);
-	$tpl -> vars('add', $tvars);
-	echo $tpl -> show('add');
+	$xt = $twig->loadTemplate('skins/default/tpl/static/edit.tpl');
+	echo $xt->render($tVars);
+	return 1;
 }
 
 
@@ -309,17 +313,28 @@ function addStaticForm(){
 function addStatic(){
 	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
 
-	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
+
+	// Check for modify permissions
+	if (!$perm['modify']) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
-		return;
+		return 0;
+	}
+
+	// Check for publish request if it's set
+	if (isset($_REQUEST['flag_published']) && isset($_REQUEST['flag_published'])) {
+		if (!$perm['publish']) {
+			msgSticker(array(array($lang['perm.denied'], 'title', 1), array($lang['perm.publish'], '', 1)), 'error', 1);
+			return 0;
+		}
 	}
 
 	// Check for security token
 	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.static'))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
-		return;
+		return 0;
 	}
+
 
 	$title = $_REQUEST['title'];
 	$content = $_REQUEST['content'];
@@ -329,7 +344,7 @@ function addStatic(){
 
 
 	if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
-		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
+		msgSticker(array(array($lang['msge_fields'], 'title', 1), array($lang['msgi_fields'],'',1)), 'error', 1);
 		return 0;
 	}
 
@@ -339,7 +354,7 @@ function addStatic(){
 	if ($alt_name) {
 		if ( is_array($mysql->record("select id from ".prefix."_static where alt_name = ".db_squote($alt_name)." limit 1")) ) {
 			msg(array("type" => "error", "text" => $lang['msge_alt_name'], "info" => $lang['msgi_alt_name']));
-			return;
+			return 0;
 		}
 		$SQL['alt_name'] = $alt_name;
 	} else {
@@ -360,33 +375,13 @@ function addStatic(){
 	$SQL['content']		= $content;
 
 	$SQL['template']	= $_REQUEST['template'];
-	$SQL['approve']		= intval($_REQUEST['approve']);
+	$SQL['approve']		= intval($_REQUEST['flag_published']);
 
 	// Variable FLAGS is a bit-variable:
 	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
 	// 1 = HTML enable	[if set, HTML codes may be used in news]
 
-	$SQL['flags'] = 0;
-	switch ($userROW['status']) {
-		case 1:		// admin can do anything
-			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0) + ($_REQUEST['flag_MAIN']?4:0);
-			break;
-
-		case 2:		// Editor. Check if we have permissions (only admin can have own mainpage)
-			if (!$config['htmlsecure_2'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 3:		// Journalists. Check if we have permissions (only admin can have own mainpage)
-			if (!$config['htmlsecure_3'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 4:		// Commentors. Check if we have permissions (only admin can have own mainpage)
-			if (!$config['htmlsecure_4'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-	}
+	$SQL['flags'] = (($perm['html'] && isset($_REQUEST['flag_raw']) && $_REQUEST['flag_raw'])?1:0) + (($perm['html'] && isset($_REQUEST['flag_html']) && $_REQUEST['flag_html'])?2:0) + (($perm['html'] && isset($_REQUEST['flag_template_main']) && $_REQUEST['flag_template_main'])?4:0);
 
 
 	if (is_array($PFILTERS['static']))
@@ -404,97 +399,10 @@ function addStatic(){
 
 	msg(array(
 		"text" => str_replace('{url}',$link , $lang['msg.added']),
-		"info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.added#descr'])));
+		"info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=editForm&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.added#descr'])));
+	return $id;
 }
 
-
-//
-// Edit static page :: FORM
-//
-function editStaticForm(){
-	global $lang, $parse, $mysql, $config, $tpl, $mod, $PFILTERS, $tvars, $userROW;
-	global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute;
-
-	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify');
-	$permDetails	= checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'details');
-
-	if (!$permModify && !$permDetails) {
-		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
-		return;
-	}
-
-
-	// Try to find news that we're trying to edit
-	if (!is_array($row = $mysql->record("select * from ".prefix."_static where id = ".db_squote($_REQUEST['id'])))) {
-		msg(array("type" => "error", "text" => $lang['msge_not_found']));
-		return;
-	}
-
-	$tvars['vars'] = array(
-		'php_self'			=>	$PHP_SELF,
-		'quicktags'			=>	QuickTags('currentInputAreaID', 'static'),
-		'id'				=>	$row['id'],
-		'title'				=>	secure_html($row['title']),
-		'content'			=>	secure_html($row['content']),
-		'alt_name'			=>	$row['alt_name'],
-		'template'			=>	$row['template'],
-		'templateopts'		=> staticListTemplates($row['template']),
-		'description'		=>	$row['description'],
-		'keywords'			=>	$row['keywords'],
-		'cdate'			=> date('d.m.Y H:i', $row['postdate']),
-		'token'				=> genUToken('admin.static'),
-	);
-	$tvars['regx']['#\[perm\.modify\](.*?)\[\/perm\.modify\]#is'] = $permModify?'$1':'';
-
-	if ($config['use_smilies']) {
-		$tvars['vars']['smilies'] = InsertSmilies('content', 20);
-	} else {
-		$tvars['vars']['smilies'] = '';
-	}
-
-	if ($userROW['status'] < 3) {
-		$tvars['vars']['[options]'] = '';
-		$tvars['vars']['[/options]'] = '';
-		$tvars['regx']["'\\[hidden\\].*?\\[/hidden\\]'si"] = '';
-	} else {
-		$tvars['vars']['[hidden]'] = '';
-		$tvars['vars']['[/hidden]'] = '';
-		$tvars['regx']["'\\[options\\].*?\\[/options\\]'si"] = '';
-	}
-
-	$tvars['vars']['flag_approve'] = ($row['approve']) ? 'checked' : '';
-
-	if ($config['meta']) {
-		$tvars['vars']['[meta]'] = '';
-		$tvars['vars']['[/meta]'] = '';
-	} else{
-		$tvars['regx']["'\\[meta\\].*?\\[/meta\\]'si"] = '';
-	}
-
-	// Additional flags
-	$tvars['vars']['ifraw']		=	($row['flags'] & 1) ? 'checked' : '';
-	$tvars['vars']['ifhtml']	=	($row['flags'] & 2) ? 'checked' : '';
-	$tvars['vars']['ifmain']	=	($row['flags'] & 4) ? 'checked' : '';
-
-	$flock = 0;
-	switch ($userROW['status']) {
-		case 2:		if ($config['htmlsecure_2']) $flock = 1;	break;
-		case 3:		if ($config['htmlsecure_3']) $flock = 1;	break;
-		case 4:		if ($config['htmlsecure_4']) $flock = 1;	break;
-	}
-	$tvars['vars']['disable_flag_main']	= ($userROW['status'] > 1)?'disabled':'';
-	$tvars['vars']['disable_flag_raw']	= $flock?'disabled':'';
-	$tvars['vars']['disable_flag_html']	= $flock?'disabled':'';
-
-	exec_acts('editstatic');
-
-	if (is_array($PFILTERS['static']))
-		foreach ($PFILTERS['static'] as $k => $v) { $v->editStaticForm($row['id'], $row, $tvars); }
-
-	$tpl -> template('edit', tpl_actions.$mod);
-	$tpl -> vars('edit', $tvars);
-	echo $tpl -> show('edit');
-}
 
 
 //
@@ -503,16 +411,18 @@ function editStaticForm(){
 function editStatic(){
 	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
 
+	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
+
 	// Check for permissions
-	if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
+	if (!$perm['modify']) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
-		return;
+		return -1;
 	}
 
 	// Check for security token
 	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.static'))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
-		return;
+		return -1;
 	}
 
 	$id			=	intval($_REQUEST['id']);
@@ -523,11 +433,11 @@ function editStatic(){
 	// Try to find news that we're trying to edit
 	if (!is_array($row = $mysql->record("select * from ".prefix."_static where id=".db_squote($id)))) {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));
-		return;
+		return -1;
 	}
 
 	if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
-		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
+		msgSticker(array(array($lang['msge_fields'], 'title', 1), array($lang['msgi_fields'],'',1)), 'error', 1);
 		return 0;
 	}
 
@@ -535,8 +445,9 @@ function editStatic(){
 
 	// Check for dup if alt_name is specified
 	if ( is_array($mysql->record("select id from ".prefix."_static where alt_name = ".db_squote($alt_name)." and id <> ".$row['id']." limit 1")) ) {
-		msg(array("type" => "error", "text" => $lang['msge_alt_name'], "info" => $lang['msgi_alt_name']));
-		return;
+		msgSticker(array(array($lang['msge_alt_name'], 'title', 1), array($lang['msgi_alt_name'], '', 1)), 'error', 1);
+		//msg(array("type" => "error", "text" => $lang['msge_alt_name'], "info" => $lang['msgi_alt_name']));
+		return 0;
 	}
 	$SQL['alt_name'] = $alt_name;
 
@@ -549,40 +460,14 @@ function editStatic(){
 	$SQL['content']		= $content;
 
 	$SQL['template']	= $_REQUEST['template'];
-	$SQL['approve']		= intval($_REQUEST['approve']);
+	$SQL['approve']		= intval($_REQUEST['flag_published']);
 	if (isset($_POST['set_postdate']) && $_POST['set_postdate']) {
 		if (preg_match('#^(\d+)\.(\d+)\.(\d+) +(\d+)\:(\d+)$#', $_REQUEST['cdate'], $m)) {
 			$SQL['postdate'] = mktime($m[4], $m[5], 0, $m[2], $m[1], $m[3]) + ($config['date_adjust'] * 60);
 		}
 	}
 
-
-
-	// Variable FLAGS is a bit-variable:
-	// 0 = RAW mode		[if set, no conversion "\n" => "<br />" will be done]
-	// 1 = HTML enable	[if set, HTML codes may be used in news]
-
-	$SQL['flags'] = 0;
-	switch ($userROW['status']) {
-		case 1:		// admin can do anything
-			$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0) + ($_REQUEST['flag_MAIN']?4:0);;
-			break;
-
-		case 2:		// Editor. Check if we have permissions
-			if (!$config['htmlsecure_2'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 3:		// Journalists. Check if we have permissions
-			if (!$config['htmlsecure_3'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-
-		case 4:		// Commentors. Check if we have permissions
-			if (!$config['htmlsecure_4'])
-				$SQL['flags']	=	($_REQUEST['flag_RAW']?1:0) + ($_REQUEST['flag_HTML']?2:0);
-			break;
-	}
+	$SQL['flags'] = (($perm['html'] && isset($_REQUEST['flag_raw']) && $_REQUEST['flag_raw'])?1:0) + (($perm['html'] && isset($_REQUEST['flag_html']) && $_REQUEST['flag_html'])?2:0) + (($perm['html'] && isset($_REQUEST['flag_template_main']) && $_REQUEST['flag_template_main'])?4:0);
 
 	if (is_array($PFILTERS['static']))
 		foreach ($PFILTERS['static'] as $k => $v) { $v->editStatic($row['id'], $row, $SQL, $tvars); }
@@ -595,8 +480,56 @@ function editStatic(){
 	$link = (checkLinkAvailable('static', '')?
 				generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id), array(), false, true):
 				generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id), false, true));
+
+	msgSticker($lang['msg.edited']);
+/*
 	msg(array(
 		"text" => str_replace('{url}',$link , $lang['msg.edited']),
 		"info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.edited#descr'])));
+*/
+	// Return ID
+	return $id;
+}
 
+
+
+
+
+// #=======================================#
+// # Action selection                      #
+// #=======================================#
+
+$action		=	isset($_REQUEST['action'])?$_REQUEST['action']:'';
+
+switch ($action) {
+	case 'add':			if ($id = addStatic()) {
+							addEditStaticForm(3, $id);
+						} else {
+							addEditStaticForm(2);
+						}
+						break;
+
+	case 'addForm':		addEditStaticForm(1);
+						break;
+
+	case 'edit':		if (($id = editStatic())>0) {
+							addEditStaticForm(3, $id);
+						} else if ($id == 0) {
+							addEditStaticForm(4);
+						} else {
+							listStatic();
+						}
+						break;
+
+	case 'editForm':	addEditStaticForm(3);
+						break;
+
+	default: {
+		switch ($action) {
+			case 'do_mass_approve':		massStaticModify('approve = 1', 'msgo_approved',  'approve');		break;
+			case 'do_mass_forbidden':	massStaticModify('approve = 0', 'msgo_forbidden', 'forbidden');		break;
+			case 'do_mass_delete':		massStaticDelete();													break;
+		}
+		listStatic();
+	}
 }
