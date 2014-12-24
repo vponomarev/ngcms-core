@@ -489,7 +489,7 @@ function msgSticker($msg, $type = '', $disp = -1) {
 	$lines = array();
 	if (is_array($msg)) {
 		foreach ($msg as $x) {
-			$txt = (isset($x[2]) && ($x[2]))?$x[0]:htmlspecialchars($x[1], ENT_COMPAT | ENT_HTML401, "cp1251");
+			$txt = (isset($x[2]) && ($x[2]))?$x[0]:htmlspecialchars($x[0], ENT_COMPAT | ENT_HTML401, "cp1251");
 			$lines []= (isset($x[1]) && ($x[1] == 'title'))?('<b>'.$txt.'</b>'):$txt;
 		}
 	} else {

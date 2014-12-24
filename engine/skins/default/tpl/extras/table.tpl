@@ -31,7 +31,7 @@ var qStateUninstalled	= 0;
 */
 
 for (i=0; i<sheetRules.length; i++) {
-	var sText = ''+sheetRules[i]['selectorText']; 
+	var sText = ''+sheetRules[i]['selectorText'];
 	sText = sText.toLowerCase();
 	if (sText == '.pluginentryactive td')		sIndexActive = i;
 	if (sText == '.pluginentryinactive td')		sIndexInactive = i;
@@ -42,7 +42,7 @@ for (i=0; i<sheetRules.length; i++) {
 // Init pre-saved in cookies values
 var cookieStatus = getCookie('ngadm_pstatus');
 if ((cookieStatus !== null)&&(typeof(cookieStatus) == "string")&&(Number(cookieStatus) >= 0)&&(Number(cookieStatus) <= 4)) {
-	qShowState = Number(cookieStatus); 
+	qShowState = Number(cookieStatus);
 }
 
 
@@ -50,10 +50,10 @@ if ((cookieStatus !== null)&&(typeof(cookieStatus) == "string")&&(Number(cookieS
 // Init pre-display CSS groups
  if (sIndexActive >= 0)
 	sheetRules[sIndexActive].style.display = ((qShowState == 0 )||(qShowState == 1))?'':'none';
-	
+
  if (sIndexInactive >= 0)
 	sheetRules[sIndexInactive].style.display = ((qShowState == 0 )||(qShowState == 2))?'':'none';
- 
+
  if (sIndexUninstalled >= 0)
 	sheetRules[sIndexUninstalled].style.display = ((qShowState == 0 )||(qShowState == 3))?'':'none';
 
@@ -66,10 +66,10 @@ function setDisplayMode(mode) {
 
  if (sIndexActive >= 0)
 	sheetRules[sIndexActive].style.display = ((qShowState == 0 )||(qShowState == 1))?'':'none';
-	
+
  if (sIndexInactive >= 0)
 	sheetRules[sIndexInactive].style.display = ((qShowState == 0 )||(qShowState == 2))?'':'none';
- 
+
  if (sIndexUninstalled >= 0)
 	sheetRules[sIndexUninstalled].style.display = ((qShowState == 0 )||(qShowState == 3))?'':'none';
 
@@ -77,8 +77,8 @@ function setDisplayMode(mode) {
  document.getElementById('pTypeActive').className		= (qShowState == 1)?'pActive':'pInactive';
  document.getElementById('pTypeInactive').className		= (qShowState == 2)?'pActive':'pInactive';
  document.getElementById('pTypeUninstalled').className	= (qShowState == 3)?'pActive':'pInactive';
-} 
- 
+}
+
 </script>
 
 <div id="pluginMenu">
@@ -88,7 +88,7 @@ function setDisplayMode(mode) {
 </tr>
 </table>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
-
+<thead>
 <tr>
 <td width=100% colspan="8" class="contentNav">
 <div id="pluginTypeMenu">
@@ -110,8 +110,10 @@ function setDisplayMode(mode) {
 <td>{{ lang['author'] }}</td>
 <td>{{ lang['action'] }}</td>
 </tr>
+</thead>
+<tbody id="entryList">
 {% for entry in entries %}
-<tr align="left" class="{{ entry.style }}" id="plugin_{id}">
+<tr align="left" class="{{ entry.style }}" id="plugin_{{ entry.id }}">
 	<td>{{ entry.id }} {{ entry.new }}</td>
 	<td>{{ entry.url }}</td>
 	<td>{{ entry.type }}</td>
@@ -121,8 +123,8 @@ function setDisplayMode(mode) {
 	<td>{{ entry.author_url }}</td>
 	<td nowrap="nowrap">{{ entry.link }} {{ entry.install }}</td>
 </tr>
-
 {% endfor %}
+</tbody>
 </table>
 </div>
 
@@ -134,5 +136,33 @@ function setDisplayMode(mode) {
  document.getElementById('pTypeActive').className		= (qShowState == 1)?'pActive':'pInactive';
  document.getElementById('pTypeInactive').className		= (qShowState == 2)?'pActive':'pInactive';
  document.getElementById('pTypeUninstalled').className	= (qShowState == 3)?'pActive':'pInactive';
+
+
+function ngPluginSwitch(plugin, state) {
+	ngShowLoading();
+	$.post('/engine/rpc.php', {
+			json : 1,
+			methodName : 'admin.extras.switch',
+			rndval: new Date().getTime(),
+			params : json_encode(
+				{
+					'token'  : '{{ token }}',
+					'plugin' : plugin,
+					'state'  : state,
+				}
+			) }, function(data) {
+		ngHideLoading();
+		// Try to decode incoming data
+		try {
+			resTX = eval('('+data+')');
+		} catch (err) { ngNotifyWindow('{{ lang['rpc_jsonError'] }} '+data, '{{ lang['notifyWindowError'] }}'); }
+		if (!resTX['status']) {
+			ngNotifyWindow('Error ['+resTX['errorCode']+']: '+resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
+		} else {
+			ngNotifyWindow(resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
+		}
+	}, "text").error(function() { ngHideLoading(); ngNotifyWindow('{{ lang['rpc_httpError'] }}', '{{ lang['notifyWindowError'] }}'); });
+}
+
 
 </script>
