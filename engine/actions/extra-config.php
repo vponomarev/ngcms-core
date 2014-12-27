@@ -34,10 +34,14 @@ $plugin = $_REQUEST['plugin'];
 $stype = isset($_REQUEST['stype'])?$_REQUEST['stype']:'';
 
 if (!is_array($extras[$plugin])) {
-		$tpl -> template('nomodule', tpl_actions.'extra-config');
-		$tvars['vars'] = array('action' => $lang['config_text'], 'action_text' => $lang['noplugin'], 'plugin' => $plugin, 'php_self' => $PHP_SELF);
-		$tpl -> vars('nomodule', $tvars);
-		echo $tpl -> show('nomodule');
+		$tVars = array(
+			'action' => $lang['config_text'],
+			'action_text' => $lang['noplugin'],
+			'plugin' => $plugin,
+			'php_self' => $PHP_SELF
+		);
+		$xt = $twig->loadTemplate('skins/default/tpl/extra-config/nomodule.tpl');
+		echo $xt->render($tVars);
 } else {
 	//
 	// Call 'install'/'deinstall' script if it's requested. Else - call config script.
@@ -67,9 +71,13 @@ if (!is_array($extras[$plugin])) {
 		}
 
 	} else {
-		$tpl -> template('nomodule', tpl_actions.'extra-config');
-		$tvars['vars'] = array('action' => $lang[$stype.'_text'], 'action_text' => $lang['nomod_'.$stype], 'plugin' => $plugin, 'php_self' => $PHP_SELF);
-		$tpl -> vars('nomodule', $tvars);
-		echo $tpl -> show('nomodule');
+		$tVars['vars'] = array(
+			'action' => $lang[$stype.'_text'],
+			'action_text' => $lang['nomod_'.$stype],
+			'plugin' => $plugin,
+			'php_self' => $PHP_SELF
+		);
+		$xt = $twig->loadTemplate('skins/default/tpl/extra-config/nomodule.tpl');
+		echo $xt->render($tVars);
 	}
 }
