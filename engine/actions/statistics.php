@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2012 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: statistics.php
 // Description: Generate system statistics
 // Author: Vitaly Ponomarev
@@ -12,10 +12,8 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('statistics', 'admin');
 
-function phpConfigGetBytes ($size_str)
-{
-	switch (substr ($size_str, -1))
-	{
+function phpConfigGetBytes ($size_str) {
+	switch (substr ($size_str, -1))	{
 		case 'M': case 'm': return (int)$size_str * 1048576;
 		case 'K': case 'k': return (int)$size_str * 1024;
 		case 'G': case 'g': return (int)$size_str * 1073741824;
@@ -107,8 +105,6 @@ if (file_exists($note_path)) {
 	fclose($fp);
 }
 
-$tpl -> template('statistics', tpl_actions);
-
 $df_size = @disk_free_space(root);
 $df = ($df_size > 1) ? Formatsize($df_size) : 'n/a';
 
@@ -122,7 +118,7 @@ $news_unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approv
 $news_unapp = ($news_unapp == "0") ? $news_unapp : '<font color="#ff6600">'.$news_unapp.'</font>';
 $users_unact = $mysql->result("SELECT count(id) FROM ".uprefix."_users WHERE activation != ''");
 $users_unact = ($users_unact == "0") ? $users_unact : '<font color="#ff6600">'.$users_unact.'</font>';
-$tvars['vars'] = array(
+$tVars = array(
 	'php_self'			=>	$PHP_SELF,
 	'php_os'			=>	PHP_OS,
 	'php_version'		=>	phpversion(),
@@ -149,23 +145,22 @@ $tvars['vars'] = array(
 	'admin_note'		=>	($note) ? $note : $lang['no_notes']
 );
 
-$tvars['vars'] = $tvars['vars'] + $STATS;
+$tVars = $tVars + $STATS;
 
 // Check if we have problems with limits for uploads
 $minUploadLimits = array(phpConfigGetBytes(ini_get('upload_max_filesize')), phpConfigGetBytes(ini_get('post_max_size')));
-$tvars['vars']['minUploadLimit'] = intval(min($minUploadLimits)/1024).'kb';
+$tVars['minUploadLimit'] = intval(min($minUploadLimits)/1024).'kb';
 
-$tvars['regx']['#\[error_size_files\](.+?)\[\/error_size_files\]#is'] = (min($minUploadLimits) < ($config['files_max_size'] * 1024))?'$1':'';
-$tvars['regx']['#\[error_size_images\](.+?)\[\/error_size_images\]#is'] = (min($minUploadLimits) < ($config['images_max_size'] * 1024))?'$1':'';
+$tVars['flags']['errorSizeFiles'] = (min($minUploadLimits) < ($config['files_max_size'] * 1024))?1:0;
+$tVars['flags']['errorSizeImages'] = (min($minUploadLimits) < ($config['images_max_size'] * 1024))?1:0;
 
 // PHP errors
 $phpErrors = 0;
 foreach (array('register_globals', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase') as $flag) {
-	$tvars['vars']['flag:'.$flag]     = ini_get($flag)?('<font color="red"><b>'.$lang['perror.on'].'</b></font>'):$lang['perror.off'];
+	$tVars['flags'][$flag]     = ini_get($flag)?('<font color="red"><b>'.$lang['perror.on'].'</b></font>'):$lang['perror.off'];
 	if (ini_get($flag)) { $phpErrors++; }
 }
-$tvars['regx']['#\[conf_error\](.+?)\[\/conf_error\]#is'] = ($phpErrors)?'$1':'';
+$tVars['flags']['confError'] = ($phpErrors)?1:0;
 
-
-$tpl -> vars('statistics', $tvars);
-echo $tpl -> show('statistics');
+$xt = $twig->loadTemplate('skins/default/tpl/statistics.tpl');
+echo $xt->render($tVars);

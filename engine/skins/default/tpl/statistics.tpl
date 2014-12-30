@@ -20,37 +20,37 @@ function _modal_close() {
 <td width="50%" style="padding-right:10px;" valign="top">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
-<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_server}</td>
+<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['server'] }}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_os}</td>
-<td width="50%" class="contentEntry2">{php_os}</td>
+<td width="50%" class="contentEntry1">{{ lang['os'] }}</td>
+<td width="50%" class="contentEntry2">{{ php_os }}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_php_version} / {l_mysql_version}</td>
-<td width="50%" class="contentEntry2">{php_version} / {mysql_version}</td>
+<td width="50%" class="contentEntry1">{{ lang['php_version'] }} / {{ lang['mysql_version'] }}</td>
+<td width="50%" class="contentEntry2">{{ php_version }} / {{ mysql_version }}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_gd_version}</td>
-<td width="50%" class="contentEntry2">{gd_version}</td>
+<td width="50%" class="contentEntry1">{{ lang['gd_version'] }}</td>
+<td width="50%" class="contentEntry2">{{ gd_version }}</td>
 </tr>
 </table>
 </td>
 <td width="50%" style="padding-left:10px;" valign="top">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
-<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />Next Generation CMS</td>
+<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />Next Generation CMS</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_current_version}</td>
-<td width="50%" class="contentEntry2"><span style="font-weight: bold; color: #6cb7ef;">{currentVersion}</span></td>
+<td width="50%" class="contentEntry1">{{ lang['current_version'] }}</td>
+<td width="50%" class="contentEntry2"><span style="font-weight: bold; color: #6cb7ef;">{{ currentVersion }}</span></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_last_version}</td>
+<td width="50%" class="contentEntry1">{{ lang['last_version'] }}</td>
 <td width="50%" class="contentEntry2"><span id="syncLastVersion">loading..</span></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_svn_version}</td>
+<td width="50%" class="contentEntry1">{{ lang['svn_version'] }}</td>
 <td width="50%" class="contentEntry2"><span id="syncSVNVersion">loading..</span></td>
 </tr>
 </table>
@@ -61,33 +61,33 @@ function _modal_close() {
 <td width="50%"  style="padding-right:10px;" valign="top">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
-<td colspan="4" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_size}</td>
+<td colspan="4" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['size'] }}</td>
 </tr>
-<tr><td class="contentEntry1">{l_group}</td><td class="contentEntry1" align="right">{l_amount}</td><td class="contentEntry1"align="right">{l_volume}</td><td class="contentEntry1"> &nbsp; {l_permissions}</td></tr>
-<tr><td class="contentEntry1">{l_group_images}</td><td class="contentEntry1"align="right">{image_amount}</td><td class="contentEntry1"align="right">{image_size}</td><td class="contentEntry1"> &nbsp; {image_perm}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group'] }}</td><td class="contentEntry1" align="right">{{ lang['amount'] }}</td><td class="contentEntry1"align="right">{{ lang['volume'] }}</td><td class="contentEntry1"> &nbsp; {{ lang['permissions'] }}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group_images'] }}</td><td class="contentEntry1"align="right">{{ image_amount }}</td><td class="contentEntry1"align="right">{{ image_size }}</td><td class="contentEntry1"> &nbsp; {{ image_perm }}</td></tr>
 <tr>
-<td class="contentEntry1">{l_group_files}</td><td class="contentEntry1"align="right">{file_amount}</td><td class="contentEntry1"align="right">{file_size}</td><td class="contentEntry1"> &nbsp; {file_perm}</td></tr>
+<td class="contentEntry1">{{ lang['group_files'] }}</td><td class="contentEntry1"align="right">{{ file_amount }}</td><td class="contentEntry1"align="right">{{ file_size }}</td><td class="contentEntry1"> &nbsp; {{ file_perm }}</td></tr>
 <tr>
-<td class="contentEntry1">{l_group_photos}</td><td class="contentEntry1" align="right">{photo_amount}</td><td class="contentEntry1" align="right">{photo_size}</td><td class="contentEntry1">&nbsp; {photo_perm}</td></tr>
-<tr><td class="contentEntry1">{l_group_avatars}</td><td class="contentEntry1" align="right">{avatar_amount}</td><td class="contentEntry1" align="right">{avatar_size}</td><td class="contentEntry1"> &nbsp; {avatar_perm}</td></tr>
-<tr><td class="contentEntry1">{l_group_backup}</td><td class="contentEntry1" align="right">{backup_amount}</td><td class="contentEntry1" align="right">{backup_size}</td><td class="contentEntry1"> &nbsp; {backup_perm}</td></tr>
+<td class="contentEntry1">{{ lang['group_photos'] }}</td><td class="contentEntry1" align="right">{{ photo_amount }}</td><td class="contentEntry1" align="right">{{ photo_size }}</td><td class="contentEntry1">&nbsp; {{ photo_perm }}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group_avatars'] }}</td><td class="contentEntry1" align="right">{{ avatar_amount }}</td><td class="contentEntry1" align="right">{{ avatar_size }}</td><td class="contentEntry1"> &nbsp; {{ avatar_perm }}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group_backup'] }}</td><td class="contentEntry1" align="right">{{ backup_amount }}</td><td class="contentEntry1" align="right">{{ backup_size }}</td><td class="contentEntry1"> &nbsp; {{ backup_perm }}</td></tr>
 </table>
 
-<script type="text/javascript" language="JavaScript" src="{versionNotifyURL}"></script>
+<script type="text/javascript" language="JavaScript" src="{{versionNotifyURL }}"></script>
 
 <br/><br/>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
-<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_size}</td>
+<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['size'] }}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_allowed_size}</td>
-<td width="50%" class="contentEntry2">{allowed_size}</td>
+<td width="50%" class="contentEntry1">{{ lang['allowed_size'] }}</td>
+<td width="50%" class="contentEntry2">{{ allowed_size }}</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{l_mysql_size}</td>
-<td width="50%" class="contentEntry2">{mysql_size}</td>
+<td width="50%" class="contentEntry1">{{ lang['mysql_size'] }}</td>
+<td width="50%" class="contentEntry2">{{ mysql_size }}</td>
 </tr>
 </table>
 </td>
@@ -95,41 +95,41 @@ function _modal_close() {
 <td width="50%" style="padding-left:10px;" valign="top">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
-<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_system}</td>
+<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['system'] }}</td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{l_all_cats}</td>
-<td width="30%" class="contentEntry2">{categories}</td>
+<td width="70%" class="contentEntry1">{{ lang['all_cats'] }}</td>
+<td width="30%" class="contentEntry2">{{ categories }}</td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{l_all_news}</td>
-<td width="30%" class="contentEntry2"><a href="?mod=news&status=1">{news_draft}</a> / <a href="?mod=news&status=2">{news_unapp}</a> / <a href="?mod=news&status=3">{news}</a></td>
+<td width="70%" class="contentEntry1">{{ lang['all_news'] }}</td>
+<td width="30%" class="contentEntry2"><a href="?mod=news&status=1">{{ news_draft }}</a> / <a href="?mod=news&status=2">{{ news_unapp }}</a> / <a href="?mod=news&status=3">{{ news }}</a></td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{l_all_comments}</td>
-<td width="30%" class="contentEntry2">{comments}</td>
+<td width="70%" class="contentEntry1">{{ lang['all_comments'] }}</td>
+<td width="30%" class="contentEntry2">{{ comments }}</td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{l_all_users}</td>
-<td width="30%" class="contentEntry2">{users}</td>
-</tr>
-<tr>        
-<td width="70%" class="contentEntry1">{l_all_users_unact}</td>
-<td width="30%" class="contentEntry2">{users_unact}</td>
+<td width="70%" class="contentEntry1">{{ lang['all_users'] }}</td>
+<td width="30%" class="contentEntry2">{{ users }}</td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{l_all_images}</td>
-<td width="30%" class="contentEntry2">{images}</td>
+<td width="70%" class="contentEntry1">{{ lang['all_users_unact'] }}</td>
+<td width="30%" class="contentEntry2">{{ users_unact }}</td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{l_all_files}</td>
-<td width="30%" class="contentEntry2">{files}</td>
+<td width="70%" class="contentEntry1">{{ lang['all_images'] }}</td>
+<td width="30%" class="contentEntry2">{{ images }}</td>
+</tr>
+<tr>
+<td width="70%" class="contentEntry1">{{ lang['all_files'] }}</td>
+<td width="30%" class="contentEntry2">{{ files }}</td>
 </tr>
 </table>
-<!-- 
+<!--
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 <tr>
-<td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_system}</td>
+<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['system'] }}</td>
 </tr>
 <tr>
 </table>
@@ -141,39 +141,39 @@ function _modal_close() {
 <tr>
 <td width="50%" style="padding-right:10px;" valign="top">
  <table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <tr><td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_note}</td></tr>
+  <tr><td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['note'] }}</td></tr>
   <tr>
    <td width="50%" colspan="2" class="contentEntry1">
-    <form method="post" action="{php_self}?mod=statistics">
+    <form method="post" action="{{ php_self }}?mod=statistics">
      <input type="hidden" name="action" value="save" />
-     <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow;">{admin_note}</textarea><br />
-     <input type="submit" class="button" value="{l_save_note}" />
+     <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow;">{{ admin_note }}</textarea><br />
+     <input type="submit" class="button" value="{{ lang['save_note'] }}" />
     </form>
    </td>
   </tr>
  </table>
 </td>
 <td width="50%" style="padding-left:10px;" valign="top">
-[conf_error]
+{% if (flags.confError) %}
 <!-- Configuration errors -->
  <table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <tr><td colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" /><font color="red">{l_pconfig.error}</font></td></tr>
+  <tr><td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" /><font color="red">{{ lang['pconfig.error'] }}</font></td></tr>
   <tr><td>
 <table width="100%">
-<thead><tr><td>{l_perror.parameter}</td><td>{l_perror.shouldbe}</td><td>{l_perror.set}</td></thead>
-<tr><td>Register Globals</td><td>Отключено</td><td>{flag:register_globals}</td></tr>
-<tr><td>Magic Quotes GPC</td><td>Отключено</td><td>{flag:magic_quotes_gpc}</td></tr>
-<tr><td>Magic Quotes Runtime</td><td>Отключено</td><td>{flag:magic_quotes_runtime}</td></tr>
-<tr><td>Magic Quotes Sybase</td><td>Отключено</td><td>{flag:magic_quotes_sybase}</td></tr>
+<thead><tr><td>{{ lang['perror.parameter'] }}</td><td>{{ lang['perror.shouldbe'] }}</td><td>{{ lang['perror.set'] }}</td></thead>
+<tr><td>Register Globals</td><td>Отключено</td><td>{{ flags.register_globals }}</td></tr>
+<tr><td>Magic Quotes GPC</td><td>Отключено</td><td>{{ flags.magic_quotes_gpc }}</td></tr>
+<tr><td>Magic Quotes Runtime</td><td>Отключено</td><td>{{ flags.magic_quotes_runtime }}</td></tr>
+<tr><td>Magic Quotes Sybase</td><td>Отключено</td><td>{{ flags.magic_quotes_sybase }}</td></tr>
 </table>
 <br/>
-&nbsp;<a style="cursor: pointer; color: red;" onclick="document.getElementById('perror_resolve').style.display='block';">{l_perror.howto}</a><br/>
+&nbsp;<a style="cursor: pointer; color: red;" onclick="document.getElementById('perror_resolve').style.display='block';">{{ lang['perror.howto'] }}</a><br/>
 <div id="perror_resolve" style="display: none;">
-{l_perror.descr}
+{{ lang['perror.descr'] }}
 </div>
   </td></tr>
  </table>
-[/conf_error]
+{% endif %}
 </td>
 </tr>
 </table>
