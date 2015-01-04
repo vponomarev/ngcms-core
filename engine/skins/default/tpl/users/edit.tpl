@@ -83,7 +83,7 @@
 <!-- <td class="contentHead"><b>V</b></td> -->
 <td class="contentHead"><b>Значение</b></td>
 </tr>
-{% for xFN,xfV in p.xfields.fields %}
+{% for xFN,xfV in plugin.xfields.fields %}
 <tr>
 	<td>{{ xFN }}</td>
 	<td>{{ xfV.title }}</td>
