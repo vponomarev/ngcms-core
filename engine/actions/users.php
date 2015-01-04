@@ -12,6 +12,7 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('users', 'admin');
 
+LoadPluginLibrary('uprofile', 'lib');
 
 //
 // Form: Edit user
@@ -38,8 +39,9 @@ function userEditForm(){
 		return;
 	}
 
-//	if (is_array($PFILTERS['p_uprofile']))
-//		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfilePre($row['id'], $row, $tvars); }
+	// Manage profile data [if needed]
+	if (is_array($PFILTERS['plugin.uprofile']))
+		foreach ($PFILTERS['plugin.uprofile'] as $k => $v) { $v->editProfileFormPre($row['id'], $row); }
 
 	foreach ($UGROUP as $ugID => $ugData) {
 		$status .= ' <option value="'.$ugID.'"'.(($row['status'] == $ugID)?' selected':'').'>'.$ugID.' ('.$ugData['name'].')</option>';
@@ -67,8 +69,11 @@ function userEditForm(){
 		),
 	);
 
-//	if (is_array($PFILTERS['p_uprofile']))
-//		foreach ($PFILTERS['p_uprofile'] as $k => $v) { $v->showProfile($row['id'], $row, $tvars); }
+	if (is_array($PFILTERS['plugin.uprofile']))
+		foreach ($PFILTERS['plugin.uprofile'] as $k => $v) {
+
+			$v->editProfileForm($row['id'], $row, $tVars);
+		}
 
 	ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(1));
 

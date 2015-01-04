@@ -34,7 +34,7 @@
 <tr>
 <td width=50% class=contentEntry1>{{ lang['new_pass'] }}</td>
 <td width=50% class=contentEntry2 valign=middle><input class="password" name="password" size="40" maxlength="16" /><br /><small>{{ lang['pass_left'] }}</small></td>
-</tr>                                                                                           
+</tr>
 <tr>
 <td width=50% class=contentEntry1>{{ lang['email'] }}</td>
 <td width=50% class=contentEntry2 valign=middle><input class="email" type="text" name="mail" value="{{ mail }}" size=40 /></td>
@@ -68,3 +68,31 @@
 </tr>
 </table>
 </form>
+
+
+{% if (pluginIsActive('xfields')) %}
+<table width="100%">
+<tr>
+<td colspan="8" width="100%" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8">Доп. поля в профиле пользователя (только просмотр)</td>
+</tr>
+<tr align="left">
+<td class="contentHead"><b>ID поля</b></td>
+<td class="contentHead"><b>Название поля</b></td>
+<td class="contentHead"><b>Тип поля</b></td>
+<td class="contentHead"><b>Блок</b></td>
+<!-- <td class="contentHead"><b>V</b></td> -->
+<td class="contentHead"><b>Значение</b></td>
+</tr>
+{% for xFN,xfV in p.xfields.fields %}
+<tr>
+	<td>{{ xFN }}</td>
+	<td>{{ xfV.title }}</td>
+	<td>{{ xfV.data.type }}</td>
+	<td>{{ xfV.data.area }}</td>
+<!-- 	<td>{% if (xfV.data.type == "select") and (xfV.data.storekeys) %}<span style="font-color: red;"><b>{{ xfV.secure_value }}{% else %}&nbsp;{% endif %}</td> -->
+	<td>{{ xfV.input }}</td>
+
+</tr>
+{% endfor %}
+</table>
+{% endif %}
