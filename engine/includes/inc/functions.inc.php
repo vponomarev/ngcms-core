@@ -356,7 +356,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 	global $lang, $config;
 
 	// Include new PHP mailer class
-	@include_once root.'includes/classes/PHPMailer/class.phpmailer.php';
+	@include_once root.'includes/classes/phpmailer/class.phpmailer.php';
 	$mail	= new phpmailer;
 
 	$mail->CharSet	= 'Windows-1251';
