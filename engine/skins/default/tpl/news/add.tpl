@@ -147,7 +147,7 @@ function changeActive(name) {
 </table>
 </div>
 <script language="javascript" type="text/javascript">
-$("#cdate").datetimepicker( { currentText: "DD.MM.YYYY HH:MM", dateFormat: "dd.mm.yy", timeFormat: "hh:mm" });
+$("#cdate").datetimepicker( { currentText: "DD.MM.YYYY HH:MM" });
 </script>
 
 <!-- ATTACHES -->

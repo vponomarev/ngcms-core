@@ -43,8 +43,11 @@
 </table>
 </div>
 
-<script type="text/javascript" src="{{ home }}/lib/ngFileTree.js"></script>
-<link rel="stylesheet" href="{{ home }}/lib/ngFileTree.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="{{ home }}/lib/codemirror/codemirror.css">
+<script type="text/javascript" src="{{ home }}/lib/codemirror/codemirror.js"></script>
+
+<script type="text/javascript" src="{{ home_url }}/lib/ngFileTree.js"></script>
+<link rel="stylesheet" href="{{ home_url }}/lib/ngFileTree.css" type="text/css" media="screen" />
 <script type="text/javascript" language="javascript">
 var ngTemplateName = 'default';
 var ngFileName = '';
@@ -78,6 +81,32 @@ var ngFileTreeFunc = function(file) {
 				document.getElementById('imageViewContainer').style.display = 'none';
 				document.getElementById('fileEditorSelector').style.display = 'block';
 				$('#fileEditorSelector').val(resTX['content']);
+
+				// Remove previous codemirror (if installed)
+				$(".CodeMirror").remove();
+
+				// Install codemirror
+				var edField = $('#fileEditorSelector');
+				var eW = edField.width();
+				var eH = edField.height();
+				var cm = CodeMirror.fromTextArea(
+					document.getElementById('fileEditorSelector'), {
+				                lineNumbers: true,
+				                //mode: i,
+				       //         lineWrapping: true,
+				                styleActiveLine: true,
+				                tabMode: "indent",
+				                extraKeys: {
+				                	"F11": function(cm) {cm.setOption("fullScreen", !cm.getOption("fullScreen"));},
+				                	"Esc": function(cm) {if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);}
+				                }
+
+				});
+				cm.setSize(eW, eH);
+				cm.on("change", function(cm) {
+					$("#fileEditorSelector").val(cm.getValue());
+				});
+
 				ngFileContent = resTX['content'];
 			}
 		}, "text").error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });

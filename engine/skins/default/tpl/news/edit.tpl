@@ -160,7 +160,7 @@ function changeActive(name) {
 </table>
 </div>
 <script language="javascript" type="text/javascript">
-$("#cdate").datetimepicker( { currentText: "{{ cdate }}", dateFormat: "dd.mm.yy", timeFormat: "hh:mm" });
+$("#cdate").datetimepicker( { currentText: "{{ cdate }}" });
 </script>
 <!-- ATTACHES -->
 <div id="attaches" style="display: none;">
