@@ -7,6 +7,9 @@
 // Author: Vitaly Ponomarev
 //
 
+
+@header('content-type: text/html; charset=Windows-1251');
+
 @error_reporting (E_ALL ^ E_NOTICE);
 define('NGCMS', 1);
 

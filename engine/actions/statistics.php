@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2015 Next Generation CMS (http://ngcms.ru/)
 // Name: statistics.php
 // Description: Generate system statistics
 // Author: Vitaly Ponomarev
@@ -118,14 +118,20 @@ $news_unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approv
 $news_unapp = ($news_unapp == "0") ? $news_unapp : '<font color="#ff6600">'.$news_unapp.'</font>';
 $users_unact = $mysql->result("SELECT count(id) FROM ".uprefix."_users WHERE activation != ''");
 $users_unact = ($users_unact == "0") ? $users_unact : '<font color="#ff6600">'.$users_unact.'</font>';
+
+// Display GIT guild version if versionType == GIT
+$displayEngineVersion = (engineVersionType == "GIT")?
+		engineVersion." + GIT ".engineVersionBuild:
+		engineVersion." ".engineVersionType;
+
 $tVars = array(
 	'php_self'			=>	$PHP_SELF,
 	'php_os'			=>	PHP_OS,
 	'php_version'		=>	phpversion(),
 	'mysql_version'		=>	mysql_get_server_info(),
 	'gd_version'		=>	(isset($gd_version) && is_array($gd_version))?$gd_version["GD Version"]:'<font color="red"><b>NOT INSTALLED</b></font>',
-	'currentVersion'	=>	engineVersion,
-	'versionNotifyURL'	=>	'http://ngcms.ru/sync/versionNew.php?ver='.urlencode(engineVersion).'&uuid='.$config['UUID'],
+	'currentVersion'	=>	$displayEngineVersion,
+	'versionNotifyURL'	=>	'http://ngcms.ru/sync/versionInfo.php?ver='.urlencode(engineVersion).'&type='.urlencode(engineVersionType).'&build='.urlencode(engineVersionBuild).'&uuid='.$config['UUID'],
 	'mysql_size'		=>	$mysql_size,
 	'allowed_size'		=>	$df,
 	'avatars'			=>	$avatars,

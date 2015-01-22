@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2015 Next Generation CMS (http://ngcms.ru)
 // Name: admin.php
 // Description: administration panel
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -10,7 +10,9 @@
 // Administrative panel filters
 $AFILTERS = array();
 
+
 // Load core
+@header('content-type: text/html; charset=Windows-1251');
 @include_once 'core.php';
 
 // Protect against hack attempts

@@ -4,7 +4,7 @@
 // Copyright (C) 2006-2015 Next Generation CMS (http://ngcms.ru/)
 // Name: consts.inc.php
 // Description: Initializing global consts
-// Author: Alexey Zinchenko, Vitaly Ponomarev
+// Author: Vitaly Ponomarev
 //
 
 // Determine current admin working directory
@@ -17,7 +17,9 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.3 + GIT [20150109+]');
+@define('engineVersion', '0.9.4.RC1');
+@define('engineVersionType', 'GIT');
+@define('engineVersionBuild', '20150123');
 
 @define('prefix', $config['prefix']);
 @define('uprefix',$config['uprefix']);
