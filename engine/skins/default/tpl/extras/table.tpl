@@ -1,4 +1,3 @@
-<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
 <script type="text/javascript" language="javascript">
 
 //

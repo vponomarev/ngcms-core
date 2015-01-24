@@ -26,7 +26,7 @@
  <td width="230" valign="top">
   <div id="fileTreeSelector" style="overflow: auto; width: 99%; height: 578px; background-color: #ABCDEF; float: left; ">TEST CONTENT</div>
   <div style="width: 100%; background-color: #E0E0E0; padding: 3px; ">
-  <input style="width: 150px;" type="button" class="navbutton" value="Create template.."/>
+  <!-- <input style="width: 150px;" type="button" class="navbutton" value="Create template.."/> -->
   </div>
  </td>
  <td valign="top">
