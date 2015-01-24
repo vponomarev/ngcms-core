@@ -131,7 +131,7 @@
 							<span class="icon icon-calendar"></span> Календарь:
 						</div>
 						<div class="block-calendar">
-							{{ callPlugin('calendar.show') }}
+							{{ plugin_calendar }}
 						</div>
 					</div>
 					{% endif %}

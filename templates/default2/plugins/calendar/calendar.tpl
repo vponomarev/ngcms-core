@@ -19,7 +19,7 @@ function ng_calendar_walk(month, year, offset) {
 <div id="ngCalendarDiv">
 <table cellspacing="0" id="calendar">
 	<tr>
-		<th colspan="7" class="monthselect"><center><b><a href="{{ prevMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'prev'); return false;">&laquo;</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ currentMonth.link }}">{{ currentMonth.name }} {{ currentEntry.year }}</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ nextMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'next'); return false;">&raquo;</a></b></center></th>
+		<th colspan="7" class="monthselect"><center><b>{% if (flags.havePrevMonth) %}<a href="{{ prevMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'prev'); return false;">&laquo;</a>{% endif %}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ currentMonth.link }}">{{ currentMonth.name }} {{ currentEntry.year }}</a>&nbsp;&nbsp;&nbsp;&nbsp;{% if (flags.haveNextMonth) %}<a href="{{ nextMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'next'); return false;">&raquo;</a>{% endif %}</b></center></th>
 	</tr>
 	<tr class="weeks">
 		<td class="weekday"><span>{{ weekdays[1] }}</span></td>
