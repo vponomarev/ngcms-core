@@ -289,9 +289,9 @@ class file_managment {
 			$wDir .= '/'.$dir1;
 			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
 				if ($param['rpc']) {
-					return array('status' => 0, 'errorCode' => 306, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+					return array('status' => 0, 'errorCode' => 306, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])));
 				} else {
-					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])));
 					return 0;
 				}
 			}
@@ -299,9 +299,9 @@ class file_managment {
 			$wDir .= '/'.$dir2;
 			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
 				if ($param['rpc']) {
-					return array('status' => 0, 'errorCode' => 307, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+					return array('status' => 0, 'errorCode' => 307, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])));
 				} else {
-					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.ext'])));
+					msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])));
 					return 0;
 				}
 			}
@@ -324,9 +324,9 @@ class file_managment {
 
 					// Unable to create dir
 					if ($param['rpc']) {
-						return array('status' => 0, 'errorCode' => 308, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.ext'])));
+						return array('status' => 0, 'errorCode' => 308, 'errorText' => iconv('Windows-1251', 'UTF-8', str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.dircreate'])));
 					} else {
-						msg(array("type" => "error", "text" => str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.ext'])));
+						msg(array("type" => "error", "text" => str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.dircreate'])));
 						return 0;
 					}
 				} else {
