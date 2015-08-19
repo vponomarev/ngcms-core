@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2015 Next Generation CMS (http://ngcms.ru/)
 // Name: cmodules.php
 // Description: Common CORE modules
 // Author: Vitaly Ponomarev
@@ -26,15 +26,28 @@ function coreActivateUser() {
 		$code	= $_REQUEST['code'];
 	}
 
-	// All checks are done via mysql
-	if (is_array($urow = $mysql->record("select * from ".prefix."_users where id=".db_squote($userid)." and activation =".db_squote($code)))) {
-		$mysql->query("update `".uprefix."_users` set activation = '' where id = ".db_squote($userid));
-		msg(array("text" => $lang['msgo_activated'], "info" => sprintf($lang['msgi_activated'], admin_url)));
-		$SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'].'/';
+	// Check if user exists with ID = $userid
+	if (is_array($uRow = $mysql->record("select * from ".prefix."_users where id=".db_squote($userid)))) {
+		// User found. Check activation.
+		if ($uRow['activation']) {
+			if ($uRow['activation'] == $code) {
+				// Yeah, activate user!
+				$mysql->query("update `".uprefix."_users` set activation = '' where id = ".db_squote($userid));
+
+				msg(array("text" => $lang['msgo_activated'], "info" => sprintf($lang['msgi_activated'], admin_url)));
+				$SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'].'/';
+			} else {
+				// Incorrect activation code
+				msg(array("text" => $lang['msge_activate'], "info" => sprintf($lang['msgi_activate'], admin_url)));
+			}
+		} else {
+			// Already activated
+			print "ALREADY";
+			msg(array("text" => $lang['msge_activation'], "info" => sprintf($lang['msgi_activation'], admin_url)));
+		}
 	} else {
+		// User not found
 		error404();
-		//msg(array("type" => "error", "text" => $lang['msge_activation'], "info" => $lang['msgi_activation']));
-		//$SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'].'/';
 	}
 }
 
