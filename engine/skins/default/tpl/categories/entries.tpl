@@ -2,8 +2,8 @@
 <tr align="center" class="contRow1">
 <td>
 {% if (flags.canModify) %}
- <a href="#" onclick="categoryModifyRequest('up', {{ entry.id }});"><img src="/engine/skins/default/images/up.gif"/></a>
- <a href="#" onclick="categoryModifyRequest('down', {{ entry.id }});"><img src="/engine/skins/default/images/down.gif"/></a>
+ <a href="#" onclick="categoryModifyRequest('up', {{ entry.id }});"><img src="{{ skins_url }}/images/up.gif"/></a>
+ <a href="#" onclick="categoryModifyRequest('down', {{ entry.id }});"><img src="{{ skins_url }}/images/down.gif"/></a>
 {% endif %}
 </td>
 <td>
@@ -18,6 +18,6 @@
 {% if (entry.flags.showMain) %}<img src="{{ skins_url }}/images/yes.png" alt="{{ lang['yesa'] }}" title="{{ lang['yesa'] }}"/>{% else %}<img src="{{ skins_url }}/images/no.png" alt="{{ lang['noa'] }}" title="{{ lang['noa'] }}"/>{% endif %}</td>
 <td>{% if (entry.template == '') %}--{% else %}{{ entry.template }}{% endif %}</td>
 <td><a href="admin.php?mod=news&amp;category={{ entry.id }}">{% if (entry.news == 0) %}--{% else %}{{ entry.news }}{% endif %}</a></td>
-<td>{% if (flags.canModify) %}<a href="#" onclick="categoryModifyRequest('del', {{ entry.id }});"><img title="{{ lang['delete'] }}" alt="{{ lang['delete'] }}" src="/engine/skins/default/images/delete.gif" /></a>{% endif %}</td>
+<td>{% if (flags.canModify) %}<a href="#" onclick="categoryModifyRequest('del', {{ entry.id }});"><img title="{{ lang['delete'] }}" alt="{{ lang['delete'] }}" src="{{ skins_url }}/images/delete.gif" /></a>{% endif %}</td>
 </tr>
 {% endfor %}
