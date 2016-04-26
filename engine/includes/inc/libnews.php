@@ -777,7 +777,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			// Check mode:
 			// 1 - Master category
 			// 2 - Current category
-			$fcat = $callingParams['customCategoryId'];
+			$fcat = $callingParams['customCategoryTemplate'];
 			if ($callingParams['customCategoryTemplate'] == 1) {
 				// Find first category
 				$fcat = array_shift(explode(",", $row['catid']));
