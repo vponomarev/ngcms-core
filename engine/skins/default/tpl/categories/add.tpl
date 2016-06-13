@@ -49,11 +49,11 @@
 <td width="30%" class="contentEntry2"><select name="template_mode">{{ template_mode }}</select></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{{ lang['icon'] }}<br/><small>URL пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</small></td>
+<td width="50%" class="contentEntry1">{{ lang['icon'] }}<br/><small>URL картинки, используемой в качестве иконки категории</small></td>
 <td width="50%" class="contentEntry2"><input type="text" size="40" name="icon" maxlength="255" /></td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ<br/><small>пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.<br/>пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.</small></td>
+<td width="70%" class="contentEntry1">Прикрепленная иконка<br/><small>Вы можете прикрепить изображение-иконку непосредственно к категории.<br/>Данное поле имеет приоритет.</small></td>
 <td width="30%" class="contentEntry2">
 <input type="file" size="40" name="image" />
 </td>
