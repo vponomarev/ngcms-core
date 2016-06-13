@@ -9,14 +9,8 @@
 <td width="50%" class="contentEntry2"><input type="checkbox" id="cat_show" name="cat_show" value="1" class="check" checked="checked" /></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{{ lang['show.link'] }}</td>
-<td width="50%" class="contentEntry2">
-	<select name="show_link">
-		<option value="0">{{ lang['link.always'] }}</option>
-		<option value="1">{{ lang['link.ifnews'] }}</option>
-		<option value="2">{{ lang['link.never'] }}</option>
-	</select>
-</td>
+	<td width="50%" class="contentEntry1">{{ lang['parent'] }}</td>
+	<td width="50%" class="contentEntry2">{{ parent }}</td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{{ lang['title'] }}</td>
@@ -39,6 +33,16 @@
 <tr>
 <td width="50%" class="contentEntry1">{{ lang['cat_number'] }}</td>
 <td width="50%" class="contentEntry2"><input type="text" size="4" name="number" /></td>
+</tr>
+<tr>
+	<td width="50%" class="contentEntry1">{{ lang['show.link'] }}</td>
+	<td width="50%" class="contentEntry2">
+		<select name="show_link">
+			<option value="0">{{ lang['link.always'] }}</option>
+			<option value="1">{{ lang['link.ifnews'] }}</option>
+			<option value="2">{{ lang['link.never'] }}</option>
+		</select>
+	</td>
 </tr>
 <tr>
 <td width="50%" class="contentEntry1">{{ lang['cat_tpl'] }}</td>
@@ -70,10 +74,6 @@
 <td width="70%" class="contentEntry1" valign="top">{{ lang['category.info'] }}<br/><small>{{ lang['category.info#desc'] }}</small></td>
 <td width="30%" class="contentEntry2"><textarea id="info" name="info" cols="70" rows="5"></textarea></td>
 </tr>
-<tr>
-<td width="50%" class="contentEntry1">{{ lang['parent'] }}</td>
-<td width="50%" class="contentEntry2">{{ parent }}</td>
-</tr>                                     
 {{ extend }}
 <tr><td width="100%" colspan="2">&nbsp;</td></tr>
 <tr>
