@@ -1129,7 +1129,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()){
 		$markers['mark.default'] = '&#8212;';
 
 
-	// Deremine working mode - old or new
+	// Determine working mode - old or new
 	// If template 'news.categories' exists - use `new way`, else - old
 	if (file_exists(tpl_site.'news.categories.tpl') || $flags['returnData']) {
 
@@ -1243,9 +1243,22 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()){
 	// OLD STYLE menu generation
 	$result = '';
 
+	$flagSkip = false;
+	$skipLevel = 0;
 	$tpl -> template('categories', tpl_site);
 	foreach($catz as $k => $v){
-		if (!substr($v['flags'],0,1)) continue;
+		// Skip category if it's disabled in category tree
+		if ($flagSkip) {
+			if ($v['poslevel'] > $skipLevel)
+				continue;
+			$flagSkip = false;
+		}
+
+		if (!substr($v['flags'],0,1)) {
+			$flagSkip = true;
+			$skipLevel = $v['poslevel'];
+			continue;
+		}
 
 		$tvars['vars'] = array(
 			'if_active'	=>	(isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id']))?$markers['class.active']:$markers['class.inactive'],
