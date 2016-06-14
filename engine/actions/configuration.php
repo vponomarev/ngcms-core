@@ -12,7 +12,6 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang		= LoadLang('configuration', 'admin');
 
-
 function twigmkSelect($params) {
 	$values = '';
 	if (isset($params['values']) && is_array($params['values'])) {
@@ -129,8 +128,6 @@ function systemConfigEditForm(){
 		if ($v['db'])		{ $auth_dbs[$k] = $k;		}
 	}
 
-
-
 	// Load config file from configuration
 	// Now in $config we have original version of configuration data
 	include confroot.'config.php';
@@ -145,6 +142,9 @@ function systemConfigEditForm(){
 		$mConfig []= $v;
 	}
 
+	// Set default timeZone if it's empty
+	if (!$config['timezone'])
+		$config['timezone'] = 'Europe/Moscow';
 
 	$tVars = array(
 		//	SYSTEM CONFIG is available via `config` variable
@@ -156,6 +156,7 @@ function systemConfigEditForm(){
 			'wm_image'					=> ListFiles('trash', array('gif', 'png'), 2),
 			'auth_module'				=> $auth_modules,
 			'auth_db'					=> $auth_dbs,
+			'timezoneList'				=> timezone_identifiers_list(),
 		),
 		'php_self'					=>	$PHP_SELF,
 		'timestamp_active_now'		=>	LangDate($config['timestamp_active'], time()),

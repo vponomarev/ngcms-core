@@ -82,10 +82,6 @@ $PLUGINS	= array(
 	'config:loaded'	=> 0,
 );
 
-// Preconfigure default timezone as 'Europe/Moscow'
-date_default_timezone_set('Europe/Moscow');
-
-
 // Define global constants "root", "site_root"
 define('root', dirname(__FILE__).'/');
 define('site_root', dirname(dirname(__FILE__)).'/');
@@ -147,6 +143,9 @@ multi_multisites();
 @include_once confroot.'config.php';
 // [[FIX config variables]]
 if (!isset($config['uprefix'])) { $config['uprefix'] = $config['prefix']; }
+
+// Set up default timezone [ default: Europe/Moscow ]
+date_default_timezone_set($config['timezone']?$config['timezone']:'Europe/Moscow');
 
 // [[MARKER]] Configuration file is loaded
 $timer->registerEvent('Config file is loaded');

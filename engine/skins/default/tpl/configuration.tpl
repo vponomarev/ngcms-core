@@ -318,6 +318,15 @@ function ngCheckEmail() {
 <td class="contentEntry2" valign="middle">{{ mkSelectNY({'name' : 'save_con[url_external_target_blank]', 'value' : config['url_external_target_blank'] }) }}</td>
 </tr>
 <tr>
+	<td class="contentEntry1">{{ lang['timezone'] }}<br /><small>{{ lang['timezone#desc'] }}</small></td>
+	<td class="contentEntry2" valign="middle">
+	<select name="save_con[timezone]" id="timezone">
+{% for zone in list['timezoneList'] %}<option value="{{ zone }}" {% if (config['timezone'] == zone) %}selected="selected"{% endif %}>{{ zone }}</option>
+{% endfor %}
+	</select>
+	</td>
+</tr>
+<tr>
  <td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['email_configuration'] }}</td>
 </tr>
 <tr>
