@@ -552,6 +552,9 @@ function addNews($mode = array()){
 
 	$SQL['content']		= $content;
 
+	// Dummy parameter for API call
+	$tvars = array();
+
 	exec_acts('addnews');
 
 	$pluginNoError = 1;
@@ -656,7 +659,7 @@ function addNews($mode = array()){
 //	*	'no.files'	- disable updating files
 //	*	'no.token'	- do not check for security token
 function editNews($mode = array()) {
-	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW, $catz, $catmap;
+	global $lang, $parse, $mysql, $config, $PFILTERS, $userROW, $catmap;
 
 	// Load permissions
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
@@ -837,7 +840,7 @@ function editNews($mode = array()) {
 	if ($perm[$permGroupMode.'.customdate']) {
 		if ($_REQUEST['setdate_custom']) {
 			if (preg_match('#^(\d+)\.(\d+)\.(\d+) +(\d+)\:(\d+)$#', $_REQUEST['cdate'], $m)) {
-				$SQL['postdate'] = mktime($m[4], $m[5], 0, $m[2], $m[1], $m[3]) + ($config['date_adjust'] * 60);
+				$SQL['postdate'] = mktime($m[4], $m[5], 0, $m[2], $m[1], $m[3]);
 			}
 
 			//$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
@@ -855,7 +858,7 @@ function editNews($mode = array()) {
 	} else {
 		$SQL['alt_name']  = $row['alt_name'];
 	}
-	$SQL['editdate']  = time();
+	$SQL['editdate']  = time() + ($config['date_adjust'] * 60);
 	$SQL['catid']     = implode(",", array_keys($catids));
 
 	// Change this parameters if user have enough access level
@@ -881,6 +884,9 @@ function editNews($mode = array()) {
 	// Load list of attached images/files
 	$row['#files']	= $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_files where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
 	$row['#images']	= $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix."_images where (linked_ds = 1) and (linked_id = ".db_squote($row['id']).')', 1);
+
+	// Dummy parameter for API call
+	$tvars = array();
 
 	exec_acts('editnews', $id);
 
@@ -995,7 +1001,6 @@ function admcookie_get(){
 }
 
 function admcookie_set($x = array()) {
-	return setcookie('ng_adm', serialize($x), time() + 365*86400);
 	return setcookie('ng_adm', serialize($x), time() + 365*86400);
 }
 
