@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru/)
 // Name: functions.php
 // Description: Common system functions
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -2967,4 +2967,28 @@ function detectUTF8($string)
         |[\xF1-\xF3][\x80-\xBF]{3}                  # planes 4-15
         |\xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
         )+%xs', $string);
+}
+
+
+// Collect backtrace for debug analysis
+// $style:
+//		0 - print output in <pre>..</pre>
+//		1 - return array
+function ngCollectTrace($style = 0) {
+	$bt = debug_backtrace();
+	$list = array();
+	foreach ($bt as $b) {
+		$list []= array('file' => $b['file'], 'line' => $b['line'], 'function' => $b['function']);
+	}
+
+	if ($style == 1)
+		return $list;
+
+	print "<pre>ngCollectTrace() debug output:\n";
+	foreach ($list as $b) {
+		printf("[ %-40s ] (%5u) %s\n", $b['function'], $b['line'], $b['file']);
+	}
+	print "</pre>";
+
+	return true;
 }
