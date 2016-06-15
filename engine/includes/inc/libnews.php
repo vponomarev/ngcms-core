@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru/)
 // Name: libnews.php
 // Description: News engine shared functions
 // Author: Vitaly A Ponomarev, vp7@mail.ru
@@ -38,9 +38,9 @@
 //			data     - when news is found && export is used
 //			news row - when news is found
 function news_showone($newsID, $alt_name, $callingParams = array()) {
-	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $template, $parse, $vars, $lang, $SYSTEM_FLAGS, $PFILTERS, $EXTRA_HTML_VARS;
+	global $mysql, $tpl, $userROW, $catz, $catmap, $config, $template, $parse, $lang, $SYSTEM_FLAGS, $PFILTERS, $EXTRA_HTML_VARS;
 	global $timer;
-	global $year, $month, $day, $SUPRESS_TEMPLATE_SHOW;
+	global $year, $month, $day;
 
 	// Calculate exec time
 	$tX0 = $timer->stop(4);
@@ -777,7 +777,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			// Check mode:
 			// 1 - Master category
 			// 2 - Current category
-			$fcat = $callingParams['customCategoryTemplate'];
+			$fcat = $callingParams['currentCategoryId'];
 			if ($callingParams['customCategoryTemplate'] == 1) {
 				// Find first category
 				$fcat = array_shift(explode(",", $row['catid']));
