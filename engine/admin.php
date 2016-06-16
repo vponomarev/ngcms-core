@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2015 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru)
 // Name: admin.php
 // Description: administration panel
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -9,7 +9,6 @@
 
 // Administrative panel filters
 $AFILTERS = array();
-
 
 // Load core
 @header('content-type: text/html; charset=Windows-1251');
@@ -37,17 +36,6 @@ if (defined('DEBUG')) {
 	print "HTTP CALL PARAMS: <pre>"; var_dump(array('GET' => $_GET, 'POST' => $_POST, 'COOKIE' => $_COOKIE)); print "</pre><br>\n";
 	print "SERVER PARAMS: <pre>"; var_dump($_SERVER); print "</pre><br>\n";
 }
-
-// Check for REQUIRED PHP EXTENSIONS
-foreach (array('iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
-	if (!function_exists($pFunction)) {
-		print str_replace(array('{extension}', '{function}'), array($pModule, $pFunction), $lang['fatal.lostlib']);
-		die();
-	}
-}
-
-
-// !! Allow to do POST requests only from home domain !!
 
 $PHP_SELF = "admin.php";
 

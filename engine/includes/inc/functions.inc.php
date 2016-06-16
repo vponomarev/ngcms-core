@@ -56,7 +56,7 @@ function checkIP() {
 }
 
 
-function gzip() {
+function initGZipHandler() {
 	global $config;
 
 	if ($config['use_gzip'] == "1" && extension_loaded('zlib') && function_exists('ob_gzhandler')) {
@@ -219,7 +219,7 @@ function phphighlight($content = '') {
 
 
 function QuickTags($area = false, $template = false) {
-	global $config, $lang, $tpl, $PHP_SELF;
+	global $tpl, $PHP_SELF;
 
 	$tvars['vars'] = array(
 		'php_self'	=>	$PHP_SELF,
@@ -496,7 +496,10 @@ function msgSticker($msg, $type = '', $disp = -1) {
 		$lines []= htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "cp1251");
 	}
 
-	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("'.join("<br/>", $lines).'"'.(($type=="error")?', {sticked: true, className: "ngStickerClassError"}':'').');</script>';
+	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("'.
+		join("<br/>", $lines).'"'.
+		(($type=="error")?', {sticked: true, className: "ngStickerClassError"}':'').
+		');</script>';
 	print $output;
 }
 
@@ -1197,7 +1200,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()){
 		// Update `hasChildren` and `closeLevel_X` flags for items
 		for ($i = 0; $i < count($tEntries); $i++) {
 			$tEntries[$i]['flags']['hasChildren'] = true;
-			if (($i == (count($tEntris)-1)) || ($tEntries[$i]['level'] >= $tEntries[$i+1]['level'])) {
+			if (($i == (count($tEntries)-1)) || ($tEntries[$i]['level'] >= $tEntries[$i+1]['level'])) {
 				// Mark that this is last item in this level
 				$tEntries[$i]['flags']['hasChildren'] = false;
 
@@ -2541,8 +2544,8 @@ function twigIsCategory($list) {
 	if ($list == ':name')					return secure_html($currentCategory['name']);
 	if ($list == ':icon')					return ($currentCategory['image_id'] && $currentCategory['icon_id'])?1:0;
 	if ($list == ':icon.url')				return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/'.$currentCategory['icon_name'];
-	if ($list == ':icon.width')				return intval($row['icon_width']);
-	if ($list == ':icon.height')			return intval($row['icon_height']);
+	if ($list == ':icon.width')				return intval($currentCategory['icon_width']);
+	if ($list == ':icon.height')			return intval($currentCategory['icon_height']);
 	if ($list == ':icon.preview')			return ($currentCategory['image_id'] && $currentCategory['icon_id'] && $currentCategory['icon_preview'])?1:0;
 	if ($list == ':icon.preview.url')		return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/thumb/'.$currentCategory['icon_name'];
 	if ($list == ':icon.preview.width')		return intval($currentCategory['icon_pwidth']);
@@ -2801,7 +2804,6 @@ function coreUserMenu() {
 		$tVars['reg_link']				= generateLink('core', 'registration');
 		$tVars['lost_link']				= generateLink('core', 'lostpassword');
 		$tVars['form_action']			= generateLink('core', 'login');
-		$tVars['result']				= ($result) ? '<div style="color : #fff; padding : 5px;">'.$lang['msge_login'].'</div>' : '';
 	} else {
 		// User is logged in
 		$tVars['profile_link']				= generateLink('uprofile', 'edit');
@@ -2809,7 +2811,6 @@ function coreUserMenu() {
 		$tVars['logout_link']				= generateLink('core', 'logout');
 		$tVars['name']						= $userROW['name'];
 		$tVars['phtumb_url']				= photos_url.'/'.(($userROW['photo'] != "")?'thumb/'.$userROW['photo']:'nophoto.gif');
-		$tVars['result']					= ($result) ? '<div style="color : #fff; padding:5px;">'.$lang['msge_login'].'</div>' : '';
 		$tVars['home_url']					= home;
 
 		// Generate avatar link
@@ -2840,8 +2841,8 @@ function coreUserMenu() {
 	$template['vars']['personal_menu'] = $xt->render($tVars);
 
 	// Add special variables `personal_menu:logged` and `personal_menu:not.logged`
-	$template['vars']['personal_menu:logged'] = $is_logged ? $template['vars']['personal_menu'] : '';
-	$template['vars']['personal_menu:not.logged'] = $is_logged ? '' : $template['vars']['personal_menu'];
+	$template['vars']['personal_menu:logged'] = is_array($userROW) ? $template['vars']['personal_menu'] : '';
+	$template['vars']['personal_menu:not.logged'] = is_array($userROW) ? '' : $template['vars']['personal_menu'];
 }
 
 

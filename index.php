@@ -17,15 +17,11 @@ if (version_compare(PHP_VERSION, '5.3.0') < 0) {
 	exit;
 }
 
+// Load CORE module
 @include_once 'engine/core.php';
 
-// Check for FATAL error with include
-if (!function_exists('gzip')) {
- print "<html><head><title>FATAL EXECUTION ERROR</title></head><body><div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), execution halted!</span></div></body></html>";
- die;
-}
-gzip();
-
+// Init GZip handler
+initGZipHandler();
 
 // Define default TITLE
 $SYSTEM_FLAGS['info']['title'] = array ();

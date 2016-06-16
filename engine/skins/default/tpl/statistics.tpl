@@ -34,6 +34,10 @@ function _modal_close() {
 <td width="50%" class="contentEntry1">{{ lang['gd_version'] }}</td>
 <td width="50%" class="contentEntry2">{{ gd_version }}</td>
 </tr>
+ <tr>
+  <td width="50%" class="contentEntry1">{{ lang['pdo_support'] }}</td>
+  <td width="50%" class="contentEntry2">{{ pdo_support }}</td>
+ </tr>
 </table>
 </td>
 <td width="50%" style="padding-left:10px;" valign="top">

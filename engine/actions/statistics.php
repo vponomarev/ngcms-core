@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2015 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru/)
 // Name: statistics.php
 // Description: Generate system statistics
 // Author: Vitaly Ponomarev
@@ -103,6 +103,8 @@ if (file_exists($note_path)) {
 	$fp		=	fopen($note_path, 'r');
 	$note	=	fread($fp, filesize($note_path));
 	fclose($fp);
+} else {
+	$note = '';
 }
 
 $df_size = @disk_free_space(root);
@@ -131,7 +133,7 @@ $tVars = array(
 	'mysql_version'		=>	mysql_get_server_info(),
 	'gd_version'		=>	(isset($gd_version) && is_array($gd_version))?$gd_version["GD Version"]:'<font color="red"><b>NOT INSTALLED</b></font>',
 	'currentVersion'	=>	$displayEngineVersion,
-	'versionNotifyURL'	=>	'http://ngcms.ru/sync/versionInfo.php?ver='.urlencode(engineVersion).'&type='.urlencode(engineVersionType).'&build='.urlencode(engineVersionBuild).'&uuid='.$config['UUID'],
+	'versionNotifyURL'	=>	'http://ngcms.ru/sync/versionInfo.php?ver='.urlencode(engineVersion).'&type='.urlencode(engineVersionType).'&build='.urlencode(engineVersionBuild).'&uuid='.$config['UUID'].'&pdo='.((extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO'))?'yes':'no'),
 	'mysql_size'		=>	$mysql_size,
 	'allowed_size'		=>	$df,
 	'avatars'			=>	$avatars,
@@ -148,7 +150,8 @@ $tVars = array(
 	'images'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_images"),
 	'files'				=>	$mysql->result("SELECT count(id) FROM ".prefix."_files"),
 	'categories'		=>	$mysql->result("SELECT count(id) FROM ".prefix."_category"),
-	'admin_note'		=>	($note) ? $note : $lang['no_notes']
+	'admin_note'		=>	($note) ? $note : $lang['no_notes'],
+	'pdo_support'		=>	(extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO'))?$lang['yesa']:('<font color="red">'.$lang['noa'].'</font>'),
 );
 
 $tVars = $tVars + $STATS;
