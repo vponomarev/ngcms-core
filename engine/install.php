@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2013 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru)
 // Name: install.php
 // Description: System installer
 // Author: Vitaly Ponomarev
@@ -177,8 +177,6 @@ function doWelcome() {
 
 // Вывод формы для ввода параметров установки
 function doConfig() {
-	global $home_url, $ERR, $tvars, $tpl, $templateDir;
-
 	switch ($_POST['stage']) {
 		default:
 			doConfig_db(0);
@@ -336,6 +334,14 @@ function doConfig_perm() {
 		$error = 1;
 	}
 
+	// PDO support
+	if (extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) {
+		$tvars['vars']['pdo'] = $lang['perm.yes'];
+	} else {
+		$tvars['vars']['pdo'] = '<font color="red">'.$lang['perm.no'].'</font>';
+		$error = 0;
+	}
+
 	// XML support
 	if (function_exists('xml_parser_create')) {
 		$tvars['vars']['xml'] = $lang['perm.yes'];
@@ -388,7 +394,7 @@ function doConfig_perm() {
 }
 
 function doConfig_plugins() {
-        global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $SQL_VERSION;
+        global $tvars, $tpl, $templateDir;
 	$tvars['vars']['menu_plugins'] = ' class="hover"';
 	printHeader();
 
@@ -423,7 +429,7 @@ function doConfig_plugins() {
 	$hinput = array();
 	// Collect data for all plugins
 
-	$ouput = '';
+	$output = '';
 	$tpl -> template('config_prow', $templateDir);
 	foreach ($pluglist as $plugin) {
 		$tv = array (	'id' => $plugin['id'],
