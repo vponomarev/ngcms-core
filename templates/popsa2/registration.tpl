@@ -1,4 +1,4 @@
-<form name="register" action="{{ form_action }}">
+<form name="register" action="{{ form_action }}" method="POST">
 <input type="hidden" name="type" value="doregister" />
 <div class="full">
 	<h1>{{ lang['registration'] }}</h1>
