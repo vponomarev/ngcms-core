@@ -24,7 +24,7 @@
     float: left;
     padding: 8px 0 12px 48px;
     height: 22px;
-    background: url('../img/add-news.jpg') 0 0 no-repeat;
+    background: url('../img/add-news.png') 0 0 no-repeat;
     margin: 0 50px 0 0;
 }
 #auth .auth-profile {
@@ -32,7 +32,7 @@
     float: left;
     padding: 8px 0 12px 45px;
     height: 22px;
-    background: url('../img/profile.jpg') 0 0 no-repeat;
+    background: url('../img/profile.png') 0 0 no-repeat;
     margin: 0 25px;
 }
 
@@ -41,7 +41,7 @@
     float: left;
     padding: 8px 0 14px 48px;
     height: 22px;
-    background: url('../img/registration.jpg') 0 0 no-repeat;
+    background: url('../img/registration.png') 0 0 no-repeat;
     margin: 0 50px 0 0;
 }
 #auth .auth-login {
@@ -49,7 +49,7 @@
     float: left;
     padding: 8px 0 12px 45px;
     height: 22px;
-    background: url('../img/login.jpg') 0 0 no-repeat;
+    background: url('../img/login.png') 0 0 no-repeat;
     margin: 0 25px;
 }
 
@@ -234,7 +234,7 @@
     width: 10px;
     height: 10px;
     margin: 0 2px 0 8px;
-    background-image: url('../img/switch.jpg');
+    background-image: url('../img/switch.png');
 }
 .articles-switch a.articles-switch-1 {
     height: 21px;
@@ -266,7 +266,7 @@
     position: relative;
     width: 315px;
     height: 161px;
-    background: url('../img/img-none.jpg') no-repeat;
+    background: url('../img/img-none.png') no-repeat;
     margin-bottom: 12px;
     display: block;
 }
@@ -390,10 +390,10 @@ h1.title {
     right: 0;
     top: 4px;
     position: absolute;
-    background: url("../img/rating.jpg") repeat-x;
+    background: url("../img/rating.png") repeat-x;
 }
 .uRating li {
-	background: url("../img/rating.jpg") 0 -22px;
+	background: url("../img/rating.png") 0 -22px;
 	height: 11px;
 	display: block;
 	text-indent: -9000px;
@@ -410,7 +410,7 @@ h1.title {
 	position: absolute;
 }
 .uRating li a:hover {
-	background: url("../img/rating.jpg") 0 -11px;
+	background: url("../img/rating.png") 0 -11px;
 	z-index: 2;
 	left: 0;
 }
@@ -1223,7 +1223,7 @@ select {
 .block-user-info .avatar {
     width: 146px;
     height: 146px;
-    background: url('../img/user.jpg') no-repeat -2px -2px;
+    background: url('../img/user.png') no-repeat -2px -2px;
     float: left;
     margin: 0 15px 0 0;
     position: relative;

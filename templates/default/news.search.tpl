@@ -4,7 +4,7 @@
 		{% if (news.embed.imgCount > 0) %}
 			<img src="{{ news.embed.images[0] }}" width="315" height="161" />
 		{% else %}
-			<img src="{{ tpl_url }}/img/img-none.jpg" width="315" height="161" />
+			<img src="{{ tpl_url }}/img/img-none.png" width="315" height="161" />
 		{% endif %}
 		<div class="article-cat">{{ news.categories.masterText }}</div>
 	</div>
