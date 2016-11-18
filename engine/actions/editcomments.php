@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru/)
 // Name: editcomments.php
 // Description: News comments managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -35,8 +35,8 @@ if ($subaction == "doeditcomment") {
 		msg(array("type" => "error", "text" => $lang['msge_namefield']));
 	}
 	else {
-		$comment = str_replace("{","&#123;",str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['comment']))));
-		$content = str_replace("{","&#123;",str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['content']))));
+		$comment = str_replace("{","&#123;",str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['comment']), ENT_COMPAT, 'cp1251')));
+		$content = str_replace("{","&#123;",str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['content']), ENT_COMPAT, 'cp1251')));
 
 		$mail = trim($_REQUEST['mail']);
 
