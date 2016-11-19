@@ -14,13 +14,21 @@ if (!defined('NGCMS')) die ('HAL');
 // SQL security string escape
 //
 function db_squote($string) {
+	global $mysql;
 	if (is_array($string)) { return false; }
-	return "'".mysql_real_escape_string($string)."'";
+	if(extension_loaded('mysqli'))
+		return "'".mysqli_real_escape_string($mysql->_connect(), $string)."'";
+	else
+		return "'".mysql_real_escape_string($string)."'";
 }
 
 function db_dquote($string) {
+	global $mysql;
 	if (is_array($string)) { return false; }
-	return '"'.mysql_real_escape_string($string).'"';
+	if(extension_loaded('mysqli'))
+		return '"'.mysqli_real_escape_string($mysql->_connect(), $string).'"';
+	else
+		return "'".mysql_real_escape_string($string)."'";
 }
 
 //
