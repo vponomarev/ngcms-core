@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2008 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru/)
 // Name: timer.class.php
 // Description: Time measurer class
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -10,7 +10,7 @@
 class microTimer {
 
 	// CONSTRUCTOR
-	function microTimer(){
+	function __construct() {
 		$this->events = array();
 	}
 
