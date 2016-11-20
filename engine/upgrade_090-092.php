@@ -235,7 +235,7 @@ if ($_REQUEST['update091fp1_092rc1']) {
 
 	$flag_err = false;
 	foreach ($query_list_091fp1_092rc1 as $sql) {
-		$res = mysql->query($sql);
+		$res = $mysql->query($sql);
 		print '<tr><td>'.$sql.'</td><td>'.($res?'OK':'<font color="red"><b>FAIL</b></font>').'</td></tr>'."\n";
 		if (!$res) {
 			$flag_err = true;
