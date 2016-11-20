@@ -228,13 +228,7 @@ function doConfig_db($check) {
 			$ac = 1;
 		}
 		
-		if(extension_loaded('mysqli')){
-			@include_once root.'includes/classes/mysqli.class.php';
-			$mysql = new _mysqli;
-		} else {
-			@include_once root.'includes/classes/mysql.class.php';
-			$mysql = new mysql;
-		}
+		$mysql = DBLoad();
 		
 		// Try to connect
 		if (!$error) {
@@ -601,13 +595,7 @@ function doInstall() {
 
 		if ($error) break;
 		
-		if(extension_loaded('mysqli')){
-			@include_once root.'includes/classes/mysqli.class.php';
-			$mysql = new _mysqli;
-		} else {
-			@include_once root.'includes/classes/mysql.class.php';
-			$mysql = new mysql;
-		}
+		$mysql = DBLoad();
 		
 		// Stage #02 - Connect to DB
 		// Если заказали автосоздание, то подключаемся рутом

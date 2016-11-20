@@ -281,16 +281,9 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 
 // ** Load cache engine
 @include_once root.'includes/classes/cache.class.php';
+@include_once root.'includes/inc/DBLoad.php';
 
-if(extension_loaded('mysqli')){
-	// ** Load MySQLi DB engine library
-	@include_once root.'includes/classes/mysqli.class.php';
-	$mysql = new _mysqli;
-} else {
-	// ** Load MySQL DB engine library
-	@include_once root.'includes/classes/mysql.class.php';
-	$mysql = new mysql;
-}
+$mysql = DBLoad();
 $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
 
 // [[MARKER]] MySQL connection is established
