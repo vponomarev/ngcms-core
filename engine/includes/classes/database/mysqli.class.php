@@ -132,7 +132,7 @@ class _mysqli {
 		}
 	}
 	
-	function num_fields($query, $field_offset){
+	function num_fields($query, $field_offset) {
 		global $timer;
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
@@ -147,10 +147,10 @@ class _mysqli {
 		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 		
-		return is_object($result) ? $result->name : null;
+		return $result;
 	}
 	
-	function field_name($query, $field_offset){
+	function field_name($query, $field_offset) {
 		global $timer;
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
@@ -165,11 +165,13 @@ class _mysqli {
 		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 		
-		return is_object($result) ? $result->name : null;
+		return is_object($result) ? $result->name : false;
 	}
 	
 	function field_type($query, $field_offset) {
 		global $timer;
+        static $types;
+
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
 		$this->queries++;
@@ -189,10 +191,10 @@ class _mysqli {
 		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 		
-		return array_key_exists($type, $types)? $types[$type] : NULL;
+		return array_key_exists($type, $types)? $types[$type] : false;
 	}
 	
-	function field_len($query, $field_offset){
+	function field_len($query, $field_offset) {
 		global $timer;
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
@@ -202,15 +204,12 @@ class _mysqli {
 			return false;
 		}
 
-		while ($field_offset--) {
-			$_result = mysqli_fetch_field_direct($query, $field_offset);
-			$item[$_result['name']] = $_result['length'];
-		}
+		$result = mysqli_fetch_field_direct($query, $field_offset);
 		
 		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 	
-		return $item;
+		return is_object($result) ? $result->length : false;
 	}
 	
 	function num_rows($query) {

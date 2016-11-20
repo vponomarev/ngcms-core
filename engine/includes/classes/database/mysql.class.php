@@ -137,7 +137,7 @@ class mysql {
 		}
 	}
 	
-	function num_fields($query, $field_offset){
+	function num_fields($query, $field_offset) {
 		global $timer;
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
@@ -152,10 +152,10 @@ class mysql {
 		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 		
-		return is_object($result) ? $result->name : null;
+		return $result;
 	}
 	
-	function field_name($query, $field_offset){
+	function field_name($query, $field_offset) {
 		global $timer;
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
@@ -183,15 +183,15 @@ class mysql {
 			return false;
 		}
 
-		$type = mysql_field_type($query, $field_offset);
+        $result = mysql_field_type($query, $field_offset);
 
 		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
 		array_push ($this->query_list, $tX.$sql);
 		
-		return $type;
+		return $result;
 	}
 	
-	function field_len($query, $field_offset){
+	function field_len($query, $field_offset) {
 		global $timer;
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
@@ -227,7 +227,7 @@ class mysql {
 		return $result;
 	}
 	
-	function fetch_row($query){
+	function fetch_row($query) {
 		global $timer;
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 	
