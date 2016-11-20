@@ -16,6 +16,7 @@ define('NGCMS', 1);
 // Basic variables
 @define('root', dirname(__FILE__).'/');
 @include_once root.'includes/inc/multimaster.php';
+@include_once root.'includes/inc/DBLoad.php';
 
 multi_multisites();
 @define( 'confroot', root.'conf/'.($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/'.$multiDomainName.'/' : '') );
