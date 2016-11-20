@@ -2,7 +2,7 @@
 
 class mysql {
 
-	function connect($host, $user, $pass, $db, $noerror = 0) {
+	function connect($host, $user, $pass, $db = '', $noerror = 0) {
 		global $lang, $timer;
 
 		$this->queries = 0;
@@ -19,8 +19,8 @@ class mysql {
 			$this->error = 1;
 			return false;
 		}
-		@mysql_query("/*!40101 SET NAMES 'cp1251' */", $this->connect);
-		if (!@mysql_select_db($db)) {
+		@mysql_query("/*!40101 SET NAMES 'cp1251' */", $this->connect);)
+		if (!empty($db) && !@mysql_select_db($db)) {
 			if (!$noerror) {
 				die('<h1>An Error Occurred</h1><hr />Unable to find the database <i>'.$db.'</i>!');
 			}
@@ -29,7 +29,11 @@ class mysql {
 		}
 		return true;
 	}
-
+	
+	function select_db($db){
+		return mysql_select_db($db);
+	}
+	
 	// Report an SQL error
 	// $type	- query type
 	// $query	- text of the query
@@ -75,8 +79,8 @@ class mysql {
 	}
 
 	function record($sql, $assocMode = 1) {
-	        global $timer;
-	        if ($this->queryTimer) { $tX = $timer->stop(4); }
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
 
 		$this->queries++;
 		if (!($query = @mysql_query($sql, $this->connect))) {
@@ -115,8 +119,8 @@ class mysql {
 	}
 
 	function result($sql) {
-	        global $timer;
-	        if ($this->queryTimer) { $tX = $timer->stop(4); }
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
 
 		$this->queries++;
 		if (!($query = @mysql_query($sql, $this->connect))) {
@@ -132,7 +136,115 @@ class mysql {
 			return @mysql_result($query, 0);
 		}
 	}
+	
+	function num_fields($query, $field_offset){
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
+	
+		$this->queries++;
+		if (!$query) {
+			$this->errorReport('num_fields', $sql);
+			return false;
+		}
+		
+		$result = mysql_num_fields($query);
+		
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
+		array_push ($this->query_list, $tX.$sql);
+		
+		return is_object($result) ? $result->name : null;
+	}
+	
+	function field_name($query, $field_offset){
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
+	
+		$this->queries++;
+		if (!$query) {
+			$this->errorReport('field_name', $sql);
+			return false;
+		}
+		
+		$result = mysql_field_name($query, $field_offset);
+		
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
+		array_push ($this->query_list, $tX.$sql);
+		
+		return $result;
+	}
+	
+	function field_type($query, $field_offset) {
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
+	
+		$this->queries++;
+		if (!$query) {
+			$this->errorReport('field_type', $sql);
+			return false;
+		}
 
+		$type = mysql_field_type($query, $field_offset);
+
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
+		array_push ($this->query_list, $tX.$sql);
+		
+		return $type;
+	}
+	
+	function field_len($query, $field_offset){
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
+	
+		$this->queries++;
+		if (!$query) {
+			$this->errorReport('field_len', $sql);
+			return false;
+		}
+	
+		$result = mysql_field_len($query, $field_offset);
+		
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
+		array_push ($this->query_list, $tX.$sql);
+	
+		return $result;
+	}
+	
+	function num_rows($query) {
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
+	
+		$this->queries++;
+		if (!$query) {
+			$this->errorReport('num_rows', $sql);
+			return false;
+		}
+	
+		$result = mysql_num_rows($query);
+	
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
+		array_push ($this->query_list, $tX.$sql);
+	
+		return $result;
+	}
+	
+	function fetch_row($query){
+		global $timer;
+		if ($this->queryTimer) { $tX = $timer->stop(4); }
+	
+		$this->queries++;
+		if (!$query) {
+			$this->errorReport('fetch_row', $sql);
+			return array();
+		}
+	
+		$result = mysql_fetch_row($query);
+	
+		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
+		array_push ($this->query_list, $tX.$sql);
+	
+		return $result;
+	}
+	
 	// check if table exists
 	function table_exists($table, $forceReload = 0) {
 		// Check if data are already saved
@@ -161,7 +273,23 @@ class mysql {
 	function qcnt() {
 		return $this->queries;
 	}
-
+	
+	function db_errno(){
+		mysql_errno($this->connect);
+	}
+	
+	function db_error(){
+		mysql_error($this->connect);
+	}
+	
+	function db_quote($string){
+		return mysql_real_escape_string($string);
+	}
+	
+	function mysql_version(){
+		return mysql_get_server_info();
+	}
+	
 	function lastid($table = '') {
 		if ($table != '') {
 			$row = $this->record("SHOW TABLE STATUS LIKE '".prefix."_".$table."'");

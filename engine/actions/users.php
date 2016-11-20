@@ -396,7 +396,7 @@ function userList(){
 	}
 
 	$sortValue = (isset($_REQUEST['sort']) && isset($sortOrderMap[$_REQUEST['sort']]))?$sortOrderMap[$_REQUEST['sort']]:'id';
-	$name = ($_REQUEST['name'] != '')?("'%".mysql_real_escape_string($_REQUEST['name'])."%'"):'';
+	$name = ($_REQUEST['name'] != '')?("'%".$mysql->db_quote($_REQUEST['name'])."%'"):'';
 
 	// Records Per Page
 	// - Load

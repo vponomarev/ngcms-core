@@ -135,11 +135,6 @@ if ($flagPendingChanges) {
 	print '</p></div>';
 }
 
-
-
-// SQL Quoting routine
-function dbsq($string) { return "'".mysql_real_escape_string($string)."'"; }
-
 //
 //
 //
@@ -232,21 +227,29 @@ function doConfig_db($check) {
 			}
 			$ac = 1;
 		}
-
+		
+		if(extension_loaded('mysqli')){
+			@include_once root.'includes/classes/mysqli.class.php';
+			$mysql = new _mysqli;
+		} else {
+			@include_once root.'includes/classes/mysql.class.php';
+			$mysql = new mysql;
+		}
+		
 		// Try to connect
 		if (!$error) {
-			if (($link = @mysql_connect($_POST['reg_dbhost'], $_POST['reg_db'.($ac?'admin':'').'user'], $_POST['reg_db'.($ac?'admin':'').'pass'])) === FALSE) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">'.$lang['error.dbconnect'].' "'.$_POST['reg_dbhost'].'":<br/> ('.mysql_errno().') '.mysql_error().'</div>';
+			if (($link = $mysql->connect($_POST['reg_dbhost'], $_POST['reg_db'.($ac?'admin':'').'user'], $_POST['reg_db'.($ac?'admin':'').'pass'])) === FALSE) {
+				$tvars['vars']['error_message'] = '<div class="errorDiv">'.$lang['error.dbconnect'].' "'.$_POST['reg_dbhost'].'":<br/> ('.$mysql->db_errno().') '.$mysql->db_error().'</div>';
 				$error = 1;
 			}
 		}
 		// Try to fetch SQL version
 		if (!$error) {
-			if (($sqlf = @mysql_query("show variables like 'version'", $link)) === FALSE) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">'.$lang['err.dbversion'].' "'.$_POST['reg_dbhost'].'":<br/> ('.mysql_errno().') '.mysql_error().'</div>';
+			if (($sqlf = $mysql->query("show variables like 'version'", $link)) === FALSE) {
+				$tvars['vars']['error_message'] = '<div class="errorDiv">'.$lang['err.dbversion'].' "'.$_POST['reg_dbhost'].'":<br/> ('.$mysql->db_errno().') '.$mysql->db_error().'</div>';
 				$error = 1;
 			} else {
-				$sqlr = mysql_fetch_array($sqlf);
+				$sqlr = $mysql->record("show variables like 'version'", -1);
 				if (preg_match('/^(\d+)\.(\d+)/', $sqlr[1], $regex)) {
 					$SQL_VERSION = array ($sqlr[1], intval($regex[1]), intval($regex[2]));
 				} else {
@@ -255,7 +258,7 @@ function doConfig_db($check) {
 			}
 		}
 
-		@mysql_close($link);
+		@$mysql->close($link);
 
     	if (!$error)
     		return true;
@@ -597,18 +600,26 @@ function doInstall() {
 		array_push($LOG, '');
 
 		if ($error) break;
-
+		
+		if(extension_loaded('mysqli')){
+			@include_once root.'includes/classes/mysqli.class.php';
+			$mysql = new _mysqli;
+		} else {
+			@include_once root.'includes/classes/mysql.class.php';
+			$mysql = new mysql;
+		}
+		
 		// Stage #02 - Connect to DB
 		// Если заказали автосоздание, то подключаемся рутом
 		if ($_POST['reg_autocreate']) {
-			if (@mysql_connect($_POST['reg_dbhost'], $_POST['reg_dbadminuser'], $_POST['reg_dbadminpass'])) {
+			if (@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbadminuser'], $_POST['reg_dbadminpass'])) {
 				// Успешно подключились
 				array_push($LOG,'Подключение к серверу БД "'.$_POST['reg_dbhost'].'" используя административный логин "'.$_POST['reg_dbadminuser'].'" ... OK');
 
 				// 1. Создание БД
-				if (!@mysql_select_db($_POST['reg_dbname'])) {
+				if (!@$mysql->select_db($_POST['reg_dbname'])) {
 					// БД нет. Пытаемся создать
-					if (!@mysql_query('CREATE DATABASE '.$_POST['reg_dbname'])) {
+					if (!@$mysql->query('CREATE DATABASE '.$_POST['reg_dbname'])) {
 						// Не удалось создать. Фатально.
 						array_push($ERROR, 'Не удалось создать БД "'.$_POST['reg_dbname'].'" используя административную учётную запись. Скорее всего у данной учётной записи нет прав на создание баз данных.');
 						$error = 1;
@@ -621,7 +632,7 @@ function doInstall() {
 				}
 
 				// 2. Предоставление доступа к БД
-				if (!@mysql_query("grant all privileges on ".$_POST['reg_dbname'].".* to '".$_POST['reg_dbuser']."'@'".$_POST['reg_dbhost']."' identified by '".$_POST['reg_dbpass']."'")) {
+				if (!@$mysql->query("grant all privileges on ".$_POST['reg_dbname'].".* to '".$_POST['reg_dbuser']."'@'".$_POST['reg_dbhost']."' identified by '".$_POST['reg_dbpass']."'")) {
 					array_push($ERROR, 'Невозможно обеспечить доступ пользователя "'.$_POST['reg_dbuser'].'" к БД "'.$_POST['reg_dbname'].'" используя административные права.');
 					$error = 1;
 					break;
@@ -634,11 +645,11 @@ function doInstall() {
 				break;
 			}
 			// Отключаемся от сервера
-			mysql_close();
+			$mysql->close();
 		}
 
 		// Подключаемся к серверу используя права пользователя
-		if (!@mysql_connect($_POST['reg_dbhost'], $_POST['reg_dbuser'], $_POST['reg_dbpass'])) {
+		if (!@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbuser'], $_POST['reg_dbpass'])) {
 			array_push($ERROR, 'Невозможно подключиться к серверу БД "'.$_POST['reg_dbhost'].'" используя логин "'.$_POST['reg_dbuser'].'" (пароль: "'.$_POST['reg_dbpass'].'")');
 			$error = 1;
 			break;
@@ -646,7 +657,7 @@ function doInstall() {
 		array_push($LOG,'Подключение к серверу БД "'.$_POST['reg_dbhost'].'" используя логин "'.$_POST['reg_dbuser'].'" ... OK');
 
 		// Открываем нужную БД
-		if (!@mysql_select_db($_POST['reg_dbname'])) {
+		if (!@$mysql->select_db($_POST['reg_dbname'])) {
 			array_push($ERROR, 'Невозможно открыть БД "'.$_POST['reg_dbname'].'"<br/>Вам необходимо создать эту БД самостоятельно.');
 			$error = 1;
 			break;
@@ -655,7 +666,7 @@ function doInstall() {
 		// Check if different character set are supported [ version >= 4.1.1 ]
 		$charsetEngine = 0;
 
-		if (($msq = mysql_query("show variables like 'character_set_client'"))&&(mysql_num_rows($msq))) {
+		if (($msq = $mysql->query("show variables like 'character_set_client'"))&&($mysql->num_rows($msq))) {
 			$charsetEngine = 1;
 		}
 		$charset = $charsetEngine?' default charset=cp1251':'';
@@ -669,17 +680,16 @@ function doInstall() {
 
 		$list = array();
 
-		if (!($query = @mysql_query("show tables"))) {
+		if (!($query = $mysql->query("show tables"))) {
 			array_push($ERROR, 'Внутренняя ошибка SQL при получении списка таблиц БД. Обратитесь к автору проект за разъяснениями.');
 			$error = 1;
 			break;
 		}
 
 		$SQL_table = array();
-		while($item = mysql_fetch_array($query, MYSQL_NUM)) {
+		foreach ($mysql->select("show tables", -1) as $item) {
 			$SQL_table[$item[0]] = 1;
 		}
-
 
 		// 1.2. Парсим список таблиц
 		$dbsql = explode(';',file_get_contents('trash/tables.sql'));
@@ -723,9 +733,9 @@ function doInstall() {
 			if (preg_match('/CREATE TABLE `(.+?)`/',$dbCreateString,$match)) {
 				$tname = $match[1];
 				$err = 0;
-				mysql_query($dbCreateString);
+				$mysql->query($dbCreateString);
 
-				if (mysql_errno()) {
+				if ($mysql->db_errno()) {
 					if (!$SUPRESS_CHARSET) {
 						$SUPRESS_CHARSET=1;
 						array_push($LOG,'Внимание! Попытка отключить настройки кодовой страницы');
@@ -749,14 +759,14 @@ function doInstall() {
 		array_push($LOG, '');
 
 		// 1.5 Создание пользователя-администратора
-		$query = "insert into `".$_POST['reg_dbprefix']."_users` (`name`, `pass`, `mail`, `status`, `reg`) VALUES (".dbsq($_POST['admin_login']).", ".dbsq(md5(md5($_POST['admin_password']))).", ".dbsq($_POST['admin_email']).", '1', unix_timestamp(now()))";
-		if (!@mysql_query($query)) {
+		$query = "insert into `".$_POST['reg_dbprefix']."_users` (`name`, `pass`, `mail`, `status`, `reg`) VALUES ('".$mysql->db_quote($_POST['admin_login'])."', '".$mysql->db_quote(md5(md5($_POST['admin_password'])))."', '".$mysql->db_quote($_POST['admin_email'])."', '1', unix_timestamp(now()))";
+		if (!@$mysql->query($query)) {
 			array_push($LOG,'Активация пользователя-администратора ... <font color="red">FAIL</font>');
 		} else {
 			array_push($LOG,'Активация пользователя-администратора ... OK');
 		}
 		// 1.6 Сохраняем конфигурационную переменную database.engine.version
-		@mysql_query("insert into `".$_POST['reg_dbprefix']."_config` (name, value) values ('database.engine.version', '0.9.2 Release+SVN')");
+		@$mysql->query("insert into `".$_POST['reg_dbprefix']."_config` (name, value) values ('database.engine.version', '0.9.2 Release+SVN')");
 
 		// Вычищаем лишний перевод строки из 'home_url'
 		if (substr($_POST['home_url'], -1, 1) == '/')

@@ -106,18 +106,18 @@ if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['updat
 	}
 
 	foreach ($queryList as $sql) {
-		$res = mysql_query($sql);
+		$res = $mysql->query($sql);
 		$sqlErrorCode = 0;
 		$sqlErrorFatal = 0;
 		if ($res) {
 			// OK
 			print '<tr><td>'.$sql.'</td><td>OK</td></tr>'."\n";
 		} else {
-			$sqlErrorCode = mysql_errno();
+			$sqlErrorCode = $mysql->db_errno();
 			if (in_array($sqlErrorCode, array(1060, 1054, 1091, 1050))) {
-				print '<tr><td>'.$sql.'</td><td>OK/Non fatal error ('.$sqlErrorCode.': '.mysql_error().')</td></tr>'."\n";
+				print '<tr><td>'.$sql.'</td><td>OK/Non fatal error ('.$sqlErrorCode.': '.$mysql->db_error().')</td></tr>'."\n";
 			} else {
-				print '<tr><td>'.$sql.'</td><td><font color="red"><b>FAIL</b></font> ('.$sqlErrorCode.': '.mysql_error().')</td></tr>'."\n";
+				print '<tr><td>'.$sql.'</td><td><font color="red"><b>FAIL</b></font> ('.$sqlErrorCode.': '.$mysql->db_error().')</td></tr>'."\n";
 				$flag_err = true;
 				break;
 			}
