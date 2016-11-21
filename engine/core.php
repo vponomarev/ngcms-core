@@ -86,9 +86,7 @@ $PLUGINS	= array(
 // Check for support of mondatory modules
 // ===========================================================
 {
-	foreach (array('zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg', 
-	//'mysql' => 'mysql_connect'
-	) as $pModule => $pFunction) {
+	foreach (array('zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
 		if (!extension_loaded($pModule) || !function_exists($pFunction)) {
 			print "<html>\n<head><title>FATAL EXECUTION ERROR</title></head>\n<body>\n<div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), PHP extension [".$pModule."] with function [".$pFunction."] is not loaded!</span></div>\n</body>\n</html>\n";
 			print str_replace(array('{extension}', '{function}'), array($pModule, $pFunction), $lang['fatal.lostlib']);
