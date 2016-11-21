@@ -31,7 +31,7 @@ class mysql {
 	}
 	
 	function select_db($db){
-		return mysql_select_db($db);
+		return @mysql_select_db($db);
 	}
 	
 	// Report an SQL error
@@ -137,111 +137,51 @@ class mysql {
 		}
 	}
 	
-	function num_fields($query, $field_offset) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('num_fields', NULL);
-			return false;
-		}
+	function num_fields($query) {
+		if (!$query) return false;
 		
 		$result = mysql_num_fields($query);
-		
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 		
 		return $result;
 	}
 	
 	function field_name($query, $field_offset) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('field_name', NULL);
-			return false;
-		}
+		if (!$query) return false;
 		
 		$result = mysql_field_name($query, $field_offset);
-		
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 		
 		return $result;
 	}
 	
 	function field_type($query, $field_offset) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('field_type', NULL);
-			return false;
-		}
+		if (!$query) return false;
 
         $result = mysql_field_type($query, $field_offset);
 
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
-		
 		return $result;
 	}
 	
 	function field_len($query, $field_offset) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('field_len', NULL);
-			return false;
-		}
-	
-		$result = mysql_field_len($query, $field_offset);
+		if (!$query) return false;
 		
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
+		$result = mysql_field_len($query, $field_offset);
 	
 		return $result;
 	}
 	
 	function num_rows($query) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('num_rows', NULL);
-			return false;
-		}
-	
+		if (!$query) return false;
+		
 		$result = mysql_num_rows($query);
-	
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 	
 		return $result;
 	}
 	
 	function fetch_row($query) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('fetch_row', NULL);
-			return array();
-		}
-	
+		if (!$query) return array();
+		
 		$result = mysql_fetch_row($query);
-	
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
-	
+		
 		return $result;
 	}
 	
@@ -255,7 +195,7 @@ class mysql {
 		$this->table_list=array();
 
 		if (!($query = @mysql_query("show tables", $this->connect))) {
-			$this->errorReport('select', $sql);
+			$this->errorReport('select', "show tables");
 			return false;
 		}
 

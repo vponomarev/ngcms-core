@@ -25,7 +25,7 @@ class _mysqli {
 	}
 	
 	function select_db($db){
-		return mysqli_select_db($this->connect, $db);
+		return @mysqli_select_db($this->connect, $db);
 	}
 	
 	// Report an SQL error
@@ -77,7 +77,7 @@ class _mysqli {
 		if ($this->queryTimer) { $tX = $timer->stop(4); }
 
 		$this->queries++;
-		if (!($query = mysqli_query($this->connect, $sql))) {
+		if (!($query = @mysqli_query($this->connect, $sql))) {
 			$this->errorReport('record', $sql);
 			return array();
 		}
@@ -132,54 +132,27 @@ class _mysqli {
 		}
 	}
 	
-	function num_fields($query, $field_offset) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('num_fields', NULL);
-			return false;
-		}
+	function num_fields($query) {
+		if (!$query) return false;
 		
 		$result = mysqli_num_fields($query);
-		
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 		
 		return $result;
 	}
 	
 	function field_name($query, $field_offset) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('field_name', NULL);
-			return false;
-		}
+		if (!$query) return false;
 		
 		$result = mysqli_fetch_field_direct($query, $field_offset);
-		
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 		
 		return is_object($result) ? $result->name : false;
 	}
 	
 	function field_type($query, $field_offset) {
-		global $timer;
         static $types;
 
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('field_type', NULL);
-			return false;
-		}
-
+		if (!$query) return false;
+		
 		$type = mysqli_fetch_field_direct($query, $field_offset)->type;
 
 		if (!isset($types)){
@@ -188,62 +161,29 @@ class _mysqli {
 			foreach ($constants['mysqli'] as $c => $n) if (preg_match('/^MYSQLI_TYPE_(.*)/', $c, $m)) $types[$n] = $m[1];
 		}
 
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
-		
 		return array_key_exists($type, $types)? $types[$type] : false;
 	}
 	
 	function field_len($query, $field_offset) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('field_len', NULL);
-			return false;
-		}
+		if (!$query) return false;
 
 		$result = mysqli_fetch_field_direct($query, $field_offset);
-		
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 	
 		return is_object($result) ? $result->length : false;
 	}
 	
 	function num_rows($query) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('num_rows', NULL);
-			return false;
-		}
+		if (!$query) return false;
 	
 		$result = mysqli_num_rows($query);
-	
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 	
 		return $result;
 	}
 	
 	function fetch_row($query) {
-		global $timer;
-		if ($this->queryTimer) { $tX = $timer->stop(4); }
-	
-		$this->queries++;
-		if (!$query) {
-			$this->errorReport('fetch_row', NULL);
-			return array();
-		}
+		if (!$query) return array();
 	
 		$result = mysqli_fetch_row($query);
-	
-		if ($this->queryTimer) { $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] '; } else { $tX = ''; }
-		array_push ($this->query_list, $tX.$sql);
 	
 		return $result;
 	}
@@ -258,7 +198,7 @@ class _mysqli {
 		$this->table_list=array();
 
 		if (!($query = @mysqli_query($this->connect, "show tables"))) {
-			$this->errorReport('select', NULL);
+			$this->errorReport('select', "show tables");
 			return false;
 		}
 
