@@ -36,7 +36,7 @@ function admConfigurationTestDB($params) {
 	}
 
 	// Check if DB connection params are correct
-	$sqlTest = new mysql();
+	$sqlTest = DBLoad();
 	if (!$sqlTest->connect($params['dbhost'], $params['dbuser'], $params['dbpasswd'], $params['dbname'], 1)) {
 		if ($sqlTest->error<2)
 			return array('status' => 0, 'errorCode' => 4, 'errorText' => iconv('Windows-1251','UTF-8', $lang['dbcheck_noconnect']));
