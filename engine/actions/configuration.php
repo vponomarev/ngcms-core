@@ -65,7 +65,7 @@ function systemConfigSave(){
 	}
 
 	// Check if DB connection params are correct
-	$sqlTest = new mysql();
+	$sqlTest = DBLoad();
 	if (!$sqlTest->connect($save_con['dbhost'],$save_con['dbuser'], $save_con['dbpasswd'], $save_con['dbname'], 1)) {
 		msgSticker($lang['dbcheck_error'], 'error');
 		return false;
