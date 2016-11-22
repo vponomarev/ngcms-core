@@ -86,10 +86,22 @@ $PLUGINS	= array(
 // Check for support of mondatory modules
 // ===========================================================
 {
-	foreach (array('zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
-		if (!extension_loaded($pModule) || !function_exists($pFunction)) {
-			print "<html>\n<head><title>FATAL EXECUTION ERROR</title></head>\n<body>\n<div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), PHP extension [".$pModule."] with function [".$pFunction."] is not loaded!</span></div>\n</body>\n</html>\n";
-			print str_replace(array('{extension}', '{function}'), array($pModule, $pFunction), $lang['fatal.lostlib']);
+	foreach (array('sql' => array('mysql' => 'mysql_connect', 'mysqli' => 'mysqli_connect'), 'zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
+		$is_error = false;
+		if(is_array($pFunction)){
+			foreach($pFunction as $kModule => $vFunction){
+				if (extension_loaded($kModule) && function_exists($vFunction)) break;
+				if(!next($pFunction)) $is_error = true;
+			}
+		} else if (!extension_loaded($pModule) || !function_exists($pFunction)) {
+			$kModule = $pModule;
+			$vFunction = $pFunction;
+			$is_error = true;
+		}
+		
+		if($is_error){
+			print "<html>\n<head><title>FATAL EXECUTION ERROR</title></head>\n<body>\n<div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), PHP extension [".$kModule."] with function [".$vFunction."] is not loaded!</span></div>\n</body>\n</html>\n";
+			//print str_replace(array('{extension}', '{function}'), array($kModule, $vFunction), $lang['fatal.lostlib']);
 			die();
 		}
 	}
@@ -283,6 +295,7 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 
 $mysql = DBLoad();
 $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+$mysql = sqlDB::connect();
 
 // [[MARKER]] MySQL connection is established
 $timer->registerEvent('DB connection established');
@@ -378,10 +391,6 @@ $twigLoader->setPaths(array(tpl_site, root));
 // - TWIG: Added global variable `tpl_url`, `scriptLibrary`
 $twig->addGlobal('tpl_url',		tpl_url);
 $twig->addGlobal('scriptLibrary',	scriptLibrary);
-
-
-// Lang files are loaded _after_ executing core scripts. This is done for switcher plugin
-$lang	=	LoadLang('common');
 
 $langShortMonths = explode(",", $lang['short_months']);
 $langMonths = explode(",", $lang['months']);
