@@ -295,7 +295,6 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 
 $mysql = DBLoad();
 $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
-$mysql = sqlDB::connect();
 
 // [[MARKER]] MySQL connection is established
 $timer->registerEvent('DB connection established');
@@ -391,6 +390,10 @@ $twigLoader->setPaths(array(tpl_site, root));
 // - TWIG: Added global variable `tpl_url`, `scriptLibrary`
 $twig->addGlobal('tpl_url',		tpl_url);
 $twig->addGlobal('scriptLibrary',	scriptLibrary);
+
+
+// Lang files are loaded _after_ executing core scripts. This is done for switcher plugin
+$lang	=	LoadLang('common');
 
 $langShortMonths = explode(",", $lang['short_months']);
 $langMonths = explode(",", $lang['months']);
