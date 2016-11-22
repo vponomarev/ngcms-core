@@ -55,8 +55,8 @@ function search_news(){
 		foreach ($search_words as $s) {
 			array_push($search,
 					array(	'OR',
-							array('DATA', 'title', 'like', '%'.mysql_real_escape_string($s).'%'),
-							array('DATA', 'content', 'like', '%'.mysql_real_escape_string($s).'%')
+							array('DATA', 'title', 'like', '%'.$mysql->db_quote($s).'%'),
+							array('DATA', 'content', 'like', '%'.$mysql->db_quote($s).'%')
 					)
 			);
 		}

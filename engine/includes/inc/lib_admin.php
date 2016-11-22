@@ -337,9 +337,9 @@ function dbBackup($fname, $gzmode, $tlist = ''){
 			else			fwrite($fh, $out);
 
 			// Now let's make content of the table
-			$query = mysql_query("select * from `".$tname."`", $mysql->connect);
+			$query = $mysql->query("select * from `".$tname."`");
 			$rowNo = 0;
-			while ($row = mysql_fetch_row($query)) {
+			while ($row = $mysql->fetch_row($query)) {
 				$out = "insert into `".$tname."` values (";
 				$rowNo++;
 				$colNo = 0;

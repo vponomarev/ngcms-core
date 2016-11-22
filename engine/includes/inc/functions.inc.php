@@ -14,13 +14,15 @@ if (!defined('NGCMS')) die ('HAL');
 // SQL security string escape
 //
 function db_squote($string) {
+	global $mysql;
 	if (is_array($string)) { return false; }
-	return "'".mysql_real_escape_string($string)."'";
+	return "'".$mysql->db_quote($string)."'";
 }
 
 function db_dquote($string) {
+	global $mysql;
 	if (is_array($string)) { return false; }
-	return '"'.mysql_real_escape_string($string).'"';
+	return '"'.$mysql->db_quote($string).'"';
 }
 
 //

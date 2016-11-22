@@ -1,9 +1,6 @@
 /.idea
 /engine/plugins
-/engine/cache/_templates
-/engine/cache/core
-/engine/cache/twig
-/engine/cache/last_backup.tmp
+/engine/cache
 /engine/backups/*.gz
 /engine/conf/config.php
 /engine/conf/plugdata.php

@@ -130,7 +130,7 @@ $tVars = array(
 	'php_self'			=>	$PHP_SELF,
 	'php_os'			=>	PHP_OS,
 	'php_version'		=>	phpversion(),
-	'mysql_version'		=>	mysql_get_server_info(),
+	'mysql_version'		=>	$mysql->mysql_version(),
 	'gd_version'		=>	(isset($gd_version) && is_array($gd_version))?$gd_version["GD Version"]:'<font color="red"><b>NOT INSTALLED</b></font>',
 	'currentVersion'	=>	$displayEngineVersion,
 	'versionNotifyURL'	=>	'http://ngcms.ru/sync/versionInfo.php?ver='.urlencode(engineVersion).'&type='.urlencode(engineVersionType).'&build='.urlencode(engineVersionBuild).'&uuid='.$config['UUID'].'&pdo='.((extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO'))?'yes':'no'),
