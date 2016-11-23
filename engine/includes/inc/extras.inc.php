@@ -1147,7 +1147,7 @@ class cronManager {
 		// Check if config file exists
 		if (!is_file($configFileName)) {
 			$this->config = array();
-			return true;
+			return;
 		}
 
 		// Load config file
@@ -1155,8 +1155,6 @@ class cronManager {
 		if (!is_array($this->config)) {
 			$this->config = array();
 		}
-
-		return true;
 	}
 
 	// Save updated config
