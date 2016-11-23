@@ -215,11 +215,11 @@ class mysql {
 	}
 	
 	function db_errno(){
-		mysql_errno($this->connect);
+		return mysql_errno($this->connect);
 	}
 	
 	function db_error(){
-		mysql_error($this->connect);
+		return mysql_error($this->connect);
 	}
 	
 	function db_quote($string){
