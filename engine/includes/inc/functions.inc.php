@@ -1185,7 +1185,6 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()){
 				'link'		=>	($v['alt_url'] == '')?generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])):$v['alt_url'],
 				'mark'		=>	isset($markers['mark.level.'.$v['poslevel']])?$markers['mark.level.'.$v['poslevel']]:str_repeat($markers['mark.default'], $v['poslevel']),
 				'level'		=>	$v['poslevel'],
-				'cat'		=>	$v['name'],
 				'info'		=>	$v['info'],
 				'counter'	=>	$v['posts'],
 				'icon'		=>	$v['icon'],
