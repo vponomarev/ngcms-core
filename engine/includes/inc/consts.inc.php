@@ -17,7 +17,7 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.4.RC4');
+@define('engineVersion', '0.9.4.RC3');
 @define('engineVersionType', 'GIT');
 @define('engineVersionBuild', '20161129');
 
