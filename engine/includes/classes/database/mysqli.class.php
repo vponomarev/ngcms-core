@@ -227,11 +227,11 @@ class _mysqli {
 	}
 	
 	function db_errno(){
-		mysqli_errno($this->connect);
+		return mysqli_errno($this->connect);
 	}
 	
 	function db_error(){
-		mysqli_error($this->connect);
+		return mysqli_error($this->connect);
 	}
 	
 	function db_quote($string){

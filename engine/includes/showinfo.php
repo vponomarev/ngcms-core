@@ -12,6 +12,8 @@ include_once "../core.php";
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+header("Content-Type: text/html; charset=windows-1251");
+
 if ($_REQUEST['mode'] == 'plugin') {
 	$extras = get_extras_list();
 	$plugin = str_replace(array('/', '\\', '..'), '', $_REQUEST['plugin']);

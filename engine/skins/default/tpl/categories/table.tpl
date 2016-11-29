@@ -42,7 +42,7 @@ function categoryModifyRequest(cmd, cid) {
 				ngNotifyWindow(resTX['errorCode']+': '+resTX['errorText'], 'Error');
 		 		//alert('Error ('+resTX['errorCode']+'): '+resTX['errorText']);
 		 	} else {
-		 		if (resTX['content']) {
+		 		if (resTX['content'] !== 'undefined') {
 					if (resTX['infoText']) {
 						ngNotifySticker(resTX['infoText'], {className: resTX['infoCode']?'ngStickerClassClassic':'ngStickerClassError'});
 					}

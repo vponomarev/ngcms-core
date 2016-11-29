@@ -395,6 +395,10 @@ function ngCheckEmail() {
 <td class="contentEntry2" valign="middle"><input type="text" name='save_con[newsNavigationsCount]' value='{{ config['newsNavigationsCount'] }}' size="6" /></td>
 </tr>
 <tr>
+<td class="contentEntry1">{{ lang['bbcode'] }}<br /><small>{{ lang['bbcode_desc'] }}</small></td>
+<td class="contentEntry2" valign="middle">{{ mkSelect({'name' : 'save_con[bbcode]', 'value' : config['bbcode'], 'values' : list['bbcode'] }) }}</td>
+</tr>
+<tr>
 <td class="contentEntry1">{{ lang['category_counters'] }}<br /><small>{{ lang['category_counters_desc'] }}</small></td>
 <td class="contentEntry2" valign="middle">{{ mkSelectYN({'name' : 'save_con[category_counters]', 'value' : config['category_counters'] }) }}</td>
 </tr>

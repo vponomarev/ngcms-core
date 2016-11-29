@@ -420,7 +420,13 @@ class parse {
 		$content	=	preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $content);
 		$content	=	preg_replace('!(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)\s*<br />!', "$1", $content);
 		$content	=	preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)>)!', '$1', $content);
-		$content	=	preg_replace("/<code>(.*?)<\/code>/es", "phphighlight('$1')", $content);
+        $content    =   preg_replace_callback(
+            "/<code>(.*?)<\/code>/s",
+            function ($match) {
+                return "phphighlight('".$match[0]."')";
+            },
+            $content
+        );
 		$content	=	str_replace("\n</p>\n", "</p>", $content);
 
 		return $content;

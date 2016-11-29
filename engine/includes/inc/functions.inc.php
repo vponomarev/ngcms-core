@@ -1185,7 +1185,6 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()){
 				'link'		=>	($v['alt_url'] == '')?generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])):$v['alt_url'],
 				'mark'		=>	isset($markers['mark.level.'.$v['poslevel']])?$markers['mark.level.'.$v['poslevel']]:str_repeat($markers['mark.default'], $v['poslevel']),
 				'level'		=>	$v['poslevel'],
-				'cat'		=>	$v['name'],
 				'info'		=>	$v['info'],
 				'counter'	=>	$v['posts'],
 				'icon'		=>	$v['icon'],
@@ -1422,6 +1421,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		list ($short, $full) = explode('<!--more-->', $row['content'], 2);
 		$more = '';
 	}
+
 	// Default page number
 	$page = 1;
 
@@ -1500,7 +1500,6 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 
 	// [TWIG] news.title
 	$tvars['vars']['news']['title'] = $row['title'];
-
 
 	// Make conversion
 	if ($config['blocks_for_reg'])		{ $short = $parse -> userblocks($short);	$full = $parse -> userblocks($full); }
@@ -2898,6 +2897,16 @@ function twigTruncateHTML($string, $len = 70, $finisher = '') {
 	return $parse->truncateHTML($string, $len, $finisher);
 }
 
+function includeBBCODE(){
+	global $LIST_BBCODE, $config;
+	
+	//print '<pre>'.var_export($LIST_BBCODE).'</pre>';
+	//print '<pre>'.var_export($config['bbcode']).'</pre>';
+	//print '<pre>'.var_export($LIST_BBCODE[$config['bbcode']]).'</pre>';
+	
+	if(isset($LIST_BBCODE[$config['bbcode']]))
+		register_filter('news','wysiwyg', $LIST_BBCODE[$config['bbcode']]);
+}
 
 function jsonFormatter($json) {
 

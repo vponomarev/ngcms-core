@@ -76,7 +76,6 @@ class http_get {
 		$data = '';
 		while ((!feof($fp)) && (!$fi['timed_out'])) {
 			$in = fread($fp, 128 * 1024);
-			$fi = stream_get_meta_data($fp);
 
 			$dsize += strlen($in);
 			$data .= $in;
