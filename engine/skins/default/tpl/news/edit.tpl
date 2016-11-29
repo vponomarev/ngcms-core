@@ -43,7 +43,7 @@ function changeActive(name) {
  }
 }
 </script>
-
+{{ includ_bb }}
 <!-- Hidden SUGGEST div -->
 <div id="suggestWindow" class="suggestWindow">
 <table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
@@ -95,13 +95,13 @@ function changeActive(name) {
    <td><input type="text" class="important" size="79" id="newsTitle" name="title" value="{{ title }}" tabindex="1" /></td>
   </tr>
   <tr>
-   <td valign="top" colspan=3>{{ quicktags }}<br /> {{ smilies }}<br />
+   <td valign="top" colspan=3>{% if (not includ_bb) %}{{ quicktags }}<br /> {{ smilies }}<br />{% else %}<br />{% endif %}
 {% if (flags.edit_split) %}
-    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" id="ng_news_content_short" rows="10" tabindex="2">{{ content.short }}</textarea></div>
+    <div id="container.content.short" class="contentActive">{{ DisplayTextForm({'type' : 'textarea', class : '', name : 'ng_news_content_short' , 'options' : 'style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive(\'short\');" onfocus="changeActive(\'short\');" rows="10" tabindex="2"' }) }}</div>
 {% if (flags.extended_more) %}    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{{ lang.editnews['editor.divider'] }}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value="{{ content.delimiter }}"/></td></tr></table>{% endif %}
-    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" id="ng_news_content_full" rows="10" tabindex="2">{{ content.full }}</textarea></div>
+    <div id="container.content.full" class="contentInactive">{{ DisplayTextForm({'type' : 'textarea', id : '', class : '', name : 'ng_news_content_full' , 'options' : 'style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive(\'short\');" onfocus="changeActive(\'short\');" rows="10" tabindex="2"' }) }}</div>
 {% else %}
-    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" id="ng_news_content" rows="10" tabindex="2">{{ content.short }}</textarea></div>
+    <div id="container.content" class="contentActive">{{ DisplayTextForm({'type' : 'textarea', id : '', class : '', name : 'ng_news_content' , 'options' : 'style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive(\'short\');" onfocus="changeActive(\'short\');" rows="10" tabindex="2"' }) }}</div>
 {% endif %}
 	</td>
 </tr>
