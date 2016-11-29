@@ -15,7 +15,7 @@
 // Global variables definition
 // ============================================================================
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
-global $AUTH_METHOD, $LIST_BBCODE, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $TWIGFUNC;
+global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $TWIGFUNC;
 global $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
 global $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
 global $timer, $mysql, $ip, $parse, $tpl, $lang;
@@ -41,8 +41,6 @@ $RPCADMFUNC				= array();		// RPC admin functions
 
 $PERM					= array();		// PERMISSIONS
 $UGROUP					= array();		// USER GROUPS
-
-$LIST_BBCODE			= array();
 
 $SUPRESS_TEMPLATE_SHOW	= 0;
 $SUPRESS_MAINBLOCK_SHOW	= 0;

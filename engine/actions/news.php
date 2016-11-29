@@ -16,7 +16,7 @@ if (!defined('NGCMS')) die ('HAL');
 LoadLang('editnews', 'admin');
 LoadLang('editnews', 'admin', 'editnews');
 LoadLang('addnews', 'admin', 'addnews');
-includeBBCODE();
+
 
 // ======================================================================================================
 // Edit news form
