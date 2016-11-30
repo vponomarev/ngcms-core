@@ -17,13 +17,9 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-<<<<<<< HEAD
 @define('engineVersion', '0.9.4.RC3');
-=======
-@define('engineVersion', '0.9.4.RC2');
->>>>>>> parent of ac77223... Поддержка сторонных бб кодов
 @define('engineVersionType', 'GIT');
-@define('engineVersionBuild', '20160614');
+@define('engineVersionBuild', '20161129');
 
 @define('prefix', $config['prefix']);
 @define('uprefix',$config['uprefix']);
