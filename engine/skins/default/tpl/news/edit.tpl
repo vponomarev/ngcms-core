@@ -1,4 +1,3 @@
-
 <script type="text/javascript" src="{{ home }}/lib/ajax.js"></script>
 <script type="text/javascript" src="{{ home }}/lib/libsuggest.js"></script>
 <script language="javascript" type="text/javascript">
@@ -95,13 +94,13 @@ function changeActive(name) {
    <td><input type="text" class="important" size="79" id="newsTitle" name="title" value="{{ title }}" tabindex="1" /></td>
   </tr>
   <tr>
-   <td valign="top" colspan=3>{% if (not includ_bb) %}{{ quicktags }}<br /> {{ smilies }}<br />{% else %}<br />{% endif %}
+   <td valign="top" colspan=3>{% if (not isBBCode) %}{{ quicktags }}<br /> {{ smilies }}<br />{% else %}<br />{% endif %}
 {% if (flags.edit_split) %}
-    <div id="container.content.short" class="contentActive">{{ DisplayTextForm({'type' : 'textarea', class : '', name : 'ng_news_content_short' , 'options' : 'style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive(\'short\');" onfocus="changeActive(\'short\');" rows="10" tabindex="2"' }) }}</div>
-{% if (flags.extended_more) %}    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{{ lang.editnews['editor.divider'] }}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value="{{ content.delimiter }}"/></td></tr></table>{% endif %}
-    <div id="container.content.full" class="contentInactive">{{ DisplayTextForm({'type' : 'textarea', id : '', class : '', name : 'ng_news_content_full' , 'options' : 'style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive(\'short\');" onfocus="changeActive(\'short\');" rows="10" tabindex="2"' }) }}</div>
+	<div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2"></textarea></div>
+{% if (flags.extended_more) %}    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{{ lang.addnews['editor.divider'] }}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value=""/></td></tr></table>{% endif %}
+	<div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2"></textarea></div>
 {% else %}
-    <div id="container.content" class="contentActive">{{ DisplayTextForm({'type' : 'textarea', id : '', class : '', name : 'ng_news_content' , 'options' : 'style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive(\'short\');" onfocus="changeActive(\'short\');" rows="10" tabindex="2"' }) }}</div>
+	<div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2"></textarea></div>
 {% endif %}
 	</td>
 </tr>

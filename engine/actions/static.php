@@ -297,7 +297,7 @@ function addEditStaticForm($operationMode = 1, $sID = 0){
 			if ($editMode) {
 				$v->editStaticForm($row['id'], $row, $tVars);
 			} else {
-				$v->addStaticForm($row['id'], $row, $tVars);
+				$v->addStaticForm($tVars);
 			}
 		}
 

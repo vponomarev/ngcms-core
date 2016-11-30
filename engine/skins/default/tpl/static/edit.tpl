@@ -1,7 +1,7 @@
 <script language="javascript" type="text/javascript">
 var currentInputAreaID = 'content';
 </script>
-
+{{ includ_bb }}
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
 <td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=static">{{ lang['static_title'] }}</a> &#8594; {% if (flags.editMode) %}{{ lang['static_title_edit'] }} "{{ data.title }}"{% else %}{{ lang['static_title_add'] }}{% endif %}</td>
@@ -41,8 +41,8 @@ var currentInputAreaID = 'content';
    <td><input type="text" class="important" size="79" name="url" readonly="readonly" value="{{ data.url }}" tabindex="1" /> [ <a target="_blank" href="{{ data.url }}">открыть</a> ]</td>
   </tr>{% endif %}
   <tr>
-   <td valign="top" colspan=3>{{ quicktags }}<br /> {{ smilies }}<br />
-   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" id="content" rows="16" tabindex="2">{{ data.content }}</textarea></td>
+   <td valign="top" colspan=3>{% if (not isBBCode) %}{{ quicktags }}<br /> {{ smilies }}<br />{% else %}<br />{% endif %}
+   <textarea style="margin-left: 0px; margin-right: 0px; margin-top: 1px; width: 99%;" name="content" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="content"{% endif %} rows="16" tabindex="2">{{ data.content }}</textarea></td>
   </tr>
 
 {% if (flags.meta) %}
