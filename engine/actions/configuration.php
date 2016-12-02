@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: configuration.php
 // Description: Configuration managment
 // Author: Vitaly Ponomarev, Alexey Zinchenko
@@ -111,7 +111,7 @@ function systemConfigSave(){
 //
 // Show configuration form
 function systemConfigEditForm(){
-	global $lang, $AUTH_CAPABILITIES, $LIST_BBCODE, $PHP_SELF, $twig, $multiconfig;
+	global $lang, $AUTH_CAPABILITIES, $PHP_SELF, $twig, $multiconfig;
 
 	// Check for token
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'details')) {
@@ -120,19 +120,14 @@ function systemConfigEditForm(){
 		return false;
 	}
 
-	$bbcode = array();
-	$LIST_BBCODE = array_merge(array($lang['bbcode_standart'] => $lang['bbcode_standart']), $LIST_BBCODE);
-	foreach ($LIST_BBCODE as $k => $v) {
-		$bbcode[$k] = $k;
-	}
-	
 	$auth_modules = array();
 	$auth_dbs = array();
+
 	foreach ($AUTH_CAPABILITIES as $k => $v) {
 		if ($v['login'])	{ $auth_modules[$k] = $k;	}
 		if ($v['db'])		{ $auth_dbs[$k] = $k;		}
 	}
-	
+
 	// Load config file from configuration
 	// Now in $config we have original version of configuration data
 	include confroot.'config.php';
@@ -160,7 +155,6 @@ function systemConfigEditForm(){
 			'default_lang'				=> ListFiles('lang', ''),
 			'wm_image'					=> ListFiles('trash', array('gif', 'png'), 2),
 			'auth_module'				=> $auth_modules,
-			'bbcode'					=> $bbcode,
 			'auth_db'					=> $auth_dbs,
 			'timezoneList'				=> timezone_identifiers_list(),
 		),

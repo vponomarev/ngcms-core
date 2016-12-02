@@ -43,13 +43,7 @@ function changeActive(name) {
  }
 }
 </script>
-{% for entry in js_array %}
-	<script type="text/javascript" src="{{ entry }}"></script>
-{% endfor %}
-{% for entry in css_array %}
-	<link rel="stylesheet" href="{{ entry }}" type="text/css" media="screen" />
-{% endfor %}
-{{ include_bb }}
+{{ includ_bb }}
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type="hidden" name="area" value="" />
 </form>
@@ -89,13 +83,13 @@ function changeActive(name) {
    <td><input type="text" class="important" size="79" id="newsTitle" name="title" value="" tabindex="1" /></td>
   </tr>
   <tr>
-   <td valign="top" colspan=3>{% if (not tag_bb) %}{{ quicktags }}<br /> {{ smilies }}<br />{% endif %}
+   <td valign="top" colspan=3>{% if (not isBBCode) %}{{ quicktags }}<br /> {{ smilies }}<br />{% else %}<br />{% endif %}
 {% if (flags.edit_split) %}
-    <div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" id="{% if (tag_bb) %}{{ tag_bb }}{% else %}ng_news_content_short{% endif %}" rows="10" tabindex="2"></textarea></div>
+	<div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2"></textarea></div>
 {% if (flags.extended_more) %}    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{{ lang.addnews['editor.divider'] }}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value=""/></td></tr></table>{% endif %}
-    <div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" id="{% if (tag_bb) %}{{ tag_bb }}{% else %}ng_news_content_full{% endif %}" rows="10" tabindex="2"></textarea></div>
+	<div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2"></textarea></div>
 {% else %}
-    <div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" id="{% if (tag_bb) %}{{ tag_bb }}{% else %}ng_news_content{% endif %}" rows="10" tabindex="2"></textarea></div>
+	<div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2"></textarea></div>
 {% endif %}
 	</td>
 </tr>
