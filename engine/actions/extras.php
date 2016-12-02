@@ -121,7 +121,7 @@ function repoSync(){
 			$paramList []= urlencode($extra['id'])."=".urlencode($extra['version']);
 
 		$req = new http_get();
-		$vms = $req->get('http://ngcms.ru/sync/plugins.php?action=info&'.join('&', $paramList), 3, 1);
+		$vms = $req->get('http://ngcms.ru/components/update/?action=info&'.join('&', $paramList), 3, 1);
 
 		// Save into cache
 		cacheStoreFile('plugversion.dat', $vms);
