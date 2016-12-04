@@ -186,7 +186,9 @@ function admCategoryReorder($params = array()) {
 	} while (count($idx));
 
 	ksort($ordr);
-
+	
+	cacheStoreFile('LoadCategories.dat', '');
+	
 	$num = 1;
 	foreach($ordr as $k => $v){
 		list($catID, $level) = $v;

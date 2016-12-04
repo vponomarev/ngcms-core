@@ -163,7 +163,8 @@ function admCategoryAdd() {
 	$SQLout = array();
 	foreach ($SQL as $k => $v)
 		$SQLout[$k] = db_squote($v);
-
+	
+	cacheStoreFile('LoadCategories.dat', '');
 	// Add new record into SQL table
 	$mysql->query("insert into ".prefix."_category (".join(", ", array_keys($SQLout)).") values (".join(", ", array_values($SQLout)).")");
 	$rowID = $mysql->record("select LAST_INSERT_ID() as id");
@@ -429,7 +430,9 @@ function admCategoryEdit(){
 	$SQLout = array();
 	foreach ($SQL as $var => $val)
 		$SQLout []= '`'.$var.'` = '.db_squote($val);
-
+	
+	cacheStoreFile('LoadCategories.dat', '');
+	
 	$mysql->query("update ".prefix."_category set ".join(", ", $SQLout)." where id=".db_squote($catid));
 	msg(array("text" => $lang['msgo_saved']));
 }

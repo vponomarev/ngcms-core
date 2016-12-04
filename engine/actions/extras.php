@@ -114,7 +114,7 @@ function admGeneratePluginList() {
 
 function repoSync(){
 	global $extras, $config;
-	if (($vms = cacheRetrieveFile('plugversion.dat', 3600)) === false) {
+	if (($vms = cacheRetrieveFile('plugversion.dat', 86400)) === false) {
 		// Prepare request to repository
 		$paramList = array('_ver='.urlencode(engineVersion), 'UUID='.$config['UUID']);
 		foreach ($extras as $id => $extra)
