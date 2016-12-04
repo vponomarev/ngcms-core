@@ -1,0 +1,38 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3>Шаблон sitelock.tpl</h3>
+<br/>
+В случае, если сайт заблокирован (настройки => настройки системы => основные настройки => заблокировать сайт), и данный файл шаблона существует, то его содержимое будет выведено вместо любой страницы сайта (см. также шаблон <a href="lock.tpl.html"><b>lock.tpl</b></a>).<br/>
+<br/>
+
+<h3>Доступные блоки/переменные</h3>
+Переменные:
+<ul>
+ <li><b>{lock_reason}</b> - причина блокировки сайта, задаётся панели администрирования (настройки => настройки системы => основные настройки => причина блокировки сайта)</li>
+</ul>
+
+<br/>
+<br/>
+<h3>Пример заполнения шаблона</h3>
+<br/>
+<div class="pre">
+<pre>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{l_langcode}" lang="{l_langcode}" dir="ltr"&gt;
+&lt;head&gt;
+&lt;link href="{tpl_url}/style.css" rel="stylesheet" type="text/css" media="screen" /&gt;
+&lt;link href="{home}/rss.xml" rel="alternate" type="application/rss+xml" title="RSS" /&gt;
+&lt;title&gt;{titles}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+{lock_reason}
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+
+</body>
+</html>

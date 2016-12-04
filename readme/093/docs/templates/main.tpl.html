@@ -1,0 +1,102 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3>Шаблон main.tpl</h3>
+<br/>
+<a href="template_structure.gif" target="_blank"><img src="template_structure_very_small.gif" alt="Структура шаблонов" style="margin-right: 20px;" align="right" border="0"/></a>
+<p>Файл является <b>ядром</b> шаблонизатора и отвечает за генерацию структуры всего HTML документа.</p>
+<br/>
+<p>В нём вы определяете все <b>HTML</b> заголовки и другие обязательные элементы разметки для <b>XHTML 1.0</b> совместимого документа.</p>
+<p>Если вы создаёте шаблон для <b>NGCMS</b> на основе уже существующего <b>HTML</b>-форматирования (<b>HTML</b>-шаблона), то удобнее всего взяв за основу исходный <b>index.html</b> шаблон, переименовать его в <b>main.tpl</b> и начать переделывать, заменяя логические блоки шаблона-исходника на переменные, предоставляемые движком.</p>
+<br/>
+<p>Считается <u>правилом хорошего тона</u> указывать ссылку на сайт NGCMS внутри вашего нового шаблона. Обычно её размещают внизу страницы.<br/>
+Прошу обратить внимание, что <b>лицензионное соглашение</b>, используемое при распространении <b>NGCMS</b> не заставляет вас оставлять какие-либо ссылки на ваших страницах, но оставляя ссылку на страницу <b>NGCMS</b> вы способствуете развитию самой системы, а это выгодно всем, включая вас.<br/>
+<p>Пример ссылки:</p>
+<div class="pre"><pre>&lt;a href="http://ngcms.ru/" target="_blank">Powered by &lt;b>NGCMS&lt;/b>&lt;/a></pre></div>
+</p>
+<br/>
+
+<h3>Доступные блоки/переменные</h3>
+<br/>
+Блоки:
+<ul>
+ <li><b>[sitelock]</b> ... <b>[/sitelock]</b> - блокировка контента сайта<br/>При активации режима "заблокировать сайт" (настройки => настройки системы => основные настройки) всё содержимое этого блока будет прятаться, а на его место - выводиться содержимое шаблона <a href="lock.tpl.html"><b>lock.tpl</b></a></li>
+ <li><b>[debug]</b> ... <b>[/debug]</b> - содержимое блока будет отображаться при включении режима "генерация отладочной информации" (настройки => настройки системы => безопасность)<br/><span style="color:red;">Содержимое блока показывается <u>только</u> администратору сайта</span></li>
+ <li><b>[is-logged]</b> ... <b>[/is-logged]</b> - содержимое блока выводится в случае, если страница показывается залогиненному посетителю</li>
+ <li><b>[isnt-logged]</b> ... <b>[/isnt-logged]</b> - содержимое блока выводится в случае, если страница показывается <u><b>не</b></u>залогиненному посетителю</li>
+</ul>
+Переменные:
+<ul>
+ <li><b>{mainblock}</b> - основной блок информации, именно в этом блоке фактически отображается смысловое содержание страницы</li>
+ <li><b>{home}</b> - ссылка (относительная) на домашнюю страницу сайта</li>
+ <li><b>{titles}</b> - заголовок страницы (помещается в тег <b>&lt;title></b> блока <b>&lt;head></b>)</li>
+ <li><b>{htmlvars}</b> - данную переменную <u><b>необходимо</b></u> разместить внутри <b>HTML</b> блока <b>&lt;head></b>, она содержит вызовы CSS/JS скриптов, необходимых для работы самого движка или плагинов</li>
+ <li><b>{queries}</b> - информационно-диагностическая переменная, показывает <b>количество SQL запросов</b> использованных для генерации страницы</li>
+ <li><b>{exectime}</b> - информационно-диагностическая переменная, показывает <b>потраченное на генерацию страницы время</b> (с точностью до 1/100 секунды)</li>
+ <li><b>{search_form}</b> - содержит форму краткого поиска (шаблон: <b>search.form.tpl</b>)</li>
+ <li><b>{personal_menu}</b> - содержит блок приветствия/авторизации пользователя (шаблон: <b>usermenu.tpl</b>)</li>
+ <li><b>{personal_menu:logged}</b> - если пользователь залогинен, то содержит блок приветствия пользователя (шаблон: <b>usermenu.tpl</b>); иначе - пустоту</li>
+ <li><b>{personal_menu:not.logged}</b> - если пользователь <u><b>не</b></u> залогинен, то содержит блок авторизации пользователя (шаблон: <b>usermenu.tpl</b>); иначе - пустоту</li>
+ <li><b>{categories}</b> - содержит древовидное меню категорий новостей (см. также шаблон: <a href="categories.tpl.html"><b>categories.tpl</b></a>)</li>
+ <li><b>{what}</b> - идентификатор CMS ("Next Generation CMS")</li>
+ <li><b>{version}</b> - установленная версия CMS<br/><u>Желательно</u>, но <u>не обязательно</u> внутри <b>HTML</b> блока <b>&lt;head></b> указывать переменную <b>generator</b>. Вам этот тег не принесёт никакого вреда, но такая запись будет полезна для развития <b>NGCMS</b>.
+<div class="pre"><pre>&lt;meta name="generator" content="{what} {version}" /></pre></div>
+</li>
+ <li><b>{debug_queries}</b> - отладочная переменная (видимая только администратору), содержит <b>HTML</b>-список всех SQL запросов с указанием времени их исполнения</li>
+ <li><b>{debug_profiler}</b> - отладочная переменная (видимая только администратору), содержит <b>HTML</b>-список наиболее значимых действий системы с указанием времени их исполнения</li>
+</ul>
+<br/>
+<h3>Необходимые для работы элементы</h3>
+<p>Для корректной работы всех элементов ядра CMS вам необходимо подключить несколько <b>JavaScript'ов, обеспечивающих работу части функций ядра</b>, а также некоторые другие элементы:</p>
+<ul>
+ <li>Загрузка необходимых JavaScript'ов, добавляется в секцию <b>&lt;head&gt;</b> шаблона:
+<div class="pre">
+<pre>
+&lt;script type="text/javascript" src="{admin_url}/includes/js/functions.js">&lt;/script>
+&lt;script type="text/javascript" src="{admin_url}/includes/js/ajax.js">&lt;/script>
+</pre>
+</div>
+</li>
+<li>Подключение невидимого блока, в секцию <b>&lt;body&gt;</b> шаблона, блок должен иметь id="<b>loading-layer</b>".<br/>
+Возможны различные варианты реализации такого подхода. Например так:
+<div class="pre">
+<pre>
+&lt;div id="loading-layer" style="display:none; width:180px; height:40px; background:#fff; text-align:center; border:1px solid #eeeeef;">&lt;img src="{tpl_url}/images/loading.gif" alt="" />&lt;/div>
+</pre>
+</div>
+Указанный блок необходим для корректной работы AJAX библиотеки и отображается в момент обращения к серверу для получения необходимой дополнительной информации.
+</li>
+</ul>
+<br/>
+
+<h3>Пример заполнения шаблона</h3>
+Ниже приведён пример заполнения шаблона из поставки "по умолчанию":<br/>
+<div class="pre">
+<pre>
+&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{l_langcode}" lang="{l_langcode}" dir="ltr">
+&lt;head>
+&lt;meta http-equiv="content-type" content="text/html; charset={l_encoding}" />
+&lt;meta http-equiv="content-language" content="{l_langcode}" />
+&lt;meta name="generator" content="{what} {version}" />
+&lt;meta name="document-state" content="dynamic" />
+{htmlvars}
+&lt;link href="{tpl_url}/style.css" rel="stylesheet" type="text/css" media="screen" />
+&lt;link href="{home}/rss.xml" rel="alternate" type="application/rss+xml" title="RSS" />
+&lt;script type="text/javascript" src="{admin_url}/includes/js/functions.js">&lt;/script>
+&lt;script type="text/javascript" src="{admin_url}/includes/js/ajax.js">&lt;/script>
+&lt;title>{titles}&lt;/title>
+&lt;/head>
+&lt;body>
+[sitelock]
+&lt;div id="loading-layer"><img src="{tpl_url}/images/loading.gif" alt="" />&lt;/div>
+...
+[/sitelock]
+&lt;/body>
+&lt;/html>
+</pre>
+</div>
+</body>
+</html>

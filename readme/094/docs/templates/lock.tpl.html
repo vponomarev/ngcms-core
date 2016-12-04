@@ -1,0 +1,32 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблон lock.tpl</h3>
+			<div class="text">
+				В случае, если сайт заблокирован (настройки => настройки системы => основные настройки => заблокировать сайт), и шаблон <b>sitelock.tpl</b> <u>не существует</u>, </b> то в блоке <b>[sitelock] ... [/sitelock]</b> шаблона <a href="main.tpl.html"><b>main.tpl</b></a> отображается содержимое этого (<b>lock.tpl</b>) шаблона (см. также шаблон <a href="sitelock.tpl.html"><b>sitelock.tpl</b></a>).<br/>
+			</div>
+			<h3>Доступные блоки/переменные</h3>
+			<div class="text">
+				Переменные:
+				<ul class="level-1">
+					<li><b>{lock_reason}</b> - причина блокировки сайта, задаётся панели администрирования (настройки => настройки системы => основные настройки => причина блокировки сайта).</li>
+				</ul>
+			</div>
+			<h3>Пример заполнения шаблона</h3>
+			<div class="text">
+				<pre class="brush: html;">&lt;center>&lt;br />{lock_reason}&lt;/center></pre>
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

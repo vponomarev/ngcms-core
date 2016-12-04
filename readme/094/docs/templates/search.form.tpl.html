@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Ўаблон search.form.tpl</h3>
+			<div class="text">
+				<p>Ўаблон отвечает за генерацию краткой поисковой формы, отображаемой на всех страницах сайта.</p>
+				<p>‘актически этот шаблон - часть шаблона mail.tpl, но дл€ удобства работы поискова€ форма была вынесена в отдельный .tpl файл.</p>
+				Ўаблон должен содержать форму (тег <b>&lt;form></b>, метод запроса - <b>GET</b> или <b>POST</b>), котора€ позволит вводить параметры поиска.<br />
+				¬ форме поддерживаюс€ следующие переменные (дл€ более детального описани€ см. шаблон search.table.tpl):
+				<ul class="level-1">
+					<li><b>search</b> (тип: text) - строка дл€ поиска</li>
+				</ul>
+			</div>
+			<h3>ƒоступные блоки/переменные</h3>
+			<div class="text">
+				ѕеременные:
+				<ul class="level-1">
+					<li><b>{form_url}</b> - URL поисковой формы.</li>
+				</ul>
+			</div>
+			<h3>ѕример заполнени€ шаблона</h3>
+			<div class="text">
+				¬ примере показан минимально набор дл€ полнофункциональной работы:
+				
+<pre class="brush: html;">
+&lt;form name="short_search" action="{form_url}" method="GET">
+	&lt;input type="hidden" name="category" value="" />
+	&lt;input type="hidden" name="postdate" value="" />
+	&lt;input type="text" name="search"/>
+	&lt;input type="submit" class="button" value="Search" />
+&lt;/form>
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>ƒокументаци€ находитс€ на стадии разработки!</b> ≈сли вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (¬италий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

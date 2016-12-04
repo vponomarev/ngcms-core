@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблон pages.tpl</h3>
+			<div class="text">
+				Шаблон используется для генерации постраничной навигации (совместно с конфигурационным файлом <a href="variables.ini.html"><b>variables.ini</b></a>).<br />
+				Данный шаблон отвечает на генерацию <b>html</b> "оболочки" блока постраничной навигации.
+			</div>
+			<h3>Доступные блоки/переменные</h3>
+			<div class="text">
+				Блоки:
+				<ul class="level-1">
+					<li><b>[prev_link]</b> ... <b>[/prev_link]</b> - Содержимое блока "оборачивается" ссылкой на предыдущую страницу (если такая страница есть).</li>
+					<li><b>[next_link]</b> ... <b>[/next_link]</b> - Содержимое блока "оборачивается" ссылкой на следующую страницу (если такая страница есть).</li>
+				</ul>
+				Переменные:
+				<ul class="level-1">
+					<li><b>{pages}</b> - Блок постраничной навигации.</li>
+				</ul>
+				Доступные языковые переменные:
+				<ul class="level-1">
+					<li><b>{l_prevpage}</b> - Текст для блока [prev_link] ... [/prev_link] ("назад").</li>
+					<li><b>{l_nextpage}</b> - Текст для блока [next_link] ... [/next_link] ("далее").</li>
+				</ul>
+			</div>
+			<h3>Пример заполнения шаблона</h3>
+			<div class="text">
+				<pre class="brush: html;">[prev-link]{l_prevpage}[/prev-link] {pages} [next-link]{l_nextpage}[/next-link]</pre>
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

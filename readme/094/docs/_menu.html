@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript">
+			function clearlink(){
+				var links=document.getElementById('menu-links').getElementsByTagName('a');
+				for(var i=0;i<links.length;i++){
+					links[i].className="";
+				}
+			}
+		</script>
+		<link media="screen" href="style/styles.css" type="text/css" rel="stylesheet" />
+		<title>Главное меню</title>
+	</head>
+	<body>
+		<div class="menu">
+			<h1>Документация</h1>
+			<div class="menu-links" id="menu-links">
+				<a href="_hello.html" id="mainlink01" onClick="clearlink(); $('#mainlink01').addClass('active');" target="frameBody">Главная</a>
+				<a href="templates/twig.html" id="mainlink02" onClick="clearlink(); $('#mainlink02').addClass('active');" target="frameBody">Шаблонизатор <span class="twig">TWIG</span></a>
+				<a href="templates/templates.html" id="mainlink03" onClick="clearlink(); $('#mainlink03').addClass('active');" target="frameBody">Шаблонная система</a>
+				<span class="level-1">
+					<a href="templates/_js.html" id="mainlink04" onClick="clearlink(); $('#mainlink04').addClass('active');" target="frameBody">- Используемые JS/HTML</a>
+					<a href="templates/404.external.tpl.html" id="mainlink05" onClick="clearlink(); $('#mainlink05').addClass('active');" target="frameBody">- 404.external.tpl</a>
+					<a href="templates/404.internal.tpl.html" id="mainlink06" onClick="clearlink(); $('#mainlink06').addClass('active');" target="frameBody">- 404.internal.tpl</a>
+					<a href="templates/bbcodes.tpl.html" id="mainlink07" onClick="clearlink(); $('#mainlink07').addClass('active');" target="frameBody">- bbcodes.tpl</a>
+					<a href="templates/categories.tpl.html" id="mainlink08" onClick="clearlink(); $('#mainlink08').addClass('active');" target="frameBody">- categories.tpl</a>
+					<a href="templates/lock.tpl.html" id="mainlink09" onClick="clearlink(); $('#mainlink09').addClass('active');" target="frameBody">- lock.tpl</a>
+					<a href="templates/login.tpl.html" id="mainlink10" onClick="clearlink(); $('#mainlink10').addClass('active');" target="frameBody">- login.tpl</a>
+					<a href="templates/lostpassword.entries.tpl.html" id="mainlink11" onClick="clearlink(); $('#mainlink11').addClass('active');" target="frameBody">- lostpassword.entries.tpl</a>
+					<a href="templates/lostpassword.entry-full.tpl.html" id="mainlink12" onClick="clearlink(); $('#mainlink12').addClass('active');" target="frameBody">- lostpassword.entry-full.tpl</a>			
+					<a href="templates/lostpassword.tpl.html" id="mainlink13" onClick="clearlink(); $('#mainlink13').addClass('active');" target="frameBody">- lostpassword.tpl</a>
+					<a href="templates/main.tpl.html" id="mainlink14" onClick="clearlink(); $('#mainlink14').addClass('active');" target="frameBody">- main.tpl</a>
+					<a href="templates/news.categories.tpl.html" id="mainlink15" onClick="clearlink(); $('#mainlink15').addClass('active');" target="frameBody">- news.categories.tpl <span class="twig">TWIG</span></a>
+					<a href="templates/news.full.tpl.html" id="mainlink16" onClick="clearlink(); $('#mainlink16').addClass('active');" target="frameBody">- news.full.tpl</a>
+					<a href="templates/news.print.tpl.html" id="mainlink17" onClick="clearlink(); $('#mainlink17').addClass('active');" target="frameBody">- news.print.tpl</a>
+					<a href="templates/news.search.tpl.html" id="mainlink18" onClick="clearlink(); $('#mainlink18').addClass('active');" target="frameBody">- news.search.tpl</a>
+					<a href="templates/news.short.tpl.html" id="mainlink19" onClick="clearlink(); $('#mainlink19').addClass('active');" target="frameBody">- news.short.tpl</a>
+					<a href="templates/news.table.tpl.html" id="mainlink20" onClick="clearlink(); $('#mainlink20').addClass('active');" target="frameBody">- news.table.tpl <span class="twig">TWIG</span></a>
+					<a href="templates/pages.tpl.html" id="mainlink21" onClick="clearlink(); $('#mainlink21').addClass('active');" target="frameBody">- pages.tpl</a>
+					<a href="templates/redirect.tpl.html" id="mainlink22" onClick="clearlink(); $('#mainlink22').addClass('active');" target="frameBody">- redirect.tpl</a>
+					<a href="templates/registration.entries.tpl.html" id="mainlink23" onClick="clearlink(); $('#mainlink23').addClass('active');" target="frameBody">- registration.entries.tpl</a>
+					<a href="templates/registration.tpl.html" id="mainlink24" onClick="clearlink(); $('#mainlink24').addClass('active');" target="frameBody">- registration.tpl <span class="twig">TWIG</span></a>
+					<a href="templates/search.form.tpl.html" id="mainlink25" onClick="clearlink(); $('#mainlink25').addClass('active');" target="frameBody">- search.form.tpl</a>
+					<a href="templates/search.table.tpl.html" id="mainlink26" onClick="clearlink(); $('#mainlink26').addClass('active');" target="frameBody">- search.table.tpl</a>
+					<a href="templates/sitelock.tpl.html" id="mainlink27" onClick="clearlink(); $('#mainlink27').addClass('active');" target="frameBody">- sitelock.tpl</a>
+					<a href="templates/usermenu.tpl.html" id="mainlink28" onClick="clearlink(); $('#mainlink28').addClass('active');" target="frameBody">- usermenu.tpl <span class="twig">TWIG</span></a>
+					<a href="templates/variables.ini.html" id="mainlink29" onClick="clearlink(); $('#mainlink29').addClass('active');" target="frameBody">- variables.ini</a>
+					<a href="templates/version.html" id="mainlink30" onClick="clearlink(); $('#mainlink30').addClass('active');" target="frameBody">- Файл-описание `version`</a>
+					<a href="templates/static.tpl.html" id="mainlink31" onClick="clearlink(); $('#mainlink31').addClass('active');" target="frameBody">- static/default.tpl</a>
+					<a href="templates/static.print.tpl.html" id="mainlink32" onClick="clearlink(); $('#mainlink32').addClass('active');" target="frameBody">- static/default.print.tpl</a>
+					<a href="templates/static.main.tpl.html" id="mainlink33" onClick="clearlink(); $('#mainlink33').addClass('active');" target="frameBody">- static/default.main.tpl</a>
+				</span>
+				<a href="plugins/info.html" id="mainlink34" onClick="clearlink(); $('#mainlink34').addClass('active');" target="frameBody">Плагинная система</a>
+  				<span class="level-1">
+					<a href="plugins/version.html" id="mainlink35" onClick="clearlink(); $('#mainlink35').addClass('active');" target="frameBody">- Файл-описание `version`</a></li>
+					<a href="plugins/functions/index.html" id="mainlink36" onClick="clearlink(); $('#mainlink36').addClass('active');" target="frameBody">- Функции</a>
+				</span>
+				<span class="level-2">
+					<a href="plugins/functions/generatePageLink.html" id="mainlink37" onClick="clearlink(); $('#mainlink37').addClass('active');" target="frameBody">- generatePageLink()</a>
+					<a href="plugins/functions/generatePagination.html" id="mainlink38" onClick="clearlink(); $('#mainlink38').addClass('active');" target="frameBody">- generatePagination()</a>
+					<a href="plugins/functions/generatePluginLink.html" id="mainlink39" onClick="clearlink(); $('#mainlink39').addClass('active');" target="frameBody">- generatePluginLink()</a>
+				</span>
+				<!--<a href="_test.html" target="frameBody">test <span class="twig">TWIG</span></a>
+				<a href="_highlighter.html" id="mainlink8" onClick="clearlink(); $('#mainlink8').addClass('active');" target="frameBody">highlighter</a>
+				<span class="menu-sub">
+					<a href="javascript://" onClick="$('#menu-01').slideToggle('slow');">Раздел</a>
+				</span>
+				<div id="menu-01" class="menu-level">
+					<a href="#">Категория 1</a>
+					<a href="#">Категория 2 <span class="svn">SVN</span></a>
+					<a href="#">Категория 3 <span class="twig">TWIG</span></a>
+				</div>
+				<span class="level-1">
+					<a href="#">уровень</a>
+				</span>
+				<span class="level-2">
+					<a href="#">уровень</a>
+				</span>-->
+			</div>
+		</div>
+	</body>
+</html>

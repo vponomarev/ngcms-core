@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript">
+			function clearlink(){
+				var links=document.getElementById('menu-links').getElementsByTagName('a');
+				for(var i=0;i<links.length;i++){
+					links[i].className="";
+				}
+			}
+		</script>
+		<link media="screen" href="style/styles.css" type="text/css" rel="stylesheet" />
+		<title>Главное меню</title>
+	</head>
+	<body>
+		<div class="menu">
+			<h1>Документация</h1>
+			<div class="menu-links" id="menu-links">
+				<a href="_templates.html" id="mainlink01" onClick="clearlink(); $('#mainlink01').addClass('active');" target="frameBody">Шаблон</a>
+				<a href="_plugins.html" id="mainlink02" onClick="clearlink(); $('#mainlink02').addClass('active');" target="frameBody">Плагины</a>
+			</div>
+		</div>
+	</body>
+</html>

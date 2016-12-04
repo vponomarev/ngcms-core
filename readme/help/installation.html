@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251;">
+<title></title>
+<link href="css/global.css" rel="stylesheet" type="text/css">
+<script src="js/jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('div.menu ul li.selected').parents('ul').show();
+    $('div.menu ul li.selected').children('ul').show();
+    $('div.menu ul li:has(ul) > a').click(function() {
+        $(this).next('ul').slideToggle('slow')
+        return false;
+    });
+});
+</script>
+</head>
+<body>
+
+<div class="minWidth">
+<div class="maincontainer">
+
+<div class="menu"> 
+<ul>
+<li><a href="">Знакомство с системой</a>
+<ul>
+<li><a href="about.html">Основные сведения</a></li>
+<li><a href="enter.html">Вход в систему управления</a></li>
+<li><a href="components.html">Основные компоненты управления</a></li>
+</ul> 
+</li>
+<li><a href="">Установка системы</a><ul>
+<li><a href="hosting.html">Требования к хостингу</a></li>
+<li class="selected"><a href="installation.html">Инсталляция</a></li>
+</ul> 
+</li>
+
+<li><a href="">Возможности NGCMS</a><ul>
+<li>
+<a href="">Управление контентом</a>
+<ul>
+<li><a href="news.html">Новости</a></li>
+<li><a href="catigories.html">Категории</a></li>
+<li><a href="static.html">Статические страницы</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Настройки пользователей</a>
+<ul>
+<li><a href="users.html">Управление пользователями</a></li>
+<li><a href="ipban.html">Блокировка IP-адресов</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Системные настройки</a>
+<ul>
+<li><a href="config.html">Настройки системы</a></li>
+<li><a href="dbo.html">Управление базой данных</a></li>
+<li><a href="urls.html">Управление форматом ссылок</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Дополнительные настройки</a>
+<ul>
+<li><a href="plugins.html">Управление плагинами</a></li>
+<li><a href="images.html">Управление изображениями</a></li>
+<li><a href="files.html">Управление файлами</a></li>
+<li><a href="templates.html">Управление шаблонами</a></li>
+</ul> 
+</li>
+</ul> 
+</li>
+
+</ul> 
+</div>
+
+   <div class="rightside">  
+<h1>Инсталляция</h1>
+
+<h2>Подготовительный этап</h2>
+<br/>
+<p class="zametka">Перед установкой необходимо скачать последнюю версию NGCMS <a href="http://ngcms.ru/">с официального сайта</a>, либо с <a href="https://github.com/vponomarev/ngcms-core">GIT репозитория</a>.</p>
+
+
+<ul class="spisok">
+<li>Распакуйте архив с дистрибутивом во временный каталог.</li>
+<li>Загрузите все файлы из временного каталога в корневой каталог вашего сайта.</li>
+<li>Выставьте необходимые права доступа для следующих файлов/каталогов:
+<ul class="spisok">
+<li>папка: uploads/ (и все папки внутри)</li>
+<li>папка: templates/ (и все папки внутри)</li>
+<li>папка: engine/conf/ (и все файлы внутри)</li>
+<li>папка: engine/backups/</li>
+<li>папка: engine/cache/</li>
+<li>папка: engine/skin/default/tpl (и все папки внутри)</li>
+<li>все файлы (*.tpl) во всех папках: templates/</li>
+</ul>
+</li>
+<li>Наберите в браузере адрес вашего сайта</li>
+<li>Следуйте дальнейшим инструкциям</li>
+</ul>
+
+<h2>Установка системы</h2>
+
+<p>Фактически установка системы состоит из 7 простых шагов, проядя которые вы полочите полностью рабочую CMS.</p>
+
+<h3>Шаг 1: Лицензионное соглашение</h2>
+<p>На данном шаге Вам нужно ознакомиться с лицензионным соглашением NGCMS и принять его, поставиь соответствующую галочку внизу страницы. (рис 2.1)</p>
+ <p class="img"><img width="839"  src="images/screenshots/install_1.png" />
+    <br />рис 2.1 </p>
+	
+<h3>Шаг 2: Настройка БД</h2>
+<p>На данной странице Вам необходимо ввести параметры подключения к БД. (рис 2.2)</p>
+ <p class="img"><img width="839"  src="images/screenshots/install_2.png" />
+    <br />рис 2.2 </p>
+	
+<h3>Шаг 3: Проверка доступов</h2>
+<p>На данном шаге выполняется проверка на соответствие характеристик сервера к минимальные требования скрипта. Также проверяется правильно ли выставлены права доступа (chmod) к директориями. (рис 2.3)</p>
+ <p class="img"><img width="839"  src="images/screenshots/install_3.png" />
+    <br />рис 2.3 </p>
+<h3>Шаг 4: Активация плагинов</h2>
+<p>На данной странице отображается список плагинов, входящих в поставку NGCMS. Некоторые из них вы можете активировать прямо здесь. (рис 2.4)</p>
+ <p class="img"><img width="839"  src="images/screenshots/install_4.png" />
+    <br />рис 2.4 </p>	
+	
+<h3>Шаг 5: Выбор шаблона</h2>
+<p>На данной странице вам предстоит выбрать шаблон для NGCMS. (рис 2.5)</p>
+ <p class="img"><img width="839"  src="images/screenshots/install_5.png" />
+    <br />рис 2.5 </p>	
+	
+<h3>Шаг 6: Общие параметры</h2>
+<p>На данном шаге требуется ввести общие параметры сайта, такие как URL сайта, заголовок, а также логин и пароль для администратора. (рис 2.6)</p>
+ <p class="img"><img width="839"  src="images/screenshots/install_6.png" />
+    <br />рис 2.6 </p>	
+
+<h3>Шаг 7: Завершение установки</h2>
+<p>Это заключительный этап установки. Здесь отображаются все, выполненные во время установки, действия. (рис 2.7)</p>
+ <p class="img"><img width="839"  src="images/screenshots/install_7.png" />
+    <br />рис 2.7 </p>		
+</div>    
+</div>
+  <div class="clear"></div>
+</div>
+
+<div id="bottom">
+  <div class="bottom-inner">
+    <p>© 2008-2012 Next Generation CMS
+  </div>
+</div>
+</div>
+</body>

@@ -1,0 +1,106 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Конфигурационный файл variables.ini</h3>
+			<div class="text">
+				Набор конфигурационных переменных, которые не были вынесены в отдельный шаблон.
+				
+<pre class="brush: html;">
+[configuration]
+; Флаг: Если установлен в 1, то в TWIG массив news.embed будет выгружаться список добавленных (через тег &lt;img&gt;) к новости изображений
+; Использовать с осторожностью - данная функция увеличивает нагрузку на процессор
+extractEmbeddedItems	= 0
+
+; Имя файла аватарки по умолчанию для пользователей, не указавших свой аватар [если переменная не указана, то будет использоваться системная /uploads/avatars/noavatar.gif ]
+noAvatarImage   = "noavatar.jpg"
+; Имя файла фотографии по умолчанию для пользователей, не указавших своё фото [если переменная не указана, то будет использоваться системная /uploads/photos/nophoto.gif ]
+noPhotoImage = "nophoto.jpg"
+
+; Настройка панели постраничной навигации
+[navigation]
+; Формат ссылки `предыдущая страница`
+prevlink	= "&lt;a href='%link%'>%page%&lt;/a> "
+; Формат ссылки `следующая страница`
+nextlink	= "&lt;a href='%link%'>%page%&lt;/a> "
+; Формат ссылки `текущая страница`
+current_page	= " &lt;b>[%page%]&lt;/b> "
+; Формат ссылки `страница`
+link_page	= "&lt;a href='%link%'>%page%&lt;/a> "
+; Разделитель блока ссылок (многоточие)
+dots		= " ... "
+
+; Настройка отображения системных сообщений/ошибок
+[messages]
+; Сообщение об ощибке
+msg.error	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>"
+; Информационный блок к сообщению об ошибке
+msg.error_info	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+; Системное сообщение (об успешно выполненном действии)
+msg.common	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>"
+; Информационный блок к системному сообщению
+msg.common_info	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+; Отдельно создаваемый информационный блок
+msg.info	= "&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+
+; Настройка BB кодов
+[bbcodes]
+; ** URL ** (параметры BB кода)
+; Стиль по умолчанию для BB кода URL (если не задан в самом BB коде)
+;url.class.default	= ""
+
+; Задавать стиль для BB кода URL (вне зависимости от того задан ли стиль в BB коде)
+;url.class.force	= ""
+
+; Значение параметра "target" по умолчанию для BB кода URL (если не задан в самом BB коде)
+;url.target.default	= ""
+
+; Значение параметра "target" для BB кода URL (вне зависимости от того задан ли стиль в BB коде)
+;url.target.force	= ""
+
+; ** IMG ** (параметры BB кода)
+;url.class.default	= ""
+;url.class.force	= ""
+
+; ** ATTACH **
+; Формат отображения для BB кода "[attach]"
+; Допустимые параметры:
+; * {url}   - URL файла-вложения
+; * {title} - Имя файла-вложения
+; * {size}  - Размер файла-вложения
+attach.format	= "&lt;a href='{url}'>{title} ({size})&lt;/a>"
+; Текст, который будет выводиться вместо тега "[attach]" в случае, если такого файла-вложения не существует
+attach.nonexist	= "[wrong or deleted attach]"
+
+
+; Параметры генерации дерева категорий
+[category_tree]
+; Имя класса (class) для активной категории (т.е. категории, в которой сейчас находится пользователь)
+class.active	= "active_cat"
+; Имя класса для неактивной категории
+class.inactive	= ""
+; Метка по умолчанию для указания глубины вложения подкатегории (метка повтояется X раз, где X - глубина вложенности)
+mark.default = "&#8212;"
+; Персональная метка для вложения уровня 0 (т.е. для категорий, не имеющих родительской категории)
+;mark.level.0 = ""
+; Персональная метка вложения уровня 1
+;mark.level.1 = "=>"
+; Персональная метка вложения уровня 2
+;mark.level.2 = "==>"
+; ... и так далее (до уровня 99999)
+</pre>
+
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

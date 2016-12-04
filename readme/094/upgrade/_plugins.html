@@ -1,0 +1,157 @@
+<html>
+	<head>
+		<link media="screen" href="style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Список изменений в плагинах между версиями 0.9.3 по 0.9.4</h3>
+			<div class="text">
+				0. Как и шаблон, многие плагины тоже изменились. В котором конечной целью является полный переход на <b>TWIG</b> и отказ от старого шаблонизатора.
+			</div>
+			<div class="text">
+				1. Прекращена поддержка следующий плагинов <b>lastnews</b>, <b>popular</b> вместо них используйте плагин <b>xnews</b>.
+			</div>
+			<div class="text">
+				2. Плагин <b>archive</b> переведен под шаблонизатор <b>TWIG</b>.<br />
+				Изменился тип переменной для вывода плагина (подробности смотрите в документации плагина).<br />
+<pre>Было [isplugin archive]{plugin_archive}[/isplugin]
+Стало {% if pluginIsActive('archive') %}{{ callPlugin('archive.show', {'maxnum' : 12, 'counter' : 1, 'template': 'archive', 'cacheExpire': 60}) }}{% endif %}</pre><br />
+				Изменилось содержимое и файлы плагина, содержимое файла <b>entries.tpl</b> перемещено в файл <b>archive.tpl</b>.<br />
+				В примере показан минимальный набор файла <b>archive.tpl</b> (подробности смотрите в документации плагина).<br />
+<pre>{% for entry in entries %}
+&lt;a href="{{entry.link}}">{{entry.title}} {% if (entry.counter) %}( {{entry.cnt}} {{entry.ctext}} ){% endif %}&lt;/a>
+{% endfor %}</pre>
+			</div>
+			<div class="text">
+				3. Плагин <b>calendar</b> переведен под шаблонизатор <b>TWIG</b>.<br />
+				Изменился тип переменной для вывода плагина (подробности смотрите в документации плагина).<br />
+<pre>Было [isplugin calendar]{plugin_calendar}[/isplugin]
+Стало {% if pluginIsActive('calendar') %}{{ callPlugin('calendar.show', {'cache': 60 }) }}{% endif %}</pre><br />
+				Изменилось содержимое и файлы плагина, содержимое файла <b>entries.tpl</b> перемещено в файл <b>calendar.tpl</b>.<br />
+				В примере показан минимальный набор файла <b>calendar.tpl</b> (подробности смотрите в документации плагина).<br />
+<pre>{% if (not flags.ajax) %}
+&lt;script type="text/javascript" language="javascript">
+	function ng_calendar_walk(month, year, offset) {
+		$.post('/engine/rpc.php', { json : 1, methodName : 'plugin.calendar.show', rndval: new Date().getTime(), params : json_encode({ 'year' : year, 'offset' : offset, 'month' : month }) }, function(data) {
+			// Try to decode incoming data
+			try {
+				resTX = eval('('+data+')');
+			} catch (err) { alert('Error parsing JSON output. Result: '+linkTX.response); }
+			if (!resTX['status']) {
+				ngNotifyWindow('Error ['+resTX['errorCode']+']: '+resTX['errorText'], 'ERROR');
+			} else {
+				$('#ngCalendarDiv').html(resTX['data']);
+			}
+		}, "text").error(function() { ngHideLoading(); ngNotifyWindow('HTTP error during request', 'ERROR'); });
+	}
+&lt;/script>
+{% endif %}
+&lt;div id="ngCalendarDiv">
+	&lt;table id="calendar" align="center">
+		&lt;tr>
+			&lt;td class="month" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'prev'); return false;">[prev_link]&laquo;[/prev_link]&lt;/td>
+			&lt;td colspan="5" class="month">&lt;a href="{{ currentMonth.link }}">{{ currentMonth.name }}&lt;/a>&lt;/td>
+			&lt;td class="month" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'next'); return false;">[next_link]&raquo;[/next_link]&lt;/td>
+		&lt;/tr>
+		&lt;tr>
+			&lt;td class="weekday">{{ weekdays[1] }}&lt;/td>
+			&lt;td class="weekday">{{ weekdays[2] }}&lt;/td>
+			&lt;td class="weekday">{{ weekdays[3] }}&lt;/td>
+			&lt;td class="weekday">{{ weekdays[4] }}&lt;/td>
+			&lt;td class="weekday">{{ weekdays[5] }}&lt;/td>
+			&lt;td class="weekend">{{ weekdays[6] }}&lt;/td>
+			&lt;td class="weekend">{{ weekdays[7] }}&lt;/td>
+		&lt;/tr>
+		{% for week in weeks %}
+		&lt;tr>
+			&lt;td class="{{ week[1].className }}">{% if (week[1].countNews>0) %}&lt;a href="{{ week[1].link }}">{{ week[1].dayNo}}&lt;/a>{% else %}{{ week[1].dayNo }}{% endif %}&lt;/td>
+			&lt;td class="{{ week[2].className }}">{% if (week[2].countNews>0) %}&lt;a href="{{ week[2].link }}">{{ week[2].dayNo}}&lt;/a>{% else %}{{ week[2].dayNo }}{% endif %}&lt;/td>
+			&lt;td class="{{ week[3].className }}">{% if (week[3].countNews>0) %}&lt;a href="{{ week[3].link }}">{{ week[3].dayNo}}&lt;/a>{% else %}{{ week[3].dayNo }}{% endif %}&lt;/td>
+			&lt;td class="{{ week[4].className }}">{% if (week[4].countNews>0) %}&lt;a href="{{ week[4].link }}">{{ week[4].dayNo}}&lt;/a>{% else %}{{ week[4].dayNo }}{% endif %}&lt;/td>
+			&lt;td class="{{ week[5].className }}">{% if (week[5].countNews>0) %}&lt;a href="{{ week[5].link }}">{{ week[5].dayNo}}&lt;/a>{% else %}{{ week[5].dayNo }}{% endif %}&lt;/td>
+			&lt;td class="{{ week[6].className }}">{% if (week[6].countNews>0) %}&lt;a href="{{ week[6].link }}">{{ week[6].dayNo}}&lt;/a>{% else %}{{ week[6].dayNo }}{% endif %}&lt;/td>
+			&lt;td class="{{ week[7].className }}">{% if (week[7].countNews>0) %}&lt;a href="{{ week[7].link }}">{{ week[7].dayNo}}&lt;/a>{% else %}{{ week[7].dayNo }}{% endif %}&lt;/td>
+		&lt;/tr>
+		{% endfor %}
+	&lt;/table>
+&lt;/div></pre>
+			</div>
+			<div class="text">
+				5. В плагине <b>feedback</b> добавили новый тип поля E-mail.<br />
+				Пример поля по умолчанию в файле <b>site.form.tpl</b> в цикле {% for entry in entries %}{% endfor %} (подробности смотрите в документации плагина).<br />
+<pre>
+{% if entry.type == 'email' %}
+	&lt;tr>
+		&lt;td width="30%">{{ entry.title }}&lt;/td>
+		&lt;td width="70%">&lt;input type="text" name="{{ entry.name }}" class="input" />&lt;/td>
+	&lt;/tr>
+{% endif %}</pre>
+			</div>
+			<div class="text">
+				5. Плагин <b>lastcomments</b> переведен под шаблонизатор <b>TWIG</b>.<br />
+				Изменился тип переменной для вывода плагина (подробности смотрите в документации плагина).<br />
+<pre>Было [isplugin lastcomments]{plugin_lastcomments}[/isplugin]
+Стало {% if pluginIsActive('lastcomments') %}{{ plugin_lastcomments }}{% endif %}</pre><br />
+				Изменилось содержимое и файлы плагина, содержимое файла <b>entries.tpl</b> перемещено в файл <b>lastcomments.tpl</b>.<br />
+				В примере показан минимальный набор файла <b>lastcomments.tpl</b> (подробности смотрите в документации плагина).<br />
+<pre>{% for entry in entries %}
+	Написал:{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;a href="{{ entry.author_link }}">{% endif %}{{ entry.author }}{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;/a>{% endif %}
+	В новости:&lt;a href="{{ entry.link }}">{{ entry.title|truncateHTML(30,'...') }}&lt;/a>
+{% endfor %}</pre>
+				Изменилось содержимое и файлы плагина, содержимое файла <b>pp_entries.tpl</b> перемещено в файл <b>pp_lastcomments.tpl</b>.<br />
+				В примере показан минимальный набор файла <b>pp_lastcomments.tpl</b> (подробности смотрите в документации плагина).<br />
+<pre>{% for entry in entries %}
+	Написал:{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;a href="{{ entry.author_link }}">{% endif %}{{ entry.author }}{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;/a>{% endif %}
+	В новости:&lt;a href="{{ entry.link }}">{{ entry.title|truncateHTML(30,'...') }}&lt;/a>
+{% endfor %}</pre>
+			</div>
+			<div class="text">
+				5. Плагин <b>pm</b> переведен под шаблонизатор <b>TWIG</b>.<br />
+				Изменились типы переменныч для вывода в файле <b>usermenu.tpl</b> (подробности смотрите в документации плагина).<br />
+<pre>Кол-во новых входящих сообщений.
+Было {pm_unread} стало {{ p.pm.pm_unread }}
+
+Общее кол-во входящих сообщений.
+Было {pm_all} стало {{ p.pm.pm_all }}
+
+URL на страницу со входящими сообщениями.
+Было /plugin/pm/ стало {{ p.pm.link }}</pre>
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+		</div>
+	</body>
+</html>

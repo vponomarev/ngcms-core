@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../../highlighter/scripts/shBrushPhp.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Функция generatePluginLink()</h3>
+			<div class="text">
+				Функция-обёртка для функции generateLink(), облегчает генерацию линков плагинами.<br /><br />
+				При запуске функция проверяет наличие активных  обработчиков для <b>$pluginName</b> и <b>$handlerName</b>, и:<br />
+				* в случае наличия - вызывает <b>generateLink()</b> с переданными параметрами <b>$params</b>, <b>$xparams</b>, <b>$intLink</b>, <b>$absoluteLink</b><br />
+				* в случае отсутствия - вызывает <b>generateLink()</b> со встроенными параметрами $pluginName = '<b>core</b>', $handlerName = '<b>plugin</b>'<br />
+				При использовании данной функции вам больше не надо думать о том, есть ли в таблице настроек ЧПУ активная запись для генерации ссылок вашего плагина.<br />
+				Вызов функции:
+				<pre class="brush: php;">function generatePluginLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false){ ; }</pre>
+				Набор параметров:
+				
+<pre class="brush: php;">
+// $pluginName	- ID плагина
+// $handlerName	- Наименование обработчика
+// $params		- Набор основных параметров (из них берутся значения, которые будут частью URL'а)
+// $xparams		- Набор дополнительных параметров, которые будут добавлены к ссыке в виде "?param1=value1&...&paramX=valueX"
+// $intLink		- Флаг: "ссылка для отображения внутри HTML страницы" (т.е. все символы '&' будут преобразовываться в '&<i></i>amp;'
+// $absoluteLink	- Флаг: "абсолютная ссылка", будет генерироваться абсолютная ссылка с указанием доменного имени и префикса http://
+</pre>
+				
+				Пример использования функции:
+				
+<pre class="brush: php;">
+$myLink = generatePluginLink(
+	'news', 					// - плагин 'news'
+	'by.year',					// - обработчик 'by.year'
+	array(						// - [основные параметры]
+		'year' => 2010,			// - год = 2010
+		'page' => 3),			// - страница = 3
+	array(						// - [дополнительные параметры]
+		'referer' => 'ivan'),	// - referer = 'ivan' (в реальности такой переменной не существует)
+	1,							// - ссылка для отображения в HTML, т.е. все символы '&' будут преобразовываться в '&<i></i>amp;'
+	1							// - это абсолютная ссылка (к примеру, для добавления в email сообщение, оформленное в виде HTML)
+);
+
+print "Generated link is: ".$myLink;	// Выводится текст "Generated link is: <тут ссылка на страницу плагина news>"						
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

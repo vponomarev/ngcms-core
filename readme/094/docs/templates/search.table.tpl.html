@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблон search.table.tpl</h3>
+			<div class="text">
+				<p>Шаблон отвечает за генерацию полной поисковой формы и отображения результатов поиска.</p>
+				<p>Фактически этот шаблон - часть шаблона mail.tpl, но для удобства работы поисковая форма была вынесена в отдельный .tpl файл.</p>
+				Шаблон должен содержать форму (тег <b>&lt;form></b>, метод запроса - <b>GET</b> или <b>POST</b>), которая позволит вводить параметры поиска.<br />
+				В форме поддерживаюся следующие переменные (для более детального описания см. шаблон search.table.tpl):
+				<ul class="level-1">
+					<li><b>search</b> (тип: text) - Строка для поиска.</li>
+					<li><b>author</b> (тип: text) - Автор новости.</li>
+					<li><b>search</b> (тип: text) - Строка для поиска.</li>
+					<li><b>catid</b> (тип: select) - Выбор категории в которой необходимо искать (содержимое данной переменной формы генерируется в переменой ядра {catlist}.</li>
+					<li><b>postdate</b> (тип: select) - Выбор месяца в которой необходимо искать (содержимое списка месяцев в виде блока &lt;option value="дата">дата&lt;/option> генерируется в переменной ядра {datelist}).</li>
+				</ul>
+			</div>
+			<h3>Доступные блоки/переменные</h3>
+			<div class="text">
+				Блоки:
+				<ul class="level-1">
+					<li><b>[found]</b> ... <b>[/found]</b> - Содержимое блока отображается в случае, если в результатах поиска найдена 1 или более новостей.</li>
+					<li><b>[notfound]</b> ... <b>[/notfound]</b> - Содержимое блока отображается в случае, если в результатах поиска не найдено ни одной новости.</li>
+					<li><b>[error]</b> ... <b>[/error]</b> - Содержимое блока отображается при незаполнении обязательного HTML поля <b>search</b> (строка для поиска).</li>
+				</ul>
+				Переменные:
+				<ul class="level-1">
+					<li><b>{form_url}</b> - URL поисковой формы.</li>
+					<li><b>{count}</b> - Кол-во найденных в результатах поиска новостей (для блока <b>[found]</b> ... <b>[/found]</b>).</li>
+					<li><b>{author}</b> - Полученное значение переменной "author" (автор новости), введенное в форме поиска.</li>
+					<li><b>{search}</b> - Полученное значение переменной "search" (строка поиска), введенное в форме поиска.</li>
+					<li><b>{catlist}</b> - Блок, в который помещается HTML код для переменной <b>catid</b> из поисковой формы.</li>
+					<li><b>{datelist}</b> - Блок, в который помещается HTML код значений (option's) для переменной <b>postdate</b> из поисковой формы.</li>
+					<li><b>{entries}</b> - Отображаемые блоки с найденными новостями (для отображения новостей используется шаблон <b>news.search.tpl</b>, при его отсутствии - <b>news.short.tpl</b>).</li>
+				</ul>
+				Доступные языковые переменные:
+				<ul class="level-1">
+					<li><b>{l_search.filter.author}</b> - Текст "Автор" (для переменной <b>{author}</b></b>).</li>
+					<li><b>{l_search.filter.category}</b> - Текст "Категория" (для переменной <b>{catlist}</b>).</li>
+					<li><b>{l_search.filter.date}</b> - Текст "Дата" (для переменной <b>postdate</b>).</li>
+					<li><b>{l_search.submit}</b> - Текст "Поиск" (для submit кнопки формы).</li>
+					<li><b>{l_search.filter.date}</b> - Текст "Дата" (для переменной <b>postdate</b>).</li>
+					<li><b>{l_search.found}</b> - Текст "Найдено новостей" (для блока <b>[found]</b> ... <b>[/found]</b>).</li>
+					<li><b>{l_search.notfound}</b> - Текст "Не найдено ни одной записи, удовлетворяющей вашему запросу" (для блока <b>[notfound]</b> ... <b>[/notfound]</b>).</li>
+					<li><b>{l_search.notfound}</b> - Текст "Возможно вы не задали слово для поиска, либо оно состоит из менее чем 3-х букв!" (для блока <b>[error]</b> ... <b>[/error]</b>).</li>
+				</ul>
+			</div>
+			<h3>Пример заполнения шаблона</h3>
+			<div class="text">
+				В примере показан минимально набор для полнофункциональной работы:
+				
+<pre class="brush: html;">
+&lt;form name="full_search" action="{form_url}" method="GET">
+	{l_search.filter.author}: &lt;input type="text" name="author" value="{author}" />
+	{l_search.filter.category}: {catlist}
+	{l_search.filter.date}: &lt;select name="postdate">&lt;option value="">&lt;/option>{datelist}&lt;/select>
+	&lt;input type="submit" value="{l_search.submit}" />
+&lt;/form>
+[found]{l_search.found}: {count}[/found]
+[notfound]{l_search.notfound}[/notfound]
+[error]{l_search.error}[/error]
+{entries}
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

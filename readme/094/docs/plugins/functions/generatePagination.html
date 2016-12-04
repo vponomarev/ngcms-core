@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../../highlighter/scripts/shBrushPhp.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Функция generatePagination()</h3>
+			<div class="text">
+				Функция генерирует панель постраничной навигации с заданными параметрами, при работе использует стили из текущего шаблона сайта.<br />
+				Вызов функции:
+				<pre class="brush: php;">function generatePagination($current, $start, $end, $maxnav, $paginationParams, $navigations){ ; }</pre>
+				Набор параметров:
+				
+<pre class="brush: php;">
+// $current				- номер текущей страницы
+// $start				- номер первой страницы, отображаемой в блоке навигации
+// $end					- номер последней страницы, отображаемой в блоке навигации
+// $maxnav				- максимальное кол-во ссылок на страницы, которое будет отображаться в блоке навигации
+// $paginationParams			- параметры, необходимые для генерации URL'ов страниц [используются в функции generatePageLink()][формат описан в generatePageLink()]
+// $navigations				- параметры, определяющие вид элемента постраничной навигации
+</pre>
+				
+				Пример использования функции:
+				
+<pre class="brush: php;">
+// Загрузить локальные переменные текущего шаблона (template) из файла templates/<имя_шаблона>/variables.ini
+templateLoadVariables(true);
+
+// Получить из ГЛОБАЛЬНОГО массива $TemplateCache загруженные настройки отображения навигационных элементов (блок [navigation] файла variables.ini)
+$navigations = $TemplateCache['site']['#variables']['navigation'];
+
+// Генерируем блок навигации
+$myNavi = generatePagination(
+	3,							// - текущая страница #3
+	1,							// - первая страница #1
+	40,							// - последняя страница #40
+	10,							// - отображать не более 10 ссылок на страницы
+	array(							// - [параметры для генерации URL'ов]
+		'pluginName' => 'news'				// -- плагин 'news'
+		'pluginHandler' => 'by.year'),			// -- обработчик 'by.year'
+		'params' => array(				// -- [основные параметры]
+			'year' => 2010,				// --- год = 2010
+			'page' => 3),				// --- страница = 3
+		'xparams' => array(				// -- [дополнительные параметры]
+			'referer' => 'ivan'),			// -- referer = 'ivan' (в реальности такой переменной не существует)
+		'paginator' => array(				// -- [идентификация переменной постраничной навигации]
+			'page',					// --- переменная 'page'
+			0,					// --- переменная находится в основных параметрах
+			0)					// --- на первой странице переменную page не отображать
+	)	
+	array(							// - [параметры для определения внешнего вида]
+	)
+	);
+
+// Выводим сгенерованный блок навигации
+print $myNavi;
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

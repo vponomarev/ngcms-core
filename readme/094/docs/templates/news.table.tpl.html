@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushTwig.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблон news.table.tpl <span class="twig">TWIG</span></h3>
+			<div class="text">
+				Шаблон отвечает за генерацию табличной части вывода новостей для следующих задач:
+				<ul class="level-1">
+					<li><b>главная страница</b> - вывод новостей на главной странице</li>
+					<li><b>лента новостей</b> - вывод всех опубликованных новостей (вне зависимости от флага "отображать на главной")</li>
+					<li><b>страница категории</b> - страница конкретной категории новостей</li>
+					<li><b>Вывод по дате</b> - вывод новостей за определённую дату (плагин <i>календарь</i>)</li>
+					<li><b>вывод по месяцу</b> - вывод новостей за определённый месяц (плагин <i>архив</i>)</li>
+					<li><b>вывод новостей по году</b> - вывод новостей за определённый год (плагин <i>архив</i></li>
+				</ul>
+			</div>
+			<div class="info-block-2" style="margin:10px 0">
+				Начиная с версии [SVN1101] полностью меняется набор переменных и правила использования шаблона.<br />
+				Также шаблон становится условно-обязательным. Теперь при его отсутствии будет считаться, что он содержит следующий код:
+			</div>
+			<div class="text">
+				
+<pre class="brush: twig;">
+{% for entry in data %}
+{{ entry }}
+{% else %}
+engineMSG('common', lang['msgi_no_news'])
+{% endfor %} {{ pagination }}
+</pre>
+				
+				Такой код полностью повторяет текущее (до SVN1101) поведение системы.
+			</div>
+			<h3>Доступные переменные</h3>
+			<div class="text">
+				<ul class="level-1">
+					<li>
+						<b>handler</b></b> - текущий режим работы, может принимать значения:
+						<ul class="level-1">
+							<li><b>main</b> - вывод на главной странице</li>
+							<li><b>all</b> - вывод всех опубликованных новостей</li>
+							<li><b>by.category</b> - вывод новостей из категории</li>
+							<li><b>by.day</b> - вывод новостей по дате</li>
+							<li><b>by.month</b> - вывод новостей по месяцу</li>
+							<li><b>by.year</b> - вывод новостей по году</li>
+						</ul>
+					</li>
+					<li><b>count</b> - кол-во найденных новостей</li>
+					<li><b>data</b> - массив с выведенными (обычно через шаблон <i>news.short.tpl</i>) новостей</li>
+					<li>
+						<b>pages</b> - массив с информацией о постраничной навигации в новостях
+						<ul class="level-1">
+							<li><b>current</b> - номер текущей страницы (первая страница: 1)</li>
+							<li><b>total</b> - общее кол-во страниц</li>
+						</ul>
+					</li>
+				</ul>
+				В режиме <b>by.category</b> доступны следующие переменные:
+				<ul class="level-1">
+					<li>
+						category
+						<ul class="level-1">
+							<li><b>id</b> - ID категории</li>
+							<li><b>alt</b> - альт. имя категории</li>
+							<li><b>name</b> - имя категории</li>
+							<li><b>info</b> - информация о категории</li>
+							<li>
+								<b>icon</b> - массив с информацией об иконке категории
+								<ul class="level-1">
+									<li><b>url</b> - URL иконки</li>
+									<li><b>isExtended</b> - <i>true</i> если иконка была "приложена" к категории, <i>false</i> если указан только URL иконки. Информация ниже доступна только при значении isExtended == true</li>
+									<li><b>width</b> - ширина иконки</li>
+									<li><b>height</b> - высота иконки</li>
+									<li><b>hasPreview</b> - <i>true</i> если у иконки есть уменьшенная копия (превью)</li>
+									<li><b>purl</b>- URL превью категории</li>
+									<li><b>pwidth</b> - ширина превью</li>
+									<li><b>pheight</b> - высота превью</li>
+								</ul>
+							</li>
+							<li><b>url</b> - URL категории</li>
+							<li><b>text</b> - HTML представление ссылки на категорию</li>
+						</ul>
+					</li>
+				</ul>
+				В режиме <b>by.date</b> доступны следующие переменные:
+				<ul class="level-1">
+					<li><b>year</b> - год</li>
+					<li><b>month</b> - месяц</li>
+					<li><b>day</b> - день</li>
+					<li><b>dateStamp</b> - дата в формате UnixTime для использования в фильтре <b>|date</b></li>
+				<ul class="level-1">
+				В режиме <b>by.month</b> доступны следующие переменные:
+				<ul class="level-1">
+					<li><b>year</b> - год</li>
+					<li><b>month</b> - месяц</li>
+					<li><b>dateStamp</b> - дата (день = 1) в формате UnixTime для использования в фильтре <b>|date</b></li>
+				</ul>
+				В режиме <b>by.year</b> доступны следующие переменные:
+				<ul class="level-1">
+					<li><b>year</b> - год</li>
+					<li><b>dateStamp</b> - дата (день = 1, месяц = 1) в формате UnixTime для использования в фильтре <b>|date</b></li>
+				</ul>
+			</div>
+			<h3>Пример заполнения шаблона</h3>
+			<div class="text">
+				В примере показан минимально набор для полнофункциональной работы (с учётом использования плагина <b>comments</b>):
+				
+<pre class="brush: twig;">
+{% if (handler == 'by.category') %}
+&lt;h3>{{ category.name }}&lt;/h3>
+{% if category.icon.purl %}&lt;img src="{{ category.icon.purl }}"/>&lt;br/>{% endif %}
+{{ category.info }}
+{% endif %}
+{% for entry in data %}
+{{ entry }}
+{% endfor %}
+{{ pagination }}
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

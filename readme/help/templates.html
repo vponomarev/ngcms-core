@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251;">
+<title></title>
+<link href="css/global.css" rel="stylesheet" type="text/css">
+<script src="js/jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('div.menu ul li.selected').parents('ul').show();
+    $('div.menu ul li.selected').children('ul').show();
+    $('div.menu ul li:has(ul) > a').click(function() {
+        $(this).next('ul').slideToggle('slow')
+        return false;
+    });
+});
+</script>
+</head>
+<body>
+
+<div class="minWidth">
+<div class="maincontainer">
+
+<div class="menu"> 
+<ul>
+<li><a href="">Знакомство с системой</a>
+<ul>
+<li><a href="about.html">Основные сведения</a></li>
+<li><a href="enter.html">Вход в систему управления</a></li>
+<li><a href="components.html">Основные компоненты управления</a></li>
+</ul> 
+</li>
+<li><a href="">Установка системы</a><ul>
+<li><a href="hosting.html">Требования к хостингу</a></li>
+<li><a href="installation.html">Инсталляция</a></li>
+</ul> 
+</li>
+
+<li><a href="">Возможности NGCMS</a><ul>
+<li>
+<a href="">Управление контентом</a>
+<ul>
+<li><a href="news.html">Новости</a></li>
+<li><a href="catigories.html">Категории</a></li>
+<li><a href="static.html">Статические страницы</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Настройки пользователей</a>
+<ul>
+<li><a href="users.html">Управление пользователями</a></li>
+<li><a href="ipban.html">Блокировка IP-адресов</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Системные настройки</a>
+<ul>
+<li><a href="config.html">Настройки системы</a></li>
+<li><a href="dbo.html">Управление базой данных</a></li>
+<li><a href="urls.html">Управление форматом ссылок</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Дополнительные настройки</a>
+<ul>
+<li><a href="plugins.html">Управление плагинами</a></li>
+<li><a href="images.html">Управление изображениями</a></li>
+<li><a href="files.html">Управление файлами</a></li>
+<li class="selected"><a href="templates.html">Управление шаблонами</a></li>
+</ul> 
+</li>
+</ul> 
+</li>
+
+</ul> 
+</div>
+
+   <div class="rightside">  
+<h1>Управление шаблонами</h1>
+
+<p>Данный раздел админ-панели позволяет прямо из браузера редактировать файлы-шаблоны определённой темы оформления.</p>
+ <p class="img"><img width="839"  src="images/screenshots/templates_1.png" />
+<br />рис 14.1 </p>
+</div>    
+</div>
+  <div class="clear"></div>
+</div>
+
+<div id="bottom">
+  <div class="bottom-inner">
+    <p>© 2008-2012 Next Generation CMS
+  </div>
+</div>
+</div>
+</body>

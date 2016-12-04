@@ -1,0 +1,223 @@
+html,body,div,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,p,blockquote,pre,fieldset {
+	margin: 0;
+	padding: 0;
+}
+body {
+	color: #000;
+	min-width: 200px;
+	font-size: 12px;
+	font: 62.5%/1.65 "Open Sans", sans-serif;
+	background: #fff;
+}
+pre, blockquote {
+	padding: 5px;
+	margin: 5px 0 5px 0;
+}
+pre {
+	display: block;
+	background: #f9fafa;
+	border: 1px solid #dce7e7;
+	overflow: auto;
+	white-space: pre;
+}
+blockquote {
+	border-left: 3px solid #8BB917;
+}
+hr {
+	color: #ccc;
+	border: 0px none;
+	border-top: dotted 1px #ccc;
+	height: 1px;
+}
+h1 {
+	font-family: Cuprum,Tahoma,Arial,sans-serif;
+	font-size: 18px;
+	font-weight: normal;
+}
+h2 {
+	font-family: Cuprum,Tahoma,Arial,sans-serif;
+	font-size: 25px;
+	font-weight: normal;
+}
+h3 {
+	font-family: Cuprum,Tahoma,Arial,sans-serif;
+	font-size: 18px;
+	border-bottom: 1px solid #333;
+	margin-bottom: 4px;
+	padding-bottom: 4px;
+	color: #a5be00;
+	font-weight: normal;
+}
+a, a:visited {
+	color: #3287C9;
+	text-decoration: none;
+	-webkit-transition: color 0.3s ease, text-decoration 0.3s ease, background 0.3s ease;
+	-moz-transition: color 0.3s ease, text-decoration 0.3s ease, background 0.3s ease;
+	transition: color 0.3s ease, text-decoration 0.3s ease, background 0.3s ease;
+}
+a:hover, a:active {
+	color:#246594;
+	text-decoration:none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+table.table {
+	width: 100%;
+}
+table.table td {
+	padding: 5px;
+	border: 1px solid #EAEAEA;
+	vertical-align: middle;
+}
+table.table th {
+	padding: 5px;
+	border: 1px solid #EAEAEA;
+	background: #F5F5F5;
+	vertical-align: middle;
+}
+span.twig {
+	padding:0 2px 0 2px;
+	background: #8BB917;
+	color: #fff;
+}
+span.svn {
+	padding:0 2px 0 2px;
+	background: #3abae7;
+	color: #fff;
+}
+.menu {
+	background: #fbfbf9;
+	margin: 10px;
+	width: 200px;
+	border: 1px solid #E6E6E6;
+	border-radius: 2px;
+}
+.menu h1 {
+	padding: 0 0 3px 5px;
+	font-size: 15px;
+	border-bottom: 2px solid #3abae7;
+}
+.menu-links a {
+	display :block;
+	color: #9e9d95;
+	border-top: #edece4 1px solid;
+	padding: 2px 12px;
+	font-size: 12px;
+}
+.menu-links a:first-child {
+	border-bottom: none;
+}
+.menu-links .active, .menu-links a:hover {
+	padding-left: 12px;
+	background: #e8e8e8;
+	color: #646464;
+}
+.menu-level {
+	padding-left: 22px;
+	display: none;
+}
+.menu-level a {
+	border: none;
+	border-left: 2px solid #8BB917;
+}
+.menu-links .level-1 a {
+	padding-left: 16px;
+}
+.menu-links .level-2 a {
+	padding-left: 25px;
+}
+.menu-sub a {
+	background: url('../images/submenu.png') no-repeat !important;
+	background-position: 186px 8px !important;
+	border-bottom: none;
+}
+.content {
+	margin: 10px;
+}
+.content .text {
+	font-size: 13px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.content .text ul.level-1 {
+	padding-left: 15px;
+}
+.content .text ul.level-2 {
+	padding-left: 25px;
+}
+.content .text ul.level-3 {
+	padding-left: 35px;
+}
+.content .text img {
+	padding: 5px;
+	border: solid 1px #EFEFEF;
+	border-radius: 2px;
+	box-shadow: 0 3px 7px rgba(0,0,0,0.03);
+}
+.content .text span.blue {
+	color: #2364de;
+}
+#footer {
+	background: #F3F0F0;
+	padding: 10px;
+	overflow: hidden;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	color: #777;
+	border-top: 1px solid #F5E8E8;
+}
+#footer a {
+	color: #555;
+}
+#footer a:hover {
+	color: #333;
+}
+.info-block-1, .info-block-2, .info-block-3 {
+	font-size: 12px;
+	padding: 10px;
+}
+.info-block-1 {
+	border: 1px solid #F5E8E8;
+	background: #F5F5F5;
+}
+.info-block-2 {
+	border: 1px solid #f3e4d9;
+	background: #fcf7ee;
+}
+.info-block-3 {
+	border: 1px solid #F5EFA1;
+	background: #FFFFE1;
+}
+.spoiler {
+	background: #FAFAFA;
+	border-left: 3px solid #64B327;
+	margin: 5px 0 5px 0;
+	padding: 0px;
+}
+.spoiler .sp-head {
+	padding: 4px 0 4px 2px;
+	cursor: pointer;
+	font: 8pt Tahoma;
+	font-weight: bold;
+}
+.spoiler .sp-head b {
+	background: url(../images/spoiler-plus.gif) no-repeat;
+	float: left;
+	width:9px;
+	height:10px;
+	margin: 2px 4px 0 2px;
+}
+.spoiler .sp-head b.expanded {
+	background: url(../images/spoiler-minus.gif) no-repeat;
+	width:9px;
+	height:10px;
+}
+.spoiler .sp-body {
+	padding: 4px 6px 6px 6px;
+	font: 8pt Tahoma;
+	font-style: normal;
+	text-align: left;
+	display: none;
+}

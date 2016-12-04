@@ -1,0 +1,102 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3><font color="blue"><b>[TWIG]</b></font> Шаблон registration.tpl</h3>
+<br/>
+Шаблон используется для генерации регистрационной формы.<br/>
+<br/>
+<h3>Доступные переменные</h3>
+<ul>
+ <li><b>form_action</b> - URL формы-обработчика</li>
+ <li><b>flags</b> - флаги
+ 	<ul><li><b>hasCaptcha</b> - флаг: включена поддержка защитного кода безопасности (настройки => настройки системы => безопасность => код безопасности)</li></ul>
+ </li>
+ <li><b>entries</b> - Список переменных, выводимых в форме регистрации
+ 	<ul>
+	<li><b>id</b>    - ID переменной (значение "id" для поля ввода)</li>
+	<li><b>name</b>  - ID переменной (значение "name" для поля ввода)</li>
+	<li><b>title</b> - Название переменной</li>
+	<li><b>descr</b> - Описание переменной</li>
+	<li><b>input</b> - Поле ввода для переменной</li>
+	<li><b>type</b> - Тип переменной (input, select, manual)</li>
+	<li><b>html_flags</b> - HTML флаги для генерации поля ввода</li>
+	<li><b>value</b> - Значение (в случае если оно заполнено, к примеру, при повторном заполнении формы из-за ошибки в капче)</li>
+	<li><b>values</b> - массив вида 'ключ' => 'значение' для переменных типа 'select', определяет доступный набор полей выбора</li>
+
+	</ul>
+ </li>
+</ul>
+<br/>
+
+<br/>
+<br/>
+Шаблон должен содержать форму (тег <b>&lt;form></b>, метод запроса - <b>POST</b>), которая позволит вводить данные, необходимые для регистрации.<br/>
+В форму должны передаваться следующие переменные:
+<ul>
+<li><b>type</b> (тип: hidden) - должна содержать значение "<b>doregister</b>"</li>
+<li><b>vcode</b> (тип: text) - в это поле пользователь будет вводить значение защитного кода безопасности.<br/>URL защитного кода безопасности: <b>{admin_url}/captcha.php</b>:
+<div class="pre"><pre>&lt;img src="{admin_url}/captcha.php" alt="Security code"/></pre></div>
+<b>*</b> <i>переменная <b>vcode</b> должна использоваться только при установленном флаге <b>flags.hasCaptcha</b></i>
+</li>
+</ul>
+<br/>
+<h3>Совместимость со старым шаблонизатором</h3>
+Для обеспечения совместимости со старыми шаблонами добавлена поддержка старого синтаксиса.<br/>
+Выполняются следующие преобразования/замены:
+<ul>
+ <li><b>[captcha]</b> ... <b>[/captcha]</b> - содержимое блока отображается если включена поддержка защитного кода безопасности (настройки => настройки системы => безопасность => код безопасности)</li>
+ <li><b>{form_action}</b> - URL формы-обработчика</li>
+ <li><b>{entries}</b> - использование данной "переменной" вызывает подключение старой версии шаблона <b>registration.entries.tpl</b></li>
+ <li><b>{title}</b> - переменная <b>title</b> строки</b></li>
+ <li><b>{descr}</b> - переменная <b>descr</b> строки</b></li>
+ <li><b>{input}</b> - переменная <b>input</b> строки</b></li>
+</ul>
+
+Доступные языковые переменные:
+<ul>
+<li><b>{l_registration}</b> - текст "Регистрация"</li>
+<li><b>{l_register}</b> - текст "зарегистрироваться" (для submit кнопки формы)</li>
+</ul>
+<br/>
+
+<h3>Пример заполнения шаблона</h3>
+<br/>
+В примере показан минимально набор для полнофункциональной работы:
+<div class="pre">
+<pre>
+&lt;form name="registration" action="{{ form_action }}" method="post">
+&lt;input type="hidden" name="type" value="doregister" />
+
+{% for entry in entries %}
+{{ entry.title }} ({{ entry.descr }}): {{ entry.input }}
+{% endfor %}
+
+{% if flags.hasCaptcha %}&lt;img src="{{ admin_url }}/captcha.php"> &lt;input type="text" name="vcode" />&lt;br/>{% endif %}
+
+&lt;input type="submit" class="button" value="{l_send_pass}" />
+&lt;/form>
+</pre>
+</div>
+* <small> - что такое переменная <b>{{ admin_url }}</b> и как ей пользоваться можно узнать в описании <a href="templates.html"><b>шаблонной системы</b></a>.</small>
+<br/><br/><br/>
+
+<h3>Пример заполнения шаблона (устаревший формат)</h3>
+<br/>
+В примере показан минимально набор для полнофункциональной работы:
+<div class="pre">
+<pre>
+&lt;form name="registration" action="{form_action}" method="post">
+&lt;input type="hidden" name="type" value="doregister" />
+{entries}
+[captcha]&lt;img src="{admin_url}/captcha.php"> &lt;input type="text" name="vcode" />&lt;br/>[/captcha]
+&lt;input type="submit" class="button" value="{l_send_pass}" />
+&lt;/form>
+</pre>
+</div>
+* <small> - что такое переменная <b>{admin_url}</b> и как ей пользоваться можно узнать в описании <a href="templates.html"><b>шаблонной системы</b></a>.</small>
+
+
+</body>
+</html>

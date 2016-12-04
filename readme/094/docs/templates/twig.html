@@ -1,0 +1,213 @@
+<html>
+	<head>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushTwig.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблонизатор <span class="twig">TWIG</span></h3>
+			<div class="text">
+				<p>Долгое время в NGCMS использовалась собственная шаблонная система. С одной стороны она давала некоторую гибкость при разработке шаблонов, с другой - лёгкость в реализации. Основным же недостатком являлись крайне скудные возможности использования условных блоков, что приводило к созданию массы ненужных файлов-шаблонов и не позволяло проявить должную гибкость при создании шаблонов, значительно отличающихся от "базового" шаблона.</p><br />
+				<p>Все эти недостатки привели к необходимости найти альтертативу. И она была найдена - <a href="http://twig.sensiolabs.org/doc/templates.html" target="_blank">компилирующий шаблонизатор TWIG</a>.</p><br />
+				<p><span class="twig">TWIG</span> объединяет в себе высокую производительность (каждый шаблон автоматически компилируется в чистый PHP код) и огромную гибкость. При этом ядро <span class="twig">TWIG</span>'а предусматривает широкие возможности по расширению базового функционала и даже позволяет обеспечить (в определённых рамках) обратную совместимость с текущим (старым) шаблонизатором.</p><br />
+				<p>Документацию по <span class="twig">TWIG</span>'у можно почитать на сайте разработчика, на этой же странице будет рассказано о глобальных переменных/функциях NGCMS, доступных в любых <span class="twig">TWIG</span> шаблонах.</p>
+			</div>
+			<h3>Использование шаблонизатора <span class="twig">TWIG</span> в шаблонах</h3>
+			<div class="text">
+				В NGCMS существует 2 типа шаблонов:
+				<ul class="level-1">
+					<li><span class="twig">TWIG</span> на базе <span class="twig">TWIG</span> - в этих шаблонах синтаксис <span class="twig">TWIG</span> можно использовать сразу.</li>
+					<li>Обычные шаблоны - в них <span class="twig">TWIG</span> функции доступны внутри блока [TWIG] .. [/TWIG].</li>
+				</ul>
+			</div>
+			<h3>Глобальные функции</h3>
+			<div class="text">
+				<ul class="level-1">
+					<li>
+						<b>template_from_string(<span class="blue">$variable</span>)</b> - встроенная <span class="twig">TWIG</span> функция, позволяет исполнять <span class="twig">TWIG</span> шаблон из переменной.<br />
+						Пример использования, позволяет выполнить <span class="twig">TWIG</span> шаблон из переменной category.info (описание категории для режима работы "вывод новостей из категории") шаблона news.table.tpl:<br />
+						
+<pre class="brush: twig;">
+{% if (handler == 'by.category') %}
+	{% include template_from_string(category.info) %}
+{% endif %}
+</pre>
+						
+					</li>
+					<li>
+						<b>pluginIsActive(<span class="blue">$pluginName</span>)</b> - сообщает включен ли плагин <b>$pluginName</b> (1 - активен, 0 - нет), обычно используется для отображения элементов плагина только в том случае, если данный плагин включен (активен).<br />
+						Пример, выводящий строку '* плагин tags активен *' в случае, если плагин tags включен в админ-панели:<br />
+						
+<pre class="brush: twig;">
+{% if pluginIsActive('tags') %}
+ 	* плагин tags активен *
+{% endif %}
+</pre>
+						
+					</li>
+					<li>
+						<b>localPath(0)</b> - возвращает путь нахождения текущего шаблона, содержимое блока отображается в случае, если для категории определена иконка. Используется в случае, когда вы внутри шаблона хотите подключить другой шаблон из того же каталога.<br />
+						<i>Параметр (0) - обязателен.</i><br />
+						Пример подключения шаблона "conf.navi.tpl" из текущего каталога:
+						
+<pre class="brush: twig;">
+	{% include localPath(0) ~ "conf.navi.tpl" %}
+</pre>
+						
+					</li>
+					<li>
+						<b>getLang(0)</b> - возвращает текущий язык.<br />
+						<i>Параметр (0) - обязателен.</i><br />
+					</li>
+					<li>
+						<b>isLang(<span class="blue">$lang</span>)</b> - возвращает <b>true</b> если текущий язык - $lang<br />
+						<i>Параметр ($lang) - обязателен.</i><br />
+					</li>
+					<li>
+						<b>isHandler(<span class="blue">$rule</span>)</b> - возвращает <b>true</b> в случае, если текущее местоположение пользователя соотвествует указанным правилам в <b>$rule</b><br />
+						Формат переменной <b>$rule</b>: ENTRY1[|ENTRY2[|ENTRY3[...]]]<br />
+						Формат записи ENTRYx: PLUGIN[:HANDLER]<br/> где:<br />
+						<b>PLUGIN</b> - ID плагина<br/> <b>HANDLER</b> - ID обработчика (если указан)<br />
+						
+<pre class="brush: twig;">
+{% if isHandler('tags|news:main') %}
+ 	* Пользователь находится на главной странице или на странице плагина tags *
+{% endif %}
+</pre>
+						
+					</li>
+					<li>
+						<b>isCategory(<span class="blue">$list</span>)</b> - работа с текущей категорией посетителя (если он находится в категории)<br />
+						Функция <b>isCategory</b> поддерживает 2 режима работы:
+						<ul class="level-1">
+							<li>
+								Возвращает <b>true</b> в случае, если пользователь находится в одной из указанных в <b>$list</b> категориях.<br />
+								Список разделяется запятыми, в качестве элемента можно использовать как альт. имя так и ID категории.<br />
+								
+<pre class="brush: twig;">
+{% if isCategory('news,plugins,15') %}
+	* Пользователь находится в одной из категорий - с альт. именами 'news', 'plugin', либо с id 15 *
+{% endif %}
+</pre>
+								
+							</li>
+							<li>
+								Возвращает информацию о текущей категории (если пользователь сейчас в какой-либо категории).<br />
+								Допустимые значения для параметра <b>$list</b>:
+								<ul class="level-1">
+									<li><b>:id</b> - возвращает ID категории</li>
+									<li><b>:alt</b> - возвращает альт. имя категории</li>
+									<li><b>:name</b> - возвращает имя категории</li>
+									<li><b>:icon</b> - возвращает <b>true</b> если у категории есть прикрепленная иконка (изображение)</li>
+									<li><b>:icon.url</b> - возвращает URL прикрепленной иконки</li>
+									<li><b>:icon.width</b> - возвращает ширину прикрепленной иконки</li>
+									<li><b>:icon.height</b> - возвращает высоту прикрепленной иконки</li>
+									<li><b>:icon.preview</b> - возвращает <b>true</b> если у прикрепленной иконки есть уменьшенное изображение (превьюшка)</li>
+									<li><b>:icon.preview.url</b> - возвращает URL для превью прикрепленной иконки</li>
+									<li><b>:icon.preview.width</b> - возвращает ширину для превью прикрепленной иконки</li>
+									<li><b>:icon.preview.height</b> - возвращает высоту для превью прикрепленной иконки</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<b>isNews(<span class="blue">$rule</span>)</b> - работа с текущей новостью посетителя (если он находится в новости).<br />
+						Формат переменной <b>$rule</b>: ENTRY1[|ENTRY2[|ENTRY3[...]]]<br />
+						Формат записи ENTRYx: TYPE[:LIST] <i>или</i>LIST (в этом случае TYPE == news)<br />
+						где:<br />
+						<b>TYPE</b> - тип записи, доступные типы:<br />
+						<ul class="level-1">
+							<li><b>news</b> - новость (ID или альт. имя)</li>
+							<li><b>cat</b> - категория (ID или альт. имя)</li>
+							<li><b>mastercat</b> - главная категория (ID или альт. имя)</li>
+						</ul>
+						<b>LIST</b> - список значений через запятую<br />
+						
+<pre class="brush: twig;">
+{% if isNews('my_news,very_happy,15|mastercat:12,games') %}
+	* Пользователь находится в новости с: альт. именем "my_news" или "very_happy" или с ID 15 или главная категория новости имеет ID 12 или главная категория новости имеет альт. имя "games" *
+{% endif %}
+</pre>
+						
+					</li>
+					<li>
+						<b>engineMSG(<span class="blue">$type</span>, <span class="blue">$text</span>, <span class="blue">$info</span>)</b> - выводит сообщение CMS в стиле текущего шаблона.<br />
+						где:<br />
+						<ul class="level-1">
+							<li><b>$type</b> - тип сообщения (common, error, info)</li>
+							<li><b>$text</b> - текст сообщения</li>
+							<li><b>$info</b> - дополнительная информация (необязательный параметр)</li>
+						</ul>
+					</li>
+					<li><b>isSet(<span class="blue">$variable</span>)</b> - возвращает <b>true</b> если переменная с именем $variable определена.</li>
+					<li><b>callPlugin(<span class="blue">$function, $variable</span>)</b> - вызывает функцию <b>$function</b> и передаёт ей параметр <b>$variable</b>.</li>
+					<li><b>debugContext(<span class="blue">0</span>)</b> - выводит на экран отладочную информацию по всем доступным в данном месте переменным с их значениями.<br /><i>Использовать только для отладки !!</i></li>
+					<li>
+						<b>debugValue(<span class="blue">$variable</span>)</b> - выводит на экран отладочную информацию по содержимому указанной переменной.<br /><i>Использовать только для отладки !!</i>
+						
+<pre class="brush: twig;">
+&lt;!-- Выводим все параметры глобальной переменной handler --&gt;
+{{ debugValue(handler) }}
+</pre>
+						
+					</li>
+					<li>
+						<b>getCategoryTree(<span class="blue">$filter</span>)</b> - выводит массив с деревом категорий в формате, описанном в шаблоне news.categories.tpl.<br />
+						где:<br />
+						<b>$filter</b> - фильтр выдаваемой информации:<br />
+						<ul class="level-1">
+							<li><b>не определён</b> - если переменная не определена (не передаётся в функцию), то выводится полное дерево категорий</li>
+							<li><b><span class="blue">ID</span></b> - вывести категорию и всех её детей</li>
+							<li><b>:<span class="blue">ID</span></b> - вывести всех детей заданной категории</li>
+						</ul>
+						
+<pre class="brush: twig;">
+&lt;!-- Выводим всех детей категории с ID=6 --&gt;
+{% for entry in getCategoryTree(':6') %}
+	[{{entry.id}}]({{ entry.level }}) {{ entry.cat }}
+{% endfor %}
+</pre>
+						
+					</li>
+				</ul>
+			</div>
+			<h3>Глобальные переменные</h3>
+			<div class="text">
+				<ul class="level-1">
+					<li>
+						<b>lang</b> - глобальная переменная с языковыми константами, аналогична конструкции <b>{l_<span class="blue">Variable</span>}</b> в старом шаблонизаторе.<br />
+						Пример:
+						
+<pre class="brush: twig;">
+{{ lang['Variable'] }}
+</pre>
+						
+					</li>
+					<li><b>{{ skins_url }}</b> - аналог переменной <b>{skins_url}</b></li>
+					<li><b>{{ admin_url }}</b> - аналог переменной <b>{admin_url}</b></li>
+					<li><b>{{ tpl_url }}</b> - аналог переменной <b>{tpl_url}</b></li>
+					<li><b>handler</b> - глобальная переменная <b>$CurrentHandler</b> (массив)</li>
+					<li>
+						<b>global</b> - специальный массив с различными полезными <u>глобальными</u> параметрами:
+						<ul class="level-1">
+							<li><b>user</b> - структура с строчкой из таблицы ng_users залогиненного пользователя (<i>пример:</i> <b>global.user.name</b> - логин пользователя)
+							<li>
+								<b>flags</b> - массив с флагами:
+								<ul class="level-1">
+									<li><b>isLogged</b> - принимает значение (1) если текущий посетитель - залогиенный пользователь</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

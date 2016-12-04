@@ -1,0 +1,102 @@
+<html>
+	<head>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<link media="screen" href="style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Список изменений в шаблонах между версиями 0.9.3 по 0.9.4</h3>
+			<div class="text">
+				0. В начале общим пунктом стоит отметить, что NG постепенно переходит на новый шаблонизатор. Конечной целью является полный переход на TWIG и отказ от старого шаблонизатора.<br>
+				В данной версии NG во всех основных TWIG шаблонах оставлена поддержка старых переменных с целью обеспечения максимальной обратной совместимости, но в последующих релизах эта совместимость не будет поддерживаться.<br>
+				Таким образом, в данной версии в ряде шаблонов можно писать, например, как {tpl_url}, так и {{ tpl_url }}<br>
+				Конструкция [TWIG] ... [/TWIG] используется там, где требуется использовать новые TWIG конструкции, но шаблон строится старым шаблонезатором.<br>
+				Подробнее в документации в разделе "Шаблонизатор TWIG".
+			</div>
+			<div class="text">
+				1. main.tpl - практически полностью переведен на twig, хоть и вывод осуществляется через [TWIG] ... [/TWIG].<br>
+				Пример изменений (подробности смотрите в документации).
+<pre>Было {htmlvars} стало {{ htmlvars }}
+Было {tpl_url} Стало {{ tpl_url }}
+Было {admin_url}/includes/js/functions.js Стало {{ scriptLibrary }}/functions.js
+Было {admin_url}/includes/js/ajax.js Стало {{ scriptLibrary }}/ajax.js
+Было {titles} Стало {{ titles }}
+Было {personal_menu} Стало {{ personal_menu }}
+Было {search_form} Стало {{ search_form }}
+Было {categories} Стало {{ categories }}
+Было {mainblock} Стало {{ mainblock }}
+Было [ifhandler:news:main]Блок только на главной[/ifhandler] Стало {% if isHandler('news:main') %}Блок только на главной{% endif %}</pre>
+			</div>
+			<div class="text">
+				2. В ваш шаблон нужно добавить файл <b>news.table.tpl</b> скопируйте его из дефолтного шаблона или создайте сами.<br>
+				Содержимое файла по умолчанию (подробности смотрите в документации).
+<pre>{% for entry in data %}
+{{ entry }}
+{% else %}
+{{ lang['msgi_no_news'] }}
+{% endfor %}
+{{ pagination }}</pre>
+			</div>
+			<div class="text">
+				3. В файл <b>registration.tpl</b> добавлена поддержка доп. полей для их работы вам необходимо перевести файл на шаблонизатор Twig.<br>
+				В примере показан минимальный набор (подробности смотрите в документации).
+<pre>&lt;form name="registration" action="{{ form_action }}" method="post">
+	&lt;input type="hidden" name="type" value="doregister" />
+
+	{% for entry in entries %}
+		{{ entry.title }} ({{ entry.descr }}): {{ entry.input }}
+	{% endfor %}
+
+	{% if flags.hasCaptcha %}&lt;img src="{{ admin_url }}/captcha.php"> &lt;input type="text" name="vcode" />{% endif %}
+
+	&lt;input type="submit" class="button" value="{l_register}" />
+&lt;/form></pre>
+			</div>
+			<div class="text">
+				4. В файл <b>usermenu.tpl</b> добавлена поддержка Twig.<br>
+				В примере показан минимальный набор (подробности смотрите в документации).
+<pre>{% if (global.flags.isLogged) %}
+	[if-have-perm]
+	&lt;a href="{{ admin_url }}" target="_blank">{{ lang['adminpanel'] }}&lt;/a>
+	&lt;a href="{{ addnews_link }}">{{ lang['addnews'] }}&lt;/a>
+	[/if-have-perm]
+	&lt;a href="{{ profile_link }}">{{ lang['myprofile'] }}&lt;/a>
+	&lt;a href="{{ logout_link }}">{{ lang['logout'] }}&lt;/a>
+{% else %}
+	&lt;script language="javascript">
+		var set_login = 0;
+		var set_pass  = 0;
+	&lt;/script>
+	&lt;form name="login" method="post" action="{{ form_action }}" id="login">
+		&lt;input type="hidden" name="redirect" value="{{ redirect }}" />
+		{{ lang['name'] }}: &lt;input type="text" name="username">
+		{{ lang['password'] }}: &lt;input type="password" name="password">
+		&lt;a href="{{ lost_link }}" >{{ lang['lostpassword'] }}&lt;/a>
+		&lt;a href="{{ lang['registration'] }}" >{{ lang['registration'] }}&lt;/a>
+		&lt;input type="submit" value="{{ lang['login'] }}">
+	&lt;/form>
+{% endif %}</pre>
+			</div>
+			<div class="text">
+				5. Добавлен новый файл <b>news.categories.tpl</b> для удобной генерации меню категорий (подробности смотрите в документации).
+			</div>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		</div>
+	</body>
+</html>

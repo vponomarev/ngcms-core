@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<script type="text/javascript" src="highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="highlighter/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="highlighter/scripts/shBrushXml.js"></script>
+		<script type="text/javascript" src="highlighter/scripts/shBrushCss.js"></script>
+		<script type="text/javascript" src="highlighter/scripts/shBrushPhp.js"></script>
+		<script type="text/javascript" src="highlighter/scripts/shBrushTwig.js"></script>
+		<link type="text/css" rel="stylesheet" href="highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Highlighter - js</h3>
+			<div class="text">
+			
+<pre class="brush: js;">
+function helloSyntaxHighlighter()
+{
+	return "hi!";
+}
+</pre>
+
+			</div>
+			<h3>Highlighter - html</h3>
+			<div class="text">
+
+<pre class="brush: html;">
+&lt;html>
+	&lt;header>
+		&lt;title>{title}&lt;/title>
+	&lt;/header>
+	&lt;body>
+		{content}
+	&lt;/body>
+&lt;/html>
+</pre>
+
+			</div>
+			<h3>Highlighter - css</h3>
+			<div class="text">
+
+<pre class="brush: css;">
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+table.table {
+	width: 100%;
+}
+table.table td {
+	padding: 5px;
+	border: 1px solid #EAEAEA;
+	vertical-align: middle;
+}
+table.table th {
+	padding: 5px;
+	border: 1px solid #EAEAEA;
+	background: #F5F5F5;
+	vertical-align: middle;
+}
+</pre>
+
+			</div>
+			<h3>Highlighter - php</h3>
+			<div class="text">
+
+<pre class="brush: php;">
+$template = array(
+	'vars'	=> array(
+		'what'			=>	engineName,
+		'version'		=>	engineVersion,
+		'home'			=>	home,
+		'titles'		=>	home_title,
+		'home_title'	=>	home_title,
+		'mainblock'	=>	'',
+		'htmlvars'	=> 	'',
+	),
+);
+</pre>
+
+			</div>
+			
+			<h3>Highlighter - twig</h3>
+			<div class="text">
+
+<pre class="brush: twig;">
+{# --------- arrays ----------------------------------- #}
+{{ array.key }}
+ 
+{# --------- filters ---------------------------------- #}
+{{ var|escape }}
+{{ data|json_encode() }}
+{{ "now"|date("m/d/Y") }}
+ 
+{# --------- functions -------------------------------- #}
+{{ cycle(fruits, i) }}
+{{ attribute(object, method, arguments) }}
+{{ dump(user) }}
+ 
+{# --------- tags ------------------------------------- #}
+{% for i in 0..10 %}
+    * {{ i }}
+{% endfor %}
+ 
+{% if kenny.home %}
+    Kenny is at home.
+{% elseif kenny.school %}
+    Kenny is at school.
+{% else %}
+    Kenny is at Starbucks
+{% endif %}
+ 
+{% include 'header.html' %}
+    Body
+{% include 'footer.html' %}
+ 
+ 
+{# --------- multiline comments ------------------------ #}
+{# note: disabled template because we no longer use this
+    {% for user in users %}
+        ...
+    {% endfor %}
+#}
+</pre>
+
+			</div>
+		</div>
+	</body>
+</html>

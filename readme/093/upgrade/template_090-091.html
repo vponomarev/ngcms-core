@@ -1,0 +1,342 @@
+<html>
+<head>
+ <title>Обновление шаблонов с версии 0.9.0 до версии 0.9.1</title>
+ <link href="style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>Изменения в шаблонной системе при переходе с версии 0.9.0 на 0.9.1</h1>
+<p>Разработка версии 0.9.1 заняла значительное время и в процессе работы над версией было внесено достаточное
+количество изменений в шаблонную систему.</p>
+<p>Несмотря на то, что изменений действительно много, вы можете достаточно быстро адаптировать ваш существующий
+шаблон для работы с новой версией. При наличии навыков работы с HTML на адаптацию шаблона у вас уйдёт от 10 до 30 минут.
+</p>
+<br/>
+Список наиболее заметных изменений, произошедших в шаблонной системе:
+<ul>
+<li>Комментарии вынесены в отдельный плагин (<b>comments</b>)</li>
+<li>Работа с учётными записями пользователей вынесена в отдельный плагин (<b>uprofile</b>)</li>
+<li>Созданы специальные страницы для обработки ошибки <b>404: Not found</b></li>
+<li>Создан специальный настроечный файл <b><i>variables.ini</i></b> (функционал из файла navigations.ini перенесён в него)</li>
+</ul>
+
+<br/>
+Для удобства представления изменений перед каждым именем файла добавляется специальный префикс:
+<ul>
+<li>[NEW] - новый шаблон</li>
+<li>[EDIT] - изменения в существующем шаблоне</li>
+<li>[DEL] - удаление существующего файла</li>
+<li>[MOVE] - существующий файл перенесён</li>
+</ul>
+
+<br/><br/>
+<h1>Список изменённых шаблонов/файлов</h1>
+
+<h3><span class="chPrefix">[EDIT]</span> categories.tpl</h3>
+<ul>
+<li>добавился блок [if_link]..[/if_link] - содержимое блока показывается в случае, если элемент меню должен быть ссылкой (см. параметр "Режим отображения ссылок в меню категорий" в настройках категорий)</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> usermenu.tpl</h3>
+<ul>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>переменная {request_uri} переименована в {redirect}, её необходимо использовать в качестве значения для переменной <b>redirect</b> в форме авторизации</li>
+<li>добавилась переменная {logout_link}, её необходимо использовать для ссылки на выход (logout)</li>
+<li>удалён блок [login-err]..[/login-err]. Теперь в случае ошибки авторизации вся информация отображается в новом шаблоне login.tpl</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> news.short.tpl</h3>
+<ul>
+<li>блок [link]..[/link] переименован в [full-link]..[/full-link]</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> news.full.tpl</h3>
+<ul>
+<li>добавлен блок [more]..[/more], его необходимо устанавливать в месте разделения короткой и длинной новостей. логика работы блока: если включена поддержка "Расширенного режима для разделения короткой/полной новостей" (настройки системы => новости) и пользователь указал свой текст разделителя, то выводится пользовательский разделитель. Иначе - выводится содержимое этого блока.</li>
+<li>убран блок [comheader]..[/comheader], теперь вся информация для комментариев выводится плагином comments. для работы комментариев в шаблон необходимо добавить переменную {plugin_comments} в место, где должны отображаться комментарии</li>
+</ul>
+
+<h3><span class="chPrefix">[MOVE]</span> print.tpl</h3>
+<b>print.tpl</b> =&gt; <b>news.print.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[EDIT]</span> main.tpl</h3>
+<ul>
+<li>убрана переменная {metatags}, на её место пришла переменная {htmlvars} (на её месте отображаются не только мета-теги, но и подключаются необходимые JS/CSS библиотеки, включая те, которые подгружают плагины)</li>
+</ul>
+
+<h3><span class="chPrefix">[EDIT]</span> search.table.tpl</h3>
+<ul>
+<li>невидимое (hidden) input-поле action больше не нужно</li>
+<li>переименованы языковые переменные: author => search.filter.author, category => search.filter.category, date => search.filter.date, search => search.submit, found => search.found (т.е. теперь вместо {l_author} надо писать {l_search.filter.author})</li>
+<li>убраны переменные {padeg1}, {padeg2}, {count_all}</li>
+</ul>
+Добавлены следующие элементы:
+<ul>
+<li>переменная {form_url}, её необходимо использовать в качестве action'а для формы</li>
+<li>языковые переменные {l_search.found}, {l_search.notfound}</li>
+<li>переменная {count} (кол-во найденных новостей)</li>
+<li>блок [found]..[/found] - отображается только в случае, если что-то нашли (в него удобно класть отображение информации о кол-ве найденных новостей)</li>
+<li>блок [found]..[/found] - отображается только в случае, если что-то нашли (в него удобно класть отображение информации о кол-ве найденных новостей)</li>
+<li>блок [notfound]..[/notfound] - отображатеся только в случае, если ничего найти не удалось</li>
+<li>блок [error]..[/error] и языковая переменная {l_search.error} - отображается в случае, если неверно указаны входные параметры (обычно - если не задан текст для поиска)</li>
+</ul>
+
+
+<h3><span class="chPrefix">[EDIT]</span> search.form.tpl</h3>
+<ul>
+<li>добавилась переменная {form_url}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>невидимое (hidden) input-поле action больше не нужно</li>
+</ul>
+
+<h3><span class="chPrefix">[MOVE]</span> search.entries.tpl <i>[необязательный шаблон]</i></h3>
+<b>search.entries.tpl</b> =&gt; <b>news.search.tpl</b><br/>
+// Шаблон для отображения найденных новостей (в списке). При его отсутствии используется шаблон <b>news.short.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[EDIT]</span> lostpassword.tpl</h3>
+<ul>
+<li>переменная {php_self} заменена на {form_action} (используется в качестве <b>action</b> для тега <b>&lt;form></b></li>
+<li>удалена переменная <b>action</b> из формы</li>
+</ul>
+<br/>
+
+<h3><span class="chPrefix">[EDIT]</span> registration.tpl</h3>
+<ul>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации (ранее в некоторых случаях там использовалась переменная {php_self} либо {register_link}. обе переменные сейчас недоступны)</li>
+<li>невидимое (hidden) input-поле action больше не нужно</li>
+</ul>
+
+<h3><span class="chPrefix">[NEW]</span> login.tpl</h3>
+// Отдельная форма авторизации.<br/>
+Отображается на сайте при заходе на URL логина, а также при неправильном указании логина/пароля при авторизации через usermenu.tpl<br/>
+Допустимые переменные:
+<ul>
+<li>{form_action} - URL формы-обработчика</li>
+<li>{redirect} - значение, которое необходимо передать в скрытом поле ввода <b>redirect</b>, позволяет вернуться обратно на страницу (внутри сайта), с которой пользователь авторизовывался</li>
+</ul>
+В форме должны использоваться переменные:
+<ul>
+<li><b>username</b> - логин пользователя</li>
+<li><b>password</b> - пароль пользователя</li>
+</ul>
+
+<h3><span class="chPrefix">[NEW]</span> 404.internal.tpl</h3>
+// Шаблон страницы для ошибки "404.Объект не найден" (шаблон для отображения внутри общего шаблона <b>main.tpl</b>)<br/>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> 404.external.tpl</h3>
+// Шаблон страницы для ошибки "404.Объект не найден" (шаблон для отображения вместо общего шаблона)<br/>
+// Рекомендуемый размер страницы - не менее 1kb, иначе некоторые браузеры не будут отображать содержимое страницы.<br/>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> comments.show.tpl</h3>
+<b>comments.show.tpl</b> =&gt; <b>plugins/comments/comments.show.tpl</b><br/>
+<ul>
+<li>Для правильной отработки ссылки на цитирование необходимо в блоке [quote]..[/quote] ссылку прописывать так (т.е. добавить <b>return false;</b>):
+<div class="pre"><pre>
+[quote]&lt;a href="" onclick="quote('{author}'); return false;" title="{l_quote}"&gt; {l_quote}&lt;/a&gt;[/quote]
+</pre></div>
+</li>
+</ul>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> comments.form.tpl</h3>
+<b>comments.form.tpl</b> =&gt; <b>plugins/comments/comments.form.tpl</b><br/>
+<ul>
+<li>изменён блок JS кодов, отвечающих за добавление комментариев через AJAX, необходимо этот блок взять из стандартной поставки. Также из стандартной поставки желательно взять заголовочную часть (идёт сразу за JS кодом) либо сделать по аналогии:
+<div class="pre"><pre>
+&lt;div id="new_comments">&lt;/div>
+&lt;form id="comment" method="post" action="{post_url}" name="form" [ajax]onsubmit="add_comment(); return false;"[/ajax]>
+&lt;input type="hidden" name="newsid" value="{newsid}" />
+&lt;input type="hidden" name="referer" value="{request_uri}" />
+</pre></div>
+</li>
+<li>добавилась переменная {post_url}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>добавилась переменная {request_uri}, её значение необходимо передавать в hidden-переменную <b>referer</b> для корректной переадресации обратно к новости при добавлении комментария и отключении AJAX режима:
+<div class="pre"><pre>
+&lt;input type="hidden" name="referer" value="{request_uri}" />
+</pre></div>
+</li>
+<li>теперь для текстового блока &lt;textarea&gt; необходимо указывать id="content":
+<div class="pre"><pre>
+&lt;textarea name="content" id="content" style="width: 95%;" rows="8"&gt;&lt;/textarea&gt;
+</pre></div>
+</ul>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.internal.tpl</h3>
+// Шаблон для отображения блока комментариев - шаблон, отображаемый внутри новости (шаблон <b>news.full.tpl</b>)<br/>
+Поддерживаются следующие элементы:
+<ul>
+<li>[comheader]..[/comheader] - блок выводится в случае, если в новости уже есть комментарии</li>
+<li>{entries} - список комментариев (для отображения используется шаблон <b>comments.show.tpl</b>)</li>
+<li>{more_comments} - ссылка "Читать все комментарии" (отображается в случае, если комментарии к новости не помещаются на первой странице внутри новости)</li>
+<li>{form} - форма добавления комментариев</li>
+</ul>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> plugins/comments/comments.external.tpl</h3>
+// Шаблон для отображения блока комментариев на странице плагина комментариев (отображение второй и далее страницы комментариев к новости)<br/>
+Поддерживается тот же набор переменных, что и в шаблоне <b>comments.internal.tpl</b>, а также дополнительные элементы:
+<ul>
+<li>{link} - ссылка на новость, к которой показываются комментарии</li>
+<li>{title} - название новости, к которой показываются комментарии</li>
+</ul>
+<br/>
+
+<h3><span class="chPrefix">[EDIT]</span> bbcodes.tpl</h3>
+// Шаблон отвечает за вывод BB кодов в форме добавления комментариев.
+В связи с тем, что некоторые новые браузеры некорректно поддерживают конструкцию вида:
+<div class="pre">
+<pre>
+&lt;a href="javascript:insertext('[b]','[/b]', '{area}')" title='{l_qt_bold}'> ...
+</pre></div>
+в шаблоне была повсеместно проведена замена на код:
+<div class="pre">
+<pre>
+&lt;a onclick="insertext('[b]','[/b]', '{area}')" title='{l_qt_bold}'> ...
+</pre></div>
+а также содержимое всего файла <b>bbcodes.tpl</b> взять в блок:
+<div class="pre">
+<pre>
+&lt;span id="tags">
+...содержимое...
+&lt;/span>
+</pre></div>
+Рекомендуем использовать в своём шаблоне файл из стандартной поставки.<br/>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> error.tpl</h3>
+<b>error.tpl</b> =&gt; <b>plugins/comments/comments.error.tpl</b><br/>
+// Шаблон используется при отображении ошибки добавления комментария в AJAX режиме<br/>
+В шаблоне изменена логика работы кнопки "Закрыть", рекомендуем в вашем шаблоне использовать файл из поставки.<br/>
+<br/>
+
+
+
+<h3><span class="chPrefix">[MOVE]</span> users.tpl</h3>
+<b>users.tpl</b> =&gt; <b>plugins/uprofile/users.tpl</b><br/>
+<ul>
+<li>Языковые переменные перенесены в плагин <b>uprofile</b>, теперь вместо {l_<b>var</b>} нужно писать {l_uprofile:<b>var</b>}<br/>Пример: вместо <b>{l_icq}</b> нужно писать <b>{l_uprofile:icq}</b></li>
+</ul>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> profile.tpl</h3>
+<b>profile.tpl</b> =&gt; <b>plugins/uprofile/profile.tpl</b><br/>
+<ul>
+<li>Языковые переменные перенесены в плагин <b>uprofile</b>, теперь вместо {l_<b>var</b>} нужно писать {l_uprofile:<b>var</b>}<br/>Пример: вместо <b>{l_icq}</b> нужно писать <b>{l_uprofile:icq}</b></li>
+<li>добавилась переменная {form_action}, её необходимо использовать в качестве action'а для формы авторизации</li>
+<li>в форме необходимо добавить скрытое поле:
+<div class="pre"><pre>
+&lt;input type="hidden" name="plugin_cmd" value="apply" />
+</pre></div></li>
+</ul>
+<br/>
+
+<h3><span class="chPrefix">[MOVE]</span> static.tpl</h3>
+<b>static.tpl</b> =&gt; <b>static/default.tpl</b><br/>
+<br/>
+
+<h3><span class="chPrefix">[DEL]</span> activation.tpl</h3>
+Шаблон более не требуется.<br/>
+<br/>
+
+<h3><span class="chPrefix">[DEL]</span> addnews.tpl</h3>
+Шаблон более не требуется.<br/>
+<br/>
+
+<h3><span class="chPrefix">[DEL]</span> quicktags.tpl</h3>
+Шаблон более не требуется.<br/>
+<br/>
+
+<h3><span class="chPrefix">[NEW]</span> redirect.tpl</h3>
+// Шаблон страницы переадресации (используется в случае, когда пользователя надо о чём-то проинформировать и вернуть его обратно)<br/>
+Допустимые переменные:
+<ul>
+<li>{title} - заголовок страницы</li>
+<li>{message} - сообщение для пользователя</li>
+<li>{link} - URL страницы-переадресации</li>
+<li>{linktext} - текст, отображаемый на URL'е переадресации</li>
+</ul>
+<br/>
+
+
+<h3><span class="chPrefix">[DEL]</span> navigation.ini</h3>
+Настройки из этого файла перенесены в файл variables.ini (блок <b>[navigation]</b>)
+<br/><br/>
+
+<h3><span class="chPrefix">[NEW]</span> variables.ini</h3>
+Набор общих переменных, которые не были вынесены в отдельные шаблоны.<br/>
+Пример заполнения файла с комментариями:
+<div class="pre">
+<pre>
+<div class="comment">; Настройка панели постраничной навигации</div>
+[navigation]
+<div class="comment">; Формат ссылки `предыдущая страница`</div>
+prevlink	= "&lt;a href='%link%'>%page%</a> "
+<div class="comment">; Формат ссылки `следующая страница`</div>
+nextlink	= "&lt;a href='%link%'>%page%&lt;/a> "
+<div class="comment">; Формат ссылки `текущая страница`</div>
+current_page	= " &lt;b>[%page%]&lt;/b> "
+<div class="comment">; Формат ссылки `страница`</div>
+link_page	= "&lt;a href='%link%'>%page%&lt;/a> "
+<div class="comment">; Разделитель блока ссылок (многоточие)</div>
+dots		= " ... "
+
+<div class="comment">; Настройка отображения системных сообщений/ошибок</div>
+[messages]
+<div class="comment">; Сообщение об ощибке</div>
+msg.error	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>"
+<div class="comment">; Информационный блок к сообщению об ошибке</div>
+msg.error_info	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+<div class="comment">; Системное сообщение (об успешно выполненном действии)</div>
+msg.common	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>"
+<div class="comment">; Информационный блок к системному сообщению</div>
+msg.common_info	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+<div class="comment">; Отдельно создаваемый информационный блок</div>
+msg.info	= "&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+
+<div class="comment">; Настройка BB кодов</div>
+[bbcodes]
+<div class="comment">; ** URL ** (параметры BB кода)</div>
+<div class="comment">; Стиль по умолчанию для BB кода URL (если не задан в самом BB коде)</div>
+;url.class.default	= ""
+
+<div class="comment">; Задавать стиль для BB кода URL (вне зависимости от того задан ли стиль в BB коде)</div>
+;url.class.force	= ""
+
+<div class="comment">; Значение параметра <b>target</b> по умолчанию для BB кода URL (если не задан в самом BB коде)</div>
+;url.target.default	= ""
+
+<div class="comment">; Значение параметра <b>target</b> для BB кода URL (вне зависимости от того задан ли стиль в BB коде)</div>
+;url.target.force	= ""
+
+<div class="comment">; ** IMG ** (параметры BB кода)</div>
+;url.class.default	= ""
+;url.class.force	= ""
+
+<div class="comment">; ** ATTACH **</div>
+<div class="comment">; Формат отображения для BB кода <b>[attach]</b>
+; Допустимые параметры:
+; * {url}   - URL файла-вложения
+; * {title} - Имя файла-вложения
+; * {size}  - Размер файла-вложения</div>
+attach.format	= "&lt;a href='{url}'>{title} ({size})&lt;/a>"
+<div class="comment">; Текст, который будет выводиться вместо тега <b>[attach]</b> в случае, если такого файла-вложения не существует</div>
+attach.nonexist	= "[wrong or deleted attach]"
+
+</pre>
+</div>
+
+
+<br/>
+//<br/>
+// Версия от: <b>02:27 13.11.2009</b><br/>
+// Статус: <b style="color: red">разработка завершена, возможно нахождение некоторых мелких ошибок</b><br/>
+//<br/>
+<br/><br/>
+<div class="nav">&copy; <a href="http://ngcms.ru/">Next Generation CMS</a></div>
+
+</body>
+</html>

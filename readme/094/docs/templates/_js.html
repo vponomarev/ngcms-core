@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushCss.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Используемые в работе JavaScript'ы</h3>
+			<div class="text">
+				<p>За внешний вид вашего сайта отвечают шаблоны. Но некоторые элементы управления, предоставляемые ядром CMS, требуют для своей также определённого набора JavaScript'ов. В этом разделе будет дано краткое описание используемых JScript'ов.</p>
+				<p>Все скрипты, необходимые для работы ядра CMS, находятся в папке <b>lib</b>, вот их краткое описание:</p>
+				<ul class="level-1">
+					<li><b>admin.js</b> - JScript необходимый для работы админ-панели</li>
+					<li><b>ajax.js</b> - библиотека для работы AJAX-based функционала (немного модифицированная `<i>Simple AJAX Code-Kit (SACK) v1.6.1</i>`)</li>
+					<li><b>functions.js</b> - набор функций общего пользования</li>
+				</ul>
+			</div>
+			<h3>Библиотека admin.js</h3>
+			<div class="text">
+				Содержит функцию <b>json_encode()</b>, которая позволяет генерировать JSON код и передавать его в ядро CMS:
+				
+<pre class="brush: js;">
+//
+// Function from PHP to Javascript Project: php.js
+// URL: http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_json_encode/
+function json_encode(mixed_val) {
+...
+</pre>
+				
+			</div>
+			<h3>Библиотека ajax.js</h3>
+			<div class="text">
+				<p>Представляет собой модифицированную библиотеку `<i>Simple AJAX Code-Kit (SACK) v1.6.1</i>` и используется для любых AJAX вызовов в ядре CMS и во всех плагинах.</p>
+			</div>
+			<div class="text">
+				<p>Пример использования данной библиотеки можно найти а плагине <i>comments</i>, в шаблоне по умолчанию:</p>
+				<p><b>/templates/default/plugins/comments/comments.form.tpl</b></p>
+			</div>
+			<h3>Библиотека functions.js</h3>
+			<div class="text">
+				<p>Содержит набор функций общего пользования, отвечающих за работу различных элементов.</p>
+			</div>
+			<h3>Используемые в работе HTML блоки / ID и STYLE элементов</h3>
+			<div class="text">
+				<p>Следует учитывать, что для своей работы ядро CMS (и некоторые плагины) используют фиксированные идентификаторы блоков или заданный заранее набор CSS стилей.</p>
+				<ul class="level-1">
+					<li>Стили CSS:
+						<ul class="level-1">
+							<li>
+								<b>.spoiler</b> - набор стилей для спойлера (BB-тег <b>[spoiler] .. [/spoiler]</b>):
+								
+<pre class="brush: css;">
+/* SPOILERs */
+.spoiler {
+	border:solid 1px #adbac6;
+	background:#ebeef7;
+	margin:5px 0px 5px 0px;
+	padding: 0px;
+	clear:both;
+}
+.spoiler .sp-head {
+	padding:4px 0 4px 2px;
+	cursor: pointer;
+}
+.spoiler .sp-head b {
+	background:url(../images/spoiler-plus.gif) no-repeat;
+	float:left;
+	width:9px;
+	height:9px;
+	margin:2px 4px 0 2px
+}
+.spoiler .sp-head b.expanded {
+	background:url(../images/spoiler-minus.gif) no-repeat;
+	float:left;
+	width:9px;
+	height:9px;
+}
+.spoiler .sp-body {
+	border-top:solid 1px #adbac6;
+	background: #f7f8fc;
+	display: none;
+}
+</pre>
+								
+								При вставке BB-тега он вставляется в виде блока кода:
+								
+<pre class="brush: html;">
+&lt;div class="spoiler">
+	&lt;div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);">&lt;b>&lt;/b>Раскрыть&lt;/div>
+	&lt;div class="sp-body">_тут текст спойлера_&lt;br />&lt;/div>
+&lt;/div>
+</pre>
+								
+							</li>
+							<li><b>.answer</b> - используется при отображении содержимого BB-тега <b>[quote] .. [/quote]</b></li>
+						</ul>
+					</li>
+					<li>
+						Блоки с собственным ID:
+						<ul class="level-1">
+							<li><b>tags</b> - используется при отображении списка BB кодов</li>
+							<li><b>save_area</b> - используется при отображении списка BB кодов</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

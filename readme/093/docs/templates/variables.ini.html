@@ -1,0 +1,100 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3>Конфигурационный файл variables.ini</h3>
+<br/>
+Набор конфигурационных переменных, которые не были вынесены в отдельный шаблон.<br/>
+<br/>
+
+<div class="pre">
+<pre>
+<div class="comment">[configuration]</div>
+; Флаг: Если установлен в 1, то в TWIG массив news.embed будет выгружаться список добавленных (через тег &lt;img&gt;) к новости изображений
+; Использовать с осторожностью - данная функция увеличивает нагрузку на процессор
+extractEmbeddedItems	= 0
+
+; Имя файла аватарки по умолчанию для пользователей, не указавших свой аватар [если переменная не указана, то будет использоваться системная /uploads/avatars/noavatar.jpg ]
+noAvatarImage   = "noavatar.jpg"
+
+<div class="comment">; Настройка панели постраничной навигации</div>
+[navigation]
+<div class="comment">; Формат ссылки `предыдущая страница`</div>
+prevlink	= "&lt;a href='%link%'>%page%</a> "
+<div class="comment">; Формат ссылки `следующая страница`</div>
+nextlink	= "&lt;a href='%link%'>%page%&lt;/a> "
+<div class="comment">; Формат ссылки `текущая страница`</div>
+current_page	= " &lt;b>[%page%]&lt;/b> "
+<div class="comment">; Формат ссылки `страница`</div>
+link_page	= "&lt;a href='%link%'>%page%&lt;/a> "
+<div class="comment">; Разделитель блока ссылок (многоточие)</div>
+dots		= " ... "
+
+<div class="comment">; Настройка отображения системных сообщений/ошибок</div>
+[messages]
+<div class="comment">; Сообщение об ощибке</div>
+msg.error	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>"
+<div class="comment">; Информационный блок к сообщению об ошибке</div>
+msg.error_info	= "&lt;div class='msge'>&lt;img src='{skins_url}/images/error.gif' hspace='10' />{l_msge_error} {text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+<div class="comment">; Системное сообщение (об успешно выполненном действии)</div>
+msg.common	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>"
+<div class="comment">; Информационный блок к системному сообщению</div>
+msg.common_info	= "&lt;div class='msgo'>&lt;img src='{skins_url}/images/msg.gif' hspace='10' />{text}&lt;/div>&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+<div class="comment">; Отдельно создаваемый информационный блок</div>
+msg.info	= "&lt;div class='msgi'>&lt;img src='{skins_url}/images/info.gif' hspace='10' />{l_msgi_info} {info}&lt;/div>"
+
+<div class="comment">; Настройка BB кодов</div>
+[bbcodes]
+<div class="comment">; ** URL ** (параметры BB кода)</div>
+<div class="comment">; Стиль по умолчанию для BB кода URL (если не задан в самом BB коде)</div>
+;url.class.default	= ""
+
+<div class="comment">; Задавать стиль для BB кода URL (вне зависимости от того задан ли стиль в BB коде)</div>
+;url.class.force	= ""
+
+<div class="comment">; Значение параметра <b>target</b> по умолчанию для BB кода URL (если не задан в самом BB коде)</div>
+;url.target.default	= ""
+
+<div class="comment">; Значение параметра <b>target</b> для BB кода URL (вне зависимости от того задан ли стиль в BB коде)</div>
+;url.target.force	= ""
+
+<div class="comment">; ** IMG ** (параметры BB кода)</div>
+;url.class.default	= ""
+;url.class.force	= ""
+
+<div class="comment">; ** ATTACH **</div>
+<div class="comment">; Формат отображения для BB кода <b>[attach]</b>
+; Допустимые параметры:
+; * {url}   - URL файла-вложения
+; * {title} - Имя файла-вложения
+; * {size}  - Размер файла-вложения</div>
+attach.format	= "&lt;a href='{url}'>{title} ({size})&lt;/a>"
+<div class="comment">; Текст, который будет выводиться вместо тега <b>[attach]</b> в случае, если такого файла-вложения не существует</div>
+attach.nonexist	= "[wrong or deleted attach]"
+
+
+
+<div class="comment">; Параметры генерации дерева категорий</div>
+[category_tree]
+<div class="comment">; Имя класса (class) для активной категории (т.е. категории, в которой сейчас находится пользователь)</div>
+class.active	= "active_cat"
+<div class="comment">; Имя класса для неактивной категории</div>
+class.inactive	= ""
+<div class="comment">; Метка по умолчанию для указания глубины вложения подкатегории (метка повтояется X раз, где X - глубина вложенности)</div>
+mark.default = "&#8212;"
+<div class="comment">; Персональная метка для вложения уровня 0 (т.е. для категорий, не имеющих родительской категории)</div>
+;mark.level.0 = ""
+<div class="comment">; Персональная метка вложения уровня 1</div>
+;mark.level.1 = "=>"
+<div class="comment">; Персональная метка вложения уровня 2</div>
+;mark.level.2 = "==>"
+<div class="comment">; ... и так далее (до уровня 99999)</div>
+
+</pre>
+</div>
+
+
+
+</body>
+</html>

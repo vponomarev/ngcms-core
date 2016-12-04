@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251;">
+<title></title>
+<link href="css/global.css" rel="stylesheet" type="text/css">
+<script src="js/jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('div.menu ul li.selected').parents('ul').show();
+    $('div.menu ul li.selected').children('ul').show();
+    $('div.menu ul li:has(ul) > a').click(function() {
+        $(this).next('ul').slideToggle('slow')
+        return false;
+    });
+});
+</script>
+</head>
+<body>
+
+<div class="minWidth">
+<div class="maincontainer">
+
+
+<div class="menu"> 
+<ul>
+<li><a href="">Знакомство с системой</a>
+<ul>
+<li class="selected"><a href="about.html">Основные сведения</a></li>
+<li><a href="enter.html">Вход в систему управления</a></li>
+<li><a href="components.html">Основные компоненты управления</a></li>
+</ul> 
+</li>
+<li><a href="">Установка системы</a><ul>
+<li><a href="hosting.html">Требования к хостингу</a></li>
+<li><a href="installation.html">Инсталляция</a></li>
+</ul> 
+</li>
+
+<li><a href="">Возможности NGCMS</a><ul>
+<li>
+<a href="">Управление контентом</a>
+<ul>
+<li><a href="news.html">Новости</a></li>
+<li><a href="catigories.html">Категории</a></li>
+<li><a href="static.html">Статические страницы</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Настройки пользователей</a>
+<ul>
+<li><a href="users.html">Управление пользователями</a></li>
+<li><a href="ipban.html">Блокировка IP-адресов</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Системные настройки</a>
+<ul>
+<li><a href="config.html">Настройки системы</a></li>
+<li><a href="dbo.html">Управление базой данных</a></li>
+<li><a href="urls.html">Управление форматом ссылок</a></li>
+</ul> 
+</li>
+<li>
+<a href="">Дополнительные настройки</a>
+<ul>
+<li><a href="plugins.html">Управление плагинами</a></li>
+<li><a href="images.html">Управление изображениями</a></li>
+<li><a href="files.html">Управление файлами</a></li>
+<li><a href="templates.html">Управление шаблонами</a></li>
+</ul> 
+</li>
+</ul> 
+</li>
+
+</ul> 
+</div>
+
+<div class="rightside">  
+<h1>О NGCMS</h1>
+<p>
+<p class="img"><img src="images/screenshots/logotype_2.png" /></p>
+Система управления контентом Next Generation CMS (NGCMS) является универсальной платформой, позволяющей легко создавать и поддерживать профессиональные веб-сайты практически любого уровня сложности. Большинством функций CMS сможет управлять человек, обладающий элементарными навыками работы с офисными приложениями. Продвинутые пользователи с помощью документации смогут организовать интернет проект со своими уникальными возможностями.
+<br/><br/>
+NGCMS строится по модульной архитектуре. Любой сайт, созданный на базе NGCMS всегда состоит из следующего набора элементов: 
+<ul class="spisok">
+<li>Ядро - достаточно компактный блок кода, реализующий логику работы CMS, имеющий собственный шаблонизатор, а также админ-панель (фактически - это специализированный framework). В ядро также входит функционал работы с новостями и статическими страницами, но в ближайшем будущем эти функции также будут выделены в отдельные плагины.</li>
+<li>Плагины - расширения базовой функциональности. Именно благодаря плагинам NGCMS становится гибким решением, позволяющим реализовать самые разные задачи.</li>
+<li>Шаблон - набор файлов, отвечающих за генерацию результирующей HTML страницы, которую и видит посетитель</li>
+</ul>
+</p>
+<p class="zametka">
+Официальный сайт: <a href="http://ngcms.ru/">http://ngcms.ru/</a> <br/>
+Форум поддержки: <a href="http://ngcms.ru/forum/">http://ngcms.ru/forum/</a> <br/>
+GIT репозиторий проекта: <a href="https://github.com/vponomarev/ngcms-core">https://github.com/vponomarev/ngcms-core</a> <br/>
+GIT репозиторий плагинов: <a href="https://github.com/vponomarev/ngcms-plugins/">https://github.com/vponomarev/ngcms-plugins/</a> <br/>
+</p>
+
+</div>    
+</div>
+  <div class="clear"></div>
+</div>
+
+<div id="bottom">
+  <div class="bottom-inner">
+    <p>© 2008-2012 Next Generation CMS
+  </div>
+</div>
+</div>
+</body>

@@ -1,0 +1,77 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблон login.tpl</h3>
+			<div class="text">
+				Шаблон отвечает за вывод отдельного меню авторизации.<br />
+				Меню выводится в двух случаях:
+				<ul class="level-1">
+					<li>При заходе на выделенную страницу авторизации (по умолчанию: <b>/login/</b>).</li>
+					<li>В случае неуспешной авторизации (как через краткую форму из <b>usermenu.tpl</b> так и через шаблон <b>login.tpl</b>).</li>
+				</ul>
+			</div>
+			<h3>Доступные блоки/переменные</h3>
+			<div class="text">
+				Блоки:
+				<ul class="level-1">
+					<li><b>[error]</b> ... <b>[/error]</b> - Содержимое блока отображается в случае ошибки авторизации.</li>
+					<li><b>[banned]</b> ... <b>[/banned]</b> - Содержимое блоко отображается в случае, если конкретному пользователю или его IP адресу/подсети с которой заходит пользователь запрещен доступ.</li>
+					<li><b>[need.activate]</b> ... <b>[/need.activate]</b> - Содержимое блоко отображается в случае, если пользователь не активирован.</li>
+				</ul>
+				Переменные:
+				<ul class="level-1">
+					<li><b>{form_action}</b> - URL формы-обработчика.</li>
+					<li><b>{redirect}</b> - Значение, которое необходимо передать в скрытом поле ввода redirect, позволяет вернуться обратно на страницу (внутри сайта), с которой пользователь авторизовывался.</li>
+				</ul>
+				Шаблон должен содержать форму (тег <b>&lt;form></b>, метод запроса - <b>POST</b>), которая позволит пользователю авторизоваться.<br />
+				В форму должны передаваться следующие переменные:
+				<ul class="level-1">
+					<li><b>redirect</b> (тип: hidden) - Поле, в которое помещается значение переменной <b>{redirect}</b>.</li>
+					<li><b>username</b> (обычно тип: text) - Поле для ввода логина пользователя.</li>
+					<li><b>password</b> (обычно тип: hidden) - Поле для ввода пароля пользователя.</li>
+				</ul>
+				Доступные языковые переменные:
+				<ul class="level-1">
+					<li><b>{l_login.title}</b> - Заголовок блока авторизации.</li>
+					<li><b>{l_login.error}</b> - Стандартное сообщение об ошибке авторизации.</li>
+					<li><b>{l_login.banned}</b> - Стандартное сообщение о том, что пользователю запрещен вход.</li>
+					<li><b>{l_login.need.activate}</b> - Стандартное сообщение о том, что пользователь не активирован.</li>
+					<li><b>{l_login.name}</b> - Текст-описание для поля формы <b>username</b>.</li>
+					<li><b>{l_login.password}</b> - Текст-описание для поля формы <b>password</b>.</li>
+					<li><b>{l_login.submit}</b> - Текст описание для кнопки типа "submit".</li>
+				</ul>
+			</div>
+			<h3>Пример заполнения шаблона</h3>
+			<div class="text">
+				В примере показан минимально набор для полнофункциональной работы:
+				
+<pre class="brush: html;">
+[error]{l_login.error}[/error]
+[banned]{l_login.banned}[/banned]
+[need.activate]{l_login.need.activate}[/need.activate]
+&lt;form name="login" method="post" action="{form_action}">
+	&lt;input type="hidden" name="redirect" value="{redirect}"/>
+
+	{l_login.name}: &lt;input type="text" name="username" />
+	
+	{l_login.password}: &lt;input type="password" name="password" />
+	
+	&lt;input type="submit" value="{l_login.submit}"/>
+&lt;/form>
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

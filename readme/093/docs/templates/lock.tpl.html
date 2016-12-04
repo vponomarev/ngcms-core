@@ -1,0 +1,28 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3>Шаблон lock.tpl</h3>
+<br/>
+В случае, если сайт заблокирован (настройки => настройки системы => основные настройки => заблокировать сайт), и шаблон <b>sitelock.tpl</b> <u>не существует</u>, </b> то в блоке <b>[sitelock] ... [/sitelock]</b> шаблона <a href="main.tpl.html"><b>main.tpl</b></a> отображается содержимое этого (<b>lock.tpl</b>) шаблона (см. также шаблон <a href="sitelock.tpl.html"><b>sitelock.tpl</b></a>).<br/>
+<br/>
+
+<h3>Доступные блоки/переменные</h3>
+Переменные:
+<ul>
+ <li><b>{lock_reason}</b> - причина блокировки сайта, задаётся панели администрирования (настройки => настройки системы => основные настройки => причина блокировки сайта)</li>
+</ul>
+
+<br/>
+<br/>
+<h3>Пример заполнения шаблона</h3>
+<br/>
+<div class="pre">
+<pre>
+&lt;center>&lt;br />{lock_reason}&lt;/center>
+</pre>
+</div>
+
+</body>
+</html>

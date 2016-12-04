@@ -1,0 +1,155 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushTwig.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблон news.categories.tpl <span class="twig">TWIG</span></h3>
+			<div class="text">
+				В отличии от старого варианта, этот шаблон отвечает за генерацию полного меню, а не строки меню.
+			</div>
+			<div class="info-block-2" style="margin:10px 0">
+				Данный шаблон используется для удобной генерации меню категорий (при его отсутствии будет использоваться старый шаблон <a href="categories.tpl.html">categories.tpl</a>).
+			</div>
+			<h3>Доступные переменные</h3>
+			<div class="text">
+				Переменные:
+				<ul class="level-1">
+					<li>
+						<b>entries</b> - массив категорий, каждый элемент массива содержит данные по одной категории:
+						<ul class="level-1">
+							<li><b>id</b> - ID категории</li>
+							<li><b>cat</b> - наименование категории</li>
+							<li><b>link</b> - ссылка для перехода в категорию</li>
+							<li><b>mark</b> - маркер для категории данного уровня (берётся из variables.ini - блок <b>[category_tree]</b>, параметр <b>mark.level.<УРОВЕНЬ></b>, а при отсутствии - <b>mark.default</b>)</li>
+							<li><b>level</b> - уровень вложенности категории (0 - в корне)</li>
+							<li><b>counter</b> - кол-во постов в категории</li>
+							<li><b>icon</b> - ссылка на иконку категории</li>
+							<li><b>closeToLevel</b> - переменная определена если данная категория закрывает собой какой-либо уровень вложенности, переменная содержит уровень <u>к которому</u> закрывается данная категория</li>
+							<li>
+								<b>flags</b> - блок переменных-флагов:
+								<ul class="level-1">
+									<li><b>active</b> - принимает значение `true` (1) в случае, если сейчас пользователь находится именно в этой категории</li>
+									<li><b>counter</b> - принимает значение `true` (1) в случае, если в настройке CMS разрешено отображение счетчика новостей в категории</li>
+									<li><b>hasChildren</b> - принимает значение `true` (1) в случае, если у данной категории есть подкатегории</li>
+									<li><b>closeLevel_<i>X</i></b> - принимает значение `true` (1) в случае, если данная категория закрывает собой уровень вложенности `<u><i>X</i></u>`</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<h3>Совместимость со старым шаблонизатором</h3>
+			<div class="text">
+				<p>Далеко не всем нравится синтаксис TWIG, поэтому для наиболее сложных в восприятии созданы элементы-синонимы.</p>
+				<ul class="level-1">
+					<li><b>[entries]</b>..<b>[/entries]</b> - повторяющийся блок (для каждой категории)</li>
+					<li><b>[flags.active]</b>..<b>[/flags.active]</b> - условный блок, содержимое активно если пользователь сейчас находится в этой категории</li>
+					<li><b>[!flags.active]</b>..<b>[/!flags.active]</b> - условный блок, содержимое активно если пользователь сейчас не находится в этой категории</li>
+					<li><b>[flags.counter]</b>..<b>[/flags.counter]</b> - условный блок, содержимое активно если в настройке CMS разрешено отображение счетчика новостей в категории</li>
+				</ul>
+			</div>
+			<h3>Пример заполнения шаблона</h3>
+			<div class="text">
+			
+<pre class="brush: twig;">
+Меню категорий:<br/>
+{% for entry in entries %}
+	&lt;!-- Выводим маркер категории --&gt;
+	{{ entry.mark }}
+
+	&lt;!-- Если не стоит флаг `flags.active`, т.е. если эта категория - не текущая, то показываем ссылку --&gt;
+	&lt;!-- В текущей категории показываем имя категории жирным шрифтом --&gt;
+	{% if (not entry.flags.active) %}
+		&lt;a href="{{ entry.link }}">
+	{% else %}
+		&lt;b>
+	{% endif %}
+	{{ entry.cat }}
+	{% if (not entry.flags.active) %}
+		&lt;/a>
+	{% else %}
+		&lt;/b>
+	{% endif %}
+
+	&lt;!-- Отображаем кол-во новостей в категории только в случае, если выставлен флаг `flags.counter` --&gt;
+	{% if (entry.flags.counter) %}
+		[ {{ entry.counter }}]
+	{% endif %}
+{% endfor %}
+</pre>
+			
+			</div>
+			<h3>Пример заполнения шаблона с вложенными уровнями через &lt;ul&gt;..&lt;/ul&gt;</h3>
+			<div class="text">
+			
+<pre class="brush: twig;">
+Меню категорий:<br/>
+<ul>
+{% for entry in entries %}
+	&lt;!-- Если не стоит флаг `flags.active`, т.е. если эта категория - не текущая, то показываем ссылку --&gt;
+	&lt;!-- В текущей категории показываем имя категории жирным шрифтом --&gt;
+	&lt;li&gt;
+	{% if (not entry.flags.active) %}
+		&lt;a href="{{ entry.link }}">
+	{% else %}
+		&lt;b>
+	{% endif %}
+	{{ entry.cat }}
+	{% if (not entry.flags.active) %}
+		&lt;/a>
+	{% else %}
+		&lt;/b>
+	{% endif %}
+
+	&lt;!-- Отображаем кол-во новостей в категории только в случае, если выставлен флаг `flags.counter` --&gt;
+	{% if (entry.flags.counter) %}
+		[ {{ entry.counter }}]
+	{% endif %}
+
+
+	&lt;!-- Если у категории есть подкатегории, то открываем новый уровень вложенности --&gt;
+	{% if (entry.flags.hasChildren) %}
+		&lt;ul&gt;
+	{% else %}
+	&lt;/li&gt;
+		&lt;!-- Если после этой категории закрывается 1 или несколько уровней - выводим закрывающиеся &lt;/ul&gt; --&gt;
+		{% if isSet(entry.closeToLevel) %}
+			{% for i in (entry.closeToLevel+1) .. entry.level %}
+				&lt;/ul&gt;&lt;/li&gt;
+			{% endfor %}
+		{% endif %}
+	{% endif %}
+{% endfor %}
+</pre>
+			</div>
+			<h3>Пример заполнения шаблона / режим совместимости</h3>
+			<div class="text">
+			
+<pre class="brush: twig;">
+Меню категорий:<br/>
+[entries]
+	&lt;!-- Выводим маркер категории --&gt;
+	{{ entry.mark }}
+
+	&lt;!-- Если не стоит флаг `flags.active`, т.е. если эта категория - не текущая, то показываем ссылку --&gt;
+	&lt;!-- В текущей категории показываем имя категории жирным шрифтом --&gt;
+	[!flags.active]&lt;a href="{{ entry.link }}">[/!flags.active][flags.active]&lt;b>[/flags.active]{{ entry.cat }}[!flags.active]&lt;/a>[/!flags.active][flags.active]&lt;/b>[/flags.active]
+
+	&lt;!-- Отображаем кол-во новостей в категории только в случае, если выставлен флаг `flags.counter` --&gt;
+	[flags.counter][ {{ entry.counter }}][/flags.counter]
+[/entries]
+</pre>
+			
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

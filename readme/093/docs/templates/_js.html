@@ -1,0 +1,114 @@
+<html>
+<head>
+ <link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h3>Используемые в работе JavaScript'ы</h3>
+<br/>
+<p>За внешний вид вашего сайта отвечают шаблоны. Но некоторые элементы управления, предоставляемые ядром CMS, требуют для своей также определённого набора JavaScript'ов.
+В этом разделе будет дано краткое описание используемых JScript'ов.</p>
+<p>Все скрипты, необходимые для работы ядра CMS, находятся в каталоге <b>engine/includes/js/</b>, вот их краткое описание:</p>
+<ul>
+ <li><b>admin.js</b> - JScript необходимый для работы админ-панели</li>
+ <li><b>ajax.js</b> - библиотека для работы AJAX-based функционала (немного модифицированная `<i>Simple AJAX Code-Kit (SACK) v1.6.1</i>`)</li>
+ <li><b>functions.js</b> - набор функций общего пользования</li>
+</ul>
+<br/>
+
+<h3>Библиотека admin.js</h3>
+<br/>
+Содержит функцию <b>json_encode()</b>, которая позволяет генерировать JSON код и передавать его в ядро CMS:
+<div class="pre">
+<pre>
+//
+// Function from PHP to Javascript Project: php.js
+// URL: http://kevin.vanzonneveld.net/techblog/article/javascript_equivalent_for_phps_json_encode/
+function json_encode(mixed_val) {
+...
+</pre>
+</div>
+<br/>
+<h3>Библиотека ajax.js</h3>
+<br/>
+<p>Представляет собой модифицированную библиотеку `<i>Simple AJAX Code-Kit (SACK) v1.6.1</i>` и используется для любых AJAX вызовов в ядре CMS и во всех плагинах.</p>
+<br/>
+<p>Пример использования данной библиотеки можно найти а плагине <i>comments</i>, в шаблоне по умолчанию:<br/>
+<b>/templates/default/plugins/comments/comments.form.tpl</b></p>
+<br/>
+
+<h3>Библиотека functions.js</h3>
+<br/>
+Содержит набор функций общего пользования, отвечающих за работу различных элементов.<br/>
+<br/><br/>
+
+<h3>Используемые в работе HTML блоки / ID и STYLE элементов</h3>
+<br/>
+<p>Следует учитывать, что для своей работы ядро CMS (и некоторые плагины) используют фиксированные идентификаторы
+блоков или заданный заранее набор CSS стилей.</p>
+<ul>
+ <li>Стили CSS:
+	<ul>
+	 <li><b>.spoiler</b> - набор стилей для спойлера (BB-тег <b>[spoiler] .. [/spoiler]</b>):
+<div class="pre">
+<pre>
+/* SPOILERs */
+.spoiler {
+	border:solid 1px #adbac6;
+	background:#ebeef7;
+	margin:5px 0px 5px 0px;
+	padding: 0px;
+	clear:both;
+}
+
+.spoiler .sp-head {
+	padding:4px 0 4px 2px;
+	cursor: pointer;
+}
+
+.spoiler .sp-head b {
+	background:url(/templates/default/images/spoiler-plus.gif) no-repeat;
+	float:left;
+	width:9px;
+	height:9px;
+	margin:2px 4px 0 2px
+}
+
+.spoiler .sp-head b.expanded {
+	background:url(/templates/default/images/spoiler-minus.gif) no-repeat;
+	float:left;
+	width:9px;
+	height:9px;
+}
+
+.spoiler .sp-body {
+	border-top:solid 1px #adbac6;
+	background: #f7f8fc;
+	display: none;
+}
+</pre>
+</div>
+При вставке BB-тега он вставляется в виде блока кода:
+<div class="pre">
+<pre>
+&lt;div class="spoiler">
+ &lt;div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);">&lt;b>&lt;/b>Раскрыть&lt;/div>
+ &lt;div class="sp-body">_тут текст спойлера_&lt;br />&lt;/div>
+&lt;/div>
+</pre>
+</div>
+	</li>
+	<li><b>.answer</b> - используется при отображении содержимого BB-тега <b>[quote] .. [/quote]</b></li>
+	</ul>
+</li>
+<li>Блоки с собственным ID:
+ <ul>
+  <li><b>tags</b> - используется при отображении списка BB кодов</li>
+  <li><b>save_area</b> - используется при отображении списка BB кодов</li>
+ </ul>
+
+</li>
+</ul>
+
+
+</body>
+</html>

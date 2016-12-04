@@ -1,0 +1,126 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Файл-описание шаблона `version`</h3>
+			<div class="text">
+				Каждый шаблон обязан содержать собственный файл-содержание. С его помощью ядро CMS определяет параметры шаблона (его автора, дату выпуска, уникальный идентификатор), а также картинку-предпросмотра.
+			</div>
+			<h3>Структура файла-описания</h3>
+			<div class="text">
+				<p>Все строки, начиинающиеся с символа <b>;</b> (точка с запятой) или пустые строки (состоящие только из пробелов) считаются комментариями.</p>
+				Файл-описание содержит набор обязательных и необязательных переменных, которые используются ядром CMS при работе.<br />
+				Формат записи строки переменной:
+				<pre class="brush: html;">variable_name: variable_value</pre>
+				где:
+				<ul class="level-1">
+					<li><b>variable_name</b> - наименование переменой</li>
+					<li><b>variable_value</b> - значение переменой</li>
+				</ul>
+				Регистр записи переменной не важен, но для удобства восприятия лучше использовать вариант написания, указанный в этом документе.
+			</div>
+			<h3>Переменные файла-описания</h3>
+			<div class="text">
+				Вы можете использовать следующие переменные:
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Обязательная</th>
+							<th>Наименование</th>
+							<th>Описание</th>
+							<th>Комментарий</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>+</td>
+							<td>ID</td>
+							<td>Уникальный идентификатор шаблона</td>
+							<td>UID может содержать только латинские символы и символы подчёркивания и тире. Обычно UID и наименование каталога, в котором находится шаблон, совпадают.</td>
+						</tr>
+						<tr>
+							<td>+</td>
+							<td>Title</td>
+							<td>Наименование шаблона</td>
+							<td>Наименование отображается в списке шаблонов</td>
+						</tr>
+						<tr>
+							<td>+</td>
+							<td>Version</td>
+							<td>Версия шаблона</td>
+							<td>Отображается в спике шаблонов, также используется для механизма определения последней версии.<br />Должна записываться в формате [<b>число.число</b>] либо [<b>число</b>], например: <b>0.26</b> либо <b>15</b></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>Author</td>
+							<td></td>
+							<td>Имя автора, отображается в списке плагина</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>Author_URI</td>
+							<td></td>
+							<td>Ссылка на сайт автора</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>Plugins</td>
+							<td>Шаблоны для плагинов</td>
+							<td>В этой переменной указывается список плагинов для которых созданы шаблоны</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>ImagePreview</td>
+							<td>Мини preview для шаблона</td>
+							<td>Вы можете добавить мини-preview для вашего шаблона, в данном поле указывается путь к мини-preview внутри каталогов шаблона, ожидаемый размер 256x192 (не должен превышаться), тип - PNG</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td>Image</td>
+							<td>Полноценный preview для шаблона</td>
+							<td>Вы можете добавить preview для вашего шаблона, размер не более 512x384, тип - PNG</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<h3>Пример файла-описания (для плагина comments)</h3>
+			<div class="text">
+				
+<pre class="brush: html;">
+;
+; Version file for template
+;
+
+; UNIQ template ID
+ID: default
+; Version number
+Version: 01
+; Release date
+RelDate: 2013-11-28
+; List of built in templates for plugins
+; Author name
+Author: ngcms
+; Author site page
+Author_URI: http://ngcms.ru/
+Plugins: archive, calendar, favorites, popular
+; Size: 256 x 192, format: PNG
+ImagePreview: images/tpl_preview.png
+; Size: 512 x 384, format: PNG
+Image: images/tpl_image.png
+
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

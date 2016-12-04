@@ -1,0 +1,114 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushXml.js"></script>
+		<script type="text/javascript" src="../highlighter/scripts/shBrushtwig.js"></script>
+		<link type="text/css" rel="stylesheet" href="../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>Шаблон usermenu.tpl <span class="twig">TWIG</span></h3>
+			<div class="text">
+				Шаблон используется для генерации пользовательского меню.
+				<ul class="level-1">
+					<li>Если пользователь не залогинен - краткое меню авторизации.</li>
+					<li>Если пользователь залогинен - ссылки на выход, редактирование своего профиля и админ-панель сайта.</li>
+				</ul>
+				В зависимости от используемого режима (форма авторизации/меню пользователя) доступен разный набор переменных и блоков.
+			</div>
+			<h3>Доступные переменные</h3>
+			<div class="text">
+				Блоки:
+				<ul class="level-1">
+					<li><b>{% if (global.flags.isLogged) %}</b> "Панель пользователя" <b>{% else %}</b> "Форма авторизации" <b>{% endif %}</b> - Содержимое обоих блоков "панель пользователя" и "Форма авторизации".</li>
+					<li><b>{% if not (global.flags.isLogged) %}</b> "Форма авторизации" <b>{% endif %}</b> - Содержимое блока только "Форма авторизации".</li>
+					<li><b>{% if (global.flags.isLogged) %}</b> "Панель пользователя" <b>{% endif %}</b> - Содержимое блока только "панель пользователя".</li>
+				</ul>
+			</div>
+			<h3>Доступные переменные блока "Форма авторизации"</h3>
+			<div class="text">
+				Переменные:
+				<ul class="level-1">
+					<li><b>{{ form_action }}</b> - URL формы-обработчика.</li>
+					<li><b>{{ redirect }}</b> - Значение, которое необходимо передать в скрытом поле ввода redirect, позволяет вернуться обратно на страницу (внутри сайта), с которой пользователь авторизовывался.</li>
+					<li><b>{{ reg_link }}</b> - Ссылка на страницу регистрации.</li>
+					<li><b>{{ lost_link }}</b> - Ссылка на страницу восстановления потерянного пароля.</li>
+				</ul>
+				Шаблон должен содержать форму (тег <b>&lt;form></b>, метод запроса - <b>POST</b>), которая позволит пользователю авторизоваться.<br />
+				В форму должны передаваться следующие переменные:
+				<ul class="level-1">
+					<li><b>redirect</b> (тип: hidden) - Поле, в которое помещается значение переменной <b>{{ redirect }}</b>.</li>
+					<li><b>username</b> (обычно тип: name) - Поле для ввода логина пользователя.</li>
+					<li><b>password</b> (обычно тип: name) - Поле для ввода пароля пользователя.</li>
+				</ul>
+				Доступные языковые переменные:
+				<ul class="level-1">
+					<li><b>{{ lang['name'] }}</b> - Текст-описание для поля формы <b>username</b>.</li>
+					<li><b>{{ lang['password'] }}</b> - Текст-описание для поля формы <b>password</b>.</li>
+					<li><b>{{ lang['login'] }}</b> - Текст для кнопки "войти" (тип кнопки: submit).</li>
+					<li><b>{{ lang['registration'] }}</b> - Текст для ссылки "регистрация".</li>
+					<li><b>{{ lang['lostpassword'] }}</b> - Текст для ссылки "восстановить пароль".</li>
+				</ul>
+			</div>
+			<h3>Доступные переменные блока "Панель пользователя"</h3>
+			<div class="text">
+				Переменные:
+				<ul class="level-1">
+					<li><b>{{ global.user.name }}</b> - Отображаемое имя (логин) пользователя.</li>
+					<li><b>{{ admin_url }}</b> - Ссылка на админ-панель.</li>
+					<li><b>{{ addnews_link }}</b> - Ссылка на форму добавления новости (в админ панели).</li>
+					<li><b>{{ profile_link }}</b> - Ссылка на собственный профиль пользователя (для работы необходим плагин <b>uprofile</b>).</li>
+					<li><b>{{ logout_link }}</b> - Ссылка для функции "выйти с сайта" (удалить авторизационную информацию).</li>
+					<li><b>{{ pthumb_url }}</b> - Ссылка на уменьшенную фотографию пользователя.</li>
+					<li><b>{{ avatar_url }}</b> - Ссылка на иконку пользователя (поддерживается интеграция с <b>gravatar.com</b>).</li>
+				</ul>
+				Доступные языковые переменные:
+				<ul class="level-1">
+					<li><b>{{ lang['adminpanel'] }}</b> - Текст "Админ-панель" (для ссылки-переменной <b>{{ admin_url }}</b>).</li>
+					<li><b>{{ lang['addnews'] }}</b> - Текст "Добавить новость" (для ссылки-переменной <b>{{ addnews_link }}</b>).</li>
+					<li><b>{{ lang['myprofile'] }}</b> - Текст "Мой профиль" (для ссылки-переменной <b>{{ profile_link }}</b>).</li>
+					<li><b>{{ lang['logout'] }}</b> - Текст "Завершить сеанс!" (для ссылки-переменной <b>{{ logout_link }}</b>).</li>
+				</ul>
+				Блоки:
+				<ul class="level-1">
+					<li><b>[if-have-perm]</b> ... <b>[/if-have-perm]</b> - Содержимое блока виден если есть доступ к админ панели.</li>
+				</ul>
+			</div>
+			<h3>Пример заполнения шаблона</h3>
+			<div class="text">
+				В примере показан минимально набор для полнофункциональной работы:
+				
+<pre class="brush: html;">
+{% if (global.flags.isLogged) %}
+	[if-have-perm]
+	&lt;a href="{{ admin_url }}" target="_blank">{{ lang['adminpanel'] }}&lt;/a>
+	&lt;a href="{{ addnews_link }}">{{ lang['addnews'] }}&lt;/a>
+	[/if-have-perm]
+	&lt;a href="{{ profile_link }}">{{ lang['myprofile'] }}&lt;/a>
+	&lt;a href="{{ logout_link }}">{{ lang['logout'] }}&lt;/a>
+{% else %}
+	&lt;script language="javascript">
+		var set_login = 0;
+		var set_pass  = 0;
+	&lt;/script>
+	&lt;form name="login" method="post" action="{{ form_action }}" id="login">
+		&lt;input type="hidden" name="redirect" value="{{ redirect }}" />
+		{{ lang['name'] }}: &lt;input type="text" name="username">
+		{{ lang['password'] }}: &lt;input type="password" name="password">
+		&lt;a href="{{ lost_link }}" >{{ lang['lostpassword'] }}&lt;/a>
+		&lt;a href="{{ lang['registration'] }}" >{{ lang['registration'] }}&lt;/a>
+		&lt;input type="submit" value="{{ lang['login'] }}">
+	&lt;/form>
+{% endif %}
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>Документация находится на стадии разработки!</b> Если вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (Виталий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>

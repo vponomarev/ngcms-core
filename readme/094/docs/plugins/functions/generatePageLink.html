@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<script type="text/javascript" src="../../highlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="../../highlighter/scripts/shBrushPhp.js"></script>
+		<link type="text/css" rel="stylesheet" href="../../highlighter/styles/shCoreDefault.css"/>
+		<script type="text/javascript">SyntaxHighlighter.all();</script>
+		<link media="screen" href="../../style/styles.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body style="border-left: #edece4 1px solid;">
+		<div class="content">
+			<h3>‘ункци€ generatePageLink()</h3>
+			<div class="text">
+				‘ункци€ генерирует ссылку на конкретную страницу при постраничном отображении.<br />
+				¬ызов функции:
+				<pre class="brush: php;">function generatePageLink($paginationParams, $page) { ; }</pre>
+				Ќабор параметров:
+				
+<pre class="brush: php;">
+// $page		- номер страницы, дл€ которой будет генерироватьс€ ссылка
+// $paginationParams	- массив с параметрами, необходимыми дл€ генерации URL'ов страниц [соответствуют параметрам функции generatePluginLink(), generateLink()]
+// * 'pluginName'	- ID плагина
+// * 'pluginHandler'	- наименование обработчика
+// * 'params'		- "основные параметры" (см. параметр <b>$params</b> функций generatePluginLink(), generateLink())
+// * 'xparams'		- "дополнительные параметры" (см. параметр <b>$xparams</b> функций generatePluginLink(), generateLink())
+// * 'paginator'	- массив с параметрами, позвол€ющий идентифицировать наименование переменной, в которой прописываетс€ номер страниц
+// * * '0'			- название переменной с номером страницы
+// * * '1'			- местоположение переменной с номером страницы (0 - в основных параметрах, 1 - в дополнительных параметрах)
+// * * '2'			- флаг: "заполн€ть переменную с номером страницы дл€ первой страницы" (0 - нет, 1 - да)
+</pre>
+				
+				ѕример использовани€ функции:
+				
+<pre class="brush: php;">
+$myLink = generatePageLink(
+	array(
+		'pluginName' => 'news'				// - плагин 'news'
+		'pluginHandler' => 'by.year'),			// - обработчик 'by.year'
+		'params' => array(				// - [основные параметры]
+			'year' => 2010,				// - год = 2010
+			'page' => 3),				// - страница = 3
+		'xparams' => array(				// - [дополнительные параметры]
+			'referer' => 'ivan'),			// - referer = 'ivan' (в реальности такой переменной не существует)
+		'paginator' => array(				// - [идентификаци€ переменной постраничной навигации]
+			'page',					// - переменна€ 'page'
+			0,					// - переменна€ находитс€ в основных параметрах
+			0)					// - на первой странице переменную page не отображать
+	)	
+	3,							// - генерируем ссылку дл€ страницы #3
+);
+
+print "Generated link for page 3 is: ".$myLink;			// ¬ыводитс€ текст "Generated link for page 3 is: <тут ссылка на страницу плагина news>"						
+</pre>
+				
+			</div>
+			<div id="footer">
+				<b>ƒокументаци€ находитс€ на стадии разработки!</b> ≈сли вы хотите помочь с наполнением, обращайтесь:<br/>
+				ICQ: <b>145368811</b> (¬италий) | Jabber: <b>vitaly@ngcms.ru</b>
+			</div>
+		</div>
+	</body>
+</html>
