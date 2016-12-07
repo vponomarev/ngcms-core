@@ -82,7 +82,7 @@ function categoryModifyRequest(cmd, cid) {
 {% include localPath(0)~"entries.tpl" %}
 </tbody>
 <tfoot>
-<tr><td colspan="8" class="contentEdit" align="right">&nbsp; {% if (flags.canModify) %}<form method="get" action=""><input type="hidden" name="mod" value="categories"/><input type="hidden" name="action" value="add"/><input type="submit" value="Добавить категорию" class="button" /></form>{% endif %}</td></tr>
+<tr><td colspan="8" class="contentEdit" align="right">&nbsp; {% if (flags.canModify) %}<form method="get" action=""><input type="hidden" name="mod" value="categories"/><input type="hidden" name="action" value="add"/><input type="submit" value="{{ lang['addnew'] }}" class="button" /></form>{% endif %}</td></tr>
 </tfoot>
 </table>
 

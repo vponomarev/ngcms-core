@@ -102,8 +102,8 @@ function filter_attach_DateEdit(id) {
 <table border="0" cellspacing="0" cellpadding="0" class="filterblock">
   <tr>
     <td valign="top" >
-    <label>Поиск</label>
-    <input name="sl" type="text" class="bfsearch" value="{{ sl }}"/> <select name="st"><option value="0" {{ st.selected0 }}>заголовок</option><option value="1" {{ st.selected1 }}>текст</option></select>
+    <label>{{ lang.editnews['header.search'] }}</label>
+    <input name="sl" type="text" class="bfsearch" value="{{ sl }}"/> <select name="st"><option value="0" {{ st.selected0 }}>{{ lang.editnews['header.stitle'] }}</option><option value="1" {{ st.selected1 }}>{{ lang.editnews['header.stext'] }}</option></select>
     </td>
   </tr>
   <tr>
@@ -120,8 +120,8 @@ function filter_attach_DateEdit(id) {
 <table border="0" cellspacing="0" cellpadding="0" class="filterblock">
   <tr>
     <td valign="top">
-    <label>Дата</label>
-    с:&nbsp; <input type="text" id="dr1" name="dr1" value="{{ dr1 }}" class="bfdate"/>&nbsp;&nbsp; по&nbsp;&nbsp; <input type="text" id="dr2" name="dr2" value="{{ dr2 }}" class="bfdate"/>
+    <label>{{ lang.editnews['header.date'] }}</label>
+      {{ lang.editnews['header.date_since'] }}:&nbsp; <input type="text" id="dr1" name="dr1" value="{{ dr1 }}" class="bfdate"/>&nbsp;&nbsp; {{ lang.editnews['header.date_till'] }}&nbsp;&nbsp; <input type="text" id="dr2" name="dr2" value="{{ dr2 }}" class="bfdate"/>
     </td>
   </tr>
   <tr>
@@ -138,11 +138,11 @@ function filter_attach_DateEdit(id) {
 <table border="0" cellspacing="0" cellpadding="0" class="filterblock2">
   <tr>
     <td valign="top" >
-    <label>Статус</label>
+    <label>{{ lang.editnews['header.status'] }}</label>
     <select name="status" class="bfstatus"><option value="">{{ lang.editnews['smode_all'] }}</option>{{ statuslist }}</select>
     </td>
     <td align="right" valign="top"  >
-    <label>На странице</label>
+    <label>{{ lang.editnews['header.perpage'] }}</label>
     <input name="rpp" value="{{ rpp }}" type="text" size="3" />
     </td>
   </tr>

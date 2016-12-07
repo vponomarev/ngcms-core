@@ -753,7 +753,7 @@ border-bottom: 1px solid #eee;
 .editfilter form { margin:0; padding:0;}
 .bfsearch { width: 200px;}
 .bfauthor { width: 270px;}
-.bfdate { width: 120px;}
+.bfdate { width: 100px;}
 .bfstatus { width: 200px;}
 .bfsortlist { width: 180px; float:right;}
 .editfilter label, .imagesfilter label { font: 15px "Trebuchet MS", Arial, Helvetica, sans-serif; font-weight: normal; display: block; margin-bottom: 6px;}

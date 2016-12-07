@@ -180,7 +180,7 @@ $("#cdate").datetimepicker( { currentText: "{{ cdate }}" });
  <td>{{ entry.filesize }}</td>
  <td><input type="checkbox" name="delfile_{{ entry.id }}" value="1" /></td>
 </tr>
-{% else %}<tr><td colspan="6">Нет приложенных файлов</td></tr>
+{% else %}<tr><td colspan="6">{{ lang.editnews['attach.no_files_attached'] }}</td></tr>
 {% endfor %}
 <!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
 <tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" class="button" value="{{ lang.editnews['attach.more_rows'] }}" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
@@ -267,7 +267,7 @@ $("#cdate").datetimepicker( { currentText: "{{ cdate }}" });
 <td class="contentEditW" align="center" valign="top">
 <input type="hidden" name="id" value="{{ id }}" />
 {% if flags.editable %}
-Статус новости:
+{{ lang['news_status'] }}:
 <select size="1" disabled>
 	<option>{% if (approve == -1) %}{{ lang['state.draft'] }}{% elseif (approve == 0) %}{{ lang['state.unpublished'] }}{% else %}{{ lang['state.published'] }}{% endif %}</option>
 </select> &#8594;

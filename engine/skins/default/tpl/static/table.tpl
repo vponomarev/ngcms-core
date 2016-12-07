@@ -17,7 +17,7 @@
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left" class="contHead">
 <td width="20">{% if (perm.modify) %}<input class="check" type="checkbox" name="master_box" title="{{ lang['select_all'] }}" onclick="javascript:check_uncheck_all(static)" />{% endif %}</td>
-<td width="50">Состояние</td>
+<td width="50">{{ lang['state'] }}</td>
 <td width="45%">{{ lang['title'] }}</td>
 <td>{{ lang['list.altname'] }}</td>
 <td>{{ lang['list.template'] }}</td>

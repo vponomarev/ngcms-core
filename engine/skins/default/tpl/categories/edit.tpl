@@ -47,15 +47,15 @@
 <td width="30%" class="contentEntry2">{{ parent }}</td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">{{ lang['icon'] }}<br/><small>URL картинки, используемой в качестве иконки категории</small></td>
+<td width="70%" class="contentEntry1">{{ lang['icon'] }}<br/><small>{{ lang['icon#desc'] }}</small></td>
 <td width="30%" class="contentEntry2"><input type="text" size="40" name="icon" value="{{ icon }}" maxlength="255" /></td>
 </tr>
 <tr>
-<td width="70%" class="contentEntry1">Прикрепленная иконка<br/><small>Вы можете прикрепить изображение-иконку непосредственно к категории.<br/>Данное поле имеет приоритет.</small></td>
+<td width="70%" class="contentEntry1">{{ lang['attached_icon'] }}<br/><small>{{ lang['attached_icon#desc'] }}</small></td>
 <td width="30%" class="contentEntry2">
 {% if flags.haveAttach %}<div id="previewImage"><img src="{{ attach_url }}"/>
 <br/>
-<input type="checkbox" name="image_del" value="1"> <label for="image_del">удалить иконку</label></div>
+<input type="checkbox" name="image_del" value="1"> <label for="image_del">{{ lang['delete_icon'] }}</label></div>
 <br/>{% endif %}
 <input type="file" size="40" name="image" />
 </td>

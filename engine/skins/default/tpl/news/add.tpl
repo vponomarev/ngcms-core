@@ -160,7 +160,7 @@ $("#cdate").datetimepicker( { currentText: "DD.MM.YYYY HH:MM" });
 </thead>
 <tbody>
 <!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
-<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="Добавить поле" class="button" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
+<tr><td colspan="3">&nbsp;</td><td colspan="2"><input type="button" value="{{ lang.editnews['attach.more_rows'] }}" class="button" style="width: 100%;" onclick="attachAddRow();" /></td></tr>
 </table>
 </div>
 </td>
@@ -238,13 +238,13 @@ $("#cdate").datetimepicker( { currentText: "DD.MM.YYYY HH:MM" });
 <tr align="center">
 <td width="30%" class="contentEditW" align="center" valign="top">
 	<input type="button" value="{{ lang.addnews['preview'] }}" class="button" onclick="return preview();" /> &nbsp; &nbsp;
-	<input type="submit" value="Сохранить черновик" class="button" onclick="return approveMode(-1);" /> &nbsp; &nbsp; &nbsp;
+	<input type="submit" value="{{ lang.addnews['save_draft'] }}" class="button" onclick="return approveMode(-1);" /> &nbsp; &nbsp; &nbsp;
 </td>
 <td width="30%" class="contentEditW" align="center" valign="top">
-	<input type="submit" value="Отправить на модерацию" class="button" onclick="return approveMode(0);" /> &nbsp; &nbsp; &nbsp;
+	<input type="submit" value="{{ lang.addnews['send_moderation'] }}" class="button" onclick="return approveMode(0);" /> &nbsp; &nbsp; &nbsp;
 </td>
 <td width="40%" class="contentEditW" align="center" valign="top">
-{% if flags['can_publish'] %}	<input type="submit" value="Опубликовать" class="button" onclick="return approveMode(1);" />{% else %} &nbsp; {% endif %}
+{% if flags['can_publish'] %}	<input type="submit" value="{{ lang.addnews['publish'] }}" class="button" onclick="return approveMode(1);" />{% else %} &nbsp; {% endif %}
 </td>
 </tr>
 </table>
