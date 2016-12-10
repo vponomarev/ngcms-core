@@ -31,10 +31,9 @@ $h_active_files = ($mod=='files')?' class="active"':'';
 $h_active_pm = ($mod=='pm')?' class="active"':'';
 
 $datetimepicker_lang_default = "
-$(window).load(function() {
-    $.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
-    $.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
-});";
+$.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
+$.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
+";
 $datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : "";
 
 $skin_header = <<<HTML
