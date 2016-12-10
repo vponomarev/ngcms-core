@@ -1,5 +1,5 @@
-<script type="text/javascript" src="{{ admin_url }}/includes/js/ajax.js"></script>
-<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/ajax.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/admin.js"></script>
 <form method="post" action="{{ php_self }}?mod=rewrite" name="rewriteForm" id="rewriteForm">
 <span id="temp.data" style="position: absolute; display: none;"></span>
 <span id="DEBUG"></span>

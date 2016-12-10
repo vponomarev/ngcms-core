@@ -1,5 +1,5 @@
-<script type="text/javascript" src="{{ admin_url }}/includes/js/ajax.js"></script>
-<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/ajax.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/admin.js"></script>
 <script type="text/javascript">
 // Process RPC requests for categories
 var categoryUToken = '{{ token }}';

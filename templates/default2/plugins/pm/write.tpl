@@ -1,4 +1,4 @@
-<script type="text/javascript" src="{{ admin_url }}/includes/js/libsuggest.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/libsuggest.js"></script>
 <style>
 .suggestWindow {
 	background: #ecf1f7;

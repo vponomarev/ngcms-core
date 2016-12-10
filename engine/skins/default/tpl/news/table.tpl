@@ -1,6 +1,6 @@
-<script type="text/javascript" src="{{ admin_url }}/includes/js/ajax.js"></script>
-<script type="text/javascript" src="{{ admin_url }}/includes/js/admin.js"></script>
-<script type="text/javascript" src="{{ admin_url }}/includes/js/libsuggest.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/ajax.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/admin.js"></script>
+<script type="text/javascript" src="{{ scriptLibrary }}/libsuggest.js"></script>
 <script language="javascript" type="text/javascript">
 <!--
 
@@ -243,9 +243,13 @@ function filter_attach_DateEdit(id) {
 
 <script language="javascript" type="text/javascript">
 // Init jQueryUI datepicker
-$("#dr1").datepicker( { currentText: "{{ dr1 }}", dateFormat: "dd.mm.yy" });
-$("#dr2").datepicker( { currentText: "{{ dr2 }}", dateFormat: "dd.mm.yy" });
-
+$(window).load(function() {
+  $("#dr1").datepicker( { currentText: "{{ dr1 }}", dateFormat: "dd.mm.yy" });
+  $("#dr2").datepicker( { currentText: "{{ dr2 }}", dateFormat: "dd.mm.yy" });
+  {% if (lang['langcode'] == 'ru') %}
+  $.datepicker.setDefaults($.datepicker.regional['{{lang['langcode']}}']);
+  {% endif %}
+});
 
 <!--
 // INIT NEW SUGGEST LIBRARY [ call only after full document load ]

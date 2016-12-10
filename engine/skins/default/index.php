@@ -30,6 +30,13 @@ $h_active_images = ($mod=='images')?' class="active"':'';
 $h_active_files = ($mod=='files')?' class="active"':'';
 $h_active_pm = ($mod=='pm')?' class="active"':'';
 
+$datetimepicker_lang_default = "
+$(window).load(function() {
+    $.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
+    $.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
+});";
+$datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : "";
+
 $skin_header = <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$lang[langcode]" lang="$lang[langcode]" dir="ltr">
@@ -38,16 +45,20 @@ $skin_header = <<<HTML
 <title>$config[home_title] - $lang[adminpanel]</title>
 <link rel="stylesheet" href="$skins_url/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="$skins_url/ftr_panel.css" type="text/css" />
-<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/themes/cupertino/jquery-ui.css" type="text/css"/>
-<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/themes/cupertino/jquery.ui.theme.css" type="text/css"/>
-<link rel="stylesheet" href="$config[home_url]/lib/jquery-ui-timepicker-addon.css" type="text/css"/>
-<link rel="stylesheet" href="$config[home_url]/lib/jquery.multiselect.css" type="text/css"/>
-<script type="text/javascript" src="$config[home_url]/lib/jquery-1.8.2.min.js"></script>
-<script type="text/javascript" src="$config[home_url]/lib/jquery-ui-1.9.0.custom.min.js"></script>
-<script type="text/javascript" src="$config[home_url]/lib/jquery-ui-timepicker-addon.js"></script>
-<script type="text/javascript" src="$config[home_url]/lib/jquery.multiselect.min.js"></script>
+<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/core/jquery-ui-1.12.1/themes/cupertino/jquery-ui.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/core/jquery-ui-1.12.1/themes/cupertino/jquery.ui.theme.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon-1.6.3/dist/jquery-ui-timepicker-addon.min.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/plugins/jquery-ui-multiselect-widget-1.17/jquery.multiselect.css" type="text/css"/>
+<script type="text/javascript" src="$config[home_url]/lib/jq/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/jqueryui/core/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon-1.6.3/dist/jquery-ui-timepicker-addon.min.js"></script>
+<!--<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon-1.6.3/dist/i18n/jquery-ui-timepicker-addon-i18n.min.js"></script>-->
+<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-multiselect-widget-1.17/src/jquery.multiselect.min.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/functions.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/admin.js"></script>
+<script language="javascript" type="text/javascript">
+$datetimepicker_lang
+</script>
 </head>
 <body>
 <div id="loading-layer"><img src="$skins_url/images/loading.gif" alt="" /> Loading ...</div>
@@ -75,7 +86,7 @@ $skin_footer = <<<HTML
 <div class="clear_ftr"></div>
 <div id="footpanel">
     <ul id="mainpanel">
-        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2015 <strong>Next Generation</strong> CMS <small>Сайт разработчика</small></a></li>
+        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2016 <strong>Next Generation</strong> CMS <small>Сайт разработчика</small></a></li>
         <li><a href="$PHP_SELF?mod=news&amp;action=add" class="add_news">Добавить новость<small>Добавить новость</small></a></li>
         <li><a href="$PHP_SELF?mod=news" class="add_edit">Редактировать<small>Редактировать</small></a></li>
         <li><a href="$PHP_SELF?mod=images" class="add_images">Изображения<small>Изображения</small></a></li>
@@ -84,7 +95,7 @@ $skin_footer = <<<HTML
         <li><a href="$PHP_SELF?mod=categories" class="add_category">Категории<small>Категории</small></a></li>
         <li><a href="$PHP_SELF?mod=users" class="add_user">Пользователи<small>Пользователи</small></a></li>
         <li><a href="$PHP_SELF?mod=configuration" class="add_system_option">Настройка системы<small>Настройка системы</small></a></li>
-        <li id="alertpanel"><a href="http://ngcms.ru/forum/profile.php?id=23" target="_blank" class="rocket">Дизайн- RocketBoy</a></li>
+        <li id="alertpanel"><a href="http://rocketvip.ru/" target="_blank" class="rocket">Дизайн- RocketBoy</a></li>
         <li id="chatpanel"><a href="http://ngcms.ru/forum/" target="_blank" class="chat">Форум тех. поддержки</a></li>
 
     </ul>

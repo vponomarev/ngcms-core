@@ -5,8 +5,8 @@
 <meta http-equiv="Content-language" content="{l_langcode}" />
 <link href="{tpl_url}/style.css" rel="stylesheet" type="text/css" media="screen" />
 <title>{l_preview}</title>
-<script type="text/javascript" src="{admin_url}/includes/js/functions.js"></script>
-<script type="text/javascript" src="{admin_url}/includes/js/ajax.js"></script>
+<script type="text/javascript" src="{ scriptLibrary }/functions.js"></script>
+<script type="text/javascript" src="{ scriptLibrary }/ajax.js"></script>
 {htmlvars}
 </head>
 <body>

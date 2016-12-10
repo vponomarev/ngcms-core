@@ -53,9 +53,10 @@ $templateDir  = root. 'skins/default/install';
 // Determine installation URL
 $homeURL     = 'http://'.$_SERVER['HTTP_HOST'].'/'.($a=join("/", array_slice(preg_split('/(\\\|\/)/',$_SERVER['REQUEST_URI'], -1, PREG_SPLIT_NO_EMPTY),0, -2))). ($a?'/':'');
 $templateURL = $homeURL . $adminDirName . '/skins/default/install';
+$scriptLibrary = $homeURL . 'lib';
 $ERR               = array();
 
-$tvars = array ( 'vars' => array( 'templateURL' => $templateURL, 'homeURL' => $homeURL ));
+$tvars = array ( 'vars' => array( 'templateURL' => $templateURL, 'homeURL' => $homeURL, 'scriptLibrary' => $scriptLibrary ));
 foreach (array('begin', 'db', 'plugins', 'template', 'perm', 'common', 'install') as $v) {
 	$tvars['vars']['menu_'.$v] = '';
 }

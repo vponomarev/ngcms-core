@@ -274,7 +274,7 @@ function addEditStaticForm($operationMode = 1, $sID = 0){
 			'template'			=>	$row['template'],
 			'description'		=>	$row['description'],
 			'keywords'			=>	$row['keywords'],
-			'cdate'				=> date('d.m.Y H:i', $row['postdate']),
+			'cdate'				=> !empty($row['postdate'])?date('d.m.Y H:i', $row['postdate']):"",
 			'flag_published'		=> $row['approve'],
 			'flag_raw'				=> ($row['flags'] % 2)?1:0,
 			'flag_html'				=> (($row['flags']/2) % 2)?1:0,

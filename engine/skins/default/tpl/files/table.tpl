@@ -1,6 +1,6 @@
 <!-- Preload uploadify engine -->
-<script type="text/javascript" src="{admin_url}/includes/js/swfobject.js"></script>
-<script type="text/javascript" src="{admin_url}/includes/js/jquery.uploadify.v2.1.4.min.js"></script>
+<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadify/swfobject.js"></script>
+<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
 
 <!-- Main scripts -->
 <script type="text/javascript">
@@ -177,7 +177,7 @@ function RemoveFiles() {
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#fileUploadInput').uploadify({
-        'uploader'  : '{admin_url}/includes/js/uploadify.swf',
+        'uploader'  : '{scriptLibrary}/jq/plugins/uploadify/uploadify.swf',
 		'script'    : '{admin_url}/rpc.php?methodName=admin.files.upload',
 		'cancelImg' : '{skins_url}/images/up_cancel.png',
 		'folder'    : '',

@@ -35,8 +35,8 @@ h1 { padding: 0px; margin: 0px; margin-left: 5px; padding-bottom: 10px; font-siz
 </style>
 </head>
 <body>
-<script type="text/javascript" src="includes/js/functions.js"></script>
-<script type="text/javascript" src="includes/js/ajax.js"></script>
+<script type="text/javascript" src="{scriptLibrary}/functions.js"></script>
+<script type="text/javascript" src="{scriptLibrary}/ajax.js"></script>
 <div class="header" align="center">{l_header.headtitle}</div>
 <br />
 <table width="100%" border="0" class="mainMenu" cellspacing="0" cellpadding="0">
