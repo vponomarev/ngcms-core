@@ -160,7 +160,7 @@ function filter_attach_DateEdit(id) {
   </tr>
 </table>
 </form>
-<!-- Конец блока фильтрации -->
+<!-- пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ -->
 
 <br />
 <!-- List of news start here -->
@@ -242,17 +242,10 @@ function filter_attach_DateEdit(id) {
 </form>
 
 <script language="javascript" type="text/javascript">
-// Init jQueryUI datepicker
-$(window).load(function() {
-  $("#dr1").datepicker( { currentText: "{{ dr1 }}", dateFormat: "dd.mm.yy" });
-  $("#dr2").datepicker( { currentText: "{{ dr2 }}", dateFormat: "dd.mm.yy" });
-  {% if (lang['langcode'] == 'ru') %}
-  $.datepicker.setDefaults($.datepicker.regional['{{lang['langcode']}}']);
-  {% endif %}
-});
+$("#dr1").datepicker( { currentText: "{{ dr1 }}", dateFormat: "dd.mm.yy" });
+$("#dr2").datepicker( { currentText: "{{ dr2 }}", dateFormat: "dd.mm.yy" });
 
-<!--
-// INIT NEW SUGGEST LIBRARY [ call only after full document load ]
+
 function systemInit() {
 var aSuggest = new ngSuggest('an',
 								{
@@ -280,5 +273,4 @@ if (document.body.attachEvent) {
 
 filter_attach_DateEdit('dr1');
 filter_attach_DateEdit('dr2');
--->
 </script>
