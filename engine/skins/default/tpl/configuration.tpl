@@ -667,9 +667,9 @@ function ngCheckEmail() {
   <table class="contentNav" width="100%">
    <tr><td><b>{{ lang['status'] }}</b></td><td><b>{{ lang['title'] }}</b></td><td><b>{{ lang['domains'] }}</b></td><td><b>{{ lang['flags'] }}</b></td></tr>
 {% for MR in multiConfig %}
-	<tr class='contentEntry1'><td>{% if (MR['active']) %}On{% else %}Off{% endif %}</td><td>{{ MR['key'] }}</td><td>{% for domain in MR['domains'] %}{{ domain }}<br/>{% else %}- не указано -{% endfor %}</td><td>&nbsp;</td></tr>
+	<tr class='contentEntry1'><td>{% if (MR['active']) %}On{% else %}Off{% endif %}</td><td>{{ MR['key'] }}</td><td>{% for domain in MR['domains'] %}{{ domain }}<br/>{% else %}- {{ lang['not_specified'] }} -{% endfor %}</td><td>&nbsp;</td></tr>
 {% else %}
- <tr class='contentEntry1'><td colspan="4">- не используется -</td></tr>
+ <tr class='contentEntry1'><td colspan="4">- {{ lang['not_used'] }} -</td></tr>
 {% endfor %}
   </table>
  </td>

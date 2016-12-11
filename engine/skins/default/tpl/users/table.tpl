@@ -72,7 +72,7 @@ function validateAction() {
 <form method="GET" action="{{ php_self }}">
 <input type="hidden" name="mod" value="users" />
 <input type="hidden" name="action" value="list" />
-Имя: <input type="text" name="name" value="{{ name }}"/> | Группа: <select name="group"><option value="0">-- Любая --</option>{% for g in ugroup %}<option value="{{ g.id }}" {% if (group == g.id) %}selected="selected"{% endif %}>{{ g.name }}</option>{% endfor %}</select> |
+ {{ lang['name'] }}: <input type="text" name="name" value="{{ name }}"/> | {{ lang['group'] }}: <select name="group"><option value="0">-- {{ lang['any'] }} --</option>{% for g in ugroup %}<option value="{{ g.id }}" {% if (group == g.id) %}selected="selected"{% endif %}>{{ g.name }}</option>{% endfor %}</select> |
 <input style="text-align: center;" size=3 name="rpp" value="{{ rpp }}"/>
 <input type="submit" value="{{ lang['sortit'] }}" class="button" />
 </form>

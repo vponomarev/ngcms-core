@@ -1,8 +1,6 @@
-
-
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=perm">Управление правами доступа</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=perm">{{ lang['permissions'] }}</a></td>
 </tr>
 </table>
 
@@ -52,7 +50,7 @@ function onUpdateSubmit() {
 {% for group in GRP %}
  <!-- Content for group [{{ group.id }}] {{ group.title }} -->
  <div id="userTabs-{{ group.id }}">
-  <div><i>Управление правами группы пользователей: <b>{{ group.title }}</b></i></div>
+  <div><i>{{ lang['permissions_for_user_group'] }}: <b>{{ group.title }}</b></i></div>
   <br/>
 
 {% for block in CONFIG %}
@@ -65,15 +63,15 @@ function onUpdateSubmit() {
 {% if (area.description) %}   <i>{{ area.description }}</i><br/><br/>{% endif %}
 
    <table width="100%" class="content">
-    <thead><tr class="contHead"><td><b>#ID</b></td><td><b>Описание</b></td><td width="90"><b>Доступ</b></td></td></thead>
+    <thead><tr class="contHead"><td><b>#ID</b></td><td><b>{{ lang['description'] }}</b></td><td width="90"><b>{{ lang['access'] }}</b></td></td></thead>
 {% for entry in area.items %}
     <tr class="contentEntry1">
      <td><strong>{{entry.id}}</strong></td><td>{{ entry.title }}</td>
      <td>
 	  <select name="{{ entry.name }}|{{group.id}}" onchange="onUpdatePerm('{{ entry.name }}|{{group.id}}');" value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
 	   <option value="-1">--</option>
-	   <option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>Нет</option>
-	   <option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>Да</option>
+	   <option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['no'] }}</option>
+	   <option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['yes'] }}</option>
 	  </select>
 	 </td>
     </tr>
@@ -96,5 +94,5 @@ $(function(){
 </script>
 <br/>
 
-<input type="submit" value="Сохранить изменения" onclick="return onUpdateSubmit();" />
+<input type="submit" value="{{ lang['save'] }}" onclick="return onUpdateSubmit();" />
 </form>

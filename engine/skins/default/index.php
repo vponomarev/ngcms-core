@@ -85,17 +85,17 @@ $skin_footer = <<<HTML
 <div class="clear_ftr"></div>
 <div id="footpanel">
     <ul id="mainpanel">
-        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2016 <strong>Next Generation</strong> CMS <small>Сайт разработчика</small></a></li>
-        <li><a href="$PHP_SELF?mod=news&amp;action=add" class="add_news">Добавить новость<small>Добавить новость</small></a></li>
-        <li><a href="$PHP_SELF?mod=news" class="add_edit">Редактировать<small>Редактировать</small></a></li>
-        <li><a href="$PHP_SELF?mod=images" class="add_images">Изображения<small>Изображения</small></a></li>
-        <li><a href="$PHP_SELF?mod=files" class="add_files">Файлы<small>Загрузить файл</small></a></li>
-        <li><a href="$PHP_SELF?mod=extras" class="add_plugins">Плагины<small>Плагины</small></a></li>
-        <li><a href="$PHP_SELF?mod=categories" class="add_category">Категории<small>Категории</small></a></li>
-        <li><a href="$PHP_SELF?mod=users" class="add_user">Пользователи<small>Пользователи</small></a></li>
-        <li><a href="$PHP_SELF?mod=configuration" class="add_system_option">Настройка системы<small>Настройка системы</small></a></li>
-        <li id="alertpanel"><a href="http://rocketvip.ru/" target="_blank" class="rocket">Дизайн- RocketBoy</a></li>
-        <li id="chatpanel"><a href="http://ngcms.ru/forum/" target="_blank" class="chat">Форум тех. поддержки</a></li>
+        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2016 <strong>Next Generation</strong> CMS <small>$lang[ngcms_site]</small></a></li>
+        <li><a href="$PHP_SELF?mod=news&amp;action=add" class="add_news">$lang[addnews_t]<small>$lang[addnews_t]</small></a></li>
+        <li><a href="$PHP_SELF?mod=news" class="add_edit">$lang[editnews]<small>$lang[editnews]</small></a></li>
+        <li><a href="$PHP_SELF?mod=images" class="add_images">$lang[images]<small>$lang[images]</small></a></li>
+        <li><a href="$PHP_SELF?mod=files" class="add_files">$lang[files]<small>$lang[files]</small></a></li>
+        <li><a href="$PHP_SELF?mod=extras" class="add_plugins">$lang[extras]<small>$lang[extras]</small></a></li>
+        <li><a href="$PHP_SELF?mod=categories" class="add_category">$lang[categories]<small>$lang[categories]</small></a></li>
+        <li><a href="$PHP_SELF?mod=users" class="add_user">$lang[users]<small>$lang[users]</small></a></li>
+        <li><a href="$PHP_SELF?mod=configuration" class="add_system_option">$lang[options_t]<small>$lang[options_t]</small></a></li>
+        <li id="alertpanel"><a href="http://rocketvip.ru/" target="_blank" class="rocket">$lang[design]- RocketBoy</a></li>
+        <li id="chatpanel"><a href="http://ngcms.ru/forum/" target="_blank" class="chat">$lang[forum]</a></li>
 
     </ul>
 </div>

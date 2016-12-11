@@ -6,13 +6,13 @@
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr align="center">
 <td width="100%" class="contentNav" align="left" valign="top">
-<label><input id="selectTypeTemplate" type="radio" name="selectType" value="template" checked="checked" /> Шаблон(ы) сайта: </label><select name="selectTemplate" id="selectTemplate">
+<label><input id="selectTypeTemplate" type="radio" name="selectType" value="template" checked="checked" /> {{ lang.templates['tplsite'] }}: </label><select name="selectTemplate" id="selectTemplate">
 {% for st in siteTemplates %}
 <option value="{{ st.name }}">{{ st.name }} ({{ st.title }})</option>
 {% endfor %}
 </select><br/>
-<label><input id="selectTypePlugin" type="radio" name="selectType" value="plugin" /> Шаблон плагинов</label><br/>
-<input type="button" value="Выбрать" class="navbutton" onclick="submitTemplateSelector();"/>
+<label><input id="selectTypePlugin" type="radio" name="selectType" value="plugin" /> {{ lang.templates['tplmodules'] }}</label><br/>
+<input type="button" value="{{ lang.templates['select'] }}" class="navbutton" onclick="submitTemplateSelector();"/>
 </td>
 </tr>
 </table>
@@ -21,7 +21,7 @@
 <div style="width: 100%;">
 <!-- BLOCK TEMPLATES -->
 <table width="100%" border="0" cellaspacing="0" cellpadding="0">
-<tr><td colspan="2" style="background-color: #E0E0A0; padding: 3px;">Редактирование шаблона [ <b><span id="templateNameArea">default</span> </b>]</td></tr>
+<tr><td colspan="2" style="background-color: #E0E0A0; padding: 3px;">{{ lang.templates['tpl.edit'] }} [ <b><span id="templateNameArea">default</span> </b>]</td></tr>
 <tr>
  <td width="230" valign="top">
   <div id="fileTreeSelector" style="overflow: auto; width: 99%; height: 578px; background-color: #ABCDEF; float: left; ">TEST CONTENT</div>

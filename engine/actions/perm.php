@@ -10,6 +10,8 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+$lang		= LoadLang('perm', 'admin');
+
 @include_once root.'includes/inc/extrainst.inc.php';
 
 
