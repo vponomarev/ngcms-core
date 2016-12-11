@@ -44,15 +44,15 @@ $skin_header = <<<HTML
 <title>$config[home_title] - $lang[adminpanel]</title>
 <link rel="stylesheet" href="$skins_url/style.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="$skins_url/ftr_panel.css" type="text/css" />
-<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/core/jquery-ui-1.12.1/themes/cupertino/jquery-ui.min.css" type="text/css"/>
-<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/core/jquery-ui-1.12.1/themes/cupertino/jquery-ui.theme.min.css" type="text/css"/>
-<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon-1.6.3/dist/jquery-ui-timepicker-addon.min.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/core/themes/cupertino/jquery-ui.min.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/core/themes/cupertino/jquery-ui.theme.min.css" type="text/css"/>
+<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon/dist/jquery-ui-timepicker-addon.min.css" type="text/css"/>
 <!--<link rel="stylesheet" href="$config[home_url]/lib/jqueryui/plugins/jquery-ui-multiselect-widget-1.17/jquery.multiselect.css" type="text/css"/>-->
-<script type="text/javascript" src="$config[home_url]/lib/jq/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="$config[home_url]/lib/jqueryui/core/jquery-ui-1.12.1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon-1.6.3/dist/jquery-ui-timepicker-addon.min.js"></script>
-<!--<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon-1.6.3/dist/i18n/jquery-ui-timepicker-addon-i18n.min.js"></script>-->
-<!--<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-multiselect-widget-1.17/src/jquery.multiselect.min.js"></script>-->
+<script type="text/javascript" src="$config[home_url]/lib/jq/jquery.min.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/jqueryui/core/jquery-ui.min.js"></script>
+<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon/dist/jquery-ui-timepicker-addon.min.js"></script>
+<!--<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-timepicker-addon/dist/i18n/jquery-ui-timepicker-addon-i18n.min.js"></script>-->
+<!--<script type="text/javascript" src="$config[home_url]/lib/jqueryui/plugins/jquery-ui-multiselect-widget/src/jquery.multiselect.min.js"></script>-->
 <script type="text/javascript" src="$config[home_url]/lib/functions.js"></script>
 <script type="text/javascript" src="$config[home_url]/lib/admin.js"></script>
 <script language="javascript" type="text/javascript">

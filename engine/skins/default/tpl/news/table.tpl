@@ -87,11 +87,11 @@ function filter_attach_DateEdit(id) {
 <!-- Hidden SUGGEST div -->
 <div id="suggestWindow" class="suggestWindow">
 <table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
-<a href="#" align="right" id="suggestClose">close</a>
+<a href="#" align="right" id="suggestClose">{{ lang.editnews['close'] }}</a>
 </div>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news"> {{ lang.editnews['news_title'] }}</a></td>
+<td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a></td>
 </tr>
 </table>
 
@@ -121,7 +121,7 @@ function filter_attach_DateEdit(id) {
   <tr>
     <td valign="top">
     <label>{{ lang.editnews['header.date'] }}</label>
-      {{ lang.editnews['header.date_since'] }}:&nbsp; <input type="text" id="dr1" name="dr1" value="{{ dr1 }}" class="bfdate"/>&nbsp;&nbsp; {{ lang.editnews['header.date_till'] }}&nbsp;&nbsp; <input type="text" id="dr2" name="dr2" value="{{ dr2 }}" class="bfdate"/>
+      <span>{{ lang.editnews['header.date_since'] }}:</span> &nbsp; <input type="text" id="dr1" name="dr1" value="{{ dr1 }}" class="bfdate"/>&nbsp;&nbsp; <span>{{ lang.editnews['header.date_till'] }}</span> &nbsp; <input type="text" id="dr2" name="dr2" value="{{ dr2 }}" class="bfdate"/>
     </td>
   </tr>
   <tr>
@@ -174,11 +174,11 @@ function filter_attach_DateEdit(id) {
 <td width="60"  nowrap>{{ lang.editnews['date'] }}</td>
 <td width="48">&nbsp;</td>
 <td width="45%" >{{ lang.editnews['title'] }}</td>
-{% if flags.comments %}<td width="50" style=" text-align:right;"><img src="{{ skins_url }}/images/comments.gif" /></td>{% endif %}
+{% if (pluginIsActive('comments')) %}{% if flags.comments %}<td width="50" style=" text-align:right;"><img src="{{ skins_url }}/images/comments.gif" /></td>{% endif %}{% endif %}
 <td width="50" style=" text-align:right;"><img src="{{ skins_url }}/images/views.png" /></td>
 <td width="25%">{{ lang.editnews['category'] }}</td>
 <td width="10%">{{ lang.editnews['author'] }}</td>
-<td width="16">&nbsp;</td>
+<td width="16">{{ lang.editnews['status'] }}</td>
 <td width="5%"><input class="check" type="checkbox" name="master_box" title="{{ lang.editnews['select_all'] }}" onclick="javascript:check_uncheck_all(editnews)" /></td>
 </tr>
 {% for entry in entries %}
@@ -186,16 +186,16 @@ function filter_attach_DateEdit(id) {
 	<td width="30" class="contentEntry1">{{ entry.newsid }}</td>
 	<td width="60" class="contentEntry1">{{ entry.itemdate }}</td>
 	<td width="48" class="contentEntry1" cellspacing=0 cellpadding=0 style="padding:0; margin:0;" nowrap>
-		{% if entry.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="Main"/> {% endif %}
+		{% if entry.flags.mainpage %}<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="{{ lang['on_main'] }}"/> {% endif %}
 		{% if (entry.attach_count > 0) %}<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="{{ lang['attach.count'] }}: {{ entry.attach_count }}"/> {% endif %}
 		{% if (entry.images_count > 0) %}<img src="{{ skins_url }}/images/img_group.png" border="0" width="16" height="16" title="{{ lang['images.count'] }}: {{ entry.images_count }}"/> {% endif %}
 	</td>
 	<td width="45%" class="contentEntry1">
 		{% if entry.flags.editable %}<a href="{{ php_self }}?mod=news&amp;action=edit&amp;id={{ entry.newsid }}">{% endif %}{{ entry.title }}{% if entry.flags.editable %}</a>{% endif %}
 	</td>
-	{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:right;">{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
+  {% if (pluginIsActive('comments')) %}{% if entry.flags.comments %}<td class="contentEntry1" style=" text-align:right;">{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>{% endif %}{% endif %}
 	<td class="contentEntry1" style=" text-align:right;">{% if entry.flags.isActive %}<a href="{{ entry.link }}" target="_blank">{% endif %}{% if (entry.views > 0) %}{{ entry.views }}{% else %}-{% endif %}{% if entry.flags.isActive %}</a>{% endif %}</td>
-	{% endif %}<td class="contentEntry1">{{ entry.allcats }}</td>
+	<td class="contentEntry1">{{ entry.allcats }}</td>
 	<td class="contentEntry1"><a href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ entry.userid }}">{{ entry.username }}</a></td>
 	<td class="contentEntry1">{% if (entry.state == 1) %}<img src="{{ skins_url }}/images/yes.png" alt="{{ lang['state.published'] }}" />{% elseif (entry.state == 0) %}<img src="{{ skins_url }}/images/no.png" alt="{{ lang['state.unpiblished'] }}" />{% else %}<img src="{{ skins_url }}/images/no_plug.png" alt="{{ lang['state.draft'] }}" />{% endif %} </td>
 	<td class="contentEntry1"><input name="selected_news[]" value="{{ entry.newsid }}" class="check" type="checkbox" /></td>
@@ -204,12 +204,12 @@ function filter_attach_DateEdit(id) {
 <tr><td colspan="6"><p>- {{ lang.editnews['not_found'] }} -</p></td></tr>
 {% endfor %}
 <tr>
-<td width="100%" colspan="8">&nbsp;</td>
+<td width="100%" colspan="11">&nbsp;</td>
 </tr>
 
 {% if flags.allow_modify %}
 <tr align="center">
-<td colspan="8" class="contentEdit" align="right" valign="top">
+<td colspan="11" class="contentEdit" align="right" valign="top">
 <div style="text-align: left;">
 {{ lang.editnews['action'] }}: <select name="subaction" style="font: 12px Verdana, Courier, Arial; width: 230px;">
 <option value="">-- {{ lang.editnews['action'] }} --</option>
@@ -232,11 +232,11 @@ function filter_attach_DateEdit(id) {
 </td>
 </tr>
 <tr>
-<td width="100%" colspan="8">&nbsp;</td>
+<td width="100%" colspan="11">&nbsp;</td>
 </tr>
 {% endif %}
 <tr>
-<td align="center" colspan="8" class="contentHead">{{ pagesss }}</td>
+<td align="center" colspan="11" class="contentHead">{{ pagesss }}</td>
 </tr>
 </table>
 </form>

@@ -824,6 +824,10 @@ border-bottom: 1px solid #eee;
 
 
 /* Skins for ULOADIFY script */
+.uploadifyQueue {
+    margin: 0px 0px;
+}
+
 .uploadifyQueueItem {
 	background-color: #F5F5F5;
 	border: 2px solid #E5E5E5;

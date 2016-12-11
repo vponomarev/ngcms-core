@@ -1,6 +1,6 @@
 <!-- Preload uploadify engine -->
 <script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadify/swfobject.js"></script>
-<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadify/jquery.uploadify.min.js"></script>
 
 <!-- Main scripts -->
 <script type="text/javascript">
@@ -37,7 +37,7 @@ function setStatus(mode) {
 <input type="hidden" name="area" value="{area}" />
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_files_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=files">{l_files_title}</a></td>
 </tr>
 </table>
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -88,7 +88,7 @@ function setStatus(mode) {
 </table>
 </form>
 [status]
-<table id="categories" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
+<table id="categories" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr>
 <td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" />{l_addnewcat}</td>
 <td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" />{l_delcat}</td>
@@ -113,7 +113,7 @@ function setStatus(mode) {
 </table>
 [/status]
 
-<table id="uploadnew" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content">
+<table id="uploadnew" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0" class="content">
 <tr>
 <td width="50%" valign="top" class="contentEntry1">
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">

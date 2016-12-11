@@ -74,9 +74,9 @@ function changeActive(name) {
 <td valign="top" >
  <!-- Left edit column -->
 
-<table border="0" cellspacing="1" cellpadding="0" width="98%">
+<table border="0" cellspacing="1" cellpadding="0" width="100%">
 <tr>
-<td class="contentNav" align="left">
+<td class="contentNav" align="center">
 <input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{{ lang.editnews['bar.maincontent'] }}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('additional')" value="{{ lang.editnews['bar.additional'] }}" class="navbutton" />
 <input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{{ lang.editnews['bar.attaches'] }} ({% if (attachCount>0) %}{{ attachCount }}{% else %}{{ lang['noa'] }}{% endif %})" class="navbutton" />
@@ -191,7 +191,7 @@ $("#cdate").datetimepicker( { currentText: "{{ cdate }}" });
 <td id="rightBar" width="300" valign="top">
  <!-- Right edit column -->
  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-  <tr><td></td><td><span class="f15">{{ lang.editnews['editor.comminfo'] }}</span></td></tr>
+  <tr><td></td><td><span class="f15">{{ lang['editor.comminfo'] }}</span></td></tr>
   <tr><td></td><td>
   <div class="list">
   {{ lang['editor.author'] }}: <a style="font-family: Tahoma, Sans-serif;" href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ authorid }}"><b>{{ author }}</b></a> {% if (pluginIsActive('uprofile')) %} <a href="{{ author_page }}" target="_blank" title="{{ lang.editnews['site.viewuser'] }}"><img src="{{ skins_url }}/images/open_new.png" alt="{{ lang.editnews['newpage'] }}"/></a>{% endif %}<br />
@@ -206,7 +206,6 @@ $("#cdate").datetimepicker( { currentText: "{{ cdate }}" });
   <tr>
    <td></td><td><div class="list">{{ mastercat }} {% if (flags.mondatory_cat) %}&nbsp; <span style="font-size: 16px; color: red;"><b>*</b></span>{% endif %}</div></td>
   </tr>
-  <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
    <td><span class="f15">{{ lang['editor.extcat'] }}</span></td>
@@ -215,7 +214,6 @@ $("#cdate").datetimepicker( { currentText: "{{ cdate }}" });
    <td></td><td>
    <div style="overflow: auto; height: 150px;" class="list">{{ extcat }}</div></td>
   </tr>
-  <tr><td colspan=2>&nbsp;</td></tr>
   <tr>
    <td></td>
    <td><span class="f15">{{ lang['editor.configuration'] }}</span></td>

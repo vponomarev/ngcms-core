@@ -8,11 +8,11 @@ function markNameEdit() {
 </script>
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_images_title}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=images">{l_images_title}</a> &#8594; {l_edit_title} "{orig_name}"</td>
 </tr>
 </table>
 <br/>
-<a href="{link_back}"><strong>{l_back_to_list}</strong></a><br/>
+<a href="{link_back}"><strong>{l_back_to_list}</strong></a>
 <br/>
 <form method="post" action="admin.php">
 <input type="hidden" name="mod" value="images"/>

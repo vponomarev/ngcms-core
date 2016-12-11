@@ -4,7 +4,7 @@
 <td width="100%" style="padding-right:10px;" valign="top">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
-<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_pm}</td>
+<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=pm">{l_pm}</a></td>
 </tr>
 <tr>
 <td width=100% colspan="5">&nbsp;</td>
