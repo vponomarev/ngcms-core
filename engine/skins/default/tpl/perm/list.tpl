@@ -70,8 +70,8 @@ function onUpdateSubmit() {
      <td>
 	  <select name="{{ entry.name }}|{{group.id}}" onchange="onUpdatePerm('{{ entry.name }}|{{group.id}}');" value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
 	   <option value="-1">--</option>
-	   <option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['no'] }}</option>
-	   <option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['yes'] }}</option>
+	   <option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['noa'] }}</option>
+	   <option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['yesa'] }}</option>
 	  </select>
 	 </td>
     </tr>
@@ -94,5 +94,5 @@ $(function(){
 </script>
 <br/>
 
-<input type="submit" value="{{ lang['save'] }}" onclick="return onUpdateSubmit();" />
+<input type="submit" value="{{ lang['save'] }}" onclick="return onUpdateSubmit();" class="button" />
 </form>
