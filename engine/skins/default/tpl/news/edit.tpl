@@ -96,9 +96,9 @@ function changeActive(name) {
   <tr>
    <td valign="top" colspan=3>{% if (not isBBCode) %}{{ quicktags }}<br /> {{ smilies }}<br />{% else %}<br />{% endif %}
 {% if (flags.edit_split) %}
-	<div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2">{{ content.short }}</textarea></div>
+	<div id="container.content.short" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content_short"{% endif %} rows="10" tabindex="2">{{ content.short }}</textarea></div>
 {% if (flags.extended_more) %}    <table cellspacing="2" cellpadding="0" width="100%"><tr><td nowrap>{{ lang.addnews['editor.divider'] }}: &nbsp;</td><td style="width: 90%"><input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value=""/></td></tr></table>{% endif %}
-	<div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2">{{ content.full }}</textarea></div>
+	<div id="container.content.full" class="contentInactive"><textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content_full"{% endif %} rows="10" tabindex="2">{{ content.full }}</textarea></div>
 {% else %}
 	<div id="container.content" class="contentActive"><textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" {% if (isBBCode) %}class="{{ attributBB }}"{% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2">{{ content.short }}</textarea></div>
 {% endif %}
