@@ -67,14 +67,14 @@ function _modal_close() {
 <tr>
 <td colspan="4" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['size'] }}</td>
 </tr>
-<tr><td class="contentEntry1">{{ lang['group'] }}</td><td class="contentEntry1" align="right">{{ lang['amount'] }}</td><td class="contentEntry1"align="right">{{ lang['volume'] }}</td><td class="contentEntry1"> &nbsp; {{ lang['permissions'] }}</td></tr>
-<tr><td class="contentEntry1">{{ lang['group_images'] }}</td><td class="contentEntry1"align="right">{{ image_amount }}</td><td class="contentEntry1"align="right">{{ image_size }}</td><td class="contentEntry1"> &nbsp; {{ image_perm }}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group'] }}</td><td class="contentEntry1" align="right">{{ lang['amount'] }}</td><td class="contentEntry1"align="right">{{ lang['volume'] }}</td><td class="contentEntry1" align="right"> &nbsp; {{ lang['permissions'] }}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group_images'] }}</td><td class="contentEntry1"align="right">{{ image_amount }}</td><td class="contentEntry1"align="right">{{ image_size }}</td><td class="contentEntry1" align="right"> &nbsp; {{ image_perm }}</td></tr>
 <tr>
-<td class="contentEntry1">{{ lang['group_files'] }}</td><td class="contentEntry1"align="right">{{ file_amount }}</td><td class="contentEntry1"align="right">{{ file_size }}</td><td class="contentEntry1"> &nbsp; {{ file_perm }}</td></tr>
+<td class="contentEntry1">{{ lang['group_files'] }}</td><td class="contentEntry1"align="right">{{ file_amount }}</td><td class="contentEntry1"align="right">{{ file_size }}</td><td class="contentEntry1" align="right"> &nbsp; {{ file_perm }}</td></tr>
 <tr>
-<td class="contentEntry1">{{ lang['group_photos'] }}</td><td class="contentEntry1" align="right">{{ photo_amount }}</td><td class="contentEntry1" align="right">{{ photo_size }}</td><td class="contentEntry1">&nbsp; {{ photo_perm }}</td></tr>
-<tr><td class="contentEntry1">{{ lang['group_avatars'] }}</td><td class="contentEntry1" align="right">{{ avatar_amount }}</td><td class="contentEntry1" align="right">{{ avatar_size }}</td><td class="contentEntry1"> &nbsp; {{ avatar_perm }}</td></tr>
-<tr><td class="contentEntry1">{{ lang['group_backup'] }}</td><td class="contentEntry1" align="right">{{ backup_amount }}</td><td class="contentEntry1" align="right">{{ backup_size }}</td><td class="contentEntry1"> &nbsp; {{ backup_perm }}</td></tr>
+<td class="contentEntry1">{{ lang['group_photos'] }}</td><td class="contentEntry1" align="right">{{ photo_amount }}</td><td class="contentEntry1" align="right">{{ photo_size }}</td><td class="contentEntry1" align="right">&nbsp; {{ photo_perm }}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group_avatars'] }}</td><td class="contentEntry1" align="right">{{ avatar_amount }}</td><td class="contentEntry1" align="right">{{ avatar_size }}</td><td class="contentEntry1" align="right"> &nbsp; {{ avatar_perm }}</td></tr>
+<tr><td class="contentEntry1">{{ lang['group_backup'] }}</td><td class="contentEntry1" align="right">{{ backup_amount }}</td><td class="contentEntry1" align="right">{{ backup_size }}</td><td class="contentEntry1" align="right"> &nbsp; {{ backup_perm }}</td></tr>
 </table>
 
 <script type="text/javascript" language="JavaScript" src="{{versionNotifyURL }}"></script>
@@ -150,7 +150,7 @@ function _modal_close() {
    <td width="50%" colspan="2" class="contentEntry1">
     <form method="post" action="{{ php_self }}?mod=statistics">
      <input type="hidden" name="action" value="save" />
-     <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow;">{{ admin_note }}</textarea><br />
+     <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow; width: 100%; margin-bottom: 5px;">{{ admin_note }}</textarea><br />
      <input type="submit" class="button" value="{{ lang['save_note'] }}" />
     </form>
    </td>
