@@ -149,13 +149,33 @@ function printHeader() {
 	echo $tpl -> show('header');
 }
 
+function mkSelect($params) {
+    $values = '';
+    if (isset($params['values']) && is_array($params['values'])) {
+        if(!empty($_REQUEST['language'])) {
+            $params['value'] = $_REQUEST['language'];
+        }
+        foreach ($params['values'] as $k => $v) {
+            $values.='<option value="'.$k.'"'.(($k == $params['value'])?' selected="selected"':'').'>'.$v.'</option>';
+        }
+    }
+
+    $onchange = "window.location = document.location.protocol + '//' + document.location.hostname + document.location.pathname + '?language=' + this.options[this.selectedIndex].value;";
+
+    return "<select ".((isset($params['id']) && $params['id'])?'id="'.$params['id'].'" ':'').'name="'.$params['name'].'" onchange="'.$onchange.'">'.$values.'</select>';
+}
+
 function doWelcome() {
- global $tpl, $tvars, $templateDir;
+ global $tpl, $tvars, $templateDir, $lang;
 
  // Print header
  $tvars['vars']['menu_begin'] = ' class="hover"';
  printHeader();
 
+    //$langs = ListFiles('lang', '');
+    //var_dump($langs);
+    $lang_select = mkSelect(array('values' => array('russian' => 'Русский', 'english' => 'English'), 'value' => 'russian', 'id' => 'language', 'name' => 'language'));
+    $tvars['vars']['lang_select'] = $lang_select;
 
  // Load license
  $license = @file_get_contents(root.'../license.html');
@@ -305,7 +325,7 @@ function doConfig_perm() {
 	$tvars['vars']['chmod'] = $chmod;
 
 	// PHP Version
-	if (version_compare(phpversion(), '5.2') < 0) {
+	if (version_compare(phpversion(), '5.3') < 0) {
 		$tvars['vars']['php_version'] = '<font color="red">'.phpversion().'</font>';
 		$error = 1;
 	} else {
@@ -565,7 +585,7 @@ function doConfig_common() {
 
 // Генерация конфигурационного файла
 function doInstall() {
-	global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $pluginInstallList;
+	global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $pluginInstallList, $lang;
 	$tvars['vars']['menu_install'] = ' class="hover"';
 	printHeader();
 

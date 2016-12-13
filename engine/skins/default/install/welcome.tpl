@@ -7,6 +7,8 @@
 {l_welcome.textblock1}<br/>
 {l_welcome.textblock2}</blockquote>
 </td></tr></table>
+<p style="margin-bottom: 5px;"><b>{l_welcome.choose_lang}</b></p>
+{lang_select}
 <p style="margin-bottom: 5px;"><b>{l_welcome.licence}</b></p>
 <div style="height: 300px; border: 1px solid #76774C; background-color: #FDFDD3; margin-bottom: 10px; padding: 5px; overflow: auto;">
 {license}
