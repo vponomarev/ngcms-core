@@ -164,14 +164,16 @@ function mkLanguageSelect($params)
 function doWelcome()
 {
     global $tpl, $tvars, $templateDir, $lang, $currentLanguage;
-
+	
+	include_once root . "includes/inc/functions.inc.php";
+	
     // Print header
     $tvars['vars']['menu_begin'] = ' class="hover"';
     printHeader();
 
-    //$langs = ListFiles('lang', '');
-    //var_dump($langs);
-    $lang_select = mkLanguageSelect(array('values' => array('russian' => 'Русский', 'english' => 'English'), 'value' => $currentLanguage, 'id' => 'language', 'name' => 'language'));
+    $langs = ListFiles('lang', '');
+    
+    $lang_select = mkLanguageSelect(array('values' => $langs, 'value' => $currentLanguage, 'id' => 'language', 'name' => 'language'));
     $tvars['vars']['lang_select'] = $lang_select;
 
     // Load license
