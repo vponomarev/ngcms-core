@@ -63,12 +63,7 @@ foreach (array('begin', 'db', 'plugins', 'template', 'perm', 'common', 'install'
 
 // If action is specified, but license is not accepted - stop installation
 if ($_POST['action'] && !$_POST['agree']) {
-        $tvars['vars']['menu_begin'] = ' class="hover"';
-	printHeader();
-	$tpl -> template('notagree', $templateDir);
-	$tpl -> vars('notagree', $tvars);
-	echo $tpl -> show('notagree');
-	exit;
+    notAgree();
 }
 
 // Flag if we need to do some configuration actions after install
@@ -149,12 +144,9 @@ function printHeader() {
 	echo $tpl -> show('header');
 }
 
-function mkSelect($params) {
+function mkLanguageSelect($params) {
     $values = '';
     if (isset($params['values']) && is_array($params['values'])) {
-        if(!empty($_REQUEST['language'])) {
-            $params['value'] = $_REQUEST['language'];
-        }
         foreach ($params['values'] as $k => $v) {
             $values.='<option value="'.$k.'"'.(($k == $params['value'])?' selected="selected"':'').'>'.$v.'</option>';
         }
@@ -166,7 +158,7 @@ function mkSelect($params) {
 }
 
 function doWelcome() {
- global $tpl, $tvars, $templateDir, $lang;
+ global $tpl, $tvars, $templateDir, $lang, $currentLanguage;
 
  // Print header
  $tvars['vars']['menu_begin'] = ' class="hover"';
@@ -174,7 +166,7 @@ function doWelcome() {
 
     //$langs = ListFiles('lang', '');
     //var_dump($langs);
-    $lang_select = mkSelect(array('values' => array('russian' => 'Русский', 'english' => 'English'), 'value' => 'russian', 'id' => 'language', 'name' => 'language'));
+    $lang_select = mkLanguageSelect(array('values' => array('russian' => 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅ', 'english' => 'English'), 'value' => $currentLanguage, 'id' => 'language', 'name' => 'language'));
     $tvars['vars']['lang_select'] = $lang_select;
 
  // Load license
@@ -192,7 +184,19 @@ function doWelcome() {
  echo $tpl ->show('welcome');
 }
 
-// Вывод формы для ввода параметров установки
+function notAgree() {
+    global $tpl, $tvars, $templateDir, $lang;
+
+    $tvars['vars']['menu_begin'] = ' class="hover"';
+    printHeader();
+    $tpl -> template('notagree', $templateDir);
+    $tpl -> vars('notagree', $tvars);
+    echo $tpl -> show('notagree');
+    exit;
+
+}
+
+// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function doConfig() {
 	switch ($_POST['stage']) {
 		default:
@@ -292,7 +296,7 @@ function doConfig_db($check) {
 	$tvars['vars']['menu_db'] = ' class="hover"';
 	printHeader();
 
-	// Выводим форму проверки
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	$tpl -> template('config_db', $templateDir);
 	$tpl -> vars('config_db', $tvars);
 	echo $tpl -> show('config_db');
@@ -406,7 +410,7 @@ function doConfig_perm() {
 			$hinput[] = '<input type="hidden" name="'.$k.'" value="'.htmlspecialchars ($v, ENT_COMPAT | ENT_HTML401, 'cp1251').'"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
-	// Выводим форму проверки
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	$tpl -> template('config_perm', $templateDir);
 	$tpl -> vars('config_perm', $tvars);
 	echo $tpl -> show('config_perm');
@@ -481,7 +485,7 @@ function doConfig_plugins() {
 			$hinput[] = '<input type="hidden" name="'.$k.'" value="'.htmlspecialchars ($v, ENT_COMPAT | ENT_HTML401, 'cp1251').'"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
-	// Выводим форму проверки
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	$tpl -> template('config_plugins', $templateDir);
 	$tpl -> vars('config_plugins', $tvars);
 	echo $tpl -> show('config_plugins');
@@ -519,6 +523,9 @@ function doConfig_templates() {
 		}
 		closedir($dRec);
 	}
+    usort($tlist, function ($a, $b) {
+        return strcmp($a['id'], $b['id']);
+    });
 
 	// Set default template name
 	if (!isset($_POST['template']))
@@ -545,7 +552,7 @@ function doConfig_templates() {
 			$hinput[] = '<input type="hidden" name="'.$k.'" value="'.htmlspecialchars ($v, ENT_COMPAT | ENT_HTML401, 'cp1251').'"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
-	// Выводим форму проверки
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	$tpl -> template('config_templates', $templateDir);
 	$tpl -> vars('config_templates', $tvars);
 	echo $tpl -> show('config_templates');
@@ -576,16 +583,16 @@ function doConfig_common() {
 
 	$tvars['vars']['autodata_checked'] = (isset($_POST['autodata']) && ($_POST['autodata'] == '1'))?' checked="checked"':'';
 
-	// Выводим форму проверки
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	$tpl -> template('config_common', $templateDir);
 	$tpl -> vars('config_common', $tvars);
 	echo $tpl -> show('config_common');
 }
 
 
-// Генерация конфигурационного файла
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 function doInstall() {
-	global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $pluginInstallList, $lang;
+	global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $pluginInstallList, $lang, $currentLanguage;
 	$tvars['vars']['menu_install'] = ' class="hover"';
 	printHeader();
 
@@ -620,55 +627,55 @@ function doInstall() {
 		$mysql = DBLoad();
 		
 		// Stage #02 - Connect to DB
-		// Если заказали автосоздание, то подключаемся рутом
+		// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 		if ($_POST['reg_autocreate']) {
 			if (@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbadminuser'], $_POST['reg_dbadminpass'])) {
-				// Успешно подключились
-				array_push($LOG,'Подключение к серверу БД "'.$_POST['reg_dbhost'].'" используя административный логин "'.$_POST['reg_dbadminuser'].'" ... OK');
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+				array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ "'.$_POST['reg_dbhost'].'" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ "'.$_POST['reg_dbadminuser'].'" ... OK');
 
-				// 1. Создание БД
+				// 1. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 				if (!@$mysql->select_db($_POST['reg_dbname'])) {
-					// БД нет. Пытаемся создать
+					// пїЅпїЅ пїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 					if (!@$mysql->query('CREATE DATABASE '.$_POST['reg_dbname'])) {
-						// Не удалось создать. Фатально.
-						array_push($ERROR, 'Не удалось создать БД "'.$_POST['reg_dbname'].'" используя административную учётную запись. Скорее всего у данной учётной записи нет прав на создание баз данных.');
+						// пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+						array_push($ERROR, 'пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ "'.$_POST['reg_dbname'].'" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.');
 						$error = 1;
 						break;
 					} else {
-						array_push($LOG,'Создание БД "'.$_POST['reg_dbname'].'" ... OK');
+						array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ "'.$_POST['reg_dbname'].'" ... OK');
 					}
 				} else {
-					array_push($LOG,'БД "'.$_POST['reg_dbname'].'" уже существует ... OK');
+					array_push($LOG,'пїЅпїЅ "'.$_POST['reg_dbname'].'" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ... OK');
 				}
 
-				// 2. Предоставление доступа к БД
+				// 2. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ
 				if (!@$mysql->query("grant all privileges on ".$_POST['reg_dbname'].".* to '".$_POST['reg_dbuser']."'@'".$_POST['reg_dbhost']."' identified by '".$_POST['reg_dbpass']."'")) {
-					array_push($ERROR, 'Невозможно обеспечить доступ пользователя "'.$_POST['reg_dbuser'].'" к БД "'.$_POST['reg_dbname'].'" используя административные права.');
+					array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "'.$_POST['reg_dbuser'].'" пїЅ пїЅпїЅ "'.$_POST['reg_dbname'].'" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.');
 					$error = 1;
 					break;
 				}	else {
-					array_push($LOG,'Предоставление доступа пользователю "'.$_POST['reg_dbuser'].'" к БД "'.$_POST['reg_dbname'].'" ... OK');
+					array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "'.$_POST['reg_dbuser'].'" пїЅ пїЅпїЅ "'.$_POST['reg_dbname'].'" ... OK');
 				}
 			} else {
-				array_push($ERROR, 'Невозможно подключиться к серверу БД "'.$_POST['reg_dbhost'].'" используя административный логин "'.$_POST['reg_dbadminuser'].'"');
+				array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ "'.$_POST['reg_dbhost'].'" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ "'.$_POST['reg_dbadminuser'].'"');
 				$error = 1;
 				break;
 			}
-			// Отключаемся от сервера
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			$mysql->close();
 		}
 
-		// Подключаемся к серверу используя права пользователя
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		if (!@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbuser'], $_POST['reg_dbpass'])) {
-			array_push($ERROR, 'Невозможно подключиться к серверу БД "'.$_POST['reg_dbhost'].'" используя логин "'.$_POST['reg_dbuser'].'" (пароль: "'.$_POST['reg_dbpass'].'")');
+			array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ "'.$_POST['reg_dbhost'].'" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ "'.$_POST['reg_dbuser'].'" (пїЅпїЅпїЅпїЅпїЅпїЅ: "'.$_POST['reg_dbpass'].'")');
 			$error = 1;
 			break;
 		}
-		array_push($LOG,'Подключение к серверу БД "'.$_POST['reg_dbhost'].'" используя логин "'.$_POST['reg_dbuser'].'" ... OK');
+		array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ "'.$_POST['reg_dbhost'].'" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ "'.$_POST['reg_dbuser'].'" ... OK');
 
-		// Открываем нужную БД
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ
 		if (!@$mysql->select_db($_POST['reg_dbname'])) {
-			array_push($ERROR, 'Невозможно открыть БД "'.$_POST['reg_dbname'].'"<br/>Вам необходимо создать эту БД самостоятельно.');
+			array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ "'.$_POST['reg_dbname'].'"<br/>пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.');
 			$error = 1;
 			break;
 		}
@@ -681,17 +688,17 @@ function doInstall() {
 		}
 		$charset = $charsetEngine?' default charset=cp1251':'';
 
-		array_push($LOG, 'Ваша версия сервера БД mySQL '.((!$charsetEngine)?'не':'').'поддерживает множественные кодировки.');
+		array_push($LOG, 'пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ mySQL '.((!$charsetEngine)?'пїЅпїЅ':'').'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.');
 
 
-		// Создаём таблицы в mySQL
-		// 1. Проверяем наличие пересекающихся таблиц
-		// 1.1. Загружаем список таблиц из БД
+		// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ mySQL
+		// 1. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+		// 1.1. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅ
 
 		$list = array();
 
 		if (!($query = $mysql->query("show tables"))) {
-			array_push($ERROR, 'Внутренняя ошибка SQL при получении списка таблиц БД. Обратитесь к автору проект за разъяснениями.');
+			array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ SQL пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.');
 			$error = 1;
 			break;
 		}
@@ -701,39 +708,39 @@ function doInstall() {
 			$SQL_table[$item[0]] = 1;
 		}
 
-		// 1.2. Парсим список таблиц
+		// 1.2. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		$dbsql = explode(';',file_get_contents('trash/tables.sql'));
 
-		// 1.3. Проверяем пересечения
+		// 1.3. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		foreach ($dbsql as $dbCreateString) {
 			if (!trim($dbCreateString)) { continue; }
 
-			// Добавляем кодировку (если поддерживается)
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
 			$dbCreateString .= $charset;
 
-			// Получаем имя таблицы
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if (preg_match('/CREATE TABLE `(.+?)`/',$dbCreateString,$match)) {
 				$tname = str_replace('XPREFIX_',$_POST['reg_dbprefix'].'_',$match[1]);
 				if ($SQL_table[$tname]) {
-					array_push($ERROR, 'В БД "'.$_POST['reg_dbname'].'" уже существует таблица "'.$tname.'"<br/>Используйте другой префикс для создания таблиц!');
+					array_push($ERROR, 'пїЅ пїЅпїЅ "'.$_POST['reg_dbname'].'" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ "'.$tname.'"<br/>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!');
 					$error = 1;
 					break;
 				}
 			} else {
-				array_push($ERROR, 'Внутренняя ошибка парсера SQL. Обратитесь к автору проект за разъяснениями ['.$dbCreateString.']');
+				array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ SQL. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ['.$dbCreateString.']');
 				$error = 1;
 				break;
 			}
 		}
 		if ($error) break;
 
-		array_push($LOG,'Проверка наличия дублирующихся таблиц ... OK');
+		array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ ... OK');
 		array_push($LOG, '');
 
 		$SUPRESS_CHARSET = 0;
 		$SUPRESS_ENGINE  = 0;
 
-		// 1.4. Создаём таблицы
+		// 1.4. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		for ($i=0; $i<count($dbsql);$i++) {
 			$dbCreateString = str_replace('XPREFIX_',$_POST['reg_dbprefix'].'_',$dbsql[$i]).$charset;
 
@@ -748,41 +755,41 @@ function doInstall() {
 				if ($mysql->db_errno()) {
 					if (!$SUPRESS_CHARSET) {
 						$SUPRESS_CHARSET=1;
-						array_push($LOG,'Внимание! Попытка отключить настройки кодовой страницы');
+						array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ! пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ');
 						$i--;
 						continue;
 					}
 					if (!$SUPRESS_ENGINE) {
 						$SUPRESS_ENGINE=1;
-						array_push($LOG,'Внимание! Попытка отключить настройки формата хранения данных');
+						array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ! пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ');
 						$i--;
 						continue;
 					}
-					array_push($ERROR, 'Не могу создать таблицу "'.$tname.'"!<br>Обратитесь к автору проекта за разъяснениями<br>Код SQL запроса:<br>'.$dbCreateString);
+					array_push($ERROR, 'пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ "'.$tname.'"!<br>пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ<br>пїЅпїЅпїЅ SQL пїЅпїЅпїЅпїЅпїЅпїЅпїЅ:<br>'.$dbCreateString);
 					$error = 1;
 					break;
 				}
-				array_push($LOG,'Создание таблицы "<b>'.$tname.'</b>" ... OK');
+				array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ "<b>'.$tname.'</b>" ... OK');
 			}
 		}
-		array_push($LOG,'Все таблицы успешно созданы ... OK');
+		array_push($LOG,'пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ ... OK');
 		array_push($LOG, '');
 
-		// 1.5 Создание пользователя-администратора
+		// 1.5 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$query = "insert into `".$_POST['reg_dbprefix']."_users` (`name`, `pass`, `mail`, `status`, `reg`) VALUES ('".$mysql->db_quote($_POST['admin_login'])."', '".$mysql->db_quote(md5(md5($_POST['admin_password'])))."', '".$mysql->db_quote($_POST['admin_email'])."', '1', unix_timestamp(now()))";
 		if (!@$mysql->query($query)) {
-			array_push($LOG,'Активация пользователя-администратора ... <font color="red">FAIL</font>');
+			array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ... <font color="red">FAIL</font>');
 		} else {
-			array_push($LOG,'Активация пользователя-администратора ... OK');
+			array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ ... OK');
 		}
-		// 1.6 Сохраняем конфигурационную переменную database.engine.version
+		// 1.6 пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ database.engine.version
 		@$mysql->query("insert into `".$_POST['reg_dbprefix']."_config` (name, value) values ('database.engine.version', '0.9.2 Release+SVN')");
 
-		// Вычищаем лишний перевод строки из 'home_url'
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 'home_url'
 		if (substr($_POST['home_url'], -1, 1) == '/')
 			$_POST['home_url'] = substr($_POST['home_url'], 0, -1);
 
-		// 1.7. Формируем конфигурационный файл
+		// 1.7. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 		$newconf = array(
 			'dbhost'		=> $_POST['reg_dbhost'],
 			'dbname'		=> $_POST['reg_dbname'],
@@ -804,13 +811,13 @@ function doInstall() {
 			'home_title'	=> $_POST['home_title'],
 			'admin_mail'	=> $_POST['admin_email'],
 			'lock'			=> '0',
-			'lock_reason'	=> 'Сайт на реконструкции!',
+			'lock_reason'	=> 'пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!',
 			'meta'			=> '1',
-			'description'	=> 'Здесь описание вашего сайта',
-			'keywords'		=> 'Здесь ключевые слова, через запятую (,)',
+			'description'	=> 'пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ',
+			'keywords'		=> 'пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ (,)',
 			'skin'			=> 'default',
 			'theme'			=> $_POST['template'],
-			'default_lang'	=> 'russian',
+			'default_lang'	=> $currentLanguage,
 			'auto_backup'	=> '1',
 			'auto_backup_time' => '48',
 			'use_gzip'		=> '0',
@@ -862,18 +869,18 @@ function doInstall() {
 			'UUID' => md5(mt_rand().mt_rand()).md5(mt_rand().mt_rand()),
 		);
 
-		array_push($LOG,"Подготовка параметров конфигурационного файла ... OK");
+		array_push($LOG,"пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ... OK");
 
-		// Записываем конфиг
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		$confData	=	"<?php\n".'$config = '. var_export($newconf, true).";\n";
 
 		if (!fwrite($frec['config.php'], $confData)) {
-			array_push($ERROR, 'Ошибка записи конфигурационного файла!');
+			array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ!');
 			$error = 1;
 			break;
 		}
 
-		// Активируем плагин auth_basic
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ auth_basic
 		$plugConf = array(
 			'active' => array(
 				'auth_basic' => 'auth_basic'
@@ -887,12 +894,12 @@ function doInstall() {
 
 		$plugData = "<?php\n".'$array = '. var_export($plugConf, true). ";\n";
 		if (!fwrite($frec['plugins.php'], $plugData)) {
-			array_push($ERROR, 'Ошибка записи конфигурационного файла [список активных плагинов]!');
+			array_push($ERROR, 'пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ [пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ]!');
 			$error = 1;
 			break;
 		}
 
-		// А теперь - включаем необходимые плагины
+		// пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$pluginInstallList = array();
 		foreach ($_POST as $k => $v) {
 			if (preg_match('/^plugin\:(.+?)$/', $k, $m) && ($v == 1)) {
@@ -900,13 +907,13 @@ function doInstall() {
 			}
 		}
 
-		// Закрываем все файлы
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 		foreach (array_keys($frec) as $k)
 			fclose($frec[$k]);
 
-		array_push($LOG,'Сохранение конфигурационного файла ... OK');
+		array_push($LOG,'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ ... OK');
 
-		// А теперь - включаем необходимые плагины
+		// пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		include_once root."core.php";
 		include_once root."includes/inc/extraconf.inc.php";
 		include_once root."includes/inc/extrainst.inc.php";
@@ -914,7 +921,7 @@ function doInstall() {
 		// Now let's install plugins
 		// First: Load informational `version` files
 		$list = get_extras_list();
-		// Подготавливаем список плагинов для установки
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		$pluginInstallList = array();
 		foreach ($_POST as $k => $v) {
 			if (preg_match('/^plugin\:(.+?)$/', $k, $m) && ($v == 1)) {
@@ -928,13 +935,13 @@ function doInstall() {
 	if ($error) {
 		$output .= "<br/>\n";
 		foreach ($ERROR as $errText) {
-			$output .= '<div class="errorDiv"><b><u>Ошибка</u>!</b><br/>'.$errText.'</div>';
+			$output .= '<div class="errorDiv"><b><u>пїЅпїЅпїЅпїЅпїЅпїЅ</u>!</b><br/>'.$errText.'</div>';
 		}
 
 		// Make navigation menu
 		$output .= '<div class="warningDiv">';
-		$output .= '<input type="button" style="width: 230px;" value="Вернуться к настройке БД" onclick="document.getElementById(\'stage\').value=\'0\'; form.submit();"/> - если Вы что-то неверно ввели в настройках БД, то Вы можете исправить ошибку.<br/>';
-		$output .= '<input type="button" style="width: 230px;" value="Попробовать ещё раз" onclick="document.getElementById(\'action\').value=\'install\'; form.submit();"/> - если Вы самостоятельно устранили ошибку, то нажмите сюда.';
+		$output .= '<input type="button" style="width: 230px;" value="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ" onclick="document.getElementById(\'stage\').value=\'0\'; form.submit();"/> - пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ, пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.<br/>';
+		$output .= '<input type="button" style="width: 230px;" value="пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ" onclick="document.getElementById(\'action\').value=\'install\'; form.submit();"/> - пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.';
 		$output .= '</div>';
 	
 	}
@@ -942,7 +949,7 @@ function doInstall() {
 	$tvars['vars']['actions'] = $output;
 
 
-	// Выводим форму проверки
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	$tpl -> template('config_process', $templateDir);
 	$tpl -> vars('config_process', $tvars);
 	print $tpl -> show('config_process');
