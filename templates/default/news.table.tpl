@@ -2,7 +2,7 @@
 {{ entry }}
 {% else %}
 <div class="alert alert-info">
-	<strong>Информация</strong>
+	<strong>{{ lang.notifyWindowInfo }}</strong>
 	{{ lang['msgi_no_news'] }}
 </div>
 {% endfor %}

@@ -12,7 +12,7 @@
 		<link href="{{ tpl_url }}/css/btn/btn.css" rel="stylesheet" />
 		<link rel="shortcut icon" href="{{ tpl_url }}/favicon.ico">
 		{% if pluginIsActive('rss_export') %}<link href="{{ home }}/rss.xml" rel="alternate" type="application/rss+xml" title="RSS" />{% endif %}
-		<script type="text/javascript" src="{{ scriptLibrary }}/jquery-1.8.2.js"></script>
+		<script type="text/javascript" src="{{ scriptLibrary }}/jq/jquery.js"></script>
 		<script type="text/javascript" src="{{ scriptLibrary }}/functions.js"></script>
 		<script type="text/javascript" src="{{ scriptLibrary }}/ajax.js"></script>
 		<title>{{ titles }}</title>

@@ -24,7 +24,7 @@
 			<link rel="stylesheet" href="{{ tpl_url }}/css/ie6.css">
 		<![endif]-->
 		{% if pluginIsActive('rss_export') %}<link href="{{ home }}/rss.xml" rel="alternate" type="application/rss+xml" title="RSS" />{% endif %}
-		<script src="{{ tpl_url }}/js/jquery.js"></script>
+		<script src="{{ scriptLibrary }}/jq/jquery.js"></script>
 		<script type="text/javascript" src="{{ scriptLibrary }}/functions.js"></script>
 		<script type="text/javascript" src="{{ scriptLibrary }}/ajax.js"></script>
 		<title>{{ titles }}</title>
@@ -40,7 +40,7 @@
 					{{ personal_menu }}
 				{% else %}
 					<div id="auth">
-						<a href="/register/" class="auth-registration">Зарегистрироваться</a>
+						<a href="/register/" class="auth-registration">{{ lang.registration }}</a>
 						<a href="#auth-modal" rel="modal" class="auth-login">Войти</a>
 					</div>
 				{% endif %}
@@ -78,7 +78,7 @@
 								<a href="#" id="articles-switch-1" class="articles-switch-1" onclick="javascript:save_articles_switch_one();"></a>
 								<a href="#" id="articles-switch-2" class="articles-switch-2" onclick="javascript:save_articles_switch_two();"></a>
 							</div>
-							<div class="block-title">Новости</div>
+							<div class="block-title">{{ lang.news }}</div>
 							<div class="clearfix"></div>
 							{{ mainblock }}
 						</div>

@@ -2,11 +2,11 @@
 [notfound]<div class="alert alert-info">{l_search.notfound}</div>[/notfound]
 [error]<div class="alert alert-error"><b>{l_search.error}</b></div>[/error]
 <form method="GET" action="{form_url}">
-<div class="block-title">Поиск по сайту</div>
+<div class="block-title">{l_search.site_search}</div>
 <table border="0" width="100%" cellspacing="0" cellpadding="0" style="margin:20px 0 0 0;">
 	<tr align="center">
 		<td>{l_search.filter.author} <input type="text" name="author" class="input" value="{author}" style="width:130px" /></td>
-		<td>{l_search.filter.category} {catlist}</td>
+		<td>{l_search.filter.category} <div class="search_catz">{catlist}</div></td>
 		<td>{l_search.filter.date} <select name="postdate"><option value=""></option>{datelist}</select></td>
 	</tr>
 </table>

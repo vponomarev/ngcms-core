@@ -1,17 +1,17 @@
 {% if (global.flags.isLogged) %}
 <div id="auth">
 	{% if pluginIsActive('nsm') %}<a href="/plugin/nsm/" class="auth-add-news">Добавить новость</a>{% endif %}
-	<a href="#" class="auth-profile">Профиль</a>
+	<a href="#" class="auth-profile">{{ lang.profile }}</a>
 	<div id="profile">
 		<div class="profile-top-bg"></div>
 		<div class="profile-block">
-			<div class="title">Профиль</div>
+			<div class="title">{{ lang.profile }}</div>
 			<ul>
-				[if-have-perm]<li><a href="{{ admin_url }}" target="_blank"><b>Админ-панель</b></a></li>
-				<li><a href="{{ addnews_link }}">Добавить новость</a></li>[/if-have-perm]
-				{% if pluginIsActive('uprofile') %}<li><a href="{{ profile_link }}">Редактировать профиль</a></li>{% endif %}
-				{% if pluginIsActive('pm') %}<li><a href="{{ p.pm.link }}">Личные сообщения ({{ p.pm.pm_unread }})</a></li>{% endif %}
-				<li><a href="{{ logout_link }}">Завершить сеанс</a></li>
+				[if-have-perm]<li><a href="{{ admin_url }}" target="_blank"><b>{{ lang.admin_panel }}</b></a></li>
+				<li><a href="{{ addnews_link }}">{{ lang.add_news }}</a></li>[/if-have-perm]
+				{% if pluginIsActive('uprofile') %}<li><a href="{{ profile_link }}">{{ lang.edit_profile }}</a></li>{% endif %}
+				{% if pluginIsActive('pm') %}<li><a href="{{ p.pm.link }}">{{ lang.private_messages }} ({{ p.pm.pm_unread }})</a></li>{% endif %}
+				<li><a href="{{ logout_link }}">{{ lang.log_out }}</a></li>
 			</ul>
 		</div>
 	</div>
@@ -30,19 +30,19 @@ var set_pass  = 0;
 			<form name="login" method="post" action="{{ form_action }}" id="login">
 				<input type="hidden" name="redirect" value="{{ redirect }}" />
 				<div class="label">
-					<label for="login">Логин:</label>
+					<label for="login">{{ lang.username }}:</label>
 					<input type="text" id="login" name="username" class="input">
 				</div>
 				<div class="label clearfix">
-					<label for="password">Пароль:</label>
+					<label for="password">{{ lang.password }}:</label>
 					<input type="password" id="password" name="password" class="input">
-					<a href="{{ lost_link }}" class="pull-right">Забыли пароль?</a>
+					<a href="{{ lost_link }}" class="pull-right">{{ lang.lostpassword }}</a>
 				</div>
 				<div class="label pull-left">
-					<label><input type="checkbox"> запомнить</label>
+					<label><input type="checkbox"> {{ lang.remember_me }}</label>
 				</div>
 				<div class="label pull-right">
-					<input type="submit" value="Войти" class="button">
+					<input type="submit" value="{{ lang.login }}" class="button">
 				</div>
 			</form>
 		</div>

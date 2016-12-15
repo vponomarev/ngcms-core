@@ -11,17 +11,17 @@
 	{% endfor %}
 	{% if flags.hasCaptcha %}
 	<div class="label label-table captcha pull-left">
-		<label for="reg_capcha">Введите код безопасности:</label>
+		<label for="reg_capcha">{{ lang.captcha }}:</label>
 		<input id="reg_capcha" type="text" name="vcode" class="input">
-		<img src="{{ admin_url }}/captcha.php" onclick="reload_captcha();" id="img_captcha" style="cursor: pointer;" alt="Security code"/>
-		<div class="label-desc">Вам предстоит специальный код для подтверждения вашего действия.</div>
+		<img src="{{ admin_url }}/captcha.php" onclick="reload_captcha();" id="img_captcha" style="cursor: pointer;" alt="{{ lang.captcha }}"/>
+		<div class="label-desc">{{ lang.captcha_desc }}</div>
 	</div>
 	{% endif %}
 	<div class="clearfix"></div>
 	<div class="label">
 		<label class="pull-left"><input type="checkbox" name="agree">
 		Я ознакомился с <a href="#">правилам</a> и <a href="#">условиями</a> и принимаю их.</label>
-		<input type="submit" value="Зарегистрироваться" class="button pull-right">
+		<input type="submit" value="{{ lang.register }}" class="button pull-right">
 	</div>
 </form>
 <script type="text/javascript">

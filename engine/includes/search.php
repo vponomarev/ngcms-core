@@ -113,7 +113,7 @@ function search_news(){
 	$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = (isset($_REQUEST['search']) && !count($search_words))?'$1':'';
 
 	// Make category list
-	$tvars['vars']['catlist'] = makeCategoryList( array ('name' => 'catid', 'selected' => $_REQUEST['catid'], 'doempty' => 1, 'class' => 'mw_search_f'));
+	$tvars['vars']['catlist'] = makeCategoryList( array ('name' => 'catid', 'selected' => $_REQUEST['catid'], 'doempty' => 1));
 
 	// Results of search
 	$tvars['vars']['entries'] = $found['data'];

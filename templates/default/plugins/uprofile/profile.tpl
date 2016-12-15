@@ -65,7 +65,7 @@
 		<label>{{ lang.uprofile['photo'] }}:</label>
 		<div class="input-fileform">
 			<div class="fileformlabel"></div>
-			<div class="selectbutton">Îבחמנ</div>
+			<div class="selectbutton">{{ lang.uprofile['upload_file'] }}</div>
 			<input type="file" name="newphoto" class="upload" />
 		</div>
 		{% if (user.flags.hasPhoto) %}
@@ -84,7 +84,7 @@
 		<label>{{ lang.uprofile['avatar'] }}:</label>
 		<div class="input-fileform">
 			<div class="fileformlabel"></div>
-			<div class="selectbutton">Îבחמנ</div>
+			<div class="selectbutton">{{ lang.uprofile['upload_file'] }}</div>
 			<input type="file" name="newavatar" class="upload" />
 		</div>
 		{% if (user.flags.hasAvatar) %}
