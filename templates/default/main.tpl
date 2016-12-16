@@ -41,27 +41,27 @@
 				{% else %}
 					<div id="auth">
 						<a href="/register/" class="auth-registration">{{ lang.registration }}</a>
-						<a href="#auth-modal" rel="modal" class="auth-login">Войти</a>
+						<a href="#auth-modal" rel="modal" class="auth-login">{{ lang.theme['login'] }}</a>
 					</div>
 				{% endif %}
 				<div class="clearfix"></div>
 				<div id="menu" class="clearfix">
 					<nav class="menu">
 						<ul>
-							<li><a href="{{ home }}">Главная</a></li>
-							<li><a href="#">Новости</a></li>
-							<li><a href="#">Форум</a></li>
-							<li><a href="#">Статьи</a>
+							<li><a href="{{ home }}">{{ lang.theme.home }}</a></li>
+							<li><a href="#">{{ lang.theme.news }}</a></li>
+							<li><a href="#">{{ lang.theme.forum }}</a></li>
+							<li><a href="#">{{ lang.theme.article }}</a>
 								<ul>
-									<li><a href="#">Актуальные статьи</a></li>
-									<li><a href="#">Каталог</a></li>
-									<li><a href="#">Работа</a></li>
+									<li><a href="#">{{ lang.theme.recent_article }}</a></li>
+									<li><a href="#">{{ lang.theme.catalog }}</a></li>
+									<li><a href="#">{{ lang.theme.Job }}</a></li>
 								</ul>
 							</li>
-							<li><a href="#">Блог</a></li>
-							<li><a href="#">Каталог</a></li>
-							<li><a href="#">Работа</a></li>
-							<li><a href="#">О нас</a></li>
+							<li><a href="#">{{ lang.theme.blog }}</a></li>
+							<li><a href="#">{{ lang.theme.catalog }}</a></li>
+							<li><a href="#">{{ lang.theme.Job }}</a></li>
+							<li><a href="#">{{ lang.theme.about }}</a></li>
 						</ul>
 					</nav>
 					<div id="search">
@@ -88,21 +88,27 @@
 				</div>
 				<aside id="sidebar">
 					<div class="block popular-block">
-						<div class="block-title">Популярные статьи</div>
+						<div class="block-title">{{ lang.theme.popular_article }}</div>
 						<ul class="tabs tabs-full" id="popular-news">
-							<li class="active"><a href="#tab-1" data-transitional="fade">За день</a></li>
-							<li><a href="#tab-2" data-transitional="fade">За неделю</a></li>
-							<li><a href="#tab-3" data-transitional="fade">За все время</a></li>
+							<li class="active"><a href="#tab-1" data-transitional="fade">{{ lang.theme.day_1 }}</a></li>
+							<li><a href="#tab-2" data-transitional="fade">{{ lang.theme.day_2 }}</a></li>
+							<li><a href="#tab-3" data-transitional="fade">{{ lang.theme.day_3 }}</a></li>
 						</ul>
 						<div class="tab-content tab-bordered">
 							<div class="tab-pane active" id="tab-1">
-								{{ callPlugin('xnews.show', {'order' : 'last', 'count': '6', 'template' : 'xnews1'}) }}
+								{% if pluginIsActive('xnews') %}
+									{{ callPlugin('xnews.show', {'order' : 'last', 'count': '6', 'template' : 'xnews1'}) }}
+								{% endif %}
 							</div>
 							<div class="tab-pane" id="tab-2">
-								{{ callPlugin('xnews.show', {'order' : 'last', 'count': '6', 'template' : 'xnews1'}) }}
+								{% if pluginIsActive('xnews') %}
+									{{ callPlugin('xnews.show', {'order' : 'last', 'count': '6', 'template' : 'xnews1'}) }}
+								{% endif %}
 							</div>
 							<div class="tab-pane" id="tab-3">
-								{{ callPlugin('xnews.show', {'order' : 'last', 'count': '6', 'template' : 'xnews1'}) }}
+								{% if pluginIsActive('xnews') %}
+									{{ callPlugin('xnews.show', {'order' : 'last', 'count': '6', 'template' : 'xnews1'}) }}
+								{% endif %}
 							</div>
 						</div>
 					</div>

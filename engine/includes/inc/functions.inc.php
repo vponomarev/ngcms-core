@@ -842,6 +842,17 @@ function LoadLang($what, $where = '', $area = '') {
 	return $lang;
 }
 
+function LoadLangTheme() {
+	global $config, $lang;
+	
+	$dir_lang = tpl_dir.$config['theme'].'/lang/'.$config['default_lang'].'.ini';
+	
+	if (file_exists($dir_lang))
+		$lang['theme'] = parse_ini_file($dir_lang, true);
+	
+	return $lang;
+}
+
 // Return plugin dir
 function GetPluginDir($name) {
 	global $EXTRA_CONFIG;

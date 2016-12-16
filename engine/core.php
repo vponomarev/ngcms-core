@@ -394,6 +394,7 @@ $twig->addGlobal('scriptLibrary',	scriptLibrary);
 
 // Lang files are loaded _after_ executing core scripts. This is done for switcher plugin
 $lang	=	LoadLang('common');
+$lang	=	LoadLangTheme();
 
 $langShortMonths = explode(",", $lang['short_months']);
 $langMonths = explode(",", $lang['months']);
