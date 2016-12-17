@@ -43,19 +43,19 @@ function showList($grp) {
 		$nl1++;
 		$dBlock = array(
 			'id'			=> $kb,
-			'title'			=> $vb['title'],
-			'description'	=> $vb['description'],
+			'title'			=> (isset($vb['title']) && $vb['title'])?$vb['title']:'',
+			'description'	=> (isset($vb['description']) && $vb['description'])?$vb['description']:'',
 			'items'		=> array(),
 		);
 
 		if (is_array($vb['items'])) {
 			$nl2 = 0;
 			foreach ($vb['items'] as $ka => $va) {
-				$ln2++;
+				$nl2++;
 				$dArea = array(
 					'id'			=> $ka,
-					'title'			=> $va['title'],
-					'description'	=> $va['description'],
+					'title'			=> (isset($va['title']) && $va['title'])?$va['title']:'',
+					'description'	=> (isset($va['description']) && $va['description'])?$va['description']:'',
 					'items'		=> array(),
 				);
 
@@ -72,8 +72,8 @@ function showList($grp) {
 
 							$dEntry	= array(
 								'id'				=> $ke,
-								'title'				=> $ve['title'],
-								'description'		=> $ve['description'],
+								'title'				=> (isset($ve['title']) && $ve['title'])?$ve['title']:'',
+								'description'		=> (isset($ve['description']) && $ve['description'])?$ve['description']:'',
 								'type'				=> 'listCategoriesSelector',
 								'name'				=> str_replace('.', ':', $kb.'|'.$ka.'|'.$ke),
 								'generatedOptions'	=> makeCategoryList(array('skipDisabled' => true, 'noHeader' => true, 'doall' => true, 'allmarker' => '*', 'returnOptArray' => true)),
@@ -85,8 +85,8 @@ function showList($grp) {
 							// [[ NORMAL SELECT ]]
 							$dEntry = array(
 								'id'			=> $ke,
-								'title'			=> $ve['title'],
-								'description'	=> $ve['description'],
+								'title'			=> (isset($ve['title']) && $ve['title'])?$ve['title']:'',
+								'description'	=> (isset($ve['description']) && $ve['description'])?$ve['description']:'',
 								'perm'			=> array(),
 								'name'			=> $kb.'|'.$ka.'|'.$ke,
 								'type'			=> '',
@@ -97,21 +97,25 @@ function showList($grp) {
 						// Avoid PHP bug/feature - it replaces "." into "_". Let's use ':' instead
 						$dEntry['name'] = str_replace('.', ':', $dEntry['name']);
 
-						foreach ($grp as $kg) {
-							$x = $PERM[$kg['id']][$kb][$ka][$ke];
+						if(is_array($grp))
+							foreach ($grp as $kg) {
+								if(isset($PERM[$kg['id']][$kb][$ka][$ke]) && $PERM[$kg['id']][$kb][$ka][$ke])
+									$x = $PERM[$kg['id']][$kb][$ka][$ke];
+								else
+									$x = '';
 
-							if ($isCategories) {
-								$catArray = array();
-								foreach (explode(",", $x) as $cx) {
-									$catArray[$cx] = true;
+								if ($isCategories) {
+									$catArray = array();
+									foreach (explode(",", $x) as $cx) {
+										$catArray[$cx] = true;
+									}
+									$dvalue[$dEntry['name'].'|'.$kg['id']] = $catArray;
+									$dEntry['perm'][$kg['id']] = $catArray; //$PERM[$kg['id']][$kb][$ka][$ke];
+								} else {
+									$dEntry['perm'][$kg['id']] = $x; //$PERM[$kg['id']][$kb][$ka][$ke];
+									$dvalue[$dEntry['name'].'|'.$kg['id']] = (!isset($PERM[$kg['id']][$kb][$ka][$ke]) || ($PERM[$kg['id']][$kb][$ka][$ke] === NULL))?-1:($x?1:0);
 								}
-								$dvalue[$dEntry['name'].'|'.$kg['id']] = $catArray;
-								$dEntry['perm'][$kg['id']] = $catArray; //$PERM[$kg['id']][$kb][$ka][$ke];
-							} else {
-								$dEntry['perm'][$kg['id']] = $x; //$PERM[$kg['id']][$kb][$ka][$ke];
-								$dvalue[$dEntry['name'].'|'.$kg['id']] = (!isset($PERM[$kg['id']][$kb][$ka][$ke]) || ($PERM[$kg['id']][$kb][$ka][$ke] === NULL))?-1:($x?1:0);
 							}
-						}
 
 						$dArea['items'] []= $dEntry;
 					}

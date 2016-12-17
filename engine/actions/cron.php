@@ -101,7 +101,7 @@ function cronShowForm() {
 // ================================
 // Main content
 // ================================
-if ($_REQUEST['action'] == 'commit') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'commit') {
 	$res = cronCommit();
 	if ($res !== true) {
 		// ERROR

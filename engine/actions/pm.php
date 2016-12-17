@@ -43,8 +43,9 @@ function pm_send() {
 
 
 function pm_list (){
-	global $mysql, $config, $lang, $userROW, $tpl, $mod;
+	global $mysql, $config, $lang, $userROW, $tpl, $mod, $PHP_SELF;
 
+	$entries = '';
 	foreach($mysql->select("select pm.*, u.id as uid, u.name as uname from ".uprefix."_users_pm pm left join ".uprefix."_users u on pm.from_id=u.id where pm.to_id = ".db_squote($userROW['id'])." order by pmid desc limit 0, 30") as $row) {
 		$author = '';
 		if ($row['from_id'] && $row['uid']) {

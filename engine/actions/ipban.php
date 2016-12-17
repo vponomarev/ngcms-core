@@ -126,7 +126,7 @@ function ipban_delete() {
 // Show all records
 //
 function ipban_list() {
-	global $mysql, $lang, $mod, $twig;
+	global $mysql, $lang, $mod, $twig, $PHP_SELF;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'view')) {
@@ -168,7 +168,7 @@ function ipban_list() {
 	$tVars = array(
 		'php_self'	=> $PHP_SELF,
 		'entries'	=> $xEntries,
-		'iplock'	=> $_REQUEST['iplock'],
+		'iplock'	=> (isset($_REQUEST['iplock']) && $_REQUEST['iplock'])?$_REQUEST['iplock']:0,
 		'token'		=>	genUToken('admin.ipban'),
 		'flags'		=>	array(
 			'permModify' => checkPermission(array('plugin' => '#admin', 'item' => 'ipban'), null, 'modify')?true:false,
@@ -184,12 +184,13 @@ function ipban_list() {
 //
 // Main loop
 //
-switch ($_REQUEST['action']) {
-	case 'add':		ipban_add();
-					break;
-	case 'del':		ipban_delete();
-					break;
-}
+if(isset($_REQUEST['action']) && $_REQUEST['action'])
+	switch ($_REQUEST['action']) {
+		case 'add':		ipban_add();
+						break;
+		case 'del':		ipban_delete();
+						break;
+	}
 
 ipban_list();
 

@@ -17,7 +17,7 @@ LoadPluginLibrary('uprofile', 'lib');
 //
 // Form: Edit user
 function userEditForm(){
-	global $mysql, $lang, $twig, $mod, $PFILTERS, $UGROUP;
+	global $mysql, $lang, $twig, $mod, $PFILTERS, $UGROUP, $PHP_SELF;
 
 	$id = intval($_REQUEST['id']);
 
@@ -43,6 +43,7 @@ function userEditForm(){
 	if (is_array($PFILTERS['plugin.uprofile']))
 		foreach ($PFILTERS['plugin.uprofile'] as $k => $v) { $v->editProfileFormPre($row['id'], $row); }
 
+	$status = '';
 	foreach ($UGROUP as $ugID => $ugData) {
 		$status .= ' <option value="'.$ugID.'"'.(($row['status'] == $ugID)?' selected':'').'>'.$ugID.' ('.$ugData['name'].')</option>';
 	}
@@ -341,7 +342,7 @@ function userMassDeleteInactive(){
 //
 // Show list of users
 function userList(){
-	global $mysql, $lang, $mod, $userROW, $UGROUP, $twig;
+	global $mysql, $lang, $mod, $userROW, $UGROUP, $twig, $PHP_SELF;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'view')) {
@@ -382,21 +383,21 @@ function userList(){
 		if ($sRec['isActive']) {
 			$sRec['sign'] = ($inSort == $kOrder)?'&#8595;&#8595;':'&#8593;&#8593;';
 			$sRec['link'] = admin_url.'/admin.php?mod=users&action=list'.
-				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
-				($_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
+				(isset($_REQUEST['name']) && $_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
+				(isset($_REQUEST['rpp']) && $_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
 				'&sort='.$kOrder.(($inSort == $kOrder)?'d':'');
 		} else {
 			$sRec['sign'] = '';
 			$sRec['link'] = admin_url.'/admin.php?mod=users&action=list'.
-				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
-				($_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
+				(isset($_REQUEST['name']) && $_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
+				(isset($_REQUEST['rpp']) && $_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
 				'&sort='.$kOrder;
 		}
 		$sortLinkMap[$kOrder] = $sRec;
 	}
 
 	$sortValue = (isset($_REQUEST['sort']) && isset($sortOrderMap[$_REQUEST['sort']]))?$sortOrderMap[$_REQUEST['sort']]:'id';
-	$name = ($_REQUEST['name'] != '')?("'%".$mysql->db_quote($_REQUEST['name'])."%'"):'';
+	$name = (isset($_REQUEST['name']) && $_REQUEST['name'] != '')?("'%".$mysql->db_quote($_REQUEST['name'])."%'"):'';
 
 	// Records Per Page
 	// - Load
@@ -410,7 +411,7 @@ function userList(){
 	admcookie_set($admCookie);
 
 
-	$pageNo = intval($_REQUEST['page']);
+	$pageNo = (isset($_REQUEST['page']) && $_REQUEST['page'])?intval($_REQUEST['page']):0;
 	if (!$pageNo)
 		$pageNo = 1;
 
@@ -457,10 +458,9 @@ function userList(){
 			'current' => $pageNo,
 			'count' => $pageCount,
 			'url' => admin_url.'/admin.php?mod=users&action=list'.
-				($_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
-				($_REQUEST['how']?'&how='.htmlspecialchars($_REQUEST['how'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
-				($_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
-				'&sort='.$rsort.
+				(isset($_REQUEST['name']) && $_REQUEST['name']?'&name='.htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
+				(isset($_REQUEST['how']) && $_REQUEST['how']?'&how='.htmlspecialchars($_REQUEST['how'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'').
+				(isset($_REQUEST['rpp']) && $_REQUEST['rpp']?'&rpp='.intval($_REQUEST['rpp']):'').
 				'&page=%page%'
 		));
 
@@ -479,7 +479,7 @@ function userList(){
 	$tVars	= array(
 		'php_self'		=> $PHP_SELF,
 		'rpp'			=> $fRPP,
-		'name'			=> htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'),
+		'name'			=> (isset($_REQUEST['name']) && $_REQUEST['name'])?htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):0,
 		'token'			=> genUToken('admin.users'),
 		'pagination'	=> $pagination,
 		'ugroup'		=> $tUgroup,

@@ -195,13 +195,13 @@ function manage_upload($type){
 // Show list
 //
 function manage_showlist($type) {
-	global $config, $mysql, $tpl, $mod, $lang, $userROW, $fmanager, $langMonths;
+	global $config, $mysql, $tpl, $mod, $lang, $userROW, $fmanager, $langMonths, $PHP_SELF;
 
 	// Load admin page based cookies
 	$admCookie = admcookie_get();
 
-	$cstart		= abs(intval($_REQUEST['page'])?intval($_REQUEST['page']):0);
-	$start_from	= abs(intval($_REQUEST['start_from'])?intval($_REQUEST['start_from']):0);
+	$cstart		= abs(isset($_REQUEST['page']) && $_REQUEST['page']?intval($_REQUEST['page']):0);
+	$start_from	= abs(isset($_REQUEST['start_from']) && $_REQUEST['page']?intval($_REQUEST['start_from']):0);
 
 	if (!$cstart) { $cstart = 1; }
 	$npp = isset($_REQUEST['npp'])?intval($_REQUEST['npp']):intval($admCookie[$type]['pp']);
@@ -222,16 +222,16 @@ function manage_showlist($type) {
 		$filter			= array();
 	}
 
-	if ($_REQUEST['author'])
+	if (isset($_REQUEST['author']) && $_REQUEST['author'])
 		array_push($filter, "user = ".db_squote($_REQUEST['author']));
 
-	if ($_REQUEST['category'])
+	if (isset($_REQUEST['category']) && $_REQUEST['category'])
 		array_push($filter, "folder = ".db_squote($_REQUEST['category']));
 
 	if ($userROW['status'] > 2)
 		array_push($filter, "owner_id=".db_squote($userROW['id']));
 
-	if ($_REQUEST['postdate'] && preg_match('/^(\d{4})(\d{2})$/', $_REQUEST['postdate'], $match))
+	if (isset($_REQUEST['postdate']) && $_REQUEST['postdate'] && preg_match('/^(\d{4})(\d{2})$/', $_REQUEST['postdate'], $match))
 		array_push($filter, "(month(from_unixtime(date)) = ".db_squote($match[2])." and year(from_unixtime(date)) = ".db_squote($match[1]).")");
 
 	// Determine SQL table / directory for files
@@ -321,13 +321,15 @@ function manage_showlist($type) {
 		$tpl -> vars('entries', $tvars);
 		$entries .= $tpl -> show('entries');
 	}
-
+	
+	$dateslist = '';
 	foreach ($mysql->select("SELECT DISTINCT FROM_UNIXTIME(date,'%Y%m') as monthes, COUNT(date) AS cnt FROM ".prefix."_".$fmanager->tname." GROUP BY monthes ORDER BY date DESC") as $row) {
 	        if (preg_match('/^(\d{4})(\d{2})$/', $row['monthes'], $match)) {
 	        	$dateslist .= "<option value=\"".$row['monthes']."\"".($row['monthes'] == $_REQUEST['postdate']?' selected':'').">".$langMonths[$match[2]-1]." ".$match[1]."</option>";
 	        }
 	}
 
+	$authorlist = '';
 	if ($userROW['status'] == 4) {
 		// Just commentors. They will see only their files
 		$authorlist = "<option value=\"".$userROW['name']."\">".$userROW['name']."</option>";
@@ -337,6 +339,7 @@ function manage_showlist($type) {
 		}
 	}
 
+	$pagesss = '';
 	if (is_array($pcnt = $mysql->record($query['count']))) {
 		$itemCount = $pcnt['cnt'];
 		$pagesCount = ceil($itemCount / $npp);
@@ -364,7 +367,7 @@ function manage_showlist($type) {
 	} else {
 		$dirlistS	=	ListDirs($type.'s', false, 0, 'categorySelect');
 		$dirlist	=	ListDirs($type.'s', false, 0);
-		$dirlistcat	=	ListDirs($type.'s', $_REQUEST['category']);
+		$dirlistcat	=	ListDirs($type.'s', (isset($_REQUEST['category']) && $_REQUEST['category'])?$_REQUEST['category']:'');
 	}
 
 	// Prepare list of available extensions
@@ -387,17 +390,17 @@ function manage_showlist($type) {
 		'listExt'			=>	$listExt,
 		'descExt'			=>	$lang['uploadify_'.($type=='image'?'images':'files')],
 		'maxSize'			=>	intval($config[($type=='image'?'images':'files').'_max_size'] * 1024),
-		'area'				=>	($area) ? $area : '',
+		'area'				=>	(isset($area) && $area) ? $area : '',
 		'shadow_mode'		=>	$config['shadow_mode']?'disabled':'',
 		'stamp_mode'		=>	$config['stamp_mode']?'disabled':'',
 		'thumb_mode'		=>	$config['thumb_mode']?'disabled':'',
 		'shadow_checked'	=>	($config['shadow_mode'] == 2)?' checked':'',
 		'stamp_checked'		=>	($config['stamp_mode'] == 2)?' checked':'',
 		'thumb_checked'		=>	($config['thumb_mode'] == 2)?' checked':'',
-		'box_preview'	=> ($_COOKIE['img_preview']?' checked="checked"':''),
+		'box_preview'	=> (isset($_COOKIE['img_preview']) && $_COOKIE['img_preview']?' checked="checked"':''),
 	);
 
-	$tvars['regx']['#\[preview\](.+?)\[/preview\]#is'] = $_COOKIE['img_preview']?'$1':'';
+	$tvars['regx']['#\[preview\](.+?)\[/preview\]#is'] = (isset($_COOKIE['img_preview']) && $_COOKIE['img_preview'])?'$1':'';
 
 	// Create auth cookie
 	$tvars['vars']['authcookie'] = $userROW['authcookie'];

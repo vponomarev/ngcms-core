@@ -29,8 +29,6 @@ $UH->loadConfig();
 
 
 $lang = LoadLang('rewrite', 'admin');
-$format = $_REQUEST['format'];
-$subaction = $_REQUEST['subaction'];
 
 // ================================================================
 // Handlers for new REWRITE format

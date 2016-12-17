@@ -50,7 +50,7 @@ function loadTemplateVersions(){
 
 
 $tVars = array(
-	'home_url'	=> $home,
+	'home_url'	=> home,
 	'token'		=> genUToken('admin.templates'),
 );
 

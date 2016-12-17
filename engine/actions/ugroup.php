@@ -38,10 +38,10 @@ function ugroupList(){
 			'id'		=> $id,
 			'identity'	=> $grp['identity'],
 			'name'		=> $grp['name'],
-			'count'		=> intval($uCount[$id]),
+			'count'		=> (isset($uCount[$id])&& $uCount[$id])?intval($uCount[$id]):0,
 			'flags'		=> array(
 				'canEdit'	=> $permDetails,
-				'canDelete'	=> (($uCount[$id] < 1) && $permModify)?true:false,
+				'canDelete'	=> (isset($uCount[$id]) && ($uCount[$id] < 1) && $permModify)?true:false,
 			),
 		);
 
@@ -104,7 +104,7 @@ function ugroupForm(){
 	}
 
 	// Update supported languages
-	foreach (ListFiles('lang') as $langName) {
+	foreach (ListFiles('lang', '') as $langName) {
 		if (!isset($tVars['entry']['langName'][$langName])) {
 			$tVars['entry']['langName'][$langName] = '';
 		}

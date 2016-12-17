@@ -631,13 +631,13 @@ function makeCategoryList($params = array()){
 
 	$out = '';
 	if (!isset($params['checkarea']) || !$params['checkarea']) {
-		if (!$params['noHeader']) {
+		if (isset($params['noHeader']) && !$params['noHeader']) {
 			$out = "<select name=\"$name\" id=\"catmenu\"".
 				((isset($params['style']) && ($params['style'] != ''))?' style="'.$params['style'].'"':'').
 				((isset($params['class']) && ($params['class'] != ''))?' class="'.$params['class'].'"':'').
 				">\n";
 		}
-	 if (isset($params['doempty']) && $params['doempty'])		{ $out.= "<option ".(((isset($params['greyempty']) && $params['greyempty']))?'style="background: #c41e3a;" ':'')."value=\"0\">".$lang['no_cat']."</option>\n"; $optList []= array('k' => 0, 'v' => $lang['nocat']); }
+	 if (isset($params['doempty']) && $params['doempty'])		{ $out.= "<option ".(((isset($params['greyempty']) && $params['greyempty']))?'style="background: #c41e3a;" ':'')."value=\"0\">".$lang['no_cat']."</option>\n"; $optList []= array('k' => 0, 'v' => $lang['no_cat']); }
 	 if (isset($params['doall']) && $params['doall'])			{ $out.= "<option value=\"".(isset($params['allmarker'])?$params['allmarker']:'')."\">".$lang['sh_all']."</option>\n"; $optList []= array('k' => (isset($params['allmarker'])?$params['allmarker']:''), 'v' => $lang['sh_all']);  }
 	 if (isset($params['dowithout']) && $params['dowithout'])	{ $out.= "<option value=\"0\"".(((!is_null($params['selected'])) && ($params['selected'] == 0))?' selected="selected"':'').">".$lang['sh_empty']."</option>\n"; $optList []= array('k' => 0, 'v' => $lang['sh_empty']); }
 	}
@@ -651,7 +651,7 @@ function makeCategoryList($params = array()){
 
 	foreach($catz as $k => $v){
 		if (in_array($v['id'], $params['skip'])) { continue; }
-		if ($params['skipDisabled'] && ($v['alt_url'] != '')) { continue; }
+		if (isset($params['skipDisabled']) && $params['skipDisabled'] && ($v['alt_url'] != '')) { continue; }
 		if (isset($params['checkarea']) && $params['checkarea']) {
 			$out .= str_repeat('&#8212; ', $v['poslevel']).
 					'<label><input type="checkbox" name="'.
@@ -670,7 +670,7 @@ function makeCategoryList($params = array()){
 		}
 	}
 	if (!isset($params['checkarea']) || !$params['checkarea']) {
-		if (!$params['noHeader']) {
+		if (isset($params['noHeader']) && !$params['noHeader']) {
 			$out.="</select>";
 		}
 	}
@@ -2337,11 +2337,11 @@ function ngExceptionHandler($exception) {
 // HANDLER: Errors
 function ngErrorHandler($code, $message, $file, $line)
 {
-	if (0 == error_reporting())
+	/* if (0 == error_reporting())
 	{
 		return;
 	}
-	print "ERROR: [$code]($message)[$line]($file)<br/>\n";
+	print "ERROR: [$code]($message)[$line]($file)<br/>\n"; */
 }
 
 //
