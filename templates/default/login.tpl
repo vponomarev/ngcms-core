@@ -5,15 +5,15 @@
 <form name="login" method="post" action="{form_action}">
 <input type="hidden" name="redirect" value="{redirect}"/>
 	<div class="label pull-left">
-		<label for="logn">Логин:</label>
+		<label for="logn">{l_login.username}:</label>
 		<input type="text" type="text" name="username" class="input">
 	</div>
 	<div class="label pull-right">
-		<label for="pass">Пароль:</label>
+		<label for="pass">{l_login.password}:</label>
 		<input type="password" type="password" name="password" class="input">
 	</div>
 	<div class="clearfix"></div>
 	<div class="label">
-		<input type="submit" value="Войти" class="button">
+		<input type="submit" value="{l_login.submit}" class="button">
 	</div>
 </form>

@@ -55,12 +55,12 @@
 								<ul>
 									<li><a href="#">{{ lang.theme.recent_article }}</a></li>
 									<li><a href="#">{{ lang.theme.catalog }}</a></li>
-									<li><a href="#">{{ lang.theme.Job }}</a></li>
+									<li><a href="#">{{ lang.theme.job }}</a></li>
 								</ul>
 							</li>
 							<li><a href="#">{{ lang.theme.blog }}</a></li>
 							<li><a href="#">{{ lang.theme.catalog }}</a></li>
-							<li><a href="#">{{ lang.theme.Job }}</a></li>
+							<li><a href="#">{{ lang.theme.job }}</a></li>
 							<li><a href="#">{{ lang.theme.about }}</a></li>
 						</ul>
 					</nav>
@@ -135,12 +135,12 @@
 			</section>
 			<footer id="footer">
 				<div class="copyright">
-					<p>&copy; <a title="{{ home_title }}" href="{{ home }}">{{ home_title }}</a> Powered by <a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 2007 — {{ now|date("Y") }}. <br />SQL запросов: <b>{{ queries }}</b> | Генерация страницы: <b>{{ exectime }}</b> сек | <b>{{ memPeakUsage }}</b> Mb&nbsp;</p>
-					<p>Все права защищены. <br /> Копирование материалов без согласования с<br /> администрацией строго запрещено!</p>
+					<p>&copy; <a title="{{ home_title }}" href="{{ home }}">{{ home_title }}</a> Powered by <a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 2007 — {{ now|date("Y") }}. <br />{{ lang.sql_queries }}: <b>{{ queries }}</b> | {{ lang.page_generation }}: <b>{{ exectime }}</b> {{ lang.sec }} | <b>{{ memPeakUsage }}</b> Mb&nbsp;</p>
+					<p>{{ lang.all_right_reserved }} <br /> {{ lang.theme.copying_materials }}</p>
 				</div>
 				<div class="poweredby">
-					<p>Дизайн сайта - <a href="http://cargocollective.com/Qesoart">Qesoart</a></p>
-					<p>Обо всех замеченных ошибках просьба<br /> сообщать на <a href="#">examplesite@m.ru</a></p>
+					<p>{{ lang.theme.design_by }} - <a href="http://cargocollective.com/Qesoart">Qesoart</a></p>
+					<p>{{ lang.theme.bugs_report }}</p>
 				</div>
 			</footer>
 		</div>

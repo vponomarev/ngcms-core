@@ -1,7 +1,7 @@
 <script type="text/javascript">
 	document.ready=function()
     {
-        var sizelimit = {about_sizelimit};
+        var sizelimit = {{ info_sizelimit }};
         if(sizelimit <= 0 ) { document.getElementById('sizelimit_text').style.display = "none"; }
     }
 	function validate_form() {
@@ -20,7 +20,7 @@
 		}
 		// About
 		var about = f.editabout.value;
-		if (({about_sizelimit} > 0) && (about.length > {about_sizelimit})) {
+		if (({{ info_sizelimit }} > 0) && (about.length > {{ info_sizelimit }})) {
 			alert("{{ info_sizelimit_text }}");
 			return false;	
 		}
@@ -49,7 +49,7 @@
 	<div class="label label-table">
 		<label>{{ lang.uprofile['about'] }}: </label>
 		<textarea style="height: 60px;" name="editabout" class="textarea">{{ user.info }}</textarea>
-		<div class="label-desc" id="sizelimit_text">Не более {about_sizelimit} символов</div>
+		{% if (info_sizelimit > 0) %}<div class="label-desc" id="sizelimit_text">{{ lang.uprofile['sizelimit_min'] }} {about_sizelimit} {{ lang.uprofile['characters'] }}</div>{% endif %}
 	</div>
 	<div class="label label-table">
 		<label>{{ lang.uprofile['new_pass'] }}:</label>

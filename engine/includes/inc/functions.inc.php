@@ -2861,6 +2861,8 @@ function coreUserMenu() {
 function coreSearchForm(){
 	global $tpl, $template, $lang;
 
+	LoadLang('search', 'site');
+
 	$tpl -> template('search.form', tpl_site);
 	$tpl -> vars('search.form', array('vars' => array('form_url' =>	generateLink('search', '', array()) )));
 	$template['vars']['search_form'] = $tpl -> show('search.form');

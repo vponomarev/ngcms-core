@@ -20,7 +20,7 @@
 	<div class="clearfix"></div>
 	<div class="label">
 		<label class="pull-left"><input type="checkbox" name="agree">
-		Я ознакомился с <a href="#">правилам</a> и <a href="#">условиями</a> и принимаю их.</label>
+		{{lang.theme['registration.rules'] }}</label>
 		<input type="submit" value="{{ lang.register }}" class="button pull-right">
 	</div>
 </form>

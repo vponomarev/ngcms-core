@@ -25,7 +25,7 @@ var set_pass  = 0;
 <div class="modal" id="auth-modal">
 	<div class="modal-box">
 		<div class="modal-clouse"></div>
-		<div class="title">¬ход</div>
+		<div class="title">{{ lang.theme['login_title'] }}</div>
 		<div class="modal-content clearfix">
 			<form name="login" method="post" action="{{ form_action }}" id="login">
 				<input type="hidden" name="redirect" value="{{ redirect }}" />

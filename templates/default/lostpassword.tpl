@@ -1,17 +1,18 @@
-<div class="block-title">Восстановление пароля</div>
-<form name="lostpassword" action="{form_action}" method="post">
+[TWIG]
+<div class="block-title">{{ lang['lostpassword_title'] }}</div>
+<form name="lostpassword" action="{{ form_action }}" method="post">
 <input type="hidden" name="type" value="send" />
-	{entries}
+	{{entries}}
 	[captcha]
 		<div class="label label-table captcha pull-left">
-			<label>Введите код безопасности:</label>
+			<label>{{ lang['captcha'] }}:</label>
 			<input type="text" name="vcode" class="input">
-			<img src="{admin_url}/captcha.php" onclick="reload_captcha();" id="img_captcha" style="cursor: pointer;" alt="Security code"/>
-			<div class="label-desc">Вам предстоит специальный код для подтверждения вашего действия.</div>
+			<img src="{{admin_url}}/captcha.php" onclick="reload_captcha();" id="img_captcha" style="cursor: pointer;" alt="{{ lang['captcha'] }}"/>
+			<div class="label-desc">{{ lang['captcha_desc'] }}</div>
 		</div>
 		<div class="clearfix"></div>
 		<div class="label">
-			<input type="submit" value="Восстановить" class="button">
+			<input type="submit" value="{{ lang['send_pass'] }}" class="button">
 		</div>
 	[/captcha]
 </form>
@@ -19,7 +20,8 @@
 	function reload_captcha() {
 		var captc = document.getElementById('img_captcha');
 		if (captc != null) {
-			captc.src = "{admin_url}/captcha.php?rand="+Math.random();
+			captc.src = "{{admin_url}}/captcha.php?rand="+Math.random();
 		}
 	}   
 </script>
+[/TWIG]
