@@ -265,7 +265,7 @@ function systemDboModify() {
 //
 // List tables
 function systemDboForm() {
-	global $mysql, $lang, $twig, $config;
+	global $mysql, $lang, $twig, $config, $PHP_SELF;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'dbo'), null, 'details')) {

@@ -1147,7 +1147,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()){
 
 	// Determine working mode - old or new
 	// If template 'news.categories' exists - use `new way`, else - old
-	if (file_exists(tpl_site.'news.categories.tpl') || $flags['returnData']) {
+	if (file_exists(tpl_site.'news.categories.tpl') || (isset($flags['returnData']) && $flags['returnData'])) {
 
 		$tVars = array();
 		$tEntries = array();
@@ -2337,11 +2337,11 @@ function ngExceptionHandler($exception) {
 // HANDLER: Errors
 function ngErrorHandler($code, $message, $file, $line)
 {
-	//if (0 == error_reporting())
-	//{
-	//	return;
-	//}
-	//print "ERROR: [$code]($message)[$line]($file)<br/>\n";
+	if (0 == error_reporting())
+	{
+		return;
+	}
+	print "ERROR: [$code]($message)[$line]($file)<br/>\n";
 }
 
 //
@@ -2845,7 +2845,7 @@ function coreUserMenu() {
 
 
 	// Execute filters - add additional variables
-	if (is_array($PFILTERS['core.userMenu']))
+	if (isset($PFILTERS['core.userMenu']) && is_array($PFILTERS['core.userMenu']))
 		foreach ($PFILTERS['core.userMenu'] as $k => $v) { $v->showUserMenu($tVars); }
 
 	$twigLoader->setConversion('usermenu.tpl', $conversionConfig, $conversionConfigRegex);
@@ -2860,9 +2860,9 @@ function coreUserMenu() {
 
 function coreSearchForm(){
 	global $tpl, $template, $lang;
-
+	
 	LoadLang('search', 'site');
-
+	
 	$tpl -> template('search.form', tpl_site);
 	$tpl -> vars('search.form', array('vars' => array('form_url' =>	generateLink('search', '', array()) )));
 	$template['vars']['search_form'] = $tpl -> show('search.form');

@@ -219,7 +219,7 @@ class Twig_Loader_NGCMS implements Twig_LoaderInterface
             }
 
         	// Check for default content
-        	if ($this->defaultContent[$path.'/'.$name])
+        	if (isset($this->defaultContent[$path.'/'.$name]) && $this->defaultContent[$path.'/'.$name])
         		return $this->cache[$$name] = $path.'/'.$name;
 
         }

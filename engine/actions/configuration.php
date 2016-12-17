@@ -137,10 +137,11 @@ function systemConfigEditForm(){
 		$config['load_profiler'] = 0;
 
 	$mConfig = array();
-	foreach ($multiconfig as $k => $v) {
-		$v['key'] = $k;
-		$mConfig []= $v;
-	}
+	if(is_array($multiconfig))
+		foreach ($multiconfig as $k => $v) {
+			$v['key'] = $k;
+			$mConfig []= $v;
+		}
 
 	// Set default timeZone if it's empty
 	if (!$config['timezone'])
