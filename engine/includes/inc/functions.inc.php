@@ -631,7 +631,7 @@ function makeCategoryList($params = array()){
 
 	$out = '';
 	if (!isset($params['checkarea']) || !$params['checkarea']) {
-		if (isset($params['noHeader']) && !$params['noHeader']) {
+		if (empty($params['noHeader'])) {
 			$out = "<select name=\"$name\" id=\"catmenu\"".
 				((isset($params['style']) && ($params['style'] != ''))?' style="'.$params['style'].'"':'').
 				((isset($params['class']) && ($params['class'] != ''))?' class="'.$params['class'].'"':'').
@@ -670,7 +670,7 @@ function makeCategoryList($params = array()){
 		}
 	}
 	if (!isset($params['checkarea']) || !$params['checkarea']) {
-		if (isset($params['noHeader']) && !$params['noHeader']) {
+		if (empty($params['noHeader'])) {
 			$out.="</select>";
 		}
 	}
