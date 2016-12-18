@@ -150,7 +150,7 @@ function _modal_close() {
    <td width="50%" colspan="2" class="contentEntry1">
     <form method="post" action="{{ php_self }}?mod=statistics">
      <input type="hidden" name="action" value="save" />
-     <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow; width: 100%; margin-bottom: 5px;">{{ admin_note }}</textarea><br />
+     <textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow; width: 100%; margin-bottom: 5px;" {% if (not admin_note) %}placeholder="{{ lang['no_notes'] }}"{% endif %}>{{ admin_note }}</textarea><br />
      <input type="submit" class="button" value="{{ lang['save_note'] }}" />
     </form>
    </td>

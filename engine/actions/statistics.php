@@ -150,7 +150,7 @@ $tVars = array(
 	'images'			=>	$mysql->result("SELECT count(id) FROM ".prefix."_images"),
 	'files'				=>	$mysql->result("SELECT count(id) FROM ".prefix."_files"),
 	'categories'		=>	$mysql->result("SELECT count(id) FROM ".prefix."_category"),
-	'admin_note'		=>	empty($note) ? $lang['no_notes'] : $note,
+	'admin_note'		=>	$note,
 	'pdo_support'		=>	(extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO'))?$lang['yesa']:('<font color="red">'.$lang['noa'].'</font>'),
 );
 

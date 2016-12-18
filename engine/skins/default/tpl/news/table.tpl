@@ -170,7 +170,7 @@ function filter_attach_DateEdit(id) {
 <input type="hidden" name="action" value="manage" />
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 <tr align="left" class="contHead">
-<td width="30" nowrap>{{ lang.editnews['postid_short'] }}</td>
+<td width="40" nowrap>{{ lang.editnews['postid_short'] }}</td>
 <td width="60"  nowrap>{{ lang.editnews['date'] }}</td>
 <td width="48">&nbsp;</td>
 <td width="45%" >{{ lang.editnews['title'] }}</td>
@@ -179,7 +179,7 @@ function filter_attach_DateEdit(id) {
 <td width="25%">{{ lang.editnews['category'] }}</td>
 <td width="10%">{{ lang.editnews['author'] }}</td>
 <td width="16">{{ lang.editnews['status'] }}</td>
-<td width="5%"><input class="check" type="checkbox" name="master_box" title="{{ lang.editnews['select_all'] }}" onclick="javascript:check_uncheck_all(editnews)" /></td>
+<td width="1%"><input class="check" type="checkbox" name="master_box" title="{{ lang.editnews['select_all'] }}" onclick="javascript:check_uncheck_all(editnews)" /></td>
 </tr>
 {% for entry in entries %}
 <tr align="left" >
