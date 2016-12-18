@@ -78,8 +78,10 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 		// Check if correct categories were specified [ only for SINGLE category display
 		if ((isset($callingParams['validateCategoryID']) || isset($callingParams['validateCategoryAlt']) || 1) && $config['news_multicat_url']) {
-			$nci = intval(array_shift(explode(",", $row['catid'])));
-			$nca = ($nci)?$catmap[$nci]:'none';
+			if(getIsSet($row['catid']))
+				$nci = intval(array_shift(explode(",", $row['catid'])));
+			
+			$nca = (getIsSet($nci))?$catmap[$nci]:'none';
 
 			if ((isset($callingParams['validateCategoryID']) && ($callingParams['validateCategoryID'] != $nci)) || (isset($callingParams['validateCategoryAlt']) && ($callingParams['validateCategoryAlt'] != $nca))) {
 				$redirectURL = newsGenerateLink($row, false, 0, true);
@@ -106,8 +108,10 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 	if ($callingParams['setCurrentCategory']) {
 		// Fetch category ID from news
-		$cid = intval(array_shift(explode(',', $row['catid'])));
-		if ($cid && isset($catmap[$cid])) {
+		if(getIsSet($row['catid']))
+			$cid = intval(array_shift(explode(',', $row['catid'])));
+		
+		if (getIsSet($cid) && isset($catmap[$cid])) {
 			// Save current category identifier
 			$SYSTEM_FLAGS['news']['currentCategory.alt']	= $catz[$catmap[$cid]]['alt'];
 			$SYSTEM_FLAGS['news']['currentCategory.id']		= $catz[$catmap[$cid]]['id'];
@@ -200,9 +204,9 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 
 	// Show icon of `MAIN` category for current news
-	$masterCatID = intval(array_shift(explode(",", $row['catid'])));
-	if (!isset($catmap[$masterCatID]))
-		$masterCatID = 0;
+	$masterCatID = 0;
+	if(getIsSet($row['catid']))
+		$masterCatID = intval(array_shift(explode(",", $row['catid'])));
 
 	if ($masterCatID && isset($catmap[$masterCatID]) && trim($catz[$catmap[$masterCatID]]['icon'])) {
 		$tvars['vars']['icon']		= trim($catz[$catmap[$masterCatID]]['icon']);
@@ -284,7 +288,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 
 	// Update visits counter if we're not in emulation mode
-	if ((!$callingParams['emulate'])&&($callingParams['style'] == 'full')&&(intval($_REQUEST['page'])<2)) {
+	if (empty($callingParams['emulate']) && ($callingParams['style'] == 'full') && (getIsSet($_REQUEST['page']) < 2)) {
 		$cmode = intval($config['news_view_counters']);
 		if ($cmode > 1) {
 			// Delayed update of counters
@@ -300,7 +304,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	if (!$callingParams['style']) $callingParams['style'] = 'full';
 
 	// -> desired template - override template if needed
-	if ($callingParams['overrideTemplateName']) {
+	if (getIsSet($callingParams['overrideTemplateName'])) {
 		$templateName = $callingParams['overrideTemplateName'];
 	} else {
 		// -> generate template name for selected style
@@ -316,14 +320,15 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$templatePath = tpl_dir.$config['theme'];
 
 	// -> desired template path - override path if needed
-	if ($callingParams['overrideTemplatePath']) {
+	if (getIsSet($callingParams['overrideTemplatePath'])) {
 		$templatePath = $callingParams['overrideTemplatePath'];
 	} else if ($callingParams['customCategoryTemplate']) {
 		// -> check for custom category templates
 		// Find first category
-		$fcat = array_shift(explode(",", $row['catid']));
+		if(getIsSet($row['catid']))
+			$fcat = array_shift(explode(",", $row['catid']));
 		// Check if there is a custom mapping
-		if ($fcat && $catmap[$fcat] && ($ctname = $catz[$catmap[$fcat]]['tpl'])) {
+		if (getIsSet($fcat) && $catmap[$fcat] && ($ctname = $catz[$catmap[$fcat]]['tpl'])) {
 			// Check if directory exists
 			if (is_dir($templatePath.'/ncustom/'.$ctname)) {
 				$templatePath = $templatePath.'/ncustom/'.$ctname;
@@ -339,13 +344,12 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 	$tpl -> vars($templateName, $tvars);
 
 	// No comments/meta in emulation or export mode
-	if ((is_array($callingParams['emulate']))||($callingParams['style'] == 'export'))
+	if (is_array(getIsSet($callingParams['emulate'])) || ($callingParams['style'] == 'export'))
 		return $tpl -> show($templateName);
 
 	// Set meta tags for news page
-	$SYSTEM_FLAGS['meta']['description'] = ($row['description'] != '')?$row['description']:$catz[$catmap[$masterCatID]]['description'];
-	$SYSTEM_FLAGS['meta']['keywords']    = ($row['keywords'] != '')?$row['keywords']:$catz[$catmap[$masterCatID]]['keywords'];
-
+	$SYSTEM_FLAGS['meta']['description'] = (getIsSet($row['description']) != '')?$row['description']:(getIsSet($catmap[$masterCatID]) && is_array($catz[$catmap[$masterCatID]]))?$catz[$catmap[$masterCatID]]['description']:$config['description'];
+	$SYSTEM_FLAGS['meta']['keywords']    = (getIsSet($row['keywords']) != '' )?$row['keywords']:(getIsSet($catmap[$masterCatID]) && is_array($catz[$catmap[$masterCatID]]))?$catz[$catmap[$masterCatID]]['keywords']:$config['keywords'];
 	// Prepare title
 	//$SYSTEM_FLAGS['info']['title']['group']	= $config["category_link"]?GetCategories($row['catid'], true):LangDate(timestamp, $row['postdate']);
 	$SYSTEM_FLAGS['info']['title']['group']	= GetCategories($row['catid'], true);
@@ -660,45 +664,49 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		// Prepare list of linked files and images
 		$callingParams['linkedFiles'] = array();
 		$tvars['vars']['_files'] = array();
-		foreach ($linkedFiles['data'] as $k => $v) {
-			if ($v['linked_id'] == $row['id']) {
-				$callingParams['linkedFiles']['ids']  []= $v['id'];
-				$callingParams['linkedFiles']['data'] []= $v;
-				$tvars['vars']['_files'] []= array(
-					'plugin'		=> $v['plugin'],
-					'pidentity'		=> $v['pidentity'],
-					'url'			=> ($v['storage']?$config['attach_url']:$config['files_url']).'/'.$v['folder'].'/'.$v['name'],
-					'name'			=> $v['name'],
-					'origName'		=> secure_html($v['orig_name']),
-					'description'	=> secure_html($v['description']),
-				);
+		
+		if(isset($linkedFiles['data']) && is_array($linkedFiles['data']))
+			foreach ($linkedFiles['data'] as $k => $v) {
+				if ($v['linked_id'] == $row['id']) {
+					$callingParams['linkedFiles']['ids']  []= $v['id'];
+					$callingParams['linkedFiles']['data'] []= $v;
+					$tvars['vars']['_files'] []= array(
+						'plugin'		=> $v['plugin'],
+						'pidentity'		=> $v['pidentity'],
+						'url'			=> ($v['storage']?$config['attach_url']:$config['files_url']).'/'.$v['folder'].'/'.$v['name'],
+						'name'			=> $v['name'],
+						'origName'		=> secure_html($v['orig_name']),
+						'description'	=> secure_html($v['description']),
+					);
+				}
 			}
-		}
 
 		$callingParams['linkedFiles'] = array();
 		$tvars['vars']['_images'] = array();
-		foreach ($linkedImages['data'] as $k => $v) {
-			if ($v['linked_id'] == $row['id']) {
-				$callingParams['linkedImages']['ids']  []= $v['id'];
-				$callingParams['linkedImages']['data'] []= $v;
-				$tvars['vars']['_images'] []= array(
-					'plugin'		=> $v['plugin'],
-					'pidentity'		=> $v['pidentity'],
-					'url'			=> ($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/'.$v['name'],
-					'purl'			=> $v['preview']?(($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/thumb/'.$v['name']):null,
-					'width'			=> $v['width'],
-					'height'		=> $v['height'],
-					'pwidth'		=> $v['p_width'],
-					'pheight'		=> $v['p_height'],
-					'name'			=> $v['name'],
-					'origName'		=> secure_html($v['orig_name']),
-					'description'	=> secure_html($v['description']),
-					'flags'		=> array(
-						'hasPreview'	=> $v['preview'],
-					),
-				);
+		
+		if(isset($linkedImages['data']) && is_array($linkedImages['data']))
+			foreach ($linkedImages['data'] as $k => $v) {
+				if ($v['linked_id'] == $row['id']) {
+					$callingParams['linkedImages']['ids']  []= $v['id'];
+					$callingParams['linkedImages']['data'] []= $v;
+					$tvars['vars']['_images'] []= array(
+						'plugin'		=> $v['plugin'],
+						'pidentity'		=> $v['pidentity'],
+						'url'			=> ($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/'.$v['name'],
+						'purl'			=> $v['preview']?(($v['storage']?$config['attach_url']:$config['images_url']).'/'.$v['folder'].'/thumb/'.$v['name']):null,
+						'width'			=> $v['width'],
+						'height'		=> $v['height'],
+						'pwidth'		=> $v['p_width'],
+						'pheight'		=> $v['p_height'],
+						'name'			=> $v['name'],
+						'origName'		=> secure_html($v['orig_name']),
+						'description'	=> secure_html($v['description']),
+						'flags'		=> array(
+							'hasPreview'	=> $v['preview'],
+						),
+					);
+				}
 			}
-		}
 
 		//print "LinkedFiles (".$row['id']."): <pre>".var_export($tvars['vars']['#files'], true)."</pre>";
 		//print "LinkedImages (".$row['id']."): <pre>".var_export($tvars['vars']['#images'], true)."</pre>";
@@ -777,10 +785,11 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 			// Check mode:
 			// 1 - Master category
 			// 2 - Current category
-			$fcat = $callingParams['currentCategoryId'];
+			$fcat = getIsSet($callingParams['currentCategoryId']);
 			if ($callingParams['customCategoryTemplate'] == 1) {
 				// Find first category
-				$fcat = array_shift(explode(",", $row['catid']));
+				if(getIsSet($row['catid']))
+					$fcat = array_shift(explode(",", $row['catid']));
 			}
 
 			// Check if there is a custom mapping

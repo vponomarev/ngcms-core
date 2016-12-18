@@ -36,7 +36,7 @@ function ipban_add() {
 	$ip = trim($_REQUEST['ip']);
 	//$atype = intval($_REQUEST['atype']);
 	$reason = $_REQUEST['lock:rsn'];
-	$flags = intval($_REQUEST['lock:open']).intval($_REQUEST['lock:reg']).intval($_REQUEST['lock:login']).intval($_REQUEST['lock:comm']);
+	$flags = intval(getIsSet($_REQUEST['lock:open'])).intval($_REQUEST['lock:reg']).intval($_REQUEST['lock:login']).intval($_REQUEST['lock:comm']);
 
 	$addr_start	= 0;
 	$addr_stop	= 0;

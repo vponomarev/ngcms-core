@@ -105,7 +105,7 @@ function systemDboModify() {
 
 		// Update category news counters
 		foreach ($catz as $key) {
-			$mysql->query("update ".prefix."_category set posts = ".intval($ccount[$key['id']])." where id = ".$key['id']);
+			$mysql->query("update ".prefix."_category set posts = ".intval(getIsSet($ccount[$key['id']]))." where id = ".$key['id']);
 		}
 
 		// Check if we can update comments counters
@@ -143,7 +143,7 @@ function systemDboModify() {
 	}
 
 	// Delete specific backup file
-	if ($_REQUEST['delbackup']) {
+	if (getIsSet($_REQUEST['delbackup'])) {
 	        $filename = str_replace('/','', $_REQUEST['filename']);
 		if (!$filename) {
 			msg(array("type" => "error", "text" => $lang['dbo']['msge_delbackup']));
@@ -160,7 +160,7 @@ function systemDboModify() {
 		if ($_REQUEST['massrepair']) { $mode = 'repair'; }
 		if ($_REQUEST['massoptimize']) { $mode = 'optimize'; }
 
-		$tables = $_REQUEST['tables'];
+		$tables = getIsSet($_REQUEST['tables']);
 		if (!is_array($tables)) {
 			msg(array("type" => "error", "text" => $lang['dbo']['msge_tables'], "info" => $lang['dbo']['msgi_tables']));
 		} else {
@@ -168,6 +168,7 @@ function systemDboModify() {
 
 			for ($i = 0, $sizeof = sizeof($tables); $i < $sizeof; $i++) {
 				if ($mysql->table_exists($tables[$i])) {
+					
 					$result = $mysql->record($mode." table `".$tables[$i]."`");
 					if ($result['Msg_text'] == "2 clients are using or haven't closed the table properly") {
 						$result['Msg_text'] = $lang['dbo']['chk_no'];
@@ -182,8 +183,8 @@ function systemDboModify() {
 	}
 
 	// MASS: Delete tables
-	if ($_REQUEST['massdelete']) {
-	        $tables = $_REQUEST['tables'];
+	if (getIsSet($_REQUEST['massdelete'])) {
+	        $tables = getIsSet($_REQUEST['tables']);
 		if (!$tables) {
 			msg(array("type" => "error", "text" => $lang['dbo']['msge_tables'], "info" => $lang['dbo']['msgi_tables']));
 		}
@@ -200,8 +201,8 @@ function systemDboModify() {
 	}
 
 	// MASS: Backup tables
-	if ($_REQUEST['massbackup']) {
-	        $tables = $_REQUEST['tables'];
+	if (getIsSet($_REQUEST['massbackup'])) {
+	        $tables = getIsSet($_REQUEST['tables']);
 		if (!$tables) {
 			msg(array("type" => "error", "text" => $lang['dbo']['msge_tables'], "info" => $lang['dbo']['msgi_tables']));
 		} else {
@@ -223,7 +224,7 @@ function systemDboModify() {
 	}
 
 	//MASS: Delete backup files
-	if ($_REQUEST['massdelbackup']) {
+	if (getIsSet($_REQUEST['massdelbackup'])) {
 		$backup_dir = opendir(root.'backups');
 		while($bf = readdir($backup_dir)) {
 			if (($bf == '.')||($bf == '..'))
@@ -235,7 +236,7 @@ function systemDboModify() {
 	}
 
 	// RESTORE DB backup
-	if ($_REQUEST['restore']) {
+	if (getIsSet($_REQUEST['restore'])) {
 	        $filename = str_replace('/','', $_REQUEST['filename']);
 		if (!$filename) {
 			msg(array("type" => "error", "text" => $lang['dbo']['msge_restore'], "info" => $lang['dbo']['msgi_restore']));

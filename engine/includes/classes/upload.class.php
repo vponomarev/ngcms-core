@@ -123,8 +123,8 @@ class file_managment {
 
 		//print "CALL file_upload -> upload(".$param['http_var']."//".$param['http_varnum'].")<br>\n<pre>"; var_dump($param); print "</pre><br>\n";
 
-		$http_var		= $param['http_var'];
-		$http_varnum	= intval($param['http_varnum']);
+		$http_var		= getIsSet($param['http_var']);
+		$http_varnum	= intval(getIsSet($param['http_varnum']));
 
 		if ($param['manual']) {
 			if ($param['url']) {
@@ -136,8 +136,8 @@ class file_managment {
 					return 0;
 				}
 			} else {
-				$fname = $param['manualfile'];
-				$ftmp  = $param['manualtmp'];
+				$fname = getIsSet($param['manualfile']);
+				$ftmp  = getIsSet($param['manualtmp']);
 				$fsize = filesize($ftmp);
 			}
 		} else {
@@ -181,7 +181,7 @@ class file_managment {
 
 		// Check for existance of temp file
 		if (!$ftmp || !file_exists($ftmp)) {
-			if ($param['rpc']) {
+			if (getIsSet($param['rpc'])) {
 				return array('status' => 0, 'errorCode' => 303, 'errorText' => iconv('Windows-1251', 'UTF-8', var_export($_FILES, true).str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));
 			} else {
 				msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));

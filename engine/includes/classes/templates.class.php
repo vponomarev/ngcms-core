@@ -227,7 +227,8 @@ class tpl {
 					$data = str_replace($id, $var, $data);
 				}
 				else {
-					$data = str_replace('{'.$id.'}', $var, $data);
+					if(!is_array($var))
+						$data = str_replace('{'.$id.'}', $var, $data);
 				}
 			}
 		}

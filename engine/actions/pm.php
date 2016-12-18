@@ -136,7 +136,7 @@ function pm_reply(){
 }
 
 function pm_write(){
-	global $mysql, $config, $lang, $userROW, $tpl, $mod;
+	global $mysql, $config, $lang, $userROW, $tpl, $mod, $PHP_SELF;
 
 	$tpl -> template('write', tpl_actions.$mod);
 	$tvars['vars'] = array(
@@ -152,7 +152,7 @@ function pm_write(){
 function pm_delete(){
 	global $mysql, $config, $lang, $userROW, $tpl, $mod;
 
-	$selected_pm = $_REQUEST['selected_pm'];
+	$selected_pm = getIsSet($_REQUEST['selected_pm']);
 
 	if(!$selected_pm) {
 		msg(array("type" => "error", "text" => $lang['msge_select']));

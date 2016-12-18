@@ -22,7 +22,7 @@ LoadLang('addnews', 'admin', 'addnews');
 // Edit news form
 // ======================================================================================================
 function editNewsForm() {
-	global $lang, $parse, $mysql, $config, $PFILTERS, $tvars, $userROW, $twig;
+	global $lang, $parse, $mysql, $config, $PFILTERS, $tvars, $userROW, $twig, $PHP_SELF;
 
 	// Load permissions
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
@@ -99,7 +99,6 @@ function editNewsForm() {
 		'title'				=>	secure_html($row['title']),
 		'content'			=>  array(),
 		'alt_name'			=>	$row['alt_name'],
-		'avatar'			=>	$row['avatar'],
 		'description'		=>	secure_html($row['description']),
 		'keywords'			=>	secure_html($row['keywords']),
 		'views'				=>	$row['views'],
@@ -212,7 +211,8 @@ function editNewsForm() {
 	$tVars['attachEntries'] = $attachEntries;
 	$tVars['attachCount'] = $attachNumber;
 
-	exec_acts('editnews_entry', $row['xfields'], '');
+	if(getIsSet($row['xfields']))
+		exec_acts('editnews_entry', $row['xfields'], '');
 	exec_acts('editnews_form');
 
 	if (is_array($PFILTERS['news']))
@@ -296,7 +296,7 @@ function massCommentDelete(){
 function massNewsModify($setValue, $langParam, $auto = false) {
 	global $mysql, $lang, $PFILTERS, $catmap;
 
-	$selected_news = $_REQUEST['selected_news'];
+	$selected_news = getIsSet($_REQUEST['selected_news']);
 
 	if ((!is_array($selected_news))||(!count($selected_news))) {
 		msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
@@ -312,7 +312,7 @@ function massNewsModify($setValue, $langParam, $auto = false) {
 // Mass news delete
 //
 function massNewsDelete() {
-	massDeleteNews($_REQUEST['selected_news']);
+	massDeleteNews(getIsSet($_REQUEST['selected_news']));
 }
 
 function makeSortList($selected) {
@@ -331,7 +331,7 @@ function makeSortList($selected) {
 // List news
 // ======================================================================================================
 function listNewsForm() {
-	global $mysql, $lang, $twig, $catz, $catmap, $userROW;
+	global $mysql, $lang, $twig, $catz, $catmap, $userROW, $PHP_SELF;
 
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
 		'view',
@@ -359,38 +359,38 @@ function listNewsForm() {
 	$admCookie = admcookie_get();
 
 	// Search filters
-	$fSearchLine		= $_REQUEST['sl'];
-	$fSearchType		= intval($_REQUEST['st']);
+	$fSearchLine		= getIsSet($_REQUEST['sl']);
+	$fSearchType		= intval(getIsSet($_REQUEST['st']));
 
 	// Author filter (by name)
-	$fAuthorName		= $_REQUEST['an'];
+	$fAuthorName		= getIsSet($_REQUEST['an']);
 
 	// Date range
 	$fDateStart			= '';
 	$fDateStartText		= '';
-	if (preg_match('#^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$#', $_REQUEST['dr1'], $match)) {
-		$fDateStartText = $_REQUEST['dr1'];
+	if (preg_match('#^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$#', getIsSet($_REQUEST['dr1']), $match)) {
+		$fDateStartText = getIsSet($_REQUEST['dr1']);
 		$fDateStart		= mktime(0, 0, 0, $match[2], $match[1], $match[3]);
 	}
 
 	$fDateStop			= '';
 	$fDateStopText		= '';
-	if (preg_match('#^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$#', $_REQUEST['dr2'], $match)) {
-		$fDateStopText	= $_REQUEST['dr2'];
+	if (preg_match('#^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$#', getIsSet($_REQUEST['dr2']), $match)) {
+		$fDateStopText	= getIsSet($_REQUEST['dr2']);
 		$fDateStop		= mktime(0, 0, 0, $match[2], $match[1], $match[3]);
 	}
 
 	// Category
 	$fCategoryId	= NULL;
-	if ($_REQUEST['category'] != '')
-		$fCategoryId = intval($_REQUEST['category']);
+	if (getIsSet($_REQUEST['category']) != '')
+		$fCategoryId = intval(getIsSet($_REQUEST['category']));
 
 	// Status
-	$fStatus		= intval($_REQUEST['status']);
+	$fStatus		= intval(getIsSet($_REQUEST['status']));
 
 	// Sort mode
 	$fSort = '';
-	switch($_REQUEST['sort']){
+	switch(getIsSet($_REQUEST['sort'])){
 		case 'id':				$fSort = 'id';				break;
 		case 'id_desc':			$fSort = 'id desc';			break;
 		case 'postdate':		$fSort = 'postdate';		break;
@@ -402,9 +402,9 @@ function listNewsForm() {
 
 	// Check if user selected personal filter
 	$fAuthorId = 0;
-	if ($_REQUEST['aid']) {
+	if (getIsSet($_REQUEST['aid'])) {
 		// Try to fetch userName
-		if ($urow = $mysql->record("select id, name from ".uprefix."_users where id = ".db_squote($_REQUEST['aid']))) {
+		if ($urow = $mysql->record("select id, name from ".uprefix."_users where id = ".db_squote(getIsSet($_REQUEST['aid'])))) {
 			$fAuthorId = $urow['id'];
 			$fAuthorName = $urow['name'];
 		}
@@ -413,7 +413,7 @@ function listNewsForm() {
 
 	// Records Per Page
 	// - Load
-	$fRPP			= isset($_REQUEST['rpp'])?intval($_REQUEST['rpp']):intval($admCookie['news']['pp']);
+	$fRPP = isset($_REQUEST['rpp'])?intval($_REQUEST['rpp']):intval($admCookie['news']['pp']);
 	// - Set default value for `Records Per Page` parameter
 	if (($fRPP < 2)||($fRPP > 2000))
 		$fRPP = 20;
@@ -423,12 +423,14 @@ function listNewsForm() {
 	admcookie_set($admCookie);
 
 	// Determine requested page number
-	$pageNo		= intval($_REQUEST['page'])?$_REQUEST['page']:0;
-	if ($pageNo < 1)	$pageNo = 1;
+	$pageNo		= getIsSet($_REQUEST['page'])?intval($_REQUEST['page']):0;
+	if ($pageNo < 1)
+		$pageNo = 1;
 
-	if (!$start_from)	$start_from = ($pageNo - 1)* $news_per_page;
+	if (empty($start_from))
+		$start_from = $pageNo - 1;
 
-	$i				=	$start_from;
+	$i = $start_from;
 
 	$conditions = array();
 	if (!is_null($fCategoryId)) {
@@ -510,7 +512,7 @@ function listNewsForm() {
 			)
 		);
 
-		if (is_array($PFILTERS['news']))
+		if (getIsSet($PFILTERS['news']) && is_array($PFILTERS['news']))
 			foreach ($PFILTERS['news'] as $k => $v) {
 				$v->listNewsForm($id, $row, $tVars);
 			}
@@ -529,20 +531,6 @@ function listNewsForm() {
 			'allow_modify'	=> ($userROW['status'] <= 2)?true:false,
 		),
 	);
-
-	foreach ($mysql->select("SELECT DISTINCT FROM_UNIXTIME(postdate,'%b %Y') as monthes, COUNT(id) AS cnt FROM ".prefix."_news GROUP BY monthes ORDER BY postdate DESC") as $row){
-		$ifselected = '';
-		$post_date['ru']	=	str_replace($f3, $r, $row['monthes']);
-		$post_date['en']	=	str_replace($f3, $f2, $row['monthes']);
-		$arch_url			=	explode (" ", $post_date['en']);
-		$post_date['en']	=	$arch_url[1].$arch_url[0];
-
-		if ($post_date['en'] == $postdate) {
-			$ifselected = "selected";
-		}
-
-		$tVars['selectdate'] .= "<option value=\"$post_date[en]\" $ifselected>$post_date[ru]</option>";
-	}
 
 	$tVars['category_select'] = makeCategoryList(array('doall' => 1, 'dowithout' => 1, 'selected' => $fCategoryId, 'style' => 'width: 200px;'));
 
@@ -622,7 +610,7 @@ function listNewsForm() {
 // Add news form
 // ======================================================================================================
 function addNewsForm($retry = ''){
-	global $lang, $mysql, $config, $userROW, $PFILTERS, $twig;
+	global $lang, $mysql, $config, $userROW, $PFILTERS, $twig, $PHP_SELF;
 
 	// Load permissions
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
@@ -630,8 +618,10 @@ function addNewsForm($retry = ''){
 		'add.approve',
 		'add.mainpage',
 		'add.pinned',
+		'add.catpinned',
 		'add.favorite',
 		'add.html',
+		'add.raw',
 		'personal.view',
 		'personal.modify',
 		'personal.modify.published',
@@ -682,7 +672,7 @@ function addNewsForm($retry = ''){
 			'html.disabled'		=> !$perm['personal.html'],
 			'customdate.disabled'	=> !$perm['personal.customdate'],
 			'multicat.show'		=> $perm['personal.multicat'],
-			'extended_more'		=> ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != ''))?true:false,
+			'extended_more'		=> ($config['extended_more'] || (getIsSet($tvars['vars']['content.delimiter']) != ''))?true:false,
 			'can_publish'		=> $perm['personal.publish'],
 			'altname.disabled'	=> (!$perm['personal.altname'])?true:false,
 			'mondatory_cat'		=> (!$perm['personal.nocat'])?true:false,
@@ -704,8 +694,8 @@ function addNewsForm($retry = ''){
 // # Action selection                                                             #
 // #==============================================================================#
 
-$action		=	$_REQUEST['action'];
-$subaction	=	$_REQUEST['subaction'];
+$action		=	getIsSet($_REQUEST['action']);
+$subaction	=	getIsSet($_REQUEST['subaction']);
 
 // Main execution block
 do {

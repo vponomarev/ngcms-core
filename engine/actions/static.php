@@ -17,7 +17,7 @@ $lang = LoadLang('static', 'admin');
 // Show list of static pages
 //
 function listStatic() {
-	global $mysql, $mod, $userROW, $lang, $config, $twig;
+	global $mysql, $mod, $userROW, $lang, $config, $twig, $PHP_SELF;
 
 	// Check for permissions
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('view','modify', 'details', 'publish', 'unpublish'));
@@ -42,7 +42,7 @@ function listStatic() {
 	admcookie_set($admCookie);
 
 
-	$pageNo		= intval($_REQUEST['page']);
+	$pageNo	= intval(getIsSet($_REQUEST['page']));
 	if ($pageNo < 1)	$pageNo = 1;
 
 	$query = array();
@@ -92,7 +92,7 @@ function listStatic() {
 	$all_count_rec = $cnt['cnt'];
 
 	$countPages = ceil($all_count_rec / $per_page);
-	$tVars['pagesss'] = generateAdminPagelist( array('current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=static&action=list'.($_REQUEST['per_page']?'&per_page='.$per_page:'').'&page=%page%'));
+	$tVars['pagesss'] = generateAdminPagelist( array('current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=static&action=list'.(getIsSet($_REQUEST['per_page'])?'&per_page='.$per_page:'').'&page=%page%'));
 
 
 	exec_acts('static_list');
@@ -123,7 +123,7 @@ function massStaticModify($setValue, $langParam, $tag ='') {
 		return;
 	}
 
-	$selected = $_REQUEST['selected'];
+	$selected = getIsSet($_REQUEST['selected']);
 
 	if (!$selected) {
 		msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
@@ -155,7 +155,7 @@ function massStaticDelete() {
 		return;
 	}
 
-	$selected = $_REQUEST['selected'];
+	$selected = getIsSet($_REQUEST['selected']);
 
 	if (!$selected) {
 		msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
@@ -197,7 +197,7 @@ function staticTemplateList() {
 //	0 - autodetect
 //  x - exact static ID
 function addEditStaticForm($operationMode = 1, $sID = 0){
-	global $lang, $parse, $mysql, $config, $twig, $mod, $PFILTERS, $tvars, $userROW;
+	global $lang, $parse, $mysql, $config, $twig, $mod, $PFILTERS, $tvars, $userROW, $PHP_SELF;
 	global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute;
 
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('add', 'modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
@@ -268,17 +268,17 @@ function addEditStaticForm($operationMode = 1, $sID = 0){
 	// Fill data entry
 	$tVars['data']			= array(
 			'id'				=>	$row['id'],
-			'title'				=>	secure_html($row['title']),
-			'content'			=>	secure_html($row['content']),
-			'alt_name'			=>	$row['alt_name'],
-			'template'			=>	$row['template'],
-			'description'		=>	$row['description'],
-			'keywords'			=>	$row['keywords'],
+			'title'				=>	secure_html(getIsSet($row['title'])),
+			'content'			=>	secure_html(getIsSet($row['content'])),
+			'alt_name'			=>	getIsSet($row['alt_name']),
+			'template'			=>	getIsSet($row['template']),
+			'description'		=>	getIsSet($row['description']),
+			'keywords'			=>	getIsSet($row['keywords']),
 			'cdate'				=> !empty($row['postdate'])?date('d.m.Y H:i', $row['postdate']):"",
-			'flag_published'		=> $row['approve'],
-			'flag_raw'				=> ($row['flags'] % 2)?1:0,
-			'flag_html'				=> (($row['flags']/2) % 2)?1:0,
-			'flag_template_main'	=> (($row['flags']/4) % 2)?1:0,
+			'flag_published'		=> getIsSet($row['approve']),
+			'flag_raw'				=> (getIsSet($row['flags']) % 2)?1:0,
+			'flag_html'				=> ((getIsSet($row['flags'])/2) % 2)?1:0,
+			'flag_template_main'	=> ((getIsSet($row['flags'])/4) % 2)?1:0,
 		);
 
 	if ($editMode && ($origRow['approve'])) {
@@ -292,7 +292,7 @@ function addEditStaticForm($operationMode = 1, $sID = 0){
 	exec_acts('addstatic');
 	exec_acts('editstatic');
 
-	if (is_array($PFILTERS['static']))
+	if (getIsSet($PFILTERS['static']) && is_array($PFILTERS['static']))
 		foreach ($PFILTERS['static'] as $k => $v) {
 			if ($editMode) {
 				$v->editStaticForm($row['id'], $row, $tVars);

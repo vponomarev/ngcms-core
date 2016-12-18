@@ -300,7 +300,7 @@ class urlHandler {
 				case '1':	if ($rcmd[$pos] == '}') {
 								// End of the variable
 								$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-								$genmap[] = array($cmd['vars'][$text]['isSecure']?2:1, $text, $variative);
+								$genmap[] = array(getIsSet($cmd['vars'][$text]['isSecure'])?2:1, $text, $variative);
 								$dataStartPos = $pos+1;
 								$state = 0;
 								break;

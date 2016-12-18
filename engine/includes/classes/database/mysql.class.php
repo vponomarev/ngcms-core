@@ -7,6 +7,7 @@ class mysql {
 
 		$this->queries = 0;
 		$this->query_list = array();
+		$this->table_list = array();
 		$this->error = 0;
 		$this->conn_db = $db;
 		$this->queryTimer = (isset($timer) && (method_exists($timer, 'stop')));
@@ -188,11 +189,9 @@ class mysql {
 	// check if table exists
 	function table_exists($table, $forceReload = 0) {
 		// Check if data are already saved
-		if (is_array($this->table_list)  && !$forceReload) {
+		if (getIsSet($this->table_list[$table]) && is_array($this->table_list)  && !$forceReload) {
 			return $this->table_list[$table]?1:0;
 		}
-
-		$this->table_list=array();
 
 		if (!($query = @mysql_query("show tables", $this->connect))) {
 			$this->errorReport('select', "show tables");

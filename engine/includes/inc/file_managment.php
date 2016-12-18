@@ -22,7 +22,7 @@ function manage_delete($type){
 
 	$ok = 0;
 	$err = 0;
-	$files = $_REQUEST['files'];
+	$files = getIsSet($_REQUEST['files']);
 	if (is_array($files)) {
 		foreach ($files as $file) {
 			if ($fmanager->file_delete(array('type' => $type, 'id' => $file))) {
@@ -53,8 +53,8 @@ function manage_move($type){
 
 	$ok		= 0;
 	$fail	= 0;
-	$files		= $_REQUEST['files'];
-	$category	= $_REQUEST['category'];
+	$files		= getIsSet($_REQUEST['files']);
+	$category	= getIsSet($_REQUEST['category']);
 	if ($files && is_dir($dir.$category) && is_writable($dir.$category)) {
 		foreach ($files as $file) {
 			if ($fmanager->file_rename(array('type' => $type, 'id' => $file, 'move' => 1, 'newcategory' => $category))) {
@@ -98,18 +98,18 @@ function manage_upload($type){
 	$filelist = array();
 
 	// LOAD URL LIST
-	if (is_array($urls = $_REQUEST['userurl'])) {
+	if (is_array($urls = getIsSet($_REQUEST['userurl']))) {
 		// If URL upload
 		foreach($urls as $url){
-			array_push($filelist, array('type' => $type, 'category' => $subdirectory, 'manual' => 1, 'url' => $url, 'replace' => $_REQUEST['replace']?1:0, 'randprefix' => $_REQUEST['rand']?1:0));
+			array_push($filelist, array('type' => $type, 'category' => $subdirectory, 'manual' => 1, 'url' => $url, 'replace' => getIsSet($_REQUEST['replace'])?1:0, 'randprefix' => getIsSet($_REQUEST['rand'])?1:0));
 		}
 	};
 
 	// LOAD ATTACHED FILE LIST
-	if (is_array($_FILES['userfile']['name']))
+	if (getIsSet($_FILES['userfile']['name']) && is_array($_FILES['userfile']['name']))
 		foreach($_FILES['userfile']['name'] as $i => $v)
 			if ($v != '')
-				array_push($filelist, array('type' => $type, 'category' => $subdirectory, 'http_var' => 'userfile', 'http_varnum' => $i, 'replace' => $_REQUEST['replace']?1:0, 'randprefix' => $_REQUEST['rand']?1:0));
+				array_push($filelist, array('type' => $type, 'category' => $subdirectory, 'http_var' => 'userfile', 'http_varnum' => $i, 'replace' => getIsSet($_REQUEST['replace'])?1:0, 'randprefix' => getIsSet($_REQUEST['rand'])?1:0));
 
 
 	foreach($filelist as $fparam) {

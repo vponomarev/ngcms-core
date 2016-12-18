@@ -452,7 +452,7 @@ function msg($params, $mode = 0, $disp = -1) {
 
 	// Choose working mode
 	$type = 'msg.common';
-	switch ($params['type']) {
+	switch (getIsSet($params['type'])) {
 		case 'error':	$type = 'msg.error'.(isset($params['info'])?'_info':''); break;
 		case 'info':	$type = 'msg.info'; break;
 		default:		$type = 'msg.common'.(isset($params['info'])?'_info':''); break;
@@ -1429,7 +1429,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 			$more	= '';
 		}
 	} else {
-		list ($short, $full) = explode('<!--more-->', $row['content'], 2);
+		list ($short, $full) = array_pad(explode('<!--more-->', $row['content']), 2, '');
 		$more = '';
 	}
 	// Default page number
@@ -2331,6 +2331,14 @@ function ngExceptionHandler($exception) {
 		print "<tr><td>".$k."</td><td>".$v['line']."</td><td>".(isset($v['class'])?('<i>'.$v['class'].'</i>'):$v['function'])."</td><td>".$v['file']."</td></tr>\n";
 	}
 	print "</tbody></table>";
+}
+
+//Проверяем переменную
+function getIsSet(&$result) {
+    if (isset($result))
+        return $result;
+	
+    return null;
 }
 
 //

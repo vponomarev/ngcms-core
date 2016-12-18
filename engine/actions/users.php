@@ -187,7 +187,7 @@ function userMassActivate(){
 		return;
 	}
 
-	$selected_users = $_REQUEST['selected_users'];
+	$selected_users = getIsSet($_REQUEST['selected_users']);
 	if (!$selected_users) {
 		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
 		return;
@@ -215,7 +215,7 @@ function userMassLock(){
 		return;
 	}
 
-	$selected_users = $_REQUEST['selected_users'];
+	$selected_users = getIsSet($_REQUEST['selected_users']);
 	if (!$selected_users) {
 		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
 		return;
@@ -246,7 +246,7 @@ function userMassSetStatus(){
 		return;
 	}
 
-	$selected_users = $_REQUEST['selected_users'];
+	$selected_users = getIsSet($_REQUEST['selected_users']);
 	if (!$selected_users) {
 		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
 		return;
@@ -286,7 +286,7 @@ function userMassDelete(){
 		return;
 	}
 
-	$selected_users = $_REQUEST['selected_users'];
+	$selected_users = getIsSet($_REQUEST['selected_users']);
 	if (!$selected_users || !is_array($selected_users)) {
 		msg(array("type" => "error", "text" => $lang['msge_select'], "info" => $lang['msgi_select']));
 		return;
@@ -479,7 +479,7 @@ function userList(){
 	$tVars	= array(
 		'php_self'		=> $PHP_SELF,
 		'rpp'			=> $fRPP,
-		'name'			=> (isset($_REQUEST['name']) && $_REQUEST['name'])?htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):0,
+		'name'			=> (isset($_REQUEST['name']) && $_REQUEST['name'])?htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251'):'',
 		'token'			=> genUToken('admin.users'),
 		'pagination'	=> $pagination,
 		'ugroup'		=> $tUgroup,

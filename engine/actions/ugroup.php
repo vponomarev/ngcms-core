@@ -64,7 +64,7 @@ function ugroupForm(){
 	global $mysql, $lang, $mod, $PFILTERS, $twig, $UGROUP;
 
 	// ID of group for editing
-	$id = intval($_REQUEST['id']);
+	$id = intval(getIsSet($_REQUEST['id']));
 
 	// Add/Edit mode flag
 	$editMode = ($id > 0)?true:false;

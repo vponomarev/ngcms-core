@@ -53,7 +53,7 @@ function admCategoryAddForm(){
 
 	$templateMode = '';
 	foreach (array('0', '1', '2') as $k => $v) {
-		$templateMode .= '<option value="'.$k.'"'.(($k == intval(substr($row['flags'], 2, 1)))?' selected="selected"':'').'>'.$lang['template_mode.'.$v].'</option>';
+		$templateMode .= '<option value="'.$k.'"'.(($k == intval(substr(getIsSet($row['flags']), 2, 1)))?' selected="selected"':'').'>'.$lang['template_mode.'.$v].'</option>';
 	}
 
 
@@ -223,7 +223,7 @@ function admCategoryAdd() {
 // ///////////////////////////////////////////////////////////////////////////
 //
 function admCategoryEditForm(){
-	global $mysql, $lang, $mod, $config, $twig, $AFILTERS;
+	global $mysql, $lang, $mod, $config, $twig, $AFILTERS, $PHP_SELF;
 
 	// Check for permissions
 	$permModify		= checkPermission(array('plugin' => '#admin', 'item' => 'categories'), null, 'modify');

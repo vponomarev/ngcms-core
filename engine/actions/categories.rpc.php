@@ -156,7 +156,7 @@ function admCategoryReorder($params = array()) {
 
 
 	$num = 0;
-	$nc = $ncat[0];
+	$nc = getIsSet($ncat[0]);
 	$idx = array();
 	$idxD = array();
 	$ordr = array();
