@@ -361,7 +361,7 @@ function listNewsForm() {
 	// Search filters
 	$fSearchLine		= getIsSet($_REQUEST['sl']);
 	$fSearchType		= intval(getIsSet($_REQUEST['st']));
-
+	
 	// Author filter (by name)
 	$fAuthorName		= getIsSet($_REQUEST['an']);
 
@@ -556,8 +556,7 @@ function listNewsForm() {
 
 	$tVars['an'] = secure_html($fAuthorName);
 	$tVars['sl'] = secure_html($fSearchLine);
-	$tVars['st.selected0'] = !$fSearchType?' selected="selected"':'';
-	$tVars['st.selected1'] =  $fSearchType?' selected="selected"':'';
+	$tVars['selected'] =  $fSearchType;
 	$tVars['dr1'] = $fDateStartText;
 	$tVars['dr2'] = $fDateStopText;
 	$tVars['token'] = genUToken('admin.news.edit');

@@ -103,7 +103,7 @@ function filter_attach_DateEdit(id) {
   <tr>
     <td valign="top" >
     <label>{{ lang.editnews['header.search'] }}</label>
-    <input name="sl" type="text" class="bfsearch" value="{{ sl }}"/> <select name="st"><option value="0" {{ st.selected0 }}>{{ lang.editnews['header.stitle'] }}</option><option value="1" {{ st.selected1 }}>{{ lang.editnews['header.stext'] }}</option></select>
+    <input name="sl" type="text" class="bfsearch" value="{{ sl }}"/> <select name="st"><option value="0" {% if (selected == '0') %}selected="selected"'{% endif %}>{{ lang.editnews['header.stitle'] }}</option><option value="1" {% if (selected == '1') %}selected="selected"'{% endif %}>{{ lang.editnews['header.stext'] }}</option></select>
     </td>
   </tr>
   <tr>
