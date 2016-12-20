@@ -331,7 +331,7 @@ function makeSortList($selected) {
 // List news
 // ======================================================================================================
 function listNewsForm() {
-	global $mysql, $lang, $twig, $catz, $catmap, $userROW, $PHP_SELF;
+	global $mysql, $lang, $twig, $catz, $catmap, $userROW, $PHP_SELF, $config;
 
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'news'), null, array(
 		'view',
@@ -534,10 +534,12 @@ function listNewsForm() {
 
 	$tVars['category_select'] = makeCategoryList(array('doall' => 1, 'dowithout' => 1, 'selected' => $fCategoryId, 'style' => 'width: 200px;'));
 
+    $maxNavigations = !(empty($config['newsNavigationsAdminCount']) || $config['newsNavigationsAdminCount'] < 1)?$config['newsNavigationsAdminCount']:20;
+
 	if (count($newsEntries) > 0) {
 		$tVars['pagesss'] = generateAdminPagelist(
 		array(
-			'maxNavigations' => 30,
+			'maxNavigations' => $maxNavigations,
 			'current' => $pageNo,
 			'count' => $countPages,
 			'url' => admin_url.
