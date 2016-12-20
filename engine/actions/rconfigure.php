@@ -14,7 +14,7 @@ $UHANDLER->loadConfig();
 
 $ULIB->registerCommand('news', 'all',
 		array ('vars' =>
-			array(	'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница')),
+			array(	'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
 			),
 			'descr'	=> array ('russian' => 'Лента новостей'),
 		)
@@ -69,7 +69,7 @@ $ULIB->registerCommand('core', 'logout',
 
 $ULIB->registerCommand('news', 'main',
 		array ('vars' =>
-					array(	'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница')),
+					array(	'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
 					),
 				'descr'	=> array ('russian' => 'Главная новостная страница'),
 		)
@@ -78,8 +78,8 @@ $ULIB->registerCommand('news', 'main',
 $ULIB->registerCommand('news', 'by.category',
 		array ('vars' =>
 					array(	'category' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя категории')),
-							'catid' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID категории')),
-							'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница')),
+							'catid' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID категории')),
+							'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
 					),
 				'descr'	=> array ('russian' => 'Новости из заданной категории'),
 		)
@@ -88,14 +88,14 @@ $ULIB->registerCommand('news', 'by.category',
 $ULIB->registerCommand('news', 'news',
 		array ('vars' =>
 					array(	'category' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя категории')),
-							'catid' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID категории')),
+							'catid' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID категории')),
 							'year' => array('matchRegex' => '\d{4}', 'descr' => array ('russian' => 'Год')),
 							'month' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'Месяц')),
 							'day' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'День')),
-							'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
+							'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница внутри новости')),
 							'altname' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя новости')),
-							'id' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID новости')),
-							'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
+							'id' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID новости')),
+							'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница внутри новости')),
 					),
 				'descr'	=> array ('russian' => 'Отображение полной новости'),
 		)
@@ -104,14 +104,14 @@ $ULIB->registerCommand('news', 'news',
 $ULIB->registerCommand('news', 'print',
 	array ('vars' =>
 	array(	'category' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя категории')),
-	'catid' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID категории')),
+	'catid' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID категории')),
 	'year' => array('matchRegex' => '\d{4}', 'descr' => array ('russian' => 'Год')),
 	'month' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'Месяц')),
 	'day' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'День')),
-	'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
+	'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница внутри новости')),
 	'altname' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя новости')),
-	'id' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID новости')),
-	'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница внутри новости')),
+	'id' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID новости')),
+	'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница внутри новости')),
 	),
 	'descr'	=> array ('russian' => 'Страница для печати полной новости'),
 	)
@@ -120,7 +120,7 @@ $ULIB->registerCommand('news', 'print',
 $ULIB->registerCommand('news', 'by.year',
 		array ('vars' =>
 					array(	'year' => array('matchRegex' => '\d{4}', 'descr' => array('russian' => 'Год')),
-							'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница')),
+							'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
 					),
 				'descr'	=> array ('russian' => 'Новости за год'),
 		)
@@ -131,7 +131,7 @@ $ULIB->registerCommand('news', 'by.month',
 		array ( 'vars' =>
 			array(	'year' => array('matchRegex' => '\d{4}', 'descr' => array ('russian' => 'Год')),
 					'month' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'Месяц')),
-					'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница')),
+					'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
 			),
 		'descr'	=> array ('russian' => 'Новости за месяц'),
 	)
@@ -142,7 +142,7 @@ $ULIB->registerCommand('news', 'by.day',
 			array(	'year' => array('matchRegex' => '\d{4}', 'descr' => array ('russian' => 'Год')),
 					'month' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'Месяц')),
 					'day' => array('matchRegex' => '\d{2}', 'descr' => array ('russian' => 'День')),
-					'page' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'Страница')),
+					'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
 			),
 		'descr'	=> array ('russian' => 'Новости за день'),
 	)
@@ -158,7 +158,7 @@ $ULIB->registerCommand('rss_export', 'main',
 $ULIB->registerCommand('rss_export', 'category',
 		array ('vars' =>
 			array(	'category' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя категории')),
-				'catid' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID категории')),
+				'catid' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID категории')),
 			),
 		'descr'	=> array ('russian' => 'RSS поток указанной категории'),
 	)
@@ -184,7 +184,7 @@ $ULIB->registerCommand('uprofile', 'show',
 $ULIB->registerCommand('static', '',
 		array ('vars' =>
 					array(		'altname' => array('matchRegex' => '.+?', 'descr' => array('russian' => 'Альт. имя статической страницы')),
-							'id' => array('matchRegex' => '\d{1,4}', 'descr' => array('russian' => 'ID статической страницы')),
+							'id' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'ID статической страницы')),
 					),
 				'descr'	=> array ('russian' => 'Отображение статической страницы'),
 		)
@@ -208,7 +208,7 @@ $UHANDLER->registerHandler(0,
 		'callbackFunc'		=> 'defaultCallbackFunction',
 		'rstyle'	=> array(
 			'rcmd'			=> '/{category}/{altname}[/page{page}].html',
-			'regex'			=> '#^/([^/]+?)/([^/]+?)(?:/page(\d{1,4}))?.html#',
+			'regex'			=> '#^/([^/]+?)/([^/]+?)(?:/page(\d+))?.html#',
 			'regexMap'		=> array(
 				1	=> 'catname',
 				2	=> 'altname',
@@ -238,7 +238,7 @@ $UHANDLER->registerHandler(0,
 		'callbackFunc'		=> 'defaultCallbackFunction',
 		'rstyle'	=> array(
 			'rcmd'			=> '/category/{category}[/page/{page}].html',
-			'regex'			=> '#^/category/([^/]+?)(?:/page/(\d{1,4}))?.html#',
+			'regex'			=> '#^/category/([^/]+?)(?:/page/(\d+))?.html#',
 			'regexMap'		=> array(
 				1	=> 'catname',
 				2	=> 'page',
@@ -265,7 +265,7 @@ $UHANDLER->registerHandler(0,
 		'callbackFunc'		=> 'defaultCallbackFunction',
 		'rstyle'	=> array(
 			'rcmd'			=> '/{year}[-page{page}].html',
-			'regex'			=> '#^/(\d{4})(?:\-page(\d{1,4})).html#',
+			'regex'			=> '#^/(\d{4})(?:\-page(\d+)).html#',
 			'regexMap'		=> array(
 				1	=> 'year',
 				2	=> 'page',
@@ -292,7 +292,7 @@ $UHANDLER->registerHandler(0,
 		'callbackFunc'		=> 'defaultCallbackFunction',
 		'rstyle'	=> array(
 			'rcmd'			=> '/{year}-{month}[-page{page}].html',
-			'regex'			=> '#^/(\d{4})-(\d{2})(?:\-page(\d{1,4})).html#',
+			'regex'			=> '#^/(\d{4})-(\d{2})(?:\-page(\d+)).html#',
 			'regexMap'		=> array(
 				1	=> 'year',
 				2	=> 'month',
@@ -322,7 +322,7 @@ $UHANDLER->registerHandler(0,
 		'callbackFunc'		=> 'defaultCallbackFunction',
 		'rstyle'	=> array(
 			'rcmd'			=> '/{year}-{month}-{day}[-page{page}].html',
-			'regex'			=> '#^/(\d{4})-(\d{2})-(\d{2})(?:\-page(\d{1,4})).html#',
+			'regex'			=> '#^/(\d{4})-(\d{2})-(\d{2})(?:\-page(\d+)).html#',
 			'regexMap'		=> array(
 				1	=> 'year',
 				2	=> 'month',
