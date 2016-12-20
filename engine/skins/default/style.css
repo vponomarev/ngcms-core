@@ -718,6 +718,11 @@ color: #fff;
  padding:3px; cursor: pointer;
 }
 
+a.suggestClose:hover{
+    background:#3c9c08;
+    color: white;
+}
+
 /* Plugin configuration */
 .pluginConfigHeader {
 background-color: #fafafa;

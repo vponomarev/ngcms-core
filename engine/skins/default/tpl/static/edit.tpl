@@ -37,8 +37,8 @@ var currentInputAreaID = 'content';
 {% if (flags.isPublished) %}
   <tr>
    <td>&nbsp;</td>
-   <td width="100">URL статьи:</td>
-   <td><input type="text" class="important" size="79" name="url" readonly="readonly" value="{{ data.url }}" tabindex="1" /> [ <a target="_blank" href="{{ data.url }}">открыть</a> ]</td>
+   <td width="100">{{ lang['url_static_page'] }}:</td>
+   <td><input type="text" class="important" size="79" name="url" readonly="readonly" value="{{ data.url }}" tabindex="1" /> [ <a target="_blank" href="{{ data.url }}">{{ lang['open'] }}</a> ]</td>
   </tr>{% endif %}
   <tr>
    <td valign="top" colspan=3>{% if (not isBBCode) %}{{ quicktags }}<br /> {{ smilies }}<br />{% else %}<br />{% endif %}

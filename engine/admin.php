@@ -66,6 +66,7 @@ if (!is_array($userROW)) {
 	$tvars['vars'] = array(
 		'php_self'		=>	$PHP_SELF,
 		'redirect'		=>	$REQUEST_URI,
+        'year'		    =>	date("Y"),
 		'home_title'	=>	home_title,
 		'error'			=>	($SYSTEM_FLAGS['auth_fail'])?$lang['msge_login']:'',
 	);

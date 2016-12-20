@@ -36,6 +36,8 @@ $.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
 ";
 $datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : "";
 
+$year = date("Y");
+
 $skin_header = <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$lang[langcode]" lang="$lang[langcode]" dir="ltr">
@@ -85,7 +87,7 @@ $skin_footer = <<<HTML
 <div class="clear_ftr"></div>
 <div id="footpanel">
     <ul id="mainpanel">
-        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-2016 <strong>Next Generation</strong> CMS <small>$lang[ngcms_site]</small></a></li>
+        <li><a href="http://ngcms.ru" target="_blank" class="home">© 2008-$year <strong>Next Generation</strong> CMS <small>$lang[ngcms_site]</small></a></li>
         <li><a href="$PHP_SELF?mod=news&amp;action=add" class="add_news">$lang[addnews_t]<small>$lang[addnews_t]</small></a></li>
         <li><a href="$PHP_SELF?mod=news" class="add_edit">$lang[editnews]<small>$lang[editnews]</small></a></li>
         <li><a href="$PHP_SELF?mod=images" class="add_images">$lang[images]<small>$lang[images]</small></a></li>
