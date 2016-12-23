@@ -100,8 +100,7 @@ function coreRegisterUser() {
 		// Execute filters - check if user is allowed to register
 		if ((!$msg) && is_array($PFILTERS['core.registerUser']))
 			foreach ($PFILTERS['core.registerUser'] as $k => $v) {
-				if (!$v->registerUser($params, $pmsg)) {
-					$msg = $pmsg;
+				if (!$v->registerUser($params, $msg)) {
 					break;
 				}
 			}
@@ -135,7 +134,7 @@ function coreRegisterUser() {
 
 // Registration page generation
 function generate_reg_page($params, $values = array(), $msg = '') {
-	global $tpl, $template, $PHP_SELF, $config, $PFILTERS, $twig, $twigLoader;
+	global $tpl, $template, $PHP_SELF, $config, $PFILTERS, $twig, $twigLoader, $lang;
 
 	$tVars = array(
 		'entries' => array(),
@@ -320,7 +319,7 @@ function coreRestorePassword() {
 
 // Registration page generation
 function generate_restorepw_page($params, $values = array(), $msg = '') {
-	global $tpl, $template, $PHP_SELF, $config;
+	global $tpl, $template, $PHP_SELF, $config, $lang;
 	$tpl -> template('lostpassword.entries', tpl_site);
 	$tpl -> template('lostpassword.entry-full', tpl_site);
 

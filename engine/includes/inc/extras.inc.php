@@ -873,6 +873,45 @@ function cacheRetrieveFile($fname, $expire, $plugin = '') {
 	return $data;
 }
 
+function create_access_htaccess(){
+	
+	$htaccess_array = array(
+		array('dir' => 'cache', 'data' => "# Lock access\nOrder Deny,Allow\nDeny from all"),
+		array('dir' => 'backups', 'data' => "# Lock access\n\t<FilesMatch .*>\n\tDeny from all\n</FilesMatch>"),
+		array('dir' => 'conf', 'data' => "<files *>\n\tOrder Deny,Allow\n\tDeny from All\n</files>"),
+	);
+	
+	//print '<pre>'.var_export($htaccess_array, true).'</pre>';
+	
+	if(is_array($htaccess_array))
+		foreach ($htaccess_array as $result){
+			$htaccessFile = root.$result['dir'].'/.htaccess';
+			
+			// Try to create file
+			if(file_exists($htaccessFile))
+				continue;
+
+			if (($fn = @fopen($htaccessFile, 'w')) == FALSE)
+				continue;
+				
+			// Try to make exclusive file lock. Return if failed
+			if (@flock($fn, LOCK_EX) == FALSE) {
+				fclose($fn);
+				continue;
+				
+			}
+			// Write into file
+			if (@fwrite($fn, $result['data']) == -1) {
+				// Failed.
+				flock($fn, LOCK_UN);
+				fclose($fn);
+				continue;
+			}
+			flock($fn, LOCK_UN);
+			fclose($fn);
+		}
+}
+
 //
 // Routine that helps plugin to locate template files. It checks if required file
 // exists in "global template" dir

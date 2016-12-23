@@ -92,21 +92,21 @@ function admExtrasOnOff($params) {
 			return array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'content' => 'Plugin ['.$params['plugin'].']is switched on');
 		} else {
 			// generate error message
-			ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $enable)), null, array(0, 'ERROR: '.$enable));
+			ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $params['plugin'])), null, array(0, 'ERROR: '.$params['state']));
 			return array('status' => 0, 'errorCode' => 8, 'errorText' => 'Error turning plugin ['.$params['plugin'].'] on');
 		}
 	}
 
 	if ($params['state'] == 'off') {
 		if ($extras[$params['plugin']]['permanent']) {
-			ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_off', 'list' => array('plugin' => $params['plugin'])), null, array(0, 'ERROR: PLUGIN is permanent '.$disable));
+			ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_off', 'list' => array('plugin' => $params['plugin'])), null, array(0, 'ERROR: PLUGIN is permanent '.$params['state']));
 			return array('status' => 0, 'errorCode' => 9, 'errorText' => 'Cannot turn off permanent plugin ['.$params['plugin'].']');
 		} else {
 			if (pluginSwitch($params['plugin'], 'off')) {
 				ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_off', 'list' => array('plugin' => $params['plugin'])), null, array(1, ''));
 				return array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'content' => 'Plugin ['.$params['plugin'].']is switched on');
 			} else {
-				ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $params['plugin'])), null, array(0, 'ERROR: '.$disable));
+				ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $params['plugin'])), null, array(0, 'ERROR: '.$params['state']));
 				return array('status' => 0, 'errorCode' => 10, 'errorText' => 'Error turning plugin ['.$params['plugin'].'] off');
 			}
 		}

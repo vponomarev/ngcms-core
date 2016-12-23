@@ -19,7 +19,7 @@ LoadPluginLibrary('uprofile', 'lib');
 function userEditForm(){
 	global $mysql, $lang, $twig, $mod, $PFILTERS, $UGROUP, $PHP_SELF;
 
-	$id = intval($_REQUEST['id']);
+	$id = (getIsSet($_REQUEST['id']))?intval($_REQUEST['id']):0;
 
 	// Determine user's permissions
 	$perm			= checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, array('modify', 'details'));
@@ -134,7 +134,7 @@ function userEdit(){
 //
 // Add new user
 function userAdd(){
-	global $mysql, $lang, $mod;
+	global $mysql, $lang, $mod, $config;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'users'), null, 'modify')) {

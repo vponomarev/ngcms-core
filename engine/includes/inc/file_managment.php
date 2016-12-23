@@ -273,8 +273,6 @@ function manage_showlist($type) {
 		$tpl -> template('entries', tpl_actions.$mod);
 		$tvars['vars'] = array(
 			'rename'		=>	$rename,
-			'code'			=>	$html_code,
-			'view_file'		=>	$view_file,
 			'view_thumb'	=>	$row['preview'] ? $row['view_thumb'] : '',
 			'file_link'		=>	$file_link,
 			'file_name'		=>	$row['orig_name'],

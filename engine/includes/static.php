@@ -71,7 +71,7 @@ function showStaticPage($params) {
 		$tvars['regx']["'\\[del-static\\].*?\\[/del-static\\]'si"] = "";
 	}
 
-	$tvars['vars']['[print-link]']	=	"<a href=\"".generatePluginLink('static', 'print', array('id' => $row['id'], 'altname' => $params['altname']), array(), true, $page)."\">";
+	$tvars['vars']['[print-link]']	=	"<a href=\"".generatePluginLink('static', 'print', array('id' => $row['id'], 'altname' => $params['altname']), array(), true)."\">";
 	$tvars['vars']['[/print-link]']	=	"</a>";
 
 	if (is_array($PFILTERS['static']))

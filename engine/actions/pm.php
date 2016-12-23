@@ -85,7 +85,7 @@ function pm_list (){
 }
 
 function pm_read(){
-	global $mysql, $config, $lang, $userROW, $tpl, $mod, $parse;
+	global $mysql, $config, $lang, $userROW, $tpl, $mod, $parse, $PHP_SELF;
 
 	$pmid = $_REQUEST['pmid'];
 	if ($row = $mysql->record("select * from ".uprefix."_users_pm where pmid = ".db_squote($pmid)."and (to_id = ".db_squote($userROW['id'])." or from_id=".db_squote($userROW['id']).")")) {

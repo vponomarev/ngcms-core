@@ -840,7 +840,7 @@ function doInstall()
             'skin' => 'default',
             'theme' => $_POST['template'],
             'default_lang' => $currentLanguage,
-            'auto_backup' => '1',
+            'auto_backup' => '0',
             'auto_backup_time' => '48',
             'use_gzip' => '0',
             'use_captcha' => '1',

@@ -165,7 +165,7 @@ function load_commit_params($cfg, $outparams) {
 
 // Priint page with config change complition notification
 function print_commit_complete($plugin) {
-	global $tpl;
+	global $tpl, $PHP_SELF;
 
 	$tpl -> template('done', tpl_actions.'extra-config');
 	$tvars['vars'] = array('plugin' => $plugin, 'php_self' => $PHP_SELF);
@@ -453,7 +453,7 @@ function generate_install_page($plugin, $text, $stype = 'install') {
 //
 class permissionRuleManager {
 	private $isLoaded = false;
-	private $rules;
+	private $rules = array();
 
 	function load() {
 		if (is_file(confroot.'perm.rules.php')) {
@@ -479,7 +479,7 @@ class permissionRuleManager {
 		// Try to save config
 		$fcHandler = @fopen(confroot.'perm.rules.php', 'w');
 		if ($fcHandler) {
-			fwrite($fcHandler, $fcData);
+			fwrite($fcHandler, $prData);
 			fclose($fcHandler);
 			return true;
 		}

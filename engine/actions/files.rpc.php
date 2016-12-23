@@ -108,7 +108,7 @@ function admRPCFilesUpload($params){
 
 	// Now write info about image into DB
 	if (is_array($sz = $imanager->get_size($dir.$ures['data']['category'].'/'.$ures['data']['name']))) {
-		$fmanager->get_limits($type);
+		$fmanager->get_limits($uploadType);
 
 
 		// Gather filesize for thumbinals

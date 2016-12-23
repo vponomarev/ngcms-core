@@ -65,9 +65,7 @@ function news_showone($newsID, $alt_name, $callingParams = array()) {
 
 		// Load news from DB
 		if (!is_array($row = $mysql->record("select * from ".prefix."_news where approve=1".(count($filter)?' and '.implode(" and ",$filter):'')))) {
-			if (!$params['FFC']) {
-				error404();
-			}
+			error404();
 			return false;
 		}
 
