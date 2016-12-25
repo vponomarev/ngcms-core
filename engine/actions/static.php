@@ -311,7 +311,7 @@ function addEditStaticForm($operationMode = 1, $sID = 0){
 // Add static page
 //
 function addStatic(){
-	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW, $PHP_SELF;
+	global $mysql, $parse, $PFILTERS, $lang, $config, $userROW, $PHP_SELF, $tvars;
 
 	$perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
 
