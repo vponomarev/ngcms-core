@@ -1,7 +1,7 @@
 <script language="javascript" type="text/javascript">
 var currentInputAreaID = 'content';
 </script>
-{{ includ_bb }}
+
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <tr>
 <td width=100% colspan="5" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=static">{{ lang['static_title'] }}</a> &#8594; {% if (flags.editMode) %}{{ lang['static_title_edit'] }} "{{ data.title }}"{% else %}{{ lang['static_title_add'] }}{% endif %}</td>
@@ -118,3 +118,5 @@ var currentInputAreaID = 'content';
 </tr>
 </table>
 </form>
+
+{{ includ_bb }}

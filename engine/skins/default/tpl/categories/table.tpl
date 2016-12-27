@@ -71,6 +71,7 @@ function categoryModifyRequest(cmd, cid) {
 <tr align="left" class="contHead">
 <td width="5%">#</td>
 <td>{{ lang['title'] }}</td>
+<td>ID</td>
 <td>{{ lang['alt_name'] }}</td>
 <td>{{ lang['category.header.menushow'] }}</td>
 <td>{{ lang['category.header.template'] }}</td>

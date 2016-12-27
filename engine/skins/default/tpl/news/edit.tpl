@@ -42,7 +42,7 @@ function changeActive(name) {
  }
 }
 </script>
-{{ includ_bb }}
+
 <!-- Hidden SUGGEST div -->
 <div id="suggestWindow" class="suggestWindow">
 <table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
@@ -357,3 +357,5 @@ var attachAbsoluteRowID = 0;
 attachAddRow();
 -->
 </script>
+
+{{ includ_bb }}
