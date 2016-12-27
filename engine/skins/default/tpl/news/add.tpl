@@ -43,7 +43,7 @@ function changeActive(name) {
  }
 }
 </script>
-{{ includ_bb }}
+
 <form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
 <input type="hidden" name="area" value="" />
 </form>
@@ -311,3 +311,5 @@ var attachAbsoluteRowID = 0;
 attachAddRow();
 -->
 </script>
+
+{{ includ_bb }}

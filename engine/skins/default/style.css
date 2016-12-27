@@ -60,7 +60,6 @@ legend {
 form div {
     margin: .5em 0;
     clear: both;
-    overflow: hidden;
 }
 
 form div.col {
@@ -641,10 +640,11 @@ blockquote .code {
 .contentActive {
     border: #CCCCCC 1px solid;
     font: normal 11px Tahoma, sans-serif;
-    margin: 0px;
+    margin: 0px 0px;
     padding: 0px;
     margin-bottom: 3px;
     background: #CCCCCC;
+
 }
 
 .contentInactive {
