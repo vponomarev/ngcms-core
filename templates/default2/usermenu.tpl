@@ -23,11 +23,11 @@ var set_pass  = 0;
 			<img src="{{ tpl_url }}/img/logo.png" alt="">
 		</div>
 		<div class="dialog-message">
-			Войдите в существующий аккаунт, используя свой логин или пароль.
+            {{ lang.theme['login_header'] }}
 			<form name="login" method="post" action="{{ form_action }}" id="login">
 				<input type="hidden" name="redirect" value="{{ redirect }}" />
-				<input type="text" name="username" placeholder="Логин:" class="input">
-				<input type="password" name="password" placeholder="Пароль:" class="input"><br>
+				<input type="text" name="username" placeholder="{{ lang['username'] }}:" class="input">
+				<input type="password" name="password" placeholder="{{ lang['password'] }}:" class="input"><br>
 				<input type="submit" value="{{ lang['login'] }}" class="btn">
 				<a href="{{ lost_link }}" class="btn">{{ lang['lostpassword'] }}</a>
 			</form>

@@ -18,7 +18,7 @@ function ng_calendar_walk(month, year, offset) {
 {% endif %}
 <div id="ngCalendarDiv">
 	<div class="block calendar-block">
-		<div class="block-title">Календарь</div>
+		<div class="block-title">{{ lang.theme['calendar'] }}</div>
 		<table width="100%" cellspacing="0" cellpadding="0" id="calendar">
 			<tr>
 				<td>

@@ -21,26 +21,26 @@
 			<div id="header">
 				<div id="menu">
 					<ul>
-						<li><a href="{{ home }}">Главная</a></li>
-						<li><a href="#">Форум</a></li>
-						<li><a href="#">О сайте</a></li>
-						<li><a href="#">Контакты</a></li>
-						<li><a href="#">Статистика</a></li>
-						<li><a href="#">Ссылка</a>
+						<li><a href="{{ home }}">{{ lang.theme.home }}</a></li>
+						<li><a href="#">{{ lang.theme.forum }}</a></li>
+						<li><a href="#">{{ lang.theme.about_site }}</a></li>
+						<li><a href="#">{{ lang.theme.contacts }}</a></li>
+						<li><a href="#">{{ lang.theme.statistic }}</a></li>
+						<li><a href="#">{{ lang.theme.menu_link }}</a>
 							<ul>
-								<li><a href="#">Подменюшная ссылка</a></li>
-								<li><a href="#">Подменюшная ссылка</a></li>
-								<li><a href="#">Подменюшная ссылка</a></li>
+								<li><a href="#">{{ lang.theme.under_menu_link }}</a></li>
+								<li><a href="#">{{ lang.theme.under_menu_link }}</a></li>
+								<li><a href="#">{{ lang.theme.under_menu_link }}</a></li>
 							</ul>
 						</li>
-						<li><a href="#">Ссылка 2</a>
+						<li><a href="#">{{ lang.theme.menu_link2 }}</a>
 							<ul>
-								<li><a href="#">Подменюшная ссылка</a></li>
-								<li><a href="#">Подменюшная ссылка</a></li>
-								<li><a href="#">Подменюшная ссылка</a></li>
+								<li><a href="#">{{ lang.theme.under_menu_link }}</a></li>
+								<li><a href="#">{{ lang.theme.under_menu_link }}</a></li>
+								<li><a href="#">{{ lang.theme.under_menu_link }}</a></li>
 							</ul>
 						</li>
-						{% if pluginIsActive('nsm') %}<li><a href="/plugin/nsm/" class="auth-add-news">Добавить новость</a></li>{% endif %}
+						{% if pluginIsActive('nsm') %}<li><a href="/plugin/nsm/" class="auth-add-news">{{ lang.theme.add_news }}</a></li>{% endif %}
 					</ul>
 				</div>
 				<div id="social">
@@ -69,8 +69,8 @@
 					{% if pluginIsActive('xnews') %}
 					<div class="block">
 						<div class="block-title last-news">
-							Популярные статьи
-							<span>за последнее время</span>
+                            {{ lang.theme.popular }}
+							<span>{{ lang.theme.popular_last }}</span>
 							<div class="icon-last-news"></div>
 						</div>
 						<div class="block-menu">
@@ -81,8 +81,8 @@
 					{% if pluginIsActive('voting') %}
 					<div class="block">
 						<div class="block-title polls">
-							Опросы пользователей
-							<span>нам важно ваше мнение!</span>
+                            {{ lang.theme.voting }}
+							<span>{{ lang.theme.voting_desc }}</span>
 							<div class="icon-polls"></div>
 						</div>
 						<div class="block-polls">
@@ -93,8 +93,8 @@
 					{% if pluginIsActive('switcher') %}
 					<div class="block">
 						<div class="block-title">
-							Выбор профиля:
-							<span>Переключение шаблонов и языков</span>
+                            {{ lang.theme.switcher }}
+							<span>{{ lang.theme.switcher_desc }}</span>
 						</div>
 						<div class="block">
 							{{ switcher }}
@@ -107,7 +107,7 @@
 					{% if pluginIsActive('archive') %}
 					<div class="block archiv">
 						<div class="block-title">
-							<span class="icon icon-archiv"></span> Архив:
+							<span class="icon icon-archiv"></span> {{ lang.theme.archive }}
 						</div>
 						<div class="block-archiv">
 							<!-- Если в архиве более 6 месяцев то с работает спойлер -->
@@ -118,7 +118,7 @@
 					{% if pluginIsActive('tags') %}
 					<div class="block tags">
 						<div class="block-title">
-							<span class="icon icon-tags"></span> Облако тегов:
+							<span class="icon icon-tags"></span> {{ lang.theme.tags_cloud }}
 						</div>
 						<div class="block-tags">
 							{{ plugin_tags }}
@@ -128,7 +128,7 @@
 					{% if pluginIsActive('calendar') %}
 					<div class="block calendar">
 						<div class="block-title">
-							<span class="icon icon-calendar"></span> Календарь:
+							<span class="icon icon-calendar"></span> {{ lang.theme.calendar }}
 						</div>
 						<div class="block-calendar">
 							{{ plugin_calendar }}
@@ -137,20 +137,22 @@
 					{% endif %}
 				</div>
 				<div id="sidebar-3">
+                    {% if pluginIsActive('k_online') %}
 					<div class="block stats">
 						<div class="block-title">
-							<span class="icon-stats"></span> Статистика:
+							<span class="icon-stats"></span> {{ lang.theme.statistic }}
 						</div>
 						<div class="block-stats">
 							{{ k_online }}
 						</div>
 					</div>
+                    {% endif %}
 				</div>
 			</div><!--#CONTAINER END-->
 			<div class="clr"></div>
 			<div id="footer">
 				<div class="copyright">
-					<em>Powered by <a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 2007 — {{ now|date("Y") }}. | SQL запросов: <b>{{ queries }}</b> | Генерация страницы: <b>{{ exectime }}</b> сек | <b>{{ memPeakUsage }}</b> Mb&nbsp;</em><br>
+					<em>Powered by <a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 2007 — {{ now|date("Y") }}. | {{ lang.sql_queries }}: <b>{{ queries }}</b> | {{ lang.page_generation }}: <b>{{ exectime }}</b> {{ lang.sec }} | <b>{{ memPeakUsage }}</b> Mb&nbsp;</em><br>
 					© <a href="{{ home }}">{{ home_title }}</a>  
 				</div>
 				<div class="by">

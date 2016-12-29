@@ -113,11 +113,13 @@
 						</div>
 					</div>
 					{% if pluginIsActive('archive') %}
-						<!-- Если в архиве более 6 месяцев то с работает спойлер -->
+					<div class="block archive-block">
+						<div class="block-title">{{ lang.theme.archive_news }}</div>
 						{{ callPlugin('archive.show', {'maxnum' : 12, 'counter' : 1, 'template': 'archive', 'cacheExpire': 60}) }}
+					</div>
 					{% endif %}
 					{% if pluginIsActive('calendar') %}
-						{{ callPlugin('calendar.show') }}
+						{{ callPlugin('calendar.show', {}) }}
 					{% endif %}
 					{% if pluginIsActive('voting') %}
 						{{ voting }}
@@ -129,7 +131,10 @@
 						{{ switcher }}
 					{% endif %}
 					{% if pluginIsActive('top_active_users') %}
+					<div class="block popular-authors-block">
+						<div class="block-title">{{ lang.theme.popular_authors }}</div>
 						{{ callPlugin('top_active_users.show', {'number' : 12, 'mode' : 'news', 'template': 'top_active_users', 'cacheExpire': 60}) }}
+					</div>
 					{% endif %}
 				</aside>
 			</section>

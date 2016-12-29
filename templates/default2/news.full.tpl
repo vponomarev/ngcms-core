@@ -5,7 +5,7 @@
 		<div class="post-info"><span class="post-views">{{ news.views }}</span> {% if pluginIsActive('comments') %}<span class="post-comments">{comments-num}</span>{% endif %}</div>
 	</div>
 	<div class="post-meta">
-		Опубликовал: {% if pluginIsActive('uprofile') %}<a href="{{ news.author.url }}">{% endif %}{{ news.author.name }}{% if pluginIsActive('uprofile') %}</a>{% endif %} , {{ news.date }} <span class="separator"></span> Категория: {{ category }}
+        {{ lang.published }}: {% if pluginIsActive('uprofile') %}<a href="{{ news.author.url }}">{% endif %}{{ news.author.name }}{% if pluginIsActive('uprofile') %}</a>{% endif %} , {{ news.date }} <span class="separator"></span> {{ lang.category }}: {{ category }}
 	</div>
 	<div class="post-text">
 		<p>{{ news.short }}{{ news.full }}</p>
@@ -18,9 +18,9 @@
 		{% endif %}
 	</div>
 	<div class="post-footer">
-		{% if (news.flags.canEdit) %}<a class="btn" href="{{ news.url.edit }}">Редактировать</a>{% endif %}
+		{% if (news.flags.canEdit) %}<a class="btn" href="{{ news.url.edit }}">{{ lang.editnews }}</a>{% endif %}
 		{% if pluginIsActive('rating') %}{{ plugin_rating }}{% endif %}
-		{% if pluginIsActive('tags') %}{% if (p.tags.flags.haveTags) %}<div class="tags">Теги: {{ tags }}</div>{% endif %}{% endif %}
+		{% if pluginIsActive('tags') %}{% if (p.tags.flags.haveTags) %}<div class="tags">{{ lang.tags }}: {{ tags }}</div>{% endif %}{% endif %}
 	</div>
 </div>
 {% if pluginIsActive('comments') %}{{ plugin_comments }}{% endif %}

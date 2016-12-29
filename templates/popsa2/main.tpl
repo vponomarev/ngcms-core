@@ -182,7 +182,7 @@
 									<h3>Календарь</h3>
 									<div class="l300_green_blue"></div>
 									<div class="telo">
-										{{ callPlugin('calendar.show') }}
+										{{ callPlugin('calendar.show', {}) }}
 									</div>
 								</div>
 								{% endif %}

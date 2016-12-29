@@ -1,7 +1,7 @@
 <form method="get" action="{form_url}">
 <div class="post">
 	<div class="post-header">
-		<div class="post-title">Поиск по сайту</div>
+		<div class="post-title">{l_search.site_search}</div>
 	</div>
 	<div style="height: 10px;"></div>
 	<div class="post-text">
