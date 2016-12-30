@@ -12,6 +12,9 @@ if (!defined('NGCMS')) die ('HAL');
 
 $lang = LoadLang('statistics', 'admin');
 
+// Create a protective .htaccess
+create_access_htaccess();
+
 function phpConfigGetBytes ($size_str) {
 	switch (substr ($size_str, -1))	{
 		case 'M': case 'm': return (int)$size_str * 1048576;

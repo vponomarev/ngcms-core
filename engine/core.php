@@ -372,9 +372,6 @@ if ($is_logged) { @define('name', $userROW['name']); }
 // Init internal cron module
 $cron = new cronManager();
 
-// Create a protective .htaccess
-create_access_htaccess();
-
 // ** Load action handlers for action 'all'
 loadActionHandlers('all');
 $timer->registerEvent('ALL core-related plugins are loaded');
