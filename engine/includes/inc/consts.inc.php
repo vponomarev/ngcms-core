@@ -17,9 +17,9 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.4.RC4');
+@define('engineVersion', '0.9.4 Release');
 @define('engineVersionType', 'GIT');
-@define('engineVersionBuild', '20161217');
+@define('engineVersionBuild', '20161231');
 
 @define('prefix', $config['prefix']);
 @define('uprefix',$config['uprefix']);
