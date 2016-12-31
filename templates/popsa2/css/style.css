@@ -593,7 +593,6 @@ textarea, .area {
 	padding:5px 20px; font-size: 12px;
 	text-decoration:none !important;
 	border:1px solid #e1e1e1;
-	background:; 
 	
 	}
 .tabs li.selected a{
@@ -860,7 +859,7 @@ border:#eeeeee 1px solid;
 .menu-v-d li:hover { background: #a6a6a6; }
 .menu-v-d a:hover { color: #fff; }
 
-.menu-v-d li ul { display: none; position: absolute; top: 0; border-bottom: 1px solid #ccc; left: 100%; width: 100%; background: #;  }
+.menu-v-d li ul { display: none; position: absolute; top: 0; border-bottom: 1px solid #ccc; left: 100%; width: 100%; }
 .menu-v-d li ul li { background: #a6a6a6; }
 .menu-v-d li ul li a{  font-size: 14px;}
 

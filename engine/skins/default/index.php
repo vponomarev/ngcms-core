@@ -62,7 +62,7 @@ $datetimepicker_lang
 </script>
 </head>
 <body>
-<div id="loading-layer"><img src="$skins_url/images/loading.gif" alt="" /> Loading ...</div>
+<div id="loading-layer"><img src="$skins_url/images/loading.gif" alt="" /> $lang[loading] ...</div>
 <table border="0" width="1000" align="center" cellspacing="0" cellpadding="0">
 <tr>
 <td width="100%">

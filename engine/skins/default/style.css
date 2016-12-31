@@ -1121,10 +1121,11 @@ h1, h2, h3, h4 {
 #loading-layer {
     display: none;
     width: 180px;
-    height: 40px;
+    height: 25px;
     background: #fff;
     text-align: center;
     border: 1px solid #eeeeef;
+    padding-top: 10px;
 }
 
 .ngStickerClass {
