@@ -34,7 +34,7 @@
 		<div id="wrapper">
 			<header id="header">
 				<div id="logo">
-					<a href="{{ home }}"><img src="{{ tpl_url }}/img/logo.jpg" alt=""></a>
+					<a href="{{ home }}"><img src="{{ tpl_url }}/img/logo.png" alt=""></a>
 				</div>
 				{% if (global.flags.isLogged) %}
 					{{ personal_menu }}
