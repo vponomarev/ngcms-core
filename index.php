@@ -44,7 +44,8 @@ $template = array(
 // Check if site access is locked [ for everyone except admins ]
 // ===================================================================
 if ($config['lock'] && (!is_array($userROW) || (!checkPermission(array('plugin' => '#admin', 'item' => 'system'), null, 'lockedsite.view')))) {
-	$tvars['vars']['lock_reason'] = $config['lock_reason'];
+    $tvars = $template;
+    $tvars['vars']['lock_reason'] = $config['lock_reason'];
 
 	// If template 'sitelock.tpl' exists - show only this template
 	// ELSE: show template 'lock.tpl' within template 'main.tpl'

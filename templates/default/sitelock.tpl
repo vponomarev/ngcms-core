@@ -14,7 +14,7 @@
 			.errorwrap { margin: 0 auto; width: 600px; margin-top: 26%; text-align: center; }
 			.errorwrap p { margin: 0 0 15px 0; }
 		</style>
-		<title>Сайт временно отключен</title>
+		<title>{l_site_temporarily_disabled}</title>
 	</head>
 	<body>
 		<div align="center" class="errorwrap">
