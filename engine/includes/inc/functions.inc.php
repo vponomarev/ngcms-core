@@ -3022,3 +3022,17 @@ function ngCollectTrace($style = 0) {
 
 	return true;
 }
+
+/**
+ * ֱûסענûי הובאד
+ *
+ * @param mixed $obj
+ * @return string
+ */
+function dd($obj) {
+    if (is_array($obj) || is_object($obj)) {
+        $obj = print_r($obj, true);
+    }
+
+    echo '<pre>' . htmlentities($obj, ENT_QUOTES) . "</pre><br>\n";
+}
