@@ -46,16 +46,16 @@ function _modal_close() {
 <td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />Next Generation CMS</td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{{ lang['current_version'] }}</td>
-<td width="50%" class="contentEntry2"><span style="font-weight: bold; color: #6cb7ef;">{{ currentVersion }}</span></td>
+<td width="45%" class="contentEntry1">{{ lang['current_version'] }}</td>
+<td width="55%" class="contentEntry2"><span style="font-weight: bold; color: #6cb7ef;">{{ currentVersion }}</span></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{{ lang['last_version'] }}</td>
-<td width="50%" class="contentEntry2"><span id="syncLastVersion">loading..</span></td>
+<td width="45%" class="contentEntry1">{{ lang['last_version'] }}</td>
+<td width="55%" class="contentEntry2"><span id="syncLastVersion">loading..</span></td>
 </tr>
 <tr>
-<td width="50%" class="contentEntry1">{{ lang['svn_version'] }}</td>
-<td width="50%" class="contentEntry2"><span id="syncSVNVersion">loading..</span></td>
+<td width="45%" class="contentEntry1">{{ lang['git_version'] }}</td>
+<td width="55%" class="contentEntry2"><span id="syncSVNVersion">loading..</span></td>
 </tr>
 </table>
 </td>
