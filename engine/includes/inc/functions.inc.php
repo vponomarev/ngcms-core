@@ -1009,17 +1009,17 @@ function generateAdminPagelist($param){
 		// Situation #1: 1,2,3,4,[5],6 ... 128
 		if ($param['current'] < ($sectionSize * 2)) {
 			$pages .= generateAdminNavigations($param['current'], 1, $sectionSize * 2, $param['url'], $nav);
-			$pages .= " ... ";
+			$pages .= $nav['dots'];
 			$pages .= generateAdminNavigations($param['current'], $param['count']-$sectionSize, $param['count'], $param['url'], $nav);
 		} elseif ($param['current'] > ($param['count'] - $sectionSize * 2 + 1)) {
 			$pages .= generateAdminNavigations($param['current'], 1, $sectionSize, $param['url'], $nav);
-			$pages .= " ... ";
+			$pages .= $nav['dots'];
 			$pages .= generateAdminNavigations($param['current'], $param['count']-$sectionSize*2 + 1, $param['count'], $param['url'], $nav);
 		} else {
 			$pages .= generateAdminNavigations($param['current'], 1, $sectionSize, $param['url'], $nav);
-			$pages .= " ... ";
+			$pages .= $nav['dots'];
 			$pages .= generateAdminNavigations($param['current'], $param['current']-1, $param['current']+1, $param['url'], $nav);
-			$pages .= " ... ";
+			$pages .= $nav['dots'];
 			$pages .= generateAdminNavigations($param['current'], $param['count']-$sectionSize, $param['count'], $param['url'], $nav);
 		}
 	} else {
