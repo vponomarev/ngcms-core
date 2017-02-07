@@ -1,1 +1,1 @@
-<dl class="right_s"><a href="{link}"  title="{title}"><strong>{title}</strong></a> &rarr;</dl>
+<dl class="right_s"><a href="{link}" title="{title}"><strong>{title}</strong></a> &rarr;</dl>

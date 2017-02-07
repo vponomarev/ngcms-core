@@ -4,10 +4,13 @@
 		<table class="table">
 			<tr>
 				<td valign="top" style="text-align: center; padding: 5px;">
-					<img src="{{ user.avatar }}" alt="" style="max-width: 100px; max-height: 100px;" /><br />
-					{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" target="_blank"><img src="{{ user.photo_thumb }}" alt="" style="max-width: 100px; max-height: 100px;" /></a>{% endif %}
+					<img src="{{ user.avatar }}" alt="" style="max-width: 100px; max-height: 100px;"/><br/>
+					{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" target="_blank">
+						<img src="{{ user.photo_thumb }}" alt="" style="max-width: 100px; max-height: 100px;"/>
+						</a>{% endif %}
 					{% if not (global.user.status == 0) %}
-						{% if pluginIsActive('pm') %}<a href="/plugin/pm/?action=write&name={{ user.name }}">написать ЛС</a>{% endif %}
+						{% if pluginIsActive('pm') %}<a href="/plugin/pm/?action=write&name={{ user.name }}">написать
+							ЛС</a>{% endif %}
 						{% if (user.flags.isOwnProfile) %}<a href="/profile.html">редактировать</a>{% endif %}
 					{% endif %}
 				</td>

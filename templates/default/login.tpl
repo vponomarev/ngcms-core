@@ -1,9 +1,12 @@
-[error]<div class="alert alert-error">{l_login.error}</div>[/error]
-[banned]<div class="alert alert-info">{l_login.banned}</div>[/banned]
-[need.activate]<div class="alert alert-info">{l_login.need.activate}</div>[/need.activate]
+[error]
+<div class="alert alert-error">{l_login.error}</div>[/error]
+[banned]
+<div class="alert alert-info">{l_login.banned}</div>[/banned]
+[need.activate]
+<div class="alert alert-info">{l_login.need.activate}</div>[/need.activate]
 <div class="block-title">{l_login.title}</div>
 <form name="login" method="post" action="{form_action}">
-<input type="hidden" name="redirect" value="{redirect}"/>
+	<input type="hidden" name="redirect" value="{redirect}"/>
 	<div class="label pull-left">
 		<label for="logn">{l_login.username}:</label>
 		<input type="text" type="text" name="username" class="input">

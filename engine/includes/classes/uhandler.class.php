@@ -22,9 +22,12 @@
 		'descr'			= description
 
 */
+
 class urlLibrary {
+
 	// Constructor
-	function urlLibrary(){
+	function urlLibrary() {
+
 		global $config;
 
 		$this->CMD = array();
@@ -34,7 +37,8 @@ class urlLibrary {
 	}
 
 	// Load config from DISK
-	function loadConfig(){
+	function loadConfig() {
+
 		// Check if config already loaded
 		if ($this->configLoaded) {
 			return true;
@@ -46,44 +50,52 @@ class urlLibrary {
 			include $this->configFileName;
 			if (!isset($urlLibrary)) {
 				$this->fatalError = 1;
+
 				return false;
 			}
 			$this->CMD = $urlLibrary;
 		}
 		$this->configLoaded = true;
+
 		return true;
 	}
 
 	// Save config to DISK
-	function saveConfig(){
+	function saveConfig() {
+
 		// No save if config file is not loaded
 		if (!$this->configLoaded)
 			return false;
 
 		// Try to write config file
-		if (($f = fopen($this->configFileName, 'w')) === FALSE) {
+		if (($f = fopen($this->configFileName, 'w')) === false) {
 			// Error
 			$this->fatalError = true;
+
 			return false;
 		}
 
-		fwrite($f, '<?php'."\n".'$urlLibrary = '.var_export($this->CMD, true).';');
+		fwrite($f, '<?php' . "\n" . '$urlLibrary = ' . var_export($this->CMD, true) . ';');
 		fclose($f);
+
 		return true;
 	}
 
 	// Register supported commands
-	function registerCommand($plugin, $cmd, $params){
+	function registerCommand($plugin, $cmd, $params) {
+
 		if (!$this->loadConfig()) {
 			return false;
 		}
 
 		$this->CMD[$plugin][$cmd] = $params;
+
 		return true;
 	}
 
 	// Remove recently registered command
-	function removeCommand($plugin, $cmd){
+	function removeCommand($plugin, $cmd) {
+
 		if (!$this->loadConfig()) {
 			return false;
 		}
@@ -97,16 +109,19 @@ class urlLibrary {
 				unset($this->CMD[$plugin]);
 			}
 		}
+
 		return true;
 	}
 
 	// Fetch command data
 	function fetchCommand($plugin, $cmd) {
-		return isset($this->CMD[$plugin][$cmd])?$this->CMD[$plugin][$cmd]:false;
+
+		return isset($this->CMD[$plugin][$cmd]) ? $this->CMD[$plugin][$cmd] : false;
 	}
 
 	// Extract line with most matching language
 	function extractLangRec($data, $pl = '') {
+
 		global $config;
 
 		if (!is_array($data))
@@ -118,13 +133,9 @@ class urlLibrary {
 		if (isset($data[$pl]))
 			return $data[$pl];
 
-		return isset($data['english'])?$data['english']:$data[0];
+		return isset($data['english']) ? $data['english'] : $data[0];
 	}
 }
-
-
-
-
 
 /*
  urlLibrary - manages a list of possible actions that are supported by different plugins
@@ -226,25 +237,27 @@ class urlLibrary {
 
 */
 
-
 class urlHandler {
+
 	// constructor
 	function urlHandler($options = array()) {
+
 		global $config;
 
-		$this->hList		= array();
-		$this->configLoaded	= false;
+		$this->hList = array();
+		$this->configLoaded = false;
 		$this->configFileName = confroot . 'rewrite.php';
 
-		$this->options		= $options;
+		$this->options = $options;
 	}
 
 	// Populate handler record from HTTP submit interface
-	function populateHandler($ULIB, $data){
+	function populateHandler($ULIB, $data) {
+
 		//
 		// First - find references from URL library
 		if (!isset($data['pluginName']) || !isset($data['handlerName']) || !isset($ULIB->CMD[$data['pluginName']][$data['handlerName']])) {
-			return array(array(1, 'No match with URL library'.var_export($data, true)), false);
+			return array(array(1, 'No match with URL library' . var_export($data, true)), false);
 		}
 
 		// Command catched
@@ -263,49 +276,51 @@ class urlHandler {
 		$len = strlen($rcmd);
 
 		$variativeID = 0;
-		$variative	= 0;
-		$closeit	= false;
+		$variative = 0;
+		$closeit = false;
 
-		$genmap		= array();
+		$genmap = array();
 
 		while ($pos < $len) {
 			switch ($state) {
-				case '0':	if ($rcmd[$pos] == '[') {
-								// Begin of variative block
-								$newVariative	= ++$variativeID;
-								$closeit		= true;
-							}
-							if ($rcmd[$pos] == ']') {
-								$newVariative	= 0;
-								$closeit		= true;
-							}
+				case '0':
+					if ($rcmd[$pos] == '[') {
+						// Begin of variative block
+						$newVariative = ++$variativeID;
+						$closeit = true;
+					}
+					if ($rcmd[$pos] == ']') {
+						$newVariative = 0;
+						$closeit = true;
+					}
 
-							if ($rcmd[$pos] == '{') {
-								$state			= 1;
-								$closeit		= true;
-								$newVariative	= $variative;
-							}
-							if ($closeit) {
-								$closeit = false;
+					if ($rcmd[$pos] == '{') {
+						$state = 1;
+						$closeit = true;
+						$newVariative = $variative;
+					}
+					if ($closeit) {
+						$closeit = false;
 
-								if ($pos > $dataStartPos) {
-									$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-									$genmap[] = array(0, $text, $variative);
-								}
-								$variative	= $newVariative;
-								$dataStartPos = $pos+1;
-								break;
-							}
-							break;
-				case '1':	if ($rcmd[$pos] == '}') {
-								// End of the variable
-								$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-								$genmap[] = array(getIsSet($cmd['vars'][$text]['isSecure'])?2:1, $text, $variative);
-								$dataStartPos = $pos+1;
-								$state = 0;
-								break;
-							}
-							break;
+						if ($pos > $dataStartPos) {
+							$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+							$genmap[] = array(0, $text, $variative);
+						}
+						$variative = $newVariative;
+						$dataStartPos = $pos + 1;
+						break;
+					}
+					break;
+				case '1':
+					if ($rcmd[$pos] == '}') {
+						// End of the variable
+						$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+						$genmap[] = array(getIsSet($cmd['vars'][$text]['isSecure']) ? 2 : 1, $text, $variative);
+						$dataStartPos = $pos + 1;
+						$state = 0;
+						break;
+					}
+					break;
 			}
 			$pos++;
 		}
@@ -348,7 +363,7 @@ class urlHandler {
 			}
 			if ($rec[0]) {
 				if (!isset($cmd['vars'][$rec[1]])) {
-					return array(array(4, 'Variable "'.$rec[1].'" is unknown'), false);
+					return array(array(4, 'Variable "' . $rec[1] . '" is unknown'), false);
 				}
 				$regex .= '(' . $cmd['vars'][$rec[1]]['matchRegex'] . ')';
 				$regexMAP[$paramNum++] = $rec[1];
@@ -371,18 +386,18 @@ class urlHandler {
 
 		// Prepare outgoing structure
 		$dcfg = array(
-			'pluginName'	=> $data['pluginName'],
-			'handlerName'	=> $data['handlerName'],
-			'flagPrimary'	=> $data['flagPrimary']?true:false,
-			'flagFailContinue'	=> $data['flagFailContinue']?true:false,
-			'flagDisabled'	=> $data['flagDisabled']?true:false,
-			'rstyle'		=> array(
-				'rcmd'		=> $rcmd,
-				'regex'		=> $regex,
-				'regexMap'	=> $regexMAP,
-				'reqCheck'	=> array(),
-				'setVars'	=> array(),
-				'genrMAP'	=> $genmap,
+			'pluginName'       => $data['pluginName'],
+			'handlerName'      => $data['handlerName'],
+			'flagPrimary'      => $data['flagPrimary'] ? true : false,
+			'flagFailContinue' => $data['flagFailContinue'] ? true : false,
+			'flagDisabled'     => $data['flagDisabled'] ? true : false,
+			'rstyle'           => array(
+				'rcmd'     => $rcmd,
+				'regex'    => $regex,
+				'regexMap' => $regexMAP,
+				'reqCheck' => array(),
+				'setVars'  => array(),
+				'genrMAP'  => $genmap,
 			),
 		);
 
@@ -390,20 +405,24 @@ class urlHandler {
 		//print var_export($dcfg, true);
 		//print "</pre>";
 
-		return array(array(0,0), $dcfg);
+		return array(array(0, 0), $dcfg);
 	}
 
 	// register handler
 	function registerHandler($position, $handler) {
+
 		if (!$this->configLoaded)
 			return false;
 
-		if ($position == 0) { array_unshift($this->hList, $handler); }
-		else if ($position == -1) { array_push($this->hList, $handler); }
-		else {
-			$tdata = array_slice($this->hList, 0, $position) + array($handler) + array_slice($this->hList, $position+1);
+		if ($position == 0) {
+			array_unshift($this->hList, $handler);
+		} else if ($position == -1) {
+			array_push($this->hList, $handler);
+		} else {
+			$tdata = array_slice($this->hList, 0, $position) + array($handler) + array_slice($this->hList, $position + 1);
 			$this->hList = $tdata;
 		}
+
 		return true;
 	}
 
@@ -413,6 +432,7 @@ class urlHandler {
 	// $pluginName - 'pluginName' value for deleted handler
 	// $handlerName - 'handlerName' value for deleted handler
 	function removeHandler($position, $pluginName, $handlerName) {
+
 		if (!$this->configLoaded)
 			return false;
 
@@ -427,6 +447,7 @@ class urlHandler {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -434,22 +455,25 @@ class urlHandler {
 	// $pluginName - name of plugin
 	// $handlerName - name of specific handler or '*' if you need to delete all handlers of this plugin
 	function removePluginHandlers($pluginName, $handlerName = '*') {
+
 		if (!$this->configLoaded)
 			return false;
 
 		$position = count($this->hList);
 		while ($position >= 0) {
 			$h = $this->hList[$position];
-			if ((isset($h['pluginName'])) && ($h['pluginName'] == $pluginName) && (isset($h['handlerName'])) &&	(($handlerName == '*') || ($h['handlerName'] == $handlerName))) {
+			if ((isset($h['pluginName'])) && ($h['pluginName'] == $pluginName) && (isset($h['handlerName'])) && (($handlerName == '*') || ($h['handlerName'] == $handlerName))) {
 				array_splice($this->hList, $position, 1);
 			}
 			$position--;
 		}
+
 		return true;
 	}
 
 	// Return current list of handlers
 	function listHandlers() {
+
 		if (!$this->configLoaded)
 			return false;
 
@@ -457,7 +481,7 @@ class urlHandler {
 	}
 
 	// Load config from DISK
-	function loadConfig(){
+	function loadConfig() {
 
 		// Try to read config file
 		if (is_file($this->configFileName)) {
@@ -465,25 +489,29 @@ class urlHandler {
 			include $this->configFileName;
 			if (!isset($handlerList) || !isset($handlerPrimary)) {
 				$this->fatalError = 1;
+
 				return false;
 			}
 			$this->hList = $handlerList;
 			$this->hPrimary = $handlerPrimary;
 		}
 		$this->configLoaded = true;
+
 		return true;
 	}
 
 	// Save config to DISK
-	function saveConfig(){
+	function saveConfig() {
+
 		// No save if config file is not loaded
 		if (!$this->configLoaded)
 			return false;
 
 		// Try to write config file
-		if (($f = fopen($this->configFileName, 'w')) === FALSE) {
+		if (($f = fopen($this->configFileName, 'w')) === false) {
 			// Error
 			$this->fatalError = true;
+
 			return false;
 		}
 
@@ -491,7 +519,9 @@ class urlHandler {
 		$hPrimary = array();
 		foreach ($this->hList as $hId => $hData) {
 			// Skip disabled records
-			if ($hData['flagDisabled']) { continue; }
+			if ($hData['flagDisabled']) {
+				continue;
+			}
 			if (isset($hPrimary[$hData['pluginName']][$hData['handlerName']])) {
 				if (!$hPrimary[$hData['pluginName']][$hData['handlerName']][1] && ($hData['flagPrimary'])) {
 					$hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
@@ -501,24 +531,27 @@ class urlHandler {
 			}
 		}
 
-		fwrite($f, '<?php'."\n".'$handlerList = '.var_export($this->hList, true).";\n".'$handlerPrimary = '.var_export($hPrimary, true).';');
+		fwrite($f, '<?php' . "\n" . '$handlerList = ' . var_export($this->hList, true) . ";\n" . '$handlerPrimary = ' . var_export($hPrimary, true) . ';');
 		fclose($f);
+
 		return true;
 	}
 
 	// Set configuration options
-	function setOptions($options = array()){
+	function setOptions($options = array()) {
+
 		foreach ($options as $k => $v) {
 			$this->options[$k] = $v;
 		}
 	}
 
 	// RUN callback functions
-	function run($url = null, $flags = array()){
+	function run($url = null, $flags = array()) {
+
 		// Init URL if it's not passed in params
 		if ($url == null) {
 			$url = $_SERVER['REQUEST_URI'];
-			if (($tmp_pos = strpos($url, '?')) !== FALSE) {
+			if (($tmp_pos = strpos($url, '?')) !== false) {
 				$url = substr($url, 0, $tmp_pos);
 			}
 		}
@@ -526,11 +559,11 @@ class urlHandler {
 		// Merge flags with default options
 		foreach ($this->options as $optName => $optValue) {
 			if (!isset($flags[$optName]))
-					$flags[$optName] = $optValue;
+				$flags[$optName] = $optValue;
 		}
 
 		if ($flags['debug'])
-			print "urlHandler :: RUN(".$url.")<br>\n";
+			print "urlHandler :: RUN(" . $url . ")<br>\n";
 
 		// Modity calling URL if localPrefix is defined
 		if (isset($flags['localPrefix']) && ($flags['localPrefix'] != '')) {
@@ -538,27 +571,28 @@ class urlHandler {
 				// Catched prefix
 				$url = substr($url, strlen($flags['localPrefix']));
 				if ($flags['debug'])
-					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `".$flags['localPrefix']."`] (".$url.")<br/>\n";
+					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] (" . $url . ")<br/>\n";
 			} else {
 				// URL doesn't correspond to LOCAL PREFIX
 				if ($flags['debug'])
-					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `".$flags['localPrefix']."`] - <i><b>ERROR: URL DOES NOT CORRESPOND TO PREFIX</b></i><br/>\n";
+					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] - <i><b>ERROR: URL DOES NOT CORRESPOND TO PREFIX</b></i><br/>\n";
+
 				return 0;
 			}
 		}
 
 		$catchCount = 0;
 
-		foreach($this->hList as $hNum => $h) {
+		foreach ($this->hList as $hNum => $h) {
 			if ($flags['debug'])
-				print "&raquo; ".($h['flagDisabled']?'<b><font color="red">DISABLED</font></b> ':'')."Scan (".$hNum.")[".$h['pluginName']."][".$h['handlerName']."] ReGEX check [ <b><font color=blue>".$h['rstyle']['regex']." </font></b>]<br>\n";
+				print "&raquo; " . ($h['flagDisabled'] ? '<b><font color="red">DISABLED</font></b> ' : '') . "Scan (" . $hNum . ")[" . $h['pluginName'] . "][" . $h['handlerName'] . "] ReGEX check [ <b><font color=blue>" . $h['rstyle']['regex'] . " </font></b>]<br>\n";
 
 			// Skip disabled records
 			if ($h['flagDisabled'])
 				continue;
 
 			if (preg_match($h['rstyle']['regex'], $url, $scan)) {
-				$result = array( '0' => $scan[0]);
+				$result = array('0' => $scan[0]);
 				$handlerParams = array('num' => $hNum, 'value' => $h);
 
 				foreach ($scan as $k => $v)
@@ -566,7 +600,7 @@ class urlHandler {
 						$result[$h['rstyle']['regexMap'][$k]] = urldecode($v);
 
 				if ($flags['debug'])
-					print "Find match [plugin: <b>".$h['pluginName']."</b>, handler: <b>".$h['handlerName']."</b>] with REGex <b><font color=blue>".$h['rstyle']['regex']."</font></b>, params: <pre>".var_export($result, true)."</pre><br>\n";
+					print "Find match [plugin: <b>" . $h['pluginName'] . "</b>, handler: <b>" . $h['handlerName'] . "</b>] with REGex <b><font color=blue>" . $h['rstyle']['regex'] . "</font></b>, params: <pre>" . var_export($result, true) . "</pre><br>\n";
 
 				if (!isset($h['callback']))
 					$h['callback'] = '_MASTER_URL_PROCESSOR';
@@ -583,7 +617,7 @@ class urlHandler {
 						}
 					}
 
-				$skip = array ('FFC' => $h['flagFailContinue']?true:false);
+				$skip = array('FFC' => $h['flagFailContinue'] ? true : false);
 				$res = call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, $skip, $handlerParams);
 				if (is_array($res) && isset($res['fail']) && $res['fail'])
 					continue;
@@ -592,6 +626,7 @@ class urlHandler {
 			}
 
 		}
+
 		return $catchCount;
 	}
 
@@ -604,7 +639,8 @@ class urlHandler {
 	// $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
 	// $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
 	// $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
-	function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false){
+	function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false) {
+
 		$flagCommon = false;
 
 		// Check if we have handler for requested plugin
@@ -635,15 +671,20 @@ class urlHandler {
 				$depMAP[$rec[2]] = $rec[1];
 		}
 
-
 		// Now we can generate URL
 		$url = array();
 		foreach ($hRec['rstyle']['genrMAP'] as $rec) {
 			if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
 				switch ($rec[0]) {
-					case 0:	$url[] = $rec[1]; break;
-					case 1: $url[] = urlencode($params[$rec[1]]); break;
-					case 2: $url[] = $params[$rec[1]]; break;
+					case 0:
+						$url[] = $rec[1];
+						break;
+					case 1:
+						$url[] = urlencode($params[$rec[1]]);
+						break;
+					case 2:
+						$url[] = $params[$rec[1]];
+						break;
 				}
 			}
 		}
@@ -658,15 +699,15 @@ class urlHandler {
 
 		foreach ($xparams as $k => $v) {
 			if (($k != 'plugin') && ($k != 'handler'))
-				$uparams[]= $k.'='.urlencode($v);
+				$uparams[] = $k . '=' . urlencode($v);
 		}
 
 		$linkPrefix = ($absoluteLink && isset($this->options['domainPrefix']) && ($this->options['domainPrefix'] != '')) ?
-				$this->options['domainPrefix'] :
-				( (isset($this->options['localPrefix']) && ($this->options['localPrefix'] != '')) ? $this->options['localPrefix'] : '');
+			$this->options['domainPrefix'] :
+			((isset($this->options['localPrefix']) && ($this->options['localPrefix'] != '')) ? $this->options['localPrefix'] : '');
 
-		return	$linkPrefix.
-				join('', $url).
-				(count($uparams)?'?'.join('&'.($intLink?'amp;':''), $uparams):'');
+		return $linkPrefix .
+			join('', $url) .
+			(count($uparams) ? '?' . join('&' . ($intLink ? 'amp;' : ''), $uparams) : '');
 	}
 }

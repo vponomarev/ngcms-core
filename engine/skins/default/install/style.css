@@ -1,61 +1,74 @@
 html {
-width:80%;
-padding-left:100px;
+	width: 80%;
+	padding-left: 100px;
 }
 
-.filterbutton {  height: 22px; background:#3c9c08 url(../images/1px.png) repeat-x; border:#317e08 1px solid; font: 12px "Trebuchet MS", Arial, Helvetica, sans-serif; text-transform:uppercase; color:#edffd9; font-weight: bold;}
-.filterbutton:hover { background:#243e5c url(../images/1px.png) repeat-x; border:#203752 1px solid;}
+.filterbutton {
+	height: 22px;
+	background: #3c9c08 url(../images/1px.png) repeat-x;
+	border: #317e08 1px solid;
+	font: 12px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	color: #edffd9;
+	font-weight: bold;
+}
 
-.header { 
-padding: 6px;
-padding-bottom: 6px;
-background:#3c9c08 url(../images/1px.png) repeat-x; border:#317e08 1px solid; font: 15px "Trebuchet MS", Arial, Helvetica, sans-serif; text-transform:uppercase; color:#edffd9; font-weight: bold;
-/* FONT-FAMILY: "Trebuchet MS", Verdana; */
+.filterbutton:hover {
+	background: #243e5c url(../images/1px.png) repeat-x;
+	border: #203752 1px solid;
+}
+
+.header {
+	padding: 6px;
+	padding-bottom: 6px;
+	background: #3c9c08 url(../images/1px.png) repeat-x;
+	border: #317e08 1px solid;
+	font: 15px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	text-transform: uppercase;
+	color: #edffd9;
+	font-weight: bold;
+	/* FONT-FAMILY: "Trebuchet MS", Verdana; */
 }
 
 body {
-background: #fff url(img/inst-bg.png) repeat-x top center;
-height:auto !important;
-font: normal 13px/14px Tahoma,sans-serif;
-color: black;
+	background: #fff url(img/inst-bg.png) repeat-x top center;
+	height: auto !important;
+	font: normal 13px/14px Tahoma, sans-serif;
+	color: black;
 }
 
 .contentEntry1 {
-padding: 5px 0 1px 5px;
-border-bottom: 1px solid #f0f0f0;
-font: normal 11px tahoma, sans-serif;
-color: #000;
+	padding: 5px 0 1px 5px;
+	border-bottom: 1px solid #f0f0f0;
+	font: normal 11px tahoma, sans-serif;
+	color: #000;
 }
 
 .contentEntry1 small {
-color: #777;
+	color: #777;
 }
 
 .contentEntry2 {
-padding: 5px 10px 3px 15px;
-border-bottom: 1px solid #f0f0f0;
-font: normal 11px Tahoma,sans-serif;
-color: #333;
-text-align: left;
+	padding: 5px 10px 3px 15px;
+	border-bottom: 1px solid #f0f0f0;
+	font: normal 11px Tahoma, sans-serif;
+	color: #333;
+	text-align: left;
 }
 
 .errorDiv {
- background-color: red;
- color: white;
- padding: 3px;
- margin-bottom: 10px;
+	background-color: red;
+	color: white;
+	padding: 3px;
+	margin-bottom: 10px;
 }
 
 .warningDiv {
- background-color: #96948E;
- color: white;
- padding: 3px;
- margin-bottom: 10px;
+	background-color: #96948e;
+	color: white;
+	padding: 3px;
+	margin-bottom: 10px;
 }
-
-
-
-
 
 /*
 a {

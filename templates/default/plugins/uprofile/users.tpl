@@ -1,14 +1,17 @@
-<div class="block-title">{{ lang.uprofile['profile_of'] }} {{ user.name }} {% if (user.flags.isOwnProfile) %}[ <a href="/profile.html">{{ lang.uprofile['edit_profile'] }}</a> ]{% endif %}</div>
+<div class="block-title">{{ lang.uprofile['profile_of'] }} {{ user.name }} {% if (user.flags.isOwnProfile) %}[
+		<a href="/profile.html">{{ lang.uprofile['edit_profile'] }}</a> ]{% endif %}</div>
 <div class="block-user-info">
 	<div class="avatar">
 		<img src="{{ user.avatar }}" alt=""/>
 		{% if not (global.user.status == 0) %}
-			{% if pluginIsActive('pm') %}<a href="/plugin/pm/?action=write&name={{ user.name }}">{{ lang.uprofile['write_pm'] }}</a>{% endif %}
+			{% if pluginIsActive('pm') %}
+				<a href="/plugin/pm/?action=write&name={{ user.name }}">{{ lang.uprofile['write_pm'] }}</a>{% endif %}
 		{% endif %}
 	</div>
 	<div class="avatar">
 		<img src="{{ user.photo_thumb }}" alt=""/>
-		{% if (user.flags.hasPhoto) %}<a href="{{ user.photo }}" target="_blank">{{ lang.uprofile['zoom_photo'] }}</a>{% endif %}
+		{% if (user.flags.hasPhoto) %}
+			<a href="{{ user.photo }}" target="_blank">{{ lang.uprofile['zoom_photo'] }}</a>{% endif %}
 	</div>
 	<div class="user-info">
 		<table class="table" cellspacing="0" cellpadding="0">

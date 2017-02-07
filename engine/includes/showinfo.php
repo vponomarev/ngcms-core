@@ -21,16 +21,16 @@ if ($_REQUEST['mode'] == 'plugin') {
 		return;
 
 	if ($_REQUEST['item'] == 'readme') {
-		if (file_exists(root.'plugins/'.$plugin.'/readme')) {
+		if (file_exists(root . 'plugins/' . $plugin . '/readme')) {
 			print "<pre>";
-			print file_get_contents(root.'plugins/'.$plugin.'/readme');
+			print file_get_contents(root . 'plugins/' . $plugin . '/readme');
 			print "</pre>";
 		}
 	}
 	if ($_REQUEST['item'] == 'history') {
-		if (file_exists(root.'plugins/'.$plugin.'/history')) {
+		if (file_exists(root . 'plugins/' . $plugin . '/history')) {
 			print "<pre>";
-			print file_get_contents(root.'plugins/'.$plugin.'/history');
+			print file_get_contents(root . 'plugins/' . $plugin . '/history');
 			print "</pre>";
 		}
 	}

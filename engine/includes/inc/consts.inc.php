@@ -9,7 +9,7 @@
 
 // Determine current admin working directory
 {
-	$tempVariable = preg_split('/(\\\|\/)/',root, -1, PREG_SPLIT_NO_EMPTY);
+	$tempVariable = preg_split('/(\\\|\/)/', root, -1, PREG_SPLIT_NO_EMPTY);
 	define('adminDirName', array_pop($tempVariable));
 	unset($tempVariable);
 }
@@ -22,10 +22,10 @@
 @define('engineVersionBuild', '20161231');
 
 @define('prefix', $config['prefix']);
-@define('uprefix',$config['uprefix']);
+@define('uprefix', $config['uprefix']);
 @define('home', $config['home_url']);
-@define('scriptLibrary', $config['home_url'].'/lib');
-@define('localPrefix', (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $tempMatch))?$tempMatch[2]:'');
+@define('scriptLibrary', $config['home_url'] . '/lib');
+@define('localPrefix', (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $tempMatch)) ? $tempMatch[2] : '');
 
 @define('home_title', $config['home_title']);
 @define('admin_url', $config['admin_url']);
@@ -41,13 +41,12 @@
 @define('timestamp', $config['timestamp_active']);
 @define('date_adjust', $config['date_adjust']);
 
-@define('skins_url', admin_url.'/skins/default');
-@define('tpl_actions', root.'skins/default/tpl/');
-@define('tpl_dir', site_root.'templates/');
+@define('skins_url', admin_url . '/skins/default');
+@define('tpl_actions', root . 'skins/default/tpl/');
+@define('tpl_dir', site_root . 'templates/');
 
-@define('extras_dir', root.'plugins', true);
+@define('extras_dir', root . 'plugins', true);
 
-
-@define('conf_pactive', confroot.'plugins.php', true);
-@define('conf_pconfig', confroot.'plugdata.php', true);
+@define('conf_pactive', confroot . 'plugins.php', true);
+@define('conf_pconfig', confroot . 'plugdata.php', true);
 

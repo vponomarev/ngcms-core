@@ -15,14 +15,15 @@ $lang = LoadLang('templates', 'admin', 'templates');
 //
 // Preload templates version files
 //
-function loadTemplateVersions(){
-	$tDir = root.'../templates';
+function loadTemplateVersions() {
+
+	$tDir = root . '../templates';
 	$tlist = array();
 	if ($dRec = opendir($tDir)) {
 		while (($dName = readdir($dRec)) !== false) {
-			if (($dName == '.')||($dName == '..'))
+			if (($dName == '.') || ($dName == '..'))
 				continue;
-			if (is_dir($tDir.'/'.$dName) && file_exists($vfn = $tDir.'/'.$dName.'/version') && (filesize($vfn)) && ($vf = @fopen($vfn, 'r'))) {
+			if (is_dir($tDir . '/' . $dName) && file_exists($vfn = $tDir . '/' . $dName . '/version') && (filesize($vfn)) && ($vf = @fopen($vfn, 'r'))) {
 
 				$tRec = array('name' => $dName);
 				while (!feof($vf)) {
@@ -39,6 +40,7 @@ function loadTemplateVersions(){
 		}
 		closedir($dRec);
 	}
+
 	return $tlist;
 }
 
@@ -48,17 +50,16 @@ function loadTemplateVersions(){
 // ================================================================== //
 //
 
-
 $tVars = array(
-	'home_url'	=> home,
-	'token'		=> genUToken('admin.templates'),
+	'home_url' => home,
+	'token'    => genUToken('admin.templates'),
 );
 
 $tVars['siteTemplates'] = array();
 
 $tlist = loadTemplateVersions();
 foreach ($tlist as $tver) {
-	$tVars['siteTemplates'] []= $tver;
+	$tVars['siteTemplates'] [] = $tver;
 }
 
 $xt = $twig->loadTemplate('skins/default/tpl/templates.tpl');

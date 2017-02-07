@@ -1,14 +1,14 @@
 <script type="text/javascript">
-var ajax = new sack();
-function rating(rating, post_id){
-	ajax.onShow("");
-	ajax.setVar("rating", rating);
-	ajax.setVar("post_id", post_id);
-	ajax.requestFile = "{home}/plugin/rating/?rating="+rating+"&post_id="+post_id;
-	ajax.method = 'POST';
-	ajax.element = 'ratingdiv_'+post_id;
-	ajax.runAJAX();
-}
+	var ajax = new sack();
+	function rating(rating, post_id) {
+		ajax.onShow("");
+		ajax.setVar("rating", rating);
+		ajax.setVar("post_id", post_id);
+		ajax.requestFile = "{home}/plugin/rating/?rating=" + rating + "&post_id=" + post_id;
+		ajax.method = 'POST';
+		ajax.element = 'ratingdiv_' + post_id;
+		ajax.runAJAX();
+	}
 </script>
 <div id="ratingdiv_{post_id}">
 	<div style="float:left;" class="rating">

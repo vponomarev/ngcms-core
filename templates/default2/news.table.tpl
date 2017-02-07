@@ -1,8 +1,8 @@
 {% for entry in data %}
-{{ entry }}
+	{{ entry }}
 {% else %}
-<div class="ng-message">
-	{{ lang['msgi_no_news'] }}
-</div>
+	<div class="ng-message">
+		{{ lang['msgi_no_news'] }}
+	</div>
 {% endfor %}
 {{ pagination }}

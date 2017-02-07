@@ -10,10 +10,9 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
-$lang		= LoadLang('perm', 'admin');
+$lang = LoadLang('perm', 'admin');
 
-@include_once root.'includes/inc/extrainst.inc.php';
-
+@include_once root . 'includes/inc/extrainst.inc.php';
 
 $pManager = new permissionRuleManager();
 $pManager->load();
@@ -28,11 +27,13 @@ $grp = array();
 
 // Show list of current permissions
 function showList($grp) {
+
 	global $PERM, $pManager, $twig, $userROW, $lang, $catz;
 
 	// ACCESS ONLY FOR ADMIN
 	if ($userROW['status'] > 1) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
+
 		return;
 	}
 
@@ -42,10 +43,10 @@ function showList($grp) {
 	foreach ($pManager->getList() as $kb => $vb) {
 		$nl1++;
 		$dBlock = array(
-			'id'			=> $kb,
-			'title'			=> (isset($vb['title']) && $vb['title'])?$vb['title']:'',
-			'description'	=> (isset($vb['description']) && $vb['description'])?$vb['description']:'',
-			'items'		=> array(),
+			'id'          => $kb,
+			'title'       => (isset($vb['title']) && $vb['title']) ? $vb['title'] : '',
+			'description' => (isset($vb['description']) && $vb['description']) ? $vb['description'] : '',
+			'items'       => array(),
 		);
 
 		if (is_array($vb['items'])) {
@@ -53,10 +54,10 @@ function showList($grp) {
 			foreach ($vb['items'] as $ka => $va) {
 				$nl2++;
 				$dArea = array(
-					'id'			=> $ka,
-					'title'			=> (isset($va['title']) && $va['title'])?$va['title']:'',
-					'description'	=> (isset($va['description']) && $va['description'])?$va['description']:'',
-					'items'		=> array(),
+					'id'          => $ka,
+					'title'       => (isset($va['title']) && $va['title']) ? $va['title'] : '',
+					'description' => (isset($va['description']) && $va['description']) ? $va['description'] : '',
+					'items'       => array(),
 				);
 
 				if (is_array($va['items'])) {
@@ -70,36 +71,35 @@ function showList($grp) {
 							// [[ CATEGORIES ]]
 							$isCategories = true;
 
-							$dEntry	= array(
-								'id'				=> $ke,
-								'title'				=> (isset($ve['title']) && $ve['title'])?$ve['title']:'',
-								'description'		=> (isset($ve['description']) && $ve['description'])?$ve['description']:'',
-								'type'				=> 'listCategoriesSelector',
-								'name'				=> str_replace('.', ':', $kb.'|'.$ka.'|'.$ke),
-								'generatedOptions'	=> makeCategoryList(array('skipDisabled' => true, 'noHeader' => true, 'doall' => true, 'allmarker' => '*', 'returnOptArray' => true)),
-								'uniqId'			=> 'id'.$nl1.'_'.$nl2.'_'.$nl3,
+							$dEntry = array(
+								'id'               => $ke,
+								'title'            => (isset($ve['title']) && $ve['title']) ? $ve['title'] : '',
+								'description'      => (isset($ve['description']) && $ve['description']) ? $ve['description'] : '',
+								'type'             => 'listCategoriesSelector',
+								'name'             => str_replace('.', ':', $kb . '|' . $ka . '|' . $ke),
+								'generatedOptions' => makeCategoryList(array('skipDisabled' => true, 'noHeader' => true, 'doall' => true, 'allmarker' => '*', 'returnOptArray' => true)),
+								'uniqId'           => 'id' . $nl1 . '_' . $nl2 . '_' . $nl3,
 							);
 							//$dArea['items'] []= $dEntry;
 							//continue;
 						} else {
 							// [[ NORMAL SELECT ]]
 							$dEntry = array(
-								'id'			=> $ke,
-								'title'			=> (isset($ve['title']) && $ve['title'])?$ve['title']:'',
-								'description'	=> (isset($ve['description']) && $ve['description'])?$ve['description']:'',
-								'perm'			=> array(),
-								'name'			=> $kb.'|'.$ka.'|'.$ke,
-								'type'			=> '',
+								'id'          => $ke,
+								'title'       => (isset($ve['title']) && $ve['title']) ? $ve['title'] : '',
+								'description' => (isset($ve['description']) && $ve['description']) ? $ve['description'] : '',
+								'perm'        => array(),
+								'name'        => $kb . '|' . $ka . '|' . $ke,
+								'type'        => '',
 							);
 						}
-
 
 						// Avoid PHP bug/feature - it replaces "." into "_". Let's use ':' instead
 						$dEntry['name'] = str_replace('.', ':', $dEntry['name']);
 
-						if(is_array($grp))
+						if (is_array($grp))
 							foreach ($grp as $kg) {
-								if(isset($PERM[$kg['id']][$kb][$ka][$ke]) && $PERM[$kg['id']][$kb][$ka][$ke])
+								if (isset($PERM[$kg['id']][$kb][$ka][$ke]) && $PERM[$kg['id']][$kb][$ka][$ke])
 									$x = $PERM[$kg['id']][$kb][$ka][$ke];
 								else
 									$x = '';
@@ -109,68 +109,69 @@ function showList($grp) {
 									foreach (explode(",", $x) as $cx) {
 										$catArray[$cx] = true;
 									}
-									$dvalue[$dEntry['name'].'|'.$kg['id']] = $catArray;
+									$dvalue[$dEntry['name'] . '|' . $kg['id']] = $catArray;
 									$dEntry['perm'][$kg['id']] = $catArray; //$PERM[$kg['id']][$kb][$ka][$ke];
 								} else {
 									$dEntry['perm'][$kg['id']] = $x; //$PERM[$kg['id']][$kb][$ka][$ke];
-									$dvalue[$dEntry['name'].'|'.$kg['id']] = (!isset($PERM[$kg['id']][$kb][$ka][$ke]) || ($PERM[$kg['id']][$kb][$ka][$ke] === NULL))?-1:($x?1:0);
+									$dvalue[$dEntry['name'] . '|' . $kg['id']] = (!isset($PERM[$kg['id']][$kb][$ka][$ke]) || ($PERM[$kg['id']][$kb][$ka][$ke] === null)) ? -1 : ($x ? 1 : 0);
 								}
 							}
 
-						$dArea['items'] []= $dEntry;
+						$dArea['items'] [] = $dEntry;
 					}
 				}
-				$dBlock['items'] []= $dArea;
+				$dBlock['items'] [] = $dArea;
 			}
 
 		}
-		$data []= $dBlock;
+		$data [] = $dBlock;
 	}
 
-//print "<pre><select size='10' multiple='multiple'>".makeCategoryList(array('skipDisabled' => true, 'noHeader' => true))."</select></pre>";
+	//print "<pre><select size='10' multiple='multiple'>".makeCategoryList(array('skipDisabled' => true, 'noHeader' => true))."</select></pre>";
 	// Print template
 	$xt = $twig->loadTemplate('skins/default/tpl/perm/list.tpl');
 	print $xt->render(array(
-		'CONFIG' => $data,
-		'PERM' => $PERM,
-		'GRP' => $grp,
-		'DEFAULT_JSON' => json_encode($dvalue),
-		'DEFAULT'	=> $dvalue,
-		'token'		=> genUToken('admin.perm'),
+			'CONFIG'       => $data,
+			'PERM'         => $PERM,
+			'GRP'          => $grp,
+			'DEFAULT_JSON' => json_encode($dvalue),
+			'DEFAULT'      => $dvalue,
+			'token'        => genUToken('admin.perm'),
 		)
 	);
 }
 
 function displayPermValue($value, $type) {
-	global $lang;
 
+	global $lang;
 
 	if ($type == 'listCategoriesSelector') {
 		return $value;
 	}
 
-	if ($value == -1)	return '--';
-	if ($value == 0)	return $lang['noa'];
-	if ($value == 1)	return $lang['yesa'];
+	if ($value == -1) return '--';
+	if ($value == 0) return $lang['noa'];
+	if ($value == 1) return $lang['yesa'];
 
 }
 
-
 function updateConfig() {
+
 	global $userROW, $lang, $PERM, $confPerm, $confPermUser, $pManager, $twig, $grp;
 	//print "Incoming POST: <pre>".var_export($_POST, true)."</pre>";
 	// ACCESS ONLY FOR ADMIN
 	if (($userROW['status'] > 1)) {
 		msg(array("type" => "error", "text" => $lang['perm.denied']));
+
 		return;
 	}
 
 	// Check for security token
-	if ((!isset($_REQUEST['token']))||($_REQUEST['token'] != genUToken('admin.perm'))) {
+	if ((!isset($_REQUEST['token'])) || ($_REQUEST['token'] != genUToken('admin.perm'))) {
 		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+
 		return;
 	}
-
 
 	$pList = $pManager->getList();
 	$updateList = array();
@@ -193,7 +194,7 @@ function updateConfig() {
 				$itemType = $null[1];
 				$itemSubType = $null[2];
 			}
-			$itemIsCategories = ($itemType == 'listCategoriesSelector')?true:false;
+			$itemIsCategories = ($itemType == 'listCategoriesSelector') ? true : false;
 			//print "[$itemType,$itemSubType,$itemIsCategories]";
 			// TYPE: listCategoriesSelector - own processing
 			if ($itemIsCategories) {
@@ -201,33 +202,32 @@ function updateConfig() {
 					if (in_array('*', $v)) {
 						$v = '*';
 					} else {
-						$v = join(",",$v);
+						$v = join(",", $v);
 					}
 				}
 			}
 
-
 			$markValue = 99;
-			if (!isset($PERM[$m[4]][$m[1]][$m[2]][$m[3]]) || ($PERM[$m[4]][$m[1]][$m[2]][$m[3]] === NULL)) {
+			if (!isset($PERM[$m[4]][$m[1]][$m[2]][$m[3]]) || ($PERM[$m[4]][$m[1]][$m[2]][$m[3]] === null)) {
 				$markValue = -1;
 			} else {
 				if ($itemIsCategories) {
 					$markValue = ($PERM[$m[4]][$m[1]][$m[2]][$m[3]]);
 				} else {
-					$markValue = ($PERM[$m[4]][$m[1]][$m[2]][$m[3]])?1:0;
+					$markValue = ($PERM[$m[4]][$m[1]][$m[2]][$m[3]]) ? 1 : 0;
 				}
 			}
 			if ($markValue != $v) {
 				// Save information about updates
 				$updateList [] = array(
-					'id'		=> $m[1] .' &#8594; '.$m[2].' &#8594; '.$m[3],
-					'group'		=> $m[4],
-					'title'		=> $pList[$m[1]]['items'][$m[2]]['items'][$m[3]]['title'],
-					'type'		=> $itemType,
-					'old'		=> $markValue,
-					'new'		=> $v,
-					'displayNew'	=> displayPermValue($v, $itemType),
-					'displayOld'	=> displayPermValue($markValue, $itemType),
+					'id'         => $m[1] . ' &#8594; ' . $m[2] . ' &#8594; ' . $m[3],
+					'group'      => $m[4],
+					'title'      => $pList[$m[1]]['items'][$m[2]]['items'][$m[3]]['title'],
+					'type'       => $itemType,
+					'old'        => $markValue,
+					'new'        => $v,
+					'displayNew' => displayPermValue($v, $itemType),
+					'displayOld' => displayPermValue($markValue, $itemType),
 				);
 
 				//print "> $k: ".$markValue.' => '.$v."<br/>";
@@ -247,7 +247,7 @@ function updateConfig() {
 					if ($itemIsCategories) {
 						$confPermUser[$m[4]][$m[1]][$m[2]][$m[3]] = $v;
 					} else {
-						$confPermUser[$m[4]][$m[1]][$m[2]][$m[3]] = ($v == -1)?NULL:($v?true:false);
+						$confPermUser[$m[4]][$m[1]][$m[2]][$m[3]] = ($v == -1) ? null : ($v ? true : false);
 					}
 					//print "SAVE NEW $k -> $v<br/>\n";
 				}
@@ -261,14 +261,13 @@ function updateConfig() {
 
 	$xt = $twig->loadTemplate('skins/default/tpl/perm/result.tpl');
 	print $xt->render(array(
-		'updateList' => $updateList,
-		'GRP'	=> $grp,
-		'execResult'	=> $execResult,
+			'updateList' => $updateList,
+			'GRP'        => $grp,
+			'execResult' => $execResult,
 		)
 	);
 
 }
-
 
 //
 //
@@ -276,5 +275,5 @@ if (($_SERVER['REQUEST_METHOD'] == "POST") && isset($_POST['save']) && ($_POST['
 	updateConfig();
 } else {
 	showList($grp);
-//	showList(array('1' => array('id' => 1, 'title' => 'Администратор')));
+	//	showList(array('1' => array('id' => 1, 'title' => 'Администратор')));
 }

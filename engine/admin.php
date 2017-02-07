@@ -23,9 +23,9 @@ if (!defined('NGCMS')) die ('HAL');
 
 // Pre-configure required global variables
 global $action, $subaction, $mod;
-$action		= isset($_REQUEST['action'])?$_REQUEST['action']:'';
-$subaction	= isset($_REQUEST['subaction'])?$_REQUEST['subaction']:'';
-$mod		= isset($_REQUEST['mod'])?$_REQUEST['mod']:'';
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+$subaction = isset($_REQUEST['subaction']) ? $_REQUEST['subaction'] : '';
+$mod = isset($_REQUEST['mod']) ? $_REQUEST['mod'] : '';
 
 // Activate output buffer
 ob_start();
@@ -33,8 +33,12 @@ ob_start();
 //define('DEBUG', 1);
 
 if (defined('DEBUG')) {
-	print "HTTP CALL PARAMS: <pre>"; var_dump(array('GET' => $_GET, 'POST' => $_POST, 'COOKIE' => $_COOKIE)); print "</pre><br>\n";
-	print "SERVER PARAMS: <pre>"; var_dump($_SERVER); print "</pre><br>\n";
+	print "HTTP CALL PARAMS: <pre>";
+	var_dump(array('GET' => $_GET, 'POST' => $_POST, 'COOKIE' => $_COOKIE));
+	print "</pre><br>\n";
+	print "SERVER PARAMS: <pre>";
+	var_dump($_SERVER);
+	print "</pre><br>\n";
 }
 
 $PHP_SELF = "admin.php";
@@ -46,7 +50,7 @@ $PHP_SELF = "admin.php";
 // Handle LOGIN
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
-	include_once root.'cmodules.php';
+	include_once root . 'cmodules.php';
 	coreLogin();
 }
 
@@ -54,37 +58,35 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
 // Handle LOGOUT
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
-	include_once root.'cmodules.php';
+	include_once root . 'cmodules.php';
 	coreLogout();
 }
-
 
 //
 // Show LOGIN screen if user is not logged in
 //
 if (!is_array($userROW)) {
 	$tvars['vars'] = array(
-		'php_self'		=>	$PHP_SELF,
-		'redirect'		=>	$REQUEST_URI,
-        'year'		    =>	date("Y"),
-		'home_title'	=>	home_title,
-		'error'			=>	($SYSTEM_FLAGS['auth_fail'])?$lang['msge_login']:'',
+		'php_self'   => $PHP_SELF,
+		'redirect'   => $REQUEST_URI,
+		'year'       => date("Y"),
+		'home_title' => home_title,
+		'error'      => ($SYSTEM_FLAGS['auth_fail']) ? $lang['msge_login'] : '',
 	);
-	$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($SYSTEM_FLAGS['auth_fail'])?'$1':'';
+	$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '';
 
-	$tpl -> template('login', tpl_actions);
-	$tpl -> vars('login', $tvars);
-	echo $tpl -> show('login');
+	$tpl->template('login', tpl_actions);
+	$tpl->vars('login', $tvars);
+	echo $tpl->show('login');
 	exit;
 }
 
 // Check if visitor has permissions to view admin panel
 if (!checkPermission(array('plugin' => '#admin', 'item' => 'system'), null, 'admpanel.view')) {
 	ngSYSLOG(array('plugin' => '#admin', 'item' => 'system'), array('action' => 'admpanel.view'), null, array(0, 'SECURITY.PERM'));
-	@header("Location: ".home);
+	@header("Location: " . home);
 	exit;
 }
-
 
 //
 // Only admins can reach this location
@@ -100,30 +102,30 @@ load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = array(
-	'perm'			=> 	'1',
-	'ugroup'		=> 	1,
-	'configuration'	=>	99,
-	'cron'			=>	99,
-	'dbo'			=>	99,
-	'extras'		=>	'1',
-	'extra-config'	=>	'1',
-	'statistics'	=>	'1',
-	'templates'		=>	99,
-	'users'			=>	99,
-	'rewrite'		=>	'1',
-	'static'		=>	'1',
+	'perm'          => '1',
+	'ugroup'        => 1,
+	'configuration' => 99,
+	'cron'          => 99,
+	'dbo'           => 99,
+	'extras'        => '1',
+	'extra-config'  => '1',
+	'statistics'    => '1',
+	'templates'     => 99,
+	'users'         => 99,
+	'rewrite'       => '1',
+	'static'        => '1',
 
-	'editcomments'	=>	'2',
-	'ipban'			=>	99,
-	'options'		=>	'2',
+	'editcomments' => '2',
+	'ipban'        => 99,
+	'options'      => '2',
 
-	'categories'	=>	99,
-	'news'			=>	99,
+	'categories' => 99,
+	'news'       => 99,
 
-	'files'			=>	'3',
-	'images'		=>	'3',
-	'pm'			=>	'3',
-	'preview'		=>	'3',
+	'files'   => '3',
+	'images'  => '3',
+	'pm'      => '3',
+	'preview' => '3',
 );
 
 exec_acts("admin_header");
@@ -135,7 +137,7 @@ if ($mod != 'preview') {
 
 // Default action
 if (!$mod) {
-	$mod = ($userROW['status'] == 1)?'statistics':'news';
+	$mod = ($userROW['status'] == 1) ? 'statistics' : 'news';
 }
 
 // Check requested module exists
@@ -145,8 +147,8 @@ if (isset($permissions[$mod]) && ($permissions[$mod])) {
 	// If user's status fits - call module. Else - show an error
 	if ($userROW['status'] <= $level) {
 		// Load plugins, that need to make any changes in this mod
-		load_extras('admin:mod:'.$mod);
-		require("./actions/".$mod.".php");
+		load_extras('admin:mod:' . $mod);
+		require("./actions/" . $mod . ".php");
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_mod']));
 	}
@@ -155,10 +157,12 @@ if (isset($permissions[$mod]) && ($permissions[$mod])) {
 }
 
 // Print skin footer (if we're not in preview mode)
-if ( !$mod || ($mod && $mod != "preview") ) { echo $skin_footer; }
+if (!$mod || ($mod && $mod != "preview")) {
+	echo $skin_footer;
+}
 
 if (defined('DEBUG')) {
-	echo "SQL queries:<br />\n-------<br />\n ".implode("<br />\n",$mysql->query_list);
+	echo "SQL queries:<br />\n-------<br />\n " . implode("<br />\n", $mysql->query_list);
 }
 
 exec_acts("admin_footer");

@@ -6,16 +6,16 @@
 * Название: {{ form.title }}
 * Описание: {{ form.description }}
 {% if (flags.link_news) %}
-Запрос по новости:
-* ID: {{ news.id }}
-* Ссылка: {{ news.url }}
-* Заголовок:{{ news.title }}
+	Запрос по новости:
+	* ID: {{ news.id }}
+	* Ссылка: {{ news.url }}
+	* Заголовок:{{ news.title }}
 
-{%endif %}
+{% endif %}
 
 Пользователь заполнил следующие поля:
 {% for entry in entries %}
-* ({{ entry.id }})[{{ entry.title }}]: {{ entry.value }}
+	* ({{ entry.id }})[{{ entry.title }}]: {{ entry.value }}
 {% endfor %}
 
 ---

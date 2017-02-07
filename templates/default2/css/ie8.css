@@ -2,10 +2,12 @@
 	margin: 0 -20px 0 0;
 	position: relative;
 }
+
 #right-control #user-panel .avatar img {
 	position: relative;
 	height: 46px;
 }
+
 #right-control #user-panel .exit:hover,
 #right-control #user-panel .exit {
 	filter: none;

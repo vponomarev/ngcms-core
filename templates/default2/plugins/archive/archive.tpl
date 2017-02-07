@@ -2,11 +2,11 @@
 	{% for entry in entries %}
 		{% if (loop.index <= 6) %}
 			<li>
-				<a href="{{entry.link}}">{{entry.title}} {% if (entry.counter) %}({{entry.cnt}}){% endif %}</a>
+				<a href="{{ entry.link }}">{{ entry.title }} {% if (entry.counter) %}({{ entry.cnt }}){% endif %}</a>
 			</li>
-		{% elseif (loop.index > 6)  %}
+		{% elseif (loop.index > 6) %}
 			<li class="showhide">
-				<a href="{{entry.link}}">{{entry.title}} {% if (entry.counter) %}({{entry.cnt}}){% endif %}</a>
+				<a href="{{ entry.link }}">{{ entry.title }} {% if (entry.counter) %}({{ entry.cnt }}){% endif %}</a>
 			</li>
 		{% endif %}
 	{% endfor %}
