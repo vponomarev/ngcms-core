@@ -9,8 +9,7 @@
 		document.getElementById('list').style.display = "none";
 		[status]
 		document.getElementById('categories').style.display = "none";
-		[ / status
-	]
+		[/status]
 		document.getElementById('uploadnew').style.display = "none";
 
 		if (selectedOption == 'list') {
@@ -25,8 +24,7 @@
 			document.getElementById('categories').style.display = "";
 			document.getElementById('entries').style.display = "none";
 		}
-		[ / status
-	]
+		[/status]
 
 		if (selectedOption == 'uploadnew') {
 			document.getElementById('uploadnew').style.display = "";
