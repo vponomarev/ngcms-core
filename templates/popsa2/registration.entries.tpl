@@ -1,4 +1,5 @@
 <div class="input">
 	<label>{title}:</label>
-	{input}<br /><small>{descr}</small>
+	{input}<br/>
+	<small>{descr}</small>
 </div>

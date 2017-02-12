@@ -5,7 +5,7 @@
 	<div style="height: 10px;"></div>
 	<div class="post-text">
 		<p>
-			{votelines}<br />Всего проголосовало: {vcount}
+			{votelines}<br/>Всего проголосовало: {vcount}
 		</p>
 	</div>
 </div>

@@ -1,43 +1,34 @@
 <?php
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
-
 $lang = LoadLang('index', 'admin');
-
 if (is_array($userROW)) {
-	$newpm = $mysql->result("SELECT count(pmid) FROM ".prefix."_users_pm WHERE to_id = ".db_squote($userROW['id'])." AND viewed = '0'");
-	$newpm = ($newpm != "0") ? '<b>'.$newpm.'</b>' : '0';
-
+	$newpm = $mysql->result("SELECT count(pmid) FROM " . prefix . "_users_pm WHERE to_id = " . db_squote($userROW['id']) . " AND viewed = '0'");
+	$newpm = ($newpm != "0") ? '<b>' . $newpm . '</b>' : '0';
 	// Calculate number of un-approved news
 	$unapproved = '';
 	if ($userROW['status'] == 1 || $userROW['status'] == 2) {
-		$unapp = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
+		$unapp = $mysql->result("SELECT count(id) FROM " . prefix . "_news WHERE approve = '0'");
 		if ($unapp)
-			$unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
+			$unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>' . $unapp . '</b></font></a> ] ';
 	}
 }
-
 $skins_url = skins_url;
-
 $mod = $_REQUEST['mod'];
-$action = isset($_REQUEST['action'])?$_REQUEST['action']:'';
-
-$h_active_options = (in_array($mod, array('options', 'categories', 'static')))?' class="active"':'';
-$h_active_extras = (($mod=='extra-config')||($mod=='extras'))?' class="active"':'';
-$h_active_addnews = (($mod=='news')&&($action=='add'))?' class="active"':'';
-$h_active_editnews = (($mod=='news')&&($action!='add'))?' class="active"':'';
-$h_active_images = ($mod=='images')?' class="active"':'';
-$h_active_files = ($mod=='files')?' class="active"':'';
-$h_active_pm = ($mod=='pm')?' class="active"':'';
-
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+$h_active_options = (in_array($mod, array('options', 'categories', 'static'))) ? ' class="active"' : '';
+$h_active_extras = (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '';
+$h_active_addnews = (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '';
+$h_active_editnews = (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '';
+$h_active_images = ($mod == 'images') ? ' class="active"' : '';
+$h_active_files = ($mod == 'files') ? ' class="active"' : '';
+$h_active_pm = ($mod == 'pm') ? ' class="active"' : '';
 $datetimepicker_lang_default = "
-$.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
-$.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
+$.datepicker.setDefaults($.datepicker.regional['" . $lang['langcode'] . "']);
+$.timepicker.setDefaults($.timepicker.regional['" . $lang['langcode'] . "']);
 ";
 $datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : "";
-
 $year = date("Y");
-
 $skin_header = <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$lang[langcode]" lang="$lang[langcode]" dir="ltr">
@@ -79,8 +70,6 @@ $datetimepicker_lang
 </div>
 <div id="adminDataBlock" style="text-align : left;">
 HTML;
-
-
 $skin_footer = <<<HTML
 </div>
 <div class="clear_20"></div>

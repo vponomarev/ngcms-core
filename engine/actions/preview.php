@@ -13,7 +13,7 @@ if (!defined('NGCMS')) die ('HAL');
 $lang = LoadLang('preview', 'admin');
 
 // Preload news display engine
-include_once root.'includes/news.php';
-include_once root.'includes/classes/upload.class.php';
+include_once root . 'includes/news.php';
+include_once root . 'includes/classes/upload.class.php';
 
 showPreview();

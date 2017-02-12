@@ -2,10 +2,10 @@
 
 class tpl {
 
-	var $data	=	array();
-	var $root	=	'.';
-	var $ext	=	'.tpl';
-	var $da_vr	=	array();
+	var $data = array();
+	var $root = '.';
+	var $ext = '.tpl';
+	var $da_vr = array();
 	var $execTime = 0;
 	var $execCount = 0;
 
@@ -17,30 +17,32 @@ class tpl {
 	//	includeDisableChroot  - flag: to allow to include files beyond $dir
 	//	includeAllowRecursive - flag: to allow recursive includes
 	function template($name, $dir, $file = '', $params = array()) {
+
 		global $lang;
 
 		// Prepare to calculate exec time
 		list($usec, $sec) = explode(' ', microtime());
-		$timeStart = (float) $sec + (float) $usec;
+		$timeStart = (float)$sec + (float)$usec;
 
 		if (is_dir($dir)) {
-			$this -> root = $dir;
+			$this->root = $dir;
 		} else {
 			ngFatalError(sprintf($lang['msge_no_tpldir'], $dir));
 		}
 
-		$nn		=	$name;
+		$nn = $name;
 
-		$fname	=	$dir.($file?$file:((substr($dir, -1) != '/'?'/':'').$name.$this->ext));
+		$fname = $dir . ($file ? $file : ((substr($dir, -1) != '/' ? '/' : '') . $name . $this->ext));
 
 		if (!is_file($fname)) {
-			$this->data[$nn] = '[<b>TEMPLATE NOT FOUND</b> ('.$fname.')]';
+			$this->data[$nn] = '[<b>TEMPLATE NOT FOUND</b> (' . $fname . ')]';
+
 			return;
 			ngFatalError(sprintf(str_replace('{fname}', $fname, $lang['fatal.tpl.lost'], $fname)));
 		}
 
-		$fp		=	fopen($fname,'r');
-		$data	=	filesize($fname)?fread($fp,filesize($fname)):'';
+		$fp = fopen($fname, 'r');
+		$data = filesize($fname) ? fread($fp, filesize($fname)) : '';
 		fclose($fp);
 
 		// Check if includes feature is activated
@@ -55,7 +57,7 @@ class tpl {
 						if (preg_match('#^\.\.\/(.+)$#is', $incName, $mt))
 							$incName = $mt[1];
 					}
-					$incFile = $dir.$incName;
+					$incFile = $dir . $incName;
 					if (is_file($incFile) && is_readable($incFile)) {
 						$fI = fopen($incFile, 'r');
 						$incData = filesize($incFile) ? fread($fI, filesize($incFile)) : '';
@@ -75,7 +77,7 @@ class tpl {
 							if (preg_match('#^\.\.\/(.+)$#is', $incName, $mt))
 								$incName = $mt[1];
 						}
-						$incFile = $dir.$incName;
+						$incFile = $dir . $incName;
 						if (is_file($incFile) && is_readable($incFile)) {
 							$fI = fopen($incFile, 'r');
 							$incData = filesize($incFile) ? fread($fI, filesize($incFile)) : '';
@@ -88,11 +90,11 @@ class tpl {
 			}
 		}
 
-		$this -> data[$nn] = $data;
+		$this->data[$nn] = $data;
 
 		// Save calculate exec time
 		list($usec, $sec) = explode(' ', microtime());
-		$timeStop = (float) $sec + (float) $usec;
+		$timeStop = (float)$sec + (float)$usec;
 
 		$this->execTime += ($timeStop - $timeStart);
 	}
@@ -101,21 +103,22 @@ class tpl {
 	// codeExec	- flag to execute ( php eval() ) code
 	// inline	- flag: inline data. If set $nn is treated as data, not a template file name
 	function vars($nn, $vars = array(), $params = array()) {
+
 		global $lang, $userROW, $CurrentHandler, $config, $PHP_SELF, $twig;
 
 		// Prepare to calculate exec time
 		list($usec, $sec) = explode(' ', microtime());
-		$timeStart = (float) $sec + (float) $usec;
+		$timeStart = (float)$sec + (float)$usec;
 
-		$data = (isset($params['inline']) && $params['inline'])?$nn:$this->data[$nn];
+		$data = (isset($params['inline']) && $params['inline']) ? $nn : $this->data[$nn];
 		if (isset($params['codeExec']) && $params['codeExec'])
-			$data = (eval(' ?>'.$this->data[$nn].'<?php '));
+			$data = (eval(' ?>' . $this->data[$nn] . '<?php '));
 
 		if (preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr)) {
 			// Show language variables
 			foreach ($larr[0] as $k => $v) {
 				$name_larr = substr($v, 2);
-				$data = str_replace('{'.$v.'}', isset($lang[$name_larr])?$lang[$name_larr]:'[LANG_LOST:'.$name_larr.']', $data);
+				$data = str_replace('{' . $v . '}', isset($lang[$name_larr]) ? $lang[$name_larr] : '[LANG_LOST:' . $name_larr . ']', $data);
 			}
 		}
 
@@ -123,30 +126,29 @@ class tpl {
 		if (preg_match_all('/\[TWIG\](.+?)\[\/TWIG\]/is', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
 				$scode = $parr[1][$k];
-				$cacheFileName = md5($scode).'.txt';
+				$cacheFileName = md5($scode) . '.txt';
 				$cacheFile = cacheRetrieveFile($cacheFileName, 3600, '_templates');
 				if ($cacheFile === false) {
 					cacheStoreFile($cacheFileName, $scode, '_templates');
 				}
-				$tx = $twig->loadTemplate(get_plugcache_dir('_templates').$cacheFileName);
+				$tx = $twig->loadTemplate(get_plugcache_dir('_templates') . $cacheFileName);
 				$result = $tx->render($vars['vars']);
-				$data = str_replace($v,$result, $data);
+				$data = str_replace($v, $result, $data);
 			}
 		}
-
 
 		// LOGIC processing
 		// [isplugin <NAME>] .. [/isplugin] - content will be shown only if plugin <NAME> is active
 		if (preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
-				$data = str_replace($v,getPluginStatusActive($parr[1][$k])?$parr[2][$k]:'', $data);
+				$data = str_replace($v, getPluginStatusActive($parr[1][$k]) ? $parr[2][$k] : '', $data);
 			}
 		}
 
 		// [isntplugin <NAME>] .. [/ispntlugin] - content will be shown only if plugin <NAME> is NOT active
 		if (preg_match_all('/\[isnplugin (.+?)\](.+?)\[\/isnplugin\]/is', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
-				$data = str_replace($v,getPluginStatusActive($parr[1][$k])?'':$parr[2][$k], $data);
+				$data = str_replace($v, getPluginStatusActive($parr[1][$k]) ? '' : $parr[2][$k], $data);
 			}
 		}
 
@@ -158,7 +160,7 @@ class tpl {
 					$name_parr = $match[1];
 
 				if (!getPluginStatusActive($name_parr)) {
-					$data = str_replace('{'.$v.'}', '', $data);
+					$data = str_replace('{' . $v . '}', '', $data);
 				}
 			}
 		}
@@ -177,7 +179,7 @@ class tpl {
 				// 1 - 'n' for NOT expression, else - ''
 				// 2 - Plugin/Handler list string
 				// 3 - content of the block
-				$filterNegativeFlag = ($v[1] == 'n')?1:0;
+				$filterNegativeFlag = ($v[1] == 'n') ? 1 : 0;
 
 				$ruleCatched = false;
 				foreach (preg_split("#\|#", $v[2]) as $rule) {
@@ -192,8 +194,8 @@ class tpl {
 						break;
 					}
 				}
-				$bShowFlag = (($ruleCatched && !$filterNegativeFlag)||(!$ruleCatched && $filterNegativeFlag));
-				$data = str_replace($v[0], $bShowFlag?$v[3]:'', $data);
+				$bShowFlag = (($ruleCatched && !$filterNegativeFlag) || (!$ruleCatched && $filterNegativeFlag));
+				$data = str_replace($v[0], $bShowFlag ? $v[3] : '', $data);
 			}
 		}
 
@@ -201,13 +203,13 @@ class tpl {
 		// [iflang:<Language>] .. [/iflang]
 		if (preg_match_all('/\[iflang\:(.+?)\](.+?)\[\/iflang\]/is', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
-				$data = str_replace($v,($config['default_lang'] == $parr[1][$k])?'$1':'', $data);
+				$data = str_replace($v, ($config['default_lang'] == $parr[1][$k]) ? '$1' : '', $data);
 			}
 		}
 		// [ifnlang:<Language>] .. [/ifnlang]
 		if (preg_match_all('/\[ifnlang\:(.+?)\](.+?)\[\/ifnlang\]/is', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
-				$data = str_replace($v,($config['default_lang'] == $parr[1][$k])?'':'$1', $data);
+				$data = str_replace($v, ($config['default_lang'] == $parr[1][$k]) ? '' : '$1', $data);
 			}
 		}
 
@@ -216,19 +218,18 @@ class tpl {
 
 			foreach ($carr[0] as $k => $v) {
 				$name_carr = substr($v, 2);
-				$data = str_replace('{'.$v.'}', $config[$name_carr], $data);
+				$data = str_replace('{' . $v . '}', $config[$name_carr], $data);
 			}
 		}
 
 		// Process variables
 		if (isset($vars['vars']) && is_array($vars['vars'])) {
 			foreach ($vars['vars'] as $id => $var) {
-				if (substr($id,0,1) == '[') {
+				if (substr($id, 0, 1) == '[') {
 					$data = str_replace($id, $var, $data);
-				}
-				else {
-					if(!is_array($var))
-						$data = str_replace('{'.$id.'}', $var, $data);
+				} else {
+					if (!is_array($var))
+						$data = str_replace('{' . $id . '}', $var, $data);
 				}
 			}
 		}
@@ -247,19 +248,21 @@ class tpl {
 		if (isset($params['inline']) && $params['inline'])
 			return $data;
 
-		$this -> da_vr[$nn] = $data;
+		$this->da_vr[$nn] = $data;
 
 		// Save calculate exec time
 		list($usec, $sec) = explode(' ', microtime());
-		$timeStop = (float) $sec + (float) $usec;
+		$timeStop = (float)$sec + (float)$usec;
 
 		$this->execTime += ($timeStop - $timeStart);
 		$this->execCount++;
 	}
 
 	function show($name) {
-		$ret = $this -> da_vr[$name];
-		$this -> da_vr[$name] = $this -> data[$name];
+
+		$ret = $this->da_vr[$name];
+		$this->da_vr[$name] = $this->data[$name];
+
 		return $ret;
 	}
 }

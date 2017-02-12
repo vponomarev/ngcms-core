@@ -14,6 +14,7 @@ if (!defined('NGCMS')) die ('HAL');
 // Switch plugin ON/OFF
 //
 function pluginSwitch($pluginID, $mode = 'on') {
+
 	global $PLUGINS;
 
 	// Load list of active plugins
@@ -25,21 +26,25 @@ function pluginSwitch($pluginID, $mode = 'on') {
 		case 'on':
 			// Load plugins list
 			$extras = get_extras_list();
-			if (!is_array($extras)) { return false; }
-			if (!$extras[$pluginID]) { return false; }
+			if (!is_array($extras)) {
+				return false;
+			}
+			if (!$extras[$pluginID]) {
+				return false;
+			}
 
 			// Mark module as active
 			$activated['active'][$pluginID] = $extras[$pluginID]['dir'];
 
 			// Mark module to be activated in all listed actions
 			if (isset($extras[$pluginID]['acts']) && isset($extras[$pluginID]['file'])) {
-				foreach (explode(',',$extras[$pluginID]['acts']) as $act) {
-						$activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'].'/'.$extras[$pluginID]['file'];
+				foreach (explode(',', $extras[$pluginID]['acts']) as $act) {
+					$activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'] . '/' . $extras[$pluginID]['file'];
 				}
 			}
 
 			foreach ($extras[$pluginID]['actions'] as $act => $file) {
-				$activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'].'/'.$file;
+				$activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'] . '/' . $file;
 			}
 
 			if (count($extras[$pluginID]['library']))
@@ -47,6 +52,7 @@ function pluginSwitch($pluginID, $mode = 'on') {
 
 			// update active extra list in memory
 			$PLUGINS['active'] = $activated;
+
 			return savePluginsActiveList();
 
 		// TURN _OFF_
@@ -56,13 +62,15 @@ function pluginSwitch($pluginID, $mode = 'on') {
 
 			foreach ($activated['actions'] as $key => $value) {
 				if ($activated['actions'][$key][$pluginID]) {
-						unset($activated['actions'][$key][$pluginID]);
+					unset($activated['actions'][$key][$pluginID]);
 				}
 			}
 
 			$PLUGINS['active'] = $activated;
+
 			return savePluginsActiveList();
 	}
+
 	return false;
 }
 
@@ -70,7 +78,8 @@ function pluginSwitch($pluginID, $mode = 'on') {
 // Save list of active plugins & required files
 //
 
-function savePluginsActiveList(){
+function savePluginsActiveList() {
+
 	global $PLUGINS;
 
 	if (!is_file(conf_pactive))
@@ -79,18 +88,18 @@ function savePluginsActiveList(){
 	if (!($file = fopen(conf_pactive, "w")))
 		return false;
 
-	$content = '<?php $array = '.var_export($PLUGINS['active'], true).'; ?>';
+	$content = '<?php $array = ' . var_export($PLUGINS['active'], true) . '; ?>';
 	fwrite($file, $content);
 	fclose($file);
 
 	return true;
 }
 
-
 //
 // Mark plugin as installed
 //
 function plugin_mark_installed($plugin) {
+
 	global $PLUGINS;
 
 	// Load activated list
@@ -103,6 +112,7 @@ function plugin_mark_installed($plugin) {
 
 	$activated['installed'][$plugin] = 1;
 	$PLUGINS['active'] = $activated;
+
 	return savePluginsActiveList();
 }
 
@@ -110,6 +120,7 @@ function plugin_mark_installed($plugin) {
 // Mark plugin as deinstalled
 //
 function plugin_mark_deinstalled($plugin) {
+
 	global $PLUGINS;
 
 	// Load activated list
@@ -127,5 +138,6 @@ function plugin_mark_deinstalled($plugin) {
 	}
 
 	$PLUGINS['active'] = $activated;
+
 	return savePluginsActiveList();
 }

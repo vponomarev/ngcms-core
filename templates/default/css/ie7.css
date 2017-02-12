@@ -1,91 +1,100 @@
 .pagination ul {
-    display: inline;
+	display: inline;
 }
 
 .pagination ul li {
-    display: inline;
+	display: inline;
 }
+
 .pagination ul li .pagi-prev {
-    display: block;
+	display: block;
 }
+
 .pagination ul li .pagi-next {
-    display: block;
+	display: block;
 }
+
 .pagination a {
-    display: inline;
+	display: inline;
 }
+
 .pagination span {
-    display: inline;
+	display: inline;
 }
-
-
 
 .tabs li a {
-    padding: 7px 13px;
-}
-.tabs.tabs-full {
-    display: block;
-    width: 100%;
-    overflow: hidden;
-}
-.tabs.tabs-full li {
-    display: block;
-    float: left;
+	padding: 7px 13px;
 }
 
+.tabs.tabs-full {
+	display: block;
+	width: 100%;
+	overflow: hidden;
+}
+
+.tabs.tabs-full li {
+	display: block;
+	float: left;
+}
 
 #table3 .next-month {
-    margin-top: -15px;
-}
-#table2 {
-    position: relative !important;
-    border-right: 1px solid #d0d3d8;
-    border-bottom: 1px solid #d0d3d8;
-    width: 261px !important;
-}
-#table2 td {
-    z-index: 9;
-}
-#table2 td.todaywd {
-    z-index: 10;
-    position: relative;
-}
-.captcha img {
-    bottom: 2px;
+	margin-top: -15px;
 }
 
+#table2 {
+	position: relative !important;
+	border-right: 1px solid #d0d3d8;
+	border-bottom: 1px solid #d0d3d8;
+	width: 261px !important;
+}
+
+#table2 td {
+	z-index: 9;
+}
+
+#table2 td.todaywd {
+	z-index: 10;
+	position: relative;
+}
+
+.captcha img {
+	bottom: 2px;
+}
 
 .label.label-table {
-    display: block;
-    border-bottom: 1px dotted #ccc;
-    padding: 0 0 20px 0;
-    margin: 0 0 20px 0;
-    width: 100%;
+	display: block;
+	border-bottom: 1px dotted #ccc;
+	padding: 0 0 20px 0;
+	margin: 0 0 20px 0;
+	width: 100%;
 }
+
 .label.label-table label {
-    display: block;
-    float: left;
-    width: 140px;
-    vertical-align: middle;
+	display: block;
+	float: left;
+	width: 140px;
+	vertical-align: middle;
 }
+
 .label.label-table .input {
-    display: block;
-    float: left;
-    position: relative;
+	display: block;
+	float: left;
+	position: relative;
 }
+
 .label.label-table .label-desc {
-    display: block;
-    float: left;
-    color: #989898;
-    font-style: italic;
-    vertical-align: middle;
-    margin-top: 5px;
-    padding-left: 10px;
-    font-size: 11px;
-    width: 200px;
+	display: block;
+	float: left;
+	color: #989898;
+	font-style: italic;
+	vertical-align: middle;
+	margin-top: 5px;
+	padding-left: 10px;
+	font-size: 11px;
+	width: 200px;
 }
 
 .captcha.label-table img {
-    right: 0;
-    bottom: 21px;
+	right: 0;
+	bottom: 21px;
 }

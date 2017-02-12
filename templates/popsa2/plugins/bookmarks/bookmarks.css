@@ -2,54 +2,64 @@
 
 .futu_alert_outer {
 	position: fixed;
-	top: 0; left: 0;
+	top: 0;
+	left: 0;
 	width: 100%;
-	
-	z-index:9999;
+
+	z-index: 9999;
 }
+
 .futu_alert_outer .frame {
-	position:relative;
-	z-index:9999;
+	position: relative;
+	z-index: 9999;
 }
+
 .futu_alerts_holder {
-	position:absolute;
-	left:69%; top:0;
-	width:30%;
-	z-index:9999;
+	position: absolute;
+	left: 69%;
+	top: 0;
+	width: 30%;
+	z-index: 9999;
 }
 
 .futu_alerts_holder .futu_alert {
-	position:absolute;
-	top:-1000px;
-	background-color:#FFEBA0;
-	font:1.2em Tahoma, sans-serif;
-	border:1px solid #FFFFFF;
-	margin-left:60px;
+	position: absolute;
+	top: -1000px;
+	background-color: #ffeba0;
+	font: 1.2em Tahoma, sans-serif;
+	border: 1px solid #ffffff;
+	margin-left: 60px;
 }
+
 .futu_alerts_holder .futu_alert .futu_alert_header {
-	font-size:1.2em;
-	margin:10px 20px 0;
+	font-size: 1.2em;
+	margin: 10px 20px 0;
 }
+
 .futu_alerts_holder .futu_alert .futu_alert_text {
-	font-size:0.9em;
-	margin:10px 20px;
+	font-size: 0.9em;
+	margin: 10px 20px;
 }
+
 .futu_alerts_holder .futu_alert .futu_alert_close_button {
-	position:absolute;
-	padding:10px;
-	top:0;
-	right:0;
-	outline:none;
+	position: absolute;
+	padding: 10px;
+	top: 0;
+	right: 0;
+	outline: none;
 }
+
 .futu_alerts_holder .message {
-	color:#FFF;
-	background-color:#6690C9;
+	color: #fff;
+	background-color: #6690c9;
 }
+
 .futu_alerts_holder .error {
-	color:#FFF;
-	background-color:#ed6060;
+	color: #fff;
+	background-color: #ed6060;
 }
+
 .futu_alerts_holder .save {
-	color:#FFF;
-	background-color:#73a168;
+	color: #fff;
+	background-color: #73a168;
 }

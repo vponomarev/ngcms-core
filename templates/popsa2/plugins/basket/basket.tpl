@@ -16,22 +16,22 @@
 				<td>Супер кисточка XMS3000</td>
 				<td class="detail">
 					<img src="../images/tab_minus.png"/>
-					<input name="" type="text" class="kolvo" />
-					<img src="../images/tab_plus.png" />
+					<input name="" type="text" class="kolvo"/>
+					<img src="../images/tab_plus.png"/>
 				</td>
 				<td class="price_orange">2500</td>
 			</tr>
 		</table>
 	</div>
 	<div class="clear20"></div>
-	<span class="right_s"><img src="../images/btn_pereschet.png" alt="Пересчитать заказ" class="btn_more" /> <img src="../images/btn_order.png" alt="Оформить заказ" class="btn_order"/></span>
+	<span class="right_s"><img src="../images/btn_pereschet.png" alt="Пересчитать заказ" class="btn_more"/> <img src="../images/btn_order.png" alt="Оформить заказ" class="btn_order"/></span>
 	<div class="clear20"></div>
 </div>
 <!--/Корзина-->
 <article>
-<div class="full">
-	<header><h1>Корзина</h1></header>
-	<div class="telo">
-		
+	<div class="full">
+		<header><h1>Корзина</h1></header>
+		<div class="telo">
+
+		</div>
 	</div>
-</div>

@@ -1,7 +1,7 @@
 {% if (flags.error) %}
-<div class="ng-message">
-	{{ errorText }}
-</div>
+	<div class="ng-message">
+		{{ errorText }}
+	</div>
 {% endif %}
 <div class="post">
 	<div class="post-header">

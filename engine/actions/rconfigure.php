@@ -13,11 +13,13 @@ $UHANDLER = new urlHandler();
 $UHANDLER->loadConfig();
 
 $ULIB->registerCommand('news', 'all',
-		array ('vars' =>
-			array(	'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
+	array(
+		'vars'  =>
+			array(
+				'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
 			),
-			'descr'	=> array ('russian' => 'Лента новостей'),
-		)
+		'descr' => array('russian' => 'Лента новостей'),
+	)
 );
 
 /*

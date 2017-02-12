@@ -1,8 +1,33 @@
 <style>
-	.jchat_ODD  TD { background-color: #d8e4d2; width: 100%; text-align: left; padding: 5px 20px; font-size: 12px; border-bottom: 1px solid #e1e1e1; }
-	.jchat_EVEN TD { width: 100%; text-align: left; padding: 5px 20px; font-size: 12px; border-bottom: 1px solid #e0e0e0; }
-	.jchat_INFO TD { background-color: #FFFFFF; width: 100%; text-align: left; font: 10px arial; border-bottom: 1px solid #DDDDDD; }
-	.jchat_userName { font-weight: bold; cursor: pointer; }
+	.jchat_ODD TD {
+		background-color: #d8e4d2;
+		width: 100%;
+		text-align: left;
+		padding: 5px 20px;
+		font-size: 12px;
+		border-bottom: 1px solid #e1e1e1;
+	}
+
+	.jchat_EVEN TD {
+		width: 100%;
+		text-align: left;
+		padding: 5px 20px;
+		font-size: 12px;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	.jchat_INFO TD {
+		background-color: #FFFFFF;
+		width: 100%;
+		text-align: left;
+		font: 10px arial;
+		border-bottom: 1px solid #DDDDDD;
+	}
+
+	.jchat_userName {
+		font-weight: bold;
+		cursor: pointer;
+	}
 </style>
 [:include jchat.script.header.js]
 <div class="full">

@@ -26,7 +26,7 @@
 		<form method="get" action="{form_url}">
 			<div class="input">
 				<label>{l_search.filter.author}</label>
-				<input type="text" name="author" value="{author}" />
+				<input type="text" name="author" value="{author}"/>
 			</div>
 			<div>
 				<label>{l_search.filter.category}</label>
@@ -34,11 +34,14 @@
 			</div>
 			<div>
 				<label>{l_search.filter.date}</label>
-				<select name="postdate"><option value=""></option>{datelist}</select>
+				<select name="postdate">
+					<option value=""></option>
+					{datelist}</select>
 			</div>
 			<div class="input">
-				<input type="text" name="search" value="{search}" class="story" />
-				<div class="clear10"></div><input class="btn btn-primary btn-large" type="submit" value="{l_search.submit}" />
+				<input type="text" name="search" value="{search}" class="story"/>
+				<div class="clear10"></div>
+				<input class="btn btn-primary btn-large" type="submit" value="{l_search.submit}"/>
 			</div>
 		</form>
 		<div class="clear20"></div>

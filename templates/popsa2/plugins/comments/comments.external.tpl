@@ -25,6 +25,9 @@
 	</div>
 </nav>
 [/more_comments]
-[regonly]<div class="msgi">“олько зарегистрированные пользователи могут оставл€ть в данной новости свои комментарии.</div>[/regonly]
-[commforbidden]<div class="msge"> омментирование данной новости запрещено!</div>[/commforbidden]
+[regonly]
+<div class="msgi">“олько зарегистрированные пользователи могут оставл€ть в данной новости свои комментарии.
+</div>[/regonly]
+[commforbidden]
+<div class="msge"> омментирование данной новости запрещено!</div>[/commforbidden]
 {form}

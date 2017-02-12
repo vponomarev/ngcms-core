@@ -11,40 +11,47 @@
 if (!defined('NGCMS')) die ('HAL');
 
 class parse {
+
 	function slashes($content) {
+
 		return (get_magic_quotes_gpc()) ? $content : addslashes($content);
 	}
 
-	function userblocks($content){
+	function userblocks($content) {
+
 		global $config, $lang, $userROW;
 		if (!$config['blocks_for_reg']) return $content;
-		return preg_replace("#\[hide\]\s*(.*?)\s*\[/hide\]#is", is_array($userROW)?"$1":str_replace("{text}", $lang['not_logged'], $lang['not_logged_html']), $content);
+
+		return preg_replace("#\[hide\]\s*(.*?)\s*\[/hide\]#is", is_array($userROW) ? "$1" : str_replace("{text}", $lang['not_logged'], $lang['not_logged_html']), $content);
 	}
 
 
 	// Scan URL and normalize it to convert to absolute path
 	// Check for XSS
-	function normalize_url($url){
-		if (((substr($url,0,1) == "\"") && (substr($url,-1,1) == "\""))||
-			((substr($url,0,1) == "'")  && (substr($url,-1,1) == "'" ))) {
-			$url = substr($url, 1, strlen($url)-2);
+	function normalize_url($url) {
+
+		if (((substr($url, 0, 1) == "\"") && (substr($url, -1, 1) == "\"")) ||
+			((substr($url, 0, 1) == "'") && (substr($url, -1, 1) == "'"))
+		) {
+			$url = substr($url, 1, strlen($url) - 2);
 		}
 
 		// Check for XSS attack
-		$urlXSS = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";"),'',$url);
+		$urlXSS = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";"), '', $url);
 		if (preg_match('/^javascript:/is', $urlXSS)) {
 			return false;
 		}
 
 		// Add leading "http://" if needed
 		if (!preg_match("#^(http|ftp|https|news)\://#i", $url)) {
-			$url = "http://".$url;
+			$url = "http://" . $url;
 		}
+
 		return $url;
 	}
 
 	// Parse BB-tag params
-	function parseBBCodeParams($paramLine){
+	function parseBBCodeParams($paramLine) {
 
 		// Start scanning
 		// State:
@@ -66,45 +73,84 @@ class parse {
 
 		$keys = array();
 
-		for ($sI = 0; $sI < strlen($paramLine); $sI ++) {
+		for ($sI = 0; $sI < strlen($paramLine); $sI++) {
 			// act according current state
 			$x = $paramLine{$sI};
 
 			switch ($state) {
-				case 0:  if      ($x == "'") { $quotes = 1; $state = 1; $keyName = '';}
-						 else if ($x == "'") { $quotes = 2; $state = 1; $keyName = ''; }
-						 else if ((($x >='A')&&($x <='Z'))||(($x >='a')&&($x <='z'))) { $state = 1; $keyName = $x; }
-						 break;
-				case 1:  if ((($quotes == 1)&&($x == "'"))||(($quotes == 2)&&($x == '"'))) { $quotes = 0; $state=2; }
-						 else if ((($x >='A')&&($x <='Z'))||(($x >='a')&&($x <='z'))) { $keyName .= $x; }
-						 else if ($x == '=') { $state = 3; }
-						 else if (($x == ' ')||($x == chr(9))) { $state = 2; }
-						 else { $erorFlag = 1; }
-						 break;
-				case 2:  if ($x == '=') { $state = 3; }
-						 else if (($x == ' ')||($x == chr(9))) { ; }
-						 else { $errorFlag = 1; }
-						 break;
-				case 3:  if      ($x == "'") { $quotes = 1; $state = 4; $keyValue = '';}
-						 else if ($x == '"') { $quotes = 2; $state = 4; $keyValue = ''; }
-						 else if ((($x >='A')&&($x <='Z'))||(($x >='a')&&($x <='z'))) { $state = 4; $keyValue = $x; }
-						 break;
-				case 4:  if ((($quotes == 1)&&($x == "'"))||(($quotes == 2)&&($x == '"'))) { $quotes = 0; $state=5; }
-						 else if (!$quotes &&  (($x == ' ')||($x == chr(9)))) { $state = 5; }
-						 else { $keyValue .= $x; }
-						 break;
+				case 0:
+					if ($x == "'") {
+						$quotes = 1;
+						$state = 1;
+						$keyName = '';
+					} else if ($x == "'") {
+						$quotes = 2;
+						$state = 1;
+						$keyName = '';
+					} else if ((($x >= 'A') && ($x <= 'Z')) || (($x >= 'a') && ($x <= 'z'))) {
+						$state = 1;
+						$keyName = $x;
+					}
+					break;
+				case 1:
+					if ((($quotes == 1) && ($x == "'")) || (($quotes == 2) && ($x == '"'))) {
+						$quotes = 0;
+						$state = 2;
+					} else if ((($x >= 'A') && ($x <= 'Z')) || (($x >= 'a') && ($x <= 'z'))) {
+						$keyName .= $x;
+					} else if ($x == '=') {
+						$state = 3;
+					} else if (($x == ' ') || ($x == chr(9))) {
+						$state = 2;
+					} else {
+						$erorFlag = 1;
+					}
+					break;
+				case 2:
+					if ($x == '=') {
+						$state = 3;
+					} else if (($x == ' ') || ($x == chr(9))) {
+						;
+					} else {
+						$errorFlag = 1;
+					}
+					break;
+				case 3:
+					if ($x == "'") {
+						$quotes = 1;
+						$state = 4;
+						$keyValue = '';
+					} else if ($x == '"') {
+						$quotes = 2;
+						$state = 4;
+						$keyValue = '';
+					} else if ((($x >= 'A') && ($x <= 'Z')) || (($x >= 'a') && ($x <= 'z'))) {
+						$state = 4;
+						$keyValue = $x;
+					}
+					break;
+				case 4:
+					if ((($quotes == 1) && ($x == "'")) || (($quotes == 2) && ($x == '"'))) {
+						$quotes = 0;
+						$state = 5;
+					} else if (!$quotes && (($x == ' ') || ($x == chr(9)))) {
+						$state = 5;
+					} else {
+						$keyValue .= $x;
+					}
+					break;
 			}
 
 			// Action in case when scanning is complete
 			if ($state == 5) {
-				$keys [ strtolower($keyName) ] = $keyValue;
+				$keys [strtolower($keyName)] = $keyValue;
 				$state = 0;
 			}
 		}
 
 		// If we finished and we're in stete "scanning value" - register this field
 		if ($state == 4) {
-			$keys [ strtolower($keyName) ] = $keyValue;
+			$keys [strtolower($keyName)] = $keyValue;
 			$state = 0;
 		}
 
@@ -116,50 +162,52 @@ class parse {
 		if ($errorFlag) {
 			return -1;
 		}
+
 		return $keys;
 	}
 
 	function bbcodes($content) {
+
 		global $lang, $config, $userROW, $SYSTEM_FLAGS;
 
 		if (!$config['use_bbcodes']) return $content;
 
 		// Special BB tag [code] - blocks all other tags inside
 		while (preg_match("#\[code\](.+?)\[/code\]#ies", $content, $res)) {
-			$content = str_replace($res[0], '<pre>'.str_replace(array('[', '<'), array('&#91;', '&lt;'), $res[1]).'</pre>', $content);
+			$content = str_replace($res[0], '<pre>' . str_replace(array('[', '<'), array('&#91;', '&lt;'), $res[1]) . '</pre>', $content);
 		}
 
 		//$content	=	preg_replace("#\[code\](.+?)\[/code\]#is", "<pre>$1</pre>",$content);
 
-		$content	=	preg_replace("#\[quote\]\s*(.*?)\s*\[/quote\]#is", "<blockquote><b>".$lang['bb_quote']."</b><br />$1</blockquote>",$content);
-		$content	=	preg_replace("#\[quote=(.*?)\]\s*(.*?)\s*\[/quote\]#is","<blockquote><b>$1 ".$lang['bb_wrote']."</b><br />$2</blockquote>",$content);
+		$content = preg_replace("#\[quote\]\s*(.*?)\s*\[/quote\]#is", "<blockquote><b>" . $lang['bb_quote'] . "</b><br />$1</blockquote>", $content);
+		$content = preg_replace("#\[quote=(.*?)\]\s*(.*?)\s*\[/quote\]#is", "<blockquote><b>$1 " . $lang['bb_wrote'] . "</b><br />$2</blockquote>", $content);
 
-		$content	=	preg_replace("#\[acronym\]\s*(.*?)\s*\[/acronym\]#is", "<acronym>$1</acronym>",$content);
-		$content	=	preg_replace('#\[acronym=([^\"]+?)\]\s*(.*?)\s*\[/acronym\]#is',"<acronym title=\"$1\">$2</acronym>",$content);
+		$content = preg_replace("#\[acronym\]\s*(.*?)\s*\[/acronym\]#is", "<acronym>$1</acronym>", $content);
+		$content = preg_replace('#\[acronym=([^\"]+?)\]\s*(.*?)\s*\[/acronym\]#is', "<acronym title=\"$1\">$2</acronym>", $content);
 
-		$content	=	preg_replace("#\[email\]\s*([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\[/email\]#i", "<a href=\"mailto:$1\">$1</a>", $content);
-		$content	=	preg_replace("#\[email\s*=\s*\&quot\;([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\&quot\;\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
-		$content	=	preg_replace("#\[email\s*=\s*([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
-		$content	=	preg_replace("#\[s\](.*?)\[/s\]#is", "<s>$1</s>", $content);
-		$content	=	preg_replace("#\[b\](.+?)\[/b\]#is", "<b>$1</b>", $content);
-		$content	=	preg_replace("#\[i\](.+?)\[/i\]#is", "<i>$1</i>", $content);
-		$content	=	preg_replace("#\[u\](.+?)\[/u\]#is", "<u>$1</u>", $content);
-		$content	=	preg_replace("#\[p\](.+?)\[/p\]#is", "<p>$1</p>", $content);
-		$content	=	preg_replace("#\[ul\](.*?)\[/ul\]#is", "<ul>$1</ul>", $content);
-		$content	=	preg_replace("#\[li\](.*?)\[/li\]#is", "<li>$1</li>", $content);
-		$content	=	preg_replace("#\[ol\](.*?)\[/ol\]#is", "<ol>$1</ol>", $content);
-		$content	=	preg_replace("#\[left\](.*?)\[/left\]#is","<p style=\"text-align: left\">$1</p>", $content);
-		$content	=	preg_replace("#\[right\](.*?)\[/right\]#is","<p style=\"text-align: right\">$1</p>", $content);
-		$content	=	preg_replace("#\[center\](.*?)\[/center\]#is","<p style=\"text-align: center\">$1</p>", $content);
-		$content	=	preg_replace("#\[justify\](.*?)\[/justify\]#is","<p style=\"text-align: justify\">$1</p>", $content);
-		$content	=	preg_replace("#\[br\]#is", "<br/>", $content);
+		$content = preg_replace("#\[email\]\s*([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\[/email\]#i", "<a href=\"mailto:$1\">$1</a>", $content);
+		$content = preg_replace("#\[email\s*=\s*\&quot\;([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\&quot\;\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
+		$content = preg_replace("#\[email\s*=\s*([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,20})\s*\](.*?)\[\/email\]#i", "<a href=\"mailto:$1\">$2</a>", $content);
+		$content = preg_replace("#\[s\](.*?)\[/s\]#is", "<s>$1</s>", $content);
+		$content = preg_replace("#\[b\](.+?)\[/b\]#is", "<b>$1</b>", $content);
+		$content = preg_replace("#\[i\](.+?)\[/i\]#is", "<i>$1</i>", $content);
+		$content = preg_replace("#\[u\](.+?)\[/u\]#is", "<u>$1</u>", $content);
+		$content = preg_replace("#\[p\](.+?)\[/p\]#is", "<p>$1</p>", $content);
+		$content = preg_replace("#\[ul\](.*?)\[/ul\]#is", "<ul>$1</ul>", $content);
+		$content = preg_replace("#\[li\](.*?)\[/li\]#is", "<li>$1</li>", $content);
+		$content = preg_replace("#\[ol\](.*?)\[/ol\]#is", "<ol>$1</ol>", $content);
+		$content = preg_replace("#\[left\](.*?)\[/left\]#is", "<p style=\"text-align: left\">$1</p>", $content);
+		$content = preg_replace("#\[right\](.*?)\[/right\]#is", "<p style=\"text-align: right\">$1</p>", $content);
+		$content = preg_replace("#\[center\](.*?)\[/center\]#is", "<p style=\"text-align: center\">$1</p>", $content);
+		$content = preg_replace("#\[justify\](.*?)\[/justify\]#is", "<p style=\"text-align: justify\">$1</p>", $content);
+		$content = preg_replace("#\[br\]#is", "<br/>", $content);
 
 		// Process spoilers
 		while (preg_match("#\[spoiler\](.*?)\[/spoiler\]#is", $content, $null))
-			$content	=	preg_replace("#\[spoiler\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>'.$lang['bb_spoiler'].'</div><div class="sp-body">$1</div></div>', $content);
+			$content = preg_replace("#\[spoiler\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>' . $lang['bb_spoiler'] . '</div><div class="sp-body">$1</div></div>', $content);
 
 		while (preg_match("#\[spoiler=\"(.+?)\"\](.*?)\[/spoiler\]#is", $content, $null))
-			$content	=	preg_replace("#\[spoiler=\"(.+?)\"\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>$1</div><div class="sp-body">$2</div></div>', $content);
+			$content = preg_replace("#\[spoiler=\"(.+?)\"\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>$1</div><div class="sp-body">$2</div></div>', $content);
 
 		// Process Images
 		// Possible format:
@@ -190,7 +238,7 @@ class parse {
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
 				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
 					// Possible bracket error. Make deep analysis
-					$jline = $paramLine.']'.$alt;
+					$jline = $paramLine . ']' . $alt;
 					$brk = 0;
 					$jlen = strlen($jline);
 					for ($ji = 0; $ji < $jlen; $ji++) {
@@ -202,7 +250,7 @@ class parse {
 						if ((!$brk) && ($jline[$ji] == ']')) {
 							// Found correct delimiter
 							$paramLine = substr($jline, 0, $ji);
-							$alt = substr($jline, $ji+1);
+							$alt = substr($jline, $ji + 1);
 							break;
 						}
 					}
@@ -213,25 +261,25 @@ class parse {
 				// Make a parametric line with url
 				if (trim($paramLine)) {
 					// Parse params
-					$keys = $this->parseBBCodeParams((($null=='=')?'src=':'').$paramLine);
+					$keys = $this->parseBBCodeParams((($null == '=') ? 'src=' : '') . $paramLine);
 				} else {
 					// No params to scan
 					$keys = array();
 				}
 
 				// Get URL
-				$urlREF = $this->validateURL((!isset($keys['src']) || !$keys['src'])?$alt:$keys['src']);
+				$urlREF = $this->validateURL((!isset($keys['src']) || !$keys['src']) ? $alt : $keys['src']);
 
 				// Return an error if BB code is bad
-				if ((!is_array($keys))||($urlREF === false)) {
-					array_push($rdest,'[INVALID IMG BB CODE]');
+				if ((!is_array($keys)) || ($urlREF === false)) {
+					array_push($rdest, '[INVALID IMG BB CODE]');
 					continue;
 				}
 
 				$keys['alt'] = $alt;
 
 				// Now let's compose a resulting URL
-				$outkeys [] = 'src="'.$urlREF.'"';
+				$outkeys [] = 'src="' . $urlREF . '"';
 
 				// Now parse allowed tags and add it into output line
 				foreach ($keys as $kn => $kv) {
@@ -241,32 +289,31 @@ class parse {
 						case 'hspace':
 						case 'vspace':
 						case 'border':
-								$outkeys[] = $kn.'="'.intval($kv).'"';
-								break;
+							$outkeys[] = $kn . '="' . intval($kv) . '"';
+							break;
 						case 'align':
-							if (in_array(strtolower($kv), array( 'left', 'right', 'middle', 'top', 'bottom')))
-								$outkeys[] = $kn.'="'.strtolower($kv).'"';
+							if (in_array(strtolower($kv), array('left', 'right', 'middle', 'top', 'bottom')))
+								$outkeys[] = $kn . '="' . strtolower($kv) . '"';
 							break;
 						case 'class':
-							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&', '[', ']'),'',$kv);
-							$outkeys [] = $kn.'="'.$v.'"';
+							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&', '[', ']'), '', $kv);
+							$outkeys [] = $kn . '="' . $v . '"';
 							break;
 						case 'alt':
 						case 'title':
-							$v = str_replace(array("\"", '[', ']', ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'),array("'",'%5b', '%5d', ''),$kv);
-							$outkeys [] = $kn.'="'.$v.'"';
+							$v = str_replace(array("\"", '[', ']', ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'), array("'", '%5b', '%5d', ''), $kv);
+							$outkeys [] = $kn . '="' . $v . '"';
 							break;
 					}
 				}
 				// Fill an output replacing array
-				array_push($rdest, "<img ".(implode(" ", $outkeys)).' />');
+				array_push($rdest, "<img " . (implode(" ", $outkeys)) . ' />');
 			}
 			$content = str_replace($rsrc, $rdest, $content);
 		}
 
 		// Авто-подсветка URL'ов в тексте новости [ пользуемся обработчиком тега [url] ]
-		$content	=	preg_replace("#(^|\s)((http|https|news|ftp)://\w+[^\s\[\]\<]+)#i", "$1[url]$2[/url]", $content);
-
+		$content = preg_replace("#(^|\s)((http|https|news|ftp)://\w+[^\s\[\]\<]+)#i", "$1[url]$2[/url]", $content);
 
 		// Process URLS
 		// Possible format:
@@ -292,7 +339,7 @@ class parse {
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
 				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
 					// Possible bracket error. Make deep analysis
-					$jline = $paramLine.']'.$alt;
+					$jline = $paramLine . ']' . $alt;
 					$brk = 0;
 					$jlen = strlen($jline);
 					for ($ji = 0; $ji < $jlen; $ji++) {
@@ -304,7 +351,7 @@ class parse {
 						if ((!$brk) && ($jline[$ji] == ']')) {
 							// Found correct delimiter
 							$paramLine = substr($jline, 0, $ji);
-							$alt = substr($jline, $ji+1);
+							$alt = substr($jline, $ji + 1);
 							break;
 						}
 					}
@@ -315,7 +362,7 @@ class parse {
 				// Make a parametric line with url
 				if (trim($paramLine)) {
 					// Parse params
-					$keys = $this->parseBBCodeParams((($null=='=')?'href=':'').$paramLine);
+					$keys = $this->parseBBCodeParams((($null == '=') ? 'href=' : '') . $paramLine);
 				} else {
 					// No params to scan
 					$keys = array();
@@ -323,12 +370,12 @@ class parse {
 
 				// Return an error if BB code is bad
 				if (!is_array($keys)) {
-					array_push($rdest,'[INVALID URL BB CODE]');
+					array_push($rdest, '[INVALID URL BB CODE]');
 					continue;
 				}
 
 				// Check for EMPTY URL
-				$urlREF = $this->validateURL((!$keys['href'])?$alt:$keys['href']);
+				$urlREF = $this->validateURL((!$keys['href']) ? $alt : $keys['href']);
 
 				if ($urlREF === false) {
 					// EMPTY, SKIP
@@ -337,13 +384,15 @@ class parse {
 				}
 
 				// Now let's compose a resulting URL
-				$outkeys [] = 'href="'.$urlREF.'"';
+				$outkeys [] = 'href="' . $urlREF . '"';
 
 				// Check if we have external URL
 				$flagExternalURL = false;
 
 				$dn = parse_url($urlREF);
-				if (strlen($dn['host']) && !in_array($dn['host'], $SYSTEM_FLAGS['mydomains'])) { $flagExternalURL = true; }
+				if (strlen($dn['host']) && !in_array($dn['host'], $SYSTEM_FLAGS['mydomains'])) {
+					$flagExternalURL = true;
+				}
 
 				// Check for rel=nofollow request for external links
 
@@ -360,98 +409,106 @@ class parse {
 					switch ($kn) {
 						case 'class':
 						case 'target':
-							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&', '[', ']'),'',$kv);
-							$outkeys [] = $kn.'="'.$v.'"';
+							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&', '[', ']'), '', $kv);
+							$outkeys [] = $kn . '="' . $v . '"';
 							break;
 						case 'title':
-							$v = str_replace(array("\"", '[', ']', ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'),array("'",'%5b', '%5d', ''),$kv);
-							$outkeys [] = $kn.'="'.$v.'"';
+							$v = str_replace(array("\"", '[', ']', ord(0), ord(9), ord(10), ord(13), ":", '<', '>', '&'), array("'", '%5b', '%5d', ''), $kv);
+							$outkeys [] = $kn . '="' . $v . '"';
 							break;
 					}
 				}
 				// Fill an output replacing array
-				array_push($rdest, "<a ".(implode(" ", $outkeys)).">".$alt.'</a>');
+				array_push($rdest, "<a " . (implode(" ", $outkeys)) . ">" . $alt . '</a>');
 			}
 			$content = str_replace($rsrc, $rdest, $content);
 		}
 
-        // Обработка кириллических символов для украинского языка
-        $content	=	str_replace(array('[CYR_I]', '[CYR_i]', '[CYR_E]', '[CYR_e]', '[CYR_II]', '[CYR_ii]'), array('&#1030;', '&#1110;', '&#1028;', '&#1108;', '&#1031;', '&#1111;'), $content);
+		// Обработка кириллических символов для украинского языка
+		$content = str_replace(array('[CYR_I]', '[CYR_i]', '[CYR_E]', '[CYR_e]', '[CYR_II]', '[CYR_ii]'), array('&#1030;', '&#1110;', '&#1028;', '&#1108;', '&#1031;', '&#1111;'), $content);
 
 		while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#ies", $content, $res)) {
 			$nl = $this->color(array('style' => $res[1], 'text' => $res[2]));
 			$content = str_replace($res[0], $nl, $content);
 		}
+
 		return $content;
 	}
 
-	function validateURL ($url) {
+	function validateURL($url) {
+
 		// Check for empty url
 		if (trim($url) == '')
 			return false;
 
 		// Make replacement of dangerous symbols
 		if (preg_match('#^(http|https|ftp)://(.+)$#', $url, $mresult))
-			return $mresult[1].'://'.str_replace(array(':', "'", '"', '[', ']'), array('%3A', '%27', '%22', '%5b', '%5d'), $mresult[2]);
+			return $mresult[1] . '://' . str_replace(array(':', "'", '"', '[', ']'), array('%3A', '%27', '%22', '%5b', '%5d'), $mresult[2]);
 
 		// Process special `magnet` links
 		if (preg_match('#^(magnet\:\?)(.+)$#', $url, $mresult))
-			return $mresult[1].str_replace(array(' ', "'", '"'), array('%20', '%27', '%22'), $mresult[2]);
+			return $mresult[1] . str_replace(array(' ', "'", '"'), array('%20', '%27', '%22'), $mresult[2]);
 
 		return str_replace(array(':', "'", '"'), array('%3A', '%27', '%22'), $url);
 	}
 
 	function htmlformatter($content) {
+
 		global $config;
 
 		if (!$config['use_htmlformatter'])
 			return $content;
 
-		$content	=	preg_replace('|<br />\s*<br />|', "\n\n", $content);
-		$content	=	str_replace(array("\r\n", "\r"), "\n", $content);
-		$content	=	preg_replace("/\n\n+/", "\n\n", $content);
-		$content	=	preg_replace('/\n/', "<br />", $content);
-		$content	=	preg_replace('!<p>\s*(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)\s*</p>!', "$1", $content);
-		$content	=	preg_replace("|<p>(<li.+?)</p>|", "$1", $content);
-		$content	=	preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $content);
-		$content	=	str_replace('</blockquote></p>', '</p></blockquote>', $content);
-		$content	=	preg_replace('!<p>\s*(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)!', "$1", $content);
-		$content	=	preg_replace('!(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)\s*</p>!', "$1", $content);
-		$content	=	preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $content);
-		$content	=	preg_replace('!(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)\s*<br />!', "$1", $content);
-		$content	=	preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)>)!', '$1', $content);
-        $content    =   preg_replace_callback(
-            "/<code>(.*?)<\/code>/s",
-            function ($match) {
-                return "phphighlight('".$match[0]."')";
-            },
-            $content
-        );
-		$content	=	str_replace("\n</p>\n", "</p>", $content);
+		$content = preg_replace('|<br />\s*<br />|', "\n\n", $content);
+		$content = str_replace(array("\r\n", "\r"), "\n", $content);
+		$content = preg_replace("/\n\n+/", "\n\n", $content);
+		$content = preg_replace('/\n/', "<br />", $content);
+		$content = preg_replace('!<p>\s*(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)\s*</p>!', "$1", $content);
+		$content = preg_replace("|<p>(<li.+?)</p>|", "$1", $content);
+		$content = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $content);
+		$content = str_replace('</blockquote></p>', '</p></blockquote>', $content);
+		$content = preg_replace('!<p>\s*(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)!', "$1", $content);
+		$content = preg_replace('!(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)\s*</p>!', "$1", $content);
+		$content = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $content);
+		$content = preg_replace('!(</?(?:table|thead|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|math|p|h[1-6])[^>]*>)\s*<br />!', "$1", $content);
+		$content = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)>)!', '$1', $content);
+		$content = preg_replace_callback(
+			"/<code>(.*?)<\/code>/s",
+			function ($match) {
+
+				return "phphighlight('" . $match[0] . "')";
+			},
+			$content
+		);
+		$content = str_replace("\n</p>\n", "</p>", $content);
 
 		return $content;
 	}
 
 	function smilies($content) {
+
 		global $config;
 
 		if (!$config['use_smilies'])
 			return $content;
 
-		$smilies_arr	=	explode(",", $config['smilies']);
+		$smilies_arr = explode(",", $config['smilies']);
 		foreach ($smilies_arr as $null => $smile) {
-			$smile		=	trim($smile);
-			$find[]		=	"':$smile:'";
-			$replace[]	=	"<img class=\"smilies\" alt=\"$smile\" src=\"".skins_url."/smilies/$smile.gif\" />";
+			$smile = trim($smile);
+			$find[] = "':$smile:'";
+			$replace[] = "<img class=\"smilies\" alt=\"$smile\" src=\"" . skins_url . "/smilies/$smile.gif\" />";
 		}
+
 		return preg_replace($find, $replace, $content);
 	}
 
-	function nameCheck($name){
+	function nameCheck($name) {
+
 		return preg_match('#^[a-z0-9\_\-\.]+$#mi', $name);
 	}
 
 	function translit($content, $allowDash = 0, $allowSlash = 0) {
+
 		// $allowDash is not used any more
 
 		$utf2enS = array('А' => 'a', 'Б' => 'b', 'В' => 'v', 'Г' => 'g', 'Ґ' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ё' => 'jo', 'Є' => 'e', 'Ж' => 'zh', 'З' => 'z', 'И' => 'i', 'І' => 'i', 'Й' => 'i', 'Ї' => 'i', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n', 'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u', 'Ў' => 'u', 'Ф' => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sz', 'Ъ' => '', 'Ы' => 'y', 'Ь' => '', 'Э' => 'e', 'Ю' => 'yu', 'Я' => 'ya');
@@ -465,33 +522,36 @@ class parse {
 		$content = preg_replace("/\s+/ms", "-", $content);
 		$content = preg_replace("/[ ]+/", "-", $content);
 
-		$content = preg_replace("/[^a-z0-9_\-\.".($allowSlash?'\/':'')."]+/mi", "", $content);
+		$content = preg_replace("/[^a-z0-9_\-\." . ($allowSlash ? '\/' : '') . "]+/mi", "", $content);
 		$content = preg_replace("#-(-)+#", "-", $content);
 
 		return $content;
 	}
 
 	function color($arr) {
+
 		$style = $arr['style'];
-		$text  = $arr['text'];
+		$text = $arr['text'];
 		$style = str_replace('&quot;', '', $style);
-		$style = preg_replace("/[&\(\)\.\%\[\]<>\'\"]/", "", preg_replace( "#^(.+?)(?:;|$)#", "$1", $style ));
+		$style = preg_replace("/[&\(\)\.\%\[\]<>\'\"]/", "", preg_replace("#^(.+?)(?:;|$)#", "$1", $style));
 		$style = preg_replace("/[^\d\w\#\s]/s", "", $style);
 
-		return "<span style=\"color:".$style."\">".$text."</span>";
+		return "<span style=\"color:" . $style . "\">" . $text . "</span>";
 	}
 
 	// Functions for HTML truncator
-	function joinAttributes($attributes){
+	function joinAttributes($attributes) {
+
 		$alist = array();
 		foreach ($attributes as $aname => $aval) {
-			$mark = (strpos($aval, '"') === FALSE)?'"':"'";
-			$alist [] = $aname.'='.$mark.$aval.$mark;
+			$mark = (strpos($aval, '"') === false) ? '"' : "'";
+			$alist [] = $aname . '=' . $mark . $aval . $mark;
 		}
+
 		return join(" ", $alist);
 	}
 
-	function truncateHTML ( $text, $size = 50, $finisher = '...' ) {
+	function truncateHTML($text, $size = 50, $finisher = '...') {
 
 		$len = strlen($text);
 
@@ -499,7 +559,7 @@ class parse {
 			return $text;
 
 		$textLen = 0;
-		$position  = -1;
+		$position = -1;
 		$tagNameStartPos = 0;
 		$tagNameEndPos = 0;
 		$openTagList = array();
@@ -520,10 +580,10 @@ class parse {
 		// Flag if 'tag close symbol' is used
 		$closeFlag = 0;
 
-		while ((($position+1) < $len) && ($textLen < $size)) {
+		while ((($position + 1) < $len) && ($textLen < $size)) {
 			$position++;
 			$char = $text{$position};
-		//	printf("%03u[%u][%03u][%02u] %s\n", $position, $state, $textLen, count($openTagList), $char);
+			//	printf("%03u[%u][%03u][%02u] %s\n", $position, $state, $textLen, count($openTagList), $char);
 
 			switch ($state) {
 				// Scanning text
@@ -531,7 +591,7 @@ class parse {
 					// '<' - way to starting tag
 					if ($char == '<') {
 						$state = 1;
-						$tagNameStartPos = $position+1;
+						$tagNameStartPos = $position + 1;
 						continue;
 					}
 					$textLen++;
@@ -539,7 +599,7 @@ class parse {
 					break;
 				case 1:
 					// If this is a space/tab - tag name is finished
-					if (($char == ' ')||($char == "\t")) {
+					if (($char == ' ') || ($char == "\t")) {
 						$tagNameLen = $position - $tagNameStartPos;
 						$state = 2;
 						continue;
@@ -559,11 +619,11 @@ class parse {
 					if ($char == '>') {
 						$tagNameLen = $position - $tagNameStartPos;
 						$tagName = substr($text, $tagNameStartPos, $tagNameLen);
-				//		print "openTag[1]: $tagName\n";
+						//		print "openTag[1]: $tagName\n";
 
 						// Closing tag
 						if ($tagName{0} == '/') {
-							if ((count($openTagList)) && ($openTagList[count($openTagList)-1] == substr($tagName, 1)))
+							if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == substr($tagName, 1)))
 								array_pop($openTagList);
 						} else {
 							// Opening tag
@@ -592,10 +652,10 @@ class parse {
 					// Action on tag closing
 					if ($char == '>') {
 						$tagName = substr($text, $tagNameStartPos, $tagNameLen);
-				//		print "openTag: $tagName\n";
+						//		print "openTag: $tagName\n";
 
 						// Closing tag
-						if ((count($openTagList)) && ($openTagList[count($openTagList)-1] == substr($tagName, 1))) {
+						if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == substr($tagName, 1))) {
 							if ($openTagList[count($openTagList)] == substr($tagName, 1))
 								array_pop($openTagList);
 						} else {
@@ -610,8 +670,8 @@ class parse {
 					}
 
 					// Action on quote
-					if (($char == '"')||($char == "'")) {
-						$quoteType = ($char == '"')?2:1;
+					if (($char == '"') || ($char == "'")) {
+						$quoteType = ($char == '"') ? 2 : 1;
 						$state = 3;
 						continue;
 					}
@@ -631,11 +691,11 @@ class parse {
 
 					if ($char == '>') {
 						$tagName = substr($text, $tagNameStartPos, $tagNameLen);
-			//			print "openTag: $tagName\n";
+						//			print "openTag: $tagName\n";
 
 						// Closing tag
 						if ($tagName{0} != '/') {
-							if ((count($openTagList)) && ($openTagList[count($openTagList)-1] == substr($tagName, 1)))
+							if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == substr($tagName, 1)))
 								array_pop($openTagList);
 						} else {
 							// Opening tag
@@ -654,17 +714,18 @@ class parse {
 			}
 		}
 
-		$output = substr($text, 0, $position+1) . ((($position+1) != $len)?$finisher:'');
+		$output = substr($text, 0, $position + 1) . ((($position + 1) != $len) ? $finisher : '');
 
 		// Check if we have opened tags
 		while ($tag = array_pop($openTagList))
-			$output .= "</".$tag.">";
+			$output .= "</" . $tag . ">";
 
 		return $output;
 	}
 
 	// Process [attach] BB code
 	function parseBBAttach($content, $db, $templateVariables = array()) {
+
 		global $config;
 
 		$dataCache = array();
@@ -688,20 +749,20 @@ class parse {
 					if (is_array($dataCache[$uid])) {
 						$rec = $dataCache[$uid];
 					} else {
-						$rec = $db->record("select * from ".prefix."_files where id = ".db_squote($uid));
+						$rec = $db->record("select * from " . prefix . "_files where id = " . db_squote($uid));
 						if (is_array($rec)) {
 							$dataCache[$uid] = $rec;
 						}
 					}
 					if (is_array($rec)) {
 						// Generate file ULR
-						$fname = ($rec['storage']?$config['attach_dir']:$config['files_dir']).$rec['folder'].'/'.$rec['name'];
-						$fsize = (file_exists($fname) && ($fsize = @filesize($fname)))?Formatsize($fsize):'n/a';
+						$fname = ($rec['storage'] ? $config['attach_dir'] : $config['files_dir']) . $rec['folder'] . '/' . $rec['name'];
+						$fsize = (file_exists($fname) && ($fsize = @filesize($fname))) ? Formatsize($fsize) : 'n/a';
 
 						$params = array(
-							'url'	=> ($rec['storage']?$config['attach_url']:$config['files_url']).'/'.$rec['folder'].'/'.$rec['name'],
-							'title'	=> ($title=='')?$rec['orig_name']:$title,
-							'size'	=> $fsize
+							'url'   => ($rec['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $rec['folder'] . '/' . $rec['name'],
+							'title' => ($title == '') ? $rec['orig_name'] : $title,
+							'size'  => $fsize
 						);
 						array_push($rdest, str_replace(array('{url}', '{title}', '{size}'), array($params['url'], $params['title'], $params['size']), $templateVariables['bbcodes']['attach.format']));
 					} else {
@@ -724,29 +785,29 @@ class parse {
 					if (is_array($dataCache[$uid])) {
 						$rec = $dataCache[$uid];
 					} else {
-						$rec = $db->record("select * from ".prefix."_files where id = ".db_squote($uid));
+						$rec = $db->record("select * from " . prefix . "_files where id = " . db_squote($uid));
 						if (is_array($rec)) {
 							$dataCache[$uid] = $rec;
 						}
 					}
 					if (is_array($rec)) {
 						// Generate file ULR
-						$fname = ($rec['storage']?$config['attach_dir']:$config['files_dir']).$rec['folder'].'/'.$rec['name'];
+						$fname = ($rec['storage'] ? $config['attach_dir'] : $config['files_dir']) . $rec['folder'] . '/' . $rec['name'];
 
 						// Decide what to do
 						switch ($catch[2]) {
 							case 'url':
-									array_push($rdest, ($rec['storage']?$config['attach_url']:$config['files_url']).'/'.$rec['folder'].'/'.$rec['name']);
+								array_push($rdest, ($rec['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $rec['folder'] . '/' . $rec['name']);
 								break;
 							case 'size':
-									array_push($rdest, (file_exists($fname) && ($fsize = @filesize($fname)))?Formatsize($fsize):'n/a');
+								array_push($rdest, (file_exists($fname) && ($fsize = @filesize($fname))) ? Formatsize($fsize) : 'n/a');
 								break;
 							case 'name':
-									$dots = explode(".", $rec['orig_name']);
-									if (count($dots) > 1) {
-										array_pop($dots);
-									}
-									array_push($rdest, join(".", $dots));
+								$dots = explode(".", $rec['orig_name']);
+								if (count($dots) > 1) {
+									array_pop($dots);
+								}
+								array_push($rdest, join(".", $dots));
 								break;
 							case 'ext':
 								$dots = explode(".", $rec['orig_name']);
@@ -758,7 +819,7 @@ class parse {
 
 								break;
 							case 'fname':
-									array_push($rdest, $rec['orig_name']);
+								array_push($rdest, $rec['orig_name']);
 								break;
 						}
 
@@ -769,8 +830,6 @@ class parse {
 			}
 			$content = str_replace($rsrc, $rdest, $content);
 		}
-
-
 
 		return $content;
 	}

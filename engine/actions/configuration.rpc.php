@@ -11,11 +11,11 @@
 if (!defined('NGCMS')) die ('HAL');
 
 // Load library
-@include_once root.'includes/classes/upload.class.php';
+@include_once root . 'includes/classes/upload.class.php';
 $lang = LoadLang('configuration', 'admin');
 
-
 function admConfigurationTestDB($params) {
+
 	global $mysql, $userROW, $PHP_SELF, $twig, $config, $lang, $AFILTERS;
 
 	if (!is_array($userROW)) {
@@ -38,15 +38,17 @@ function admConfigurationTestDB($params) {
 	// Check if DB connection params are correct
 	$sqlTest = DBLoad();
 	if (!$sqlTest->connect($params['dbhost'], $params['dbuser'], $params['dbpasswd'], $params['dbname'], 1)) {
-		if ($sqlTest->error<2)
-			return array('status' => 0, 'errorCode' => 4, 'errorText' => iconv('Windows-1251','UTF-8', $lang['dbcheck_noconnect']));
-		return array('status' => 0, 'errorCode' => 5, 'errorText' => iconv('Windows-1251','UTF-8', $lang['dbcheck_nodb']));
+		if ($sqlTest->error < 2)
+			return array('status' => 0, 'errorCode' => 4, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['dbcheck_noconnect']));
+
+		return array('status' => 0, 'errorCode' => 5, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['dbcheck_nodb']));
 	};
 
-	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251','UTF-8', $lang['dbcheck_ok'])));
+	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['dbcheck_ok'])));
 }
 
 function admConfigurationTestMemcached($params) {
+
 	global $mysql, $userROW, $PHP_SELF, $twig, $config, $lang, $AFILTERS;
 
 	if (!is_array($userROW)) {
@@ -68,7 +70,7 @@ function admConfigurationTestMemcached($params) {
 
 	// Check if DB connection params are correct
 	if (!extension_loaded('memcached') || !class_exists('Memcached')) {
-		return array('status' => 0, 'errorCode' => 4, 'errorText' => iconv('Windows-1251','UTF-8',$lang['memcached_noextension']));
+		return array('status' => 0, 'errorCode' => 4, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['memcached_noextension']));
 	}
 
 	// Connect to Memcached
@@ -81,7 +83,7 @@ function admConfigurationTestMemcached($params) {
 
 	// Check result code
 	if ($cacheTest->getResultCode() != 0) {
-		return array('status' => 0, 'errorCode' => 5, 'errorText' => iconv('Windows-1251','UTF-8', 'Memcached error ['.$cacheTest->getResultCode().']: '.$cacheTest->getResultMessage()));
+		return array('status' => 0, 'errorCode' => 5, 'errorText' => iconv('Windows-1251', 'UTF-8', 'Memcached error [' . $cacheTest->getResultCode() . ']: ' . $cacheTest->getResultMessage()));
 	}
 
 	// Compare SET == GET values
@@ -89,12 +91,13 @@ function admConfigurationTestMemcached($params) {
 		// Some problems
 		return array('status' => 0, 'errorCode' => 6, 'errorText' => 'Unexpected error - GET/SET values are not equal');
 	}
-	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251','UTF-8', $lang['memcached_ok'])));
-}
 
+	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', $lang['memcached_ok'])));
+}
 
 // Test e-mail message sending
 function admConfigurationTestEMail($params) {
+
 	global $mysql, $userROW, $PHP_SELF, $twig, $config, $lang, $AFILTERS;
 
 	if (!is_array($userROW)) {
@@ -116,50 +119,51 @@ function admConfigurationTestEMail($params) {
 	}
 
 	// Init $mail client
-	@include_once root.'includes/classes/phpmailer/PHPMailerAutoload.php';
-	$mail	= new PHPMailer;
+	@include_once root . 'includes/classes/phpmailer/PHPMailerAutoload.php';
+	$mail = new PHPMailer;
 
-	$fromName = ($params['from']['name']?$params['from']['name']:'NGCMS Mail Agent');
+	$fromName = ($params['from']['name'] ? $params['from']['name'] : 'NGCMS Mail Agent');
 
 	$mail->setFrom($params['from']['email'], iconv('UTF-8', 'Windows-1251', $fromName));
-	$mail->CharSet	= 'Windows-1251';
-	$mail->Subject	= 'NGCMS Sending test message from admin panel ['.$_SERVER['SERVER_NAME'].']';
+	$mail->CharSet = 'Windows-1251';
+	$mail->Subject = 'NGCMS Sending test message from admin panel [' . $_SERVER['SERVER_NAME'] . ']';
 	$mail->AddAddress($params['to']['email'], $params['to']['email']);
-	$mail->ContentType	= 'text/html';
-	$mail->Body	= 'Привет, '.$params['to']['email']."!<br/><br/>\nАдминистратор сайта [".$_SERVER['SERVER_NAME']."] только что отправил тебе тестовое email сообщение.<br/>\nЕсли ты получил это сообщение, то всё в порядке!<br/><br/>\n---<br/>\nС уважением,<br/>\nМодуль отправки писем NGCMS.";
+	$mail->ContentType = 'text/html';
+	$mail->Body = 'Привет, ' . $params['to']['email'] . "!<br/><br/>\nАдминистратор сайта [" . $_SERVER['SERVER_NAME'] . "] только что отправил тебе тестовое email сообщение.<br/>\nЕсли ты получил это сообщение, то всё в порядке!<br/><br/>\n---<br/>\nС уважением,<br/>\nМодуль отправки писем NGCMS.";
 
 	$sendResult = false;
 	switch ($params['mode']) {
 		default:
-		case 'mail':	$mail->isMail();
-						$sendResult = $mail->send();
-						break;
+		case 'mail':
+			$mail->isMail();
+			$sendResult = $mail->send();
+			break;
 		case 'sendmail':
-						$mail->isSendmail();
-						$sendResult = $mail->send();
-						break;
+			$mail->isSendmail();
+			$sendResult = $mail->send();
+			break;
 		case 'smtp':
-						if (!$params['smtp']['host'] || !$params['smtp']['port']) {
-							return array('status' => 0, 'errorCode' => 1, 'errorText' => 'SMTP connection parameters are not specified');
-						}
-						$mail->isSMTP();
-						$mail->Host = $params['smtp']['host'];
-						$mail->Port = $params['smtp']['port'];
-						$mail->SMTPAuth = ($params['smtp']['auth'])?true:false;
-						$mail->Username = $params['smtp']['login'];
-						$mail->Password = $params['smtp']['pass'];
-						$mail->SMTPSecure = $params['smtp']['secure'];
-						$sendResult = $mail->send();
-						break;
+			if (!$params['smtp']['host'] || !$params['smtp']['port']) {
+				return array('status' => 0, 'errorCode' => 1, 'errorText' => 'SMTP connection parameters are not specified');
+			}
+			$mail->isSMTP();
+			$mail->Host = $params['smtp']['host'];
+			$mail->Port = $params['smtp']['port'];
+			$mail->SMTPAuth = ($params['smtp']['auth']) ? true : false;
+			$mail->Username = $params['smtp']['login'];
+			$mail->Password = $params['smtp']['pass'];
+			$mail->SMTPSecure = $params['smtp']['secure'];
+			$sendResult = $mail->send();
+			break;
 	}
 
 	if (!$sendResult) {
-		return array('status' => 0, 'errorCode' => 1, 'errorText' => 'Send error: '.$mail->ErrorInfo);
+		return array('status' => 0, 'errorCode' => 1, 'errorText' => 'Send error: ' . $mail->ErrorInfo);
 	}
-	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251','UTF-8', "Сообщение успешно отправлено.<br/>\nПроверьте получение письма в почтовом ящике <b>".$params['to']['email'].'</b>')));
+
+	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', "Сообщение успешно отправлено.<br/>\nПроверьте получение письма в почтовом ящике <b>" . $params['to']['email'] . '</b>')));
 
 }
-
 
 if (function_exists('rpcRegisterAdminFunction')) {
 	rpcRegisterAdminFunction('admin.configuration.dbCheck', 'admConfigurationTestDB');

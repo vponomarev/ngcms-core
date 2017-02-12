@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>{l_404.title}</title>
+	<title>{l_404.title}</title>
 </head>
 <body>
 {l_404.description}
