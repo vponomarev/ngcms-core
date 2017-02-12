@@ -128,7 +128,7 @@ function search_news() {
 	$tvars['vars']['entries'] = $found['data'];
 	// Make month list
 	$mnth_list = explode(",", $lang['months']);
-	foreach ($mysql->select("SELECT month(from_unixtime(postdate)) as month, year(from_unixtime(postdate)) as year, COUNT(id) AS cnt FROM " . prefix . "_news WHERE approve = '1' GROUP BY year(from_unixtime(postdate)), month(from_unixtime(postdate)) ORDER BY id DESC") as $row) {
+	foreach ($mysql->select("SELECT month(from_unixtime(postdate)) as month, year(from_unixtime(postdate)) as year, COUNT(id) AS cnt FROM " . prefix . "_news WHERE approve = '1' GROUP BY year, month ORDER BY year DESC, month DESC") as $row) {
 
 		$pd_value = sprintf("%04u%02u", $row['year'], $row['month']);
 		$pd_text = $mnth_list[$row['month'] - 1] . ' ' . $row['year'];
