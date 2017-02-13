@@ -327,7 +327,7 @@ function manage_showlist($type) {
 	}
 
 	$dateslist = '';
-	foreach ($mysql->select("SELECT DISTINCT FROM_UNIXTIME(date,'%Y%m') as monthes, COUNT(date) AS cnt FROM " . prefix . "_" . $fmanager->tname . " GROUP BY monthes ORDER BY date DESC") as $row) {
+	foreach ($mysql->select("SELECT DISTINCT FROM_UNIXTIME(date,'%Y%m') as monthes, COUNT(date) AS cnt FROM " . prefix . "_" . $fmanager->tname . " GROUP BY monthes ORDER BY monthes DESC") as $row) {
 		if (preg_match('/^(\d{4})(\d{2})$/', $row['monthes'], $match)) {
 			$dateslist .= "<option value=\"" . $row['monthes'] . "\"" . ($row['monthes'] == $_REQUEST['postdate'] ? ' selected' : '') . ">" . $langMonths[$match[2] - 1] . " " . $match[1] . "</option>";
 		}
@@ -338,7 +338,7 @@ function manage_showlist($type) {
 		// Just commentors. They will see only their files
 		$authorlist = "<option value=\"" . $userROW['name'] . "\">" . $userROW['name'] . "</option>";
 	} else {
-		foreach ($mysql->select("select user, owner_id, count(id) cnt from " . prefix . "_" . $fmanager->tname . " where (linked_ds = 0) and (linked_id = 0) group by owner_id order by user") as $row) {
+		foreach ($mysql->select("select user, owner_id, count(id) cnt from " . prefix . "_" . $fmanager->tname . " where (linked_ds = 0) and (linked_id = 0) group by owner_id, user order by user") as $row) {
 			$authorlist .= "<option value=\"" . $row['user'] . "\"" . ($row['user'] == $_REQUEST['author'] ? ' selected' : '') . ">" . $row['user'] . "(" . $row['cnt'] . ")</option>\n";
 		}
 	}
