@@ -6,4 +6,6 @@
 /engine/conf/plugdata.php
 /engine/conf/plugins.php
 /engine/conf/perm.php
+/engine/conf/extras
+/engine/trash/admin_note.inc.txt
 /uploads
