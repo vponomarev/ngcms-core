@@ -10,6 +10,11 @@
 // Protect against hack attempts
 if (!defined('NGCMS')) die ('HAL');
 
+// ==============================================================
+//  Module functions
+// ==============================================================
+@include_once root . 'includes/inc/httpget.inc.php';
+
 $lang = LoadLang('statistics', 'admin');
 
 // Create a protective .htaccess
@@ -30,6 +35,19 @@ function phpConfigGetBytes($size_str) {
 		default:
 			return $size_str;
 	}
+}
+
+function coreVersionSync() {
+
+	global $config;
+	if (($vms = cacheRetrieveFile('coreversion.dat', 86400)) === false) {
+		$paramList = array('_ver' => urlencode(engineVersion), 'type' => urlencode(engineVersionType), 'build' => urlencode(engineVersionBuild), 'uuid' => $config['UUID'], 'pdo' => ((extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) ? 'yes' : 'no'));
+		$req = new http_get();
+		$vms = $req->get('http://ngcms.ru/sync/versionInfo.php' . '?' . http_build_query($paramList), 3, 1);
+		cacheStoreFile('coreversion.dat', $vms);
+	}
+
+	return $vms;
 }
 
 // Gather information about directories
@@ -140,7 +158,7 @@ $tVars = array(
 	'mysql_version'    => $mysql->mysql_version(),
 	'gd_version'       => (isset($gd_version) && is_array($gd_version)) ? $gd_version["GD Version"] : '<font color="red"><b>NOT INSTALLED</b></font>',
 	'currentVersion'   => $displayEngineVersion,
-	'versionNotifyURL' => 'http://ngcms.ru/sync/versionInfo.php?ver=' . urlencode(engineVersion) . '&type=' . urlencode(engineVersionType) . '&build=' . urlencode(engineVersionBuild) . '&uuid=' . $config['UUID'] . '&pdo=' . ((extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) ? 'yes' : 'no'),
+	'versionNotify'    => coreVersionSync(),
 	'mysql_size'       => $mysql_size,
 	'allowed_size'     => $df,
 	'avatars'          => $avatars,

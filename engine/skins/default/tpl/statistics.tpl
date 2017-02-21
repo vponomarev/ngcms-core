@@ -138,7 +138,9 @@
 				</tr>
 			</table>
 
-			<script type="text/javascript" language="JavaScript" src="{{ versionNotifyURL }}"></script>
+			<script type="text/javascript" language="JavaScript">
+				{{ versionNotify }}
+			</script>
 
 			<br/><br/>
 
