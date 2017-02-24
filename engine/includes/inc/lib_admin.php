@@ -305,14 +305,15 @@ function massDeleteNews($list, $permCheck = true) {
 
 // Generate backup for table list. If no list is given - backup ALL tables with system prefix
 function dbBackup($fname, $gzmode, $tlist = '') {
-
 	global $mysql;
 
 	if ($gzmode && (!function_exists('gzopen')))
 		$gzmode = 0;
 
-	if ($gzmode) $fh = gzopen($fname, "w");
-	else            $fh = fopen($fname, "w");
+	if ($gzmode)
+		$fh = gzopen($fname, "w");
+	else 
+		$fh = fopen($fname, "w");
 
 	if ($fh === false)
 		return 0;
@@ -330,8 +331,10 @@ function dbBackup($fname, $gzmode, $tlist = '') {
 	$out .= "# List of tables for backup: " . join(", ", $tlist) . "\n#\n";
 
 	// Write a header
-	if ($gzmode) gzwrite($fh, $out);
-	else            fwrite($fh, $out);
+	if ($gzmode)
+		gzwrite($fh, $out);
+	else
+		fwrite($fh, $out);
 
 	// Now, let's scan tables
 	foreach ($tlist as $tname) {
@@ -341,37 +344,52 @@ function dbBackup($fname, $gzmode, $tlist = '') {
 			$out .= "DROP TABLE IF EXISTS `" . $tname . "`;\n";
 			$out .= $csql[1] . ";\n";
 
-			if ($gzmode) gzwrite($fh, $out);
-			else            fwrite($fh, $out);
-
-			// Now let's make content of the table
-			$query = $mysql->query("select * from `" . $tname . "`");
+			if ($gzmode)	
+				gzwrite($fh, $out);
+			else
+				fwrite($fh, $out);
+			
+			$start = 0;
 			$rowNo = 0;
-			while ($row = $mysql->fetch_row($query)) {
-				$out = "insert into `" . $tname . "` values (";
-				$rowNo++;
-				$colNo = 0;
-				foreach ($row as $v)
-					$out .= (($colNo++) ? ', ' : '') . db_squote($v);
-				$out .= ");\n";
+			do {
+				$query = $mysql->query("select * from `" . $tname . "` limit ".$start.", 10000");
+				$start += 10000;
+				$num_rows = $mysql->num_rows($query);
+				
+				while ($row = $mysql->fetch_row($query)) {
+					$out = "insert into `" . $tname . "` values (";
+					$rowNo++;
+					$colNo = 0;
+					foreach ($row as $v)
+						$out .= (($colNo++) ? ', ' : '') . db_squote($v);
+					$out .= ");\n";
 
-				if ($gzmode) gzwrite($fh, $out);
-				else            fwrite($fh, $out);
-			}
-
+					if ($gzmode)
+						gzwrite($fh, $out);
+					else
+						fwrite($fh, $out);
+				}
+			} while( $num_rows !== 0 );
+			
 			$out = "# Total records: $rowNo\n";
 
-			if ($gzmode) gzwrite($fh, $out);
-			else            fwrite($fh, $out);
+			if ($gzmode)
+				gzwrite($fh, $out);
+			else
+				fwrite($fh, $out);
 		} else {
 			$out = "#% Error fetching information for table `$tname`\n";
 
-			if ($gzmode) gzwrite($fh, $out);
-			else            fwrite($fh, $out);
+			if ($gzmode)
+				gzwrite($fh, $out);
+			else
+				fwrite($fh, $out);
 		}
 	}
-	if ($gzmode) gzclose($fh);
-	else            fclose($fh);
+	if ($gzmode)
+		gzclose($fh);
+	else
+		fclose($fh);
 
 	return 1;
 }
