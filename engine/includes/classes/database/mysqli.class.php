@@ -240,7 +240,28 @@ class _mysqli {
 
 		return $result;
 	}
-
+	
+	function fetch_array($query, $assocMode = 1) {
+		
+		if (!$query) return array();
+		
+		switch ($assocMode) {
+			case -1:
+				$am = MYSQLI_NUM;
+				break;
+			case  1:
+				$am = MYSQLI_ASSOC;
+				break;
+			case  0:
+			default:
+				$am = MYSQLI_BOTH;
+		}
+		
+		$result = mysqli_fetch_array($query, $am);
+		
+		return $result;
+	}
+	
 	// check if table exists
 	function table_exists($table, $forceReload = 0) {
 
