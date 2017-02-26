@@ -1,10 +1,8 @@
-<
-script
-language = "javascript" >
-	function chatSubmitForm() {
-		var formID = document.getElementById('jChatForm');
-		CHATTER.postMessage(formID.name.value, formID.text.value);
-	}
+<script language = "javascript">
+function chatSubmitForm() {
+	var formID = document.getElementById('jChatForm');
+	CHATTER.postMessage(formID.name.value, formID.text.value);
+}
 
 function jChat(maxRows, refresh, tableID, msgOrder) {
 	var thisObject = this;
@@ -193,10 +191,9 @@ function jChat(maxRows, refresh, tableID, msgOrder) {
 
 		TX.requestFile = '{link_add}';
 		//TX.setVar('plugin_cmd', 'add');
-		[not - logged]
+		[not-logged]
 		TX.setVar('name', name);
-		[ / not - logged
-		]
+		[/not-logged]
 		TX.setVar('lastEvent', this.lastEventID);
 		TX.setVar('win', this.winMode);
 		TX.setVar('start', this.maxLoadedID);
@@ -300,5 +297,4 @@ function jchatProcessAreaClick(event) {
 	}
 }
 
-</
-script >
+</script>

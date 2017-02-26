@@ -18,15 +18,13 @@
 		var form = document.getElementById('comment');
 		//cajax.whattodo = 'append';
 		cajax.onShow("");
-		[not - logged]
+		[not-logged]
 		cajax.setVar("name", form.name.value);
 		cajax.setVar("mail", form.mail.value);
 		[captcha]
 		cajax.setVar("vcode", form.vcode.value);
-		[ / captcha
-	]
-		[ / not - logged
-	]
+		[/captcha]
+		[/not-logged]
 		cajax.setVar("content", form.content.value);
 		cajax.setVar("newsid", form.newsid.value);
 		cajax.setVar("ajax", "1");
@@ -57,8 +55,7 @@
 			}
 			[captcha]
 			reload_captcha();
-			[ / captcha
-			]
+			[/captcha]
 		}
 		cajax.runAJAX();
 	}
