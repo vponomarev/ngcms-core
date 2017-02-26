@@ -85,51 +85,72 @@ function systemDboModify() {
 		// Обновляем счётчики в категориях
 		$ccount = array();
 		$nmap = '';
-		foreach ($mysql->select("select id, catid, postdate, editdate from " . prefix . "_news where approve=1") as $row) {
-			$ncats = 0;
-			foreach (explode(",", $row['catid']) as $key) {
-				if (!$key) {
-					continue;
+		$start = 0;
+		do {
+			$query = $mysql->query("select id, catid, postdate, editdate from " . prefix . "_news where approve=1 limit ".$start.", 10000");
+			$start += 10000;
+			$num_rows = $mysql->num_rows($query);
+			
+			while ($row = $mysql->fetch_array($query)) {
+				$ncats = 0;
+				foreach (explode(",", $row['catid']) as $key) {
+					if (!$key) {
+						continue;
+					}
+					$ncats++;
+					$nmap .= '(' . $row['id'] . ',' . $key . ',from_unixtime(' . (($row['editdate'] > $row['postdate']) ? $row['editdate'] : $row['postdate']) . ')),';
+					if (!$ccount[$key]) {
+						$ccount[$key] = 1;
+					} else {
+						$ccount[$key] += 1;
+					}
 				}
-				$ncats++;
-				$nmap .= '(' . $row['id'] . ',' . $key . ',from_unixtime(' . (($row['editdate'] > $row['postdate']) ? $row['editdate'] : $row['postdate']) . ')),';
-				if (!$ccount[$key]) {
-					$ccount[$key] = 1;
-				} else {
-					$ccount[$key] += 1;
+				if (!$ncats) {
+					$nmap .= '(' . $row['id'] . ',0,from_unixtime(' . (($row['editdate'] > $row['postdate']) ? $row['editdate'] : $row['postdate']) . ')),';
 				}
 			}
-			if (!$ncats) {
-				$nmap .= '(' . $row['id'] . ',0,from_unixtime(' . (($row['editdate'] > $row['postdate']) ? $row['editdate'] : $row['postdate']) . ')),';
-			}
-		}
-
+		} while( $num_rows !== 0 );
+		
 		// Update table `news_map`
 		$mysql->query("truncate table " . prefix . "_news_map");
-
+		
 		if (strlen($nmap))
 			$mysql->query("insert into " . prefix . "_news_map (newsID, categoryID, dt) values " . substr($nmap, 0, -1));
-
+		
 		// Update category news counters
 		foreach ($catz as $key) {
 			$mysql->query("update " . prefix . "_category set posts = " . intval(getIsSet($ccount[$key['id']])) . " where id = " . $key['id']);
 		}
-
+		
 		// Check if we can update comments counters
 		$haveComments = $mysql->table_exists(prefix . "_comments") ? true : false;
-
+		
 		if ($haveComments) {
-			foreach ($mysql->select("select n.id, count(c.id) as cid from " . prefix . "_news n left join " . prefix . "_comments c on c.post=n.id group by n.id") as $row) {
-				$mysql->query("update " . prefix . "_news set com=" . $row['cid'] . " where id = " . $row['id']);
-			}
+			$start = 0;
+			do {
+				$query = $mysql->query("select n.id, count(c.id) as cid from " . prefix . "_news n left join " . prefix . "_comments c on c.post=n.id group by n.id limit ".$start.", 10000");
+				$start += 10000;
+				$num_rows = $mysql->num_rows($query);
+				
+				while ($row = $mysql->fetch_array($query)) {
+					$mysql->query("update " . prefix . "_news set com=" . $row['cid'] . " where id = " . $row['id']);
+				}
+			} while( $num_rows !== 0 );
 		}
-
+		
 		// Обновляем счетчик постов у юзеров
 		$mysql->query("update " . prefix . "_users set news = 0" . ($haveComments ? ", com = 0" : ""));
-		foreach ($mysql->select("select author_id, count(*) as cnt from " . prefix . "_news group by author_id") as $row) {
-			$mysql->query("update " . uprefix . "_users set news=" . $row['cnt'] . " where id = " . $row['author_id']);
-		}
-
+		$start = 0;
+		do {
+			$query = $mysql->query("select author_id, count(*) as cnt from " . prefix . "_news group by author_id limit ".$start.", 10000");
+			$start += 10000;
+			$num_rows = $mysql->num_rows($query);
+			
+			while ($row = $mysql->fetch_array($query)) {
+				$mysql->query("update " . uprefix . "_users set news=" . $row['cnt'] . " where id = " . $row['author_id']);
+			}
+		} while( $num_rows !== 0 );
+		
 		if ($haveComments) {
 			// Обновляем счетчик комментариев у юзеров
 			foreach ($mysql->select("select author_id, count(*) as cnt from " . prefix . "_comments group by author_id") as $row) {
@@ -148,7 +169,7 @@ function systemDboModify() {
 
 		msg(array("text" => $lang['dbo']['msgo_cat_recount']));
 	}
-
+	
 	// Delete specific backup file
 	if (getIsSet($_REQUEST['delbackup'])) {
 		$filename = str_replace('/', '', $_REQUEST['filename']);
@@ -237,7 +258,7 @@ function systemDboModify() {
 		while ($bf = readdir($backup_dir)) {
 			if (($bf == '.') || ($bf == '..'))
 				continue;
-
+			
 			@unlink(root . 'backups/' . $bf);
 		}
 		msg(array("text" => $lang['dbo']['msgo_massdelb']));
@@ -250,16 +271,16 @@ function systemDboModify() {
 			msg(array("type" => "error", "text" => $lang['dbo']['msge_restore'], "info" => $lang['dbo']['msgi_restore']));
 		} else {
 			$fp = gzopen(root . 'backups/' . $filename . '.gz', "r");
-
+			
 			while (!gzeof($fp)) {
 				$query .= gzread($fp, 10000);
 			}
 			gzclose($fp);
 			$queries = ParseQueries($query);
-
+			
 			for ($i = 0; $i < sizeof($queries); $i++) {
 				$sql = trim($queries[$i]);
-
+				
 				if (!empty($sql)) {
 					$mysql->query($sql);
 				}
