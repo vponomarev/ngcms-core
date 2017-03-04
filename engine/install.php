@@ -7,7 +7,7 @@
 // Author: Vitaly Ponomarev
 //
 
-@header('content-type: text/html; charset=Windows-1251');
+@header('content-type: text/html; charset=utf-8');
 
 @error_reporting(E_ALL ^ E_NOTICE);
 define('NGCMS', 1);
@@ -377,10 +377,10 @@ function doConfig_perm() {
 	}
 
 	// XML support
-	if (function_exists('xml_parser_create')) {
-		$tvars['vars']['xml'] = $lang['perm.yes'];
+	if (extension_loaded('mbstring')) {
+		$tvars['vars']['mb'] = $lang['perm.yes'];
 	} else {
-		$tvars['vars']['xml'] = '<font color="red">' . $lang['perm.no'] . '</font>';
+		$tvars['vars']['mb'] = '<font color="red">' . $lang['perm.no'] . '</font>';
 		$error = 1;
 	}
 
@@ -914,6 +914,7 @@ function doInstall() {
 		);
 
 		$plugData = "<?php\n" . '$array = ' . var_export($plugConf, true) . ";\n";
+		$plugData = mb_convert_encoding($plugData, 'UTF-8', 'OLD-ENCODING');
 		if (!fwrite($frec['plugins.php'], $plugData)) {
 			array_push($ERROR, 'Ошибка записи конфигурационного файла [список активных плагинов]!');
 			$error = 1;

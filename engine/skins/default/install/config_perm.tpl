@@ -29,8 +29,8 @@
 									<td>{pdo}</td>
 								</tr>
 								<tr>
-									<td>{l_perm.minreq.xml}</td>
-									<td>{xml}</td>
+									<td>{l_perm.minreq.mb}</td>
+									<td>{mb}</td>
 								</tr>
 								<tr>
 									<td>{l_perm.minreq.gd}</td>
