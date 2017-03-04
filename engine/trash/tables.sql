@@ -10,7 +10,7 @@ CREATE TABLE `XPREFIX_config` (
   `name` char(60),
   `value` char(100),
   PRIMARY KEY  (`name`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -38,32 +38,9 @@ CREATE TABLE `XPREFIX_category` (
   `posorder` int default 999,
   `poslevel` int default 0,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
-
--- -- 
--- -- Table 'PREFIX_comments'
--- -- 
--- 
--- CREATE TABLE `XPREFIX_comments` (
---   `id` int(11) NOT NULL auto_increment,
---   `postdate` int(10) NOT NULL default '0',
---   `post` int(10) NOT NULL default '0',
---   `author` varchar(100) NOT NULL default '',
---   `author_id` int(11) NOT NULL default '0',
---   `mail` varchar(100) NOT NULL default '',
---   `text` text NOT NULL,
---   `ip` varchar(50) NOT NULL default '',
---   `reg` tinyint(1) default '0',
---   `answer` text,
---   `name` varchar(100) NOT NULL default '',
---   PRIMARY KEY  (`id`),
---   KEY `c_post` (`post`)
--- ) ENGINE=MyISAM;
--- 
--- -- --------------------------------------------------------
-
 
 -- 
 -- Tabel 'PREFIX_FILES'
@@ -86,7 +63,7 @@ CREATE TABLE `XPREFIX_files` (
   `storage` int(1) default 0,
   PRIMARY KEY  (`id`),
   KEY `link` (`linked_ds`, `linked_id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -98,7 +75,7 @@ CREATE TABLE `XPREFIX_flood` (
   `ip` varchar(15) NOT NULL default '',
   `id` int(10) default NULL,
   PRIMARY KEY  (`ip`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -129,7 +106,7 @@ CREATE TABLE `XPREFIX_images` (
   `storage` int(1) default 0,
   PRIMARY KEY  (`id`),
   KEY `link` (`linked_ds`, `linked_id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -150,7 +127,7 @@ CREATE TABLE `XPREFIX_ipban` (
   `hitcount` int default 0,
   PRIMARY KEY  (`id`),
   KEY `ban_start` (`addr_start`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -194,7 +171,7 @@ CREATE TABLE `XPREFIX_news` (
   KEY `news_altname` (`alt_name`),
   KEY `news_mainpage` (`approve`,`pinned`,`id`),
   KEY `news_mcount` (`mainpage`,`approve`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -208,7 +185,7 @@ CREATE TABLE `XPREFIX_news_map` (
   `dt` datetime default NULL,
   KEY `newsID` (`newsID`),
   KEY `categoryID` (`categoryID`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -230,7 +207,7 @@ CREATE TABLE `XPREFIX_static` (
   PRIMARY KEY  (`id`),
   KEY `static_title` (`title`),
   KEY `static_altname` (`alt_name`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -261,7 +238,7 @@ CREATE TABLE `XPREFIX_users` (
   PRIMARY KEY  (`id`),
   KEY `users_name` (`name`),
   KEY `users_auth` (`authcookie`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -279,7 +256,7 @@ CREATE TABLE `XPREFIX_users_pm` (
   `viewed` tinyint(1) default '0',
   PRIMARY KEY  (`pmid`),
   KEY `from_id` (`from_id`,`to_id`,`viewed`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 -- --------------------------------------------------------
@@ -298,7 +275,7 @@ CREATE TABLE `XPREFIX_load` (
   `exec_plugin` float,
   `exec_ppage` float,
   PRIMARY KEY (`dt`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 -- --------------------------------------------------------
@@ -322,7 +299,7 @@ CREATE TABLE `XPREFIX_syslog` (
   `status` INT(11),
   `stext` CHAR(90),
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 -- --------------------------------------------------------
 
@@ -340,7 +317,7 @@ CREATE TABLE `XPREFIX_profiler` (
   `tracedata` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `ondt` (`dt`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 
 -- --------------------------------------------------------
@@ -353,4 +330,4 @@ CREATE TABLE `XPREFIX_news_view` (
 	`id` INT(11) NOT NULL,
 	`cnt` INT(11) DEFAULT '0',
 	PRIMARY KEY (`id`)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;

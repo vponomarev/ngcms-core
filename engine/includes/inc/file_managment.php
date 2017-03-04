@@ -482,10 +482,10 @@ function manage_editForm($type, $id) {
 				$tvars['regx']['#\[no_stamp\](.*?)\[\/no_stamp\]#is'] = $irow['stamp'] ? '' : '$1';
 
 				if ($irow['preview']) {
-					$tvars['vars']['preview_status'] = 'есть';
+					$tvars['vars']['preview_status'] = 'РµСЃС‚СЊ';
 					$tvars['regx']['#\[preview\](.+?)\[\/preview\]#is'] = '$1';
 				} else {
-					$tvars['vars']['preview_status'] = 'нет';
+					$tvars['vars']['preview_status'] = 'РЅРµС‚';
 					$tvars['regx']['#\[preview\](.+?)\[\/preview\]#is'] = '';
 				}
 
@@ -501,12 +501,12 @@ function manage_editApply($type, $id) {
 
 	global $config, $fmanager, $mysql;
 
-	// Получаем данные об изображении
+	// РџРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ РѕР± РёР·РѕР±СЂР°Р¶РµРЅРёРё
 	if (!($irow = $mysql->record("select * from " . prefix . "_images where id = " . db_squote($id)))) {
 		return false;
 	}
 
-	// Переименование
+	// РџРµСЂРµРёРјРµРЅРѕРІР°РЅРёРµ
 	if ($_POST['newname']) {
 		if ($fmanager->file_rename(array('type' => $type, 'id' => $id, 'move' => 0, 'newname' => $_POST['newname']))) {
 			// OK. Reload image data
@@ -516,10 +516,10 @@ function manage_editApply($type, $id) {
 		}
 	}
 
-	// Инициализация обрабочика изображений
+	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РѕР±СЂР°Р±РѕС‡РёРєР° РёР·РѕР±СЂР°Р¶РµРЅРёР№
 	$imanager = new image_managment();
 
-	// Наложение штампа на оригинальную картинку
+	// РќР°Р»РѕР¶РµРЅРёРµ С€С‚Р°РјРїР° РЅР° РѕСЂРёРіРёРЅР°Р»СЊРЅСѓСЋ РєР°СЂС‚РёРЅРєСѓ
 	if ($_POST['createStamp'] && !$irow['stamp']) {
 		$stampFileName = '';
 
@@ -547,7 +547,7 @@ function manage_editApply($type, $id) {
 
 	}
 
-	// Создание/изменение уменьшенной копии (preview)
+	// РЎРѕР·РґР°РЅРёРµ/РёР·РјРµРЅРµРЅРёРµ СѓРјРµРЅСЊС€РµРЅРЅРѕР№ РєРѕРїРёРё (preview)
 	if ($_POST['flagPreview']) {
 		//print "Create thumb<br/>\n";
 		$tsx = intval($_POST['thumbSizeX']);
@@ -601,7 +601,7 @@ function manage_editApply($type, $id) {
 	if ($irow['description'] != $_POST['description'])
 		$mysql->query("update " . prefix . "_images set description = " . db_squote($_POST['description']) . " where id = " . db_squote($irow['id']));
 
-	msg(array("text" => 'Изображение отредактировано'));
+	msg(array("text" => 'РР·РѕР±СЂР°Р¶РµРЅРёРµ РѕС‚СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРѕ'));
 	manage_editForm('image', $irow['id']);
 
 	// print "<pre>".var_export($_POST, true)."</pre>";

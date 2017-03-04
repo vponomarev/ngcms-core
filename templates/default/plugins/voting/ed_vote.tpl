@@ -19,7 +19,7 @@
 
 		var voteid = form.voteid.value;
 		if (mode && (choice < 0)) {
-			alert('Сначала необходимо выбрать вариант!');
+			alert('РЎРЅР°С‡Р°Р»Р° РЅРµРѕР±С…РѕРґРёРјРѕ РІС‹Р±СЂР°С‚СЊ РІР°СЂРёР°РЅС‚!');
 			return false;
 		}
 
@@ -51,15 +51,15 @@
 </script>
 <div id="voting_ng">
 	<div class="block poll-block">
-		<div class="block-title">Опрос</div>
+		<div class="block-title">РћРїСЂРѕСЃ</div>
 		<div class="question">{votename}</div>
 		<form action="{post_url}" method="post" id="voteForm">
 			{votelines}
 			<input type="hidden" name="mode" value="vote"/>
 			<input type="hidden" name="voteid" value="{voteid}"/>
 			<input type="hidden" name="referer" value="{REFERER}"/>
-			<input type="submit" onclick="return make_vote(1);" value="Голосовать" class="button">
-			<a href="#" onclick="return make_vote(0);">Результаты</a>
+			<input type="submit" onclick="return make_vote(1);" value="Р“РѕР»РѕСЃРѕРІР°С‚СЊ" class="button">
+			<a href="#" onclick="return make_vote(0);">Р РµР·СѓР»СЊС‚Р°С‚С‹</a>
 		</form>
 	</div>
 </div>

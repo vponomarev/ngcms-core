@@ -53,7 +53,7 @@ function userEditForm() {
 		$status .= ' <option value="' . $ugID . '"' . (($row['status'] == $ugID) ? ' selected' : '') . '>' . $ugID . ' (' . $ugData['name'] . ')</option>';
 	}
 
-	//	Îáðàáàòûâàåì íåîáõîäèìûå ïåðåìåííûå äëÿ øàáëîíà
+	//	ÐžÐ±Ñ€Ð°Ð±Ð°Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ñ‹Ðµ Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ðµ Ð´Ð»Ñ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð°
 	$tVars = array(
 		'php_self'   => $PHP_SELF,
 		'name'       => secure_html($row['name']),

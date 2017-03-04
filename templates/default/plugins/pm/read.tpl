@@ -1,5 +1,5 @@
 <form method="POST" action="{{ php_self }}?action=delete&pmid={{ pmid }}&location={{ location }}">
-	<div class="block-title">{{ subject }} {% if (ifinbox) %}от{% endif %} {% if not (ifinbox) %}для{% endif %} {{ author }} {{ pmdate|date('Y-m-d H:i') }}</div>
+	<div class="block-title">{{ subject }} {% if (ifinbox) %}РѕС‚{% endif %} {% if not (ifinbox) %}РґР»СЏ{% endif %} {{ author }} {{ pmdate|date('Y-m-d H:i') }}</div>
 	<table class="table table-striped table-bordered">
 		<tr>
 			<th><a href="/plugin/pm/">{{ lang['pm:inbox'] }}</a> |

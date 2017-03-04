@@ -14,7 +14,7 @@ function multi_multisites() {
 	$siteDomainName = '';
 	$multiDomainName = '';
 
-	// Анализируем мультидоменную конфигурацию
+	// РђРЅР°Р»РёР·РёСЂСѓРµРј РјСѓР»СЊС‚РёРґРѕРјРµРЅРЅСѓСЋ РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ
 	if (!is_file(root . 'conf/multiconfig.php')) {
 		return;
 	}
@@ -23,32 +23,32 @@ function multi_multisites() {
 		return;
 	}
 
-	// Если не выбран МультиМастер - не обрабатываем мультиконфиг
+	// Р•СЃР»Рё РЅРµ РІС‹Р±СЂР°РЅ РњСѓР»СЊС‚РёРњР°СЃС‚РµСЂ - РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РјСѓР»СЊС‚РёРєРѕРЅС„РёРі
 	if (!$multimaster || (!is_array($multiconfig[$multimaster])) ||
 		(!$multiconfig[$multimaster]['active']) || (!is_array($multiconfig[$multimaster]['domains']))
 	) {
 		return;
 	}
-	// Обёртка для реализации break'ов
+	// РћР±С‘СЂС‚РєР° РґР»СЏ СЂРµР°Р»РёР·Р°С†РёРё break'РѕРІ
 	do {
-		// Проверка мастера
+		// РџСЂРѕРІРµСЂРєР° РјР°СЃС‚РµСЂР°
 		foreach ($multiconfig[$multimaster]['domains'] as $mdom) {
 			if (($_SERVER['SERVER_NAME'] == $mdom) || ($_SERVER['HTTP_HOST'] == $mdom)) {
-				// Найден сайт
+				// РќР°Р№РґРµРЅ СЃР°Р№С‚
 				$siteDomainName = $mdom;
 				$multiDomainName = $multimaster;
 				break;
 			}
 		}
 
-		// Проверка остальных учётных записей
+		// РџСЂРѕРІРµСЂРєР° РѕСЃС‚Р°Р»СЊРЅС‹С… СѓС‡С‘С‚РЅС‹С… Р·Р°РїРёСЃРµР№
 		foreach ($multiconfig as $mname => $mrec) {
 			if (!is_array($mrec['domains'])) {
 				continue;
 			}
 			foreach ($mrec['domains'] as $mdom) {
 				if (($_SERVER['SERVER_NAME'] == $mdom) || ($_SERVER['HTTP_HOST'] == $mdom)) {
-					// Найден сайт
+					// РќР°Р№РґРµРЅ СЃР°Р№С‚
 					$siteDomainName = $mdom;
 					$multiDomainName = $mname;
 					break;
@@ -60,12 +60,12 @@ function multi_multisites() {
 		}
 	} while (0);
 
-	// Если нет ни одного совпадения, то выбираем первый домен у мастера
+	// Р•СЃР»Рё РЅРµС‚ РЅРё РѕРґРЅРѕРіРѕ СЃРѕРІРїР°РґРµРЅРёСЏ, С‚Рѕ РІС‹Р±РёСЂР°РµРј РїРµСЂРІС‹Р№ РґРѕРјРµРЅ Сѓ РјР°СЃС‚РµСЂР°
 	if (!$siteDomainName) {
 		$siteDomainName = $multiconfig[$multimaster]['domains'][0];
 	}
 
-	// Если мультидомен выбран - меняем пути
+	// Р•СЃР»Рё РјСѓР»СЊС‚РёРґРѕРјРµРЅ РІС‹Р±СЂР°РЅ - РјРµРЅСЏРµРј РїСѓС‚Рё
 	if ($multiDomainName && ($multiDomainName != $multimaster)) {
 	}
 
@@ -80,7 +80,7 @@ function multi_multidomains() {
 	$newdomain = '';
 	$SYSTEM_FLAGS['mydomains'] = array();
 
-	// Анализируем параметр конфига mydomains
+	// РђРЅР°Р»РёР·РёСЂСѓРµРј РїР°СЂР°РјРµС‚СЂ РєРѕРЅС„РёРіР° mydomains
 	$domlist = null;
 	if ($config['mydomains']) {
 		$domlist = explode("\n", $config['mydomains']);
@@ -96,9 +96,9 @@ function multi_multidomains() {
 		}
 	}
 
-	// Если не найдено ни одного совпадения, то прописываем самый первый хост
+	// Р•СЃР»Рё РЅРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕРіРѕ СЃРѕРІРїР°РґРµРЅРёСЏ, С‚Рѕ РїСЂРѕРїРёСЃС‹РІР°РµРј СЃР°РјС‹Р№ РїРµСЂРІС‹Р№ С…РѕСЃС‚
 	if (!$newdomain) {
-		// Если заданы хосты в mydomains, то выбираем первый. Иначе - выбираем хост выбранный в мультисайте
+		// Р•СЃР»Рё Р·Р°РґР°РЅС‹ С…РѕСЃС‚С‹ РІ mydomains, С‚Рѕ РІС‹Р±РёСЂР°РµРј РїРµСЂРІС‹Р№. РРЅР°С‡Рµ - РІС‹Р±РёСЂР°РµРј С…РѕСЃС‚ РІС‹Р±СЂР°РЅРЅС‹Р№ РІ РјСѓР»СЊС‚РёСЃР°Р№С‚Рµ
 		if (is_array($domlist)) {
 			$newdomain = $domlist[0];
 		} else {
@@ -106,7 +106,7 @@ function multi_multidomains() {
 				$newdomain = $siteDomainName;
 				$SYSTEM_FLAGS['mydomains'] = array($newdomain);
 			} else {
-				// Если имя хоста так и не нашли, то берём данные с сервера
+				// Р•СЃР»Рё РёРјСЏ С…РѕСЃС‚Р° С‚Р°Рє Рё РЅРµ РЅР°С€Р»Рё, С‚Рѕ Р±РµСЂС‘Рј РґР°РЅРЅС‹Рµ СЃ СЃРµСЂРІРµСЂР°
 				$newdomain = $_SERVER['HTTP_HOST'];
 				$SYSTEM_FLAGS['mydomains'] = array($newdomain);
 			}
@@ -114,7 +114,7 @@ function multi_multidomains() {
 	}
 
 	//
-	// Отрабатываем замену масок {domain}, {domainID} в конфиг-файле
+	// РћС‚СЂР°Р±Р°С‚С‹РІР°РµРј Р·Р°РјРµРЅСѓ РјР°СЃРѕРє {domain}, {domainID} РІ РєРѕРЅС„РёРі-С„Р°Р№Р»Рµ
 	//
 	$newdomain = trim($newdomain);
 	$newdomainid = trim($multiDomainName);

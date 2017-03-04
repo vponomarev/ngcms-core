@@ -1472,12 +1472,12 @@ class cronManager {
 	// Register new CRON task
 	function registerTask($plugin, $handler, $min = '*', $hour = '*', $day = '*', $month = '*', $dow = '*') {
 
-		// Проверяем параметры
+		// РџСЂРѕРІРµСЂСЏРµРј РїР°СЂР°РјРµС‚СЂС‹
 		if ((!$this->checkList($min, 0, 59)) || (!$this->checkList($hour, 0, 23)) ||
 			(!$this->checkList($day, 0, 31)) || (!$this->checkList($month, 0, 12)) ||
 			(!$this->checkList($dow, 0, 6)) || (!$plugin)
 		) {
-			// Неверные значения параметров
+			// РќРµРІРµСЂРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ РїР°СЂР°РјРµС‚СЂРѕРІ
 			return 0;
 		}
 
@@ -1527,8 +1527,8 @@ class cronManager {
 		// Prepare for creating internal execution flag
 		$cacheDir = get_plugcache_dir('core');
 
-		$timeout = 120;  // 120 секунд (2 минуты) на попытку
-		$period = 300;  // 5 минут между запусками
+		$timeout = 120;  // 120 СЃРµРєСѓРЅРґ (2 РјРёРЅСѓС‚С‹) РЅР° РїРѕРїС‹С‚РєСѓ
+		$period = 300;  // 5 РјРёРЅСѓС‚ РјРµР¶РґСѓ Р·Р°РїСѓСЃРєР°РјРё
 
 		//$timeout = 5;
 		//$period = 10;
@@ -1565,7 +1565,7 @@ class cronManager {
 
 		// Create temporally file for flag
 		if (false === ($temp = tempnam($cacheDir, 'tmp_cron_'))) {
-			// Не смогли создать файл (???)
+			// РќРµ СЃРјРѕРіР»Рё СЃРѕР·РґР°С‚СЊ С„Р°Р№Р» (???)
 			return -1;
 		}
 

@@ -9,9 +9,9 @@
 				{votelines}
 				<div align="center">
 					<button class="btn btn-primary btn-large" type="submit" onclick="return make_voteL(0,{voteid});">
-						<span>Голосовать</span></button>
+						<span>Р“РѕР»РѕСЃРѕРІР°С‚СЊ</span></button>
 					<button class="btn btn-primary btn-large" type="button" onclick="document.location='{post_url}?mode=show&voteid={voteid}';">
-						<span>Результаты</span></button>
+						<span>Р РµР·СѓР»СЊС‚Р°С‚С‹</span></button>
 				</div>
 			</form>
 		</div>

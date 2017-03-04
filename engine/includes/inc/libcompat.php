@@ -1,7 +1,7 @@
 <?php
 
 //
-// Библиотека для сохранения обратной совместимости при работе не-ЧПУ сайтов
+// Р‘РёР±Р»РёРѕС‚РµРєР° РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РѕР±СЂР°С‚РЅРѕР№ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё РїСЂРё СЂР°Р±РѕС‚Рµ РЅРµ-Р§РџРЈ СЃР°Р№С‚РѕРІ
 //
 
 function compatRedirector() {
@@ -16,7 +16,7 @@ function compatRedirector() {
 	//print "<pre>".var_export($_SERVER, true)."</pre>";
 
 	if (preg_match('#^\/\?#', $uri, $null) || ($homePrefix && preg_match('#^\/' . $homePrefix . '\/\?#', $uri, $null))) {
-		// Наш клиент
+		// РќР°С€ РєР»РёРµРЅС‚
 		//print "GET PARAMS:<br/>\n<pre>".var_export($_GET, true)."</pre>";
 		if (isset($_GET['action']) && ($_GET['action'] == 'static')) {
 			if (isset($_GET['altname'])) {
@@ -49,7 +49,7 @@ function compatRedirector() {
 		}
 
 		if (isset($_GET['category']) && isset($_GET['altname'])) {
-			// Полная новость, находим её
+			// РџРѕР»РЅР°СЏ РЅРѕРІРѕСЃС‚СЊ, РЅР°С…РѕРґРёРј РµС‘
 			if ($nrow = $mysql->record("select * from " . prefix . "_news where alt_name=" . db_squote($_GET['altname']))) {
 				$link = newsGenerateLink($nrow, false, 0, true);
 				//print "Redirect: ".$link;
@@ -62,7 +62,7 @@ function compatRedirector() {
 			}
 			exit;
 		} else if (isset($_GET['id'])) {
-			// Полная новость, находим её
+			// РџРѕР»РЅР°СЏ РЅРѕРІРѕСЃС‚СЊ, РЅР°С…РѕРґРёРј РµС‘
 			if ($nrow = $mysql->record("select * from " . prefix . "_news where id=" . db_squote($_GET['id']))) {
 				$link = newsGenerateLink($nrow, false, 0, true);
 				//print "Redirect: ".$link;
@@ -75,7 +75,7 @@ function compatRedirector() {
 			}
 			exit;
 		} else if (isset($_GET['category'])) {
-			// Страница категории
+			// РЎС‚СЂР°РЅРёС†Р° РєР°С‚РµРіРѕСЂРёРё
 			if (isset($catz[$_GET['category']])) {
 				$xc = $catz[$_GET['category']];
 				$params = array('category' => $xc['alt'], 'catid' => $xc['id']);
@@ -93,7 +93,7 @@ function compatRedirector() {
 			}
 			exit;
 		} else if (isset($_GET['year'])) {
-			// Адресация по дате [год]
+			// РђРґСЂРµСЃР°С†РёСЏ РїРѕ РґР°С‚Рµ [РіРѕРґ]
 			if (isset($_GET['month']) && isset($_GET['day'])) {
 				$params = array('year' => sprintf('%04u', intval($_GET['year'])), 'month' => sprintf('%02u', intval($_GET['month'])), 'day' => sprintf('%02u', intval($_GET['day'])));
 				if (isset($_GET['cstart']))

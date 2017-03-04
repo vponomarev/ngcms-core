@@ -10,7 +10,7 @@
 		{% endif %}
 	{% endfor %}
 	{% if (entries|length >=7) %}
-		<li><a href="javascript://" id="show_all_archive">Показать весь архив</a></li>{% endif %}
+		<li><a href="javascript://" id="show_all_archive">РџРѕРєР°Р·Р°С‚СЊ РІРµСЃСЊ Р°СЂС…РёРІ</a></li>{% endif %}
 </ul>
 <script>
 	$(document).ready(function () {

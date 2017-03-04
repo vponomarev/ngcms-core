@@ -275,5 +275,5 @@ if (($_SERVER['REQUEST_METHOD'] == "POST") && isset($_POST['save']) && ($_POST['
 	updateConfig();
 } else {
 	showList($grp);
-	//	showList(array('1' => array('id' => 1, 'title' => 'Администратор')));
+	//	showList(array('1' => array('id' => 1, 'title' => 'РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ')));
 }

@@ -1,24 +1,24 @@
 <form name="register" action="/plugin/auth_loginza/register/" method="post">
 	<input type="hidden" name="type" value="doregister"/>
 	<div class="full">
-		<header><h1>Осталось уточнить некоторые данные</h1></header>
+		<header><h1>РћСЃС‚Р°Р»РѕСЃСЊ СѓС‚РѕС‡РЅРёС‚СЊ РЅРµРєРѕС‚РѕСЂС‹Рµ РґР°РЅРЅС‹Рµ</h1></header>
 		<div class="telo">
 
-			<div class="input"><label>Имя
-					пользователя:</label><input name="login" type="text" title="Имя пользователя" value="{login}"/><br/>
-				<small>Вы можете заходить на сайт через логин/пароль</small>
+			<div class="input"><label>РРјСЏ
+					РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ:</label><input name="login" type="text" title="РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ" value="{login}"/><br/>
+				<small>Р’С‹ РјРѕР¶РµС‚Рµ Р·Р°С…РѕРґРёС‚СЊ РЅР° СЃР°Р№С‚ С‡РµСЂРµР· Р»РѕРіРёРЅ/РїР°СЂРѕР»СЊ</small>
 			</div>
 			<div class="input">
-				<label>Пароль:</label><input name="password" type="text" title="Пароль" value="{password}"/><br/>
-				<small>Обязателен для захода через логин/пароль</small>
+				<label>РџР°СЂРѕР»СЊ:</label><input name="password" type="text" title="РџР°СЂРѕР»СЊ" value="{password}"/><br/>
+				<small>РћР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°С…РѕРґР° С‡РµСЂРµР· Р»РѕРіРёРЅ/РїР°СЂРѕР»СЊ</small>
 			</div>
 			<div class="input"><label>E-mail
-					адрес:</label><input name="email" type="text" title="E-mail адрес" value="{email}"/><br/>
-				<small>при восстановлении пароля новый пароль будет высылаться на этот адрес (не обязательно для
-					заполнения)
+					Р°РґСЂРµСЃ:</label><input name="email" type="text" title="E-mail Р°РґСЂРµСЃ" value="{email}"/><br/>
+				<small>РїСЂРё РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРё РїР°СЂРѕР»СЏ РЅРѕРІС‹Р№ РїР°СЂРѕР»СЊ Р±СѓРґРµС‚ РІС‹СЃС‹Р»Р°С‚СЊСЃСЏ РЅР° СЌС‚РѕС‚ Р°РґСЂРµСЃ (РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ
+					Р·Р°РїРѕР»РЅРµРЅРёСЏ)
 				</small>
 			</div>
-			<div><input class="btn btn-primary btn-large" type="submit" value="Зарегистрироваться!"/></div>
+			<div><input class="btn btn-primary btn-large" type="submit" value="Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊСЃСЏ!"/></div>
 		</div>
 	</div>
 </form>

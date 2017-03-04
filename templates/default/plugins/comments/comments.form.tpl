@@ -60,7 +60,7 @@
 		cajax.runAJAX();
 	}
 </script>
-<div class="title">Добавить комментарий</div>
+<div class="title">Р”РѕР±Р°РІРёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№</div>
 <div class="respond">
 	<form id="comment" method="post" action="{post_url}" name="form" [ajax]onsubmit="add_comment(); return false;" [
 	/ajax]>
@@ -68,11 +68,11 @@
 	<input type="hidden" name="referer" value="{request_uri}"/>
 	[not-logged]
 	<div class="label pull-left">
-		<label for="name">Введите имя:</label>
+		<label for="name">Р’РІРµРґРёС‚Рµ РёРјСЏ:</label>
 		<input type="text" name="name" value="{savedname}" class="input">
 	</div>
 	<div class="label pull-right">
-		<label for="email">Введите E-mail:</label>
+		<label for="email">Р’РІРµРґРёС‚Рµ E-mail:</label>
 		<input type="text" name="mail" value="{savedmail}" class="input">
 	</div>
 	[/not-logged]
@@ -85,14 +85,14 @@
 	</div>
 	[captcha]
 	<div class="label captcha pull-left">
-		<label for="captcha">Введите код безопасности:</label>
+		<label for="captcha">Р’РІРµРґРёС‚Рµ РєРѕРґ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё:</label>
 		<input type="text" name="vcode" id="captcha" class="input">
 		<img id="img_captcha" onclick="reload_captcha();" src="{captcha_url}?rand={rand}" alt="captcha"/>
 	</div>
 	[/captcha]
 	<div class="label pull-right">
 		<label for="sendComment" class="default">&nbsp;</label>
-		<input type="submit" id="sendComment" value="Добавить комментарий" class="button">
+		<input type="submit" id="sendComment" value="Р”РѕР±Р°РІРёС‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёР№" class="button">
 	</div>
 	</form>
 </div>

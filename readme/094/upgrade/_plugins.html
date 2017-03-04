@@ -4,31 +4,31 @@
 	</head>
 	<body style="border-left: #edece4 1px solid;">
 		<div class="content">
-			<h3>Список изменений в плагинах между версиями 0.9.3 по 0.9.4</h3>
+			<h3>РЎРїРёСЃРѕРє РёР·РјРµРЅРµРЅРёР№ РІ РїР»Р°РіРёРЅР°С… РјРµР¶РґСѓ РІРµСЂСЃРёСЏРјРё 0.9.3 РїРѕ 0.9.4</h3>
 			<div class="text">
-				0. Как и шаблон, многие плагины тоже изменились. В котором конечной целью является полный переход на <b>TWIG</b> и отказ от старого шаблонизатора.
+				0. РљР°Рє Рё С€Р°Р±Р»РѕРЅ, РјРЅРѕРіРёРµ РїР»Р°РіРёРЅС‹ С‚РѕР¶Рµ РёР·РјРµРЅРёР»РёСЃСЊ. Р’ РєРѕС‚РѕСЂРѕРј РєРѕРЅРµС‡РЅРѕР№ С†РµР»СЊСЋ СЏРІР»СЏРµС‚СЃСЏ РїРѕР»РЅС‹Р№ РїРµСЂРµС…РѕРґ РЅР° <b>TWIG</b> Рё РѕС‚РєР°Р· РѕС‚ СЃС‚Р°СЂРѕРіРѕ С€Р°Р±Р»РѕРЅРёР·Р°С‚РѕСЂР°.
 			</div>
 			<div class="text">
-				1. Прекращена поддержка следующий плагинов <b>lastnews</b>, <b>popular</b> вместо них используйте плагин <b>xnews</b>.
+				1. РџСЂРµРєСЂР°С‰РµРЅР° РїРѕРґРґРµСЂР¶РєР° СЃР»РµРґСѓСЋС‰РёР№ РїР»Р°РіРёРЅРѕРІ <b>lastnews</b>, <b>popular</b> РІРјРµСЃС‚Рѕ РЅРёС… РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РїР»Р°РіРёРЅ <b>xnews</b>.
 			</div>
 			<div class="text">
-				2. Плагин <b>archive</b> переведен под шаблонизатор <b>TWIG</b>.<br />
-				Изменился тип переменной для вывода плагина (подробности смотрите в документации плагина).<br />
-<pre>Было [isplugin archive]{plugin_archive}[/isplugin]
-Стало {% if pluginIsActive('archive') %}{{ callPlugin('archive.show', {'maxnum' : 12, 'counter' : 1, 'template': 'archive', 'cacheExpire': 60}) }}{% endif %}</pre><br />
-				Изменилось содержимое и файлы плагина, содержимое файла <b>entries.tpl</b> перемещено в файл <b>archive.tpl</b>.<br />
-				В примере показан минимальный набор файла <b>archive.tpl</b> (подробности смотрите в документации плагина).<br />
+				2. РџР»Р°РіРёРЅ <b>archive</b> РїРµСЂРµРІРµРґРµРЅ РїРѕРґ С€Р°Р±Р»РѕРЅРёР·Р°С‚РѕСЂ <b>TWIG</b>.<br />
+				РР·РјРµРЅРёР»СЃСЏ С‚РёРї РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РІС‹РІРѕРґР° РїР»Р°РіРёРЅР° (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
+<pre>Р‘С‹Р»Рѕ [isplugin archive]{plugin_archive}[/isplugin]
+РЎС‚Р°Р»Рѕ {% if pluginIsActive('archive') %}{{ callPlugin('archive.show', {'maxnum' : 12, 'counter' : 1, 'template': 'archive', 'cacheExpire': 60}) }}{% endif %}</pre><br />
+				РР·РјРµРЅРёР»РѕСЃСЊ СЃРѕРґРµСЂР¶РёРјРѕРµ Рё С„Р°Р№Р»С‹ РїР»Р°РіРёРЅР°, СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° <b>entries.tpl</b> РїРµСЂРµРјРµС‰РµРЅРѕ РІ С„Р°Р№Р» <b>archive.tpl</b>.<br />
+				Р’ РїСЂРёРјРµСЂРµ РїРѕРєР°Р·Р°РЅ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РЅР°Р±РѕСЂ С„Р°Р№Р»Р° <b>archive.tpl</b> (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
 <pre>{% for entry in entries %}
 &lt;a href="{{entry.link}}">{{entry.title}} {% if (entry.counter) %}( {{entry.cnt}} {{entry.ctext}} ){% endif %}&lt;/a>
 {% endfor %}</pre>
 			</div>
 			<div class="text">
-				3. Плагин <b>calendar</b> переведен под шаблонизатор <b>TWIG</b>.<br />
-				Изменился тип переменной для вывода плагина (подробности смотрите в документации плагина).<br />
-<pre>Было [isplugin calendar]{plugin_calendar}[/isplugin]
-Стало {% if pluginIsActive('calendar') %}{{ callPlugin('calendar.show', {'cache': 60 }) }}{% endif %}</pre><br />
-				Изменилось содержимое и файлы плагина, содержимое файла <b>entries.tpl</b> перемещено в файл <b>calendar.tpl</b>.<br />
-				В примере показан минимальный набор файла <b>calendar.tpl</b> (подробности смотрите в документации плагина).<br />
+				3. РџР»Р°РіРёРЅ <b>calendar</b> РїРµСЂРµРІРµРґРµРЅ РїРѕРґ С€Р°Р±Р»РѕРЅРёР·Р°С‚РѕСЂ <b>TWIG</b>.<br />
+				РР·РјРµРЅРёР»СЃСЏ С‚РёРї РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РІС‹РІРѕРґР° РїР»Р°РіРёРЅР° (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
+<pre>Р‘С‹Р»Рѕ [isplugin calendar]{plugin_calendar}[/isplugin]
+РЎС‚Р°Р»Рѕ {% if pluginIsActive('calendar') %}{{ callPlugin('calendar.show', {'cache': 60 }) }}{% endif %}</pre><br />
+				РР·РјРµРЅРёР»РѕСЃСЊ СЃРѕРґРµСЂР¶РёРјРѕРµ Рё С„Р°Р№Р»С‹ РїР»Р°РіРёРЅР°, СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° <b>entries.tpl</b> РїРµСЂРµРјРµС‰РµРЅРѕ РІ С„Р°Р№Р» <b>calendar.tpl</b>.<br />
+				Р’ РїСЂРёРјРµСЂРµ РїРѕРєР°Р·Р°РЅ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РЅР°Р±РѕСЂ С„Р°Р№Р»Р° <b>calendar.tpl</b> (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
 <pre>{% if (not flags.ajax) %}
 &lt;script type="text/javascript" language="javascript">
 	function ng_calendar_walk(month, year, offset) {
@@ -77,8 +77,8 @@
 &lt;/div></pre>
 			</div>
 			<div class="text">
-				5. В плагине <b>feedback</b> добавили новый тип поля E-mail.<br />
-				Пример поля по умолчанию в файле <b>site.form.tpl</b> в цикле {% for entry in entries %}{% endfor %} (подробности смотрите в документации плагина).<br />
+				5. Р’ РїР»Р°РіРёРЅРµ <b>feedback</b> РґРѕР±Р°РІРёР»Рё РЅРѕРІС‹Р№ С‚РёРї РїРѕР»СЏ E-mail.<br />
+				РџСЂРёРјРµСЂ РїРѕР»СЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РІ С„Р°Р№Р»Рµ <b>site.form.tpl</b> РІ С†РёРєР»Рµ {% for entry in entries %}{% endfor %} (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
 <pre>
 {% if entry.type == 'email' %}
 	&lt;tr>
@@ -88,34 +88,34 @@
 {% endif %}</pre>
 			</div>
 			<div class="text">
-				5. Плагин <b>lastcomments</b> переведен под шаблонизатор <b>TWIG</b>.<br />
-				Изменился тип переменной для вывода плагина (подробности смотрите в документации плагина).<br />
-<pre>Было [isplugin lastcomments]{plugin_lastcomments}[/isplugin]
-Стало {% if pluginIsActive('lastcomments') %}{{ plugin_lastcomments }}{% endif %}</pre><br />
-				Изменилось содержимое и файлы плагина, содержимое файла <b>entries.tpl</b> перемещено в файл <b>lastcomments.tpl</b>.<br />
-				В примере показан минимальный набор файла <b>lastcomments.tpl</b> (подробности смотрите в документации плагина).<br />
+				5. РџР»Р°РіРёРЅ <b>lastcomments</b> РїРµСЂРµРІРµРґРµРЅ РїРѕРґ С€Р°Р±Р»РѕРЅРёР·Р°С‚РѕСЂ <b>TWIG</b>.<br />
+				РР·РјРµРЅРёР»СЃСЏ С‚РёРї РїРµСЂРµРјРµРЅРЅРѕР№ РґР»СЏ РІС‹РІРѕРґР° РїР»Р°РіРёРЅР° (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
+<pre>Р‘С‹Р»Рѕ [isplugin lastcomments]{plugin_lastcomments}[/isplugin]
+РЎС‚Р°Р»Рѕ {% if pluginIsActive('lastcomments') %}{{ plugin_lastcomments }}{% endif %}</pre><br />
+				РР·РјРµРЅРёР»РѕСЃСЊ СЃРѕРґРµСЂР¶РёРјРѕРµ Рё С„Р°Р№Р»С‹ РїР»Р°РіРёРЅР°, СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° <b>entries.tpl</b> РїРµСЂРµРјРµС‰РµРЅРѕ РІ С„Р°Р№Р» <b>lastcomments.tpl</b>.<br />
+				Р’ РїСЂРёРјРµСЂРµ РїРѕРєР°Р·Р°РЅ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РЅР°Р±РѕСЂ С„Р°Р№Р»Р° <b>lastcomments.tpl</b> (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
 <pre>{% for entry in entries %}
-	Написал:{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;a href="{{ entry.author_link }}">{% endif %}{{ entry.author }}{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;/a>{% endif %}
-	В новости:&lt;a href="{{ entry.link }}">{{ entry.title|truncateHTML(30,'...') }}&lt;/a>
+	РќР°РїРёСЃР°Р»:{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;a href="{{ entry.author_link }}">{% endif %}{{ entry.author }}{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;/a>{% endif %}
+	Р’ РЅРѕРІРѕСЃС‚Рё:&lt;a href="{{ entry.link }}">{{ entry.title|truncateHTML(30,'...') }}&lt;/a>
 {% endfor %}</pre>
-				Изменилось содержимое и файлы плагина, содержимое файла <b>pp_entries.tpl</b> перемещено в файл <b>pp_lastcomments.tpl</b>.<br />
-				В примере показан минимальный набор файла <b>pp_lastcomments.tpl</b> (подробности смотрите в документации плагина).<br />
+				РР·РјРµРЅРёР»РѕСЃСЊ СЃРѕРґРµСЂР¶РёРјРѕРµ Рё С„Р°Р№Р»С‹ РїР»Р°РіРёРЅР°, СЃРѕРґРµСЂР¶РёРјРѕРµ С„Р°Р№Р»Р° <b>pp_entries.tpl</b> РїРµСЂРµРјРµС‰РµРЅРѕ РІ С„Р°Р№Р» <b>pp_lastcomments.tpl</b>.<br />
+				Р’ РїСЂРёРјРµСЂРµ РїРѕРєР°Р·Р°РЅ РјРёРЅРёРјР°Р»СЊРЅС‹Р№ РЅР°Р±РѕСЂ С„Р°Р№Р»Р° <b>pp_lastcomments.tpl</b> (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
 <pre>{% for entry in entries %}
-	Написал:{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;a href="{{ entry.author_link }}">{% endif %}{{ entry.author }}{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;/a>{% endif %}
-	В новости:&lt;a href="{{ entry.link }}">{{ entry.title|truncateHTML(30,'...') }}&lt;/a>
+	РќР°РїРёСЃР°Р»:{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;a href="{{ entry.author_link }}">{% endif %}{{ entry.author }}{% if (entry.author_id) and (pluginIsActive('uprofile')) %}&lt;/a>{% endif %}
+	Р’ РЅРѕРІРѕСЃС‚Рё:&lt;a href="{{ entry.link }}">{{ entry.title|truncateHTML(30,'...') }}&lt;/a>
 {% endfor %}</pre>
 			</div>
 			<div class="text">
-				5. Плагин <b>pm</b> переведен под шаблонизатор <b>TWIG</b>.<br />
-				Изменились типы переменныч для вывода в файле <b>usermenu.tpl</b> (подробности смотрите в документации плагина).<br />
-<pre>Кол-во новых входящих сообщений.
-Было {pm_unread} стало {{ p.pm.pm_unread }}
+				5. РџР»Р°РіРёРЅ <b>pm</b> РїРµСЂРµРІРµРґРµРЅ РїРѕРґ С€Р°Р±Р»РѕРЅРёР·Р°С‚РѕСЂ <b>TWIG</b>.<br />
+				РР·РјРµРЅРёР»РёСЃСЊ С‚РёРїС‹ РїРµСЂРµРјРµРЅРЅС‹С‡ РґР»СЏ РІС‹РІРѕРґР° РІ С„Р°Р№Р»Рµ <b>usermenu.tpl</b> (РїРѕРґСЂРѕР±РЅРѕСЃС‚Рё СЃРјРѕС‚СЂРёС‚Рµ РІ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё РїР»Р°РіРёРЅР°).<br />
+<pre>РљРѕР»-РІРѕ РЅРѕРІС‹С… РІС…РѕРґСЏС‰РёС… СЃРѕРѕР±С‰РµРЅРёР№.
+Р‘С‹Р»Рѕ {pm_unread} СЃС‚Р°Р»Рѕ {{ p.pm.pm_unread }}
 
-Общее кол-во входящих сообщений.
-Было {pm_all} стало {{ p.pm.pm_all }}
+РћР±С‰РµРµ РєРѕР»-РІРѕ РІС…РѕРґСЏС‰РёС… СЃРѕРѕР±С‰РµРЅРёР№.
+Р‘С‹Р»Рѕ {pm_all} СЃС‚Р°Р»Рѕ {{ p.pm.pm_all }}
 
-URL на страницу со входящими сообщениями.
-Было /plugin/pm/ стало {{ p.pm.link }}</pre>
+URL РЅР° СЃС‚СЂР°РЅРёС†Сѓ СЃРѕ РІС…РѕРґСЏС‰РёРјРё СЃРѕРѕР±С‰РµРЅРёСЏРјРё.
+Р‘С‹Р»Рѕ /plugin/pm/ СЃС‚Р°Р»Рѕ {{ p.pm.link }}</pre>
 			</div>
 			
 			

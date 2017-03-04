@@ -71,7 +71,7 @@
 	[/not-logged]
 	[captcha]
 	<div class="input">
-		<label>Проверочный код <sup>*</sup></label>
+		<label>РџСЂРѕРІРµСЂРѕС‡РЅС‹Р№ РєРѕРґ <sup>*</sup></label>
 		<img id="img_captcha" onclick="reload_captcha();" src="{captcha_url}?rand={rand}" alt="captcha" style="cursor: pointer;" class="left;"/>
 		<input type="text" name="vcode" style="width:80px"/>
 		<div class="clear"></div>

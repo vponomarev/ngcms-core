@@ -34,7 +34,7 @@
 		mode = document.forms['form_users'].action.value;
 
 		if (mode == '') {
-			alert('Необходимо выбрать действие!');
+			alert('РќРµРѕР±С…РѕРґРёРјРѕ РІС‹Р±СЂР°С‚СЊ РґРµР№СЃС‚РІРёРµ!');
 			return;
 		}
 

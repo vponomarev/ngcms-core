@@ -25,7 +25,7 @@
 			margin: 0 0 15px 0;
 		}
 	</style>
-	<title>Сайт временно отключен</title>
+	<title>РЎР°Р№С‚ РІСЂРµРјРµРЅРЅРѕ РѕС‚РєР»СЋС‡РµРЅ</title>
 </head>
 <body>
 <div align="center" class="errorwrap">

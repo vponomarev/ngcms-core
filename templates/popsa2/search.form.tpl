@@ -1,6 +1,6 @@
 <div class="blue_search">
 	<form method="post" action="{form_url}">
-		<input type="text" placeholder="Ââåäèòå çàïðîñ" name="search"/><input class="search_btn" type="image" src="{tpl_url}/images/clean.png"/>
+		<input type="text" placeholder="Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð·Ð°Ð¿Ñ€Ð¾Ñ" name="search"/><input class="search_btn" type="image" src="{tpl_url}/images/clean.png"/>
 		<input type="hidden" name="category" value=""/>
 		<input type="hidden" name="postdate" value=""/>
 	</form>

@@ -799,11 +799,11 @@ function ChangeDate($time = 0, $nodiv = 0) {
 
 //
 // Return a list of files
-// $path		- путь по которому искать файлы
-// $ext			- [scalar/array] расширение (одно или массивом) файла
-// $showExt		- флаг: показывать ли расширение [0 - нет, 1 - показывать, 2 - использовать в значениях]
-// $silentError		- не выводить сообщение об ошибке
-// $returnNullOnError	- возвращать NULL при ошибке
+// $path		- РїСѓС‚СЊ РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РёСЃРєР°С‚СЊ С„Р°Р№Р»С‹
+// $ext			- [scalar/array] СЂР°СЃС€РёСЂРµРЅРёРµ (РѕРґРЅРѕ РёР»Рё РјР°СЃСЃРёРІРѕРј) С„Р°Р№Р»Р°
+// $showExt		- С„Р»Р°Рі: РїРѕРєР°Р·С‹РІР°С‚СЊ Р»Рё СЂР°СЃС€РёСЂРµРЅРёРµ [0 - РЅРµС‚, 1 - РїРѕРєР°Р·С‹РІР°С‚СЊ, 2 - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ Р·РЅР°С‡РµРЅРёСЏС…]
+// $silentError		- РЅРµ РІС‹РІРѕРґРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
+// $returnNullOnError	- РІРѕР·РІСЂР°С‰Р°С‚СЊ NULL РїСЂРё РѕС€РёР±РєРµ
 function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnError = 0) {
 
 	$list = array();
@@ -2335,35 +2335,35 @@ function loadGroups() {
 		$UGROUP[1] = array(
 			'identity' => 'admin',
 			'langName' => array(
-				'russian' => 'Администратор',
+				'russian' => 'РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ',
 				'english' => 'Administrator',
 			),
 		);
 		$UGROUP[2] = array(
 			'identity' => 'editor',
 			'langName' => array(
-				'russian' => 'Редактор',
+				'russian' => 'Р РµРґР°РєС‚РѕСЂ',
 				'english' => 'Editor',
 			),
 		);
 		$UGROUP[3] = array(
 			'identity' => 'journalist',
 			'langName' => array(
-				'russian' => 'Журналист',
+				'russian' => 'Р–СѓСЂРЅР°Р»РёСЃС‚',
 				'english' => 'Journalist',
 			),
 		);
 		$UGROUP[4] = array(
 			'identity' => 'commentator',
 			'langName' => array(
-				'russian' => 'Комментатор',
+				'russian' => 'РљРѕРјРјРµРЅС‚Р°С‚РѕСЂ',
 				'english' => 'Commentator',
 			),
 		);
 		//		$UGROUP[5] = array(
 		//			'identity'	=> 'tester',
 		//			'langName'	=> array(
-		//				'russian'	=> 'Тестировщик',
+		//				'russian'	=> 'РўРµСЃС‚РёСЂРѕРІС‰РёРє',
 		//				'english'	=> 'Tester',
 		//			),
 		//		);
@@ -2519,7 +2519,7 @@ function ngExceptionHandler($exception) {
 	print "</tbody></table>";
 }
 
-//Проверяем переменную
+//РџСЂРѕРІРµСЂСЏРµРј РїРµСЂРµРјРµРЅРЅСѓСЋ
 function getIsSet(&$result) {
 
 	if (isset($result))
@@ -3232,7 +3232,7 @@ function ngCollectTrace($style = 0) {
 }
 
 /**
- * Быстрый дебаг
+ * Р‘С‹СЃС‚СЂС‹Р№ РґРµР±Р°Рі
  *
  * @param mixed $obj
  *

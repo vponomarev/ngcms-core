@@ -2,12 +2,12 @@
 	<div class="short">
 		<header><a href="{link}"><h2 class="green_l">{title}</h2></a></header>
 		<div class="telo">
-			[comheader]<p>Все комментарии посетителей к данной новости</p>[/comheader]
+			[comheader]<p>Р’СЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё РїРѕСЃРµС‚РёС‚РµР»РµР№ Рє РґР°РЅРЅРѕР№ РЅРѕРІРѕСЃС‚Рё</p>[/comheader]
 		</div>
 	</div>
 </article>
 <div class="comm">
-	<div class="telo"><h3 id="comments">Комментарии посетителей</h3></div>
+	<div class="telo"><h3 id="comments">РљРѕРјРјРµРЅС‚Р°СЂРёРё РїРѕСЃРµС‚РёС‚РµР»РµР№</h3></div>
 </div>
 <div id="new_comments_rev"></div>
 {entries}
@@ -16,7 +16,7 @@
 [more_comments]
 <nav>
 	<div class="w_box">
-		<!-- pagination START - вывод постраничной навигации (pages.tpl & variables.ini) -->
+		<!-- pagination START - РІС‹РІРѕРґ РїРѕСЃС‚СЂР°РЅРёС‡РЅРѕР№ РЅР°РІРёРіР°С†РёРё (pages.tpl & variables.ini) -->
 		<div id="pagination">
 			{more_comments}
 			<div class="clear"></div>
@@ -26,8 +26,8 @@
 </nav>
 [/more_comments]
 [regonly]
-<div class="msgi">Только зарегистрированные пользователи могут оставлять в данной новости свои комментарии.
+<div class="msgi">РўРѕР»СЊРєРѕ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РјРѕРіСѓС‚ РѕСЃС‚Р°РІР»СЏС‚СЊ РІ РґР°РЅРЅРѕР№ РЅРѕРІРѕСЃС‚Рё СЃРІРѕРё РєРѕРјРјРµРЅС‚Р°СЂРёРё.
 </div>[/regonly]
 [commforbidden]
-<div class="msge">Комментирование данной новости запрещено!</div>[/commforbidden]
+<div class="msge">РљРѕРјРјРµРЅС‚РёСЂРѕРІР°РЅРёРµ РґР°РЅРЅРѕР№ РЅРѕРІРѕСЃС‚Рё Р·Р°РїСЂРµС‰РµРЅРѕ!</div>[/commforbidden]
 {form}

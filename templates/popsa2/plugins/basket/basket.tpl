@@ -1,19 +1,19 @@
-<!--Корзина-->
+<!--РљРѕСЂР·РёРЅР°-->
 <div class="fullnews">
 	<div class="telo">
-		<h1>Корзина</h1>
+		<h1>РљРѕСЂР·РёРЅР°</h1>
 	</div>
 	<div class="table">
 		<table class="basket_tb">
 			<tr>
-				<th width="56">№ п/п</th>
-				<th width="202">Наименование</th>
-				<th width="108">Кол-во, шт.</th>
-				<th width="84">Цена, руб</th>
+				<th width="56">в„– Рї/Рї</th>
+				<th width="202">РќР°РёРјРµРЅРѕРІР°РЅРёРµ</th>
+				<th width="108">РљРѕР»-РІРѕ, С€С‚.</th>
+				<th width="84">Р¦РµРЅР°, СЂСѓР±</th>
 			</tr>
 			<tr>
 				<td>xxx</td>
-				<td>Супер кисточка XMS3000</td>
+				<td>РЎСѓРїРµСЂ РєРёСЃС‚РѕС‡РєР° XMS3000</td>
 				<td class="detail">
 					<img src="../images/tab_minus.png"/>
 					<input name="" type="text" class="kolvo"/>
@@ -24,13 +24,13 @@
 		</table>
 	</div>
 	<div class="clear20"></div>
-	<span class="right_s"><img src="../images/btn_pereschet.png" alt="Пересчитать заказ" class="btn_more"/> <img src="../images/btn_order.png" alt="Оформить заказ" class="btn_order"/></span>
+	<span class="right_s"><img src="../images/btn_pereschet.png" alt="РџРµСЂРµСЃС‡РёС‚Р°С‚СЊ Р·Р°РєР°Р·" class="btn_more"/> <img src="../images/btn_order.png" alt="РћС„РѕСЂРјРёС‚СЊ Р·Р°РєР°Р·" class="btn_order"/></span>
 	<div class="clear20"></div>
 </div>
-<!--/Корзина-->
+<!--/РљРѕСЂР·РёРЅР°-->
 <article>
 	<div class="full">
-		<header><h1>Корзина</h1></header>
+		<header><h1>РљРѕСЂР·РёРЅР°</h1></header>
 		<div class="telo">
 
 		</div>

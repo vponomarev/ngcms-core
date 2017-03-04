@@ -129,7 +129,7 @@ function admConfigurationTestEMail($params) {
 	$mail->Subject = 'NGCMS Sending test message from admin panel [' . $_SERVER['SERVER_NAME'] . ']';
 	$mail->AddAddress($params['to']['email'], $params['to']['email']);
 	$mail->ContentType = 'text/html';
-	$mail->Body = 'Привет, ' . $params['to']['email'] . "!<br/><br/>\nАдминистратор сайта [" . $_SERVER['SERVER_NAME'] . "] только что отправил тебе тестовое email сообщение.<br/>\nЕсли ты получил это сообщение, то всё в порядке!<br/><br/>\n---<br/>\nС уважением,<br/>\nМодуль отправки писем NGCMS.";
+	$mail->Body = 'РџСЂРёРІРµС‚, ' . $params['to']['email'] . "!<br/><br/>\nРђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ СЃР°Р№С‚Р° [" . $_SERVER['SERVER_NAME'] . "] С‚РѕР»СЊРєРѕ С‡С‚Рѕ РѕС‚РїСЂР°РІРёР» С‚РµР±Рµ С‚РµСЃС‚РѕРІРѕРµ email СЃРѕРѕР±С‰РµРЅРёРµ.<br/>\nР•СЃР»Рё С‚С‹ РїРѕР»СѓС‡РёР» СЌС‚Рѕ СЃРѕРѕР±С‰РµРЅРёРµ, С‚Рѕ РІСЃС‘ РІ РїРѕСЂСЏРґРєРµ!<br/><br/>\n---<br/>\nРЎ СѓРІР°Р¶РµРЅРёРµРј,<br/>\nРњРѕРґСѓР»СЊ РѕС‚РїСЂР°РІРєРё РїРёСЃРµРј NGCMS.";
 
 	$sendResult = false;
 	switch ($params['mode']) {
@@ -161,7 +161,7 @@ function admConfigurationTestEMail($params) {
 		return array('status' => 0, 'errorCode' => 1, 'errorText' => 'Send error: ' . $mail->ErrorInfo);
 	}
 
-	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', "Сообщение успешно отправлено.<br/>\nПроверьте получение письма в почтовом ящике <b>" . $params['to']['email'] . '</b>')));
+	return (array('status' => 1, 'errorCode' => 0, 'errorText' => iconv('Windows-1251', 'UTF-8', "РЎРѕРѕР±С‰РµРЅРёРµ СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅРѕ.<br/>\nРџСЂРѕРІРµСЂСЊС‚Рµ РїРѕР»СѓС‡РµРЅРёРµ РїРёСЃСЊРјР° РІ РїРѕС‡С‚РѕРІРѕРј СЏС‰РёРєРµ <b>" . $params['to']['email'] . '</b>')));
 
 }
 

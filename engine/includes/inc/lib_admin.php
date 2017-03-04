@@ -1061,8 +1061,8 @@ function showPreview() {
 	));
 
 	$SQL = array('id' => -1);
-	// Эмулируем работу всех штатных средств отвечающих за отображение новости.
-	// Заполняем соответствующие поля
+	// Р­РјСѓР»РёСЂСѓРµРј СЂР°Р±РѕС‚Сѓ РІСЃРµС… С€С‚Р°С‚РЅС‹С… СЃСЂРµРґСЃС‚РІ РѕС‚РІРµС‡Р°СЋС‰РёС… Р·Р° РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РЅРѕРІРѕСЃС‚Рё.
+	// Р—Р°РїРѕР»РЅСЏРµРј СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёРµ РїРѕР»СЏ
 	if ($_REQUEST['customdate']) {
 		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {

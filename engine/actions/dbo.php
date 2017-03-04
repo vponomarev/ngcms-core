@@ -82,7 +82,7 @@ function systemDboModify() {
 
 	// Update message counters
 	if ($_REQUEST['cat_recount']) {
-		// Îáíîâëÿåì ñ÷¸ò÷èêè â êàòåãîðèÿõ
+		// ÐžÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÑ‡Ñ‘Ñ‚Ñ‡Ð¸ÐºÐ¸ Ð² ÐºÐ°Ñ‚ÐµÐ³Ð¾Ñ€Ð¸ÑÑ…
 		$ccount = array();
 		$nmap = '';
 		$start = 0;
@@ -138,7 +138,7 @@ function systemDboModify() {
 			} while( $num_rows !== 0 );
 		}
 		
-		// Îáíîâëÿåì ñ÷åò÷èê ïîñòîâ ó þçåðîâ
+		// ÐžÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÑ‡ÐµÑ‚Ñ‡Ð¸Ðº Ð¿Ð¾ÑÑ‚Ð¾Ð² Ñƒ ÑŽÐ·ÐµÑ€Ð¾Ð²
 		$mysql->query("update " . prefix . "_users set news = 0" . ($haveComments ? ", com = 0" : ""));
 		$start = 0;
 		do {
@@ -152,12 +152,12 @@ function systemDboModify() {
 		} while( $num_rows !== 0 );
 		
 		if ($haveComments) {
-			// Îáíîâëÿåì ñ÷åò÷èê êîììåíòàðèåâ ó þçåðîâ
+			// ÐžÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÑ‡ÐµÑ‚Ñ‡Ð¸Ðº ÐºÐ¾Ð¼Ð¼ÐµÐ½Ñ‚Ð°Ñ€Ð¸ÐµÐ² Ñƒ ÑŽÐ·ÐµÑ€Ð¾Ð²
 			foreach ($mysql->select("select author_id, count(*) as cnt from " . prefix . "_comments group by author_id") as $row) {
 				$mysql->query("update " . uprefix . "_users set com=" . $row['cnt'] . " where id = " . $row['author_id']);
 			}
 		}
-		// Îáíîâëÿåì êîë-âî ïðèëîæåííûõ ôàéëîâ/èçîáðàæåíèé ê íîâîñòÿì
+		// ÐžÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÐºÐ¾Ð»-Ð²Ð¾ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð½Ñ‹Ñ… Ñ„Ð°Ð¹Ð»Ð¾Ð²/Ð¸Ð·Ð¾Ð±Ñ€Ð°Ð¶ÐµÐ½Ð¸Ð¹ Ðº Ð½Ð¾Ð²Ð¾ÑÑ‚ÑÐ¼
 		$mysql->query("update " . prefix . "_news set num_files = 0, num_images = 0");
 		foreach ($mysql->select("select linked_id, count(id) as cnt from " . prefix . "_files where (storage=1) and (linked_ds=1) group by linked_id") as $row) {
 			$mysql->query("update " . prefix . "_news set num_files = " . db_squote($row['cnt']) . " where id = " . db_squote($row['linked_id']));

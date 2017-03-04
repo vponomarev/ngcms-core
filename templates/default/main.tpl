@@ -143,7 +143,7 @@
 		<div class="copyright">
 			<p>&copy; <a title="{{ home_title }}" href="{{ home }}">{{ home_title }}</a> Powered by
 				<a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 2007
-				— {{ now|date("Y") }}. <br/>{{ lang.sql_queries }}: <b>{{ queries }}</b> | {{ lang.page_generation }}:
+				â€” {{ now|date("Y") }}. <br/>{{ lang.sql_queries }}: <b>{{ queries }}</b> | {{ lang.page_generation }}:
 				<b>{{ exectime }}</b> {{ lang.sec }} | <b>{{ memPeakUsage }}</b> Mb&nbsp;</p>
 			<p>{{ lang.all_right_reserved }} <br/> {{ lang.theme.copying_materials }}</p>
 		</div>

@@ -46,7 +46,7 @@
 	<div class="block-title">{{ lang.editnews['editnews_title'] }}:</div>
 	<table class="table table-striped table-bordered">
 		<tr>
-			<th colspan="2"><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></th>
+			<th colspan="2"><a role="button" href="{{ listURL }}">РџРµСЂРµР№С‚Рё Рє СЃРїРёСЃРєСѓ РІР°С€РёС… РЅРѕРІРѕСЃС‚РµР№</a></th>
 		</tr>
 		<tr>
 			<td>{{ lang.editnews['title'] }}:</td>
@@ -69,7 +69,7 @@
 		{% if (flags.edit_split) %}
 			<tr>
 				<td colspan="2">
-					<b>Вводная часть материала:</b> (Обязательно!)
+					<b>Р’РІРѕРґРЅР°СЏ С‡Р°СЃС‚СЊ РјР°С‚РµСЂРёР°Р»Р°:</b> (РћР±СЏР·Р°С‚РµР»СЊРЅРѕ!)
 					<div>
 						<div>{{ quicktags }}<br/> {{ smilies }}<br/><br/></div>
 						<textarea onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" id="ng_news_content_short" style="width:98%; height: 200px;" class="textarea">{{ content.short }}</textarea>
@@ -78,7 +78,7 @@
 			</tr>
 			{% if (flags.extended_more) %}
 				<tr>
-					<td>Разделитель:</td>
+					<td>Р Р°Р·РґРµР»РёС‚РµР»СЊ:</td>
 					<td>
 						<input tabindex="2" type="text" name="content_delimiter" class="input" value="{{ content.delimiter }}"/>
 					</td>
@@ -86,7 +86,7 @@
 			{% endif %}
 			<tr>
 				<td colspan="2">
-					<b>Материал полностью:</b> (Необязательно)
+					<b>РњР°С‚РµСЂРёР°Р» РїРѕР»РЅРѕСЃС‚СЊСЋ:</b> (РќРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)
 					<div>
 						<div>{{ quicktags }}<br/> {{ smilies }}<br/><br/></div>
 						<textarea onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" id="ng_news_content_full" style="width:98%; height: 200px;" class="textarea">{{ content.full }}</textarea>
@@ -135,15 +135,15 @@
 			<tr>
 				<td colspan="2">
 					<div>
-						Обратите снимание - у вас недостаточно прав для полноценного редактирования новости.<br/>
-						При сохранении будут произведены следующие изменения:<br/><br/>
-						{% if flags['publish.lost'] %}&#8594; Новость будет снята с публикации{% endif %}
-						{% if flags['html.lost'] %}&#8594; В новости будет запрещено использование HTML тегов и автоформатирование{% endif %}
-						{% if flags['mainpage.lost'] %}&#8594; Новость будет убрана с главной страницы{% endif %}
-						{% if flags['pinned.lost'] %}&#8594; С новости будет снято прикрепление на главной{% endif %}
-						{% if flags['catpinned.lost'] %}&#8594; С новости будет снято прикрепление в категории{% endif %}
-						{% if flags['favorite.lost'] %}&#8594; Новость будет удалена из закладок администратора{% endif %}
-						{% if flags['multicat.lost'] %}&#8594; Из новости будут удалены все дополнительные категории{% endif %}
+						РћР±СЂР°С‚РёС‚Рµ СЃРЅРёРјР°РЅРёРµ - Сѓ РІР°СЃ РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ РґР»СЏ РїРѕР»РЅРѕС†РµРЅРЅРѕРіРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ РЅРѕРІРѕСЃС‚Рё.<br/>
+						РџСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё Р±СѓРґСѓС‚ РїСЂРѕРёР·РІРµРґРµРЅС‹ СЃР»РµРґСѓСЋС‰РёРµ РёР·РјРµРЅРµРЅРёСЏ:<br/><br/>
+						{% if flags['publish.lost'] %}&#8594; РќРѕРІРѕСЃС‚СЊ Р±СѓРґРµС‚ СЃРЅСЏС‚Р° СЃ РїСѓР±Р»РёРєР°С†РёРё{% endif %}
+						{% if flags['html.lost'] %}&#8594; Р’ РЅРѕРІРѕСЃС‚Рё Р±СѓРґРµС‚ Р·Р°РїСЂРµС‰РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ HTML С‚РµРіРѕРІ Рё Р°РІС‚РѕС„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ{% endif %}
+						{% if flags['mainpage.lost'] %}&#8594; РќРѕРІРѕСЃС‚СЊ Р±СѓРґРµС‚ СѓР±СЂР°РЅР° СЃ РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹{% endif %}
+						{% if flags['pinned.lost'] %}&#8594; РЎ РЅРѕРІРѕСЃС‚Рё Р±СѓРґРµС‚ СЃРЅСЏС‚Рѕ РїСЂРёРєСЂРµРїР»РµРЅРёРµ РЅР° РіР»Р°РІРЅРѕР№{% endif %}
+						{% if flags['catpinned.lost'] %}&#8594; РЎ РЅРѕРІРѕСЃС‚Рё Р±СѓРґРµС‚ СЃРЅСЏС‚Рѕ РїСЂРёРєСЂРµРїР»РµРЅРёРµ РІ РєР°С‚РµРіРѕСЂРёРё{% endif %}
+						{% if flags['favorite.lost'] %}&#8594; РќРѕРІРѕСЃС‚СЊ Р±СѓРґРµС‚ СѓРґР°Р»РµРЅР° РёР· Р·Р°РєР»Р°РґРѕРє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°{% endif %}
+						{% if flags['multicat.lost'] %}&#8594; РР· РЅРѕРІРѕСЃС‚Рё Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РІСЃРµ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё{% endif %}
 					</div>
 				</td>
 			</tr>
@@ -165,10 +165,10 @@
 				{% if flags.can_publish %}
 					<option value="1" {% if (approve == 1) %}selected="selected"{% endif %}>{{ lang.editnews['state.published'] }}</option>{% endif %}
 			</select>
-			<input class="button" type="submit" onclick="return approveMode(-1);" value="Отправить"/>{% endif %}
-		<input class="button" type="button" onClick="preview()" value="Просмотр"/>
+			<input class="button" type="submit" onclick="return approveMode(-1);" value="РћС‚РїСЂР°РІРёС‚СЊ"/>{% endif %}
+		<input class="button" type="button" onClick="preview()" value="РџСЂРѕСЃРјРѕС‚СЂ"/>
 		{% if flags.deleteable %}
-			<input class="button" type="button" onClick="confirmit('{{ deleteURL }}', '{{ lang.editnews['sure_del'] }}')" value="Удалить"/>
+			<input class="button" type="button" onClick="confirmit('{{ deleteURL }}', '{{ lang.editnews['sure_del'] }}')" value="РЈРґР°Р»РёС‚СЊ"/>
 		{% endif %}
 	</div>
 </form>

@@ -49,7 +49,7 @@ $lang = array();
 $SYSTEM_FLAGS = array(
 	'actions.disabled' => array(),
 	'http.headers'     => array(
-		'content-type'  => 'text/html; charset=Windows-1251',
+		'content-type'  => 'text/html; charset=utf-8',
 		'cache-control' => 'private',
 	)
 );

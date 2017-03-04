@@ -113,7 +113,7 @@
 						<span class="icon icon-archiv"></span> {{ lang.theme.archive }}
 					</div>
 					<div class="block-archiv">
-						<!-- Åñëè â àðõèâå áîëåå 6 ìåñÿöåâ òî ñ ðàáîòàåò ñïîéëåð -->
+						<!-- â‰ˆÑÐ»Ð¸ Ð² Ð°Ñ€Ñ…Ð¸Ð²Ðµ Ð±Ð¾Ð»ÐµÐµ 6 Ð¼ÐµÑÂ¤Ñ†ÐµÐ² Ñ‚Ð¾ Ñ Ñ€Ð°Ð±Ð¾Ñ‚Ð°ÐµÑ‚ ÑÐ¿Ð¾Ð¹Ð»ÐµÑ€ -->
 						{{ callPlugin('archive.show', {'maxnum' : 12, 'counter' : 1, 'template': 'archive', 'cacheExpire': 60}) }}
 					</div>
 				</div>
@@ -156,9 +156,9 @@
 	<div id="footer">
 		<div class="copyright">
 			<em>Powered by <a title="Next Generation CMS" target="_blank" href="http://ngcms.ru/">NG CMS</a> 2007
-				— {{ now|date("Y") }}. | {{ lang.sql_queries }}: <b>{{ queries }}</b> | {{ lang.page_generation }}:
+				Ð§ {{ now|date("Y") }}. | {{ lang.sql_queries }}: <b>{{ queries }}</b> | {{ lang.page_generation }}:
 				<b>{{ exectime }}</b> {{ lang.sec }} | <b>{{ memPeakUsage }}</b> Mb&nbsp;</em><br>
-			© <a href="{{ home }}">{{ home_title }}</a>
+			Â© <a href="{{ home }}">{{ home_title }}</a>
 		</div>
 		<div class="by">
 			<a href="http://bymel.ru/" target="_blank"><img src="{{ tpl_url }}/img/by.png" alt=""></a>
