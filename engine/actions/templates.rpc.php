@@ -198,7 +198,7 @@ function admTemplatesGetFile($params) {
 		$data = 'Image size: <b>' . $imgW . ' px</b> * <b>' . $imgH . ' px</b><br/><img border="1" style="max-height: 500px; max-width: 700px;" src="' . $resultFileURL . '"/>';
 		$type = 'image';
 	} else {
-		$data = iconv('Windows-1251', 'UTF-8', file_get_contents($resultFileName));
+		$data = file_get_contents($resultFileName);
 	}
 	$fileTime = @filemtime($resultFileName);
 	if ($fileTime > 0) {
@@ -256,7 +256,7 @@ function admTemplatesUpdateFile($params) {
 		return array('status' => 0, 'errorCode' => 8, 'errorText' => 'Dont have write privileges for [' . $resultFileName . ']');
 	}
 
-	$newData = iconv('UTF-8', 'Windows-1251', $params['content']);
+	$newData = $params['content'];
 	$origData = file_get_contents($resultFileName);
 
 	// Notify if file was not changed

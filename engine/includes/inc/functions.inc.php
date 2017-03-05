@@ -389,7 +389,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 	@include_once root . 'includes/classes/phpmailer/PHPMailerAutoload.php';
 	$mail = new phpmailer;
 
-	$mail->CharSet = 'Windows-1251';
+	$mail->CharSet = 'UTF-8';
 
 	// Fill `sender` field
 	$mail->FromName = 'NGCMS sender';

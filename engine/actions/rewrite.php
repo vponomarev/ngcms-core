@@ -37,9 +37,9 @@ $lang = LoadLang('rewrite', 'admin');
 $jconfig = array();
 foreach ($ULIB->CMD as $plugin => $crow) {
 	foreach ($crow as $cmd => $param) {
-		$jconfig[$plugin][$cmd] = array('vars' => array(), 'descr' => iconv('Windows-1251', 'UTF-8', $ULIB->extractLangRec($param['descr'])));
+		$jconfig[$plugin][$cmd] = array('vars' => array(), 'descr' => $ULIB->extractLangRec($param['descr']));
 		foreach ($param['vars'] as $vname => $vdata) {
-			$jconfig[$plugin][$cmd]['vars'][$vname] = iconv('Windows-1251', 'UTF-8', $ULIB->extractLangRec($vdata['descr']));
+			$jconfig[$plugin][$cmd]['vars'][$vname] = $ULIB->extractLangRec($vdata['descr']);
 		}
 	}
 }
@@ -63,7 +63,7 @@ foreach ($UH->hList as $hId) {
 
 	// Fetch associated command
 	if ($cmd = $ULIB->fetchCommand($hId['pluginName'], $hId['handlerName'])) {
-		$jrow['description'] = iconv('Windows-1251', 'UTF-8', $ULIB->extractLangRec($cmd['descr']));
+		$jrow['description'] = $ULIB->extractLangRec($cmd['descr']);
 	}
 	$jdata[] = $jrow;
 	$recno++;

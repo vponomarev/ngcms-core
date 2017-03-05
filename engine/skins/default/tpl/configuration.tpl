@@ -108,7 +108,7 @@
 				ngNotifyWindow('{{ lang['rpc_jsonError'] }} ' + data, '{{ lang['notifyWindowError'] }}');
 			}
 			if (!resTX['status']) {
-				ngNotifyWindow('Error [' + resTX['errorCode'] + ']: ' + resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
+				ngNotifyWindow('{{ lang['notifyWindowError'] }} [' + resTX['errorCode'] + ']: ' + resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
 			} else {
 				ngNotifyWindow(resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
 			}
