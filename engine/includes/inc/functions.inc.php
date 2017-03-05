@@ -42,7 +42,7 @@ function secure_html($string) {
 		return '[UNEXPECTED ARRAY]';
 	}
 
-	return str_replace(array("{", "<", ">"), array("&#123;", "&lt;", "&gt;"), htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'cp1251'));
+	return str_replace(array("{", "<", ">"), array("&#123;", "&lt;", "&gt;"), htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
 }
 
 function Formatsize($file_size) {
@@ -543,11 +543,11 @@ function msgSticker($msg, $type = '', $disp = -1) {
 	$lines = array();
 	if (is_array($msg)) {
 		foreach ($msg as $x) {
-			$txt = (isset($x[2]) && ($x[2])) ? $x[0] : htmlspecialchars($x[0], ENT_COMPAT | ENT_HTML401, "cp1251");
+			$txt = (isset($x[2]) && ($x[2])) ? $x[0] : htmlspecialchars($x[0], ENT_COMPAT | ENT_HTML401, "UTF-8");
 			$lines [] = (isset($x[1]) && ($x[1] == 'title')) ? ('<b>' . $txt . '</b>') : $txt;
 		}
 	} else {
-		$lines [] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "cp1251");
+		$lines [] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "UTF-8");
 	}
 
 	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("' .

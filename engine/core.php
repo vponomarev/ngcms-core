@@ -238,7 +238,7 @@ $twig = new Twig_Environment($twigLoader, array(
 	'cache'               => root . 'cache/twig/',
 	'auto_reload'         => true,
 	'autoescape'          => false,
-	'charset'             => 'cp1251',
+	'charset'             => 'UTF-8',
 	'base_template_class' => 'Twig_Template_NGCMS',
 ));
 

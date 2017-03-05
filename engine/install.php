@@ -238,7 +238,7 @@ function doConfig_db($check) {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 	$tvars['vars']['error_message'] = '';
 	if ($check) {
@@ -296,7 +296,7 @@ function doConfig_db($check) {
 				 'reg_dbhost', 'reg_dbuser', 'reg_dbpass', 'reg_dbname', 'reg_dbprefix',
 				 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass'
 			 ) as $k) {
-		$tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'cp1251');
+		$tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8');
 		if (!isset($tvars['vars']['err:' . $k])) $tvars['vars']['err:' . $k] = '';
 	}
 	if ($_POST['reg_autocreate'])
@@ -419,7 +419,7 @@ function doConfig_perm() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
 	// Выводим форму проверки
@@ -496,7 +496,7 @@ function doConfig_plugins() {
 	$myparams = array('action', 'stage');
 	foreach ($_POST as $k => $v)
 		if ((array_search($k, $myparams) === false) && (!preg_match('/^plugin\:/', $k)))
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
 	// Выводим форму проверки
@@ -565,7 +565,7 @@ function doConfig_templates() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
 	// Выводим форму проверки
@@ -586,7 +586,7 @@ function doConfig_common() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
 	// Preconfigure some paratemers
@@ -594,7 +594,7 @@ function doConfig_common() {
 	if (!isset($_POST['home_title'])) $_POST['home_title'] = $lang['common.title.default'];
 
 	foreach (array('admin_login', 'admin_password', 'admin_email', 'home_url', 'home_title') as $k) {
-		$tvars['vars'][$k] = isset($_POST[$k]) ? htmlspecialchars($_POST[$k], ENT_COMPAT | ENT_HTML401, 'cp1251') : '';
+		$tvars['vars'][$k] = isset($_POST[$k]) ? htmlspecialchars($_POST[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8') : '';
 	}
 
 	$tvars['vars']['autodata_checked'] = (isset($_POST['autodata']) && ($_POST['autodata'] == '1')) ? ' checked="checked"' : '';
@@ -617,7 +617,7 @@ function doInstall() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
 	// Error indicator
@@ -702,7 +702,7 @@ function doInstall() {
 		if (($msq = $mysql->query("show variables like 'character_set_client'")) && ($mysql->num_rows($msq))) {
 			$charsetEngine = 1;
 		}
-		$charset = $charsetEngine ? ' default charset=cp1251' : '';
+		$charset = $charsetEngine ? ' default charset=utf8' : '';
 
 		array_push($LOG, 'Ваша версия сервера БД mySQL ' . ((!$charsetEngine) ? 'не' : '') . 'поддерживает множественные кодировки.');
 
