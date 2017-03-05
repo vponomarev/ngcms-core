@@ -183,7 +183,7 @@ function rpcAdminUsersSearch($params) {
 		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
 	}
 
-	$searchName = iconv('UTF-8', 'Windows-1251', $params);
+	$searchName = $params;
 
 	// Check search mode
 	// ! - show TOP users by posts
@@ -197,7 +197,7 @@ function rpcAdminUsersSearch($params) {
 	// Scan incoming params
 	$output = array();
 	foreach ($mysql->select($SQL) as $row) {
-		$output[] = array(iconv('Windows-1251', 'UTF-8', $row['name']), iconv('Windows-1251', 'UTF-8', $row['news'] . ' íîâîñòåé'));
+		$output[] = array($row['name'], $row['news'] . ' Ğ½Ğ¾Ğ²Ğ¾ÑÑ‚ĞµĞ¹');
 	}
 
 	return array('status' => 1, 'errorCode' => 0, 'data' => array($params, $output));
