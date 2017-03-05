@@ -175,7 +175,7 @@ function rpcRewriteSubmit($params) {
 // Admin panel: search for users
 function rpcAdminUsersSearch($params) {
 
-	global $userROW, $mysql;
+	global $userROW, $mysql, $lang;
 
 	// Check for permissions
 	if (!is_array($userROW) || ($userROW['status'] > 3)) {
@@ -197,7 +197,7 @@ function rpcAdminUsersSearch($params) {
 	// Scan incoming params
 	$output = array();
 	foreach ($mysql->select($SQL) as $row) {
-		$output[] = array($row['name'], $row['news'] . ' новостей');
+		$output[] = array($row['name'], $row['news'] . ' ' .$lang['news']);
 	}
 
 	return array('status' => 1, 'errorCode' => 0, 'data' => array($params, $output));
