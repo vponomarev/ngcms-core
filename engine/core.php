@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2017 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -9,6 +9,37 @@
 
 // Configure error display mode
 @error_reporting(E_ALL ^ E_NOTICE);
+
+// ============================================================================
+// Define global directory constants
+// ============================================================================
+define('NGCoreDir', dirname(__FILE__) . '/');				// Location of Core directory
+define('NGRootDir', dirname(dirname(__FILE__)) . '/');		// Location of SiteRoot
+define('NGClassDir', NGCoreDir.'classes/');					// Location of AutoLoaded classes
+
+spl_autoload_register(function($className) {
+	if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+		require_once $fName;
+	}
+});
+
+// Magic function for immediate closure call
+function NGRun($f) { $f(); }
+
+// ============================================================================
+// Check for external MODULE dependencies
+// ============================================================================
+NGRun(function() {
+	$depList = array(
+		'sql' => array('mysql' => 'mysql_connect', 'mysqli' => 'mysqli_connect'),
+		'zlib' => 'ob_gzhandler',
+		'iconv' => 'iconv',
+		'GD' => 'imagecreatefromjpeg'
+	);
+	NGCoreFunctions::resolveDeps($depList);
+});
+
+
 
 // ============================================================================
 // Global variables definition
@@ -80,30 +111,6 @@ $PLUGINS = array(
 	'config:loaded' => 0,
 );
 
-// ===========================================================
-// Check for support of mondatory modules
-// ===========================================================
-{
-	foreach (array('sql' => array('mysql' => 'mysql_connect', 'mysqli' => 'mysqli_connect'), 'zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
-		$is_error = false;
-		if (is_array($pFunction)) {
-			foreach ($pFunction as $kModule => $vFunction) {
-				if (extension_loaded($kModule) && function_exists($vFunction)) break;
-				if (!next($pFunction)) $is_error = true;
-			}
-		} else if (!extension_loaded($pModule) || !function_exists($pFunction)) {
-			$kModule = $pModule;
-			$vFunction = $pFunction;
-			$is_error = true;
-		}
-
-		if ($is_error) {
-			print "<html>\n<head><title>FATAL EXECUTION ERROR</title></head>\n<body>\n<div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), PHP extension [" . $pModule . "] with function [" . $pFunction . "] is not loaded!</span></div>\n</body>\n</html>\n";
-			//print str_replace(array('{extension}', '{function}'), array($kModule, $vFunction), $lang['fatal.lostlib']);
-			die();
-		}
-	}
-}
 
 // Define global constants "root", "site_root"
 define('root', dirname(__FILE__) . '/');
