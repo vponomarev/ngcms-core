@@ -98,7 +98,7 @@ $PLUGINS = array(
 		}
 
 		if ($is_error) {
-			print "<html>\n<head><title>FATAL EXECUTION ERROR</title></head>\n<body>\n<div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), PHP extension [" . $kModule . "] with function [" . $vFunction . "] is not loaded!</span></div>\n</body>\n</html>\n";
+			print "<html>\n<head><title>FATAL EXECUTION ERROR</title></head>\n<body>\n<div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), PHP extension [" . $pModule . "] with function [" . $pFunction . "] is not loaded!</span></div>\n</body>\n</html>\n";
 			//print str_replace(array('{extension}', '{function}'), array($kModule, $vFunction), $lang['fatal.lostlib']);
 			die();
 		}
@@ -397,10 +397,5 @@ $lang = LoadLangTheme();
 
 $langShortMonths = explode(",", $lang['short_months']);
 $langMonths = explode(",", $lang['months']);
-
-$f = $langShortMonths;
-$f2 = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12');
-$f3 = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-$r = explode(",", $lang['months']);
 
 $timer->registerEvent('* CORE.PHP is complete');
