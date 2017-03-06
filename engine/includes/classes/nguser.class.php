@@ -25,14 +25,20 @@ class NGUser implements ArrayAccess {
     }
 
     function __get($k) {
-        return $this->getKey($k);
+        return $this->get($k);
     }
 
     function __set($k, $v) {
         $this->set($k, $v);
     }
 
+    function isAdmin() {
+        return ($this->get('status', 0) == 1)?true:false;
+    }
+
+    // ============================================
     // AccessArray implementation
+    // ============================================
     public function offsetExists($offset) {
         return isset($this->keys[$offset]);
     }
