@@ -10,41 +10,41 @@ class NGEngine {
      * @return NGEngine Return instance of NGEngine singleton
      */
     static function getInstance() {
-        if (NGEngine::$instance === false) {
-            NGEngine::$instance = new static();
+        if (static::$instance === false) {
+            static::$instance = new static();
         }
-        return NGEngine::$instance;
+        return static::$instance;
     }
 
     // Set item
     function set($e, $v) {
-        NGEngine::$items[$e] = $v;
+        static::$items[$e] = $v;
     }
 
     // Get item
     function get($e) {
-        return NGEngine::$items[$e];
+        return static::$items[$e];
     }
 
     // Check if item is set
     function has($e) {
-        return isset(NGEngine::$items[$e]);
+        return isset(static::$items[$e]);
     }
 
     // Get DB connection
     function getDB() {
-        if (!isset(NGEngine::$items['db']))
+        if (!isset(static::$items['db']))
             throw new Exception('NGEngine: getDB(): DB class is not initalized.');
 
-        return NGEngine::$items['db'];
+        return static::$items['db'];
     }
 
     // Get Legacy DB connection
     function getLegacyDB() {
-        if (!isset(NGEngine::$items['legacyDB']))
+        if (!isset(static::$items['legacyDB']))
             throw new Exception('NGEngine: getLegacyDB(): DB class is not initalized.');
 
-        return NGEngine::$items['legacyDB'];
+        return static::$items['legacyDB'];
     }
 
     // Get event handler
@@ -53,10 +53,10 @@ class NGEngine {
      * @throws Exception Init error
      */
     function getEvents() {
-        if (!isset(NGEngine::$items['events']))
+        if (!isset(static::$items['events']))
             throw new Exception('NGEngine: getEvents(): Event handler is not loaded.');
 
-        return NGEngine::$items['events'];
+        return static::$items['events'];
     }
 
     // Get error handler
@@ -65,33 +65,33 @@ class NGEngine {
      * @throws Exception Init error
      */
     function getErrorHandler() {
-        if (!isset(NGEngine::$items['errorHandler']))
+        if (!isset(static::$items['errorHandler']))
             throw new Exception('NGEngine: getErrorHandler(): Error handler is not loaded.');
 
-        return NGEngine::$items['errorHandler'];
+        return static::$items['errorHandler'];
     }
 
     // Get configuration parameter
     function getConfigParam($param = null, $defaultValue = null) {
-        if (isset(NGEngine::$items['config'])) {
+        if (isset(static::$items['config'])) {
             if (is_null($param))
-                return NGEngine::$items['config'];
+                return static::$items['config'];
 
-            if (isset(NGEngine::$items['config'][$param]))
-                return NGEngine::$items['config'][$param];
+            if (isset(static::$items['config'][$param]))
+                return static::$items['config'][$param];
         }
         return $defaultValue;
     }
 
     function hasCurrentUser() {
-        return isset(NGEngine::$items['currentUser'])?true:false;
+        return isset(static::$items['currentUser'])?true:false;
     }
 
     /**
      * @return NGUser Return instance of NGUser for current user
      */
     function getCurrentUser() {
-        return isset(NGEngine::$items['currentUser'])?NGEngine::$items['currentUser']:null;
+        return isset(static::$items['currentUser'])?static::$items['currentUser']:null;
     }
 
 
