@@ -48,6 +48,9 @@ class NGEngine {
     }
 
     // Get event handler
+    /**
+     * @return NGEvents Return instance of NGEvents
+     */
     function getEvents() {
         if (!isset(NGEngine::$items['events']))
             throw new Exception('NGEngine: getEvents(): Event handler is not loaded.');
