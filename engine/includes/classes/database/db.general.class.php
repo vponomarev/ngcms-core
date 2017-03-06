@@ -1,11 +1,11 @@
 <?php
 
-abstract class NG_DB {
+abstract class NGDB {
     // Implement connection to DB
     abstract function __construct($params);
 
     // Generate select request to DB [ ROWS are returned ]
-    abstract function select($query, $params = array());
+    abstract function query($query, $params = array());
 
     // Generate SQL request and return SINGLE line [ ROWS are returned ]
     abstract function record($query, $params = array());

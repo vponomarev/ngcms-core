@@ -50,6 +50,7 @@ class NGEngine {
     // Get event handler
     /**
      * @return NGEvents Return instance of NGEvents
+     * @throws Exception Init error
      */
     function getEvents() {
         if (!isset(NGEngine::$items['events']))
@@ -59,6 +60,10 @@ class NGEngine {
     }
 
     // Get error handler
+    /**
+     * @return NGErrorHandler Return instance of NGErrorHandler
+     * @throws Exception Init error
+     */
     function getErrorHandler() {
         if (!isset(NGEngine::$items['errorHandler']))
             throw new Exception('NGEngine: getErrorHandler(): Error handler is not loaded.');
@@ -66,7 +71,7 @@ class NGEngine {
         return NGEngine::$items['errorHandler'];
     }
 
-    // Get configurarion parameter
+    // Get configuration parameter
     function getConfigParam($param = null, $defaultValue = null) {
         if (isset(NGEngine::$items['config'])) {
             if (is_null($param))
