@@ -21,7 +21,7 @@ class NGErrorHandler {
                         "<span style='color: red;'>MySQL ERROR [" . $params['type'] . "]: *** (you don't have a permission to see this error) ***</span></span></div>";
             }
         } else {
-            die("NGErrorHandler: Unknown exception raised for area [".$area."]".(is_object($e)?' ('.$e->getCode().'): ['.$e->getMessage().']':''));
+            throw new Exception("NGErrorHandler: Unknown exception raised for area [".$area."]".(is_object($e)?' ('.$e->getCode().'): ['.$e->getMessage().']':''));
         }
     }
 }
