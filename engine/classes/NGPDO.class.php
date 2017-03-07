@@ -9,6 +9,7 @@ class NGPDO extends NGDB {
     protected $errorSecurity    = 0;
     protected $eventLogger      = null;
     protected $errorHandler     = null;
+    protected $dbCharset        = 'UTF8';
 
     function __construct($params) {
         if (!is_array($params)) {
@@ -31,8 +32,26 @@ class NGPDO extends NGDB {
         if (!isset($params['host']))
             throw new Exception('NG_PDO: Host is not specified');
 
-        $this->eventLogger  = NGEngine::getInstance()->getEvents();
-        $this->errorHandler = NGEngine::getInstance()->getErrorHandler();
+        if (isset($params['eventLogger'])) {
+            if (!($params['eventLogger'] instanceof NGEvents))
+                throw new Exception('NGPDO: Passed eventLogger is not an instance of NGEvents class');
+
+            $this->eventLogger = $params['eventLogger'];
+        } else {
+            $this->eventLogger  = NGEngine::getInstance()->getEvents();
+        }
+
+        if (isset($params['errorHandler'])) {
+            if (!($params['errorHandler'] instanceof NGErrorHandler))
+                throw new Exception('NGPDO: Passed eventLogger is not an instance of NGErrorHandler class');
+
+            $this->errorHandler = $params['errorHandler'];
+        } else {
+            $this->errorHandler = NGEngine::getInstance()->getErrorHandler();
+        }
+
+        if (isset($params['charset']))
+            $this->dbCharset = $params['charset'];
 
 
         // Mark start of DB connection procedure
@@ -47,9 +66,9 @@ class NGPDO extends NGDB {
 
         // Try to switch CHARSET
         try {
-            $this->db->exec("/*!40101 SET NAMES 'cp1251' */");
+            $this->db->exec("/*!40101 SET NAMES '".$this->dbCharset."' */");
         } catch (PDOException $e) {
-            throw new Exception('NG_PDO: Error switching charset ('.$e->getCode().") [".$e->getMessage()."]");
+            throw new Exception("NG_PDO: Error switching to charset '".$this->dbCharset."' (".$e->getCode().") [".$e->getMessage()."]");
         }
 
         $this->eventLogger->registerEvent('NG_PDO', '', '* DB Connection established', $this->eventLogger->tickStop($tStart));
