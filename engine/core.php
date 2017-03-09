@@ -17,6 +17,7 @@ define('NGCoreDir', dirname(__FILE__) . '/');				// Location of Core directory
 define('NGRootDir', dirname(dirname(__FILE__)) . '/');		// Location of SiteRoot
 define('NGClassDir', NGCoreDir.'classes/');					// Location of AutoLoaded classes
 
+// Autoloader for NEW STYLE Classes
 spl_autoload_register(function($className) {
 	if (file_exists($fName = NGClassDir.$className.'.class.php')) {
 		require_once $fName;

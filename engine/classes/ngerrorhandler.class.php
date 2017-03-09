@@ -1,6 +1,9 @@
 <?php
 
 class NGErrorHandler {
+    function __construct() {
+
+    }
 
     function throwError($area, $params = array(), Exception $e = null) {
         // SQL error handler
