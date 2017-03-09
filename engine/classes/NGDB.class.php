@@ -16,6 +16,9 @@ abstract class NGDB {
     // Generate SQL request and return FIRST variable from SINGLE line
     abstract function result($query, $params = array());
 
+    // Quote string
+    abstract function quote($string);
+
     // Return engine type
     abstract function getEngineType();
 

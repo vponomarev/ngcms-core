@@ -182,6 +182,18 @@ class NGPDO extends NGDB {
         return null;
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
+    function quote($string)  {
+        return $this->db->quote($string);
+    }
+
+
+    /**
+     * @return string
+     */
     function getEngineType() {
         return 'PDO';
     }
@@ -193,9 +205,13 @@ class NGPDO extends NGDB {
         return $this->db;
     }
 
+    /**
     // Report an SQL error
-    // $type	- query type
-    // $query	- text of the query
+
+     * @param $type string Query type
+     * @param $query string Query content
+     * @param PDOException $e
+     */
     function errorReport($type, $query, PDOException $e) {
         $errNo = 'n/a';
         $errMsg = 'n/a';
@@ -203,9 +219,8 @@ class NGPDO extends NGDB {
             $errNo = $e->getCode();
             $errMsg = $e->getMessage();
         }
-        NGEngine::getInstance()->getErrorHandler()->throwError('SQL', array('errNo' => $errNo, 'errMsg' => $errMsg, 'type' => $type, 'query' => $query), $e);
+        $this->errorHandler->throwError('SQL', array('errNo' => $errNo, 'errMsg' => $errMsg, 'type' => $type, 'query' => $query), $e);
 	}
-
 }
 
 
