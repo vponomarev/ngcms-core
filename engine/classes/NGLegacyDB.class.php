@@ -48,4 +48,8 @@ class NGLegacyDB {
     function db_quote($string) {
         return $this->db->quote($string);
     }
+
+    function qcnt() {
+        return $this->db->getQueryCount();
+    }
 }

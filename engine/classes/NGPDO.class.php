@@ -221,6 +221,15 @@ class NGPDO extends NGDB {
         }
         $this->errorHandler->throwError('SQL', array('errNo' => $errNo, 'errMsg' => $errMsg, 'type' => $type, 'query' => $query), $e);
 	}
+
+    function getQueryCount() {
+        return $this->qCount;
+    }
+
+    function getQueryList() {
+        return $this->qList;
+    }
+
 }
 
 
