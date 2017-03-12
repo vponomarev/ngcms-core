@@ -46,10 +46,14 @@ class NGLegacyDB {
     }
 
     function db_quote($string) {
-        return $this->db->quote($string);
+        return substr($this->db->quote($string), 1, -1);
     }
 
     function qcnt() {
         return $this->db->getQueryCount();
+    }
+
+    function mysql_version() {
+        return $this->db->getDriver()->getAttribute("PDO::ATTR_SERVER_VERSION");
     }
 }
