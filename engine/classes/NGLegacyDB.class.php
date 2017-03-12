@@ -56,4 +56,16 @@ class NGLegacyDB {
     function mysql_version() {
         return $this->db->getDriver()->getAttribute("PDO::ATTR_SERVER_VERSION");
     }
+
+    function __get($name) {
+        if ($name == 'query_list') {
+            $qList = array();
+            foreach($this->db->getQueryList() as $r) {
+                $qList []= sprintf('%6.2f %6.2f %s', $r['start'], $r['duration'], $r['query']);
+            }
+            return $qList;
+        }
+        return null;
+    }
+
 }

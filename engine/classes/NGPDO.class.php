@@ -96,7 +96,7 @@ class NGPDO extends NGDB {
         }
         $duration = $this->eventLogger->tickStop($tStart);
         $this->eventLogger->registerEvent('NG_PDO', 'QUERY', $sql, $duration);
-        $this->qList []= array('query' => $sql, 'duration' => $duration);
+        $this->qList []= array('query' => $sql, 'duration' => $duration, 'start' => $tStart);
 
         return $r;
     }
