@@ -799,11 +799,11 @@ function ChangeDate($time = 0, $nodiv = 0) {
 
 //
 // Return a list of files
-// $path		- путь по которому искать файлы
-// $ext			- [scalar/array] расширение (одно или массивом) файла
-// $showExt		- флаг: показывать ли расширение [0 - нет, 1 - показывать, 2 - использовать в значениях]
-// $silentError		- не выводить сообщение об ошибке
-// $returnNullOnError	- возвращать NULL при ошибке
+// $path		- пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+// $ext			- [scalar/array] пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅпїЅпїЅ
+// $showExt		- пїЅпїЅпїЅпїЅ: пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ [0 - пїЅпїЅпїЅ, 1 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, 2 - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ]
+// $silentError		- пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+// $returnNullOnError	- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ NULL пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnError = 0) {
 
 	$list = array();
@@ -2335,35 +2335,35 @@ function loadGroups() {
 		$UGROUP[1] = array(
 			'identity' => 'admin',
 			'langName' => array(
-				'russian' => 'Администратор',
+				'russian' => 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
 				'english' => 'Administrator',
 			),
 		);
 		$UGROUP[2] = array(
 			'identity' => 'editor',
 			'langName' => array(
-				'russian' => 'Редактор',
+				'russian' => 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
 				'english' => 'Editor',
 			),
 		);
 		$UGROUP[3] = array(
 			'identity' => 'journalist',
 			'langName' => array(
-				'russian' => 'Журналист',
+				'russian' => 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
 				'english' => 'Journalist',
 			),
 		);
 		$UGROUP[4] = array(
 			'identity' => 'commentator',
 			'langName' => array(
-				'russian' => 'Комментатор',
+				'russian' => 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
 				'english' => 'Commentator',
 			),
 		);
 		//		$UGROUP[5] = array(
 		//			'identity'	=> 'tester',
 		//			'langName'	=> array(
-		//				'russian'	=> 'Тестировщик',
+		//				'russian'	=> 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ',
 		//				'english'	=> 'Tester',
 		//			),
 		//		);
@@ -2513,13 +2513,14 @@ function ngExceptionHandler($exception) {
 	print "<div class='dmsg'>" . $exception->getMessage() . "</div><br/>";
 	print "<h2>Stack trace</h2>";
 	print "<table class='dtrace'><thead><tr><td>#</td><td>Line #</td><td><i>Class</i>/Function</td><td>File name</td></tr></thead><tbody>";
+	print "<tr><td>X</td><td>".$exception->getLine()."</td><td>".$exception->getCode()."</td><td>".$exception->getFile()."</td></tr>";
 	foreach ($exception->getTrace() as $k => $v) {
 		print "<tr><td>" . $k . "</td><td>" . $v['line'] . "</td><td>" . (isset($v['class']) ? ('<i>' . $v['class'] . '</i>') : $v['function']) . "</td><td>" . $v['file'] . "</td></tr>\n";
 	}
 	print "</tbody></table>";
 }
 
-//Проверяем переменную
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 function getIsSet(&$result) {
 
 	if (isset($result))
@@ -3232,7 +3233,7 @@ function ngCollectTrace($style = 0) {
 }
 
 /**
- * Быстрый дебаг
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
  *
  * @param mixed $obj
  *

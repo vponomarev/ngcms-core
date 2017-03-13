@@ -28,16 +28,20 @@ spl_autoload_register(function($className) {
 function NGRun($f) { $f(); }
 
 // ============================================================================
-// Check for external MODULE dependencies
+// MODULE DEPs check + basic setup
 // ============================================================================
 NGRun(function() {
 	$depList = array(
-		'sql' => array('mysql' => 'mysql_connect', 'mysqli' => 'mysqli_connect'),
+		'sql' => array('pdo' => '', 'pdo_mysql' => ''),
 		'zlib' => 'ob_gzhandler',
 		'iconv' => 'iconv',
 		'GD' => 'imagecreatefromjpeg'
 	);
 	NGCoreFunctions::resolveDeps($depList);
+
+	$sx = NGEngine::getInstance();
+	$sx->set('events', new NGEvents());
+	$sx->set('errorHandler', new NGErrorHandler());
 });
 
 
@@ -301,8 +305,21 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 @include_once root . 'includes/classes/cache.class.php';
 @include_once root . 'includes/inc/DBLoad.php';
 
-$mysql = DBLoad();
-$mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+// OLD :: MySQLi driver
+// $mysql = DBLoad();
+// $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+
+// NEW :: PDO driver with global classes handler
+NGRun(function() {
+	global $config, $mysql;
+
+	$sx = NGEngine::getInstance();
+	$sx->set('db', new NGPDO(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'cp1251')));
+	$sx->set('legacyDB', new NGLegacyDB(false));
+	$sx->getLegacyDB()->connect('', '', '');
+	$mysql = $sx->getLegacyDB();
+});
+
 
 // [[MARKER]] MySQL connection is established
 $timer->registerEvent('DB connection established');

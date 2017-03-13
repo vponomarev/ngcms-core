@@ -32,6 +32,10 @@ class NGEngine {
     }
 
     // Get DB connection
+    /**
+     * @return NGDB Current DB connection instance
+     * @throws Exception
+     */
     function getDB() {
         if (!isset(static::$items['db']))
             throw new Exception('NGEngine: getDB(): DB class is not initalized.');

@@ -18,7 +18,6 @@
 // Return value: number of successfully updated news
 //
 function massModifyNews($list, $setValue, $permCheck = true) {
-
 	global $mysql, $lang, $PFILTERS, $catmap, $userROW;
 
 	// Check if we have anything to update
@@ -305,7 +304,7 @@ function massDeleteNews($list, $permCheck = true) {
 
 // Generate backup for table list. If no list is given - backup ALL tables with system prefix
 function dbBackup($fname, $gzmode, $tlist = '') {
-	global $mysql;
+	$db = NGEngine::getInstance()->getDB();
 
 	if ($gzmode && (!function_exists('gzopen')))
 		$gzmode = 0;
@@ -322,8 +321,8 @@ function dbBackup($fname, $gzmode, $tlist = '') {
 	if (!is_array($tlist)) {
 		$tlist = array();
 
-		foreach ($mysql->select("show tables like '" . prefix . "_%'", 0) as $tn)
-			$tlist [] = $tn[0];
+		foreach ($db->query("show tables like :profile", array('profile' => prefix.'_%')) as $tn)
+			$tlist [] = array_pop(array_values($tn));
 	}
 
 	// Now make a header
@@ -339,10 +338,10 @@ function dbBackup($fname, $gzmode, $tlist = '') {
 	// Now, let's scan tables
 	foreach ($tlist as $tname) {
 		// Fetch create syntax for table and after - write table's content
-		if (is_array($csql = $mysql->record("show create table `" . $tname . "`", -1))) {
+		if (is_array($csql = $db->record("show create table `" . $tname . "`"))) {
 			$out = "\n#\n# Table `" . $tname . "`\n#\n";
 			$out .= "DROP TABLE IF EXISTS `" . $tname . "`;\n";
-			$out .= $csql[1] . ";\n";
+			$out .= array_pop(array_values($csql)) . ";\n";
 
 			if ($gzmode)	
 				gzwrite($fh, $out);
@@ -352,11 +351,12 @@ function dbBackup($fname, $gzmode, $tlist = '') {
 			$start = 0;
 			$rowNo = 0;
 			do {
-				$query = $mysql->query("select * from `" . $tname . "` limit ".$start.", 10000");
+				$cursor = $db->createCursor("select * from `" . $tname . "` limit ".$start.", 10000");
+				$qRowCount = 0;
 				$start += 10000;
-				$num_rows = $mysql->num_rows($query);
-				
-				while ($row = $mysql->fetch_row($query)) {
+
+				while ($row = $db->fetchCursor($cursor)) {
+					$qRowCount++;
 					$out = "insert into `" . $tname . "` values (";
 					$rowNo++;
 					$colNo = 0;
@@ -369,7 +369,7 @@ function dbBackup($fname, $gzmode, $tlist = '') {
 					else
 						fwrite($fh, $out);
 				}
-			} while( $num_rows !== 0 );
+			} while($qRowCount > 0);
 			
 			$out = "# Total records: $rowNo\n";
 
@@ -1061,8 +1061,8 @@ function showPreview() {
 	));
 
 	$SQL = array('id' => -1);
-	// Эмулируем работу всех штатных средств отвечающих за отображение новости.
-	// Заполняем соответствующие поля
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 	if ($_REQUEST['customdate']) {
 		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {

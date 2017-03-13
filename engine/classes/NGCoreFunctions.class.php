@@ -8,10 +8,10 @@ class NGCoreFunctions {
 			$is_error = false;
 			if (is_array($pFunction)) {
 				foreach ($pFunction as $kModule => $vFunction) {
-					if (extension_loaded($kModule) && function_exists($vFunction)) break;
+					if (extension_loaded($kModule) && (($vFunction == '') || function_exists($vFunction))) break;
 					if (!next($pFunction)) $is_error = true;
 				}
-			} else if (!extension_loaded($pModule) || !function_exists($pFunction)) {
+			} else if (!extension_loaded($pModule) || !(($vFunction == '') || function_exists($pFunction))) {
 				$kModule = $pModule;
 				$vFunction = $pFunction;
 				$is_error = true;

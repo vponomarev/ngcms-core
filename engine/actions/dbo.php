@@ -305,8 +305,9 @@ function systemDboForm() {
 	}
 
 	$tableList = array();
-	foreach ($mysql->select("SHOW TABLES FROM `" . $config['dbname'] . "` LIKE '" . prefix . "_%'", 0) as $table) {
-		$info = $mysql->record("SHOW TABLE STATUS LIKE '" . $table[0] . "'");
+	foreach ($mysql->select("SHOW TABLES FROM `" . $config['dbname'] . "` LIKE '" . prefix . "_%'") as $table) {
+		$tName = array_pop(array_values($table));
+		$info = $mysql->record("SHOW TABLE STATUS LIKE '" . $tName . "'");
 
 		$tableInfo = array(
 			'table'    => $info['Name'],

@@ -230,6 +230,31 @@ class NGPDO extends NGDB {
         return $this->qList;
     }
 
+    // Cursor based operations
+    /**
+     * @param $query
+     * @param array $params
+     * @return PDOStatement
+     */
+    function createCursor($query, array $params = array()) {
+        $cursor = $this->db->prepare($query);
+        $cursor->execute($params);
+        return $cursor;
+    }
+
+    /**
+     * @param PDOStatement $cursor
+     * @return mixed
+     */
+    function fetchCursor(PDOStatement $cursor) {
+        return $cursor->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function closeCursor(PDOStatement $cursor) {
+        return $cursor->closeCursor();
+    }
+
+
 }
 
 
