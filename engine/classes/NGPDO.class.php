@@ -254,6 +254,10 @@ class NGPDO extends NGDB {
         return $cursor->closeCursor();
     }
 
+    function tableExists($name) {
+        return count($this->record("show tables like :name", array('name' => $name)))?true:false;
+    }
+
 
 }
 
