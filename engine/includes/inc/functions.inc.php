@@ -327,7 +327,7 @@ function checkBanned($ip, $act, $subact, $userRec, $name) {
 		} else if (($act == 'comments') && ($subact == 'add')) {
 			$mode = 3;
 		}
-		if (($locktype = intval(substr($ban_row['flags'], $mode, 1))) > 0) {
+		if (($locktype = intval(mb_substr($ban_row['flags'], $mode, 1))) > 0) {
 			$mysql->query("update " . prefix . "_ipban set hitcount=hitcount+1 where id=" . db_squote($ban_row['id']));
 
 			return $locktype;
@@ -826,7 +826,7 @@ function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnErr
 		// Check file against all extensions
 		foreach ($ext as $e) {
 			if ($e == '') {
-				if (strpos($file, '.') === false) {
+				if (mb_strpos($file, '.') === false) {
 					$list[$file] = $file;
 					break;
 				}
@@ -1053,7 +1053,7 @@ function MakeRandomPassword() {
 
 	global $config;
 
-	return substr(md5($config['crypto_salt'] . uniqid(rand(), 1)), 0, 10);
+	return mb_substr(md5($config['crypto_salt'] . uniqid(rand(), 1)), 0, 10);
 }
 
 function EncodePassword($pass) {
@@ -1160,8 +1160,8 @@ function convert($content) {
 
 	global $byary, $chars;
 
-	$content = strtr(urlencode($content), $byary);
-	$content = strtr($content, $chars);
+	$content = mb_strtr(urlencode($content), $byary);
+	$content = mb_strtr($content, $chars);
 	$content = urldecode($content);
 
 	return $content;
@@ -1280,7 +1280,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()) {
 		}
 
 		foreach ($catz as $k => $v) {
-			if (!substr($v['flags'], 0, 1)) continue;
+			if (!mb_substr($v['flags'], 0, 1)) continue;
 
 			// If tree selector is active - skip unwanted entries
 			if ($treeSelector['defined']) {
@@ -1381,7 +1381,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()) {
 			$flagSkip = false;
 		}
 
-		if (!substr($v['flags'], 0, 1)) {
+		if (!mb_substr($v['flags'], 0, 1)) {
 			$flagSkip = true;
 			$skipLevel = $v['poslevel'];
 			continue;
@@ -1397,7 +1397,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()) {
 			'icon'      => $v['icon'],
 		);
 		$tvars['regx']['[\[icon\](.*)\[/icon\]]'] = trim($v['icon']) ? '$1' : '';
-		switch (intval(substr($v['flags'], 1, 1))) {
+		switch (intval(mb_substr($v['flags'], 1, 1))) {
 			case 0:
 				$rmode = true;
 				break;
@@ -1556,7 +1556,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$page = 1;
 
 	// Check if long part is divided into several pages
-	if ($full && (!$disablePagination) && (strpos($full, "<!--nextpage-->") !== false)) {
+	if ($full && (!$disablePagination) && (mb_strpos($full, "<!--nextpage-->") !== false)) {
 		$page = intval(isset($CurrentHandler['params']['page']) ? $CurrentHandler['params']['page'] : (isset($_REQUEST['page']) ? $_REQUEST['page'] : 0));
 		if ($page < 1) $page = 1;
 
@@ -1686,8 +1686,8 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$tvars['vars']['full-link'] = $nlink;
 
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
-		$tvars['vars']['news']['flags']['hasFullNews'] = strlen($full) ? true : false;
-		if (strlen($full)) {
+		$tvars['vars']['news']['flags']['hasFullNews'] = mb_strlen($full) ? true : false;
+		if (mb_strlen($full)) {
 			// we have full news
 			$tvars['vars']['[fullnews]'] = '';
 			$tvars['vars']['[/fullnews]'] = '';
@@ -1956,7 +1956,7 @@ if (!function_exists('json_encode')) {
 	function _utf8_to_html($data) {
 
 		$ret = 0;
-		foreach ((str_split(strrev(chr((ord($data{0}) % 252 % 248 % 240 % 224 % 192) + 128) . substr($data, 1)))) as $k => $v)
+		foreach ((str_split(strrev(chr((ord($data{0}) % 252 % 248 % 240 % 224 % 192) + 128) . mb_substr($data, 1)))) as $k => $v)
 			$ret += (ord($v) % 128) * pow(64, $k);
 
 		// return "&#$ret;";
@@ -2037,7 +2037,7 @@ function parseParams($paramLine) {
 
 	$keys = array();
 
-	for ($sI = 0; $sI < strlen($paramLine); $sI++) {
+	for ($sI = 0; $sI < mb_strlen($paramLine); $sI++) {
 		// act according current state
 		$x = $paramLine{$sI};
 
@@ -2107,14 +2107,14 @@ function parseParams($paramLine) {
 
 		// Action in case when scanning is complete
 		if ($state == 5) {
-			$keys [strtolower($keyName)] = $keyValue;
+			$keys [mb_strtolower($keyName)] = $keyValue;
 			$state = 0;
 		}
 	}
 
 	// If we finished and we're in stete "scanning value" - register this field
 	if ($state == 4) {
-		$keys [strtolower($keyName)] = $keyValue;
+		$keys [mb_strtolower($keyName)] = $keyValue;
 		$state = 0;
 	}
 
@@ -3046,7 +3046,7 @@ function coreUserMenu() {
 			} else {
 				// If gravatar integration is active, show avatar from GRAVATAR.COM
 				if ($config['avatars_gravatar']) {
-					$userAvatar = 'http://www.gravatar.com/avatar/' . md5(strtolower($userROW['mail'])) . '.jpg?s=' . $config['avatar_wh'] . '&d=' . urlencode($noAvatarURL);
+					$userAvatar = 'http://www.gravatar.com/avatar/' . md5(mb_strtolower($userROW['mail'])) . '.jpg?s=' . $config['avatar_wh'] . '&d=' . urlencode($noAvatarURL);
 				} else {
 					$userAvatar = $noAvatarURL;
 				}
@@ -3130,7 +3130,7 @@ function jsonFormatter($json) {
 
 	$result = '';
 	$pos = 0;
-	$strLen = strlen($json);
+	$strLen = mb_strlen($json);
 	$indentStr = '  ';
 	$newLine = "\n";
 	$prevChar = '';
@@ -3139,7 +3139,7 @@ function jsonFormatter($json) {
 	for ($i = 0; $i <= $strLen; $i++) {
 
 		// Grab the next character in the string.
-		$char = substr($json, $i, 1);
+		$char = mb_substr($json, $i, 1);
 
 		// Are we inside a quoted string?
 		if ($char == '"' && $prevChar != '\\') {

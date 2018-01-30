@@ -473,7 +473,7 @@ function addNews($mode = array()) {
 	$content = str_replace("\r\n", "\n", $content);
 
 	// Check title
-	if ((!strlen(trim($title))) || ((!strlen(trim($content))) && (!$config['news_without_content']))) {
+	if ((!mb_strlen(trim($title))) || ((!mb_strlen(trim($content))) && (!$config['news_without_content']))) {
 		msg(array("type" => "error", "text" => $lang['addnews']['msge_fields'], "info" => $lang['addnews']['msgi_fields']));
 
 		return 0;
@@ -493,7 +493,7 @@ function addNews($mode = array()) {
 		$SQL['alt_name'] = $alt_name;
 	} else {
 		// Generate uniq alt_name if no alt_name specified
-		$alt_name = strtolower($parse->translit(trim($title), 1));
+		$alt_name = mb_strtolower($parse->translit(trim($title), 1));
 		// Make a conversion:
 		// * '.'  to '_'
 		// * '__' to '_' (several to one)
@@ -794,7 +794,7 @@ function editNews($mode = array()) {
 	$content = str_replace("\r\n", "\n", $content);
 
 	// Check if we have content
-	if ((!strlen(trim($title))) || ((!strlen(trim($content))) && (!$config['news_without_content']))) {
+	if ((!mb_strlen(trim($title))) || ((!mb_strlen(trim($content))) && (!$config['news_without_content']))) {
 		msg(array("type" => "error", "text" => $lang['msge_fields'], "info" => $lang['msgi_fields']));
 
 		return;
@@ -805,7 +805,7 @@ function editNews($mode = array()) {
 		$alt_name = $_REQUEST['alt_name'];
 		// Check if alt name should be generated again
 		if (trim($alt_name) == '') {
-			$alt_name = strtolower($parse->translit(trim($title), 1));
+			$alt_name = mb_strtolower($parse->translit(trim($title), 1));
 			// Make a conversion:
 			// * '.'  to '_'
 			// * '__' to '_' (several to one)

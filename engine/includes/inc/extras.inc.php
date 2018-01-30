@@ -810,7 +810,7 @@ function plugins_load_version_file($filename) {
 	while (!feof($file)) {
 		$line = fgets($file);
 		if (preg_match("/^(.+?) *\: *(.+?) *$/i", $line, $r) == 1) {
-			$key = rtrim(strtolower($r[1]));
+			$key = rtrim(mb_strtolower($r[1]));
 			$value = rtrim($r[2]);
 			if (in_array($key, $config_params)) {
 				if (in_array($key, $list_params)) {
@@ -1161,7 +1161,7 @@ function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '', $b
 
 	$tpath = array();
 	foreach ($tname as $fn) {
-		$fnc = (substr($fn, 0, 1) == ':') ? substr($fn, 1) : ($fn . '.tpl');
+		$fnc = (mb_substr($fn, 0, 1) == ':') ? mb_substr($fn, 1) : ($fn . '.tpl');
 		if (!$localsource && is_readable(tpl_site . 'plugins/' . $plugin . $tsb . '/' . $fnc)) {
 			$tpath[$fn] = tpl_site . 'plugins/' . $plugin . $tsb . '/';
 			$tpath['url:' . $fn] = tpl_url . '/plugins/' . $plugin . $tsb;

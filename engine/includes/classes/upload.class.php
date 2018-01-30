@@ -101,7 +101,7 @@ class file_managment {
 			fclose($f);
 			$filename = end(explode("/", $url));
 
-			return array($tmpn, $filename, strlen($data));
+			return array($tmpn, $filename, mb_strlen($data));
 		} else {
 			// Unable to fetch content (URL)
 		}
@@ -254,11 +254,11 @@ class file_managment {
 			}
 		}
 
-		$fil = explode(".", strtolower($fname));
+		$fil = explode(".", mb_strtolower($fname));
 		$ext = count($fil) ? array_pop($fil) : '';
 
 		// * File type [ don't allow to upload PHP files in any case ]
-		if ((array_search(strtolower($ext), $this->required_type) === false) || (array_search(strtolower($ext), array('php', 'pht', 'phtml', 'php3', 'php4', 'php5')) !== false)) {
+		if ((array_search(mb_strtolower($ext), $this->required_type) === false) || (array_search(mb_strtolower($ext), array('php', 'pht', 'phtml', 'php3', 'php4', 'php5')) !== false)) {
 			if ($param['rpc']) {
 				return array('status' => 0, 'errorCode' => 304, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.ext']), 'errorDescription' => str_replace('{ext}', join(", ", $this->required_type), $lang['upload.error.ext#info']));
 			} else {
@@ -300,8 +300,8 @@ class file_managment {
 
 			// Determine storage tree
 			$fn_md5 = md5($fname);
-			$dir1 = substr($fn_md5, 0, 2);
-			$dir2 = substr($fn_md5, 2, 2);
+			$dir1 = mb_substr($fn_md5, 0, 2);
+			$dir2 = mb_substr($fn_md5, 2, 2);
 
 			$wDir .= '/' . $dir1;
 			if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {

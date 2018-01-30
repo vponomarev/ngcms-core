@@ -303,7 +303,7 @@ class urlHandler {
 						$closeit = false;
 
 						if ($pos > $dataStartPos) {
-							$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+							$text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
 							$genmap[] = array(0, $text, $variative);
 						}
 						$variative = $newVariative;
@@ -314,7 +314,7 @@ class urlHandler {
 				case '1':
 					if ($rcmd[$pos] == '}') {
 						// End of the variable
-						$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+						$text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
 						$genmap[] = array(getIsSet($cmd['vars'][$text]['isSecure']) ? 2 : 1, $text, $variative);
 						$dataStartPos = $pos + 1;
 						$state = 0;
@@ -334,7 +334,7 @@ class urlHandler {
 			return array(array(3, 'Variative block is not closed'), false);
 		} else {
 			if ($dataStartPos < $pos) {
-				$text = substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+				$text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
 				$genmap[] = array(0, $text, 0);
 			}
 		}
@@ -551,8 +551,8 @@ class urlHandler {
 		// Init URL if it's not passed in params
 		if ($url == null) {
 			$url = $_SERVER['REQUEST_URI'];
-			if (($tmp_pos = strpos($url, '?')) !== false) {
-				$url = substr($url, 0, $tmp_pos);
+			if (($tmp_pos = mb_strpos($url, '?')) !== false) {
+				$url = mb_substr($url, 0, $tmp_pos);
 			}
 		}
 
@@ -567,9 +567,9 @@ class urlHandler {
 
 		// Modity calling URL if localPrefix is defined
 		if (isset($flags['localPrefix']) && ($flags['localPrefix'] != '')) {
-			if (substr($url, 0, strlen($flags['localPrefix'])) == $flags['localPrefix']) {
+			if (mb_substr($url, 0, mb_strlen($flags['localPrefix'])) == $flags['localPrefix']) {
 				// Catched prefix
-				$url = substr($url, strlen($flags['localPrefix']));
+				$url = mb_substr($url, mb_strlen($flags['localPrefix']));
 				if ($flags['debug'])
 					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] (" . $url . ")<br/>\n";
 			} else {
