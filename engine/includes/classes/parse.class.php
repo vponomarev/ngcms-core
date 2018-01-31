@@ -515,8 +515,8 @@ class parse {
 		$utf2enB = array('а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'ґ' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'jo', 'є' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'і' => 'i', 'й' => 'i', 'ї' => 'i', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ў' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sz', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu', 'я' => 'ya', '&quot;' => '', '&amp;' => '', 'µ' => 'u', '№' => 'num');
 
 		$content = trim(strip_tags($content));
-		$content = mb_strtr($content, $utf2enS);
-		$content = mb_strtr($content, $utf2enB);
+		$content = mb_strstr($content, $utf2enS);
+		$content = mb_strstr($content, $utf2enB);
 
 		$content = str_replace(array(' - '), array('-'), $content);
 		$content = preg_replace("/\s+/ms", "-", $content);

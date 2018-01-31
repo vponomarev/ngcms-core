@@ -1160,8 +1160,8 @@ function convert($content) {
 
 	global $byary, $chars;
 
-	$content = mb_strtr(urlencode($content), $byary);
-	$content = mb_strtr($content, $chars);
+	$content = mb_strstr(urlencode($content), $byary);
+	$content = mb_strstr($content, $chars);
 	$content = urldecode($content);
 
 	return $content;
