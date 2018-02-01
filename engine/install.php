@@ -914,7 +914,7 @@ function doInstall() {
 		);
 
 		$plugData = "<?php\n" . '$array = ' . var_export($plugConf, true) . ";\n";
-		$plugData = mb_convert_encoding($plugData, 'UTF-8', 'OLD-ENCODING');
+		$plugData = mb_convert_encoding($plugData, 'UTF-8', 'auto');
 		if (!fwrite($frec['plugins.php'], $plugData)) {
 			array_push($ERROR, 'Ошибка записи конфигурационного файла [список активных плагинов]!');
 			$error = 1;

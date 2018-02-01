@@ -240,10 +240,18 @@ class tpl {
 				$data = preg_replace($id, $var, $data);
 			}
 		}
-		$data = str_replace('{skins_url}', skins_url, $data);
-		$data = str_replace('{tpl_url}', tpl_url, $data);
-		$data = str_replace('{admin_url}', admin_url, $data);
-		$data = str_replace('{scriptLibrary}', scriptLibrary, $data);
+		
+		if(defined('skins_url'))
+			$data = str_replace('{skins_url}', skins_url, $data);
+		
+		if(defined('tpl_url'))
+			$data = str_replace('{tpl_url}', tpl_url, $data);
+	
+		if(defined('admin_url'))
+			$data = str_replace('{admin_url}', admin_url, $data);
+		
+		if(defined('scriptLibrary'))
+			$data = str_replace('{scriptLibrary}', scriptLibrary, $data);
 
 		if (isset($params['inline']) && $params['inline'])
 			return $data;
