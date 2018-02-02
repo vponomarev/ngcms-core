@@ -799,19 +799,11 @@ function ChangeDate($time = 0, $nodiv = 0) {
 
 //
 // Return a list of files
-<<<<<<< HEAD
 // $path		- путь по которому искать файлы
 // $ext			- [scalar/array] расширение (одно или массивом) файла
 // $showExt		- флаг: показывать ли расширение [0 - нет, 1 - показывать, 2 - использовать в значениях]
 // $silentError		- не выводить сообщение об ошибке
 // $returnNullOnError	- возвращать NULL при ошибке
-=======
-// $path		- ���� �� �������� ������ �����
-// $ext			- [scalar/array] ���������� (���� ��� ��������) �����
-// $showExt		- ����: ���������� �� ���������� [0 - ���, 1 - ����������, 2 - ������������ � ���������]
-// $silentError		- �� �������� ��������� �� ������
-// $returnNullOnError	- ���������� NULL ��� ������
->>>>>>> refs/remotes/origin/NewClasses
 function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnError = 0) {
 
 	$list = array();
@@ -2343,55 +2335,35 @@ function loadGroups() {
 		$UGROUP[1] = array(
 			'identity' => 'admin',
 			'langName' => array(
-<<<<<<< HEAD
 				'russian' => 'Администратор',
-=======
-				'russian' => '�������������',
->>>>>>> refs/remotes/origin/NewClasses
 				'english' => 'Administrator',
 			),
 		);
 		$UGROUP[2] = array(
 			'identity' => 'editor',
 			'langName' => array(
-<<<<<<< HEAD
 				'russian' => 'Редактор',
-=======
-				'russian' => '��������',
->>>>>>> refs/remotes/origin/NewClasses
 				'english' => 'Editor',
 			),
 		);
 		$UGROUP[3] = array(
 			'identity' => 'journalist',
 			'langName' => array(
-<<<<<<< HEAD
 				'russian' => 'Журналист',
-=======
-				'russian' => '���������',
->>>>>>> refs/remotes/origin/NewClasses
 				'english' => 'Journalist',
 			),
 		);
 		$UGROUP[4] = array(
 			'identity' => 'commentator',
 			'langName' => array(
-<<<<<<< HEAD
 				'russian' => 'Комментатор',
-=======
-				'russian' => '�����������',
->>>>>>> refs/remotes/origin/NewClasses
 				'english' => 'Commentator',
 			),
 		);
 		//		$UGROUP[5] = array(
 		//			'identity'	=> 'tester',
 		//			'langName'	=> array(
-<<<<<<< HEAD
 		//				'russian'	=> 'Тестировщик',
-=======
-		//				'russian'	=> '�����������',
->>>>>>> refs/remotes/origin/NewClasses
 		//				'english'	=> 'Tester',
 		//			),
 		//		);
@@ -2548,11 +2520,7 @@ function ngExceptionHandler($exception) {
 	print "</tbody></table>";
 }
 
-<<<<<<< HEAD
 //Проверяем переменную
-=======
-//��������� ����������
->>>>>>> refs/remotes/origin/NewClasses
 function getIsSet(&$result) {
 
 	if (isset($result))

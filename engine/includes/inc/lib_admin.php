@@ -1061,13 +1061,8 @@ function showPreview() {
 	));
 
 	$SQL = array('id' => -1);
-<<<<<<< HEAD
 	// Эмулируем работу всех штатных средств отвечающих за отображение новости.
 	// Заполняем соответствующие поля
-=======
-	// ��������� ������ ���� ������� ������� ���������� �� ����������� �������.
-	// ��������� ��������������� ����
->>>>>>> refs/remotes/origin/NewClasses
 	if ($_REQUEST['customdate']) {
 		$SQL['postdate'] = mktime(intval($_REQUEST['c_hour']), intval($_REQUEST['c_minute']), 0, intval($_REQUEST['c_month']), intval($_REQUEST['c_day']), intval($_REQUEST['c_year'])) + ($config['date_adjust'] * 60);
 	} else {
