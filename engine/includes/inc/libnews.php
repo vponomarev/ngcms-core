@@ -559,7 +559,10 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		// ** FORCE TO DISABLE PAGINATION !!
 		$callingParams['disablePagination'] = true;
 	} else {
-		$query['result'] = "SELECT * FROM " . prefix . "_news WHERE " . $query['filter'] . $query['orderby'];
+		// $query['result'] = "SELECT * FROM " . prefix . "_news WHERE " . $query['filter'] . $query['orderby'];
+
+		// Optimize query
+		$query['result'] = "SELECT * FROM " . prefix . "_news N JOIN (SELECT ID FROM ".prefix."_news WHERE " . $query['filter'] . $query['orderby'].") as NT on NT.id=N.id";
 	}
 
 	$selectResult = $mysql->select($query['result'], 1);

@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2017 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -9,6 +9,42 @@
 
 // Configure error display mode
 @error_reporting(E_ALL ^ E_NOTICE);
+
+// ============================================================================
+// Define global directory constants
+// ============================================================================
+define('NGCoreDir', dirname(__FILE__) . '/');				// Location of Core directory
+define('NGRootDir', dirname(dirname(__FILE__)) . '/');		// Location of SiteRoot
+define('NGClassDir', NGCoreDir.'classes/');					// Location of AutoLoaded classes
+
+// Autoloader for NEW STYLE Classes
+spl_autoload_register(function($className) {
+	if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+		require_once $fName;
+	}
+});
+
+// Magic function for immediate closure call
+function NGRun($f) { $f(); }
+
+// ============================================================================
+// MODULE DEPs check + basic setup
+// ============================================================================
+NGRun(function() {
+	$depList = array(
+		'sql' => array('pdo' => '', 'pdo_mysql' => ''),
+		'zlib' => 'ob_gzhandler',
+		'iconv' => 'iconv',
+		'GD' => 'imagecreatefromjpeg'
+	);
+	NGCoreFunctions::resolveDeps($depList);
+
+	$sx = NGEngine::getInstance();
+	$sx->set('events', new NGEvents());
+	$sx->set('errorHandler', new NGErrorHandler());
+});
+
+
 
 // ============================================================================
 // Global variables definition
@@ -80,6 +116,7 @@ $PLUGINS = array(
 	'config:loaded' => 0,
 );
 
+<<<<<<< HEAD
 // ===========================================================
 // Check for support of mondatory modules
 // ===========================================================
@@ -104,6 +141,8 @@ $PLUGINS = array(
 		}
 	}
 }
+=======
+>>>>>>> refs/remotes/origin/NewClasses
 
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
@@ -114,6 +153,10 @@ define('site_root', dirname(dirname(__FILE__)) . '/');
 
 // Define domain name for cookies
 $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $mHost[1] : $_SERVER['HTTP_HOST'];
+// Remove non-standart port from domain
+if (preg_match_all("#^(.+?)\:\d+$#", $ngCookieDomain, $m)) {
+	$ngCookieDomain = $m[1];
+}
 
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
@@ -292,8 +335,21 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 @include_once root . 'includes/classes/cache.class.php';
 @include_once root . 'includes/inc/DBLoad.php';
 
-$mysql = DBLoad();
-$mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+// OLD :: MySQLi driver
+// $mysql = DBLoad();
+// $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+
+// NEW :: PDO driver with global classes handler
+NGRun(function() {
+	global $config, $mysql;
+
+	$sx = NGEngine::getInstance();
+	$sx->set('db', new NGPDO(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'cp1251')));
+	$sx->set('legacyDB', new NGLegacyDB(false));
+	$sx->getLegacyDB()->connect('', '', '');
+	$mysql = $sx->getLegacyDB();
+});
+
 
 // [[MARKER]] MySQL connection is established
 $timer->registerEvent('DB connection established');
@@ -400,10 +456,5 @@ $lang = LoadLangTheme();
 
 $langShortMonths = explode(",", $lang['short_months']);
 $langMonths = explode(",", $lang['months']);
-
-$f = $langShortMonths;
-$f2 = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12');
-$f3 = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-$r = explode(",", $lang['months']);
 
 $timer->registerEvent('* CORE.PHP is complete');

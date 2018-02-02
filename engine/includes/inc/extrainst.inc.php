@@ -38,6 +38,7 @@ function generate_config_page($module, $params, $values = array()) {
 	global $tpl, $lang;
 
 	function mkParamLine($param) {
+		global $lang;
 
 		global $tpl, $lang;
 		if ($param['type'] == 'flat') {
@@ -191,28 +192,13 @@ function mysql_table_exists($table) {
 
 // check field params
 function get_mysql_field_type($table, $field) {
-
 	global $mysql;
-	$result = $mysql->query("SELECT * FROM $table limit 0");
-	$fields = $mysql->num_fields($result);
-	for ($i = 0; $i < $fields; $i++) {
-		if ($mysql->field_name($result, $i) == $field) {
-			$ft = $mysql->field_type($result, $i);
-			$fl = $mysql->field_len($result, $i);
-			if ($ft == 'string') {
-				$ft = 'char';
-			}
-			if ($ft == 'blob') {
-				$ft = 'text';
-				$fl = '';
-			}
-			$res = $ft . ($fl ? ' (' . $fl . ')' : '');
 
-			return $res;
-		}
+	foreach ($mysql->select("describe ".$table) as $l) {
+		if ($l['Field'] == $field)
+			return $l['Type'];
 	}
-
-	return '';
+	return false;
 }
 
 // Database update during install
