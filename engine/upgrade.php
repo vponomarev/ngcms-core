@@ -14,14 +14,14 @@
 // Check if we have upgrademe.txt file
 //
 if (!is_file(root . 'upgrademe.txt')) {
-	echo "Ошибка! Для запуска скрипта обновления вам необходимо в каталоге engine/ создать файл <b>upgrademe.txt</b> и удалить его после обновления.";
+	echo "РћС€РёР±РєР°! Р”Р»СЏ Р·Р°РїСѓСЃРєР° СЃРєСЂРёРїС‚Р° РѕР±РЅРѕРІР»РµРЅРёСЏ РІР°Рј РЅРµРѕР±С…РѕРґРёРјРѕ РІ РєР°С‚Р°Р»РѕРіРµ engine/ СЃРѕР·РґР°С‚СЊ С„Р°Р№Р» <b>upgrademe.txt</b> Рё СѓРґР°Р»РёС‚СЊ РµРіРѕ РїРѕСЃР»Рµ РѕР±РЅРѕРІР»РµРЅРёСЏ.";
 
 	return;
 }
 
-// Проверка заполнения опросника
+// РџСЂРѕРІРµСЂРєР° Р·Р°РїРѕР»РЅРµРЅРёСЏ РѕРїСЂРѕСЃРЅРёРєР°
 if (!$_REQUEST['doupgrade']) {
-	questionare_093();
+	questionare();
 	exit;
 }
 
@@ -34,8 +34,8 @@ if (!$_REQUEST['doupgrade']) {
 @header("Pragma: no-cache");
 $PHP_SELF = "admin.php";
 
-if (($config['skin'] && $config['skin'] != "") && file_exists("./skins/$config[skin]/index.php")) {
-	require_once("./skins/$config[skin]/index.php");
+if (($config['skin'] && $config['skin'] != "") && file_exists("./skins/".$config['skin']."/index.php")) {
+	require_once("./skins/".$config['skin']."/index.php");
 } else {
 	require_once("./skins/default/index.php");
 }
@@ -79,16 +79,55 @@ $query_list_093svn = array(
 	"create table " . prefix . "_news_view (`id` INT(11) NOT NULL, `cnt` INT(11) DEFAULT '0', PRIMARY KEY (`id`))",
 
 );
+
+$query_list_095_10 = array(
+	"ALTER DATABASE " . $config['dbname'] ." CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+
+	"ALTER TABLE " . prefix . "_config CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_category CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_files CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_flood CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_images CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_ipban CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_news CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_news_map CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_static CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_users CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_users_pm CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_load CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_syslog CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_profiler CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+	"ALTER TABLE " . prefix . "_news_view CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
+
+	"ALTER TABLE " . prefix . "_config ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_category ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_files ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_flood ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_images ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_ipban ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_news ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_news_map ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_static ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_users ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_users_pm ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_load ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_syslog ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_profiler ENGINE=InnoDB;",
+	"ALTER TABLE " . prefix . "_news_view ENGINE=InnoDB;",
+
+);
+
+
 // Load plugin list
 $extras = get_extras_list();
 // Load lang files
 $lang = LoadLang('extra-config', 'admin');
 
-if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['update093svn']) {
-	// Выполнение SQL запросов на обновление
-	print '<br/>Выполнение SQL запросов:<br/>';
+if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['update093svn'] || $_REQUEST['update095_10']) {
+	// Р’С‹РїРѕР»РЅРµРЅРёРµ SQL Р·Р°РїСЂРѕСЃРѕРІ РЅР° РѕР±РЅРѕРІР»РµРЅРёРµ
+	print '<br/>Р’С‹РїРѕР»РЅРµРЅРёРµ SQL Р·Р°РїСЂРѕСЃРѕРІ:<br/>';
 	print '<table width="80%">';
-	print '<tr><td><b>Команда</b></td><td><b>Результат</b></td></tr>';
+	print '<tr><td><b>РљРѕРјР°РЅРґР°</b></td><td><b>Р РµР·СѓР»СЊС‚Р°С‚</b></td></tr>';
 
 	$flag_err = false;
 
@@ -103,6 +142,10 @@ if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['updat
 
 	if ($_REQUEST['update093svn']) {
 		$queryList = array_merge($queryList, $query_list_093svn);
+	}
+
+	if ($_REQUEST['update095_10']) {
+		$queryList = array_merge($queryList, $query_list_095_10);
 	}
 
 	foreach ($queryList as $sql) {
@@ -127,16 +170,16 @@ if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['updat
 
 	if ($flag_err) {
 		//
-		print "<font color='red'><b>Во время обновления БД произошла ошибка!<br/>Обновление в автоматическом режиме невозможно, Вам необходимо обновить БД вручную.</b></font>";
+		print "<font color='red'><b>Р’Рѕ РІСЂРµРјСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ Р‘Р” РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°!<br/>РћР±РЅРѕРІР»РµРЅРёРµ РІ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРј СЂРµР¶РёРјРµ РЅРµРІРѕР·РјРѕР¶РЅРѕ, Р’Р°Рј РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІРёС‚СЊ Р‘Р” РІСЂСѓС‡РЅСѓСЋ.</b></font>";
 		exit;
 	}
 
-	echo "DONE <br><br>\n<b><u>Внимание!</u></b><br/>После завершения обновления Вам необходимо зайти в админ-панель и выключить-включить следующие плагины: uprofile, xfields.";
+	echo "DONE <br><br>\n<b><u>Р’РЅРёРјР°РЅРёРµ!</u></b><br/>РџРѕСЃР»Рµ Р·Р°РІРµСЂС€РµРЅРёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ Р’Р°Рј РЅРµРѕР±С…РѕРґРёРјРѕ Р·Р°Р№С‚Рё РІ Р°РґРјРёРЅ-РїР°РЅРµР»СЊ Рё РІС‹РєР»СЋС‡РёС‚СЊ-РІРєР»СЋС‡РёС‚СЊ СЃР»РµРґСѓСЋС‰РёРµ РїР»Р°РіРёРЅС‹: uprofile, xfields.";
 }
 
-print "Все операции проведены.<br/><a href='?'>назад</a><br/><br/><br/>После окончания обновления вам <font color=\"red\"><u>необходимо</u></font> удалить файл <b>upgrademe.txt</b> из каталога engine/";
+print "Р’СЃРµ РѕРїРµСЂР°С†РёРё РїСЂРѕРІРµРґРµРЅС‹.<br/><a href='?'>РЅР°Р·Р°Рґ</a><br/><br/><br/>РџРѕСЃР»Рµ РѕРєРѕРЅС‡Р°РЅРёСЏ РѕР±РЅРѕРІР»РµРЅРёСЏ РІР°Рј <font color=\"red\"><u>РЅРµРѕР±С…РѕРґРёРјРѕ</u></font> СѓРґР°Р»РёС‚СЊ С„Р°Р№Р» <b>upgrademe.txt</b> РёР· РєР°С‚Р°Р»РѕРіР° engine/";
 
-function questionare_093() {
+function questionare() {
 
 	print "
  <style>BODY {PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-TOP: 5px; PADDING-BOTTOM: 0px; MARGIN: 0px; COLOR: #333; FONT-FAMILY: 'Trebuchet MS', Verdana, Arial, sans-serif; BACKGROUND-COLOR: #f0f0f0; }</style>
@@ -144,34 +187,41 @@ function questionare_093() {
 
  <form method='get' action=''>
  <input type=hidden name='doupgrade' value='1'/>
- <b><u>Перед началом обновления вам необходимо ответить на несколько вопросов:</u></b><br /><br />
- <font color='red'><b>ВНИМАНИЕ: </b> перед началом обновления вам <u>ОБЯЗАТЕЛЬНО</u> необходимо сделать
- резервную копию БД</font><br/><br/>
+ <b><u>РџРµСЂРµРґ РЅР°С‡Р°Р»РѕРј РѕР±РЅРѕРІР»РµРЅРёСЏ РІР°Рј РЅРµРѕР±С…РѕРґРёРјРѕ РѕС‚РІРµС‚РёС‚СЊ РЅР° РЅРµСЃРєРѕР»СЊРєРѕ РІРѕРїСЂРѕСЃРѕРІ:</u></b><br /><br />
+ <font color='red'><b>Р’РќРРњРђРќРР•: </b> РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј РѕР±РЅРѕРІР»РµРЅРёСЏ РІР°Рј <u>РћР‘РЇР—РђРўР•Р›Р¬РќРћ</u> РЅРµРѕР±С…РѕРґРёРјРѕ СЃРґРµР»Р°С‚СЊ
+ СЂРµР·РµСЂРІРЅСѓСЋ РєРѕРїРёСЋ Р‘Р”</font><br/><br/>
  <table width='80%' border='1'>
  <tr>
-  <td>Выполнить обновление структуры БД 0.9.2 Release => 0.9.3 Release Candidate 1<br/>
-   <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.2 Release до версии 0.9.3 Release Candidate 1<br/>
+  <td>Р’С‹РїРѕР»РЅРёС‚СЊ РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р‘Р” 0.9.2 Release => 0.9.3 Release Candidate 1<br/>
+   <small>Р”Р°РЅРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРѕРёР·РІРµСЃС‚Рё РµРґРёРЅРѕР¶РґС‹ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё СЃ РІРµСЂСЃРёРё 0.9.2 Release РґРѕ РІРµСЂСЃРёРё 0.9.3 Release Candidate 1<br/>
    </small>
   </td>
   <td width='10%'><input type=checkbox name='update092_093rc1' value='1' /></td>
  </tr>
  <tr>
-  <td>Выполнить обновление структуры БД 0.9.3 Release => 0.9.3 SVN+<br/>
-   <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.3 Release до текущей SVN версии 1060, либо после обновления с SVN версий 1059 или младше<br/>
+  <td>Р’С‹РїРѕР»РЅРёС‚СЊ РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р‘Р” 0.9.3 Release => 0.9.3 SVN+<br/>
+   <small>Р”Р°РЅРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРѕРёР·РІРµСЃС‚Рё РµРґРёРЅРѕР¶РґС‹ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё СЃ РІРµСЂСЃРёРё 0.9.3 Release РґРѕ С‚РµРєСѓС‰РµР№ SVN РІРµСЂСЃРёРё 1060, Р»РёР±Рѕ РїРѕСЃР»Рµ РѕР±РЅРѕРІР»РµРЅРёСЏ СЃ SVN РІРµСЂСЃРёР№ 1059 РёР»Рё РјР»Р°РґС€Рµ<br/>
    </small>
   </td>
   <td width='10%'><input type=checkbox name='update093svn' value='1' /></td>
  </tr>
  <tr>
-  <td>Обновить БД плагина xfields (требуется для версии 0.10 и выше)<br/>
-   <small>Данную операцию требуется произвести единожды при установки новой версии плагина xfields, либо при общем обновлении сайта на новую версию.<br/>
-   Если плагин xfields у вас не установлен, то данная операция не требуется.
+  <td>РћР±РЅРѕРІРёС‚СЊ Р‘Р” РїР»Р°РіРёРЅР° xfields (С‚СЂРµР±СѓРµС‚СЃСЏ РґР»СЏ РІРµСЂСЃРёРё 0.10 Рё РІС‹С€Рµ)<br/>
+   <small>Р”Р°РЅРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРѕРёР·РІРµСЃС‚Рё РµРґРёРЅРѕР¶РґС‹ РїСЂРё СѓСЃС‚Р°РЅРѕРІРєРё РЅРѕРІРѕР№ РІРµСЂСЃРёРё РїР»Р°РіРёРЅР° xfields, Р»РёР±Рѕ РїСЂРё РѕР±С‰РµРј РѕР±РЅРѕРІР»РµРЅРёРё СЃР°Р№С‚Р° РЅР° РЅРѕРІСѓСЋ РІРµСЂСЃРёСЋ.<br/>
+   Р•СЃР»Рё РїР»Р°РіРёРЅ xfields Сѓ РІР°СЃ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, С‚Рѕ РґР°РЅРЅР°СЏ РѕРїРµСЂР°С†РёСЏ РЅРµ С‚СЂРµР±СѓРµС‚СЃСЏ.
    </small>
   </td>
   <td width='10%'><input type=checkbox name='xfUpdateDB' value='1' /></td>
  </tr>
+  <tr>
+  <td>Р’С‹РїРѕР»РЅРёС‚СЊ РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ Р‘Р” 0.9.5 Release => 1.0.0 DEV<br/>
+   <small>Р”Р°РЅРЅСѓСЋ РѕРїРµСЂР°С†РёСЋ С‚СЂРµР±СѓРµС‚СЃСЏ РїСЂРѕРёР·РІРµСЃС‚Рё РµРґРёРЅРѕР¶РґС‹ РїСЂРё РѕР±РЅРѕРІР»РµРЅРёРё СЃ РІРµСЂСЃРёРё 0.9.5 Release РґРѕ РІРµСЂСЃРёРё 1.0.0 DEV<br/>
+   </small>
+  </td>
+  <td width='10%'><input type=checkbox name='update095_10' value='1' /></td>
+ </tr>
  </table><br/>
- <input type='submit' value='Начать преобразование!'>
+ <input type='submit' value='РќР°С‡Р°С‚СЊ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ!'>
  </form>
  ";
 }

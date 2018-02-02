@@ -1,9 +1,9 @@
-<strong>Всего на сайте:</strong> {{ all }}<br>
-<strong>Анонимов:</strong> {{ num_guest }}<br>
-<strong>Авторизированных:</strong> {{ num_auth }}<br>
-<strong>Команда сайта:</strong> {{ num_team }}<br>
-<strong>Пользователи:</strong> {{ num_users }}<br>
-<strong>Поисковых роботов:</strong> {{ num_bot }}<br>
+<strong>Р’СЃРµРіРѕ РЅР° СЃР°Р№С‚Рµ:</strong> {{ all }}<br>
+<strong>РђРЅРѕРЅРёРјРѕРІ:</strong> {{ num_guest }}<br>
+<strong>РђРІС‚РѕСЂРёР·РёСЂРѕРІР°РЅРЅС‹С…:</strong> {{ num_auth }}<br>
+<strong>РљРѕРјР°РЅРґР° СЃР°Р№С‚Р°:</strong> {{ num_team }}<br>
+<strong>РџРѕР»СЊР·РѕРІР°С‚РµР»Рё:</strong> {{ num_users }}<br>
+<strong>РџРѕРёСЃРєРѕРІС‹С… СЂРѕР±РѕС‚РѕРІ:</strong> {{ num_bot }}<br>
 {% if (entries_team.true) %}<br/>{{ entries_team.print }}{% endif %}
 {% if (entries_user.true) %}<br/>{{ entries_user.print }}{% endif %}
 {% if (today.true) %}<br/>{{ today.print }}{% endif %}

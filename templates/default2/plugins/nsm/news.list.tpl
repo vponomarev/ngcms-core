@@ -1,22 +1,22 @@
 <div class="post">
 	<div class="post-header">
-		<div class="post-title">Список ваших новостей:</div>
+		<div class="post-title">РЎРїРёСЃРѕРє РІР°С€РёС… РЅРѕРІРѕСЃС‚РµР№:</div>
 	</div>
 	<div style="height: 10px;"></div>
 	<div class="post-text">
 		<p>
 		<table border="0" width="100%">
 			<tr>
-				<th><a href="{{ addURL }}">Добавить новость..</a></th>
+				<th><a href="{{ addURL }}">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІРѕСЃС‚СЊ..</a></th>
 			</tr>
 		</table>
 		<div style="height: 20px;"></div>
 		<table class="nsm" border="0" width="100%">
 			<tr align="center">
-				<td class="nsm_head" width="50">Статус</td>
-				<td class="nsm_head" width="70">Дата</td>
+				<td class="nsm_head" width="50">РЎС‚Р°С‚СѓСЃ</td>
+				<td class="nsm_head" width="70">Р”Р°С‚Р°</td>
 				<td class="nsm_head" width="50">&nbsp;</td>
-				<td class="nsm_head">Заголовок</td>
+				<td class="nsm_head">Р—Р°РіРѕР»РѕРІРѕРє</td>
 			</tr>
 			{% for entry in entries %}
 				<tr>
@@ -34,11 +34,11 @@
 					</td>
 					<td width="48" cellspacing=0 cellpadding=0 align="center" class="nsm_list">
 						{% if entry.flags.mainpage %}
-							<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="На главной"/> {% endif %}
+							<img src="{{ skins_url }}/images/mainpage.png" border="0" width="16" height="16" title="РќР° РіР»Р°РІРЅРѕР№"/> {% endif %}
 						{% if (entry.attach_count > 0) %}
-							<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="Файлов: {{ entry.attach_count }}"/> {% endif %}
+							<img src="{{ skins_url }}/images/attach.png" border="0" width="16" height="16" title="Р¤Р°Р№Р»РѕРІ: {{ entry.attach_count }}"/> {% endif %}
 						{% if (entry.images_count > 0) %}
-							<img src="{{ skins_url }}/images/img_group.png" border="0" width="16" height="16" title="Картинок: {{ entry.images_count }}"/> {% endif %}
+							<img src="{{ skins_url }}/images/img_group.png" border="0" width="16" height="16" title="РљР°СЂС‚РёРЅРѕРє: {{ entry.images_count }}"/> {% endif %}
 					</td>
 					<td class="nsm_list">
 						{% if entry.flags.status %}
@@ -47,7 +47,7 @@
 				</tr>
 			{% else %}
 				<tr>
-					<td colspan="4" class="nsm_list">У вас нет новостей</td>
+					<td colspan="4" class="nsm_list">РЈ РІР°СЃ РЅРµС‚ РЅРѕРІРѕСЃС‚РµР№</td>
 				</tr>
 			{% endfor %}
 		</table>

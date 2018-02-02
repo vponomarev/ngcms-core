@@ -29,8 +29,8 @@
 									<td>{pdo}</td>
 								</tr>
 								<tr>
-									<td>{l_perm.minreq.xml}</td>
-									<td>{xml}</td>
+									<td>{l_perm.minreq.mb}</td>
+									<td>{mb}</td>
 								</tr>
 								<tr>
 									<td>{l_perm.minreq.gd}</td>
@@ -105,7 +105,7 @@
 					<input type="button" value="&laquo;&laquo; {l_button.back}" onclick="document.getElementById('stage').value='0'; form.submit();" class="filterbutton"/>
 				</td>
 				<td align="center">
-					[error_button]<input style="background-color: red; color: white; font-weight: bold;" type="button" value="Повторить проверку" onclick="document.getElementById('stage').value='1'; form.submit();" class="filterbutton"/>[/error_button]
+					[error_button]<input style="background-color: red; color: white; font-weight: bold;" type="button" value="РџРѕРІС‚РѕСЂРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ" onclick="document.getElementById('stage').value='1'; form.submit();" class="filterbutton"/>[/error_button]
 				</td>
 				<td width="33%" style="text-align: right;">
 					<input type="submit" value="{l_button.next} &raquo;&raquo;" class="filterbutton"/></td>

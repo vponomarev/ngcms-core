@@ -32,7 +32,7 @@ class http_get {
 	function request($proto, $url, $params = '', $timeout = 5, $referer = 0) {
 
 		// Open TCP connection
-		if ((strtolower($proto) != 'get') && (strtolower($proto) != 'post')) {
+		if ((mb_strtolower($proto) != 'get') && (mb_strtolower($proto) != 'post')) {
 			return false;
 		}
 		list ($host, $port, $path) = http_get::parse_url($url);
@@ -61,7 +61,7 @@ class http_get {
 		}
 
 		// Send header
-		if (strtolower($proto) == 'get') {
+		if (mb_strtolower($proto) == 'get') {
 			fputs($fp,
 				"GET /$path" . (!empty($ext) ? ('?' . $ext) : '') . " HTTP/1.1\r\n" .
 				"Host: $host\r\nConnection: close\r\n" .
@@ -69,11 +69,11 @@ class http_get {
 				"User-Agent: PHPfetcher class " . $this->getVersion() . "(designed for: http://ngcms.ru/)\r\n" .
 				"\r\n"
 			);
-		} else if (strtolower($proto) == 'post') {
+		} else if (mb_strtolower($proto) == 'post') {
 			fputs($fp,
 				"POST /$path HTTP/1.1\r\n" .
 				"Host: $host\r\nConnection: close\r\n" .
-				"Content-length: " . strlen($ext) . "\r\n" .
+				"Content-length: " . mb_strlen($ext) . "\r\n" .
 				"Content-Type: application/x-www-form-urlencoded\r\n" .
 				($referer ? ('Referer: http://' . $_SERVER['HTTP_HOST'] . "/\r\n") : '') .
 				"User-Agent: PHPfetcher class " . $this->getVersion() . " (designed for: http://ngcms.ru/)\r\n" .
@@ -95,7 +95,7 @@ class http_get {
 		while ((!feof($fp)) && (!$fi['timed_out'])) {
 			$in = fread($fp, 128 * 1024);
 
-			$dsize += strlen($in);
+			$dsize += mb_strlen($in);
 			$data .= $in;
 
 			if (($chunk >= $maxchunks) || ($dsize >= $dmaxsize)) break;
@@ -109,9 +109,9 @@ class http_get {
 		}
 
 		// Try to parse data
-		if ($pos = strpos($data, "\r\n\r\n")) {
-			$header = substr($data, 0, $pos);
-			$data = substr($data, $pos + 4);
+		if ($pos = mb_strpos($data, "\r\n\r\n")) {
+			$header = mb_substr($data, 0, $pos);
+			$data = mb_substr($data, $pos + 4);
 		} else {
 			// HTTP header/body splitter not found. No body given
 			$header = $data;

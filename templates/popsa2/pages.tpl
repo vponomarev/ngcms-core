@@ -1,6 +1,6 @@
 <nav>
 	<div class="w_box">
-		<!-- pagination START - âûâîä ïîñòğàíè÷íîé íàâèãàöèè (pages.tpl & variables.ini) -->
+		<!-- pagination START - Ğ²Ñ‹Ğ²Ğ¾Ğ´ Ğ¿Ğ¾ÑÑ‚Ñ€Ğ°Ğ½Ğ¸Ñ‡Ğ½Ğ¾Ğ¹ Ğ½Ğ°Ğ²Ğ¸Ğ³Ğ°Ñ†Ğ¸Ğ¸ (pages.tpl & variables.ini) -->
 		<div id="pagination">
 			[prev-link]<span class="prev">{l_prevpage}</span>[/prev-link]{pages}[next-link]<span class="next">{l_nextpage}</span>[/next-link]
 			<div class="clear"></div>

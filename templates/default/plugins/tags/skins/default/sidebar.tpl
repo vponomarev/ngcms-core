@@ -1,5 +1,5 @@
 <div class="block tags-block">
-	<div class="block-title">Облако тегов</div>
+	<div class="block-title">РћР±Р»Р°РєРѕ С‚РµРіРѕРІ</div>
 	<div>{entries}</div>
-	<br/><a href="/plugin/tags/">Показать все теги</a>
+	<br/><a href="/plugin/tags/">РџРѕРєР°Р·Р°С‚СЊ РІСЃРµ С‚РµРіРё</a>
 </div>

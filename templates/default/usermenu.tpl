@@ -1,6 +1,6 @@
 {% if (global.flags.isLogged) %}
 	<div id="auth">
-		{% if pluginIsActive('nsm') %}<a href="/plugin/nsm/" class="auth-add-news">Добавить новость</a>{% endif %}
+		{% if pluginIsActive('nsm') %}<a href="/plugin/nsm/" class="auth-add-news">Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІРѕСЃС‚СЊ</a>{% endif %}
 		<a href="#" class="auth-profile">{{ lang.profile }}</a>
 		<div id="profile">
 			<div class="profile-top-bg"></div>
@@ -53,13 +53,13 @@
 			</div>
 			{% if pluginIsActive('auth_loginza') %}
 				<div class="modal-footer">
-					Вход через социальные сети: <br>
+					Р’С…РѕРґ С‡РµСЂРµР· СЃРѕС†РёР°Р»СЊРЅС‹Рµ СЃРµС‚Рё: <br>
 					<div class="social-in-modal">
 						<script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>
 						<a href="https://loginza.ru/api/widget?token_url={home}/plugin/auth_loginza/" class="loginza"><img src="{{ tpl_url }}/img/social/fb.png" alt="">
 							Facebook</a>
 						<a href="https://loginza.ru/api/widget?token_url={home}/plugin/auth_loginza/" class="loginza"><img src="{{ tpl_url }}/img/social/vk.png" alt="">
-							Вконтакте</a>
+							Р’РєРѕРЅС‚Р°РєС‚Рµ</a>
 						<a href="https://loginza.ru/api/widget?token_url={home}/plugin/auth_loginza/" class="loginza"><img src="{{ tpl_url }}/img/social/tw.png" alt="">
 							Twitter</a>
 					</div>

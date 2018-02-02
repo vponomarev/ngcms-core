@@ -249,22 +249,22 @@
 								</thead>
 								<tr>
 									<td>Register Globals</td>
-									<td>Отключено</td>
+									<td>РћС‚РєР»СЋС‡РµРЅРѕ</td>
 									<td>{{ flags.register_globals }}</td>
 								</tr>
 								<tr>
 									<td>Magic Quotes GPC</td>
-									<td>Отключено</td>
+									<td>РћС‚РєР»СЋС‡РµРЅРѕ</td>
 									<td>{{ flags.magic_quotes_gpc }}</td>
 								</tr>
 								<tr>
 									<td>Magic Quotes Runtime</td>
-									<td>Отключено</td>
+									<td>РћС‚РєР»СЋС‡РµРЅРѕ</td>
 									<td>{{ flags.magic_quotes_runtime }}</td>
 								</tr>
 								<tr>
 									<td>Magic Quotes Sybase</td>
-									<td>Отключено</td>
+									<td>РћС‚РєР»СЋС‡РµРЅРѕ</td>
 									<td>{{ flags.magic_quotes_sybase }}</td>
 								</tr>
 							</table>

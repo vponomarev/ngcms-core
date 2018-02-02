@@ -168,7 +168,7 @@ function showNews($handlerName, $params) {
 				$SYSTEM_FLAGS['info']['title']['group'] = $currentCategory['name'];
 
 				// Check if `default template` for this category is set to "current category"
-				$cct = intval(substr($currentCategory['flags'], 2, 1));
+				$cct = intval(mb_substr($currentCategory['flags'], 2, 1));
 				if ($cct < 1) {
 					$cct = intval($config['template_mode']);
 					if (!$cct)

@@ -49,7 +49,7 @@ $lang = array();
 $SYSTEM_FLAGS = array(
 	'actions.disabled' => array(),
 	'http.headers'     => array(
-		'content-type'  => 'text/html; charset=Windows-1251',
+		'content-type'  => 'text/html; charset=utf-8',
 		'cache-control' => 'private',
 	)
 );
@@ -84,7 +84,7 @@ $PLUGINS = array(
 // Check for support of mondatory modules
 // ===========================================================
 {
-	foreach (array('sql' => array('mysql' => 'mysql_connect', 'mysqli' => 'mysqli_connect'), 'zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
+	foreach (array('sql' => array('mysql' => 'mysql_connect', 'mysqli' => 'mysqli_connect'), 'zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg', 'mbstring' => 'mb_internal_encoding') as $pModule => $pFunction) {
 		$is_error = false;
 		if (is_array($pFunction)) {
 			foreach ($pFunction as $kModule => $vFunction) {
@@ -104,6 +104,9 @@ $PLUGINS = array(
 		}
 	}
 }
+
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
 
 // Define global constants "root", "site_root"
 define('root', dirname(__FILE__) . '/');
@@ -144,7 +147,7 @@ foreach ($confArray['predefined'] as $key => $value) {
 // Prepare variable with access URL
 $systemAccessURL = $_SERVER['REQUEST_URI'];
 if (($tmp_pos = strpos($systemAccessURL, '?')) !== false) {
-	$systemAccessURL = substr($systemAccessURL, 0, $tmp_pos);
+	$systemAccessURL = mb_substr($systemAccessURL, 0, $tmp_pos);
 }
 
 // ============================================================================
@@ -238,7 +241,7 @@ $twig = new Twig_Environment($twigLoader, array(
 	'cache'               => root . 'cache/twig/',
 	'auto_reload'         => true,
 	'autoescape'          => false,
-	'charset'             => 'cp1251',
+	'charset'             => 'UTF-8',
 	'base_template_class' => 'Twig_Template_NGCMS',
 ));
 

@@ -5,8 +5,8 @@
 			<input type=hidden name=action value=vote/>
 			<input type=hidden name=voteid value="{voteid}"/>
 			<input type=hidden name=referer value="{REFERER}"/>
-			{votelines}<br/><input class="button" type="submit" onclick="return make_voteL(0,{voteid});" value="Ãîëîñîâàòü"/>
-			<input class="button" type="button" onclick="document.location='{post_url}?mode=show&voteid={voteid}';" value="Ðåçóëüòàòû"/>
+			{votelines}<br/><input class="button" type="submit" onclick="return make_voteL(0,{voteid});" value="Ð“Ð¾Ð»Ð¾ÑÐ¾Ð²Ð°Ñ‚ÑŒ"/>
+			<input class="button" type="button" onclick="document.location='{post_url}?mode=show&voteid={voteid}';" value="Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹"/>
 		</form>
 	</div>
 </div>

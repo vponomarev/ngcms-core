@@ -369,7 +369,7 @@ function newsProcessFilter($conditions) {
 	if (!is_array($conditions))
 		return '';
 
-	switch (strtoupper($conditions[0])) {
+	switch (mb_strtoupper($conditions[0])) {
 		case 'AND' :
 		case 'OR'  :
 			$list = array();
@@ -380,7 +380,7 @@ function newsProcessFilter($conditions) {
 					$list [] = '(' . $rec . ')';
 			}
 
-			return join(' ' . strtoupper($conditions[0]) . ' ', $list);
+			return join(' ' . mb_strtoupper($conditions[0]) . ' ', $list);
 		case 'DATA':
 			if ($conditions[1] == 'category') {
 				switch ($conditions[2]) {
@@ -390,7 +390,7 @@ function newsProcessFilter($conditions) {
 						return '';
 				}
 			} else {
-				switch (strtoupper($conditions[2])) {
+				switch (mb_strtoupper($conditions[2])) {
 					case '=':
 					case '>=':
 					case '<=':
@@ -742,7 +742,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
 		$tvars['vars']['news']['embed']['imgCount'] = count($tvars['vars']['news']['embed']['images']);
 
 		// Print icon if only one parent category
-		if (isset($row['catid']) && $row['catid'] && !stristr(",", $row['catid']) && isset($catmap[$row['catid']]) && ($catalt = $catmap[$row['catid']]) && isset($catz[$catalt]['icon']) && $catz[$catalt]['icon']) {
+		if (isset($row['catid']) && $row['catid'] && !mb_stristr(",", $row['catid']) && isset($catmap[$row['catid']]) && ($catalt = $catmap[$row['catid']]) && isset($catz[$catalt]['icon']) && $catz[$catalt]['icon']) {
 			// [TWIG] news.flags.hasCategoryIcon
 			$tvars['news']['flags']['hasCategoryIcon'] = true;
 			$tvars['vars']['icon'] = $catz[$catalt]['icon'];

@@ -32,7 +32,7 @@ class tpl {
 
 		$nn = $name;
 
-		$fname = $dir . ($file ? $file : ((substr($dir, -1) != '/' ? '/' : '') . $name . $this->ext));
+		$fname = $dir . ($file ? $file : ((mb_substr($dir, -1) != '/' ? '/' : '') . $name . $this->ext));
 
 		if (!is_file($fname)) {
 			$this->data[$nn] = '[<b>TEMPLATE NOT FOUND</b> (' . $fname . ')]';
@@ -50,11 +50,11 @@ class tpl {
 			// Check include working mode: recursive or normal
 			if (isset($params['includeAllowRecursive']) && $params['includeAllowRecursive']) {
 				// Recursive mode: ON
-				while (preg_match('#\[:include (.+?)\]#is', $data, $iM)) {
+				while (preg_match('#\[:include (.+?)\]#isu', $data, $iM)) {
 					$incName = $iM[1];
 					if (!(isset($params['includeDisableChroot']) && $params['includeDisableChroot'])) {
 						$incName = str_replace(array('/../', '/./'), '', $incName);
-						if (preg_match('#^\.\.\/(.+)$#is', $incName, $mt))
+						if (preg_match('#^\.\.\/(.+)$#isu', $incName, $mt))
 							$incName = $mt[1];
 					}
 					$incFile = $dir . $incName;
@@ -66,7 +66,7 @@ class tpl {
 				}
 			} else {
 				// Recursive mode: OFF
-				if (preg_match_all('#\[:include (.+?)\]#is', $data, $iMList, PREG_SET_ORDER)) {
+				if (preg_match_all('#\[:include (.+?)\]#isu', $data, $iMList, PREG_SET_ORDER)) {
 					$pMatchString = array();
 					$pMatchData = array();
 
@@ -74,7 +74,7 @@ class tpl {
 						$incName = $iM[1];
 						if (!(isset($params['includeDisableChroot']) && $params['includeDisableChroot'])) {
 							$incName = str_replace(array('/../', '/./'), '', $incName);
-							if (preg_match('#^\.\.\/(.+)$#is', $incName, $mt))
+							if (preg_match('#^\.\.\/(.+)$#isu', $incName, $mt))
 								$incName = $mt[1];
 						}
 						$incFile = $dir . $incName;
@@ -114,16 +114,16 @@ class tpl {
 		if (isset($params['codeExec']) && $params['codeExec'])
 			$data = (eval(' ?>' . $this->data[$nn] . '<?php '));
 
-		if (preg_match_all('/(?<=\{)l_(.*?)(?=\})/i', $data, $larr)) {
+		if (preg_match_all('/(?<=\{)l_(.*?)(?=\})/iu', $data, $larr)) {
 			// Show language variables
 			foreach ($larr[0] as $k => $v) {
-				$name_larr = substr($v, 2);
+				$name_larr = mb_substr($v, 2);
 				$data = str_replace('{' . $v . '}', isset($lang[$name_larr]) ? $lang[$name_larr] : '[LANG_LOST:' . $name_larr . ']', $data);
 			}
 		}
 
 		// [TWIG]..[/TWIG]
-		if (preg_match_all('/\[TWIG\](.+?)\[\/TWIG\]/is', $data, $parr)) {
+		if (preg_match_all('/\[TWIG\](.+?)\[\/TWIG\]/isu', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
 				$scode = $parr[1][$k];
 				$cacheFileName = md5($scode) . '.txt';
@@ -139,24 +139,24 @@ class tpl {
 
 		// LOGIC processing
 		// [isplugin <NAME>] .. [/isplugin] - content will be shown only if plugin <NAME> is active
-		if (preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/is', $data, $parr)) {
+		if (preg_match_all('/\[isplugin (.+?)\](.+?)\[\/isplugin\]/isu', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
 				$data = str_replace($v, getPluginStatusActive($parr[1][$k]) ? $parr[2][$k] : '', $data);
 			}
 		}
 
 		// [isntplugin <NAME>] .. [/ispntlugin] - content will be shown only if plugin <NAME> is NOT active
-		if (preg_match_all('/\[isnplugin (.+?)\](.+?)\[\/isnplugin\]/is', $data, $parr)) {
+		if (preg_match_all('/\[isnplugin (.+?)\](.+?)\[\/isnplugin\]/isu', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
 				$data = str_replace($v, getPluginStatusActive($parr[1][$k]) ? '' : $parr[2][$k], $data);
 			}
 		}
 
 		// Special variable {plugin_<NAME>...} ({plugin_ads}, {plugin_ads_var1} for plugin ads) - will be showed only if plugin <NAME> is active
-		if (preg_match_all('/(?<=\{)plugin_(.*?)(?=\})/i', $data, $parr)) {
+		if (preg_match_all('/(?<=\{)plugin_(.*?)(?=\})/iu', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
-				$name_parr = substr($v, 7);
-				if (preg_match('/^(.+)\_/', $name_parr, $match))
+				$name_parr = mb_substr($v, 7);
+				if (preg_match('/^(.+)\_/u', $name_parr, $match))
 					$name_parr = $match[1];
 
 				if (!getPluginStatusActive($name_parr)) {
@@ -170,7 +170,7 @@ class tpl {
 		// [ifnhandler:<RULe>] .. [/ifhandler]
 		// RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
 		// ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
-		if (preg_match_all('#\[if(n){0,1}handler\:(.+?)](.+?)\[\/ifhandler\]#is', $data, $parr, PREG_SET_ORDER)) {
+		if (preg_match_all('#\[if(n){0,1}handler\:(.+?)](.+?)\[\/ifhandler\]#isu', $data, $parr, PREG_SET_ORDER)) {
 			//print "<pre>PMC:".var_export($parr, true)."</pre><br/>\n";
 			//print "<pre>CH:".var_export($CurrentHandler, true)."</pre><br/>\n";
 
@@ -183,7 +183,7 @@ class tpl {
 
 				$ruleCatched = false;
 				foreach (preg_split("#\|#", $v[2]) as $rule) {
-					if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
+					if (preg_match("#^(.+?)\:(.+?)$#u", $rule, $pt)) {
 						// Specified: Plugin + Handler
 						if (($pt[1] == $CurrentHandler['pluginName']) && ($pt[2] == $CurrentHandler['handlerName'])) {
 							$ruleCatched = true;
@@ -201,23 +201,23 @@ class tpl {
 
 		// - Special display for languages
 		// [iflang:<Language>] .. [/iflang]
-		if (preg_match_all('/\[iflang\:(.+?)\](.+?)\[\/iflang\]/is', $data, $parr)) {
+		if (preg_match_all('/\[iflang\:(.+?)\](.+?)\[\/iflang\]/isu', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
 				$data = str_replace($v, ($config['default_lang'] == $parr[1][$k]) ? '$1' : '', $data);
 			}
 		}
 		// [ifnlang:<Language>] .. [/ifnlang]
-		if (preg_match_all('/\[ifnlang\:(.+?)\](.+?)\[\/ifnlang\]/is', $data, $parr)) {
+		if (preg_match_all('/\[ifnlang\:(.+?)\](.+?)\[\/ifnlang\]/isu', $data, $parr)) {
 			foreach ($parr[0] as $k => $v) {
 				$data = str_replace($v, ($config['default_lang'] == $parr[1][$k]) ? '' : '$1', $data);
 			}
 		}
 
 		if ($PHP_SELF && $PHP_SELF == "admin.php") {
-			preg_match_all('/(?<=\{)c_(.*?)(?=\})/i', $data, $carr);
+			preg_match_all('/(?<=\{)c_(.*?)(?=\})/iu', $data, $carr);
 
 			foreach ($carr[0] as $k => $v) {
-				$name_carr = substr($v, 2);
+				$name_carr = mb_substr($v, 2);
 				$data = str_replace('{' . $v . '}', $config[$name_carr], $data);
 			}
 		}
@@ -225,7 +225,7 @@ class tpl {
 		// Process variables
 		if (isset($vars['vars']) && is_array($vars['vars'])) {
 			foreach ($vars['vars'] as $id => $var) {
-				if (substr($id, 0, 1) == '[') {
+				if (mb_substr($id, 0, 1) == '[') {
 					$data = str_replace($id, $var, $data);
 				} else {
 					if (!is_array($var))
@@ -240,10 +240,18 @@ class tpl {
 				$data = preg_replace($id, $var, $data);
 			}
 		}
-		$data = str_replace('{skins_url}', skins_url, $data);
-		$data = str_replace('{tpl_url}', tpl_url, $data);
-		$data = str_replace('{admin_url}', admin_url, $data);
-		$data = str_replace('{scriptLibrary}', scriptLibrary, $data);
+		
+		if(defined('skins_url'))
+			$data = str_replace('{skins_url}', skins_url, $data);
+		
+		if(defined('tpl_url'))
+			$data = str_replace('{tpl_url}', tpl_url, $data);
+	
+		if(defined('admin_url'))
+			$data = str_replace('{admin_url}', admin_url, $data);
+		
+		if(defined('scriptLibrary'))
+			$data = str_replace('{scriptLibrary}', scriptLibrary, $data);
 
 		if (isset($params['inline']) && $params['inline'])
 			return $data;

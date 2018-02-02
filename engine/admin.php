@@ -11,7 +11,7 @@
 $AFILTERS = array();
 
 // Load core
-@header('content-type: text/html; charset=Windows-1251');
+@header('content-type: text/html; charset=utf-8');
 @include_once 'core.php';
 
 // Protect against hack attempts

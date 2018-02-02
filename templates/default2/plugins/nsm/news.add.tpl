@@ -43,40 +43,40 @@
 	<input type="hidden" name="approve" id="approve" value="0"/>
 	<div class="post">
 		<div class="post-header">
-			<div class="post-title">Добавление материала:</div>
+			<div class="post-title">Р”РѕР±Р°РІР»РµРЅРёРµ РјР°С‚РµСЂРёР°Р»Р°:</div>
 		</div>
 		<div style="height: 10px;"></div>
 		<div class="post-text">
 			<p>
 			<table border="0" width="100%">
 				<tr>
-					<th><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></th>
+					<th><a role="button" href="{{ listURL }}">РџРµСЂРµР№С‚Рё Рє СЃРїРёСЃРєСѓ РІР°С€РёС… РЅРѕРІРѕСЃС‚РµР№</a></th>
 				</tr>
 			</table>
 			<div style="height: 20px;"></div>
 			<table border="0" width="100%">
 				<tr>
-					<td width="30%">Заголовок:</td>
+					<td width="30%">Р—Р°РіРѕР»РѕРІРѕРє:</td>
 					<td width="70%"><input type="text" name="title" class="input" value=""/></td>
 				</tr>
 				<tr>
-					<td width="30%">Альт. имя:</td>
+					<td width="30%">РђР»СЊС‚. РёРјСЏ:</td>
 					<td width="70%"><input type="text" name="alt_name" class="input" value=""/></td>
 				</tr>
 				<tr>
-					<td width="30%">Категория:</td>
+					<td width="30%">РљР°С‚РµРіРѕСЂРёСЏ:</td>
 					<td width="70%">{{ mastercat }}</td>
 				</tr>
 				{% if flags['multicat.show'] %}
 					<tr>
-						<td width="30%">Дополнительные категории:</td>
+						<td width="30%">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё:</td>
 						<td width="70%">{{ extcat }}</td>
 					</tr>
 				{% endif %}
 				{% if (flags.edit_split) %}
 					<tr>
 						<td colspan="2">
-							<b>Вводная часть материала:</b> (Обязательно)
+							<b>Р’РІРѕРґРЅР°СЏ С‡Р°СЃС‚СЊ РјР°С‚РµСЂРёР°Р»Р°:</b> (РћР±СЏР·Р°С‚РµР»СЊРЅРѕ)
 							<div>
 								<div>{{ quicktags }}<br/> {{ smilies }}</div>
 								<textarea onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" id="ng_news_content_short" style="width:98%;" rows="15" class="textarea"></textarea>
@@ -85,7 +85,7 @@
 					</tr>
 					{% if (flags.extended_more) %}
 						<tr>
-							<td width="30%">Разделитель:</td>
+							<td width="30%">Р Р°Р·РґРµР»РёС‚РµР»СЊ:</td>
 							<td width="70%">
 								<input tabindex="2" type="text" name="content_delimiter" style="width: 98%;" class="input" value=""/>
 							</td>
@@ -93,7 +93,7 @@
 					{% endif %}
 					<tr>
 						<td colspan="2">
-							<b>Материал полностью:</b> (Необязательно)
+							<b>РњР°С‚РµСЂРёР°Р» РїРѕР»РЅРѕСЃС‚СЊСЋ:</b> (РќРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)
 							<div>
 								<div>{{ quicktags }}<br/> {{ smilies }}</div>
 								<textarea onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" id="ng_news_content_full" style="width:98%;" rows="15" class="textarea"></textarea>
@@ -145,12 +145,12 @@
 					<td width="100%" valign="top">
 						{% if flags['can_publish'] %}
 							<button class="btn" type="submit" onclick="return approveMode(1);">
-								<span>Добавить материал</span></button>{% else %} &nbsp; {% endif %}
+								<span>Р”РѕР±Р°РІРёС‚СЊ РјР°С‚РµСЂРёР°Р»</span></button>{% else %} &nbsp; {% endif %}
 						<button class="btn" type="submit" onclick="return approveMode(0);">
-							<span>Отправить на модерацию</span></button>
+							<span>РћС‚РїСЂР°РІРёС‚СЊ РЅР° РјРѕРґРµСЂР°С†РёСЋ</span></button>
 						<button class="btn" type="submit" onclick="return approveMode(-1);">
-							<span>Сохранить черновик</span></button>
-						<button class="btn" type="button" onclick="return preview();"><span>Просмотр</span></button>
+							<span>РЎРѕС…СЂР°РЅРёС‚СЊ С‡РµСЂРЅРѕРІРёРє</span></button>
+						<button class="btn" type="button" onclick="return preview();"><span>РџСЂРѕСЃРјРѕС‚СЂ</span></button>
 					</td>
 				</tr>
 			</table>

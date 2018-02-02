@@ -2,15 +2,15 @@
 <div id="basketTotalDisplay">
 	{% endif %}
 	<div class="white_b">
-		<h3>Корзина</h3>
+		<h3>РљРѕСЂР·РёРЅР°</h3>
 		<div class="l300_green_blue"></div>
 		<ul class="plugin">
 			{% if (count > 0) %}
-				<li>Товаров: <strong>{{ count }}</strong></li>
-				<li>Всего: <strong class="green_t">{{ price }}</strong> <em>руб.</em></li>
-				<li><a href="/plugin/basket/" class="btn btn-primary btn-large btn-block">Оформить заказ</a></li>
+				<li>РўРѕРІР°СЂРѕРІ: <strong>{{ count }}</strong></li>
+				<li>Р’СЃРµРіРѕ: <strong class="green_t">{{ price }}</strong> <em>СЂСѓР±.</em></li>
+				<li><a href="/plugin/basket/" class="btn btn-primary btn-large btn-block">РћС„РѕСЂРјРёС‚СЊ Р·Р°РєР°Р·</a></li>
 			{% else %}
-				<li>корзина пуста</li>
+				<li>РєРѕСЂР·РёРЅР° РїСѓСЃС‚Р°</li>
 			{% endif %}
 		</ul>
 	</div>

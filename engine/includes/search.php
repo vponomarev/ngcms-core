@@ -51,7 +51,7 @@ function search_news() {
 	$search = array();
 	$search_words = array();
 	if ($_REQUEST['search']) {
-		$search_words = preg_split('#[ \,\.]+#', trim(str_replace(array('<', '>', '%', '$', '#'), '', substr($_REQUEST['search'], 0, 64))), -1, PREG_SPLIT_NO_EMPTY);
+		$search_words = preg_split('#[ \,\.]+#', trim(str_replace(array('<', '>', '%', '$', '#'), '', mb_substr($_REQUEST['search'], 0, 64))), -1, PREG_SPLIT_NO_EMPTY);
 
 		foreach ($search_words as $s) {
 			array_push($search,

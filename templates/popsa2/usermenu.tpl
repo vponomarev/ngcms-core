@@ -6,12 +6,12 @@
 		<li class="addnew"><a href="{{ addnews_link }}">{{ lang['addnews'] }}</a></li>
 		[/if-have-perm]
 		{% if pluginIsActive('pm') %}
-			<li class="pm_n"><a href="{{ p.pm.link }}"><span class="bg">ЛС ({{ p.pm.pm_unread }} / {{ p.pm.pm_all }}
+			<li class="pm_n"><a href="{{ p.pm.link }}"><span class="bg">Р›РЎ ({{ p.pm.pm_unread }} / {{ p.pm.pm_all }}
 					)</span></a></li>{% endif %}
 		{% if pluginIsActive('uprofile') %}
 			<li class="profile"><a href="{{ profile_link }}">{{ lang['myprofile'] }}</a></li>{% endif %}
 		{% if pluginIsActive('bookmarks') %}
-			<li class="book_n"><a href="/plugin/bookmarks/">Мои закладки</a></li>{% endif %}
+			<li class="book_n"><a href="/plugin/bookmarks/">РњРѕРё Р·Р°РєР»Р°РґРєРё</a></li>{% endif %}
 		<li class="logout"><a href="{{ logout_link }}">{{ lang['logout'] }}</a></li>
 	</ul>
 {% else %}
@@ -21,7 +21,7 @@
 	</script>
 	{% if pluginIsActive('auth_loginza') %}
 		<script src="http://loginza.ru/js/widget.js" type="text/javascript"></script>{% endif %}
-	<h3>Войти на сайт</h3>
+	<h3>Р’РѕР№С‚Рё РЅР° СЃР°Р№С‚</h3>
 	<form name="login" method="post" action="{{ form_action }}" id="login">
 		<input type="hidden" name="redirect" value="{{ redirect }}"/>
 		<div class="input">
@@ -34,14 +34,14 @@
 		<input type="submit" value="{{ lang['login'] }}" name="Login" class="btn btn-primary btn-large"/>
 		<div class="clear10"></div>
 		<ul class="meta">
-			<li class="register_n"><a href="{{ reg_link }}" title="Регистрация на сайте!">Регистрация</a></li>
-			<li class="lost_n"><a href="{{ lost_link }}" title="Забыли пароль?">Забыли пароль?</a></li>
+			<li class="register_n"><a href="{{ reg_link }}" title="Р РµРіРёСЃС‚СЂР°С†РёСЏ РЅР° СЃР°Р№С‚Рµ!">Р РµРіРёСЃС‚СЂР°С†РёСЏ</a></li>
+			<li class="lost_n"><a href="{{ lost_link }}" title="Р—Р°Р±С‹Р»Рё РїР°СЂРѕР»СЊ?">Р—Р°Р±С‹Р»Рё РїР°СЂРѕР»СЊ?</a></li>
 		</ul>
 		<div class="clear10"></div>
 	</form>
 	{% if pluginIsActive('auth_loginza') %}
 		<a href="http://loginza.ru/api/widget?token_url={home}" class="loginza">
-			<img src="/engine/plugins/auth_loginza/tpl/img/sign_in_button_gray.gif" alt="Войти через loginza"/>
+			<img src="/engine/plugins/auth_loginza/tpl/img/sign_in_button_gray.gif" alt="Р’РѕР№С‚Рё С‡РµСЂРµР· loginza"/>
 		</a>
 	{% endif %}
 {% endif %}

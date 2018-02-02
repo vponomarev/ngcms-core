@@ -22,7 +22,7 @@ class mysql {
 
 			return false;
 		}
-		@mysql_query("/*!40101 SET NAMES 'cp1251' */", $this->connect);
+		@mysql_query("/*!40101 SET NAMES 'utf8' */", $this->connect);
 		if (!empty($db) && !@mysql_select_db($db)) {
 			if (!$noerror) {
 				die('<h1>An Error Occurred</h1><hr />Unable to find the database <i>' . $db . '</i>!');

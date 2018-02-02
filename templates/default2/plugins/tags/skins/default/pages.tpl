@@ -1,5 +1,5 @@
 <div class="paginator">
 	<ul>
-		[prev-link]Предыдущая[/prev-link] {pages} [next-link]Следующая[/next-link]
+		[prev-link]РџСЂРµРґС‹РґСѓС‰Р°СЏ[/prev-link] {pages} [next-link]РЎР»РµРґСѓСЋС‰Р°СЏ[/next-link]
 	</ul>
 </div>

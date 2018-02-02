@@ -67,7 +67,7 @@ foreach (array('backup' => root . 'backups', 'avatar' => avatars_dir, 'photo' =>
 
 		// Error - engine can't write into directory
 		if (!is_writable($dir)) {
-			$STATS[$id . '_perm'] = '<font color="red"><b>' . $perms . '</b></font> [<a href="#" onclick="showModal(' . "'Неверные правила'" . ');">Ошибка</a>]';
+			$STATS[$id . '_perm'] = '<font color="red"><b>' . $perms . '</b></font> [<a href="#" onclick="showModal(' . "'РќРµРІРµСЂРЅС‹Рµ РїСЂР°РІРёР»Р°'" . ');">РћС€РёР±РєР°</a>]';
 		} else {
 			$STATS[$id . '_perm'] = '<font color="green"><b>' . $perms . '</b></font>';
 		}

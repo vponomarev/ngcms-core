@@ -1,5 +1,5 @@
 <div><b>{votename}</b></div>
 <div>
 	{votelines}
-	<div align="center">Всего проголосовало: {vcount}</div>
+	<div align="center">Р’СЃРµРіРѕ РїСЂРѕРіРѕР»РѕСЃРѕРІР°Р»Рѕ: {vcount}</div>
 </div>

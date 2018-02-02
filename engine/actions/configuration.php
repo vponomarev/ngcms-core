@@ -192,7 +192,7 @@ function systemConfigEditForm() {
 		}
 	}
 	$tvars['vars']['multilist'] = $tmpline;
-	$tvars['vars']['defaultSection'] = (isset($_REQUEST['selectedOption']) && $_REQUEST['selectedOption']) ? htmlspecialchars($_REQUEST['selectedOption'], ENT_COMPAT | ENT_HTML401, 'cp1251') : 'news';
+	$tvars['vars']['defaultSection'] = (isset($_REQUEST['selectedOption']) && $_REQUEST['selectedOption']) ? htmlspecialchars($_REQUEST['selectedOption'], ENT_COMPAT | ENT_HTML401, 'UTF-8') : 'news';
 
 	$xt = $twig->loadTemplate('skins/default/tpl/configuration.tpl');
 	echo $xt->render($tVars);

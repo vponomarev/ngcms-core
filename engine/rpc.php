@@ -175,7 +175,7 @@ function rpcRewriteSubmit($params) {
 // Admin panel: search for users
 function rpcAdminUsersSearch($params) {
 
-	global $userROW, $mysql;
+	global $userROW, $mysql, $lang;
 
 	// Check for permissions
 	if (!is_array($userROW) || ($userROW['status'] > 3)) {
@@ -183,7 +183,7 @@ function rpcAdminUsersSearch($params) {
 		return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
 	}
 
-	$searchName = iconv('UTF-8', 'Windows-1251', $params);
+	$searchName = $params;
 
 	// Check search mode
 	// ! - show TOP users by posts
@@ -197,7 +197,7 @@ function rpcAdminUsersSearch($params) {
 	// Scan incoming params
 	$output = array();
 	foreach ($mysql->select($SQL) as $row) {
-		$output[] = array(iconv('Windows-1251', 'UTF-8', $row['name']), iconv('Windows-1251', 'UTF-8', $row['news'] . ' новостей'));
+		$output[] = array($row['name'], $row['news'] . ' ' .$lang['news']);
 	}
 
 	return array('status' => 1, 'errorCode' => 0, 'data' => array($params, $output));

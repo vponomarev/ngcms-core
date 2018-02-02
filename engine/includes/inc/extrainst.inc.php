@@ -39,7 +39,7 @@ function generate_config_page($module, $params, $values = array()) {
 
 	function mkParamLine($param) {
 
-		global $tpl;
+		global $tpl, $lang;
 		if ($param['type'] == 'flat') {
 			return $param['input'];
 		}
@@ -67,17 +67,17 @@ function generate_config_page($module, $params, $values = array()) {
 		}
 
 		if ($param['type'] == 'text') {
-			$tvars['vars']['input'] = '<textarea name="' . $param['name'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . '>' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'cp1251') . '</textarea>';
+			$tvars['vars']['input'] = '<textarea name="' . $param['name'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . '>' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</textarea>';
 		} else if ($param['type'] == 'input') {
-			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="text" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'cp1251') . '" />';
+			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="text" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '" />';
 		} else if ($param['type'] == 'checkbox') {
 			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="checkbox" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="1"' . ($param['value'] ? ' checked' : '') . ' />';
 		} else if ($param['type'] == 'hidden') {
-			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type=hidden value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'cp1251') . '" />';
+			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type=hidden value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '" />';
 		} else if ($param['type'] == 'select') {
 			$tvars['vars']['input'] = '<select name="' . $param['name'] . '" ' . $param['html_flags'] . '>';
 			foreach ($param['values'] as $oid => $oval) {
-				$tvars['vars']['input'] .= '<option value="' . htmlspecialchars($oid, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"' . ($param['value'] == $oid ? ' selected' : '') . '>' . $oval . '</option>';
+				$tvars['vars']['input'] .= '<option value="' . htmlspecialchars($oid, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"' . ($param['value'] == $oid ? ' selected' : '') . '>' . $oval . '</option>';
 			}
 			$tvars['vars']['input'] .= '</select>';
 		} else if ($param['type'] == 'manual') {
@@ -336,7 +336,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 			}
 
 			// Check if different character set are supported [ version >= 4.1.1 ]
-			$charset = is_array($mysql->record("show variables like 'character_set_client'")) ? (' DEFAULT CHARSET=' . ($table['charset'] ? $table['charset'] : 'CP1251')) : '';
+			$charset = is_array($mysql->record("show variables like 'character_set_client'")) ? (' DEFAULT CHARSET=' . ($table['charset'] ? $table['charset'] : 'utf8')) : '';
 
 			$query = "create table " . $chgTableName . " (" . implode(', ', $fieldlist) . ($table['key'] ? ', ' . $table['key'] : '') . ")" . $charset . ($table['engine'] ? ' engine=' . $table['engine'] : '');
 			$mysql->query($query);

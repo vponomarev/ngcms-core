@@ -1,34 +1,34 @@
-<div class="block-title">Осталось уточнить некоторые данные</div>
+<div class="block-title">РћСЃС‚Р°Р»РѕСЃСЊ СѓС‚РѕС‡РЅРёС‚СЊ РЅРµРєРѕС‚РѕСЂС‹Рµ РґР°РЅРЅС‹Рµ</div>
 <form name="register" action="/plugin/auth_loginza/register/" method="post">
 	<input type="hidden" name="type" value="doregister"/>
 	<div class="label label-table">
-		<label>Имя пользователя:</label>
-		<span class="input2"><input name="login" type="text" title="Имя пользователя" value="{login}"/></span>
-		<div class="label-desc">Вы можете заходить на сайт через логин/пароль</div>
+		<label>РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ:</label>
+		<span class="input2"><input name="login" type="text" title="РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ" value="{login}"/></span>
+		<div class="label-desc">Р’С‹ РјРѕР¶РµС‚Рµ Р·Р°С…РѕРґРёС‚СЊ РЅР° СЃР°Р№С‚ С‡РµСЂРµР· Р»РѕРіРёРЅ/РїР°СЂРѕР»СЊ</div>
 	</div>
 	<div class="label label-table">
-		<label>Пароль:</label>
-		<span class="input2"><input name="password" type="text" title="Пароль" value="{password}"/></span>
-		<div class="label-desc">Обязателен для захода через логин/пароль</div>
+		<label>РџР°СЂРѕР»СЊ:</label>
+		<span class="input2"><input name="password" type="text" title="РџР°СЂРѕР»СЊ" value="{password}"/></span>
+		<div class="label-desc">РћР±СЏР·Р°С‚РµР»РµРЅ РґР»СЏ Р·Р°С…РѕРґР° С‡РµСЂРµР· Р»РѕРіРёРЅ/РїР°СЂРѕР»СЊ</div>
 	</div>
 	<div class="label label-table">
-		<label>E-mail адрес:</label>
-		<span class="input2"><input name="email" type="text" title="E-mail адрес" value="{email}"/></span>
-		<div class="label-desc">При восстановлении пароля новый пароль будет высылаться на этот адрес (не обязательно
-			для заполнения)
+		<label>E-mail Р°РґСЂРµСЃ:</label>
+		<span class="input2"><input name="email" type="text" title="E-mail Р°РґСЂРµСЃ" value="{email}"/></span>
+		<div class="label-desc">РџСЂРё РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРё РїР°СЂРѕР»СЏ РЅРѕРІС‹Р№ РїР°СЂРѕР»СЊ Р±СѓРґРµС‚ РІС‹СЃС‹Р»Р°С‚СЊСЃСЏ РЅР° СЌС‚РѕС‚ Р°РґСЂРµСЃ (РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ
+			РґР»СЏ Р·Р°РїРѕР»РЅРµРЅРёСЏ)
 		</div>
 	</div>
 	<div class="clearfix"></div>
 	<div class="label">
 		<label class="pull-left"><input type="checkbox" name="agree">
-			Я ознакомился с <a href="#">правилам</a> и <a href="#">условиями</a> и принимаю их.</label>
-		<input type="submit" value="Зарегестрироваться" class="button pull-right">
+			РЇ РѕР·РЅР°РєРѕРјРёР»СЃСЏ СЃ <a href="#">РїСЂР°РІРёР»Р°Рј</a> Рё <a href="#">СѓСЃР»РѕРІРёСЏРјРё</a> Рё РїСЂРёРЅРёРјР°СЋ РёС….</label>
+		<input type="submit" value="Р—Р°СЂРµРіРµСЃС‚СЂРёСЂРѕРІР°С‚СЊСЃСЏ" class="button pull-right">
 	</div>
 </form>
 <script type="text/javascript">
 	function validate() {
 		if (document.register.agree.checked == false) {
-			window.alert('Ознакомьтесь с правилами и условиями.');
+			window.alert('РћР·РЅР°РєРѕРјСЊС‚РµСЃСЊ СЃ РїСЂР°РІРёР»Р°РјРё Рё СѓСЃР»РѕРІРёСЏРјРё.');
 			return false;
 		}
 		return true;

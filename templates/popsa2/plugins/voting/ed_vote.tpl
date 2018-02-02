@@ -19,7 +19,7 @@
 
 		var voteid = form.voteid.value;
 		if (mode && (choice < 0)) {
-			alert('Сначала необходимо выбрать вариант!');
+			alert('РЎРЅР°С‡Р°Р»Р° РЅРµРѕР±С…РѕРґРёРјРѕ РІС‹Р±СЂР°С‚СЊ РІР°СЂРёР°РЅС‚!');
 			return false;
 		}
 
@@ -50,9 +50,9 @@
 			<input type="hidden" name="referer" value="{REFERER}"/>
 			<div align="center">
 				<button class="btn btn-primary btn-large" type="submit" onclick="return make_vote(1);">
-					<span>Голосовать</span></button>
+					<span>Р“РѕР»РѕСЃРѕРІР°С‚СЊ</span></button>
 				<button class="btn btn-primary btn-large" type="button" onclick="return make_vote(0);">
-					<span>Результаты</span></button>
+					<span>Р РµР·СѓР»СЊС‚Р°С‚С‹</span></button>
 			</div>
 		</div>
 	</form>

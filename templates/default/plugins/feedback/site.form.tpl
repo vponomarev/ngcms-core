@@ -2,7 +2,7 @@
 {% block content %}
 	{% if (flags.link_news) %}
 		<div class="alert alert-info">
-			<b>Запрос по новости : <a href="{{ news.url }}">{{ news.title }}</a></b>
+			<b>Р—Р°РїСЂРѕСЃ РїРѕ РЅРѕРІРѕСЃС‚Рё : <a href="{{ news.url }}">{{ news.title }}</a></b>
 		</div>
 	{% endif %}
 	{{ description }}<br/><br/>
@@ -70,10 +70,10 @@
 		{% endfor %}
 		{% if (flags.captcha) %}
 			<div class="label label-table captcha pull-left">
-				<label for="captcha">Введите код безопасности:</label>
+				<label for="captcha">Р’РІРµРґРёС‚Рµ РєРѕРґ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё:</label>
 				<input type="text" name="vcode" class="input"/>
 				<img id="img_captcha" onclick="this.src='{{ captcha_url }}&rand='+Math.random();" src="{{ captcha_url }}&rand={{ captcha_rand }}" style="cursor: pointer;" alt="captcha"/>
-				<div class="label-desc">Вам предстоит специальный код для подтверждения вашего действия.</div>
+				<div class="label-desc">Р’Р°Рј РїСЂРµРґСЃС‚РѕРёС‚ СЃРїРµС†РёР°Р»СЊРЅС‹Р№ РєРѕРґ РґР»СЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РІР°С€РµРіРѕ РґРµР№СЃС‚РІРёСЏ.</div>
 			</div>
 		{% endif %}
 		{% if (flags.recipients) %}
@@ -84,7 +84,7 @@
 		{% endif %}
 		<div class="clearfix"></div>
 		<div class="label">
-			<input type="submit" {% if (flags.jcheck) %}onclick="return FBF_CHECK();" {% endif %} value="Отправить" class="button">
+			<input type="submit" {% if (flags.jcheck) %}onclick="return FBF_CHECK();" {% endif %} value="РћС‚РїСЂР°РІРёС‚СЊ" class="button">
 		</div>
 	</form>
 {% endblock %}

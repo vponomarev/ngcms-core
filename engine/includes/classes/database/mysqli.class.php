@@ -22,7 +22,7 @@ class _mysqli {
 
 			return false;
 		}
-		@mysqli_query($this->connect, "/*!40101 SET NAMES 'cp1251' */");
+		@mysqli_query($this->connect, "/*!40101 SET NAMES 'utf8' */");
 
 		return true;
 	}

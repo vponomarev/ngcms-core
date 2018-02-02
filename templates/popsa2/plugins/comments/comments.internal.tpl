@@ -1,6 +1,6 @@
 <div class="comm">
 	[comheader]
-	<div class="telo"><h3 id="comments">Комментарии посетителей</h3></div>
+	<div class="telo"><h3 id="comments">РљРѕРјРјРµРЅС‚Р°СЂРёРё РїРѕСЃРµС‚РёС‚РµР»РµР№</h3></div>
 	[/comheader]
 </div>
 <div id="new_comments_rev"></div>
@@ -9,8 +9,8 @@
 <div class="clear20"></div>
 {more_comments}
 [regonly]
-<div class="msgi">Только зарегистрированные пользователи могут оставлять в данной новости свои комментарии.
+<div class="msgi">РўРѕР»СЊРєРѕ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РјРѕРіСѓС‚ РѕСЃС‚Р°РІР»СЏС‚СЊ РІ РґР°РЅРЅРѕР№ РЅРѕРІРѕСЃС‚Рё СЃРІРѕРё РєРѕРјРјРµРЅС‚Р°СЂРёРё.
 </div>[/regonly]
 [commforbidden]
-<div class="msge">Комментирование данной новости запрещено!</div>[/commforbidden]
+<div class="msge">РљРѕРјРјРµРЅС‚РёСЂРѕРІР°РЅРёРµ РґР°РЅРЅРѕР№ РЅРѕРІРѕСЃС‚Рё Р·Р°РїСЂРµС‰РµРЅРѕ!</div>[/commforbidden]
 {form}

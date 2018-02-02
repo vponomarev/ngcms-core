@@ -1,6 +1,6 @@
 <div class="block poll-block">
-	<div class="block-title">Опрос</div>
+	<div class="block-title">РћРїСЂРѕСЃ</div>
 	<div class="question">{votename}</div>
 	{votelines}
-	<a href="/plugin/voting/" class="pull-right">Архив опросов</a>
+	<a href="/plugin/voting/" class="pull-right">РђСЂС…РёРІ РѕРїСЂРѕСЃРѕРІ</a>
 </div>
