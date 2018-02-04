@@ -3233,11 +3233,7 @@ function ngCollectTrace($style = 0) {
 }
 
 /**
-<<<<<<< HEAD
  * Быстрый дебаг
-=======
- * ������� �����
->>>>>>> refs/remotes/origin/NewClasses
  *
  * @param mixed $obj
  *

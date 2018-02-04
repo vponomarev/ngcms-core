@@ -139,14 +139,9 @@ function systemDboModify() {
 				}
 			} while( $qRowCount > 0 );
 		}
-		
-<<<<<<< HEAD
+
 		// ĞĞ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ ÑÑ‡ĞµÑ‚Ñ‡Ğ¸Ğº Ğ¿Ğ¾ÑÑ‚Ğ¾Ğ² Ñƒ ÑĞ·ĞµÑ€Ğ¾Ğ²
-		$mysql->query("update " . prefix . "_users set news = 0" . ($haveComments ? ", com = 0" : ""));
-=======
-		// Îáíîâëÿåì ñ÷åò÷èê ïîñòîâ ó şçåğîâ
 		$db->exec("update " . prefix . "_users set news = 0" . ($haveComments ? ", com = 0" : ""));
->>>>>>> refs/remotes/origin/NewClasses
 		$start = 0;
 		do {
 			$cursor = $db->createCursor("select author_id, count(*) as cnt from " . prefix . "_news group by author_id limit :lStart, 10000", array('lStart' => $start));
@@ -159,27 +154,15 @@ function systemDboModify() {
 		} while( $qRowCount > 0 );
 		
 		if ($haveComments) {
-<<<<<<< HEAD
 			// ĞĞ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ ÑÑ‡ĞµÑ‚Ñ‡Ğ¸Ğº ĞºĞ¾Ğ¼Ğ¼ĞµĞ½Ñ‚Ğ°Ñ€Ğ¸ĞµĞ² Ñƒ ÑĞ·ĞµÑ€Ğ¾Ğ²
-			foreach ($mysql->select("select author_id, count(*) as cnt from " . prefix . "_comments group by author_id") as $row) {
-				$mysql->query("update " . uprefix . "_users set com=" . $row['cnt'] . " where id = " . $row['author_id']);
-			}
-		}
-		// ĞĞ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ½Ñ‹Ñ… Ñ„Ğ°Ğ¹Ğ»Ğ¾Ğ²/Ğ¸Ğ·Ğ¾Ğ±Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ğ¹ Ğº Ğ½Ğ¾Ğ²Ğ¾ÑÑ‚ÑĞ¼
-		$mysql->query("update " . prefix . "_news set num_files = 0, num_images = 0");
-		foreach ($mysql->select("select linked_id, count(id) as cnt from " . prefix . "_files where (storage=1) and (linked_ds=1) group by linked_id") as $row) {
-			$mysql->query("update " . prefix . "_news set num_files = " . db_squote($row['cnt']) . " where id = " . db_squote($row['linked_id']));
-=======
-			// Îáíîâëÿåì ñ÷åò÷èê êîììåíòàğèåâ ó şçåğîâ
 			foreach ($db->query("select author_id, count(*) as cnt from " . prefix . "_comments group by author_id") as $row) {
 				$db->exec("update " . uprefix . "_users set com= :cnt where id = :id", array('cnt' => $row['cnt'], 'id' => $row['author_id']));
 			}
 		}
-		// Îáíîâëÿåì êîë-âî ïğèëîæåííûõ ôàéëîâ/èçîáğàæåíèé ê íîâîñòÿì
+		// ĞĞ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ½Ñ‹Ñ… Ñ„Ğ°Ğ¹Ğ»Ğ¾Ğ²/Ğ¸Ğ·Ğ¾Ğ±Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ğ¹ Ğº Ğ½Ğ¾Ğ²Ğ¾ÑÑ‚ÑĞ¼
 		$db->exec("update " . prefix . "_news set num_files = 0, num_images = 0");
 		foreach ($db->query("select linked_id, count(id) as cnt from " . prefix . "_files where (storage=1) and (linked_ds=1) group by linked_id") as $row) {
 			$db->exec("update " . prefix . "_news set num_files = :cnt where id = :id", array('cnt' => $row['cnt'], 'id' => $row['linked_id']));
->>>>>>> refs/remotes/origin/NewClasses
 		}
 
 		foreach ($db->query("select linked_id, count(id) as cnt from " . prefix . "_images where (storage=1) and (linked_ds=1) group by linked_id") as $row) {
