@@ -25,6 +25,9 @@ abstract class NGDB {
     // Return raw class of DB engine driver
     abstract function getDriver();
 
+	// Return version
+    abstract function getVersion();
+	
     abstract function createCursor($query, array $params = array());
     abstract function fetchCursor(PDOStatement $cursor);
     abstract function closeCursor(PDOStatement $cursor);

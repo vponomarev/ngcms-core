@@ -1,6 +1,6 @@
 <?php
 
-class NGPDO extends NGDB {
+class NGMYSQLi extends NGDB {
 
     protected $db               = null;
     protected $qCount           = 0;
@@ -13,7 +13,7 @@ class NGPDO extends NGDB {
 
     function __construct($params) {
         if (!is_array($params)) {
-            throw new Exception('NG_PDO: Parameters lost for constructor');
+            throw new Exception('NG_MySQLi: Parameters lost for constructor');
         }
 
         // Init params
@@ -24,17 +24,17 @@ class NGPDO extends NGDB {
             $this->errorSecurity = $params['errorSecurity'];
 
         if (!isset($params['user']))
-            throw new Exception('NG_PDO: User is not specified');
+            throw new Exception('NG_MySQLi: User is not specified');
 
         if (!isset($params['pass']))
-            throw new Exception('NG_PDO: Password is not specified');
+            throw new Exception('NG_MySQLi: Password is not specified');
 
         if (!isset($params['host']))
-            throw new Exception('NG_PDO: Host is not specified');
+            throw new Exception('NG_MySQLi: Host is not specified');
 
         if (isset($params['eventLogger'])) {
             if (!($params['eventLogger'] instanceof NGEvents))
-                throw new Exception('NGPDO: Passed eventLogger is not an instance of NGEvents class');
+                throw new Exception('NGMySQLi: Passed eventLogger is not an instance of NGEvents class');
 
             $this->eventLogger = $params['eventLogger'];
         } else {
@@ -43,7 +43,7 @@ class NGPDO extends NGDB {
 
         if (isset($params['errorHandler'])) {
             if (!($params['errorHandler'] instanceof NGErrorHandler))
-                throw new Exception('NGPDO: Passed eventLogger is not an instance of NGErrorHandler class');
+                throw new Exception('NGMySQLi: Passed eventLogger is not an instance of NGErrorHandler class');
 
             $this->errorHandler = $params['errorHandler'];
         } else {
@@ -58,20 +58,19 @@ class NGPDO extends NGDB {
         $tStart = $this->eventLogger->tickStart();
 
         try {
-            $this->db = new PDO('mysql:host='.$params['host'].(isset($params['db'])?';dbname='.$params['db']:''), $params['user'], $params['pass']);
-            $this->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-        } catch(PDOException $e) {
-            throw new Exception('NG_PDO: Error connecting to DB ('.$e->getCode().") [".$e->getMessage()."]");
+			$this->db = mysqli_connect($params['host'], $params['user'], $params['pass'], $params['db']);
+        } catch(Exception $e) {
+            throw new Exception('NGMYSQLi: Error connecting to DB ('.$e->getCode().") [".$e->getMessage()."]");
         }
 
         // Try to switch CHARSET
         try {
-            $this->db->exec("/*!40101 SET NAMES '".$this->dbCharset."' */");
-        } catch (PDOException $e) {
-            throw new Exception("NG_PDO: Error switching to charset '".$this->dbCharset."' (".$e->getCode().") [".$e->getMessage()."]");
+			mysqli_query($this->db, "/*!40101 SET NAMES '".$this->dbCharset."' */");
+        } catch (Exception $e) {
+            throw new Exception("NGMYSQLi: Error switching to charset '".$this->dbCharset."' (".$e->getCode().") [".$e->getMessage()."]");
         }
 
-        $this->eventLogger->registerEvent('NG_PDO', '', '* DB Connection established', $this->eventLogger->tickStop($tStart));
+        $this->eventLogger->registerEvent('NGMYSQLi', '', '* DB Connection established', $this->eventLogger->tickStop($tStart));
         return true;
     }
 
@@ -81,47 +80,38 @@ class NGPDO extends NGDB {
         $this->qCount++;
 
         try {
-            // Check if we should prepare
-            if (is_array($params) && count($params)) {
-                $st = $this->db->prepare($sql);
-                $st->execute($params);
-                $r = $st->fetchAll(PDO::FETCH_ASSOC);
-
-            } else {
-                $r = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
+			$query = @mysqli_query($this->db, $sql);
+			
+			$r = array();
+			while ($item = mysqli_fetch_array($query)) {
+				$r[] = $item;
+			}
+			
+        } catch (Exception $e) {
             $this->errorReport('query', $sql, $e);
             $r = null;
         }
         $duration = $this->eventLogger->tickStop($tStart);
-        $this->eventLogger->registerEvent('NG_PDO', 'QUERY', $sql, $duration);
+        $this->eventLogger->registerEvent('NG_MySQLi', 'QUERY', $sql, $duration);
         $this->qList []= array('query' => $sql, 'duration' => $duration, 'start' => $tStart);
 
         return $r;
     }
 
     function record($sql, $params = array()) {
-
         $tStart = $this->eventLogger->tickStart();
         $this->qCount++;
 
         try {
-            // Check if we should prepare
-            if (is_array($params) && count($params)) {
-                $st = $this->db->prepare($sql);
-                $st->execute($params);
-                $r = $st->fetch(PDO::FETCH_ASSOC);
-                $st->closeCursor();
-            } else {
-                $r = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
+            $query = mysqli_query($this->db, $sql);
+			
+			$r = mysqli_fetch_array($query, MYSQLI_BOTH);
+        } catch (Exception $e) {
             $this->errorReport('record', $sql, $e);
             $r = null;
         }
         $duration = $this->eventLogger->tickStop($tStart);
-        $this->eventLogger->registerEvent('NG_PDO', 'RECORD', $sql, $duration);
+        $this->eventLogger->registerEvent('NG_MySQLi', 'RECORD', $sql, $duration);
         $this->qList []= array('query' => $sql, 'duration' => $duration);
 
         return $r;
@@ -134,20 +124,18 @@ class NGPDO extends NGDB {
 
         $r = null;
         try {
-            // Check if we should prepare
-            if (is_array($params) && count($params)) {
-                $st = $this->db->prepare($sql);
-                $st->execute($params);
-                $st->closeCursor();
-            } else {
-                $r = $this->db->query($sql)->closeCursor();
-            }
-        } catch (PDOException $e) {
+			$split = explode(" ", $sql);
+			if(mb_strtolower(trim($split['0'])) == 'use' ){
+				mysqli_select_db($this->db, $split['1']);
+			} else {
+				$r = @mysqli_query($this->db, $sql);
+			}
+        } catch (Exception $e) {
             $this->errorReport('exec', $sql, $e);
             $r = null;
         }
         $duration = $this->eventLogger->tickStop($tStart);
-        $this->eventLogger->registerEvent('NG_PDO', 'EXEC', $sql, $duration);
+        $this->eventLogger->registerEvent('NG_MySQLi', 'EXEC', $sql, $duration);
         $this->qList []= array('query' => $sql, 'duration' => $duration);
 
         return $r;
@@ -159,21 +147,14 @@ class NGPDO extends NGDB {
         $this->qCount++;
 
         try {
-            // Check if we should prepare
-            if (is_array($params) && count($params)) {
-                $st = $this->db->prepare($sql);
-                $st->execute($params);
-                $r = $st->fetch(PDO::FETCH_ASSOC);
-                $st->closeCursor();
-            } else {
-                $r = $this->db->query($sql)->fetch(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
+            $query = @mysqli_query($this->db, $sql);
+			$r = $this->mysqli_result($query, 0);
+        } catch (Exception $e) {
             $this->errorReport('result', $sql, $e);
             $r = null;
         }
         $duration = $this->eventLogger->tickStop($tStart);
-        $this->eventLogger->registerEvent('NG_PDO', 'RESULT', $sql, $duration);
+        $this->eventLogger->registerEvent('NG_MySQLi', 'RESULT', $sql, $duration);
         $this->qList []= array('query' => $sql, 'duration' => $duration);
 
         if (count($r)) {
@@ -187,7 +168,7 @@ class NGPDO extends NGDB {
      * @return string
      */
     function quote($string)  {
-        return $this->db->quote($string);
+		return mysqli_real_escape_string($this->db, $string);
     }
 
 
@@ -195,21 +176,21 @@ class NGPDO extends NGDB {
      * @return string
      */
     function getEngineType() {
-        return 'PDO';
+        return 'MySQLi';
     }
 
     /**
-     * @return PDO Instance of PDO driver for low level access
+     * @return MySQLi Instance of MySQLi driver for low level access
      */
     function getDriver() {
         return $this->db;
     }
-	
-	/**
-     * @return version PDO
+
+		/**
+     * @return version MySQLi
      */
 	function getVersion() {
-        return $this->db->getDriver()->getAttribute("PDO::ATTR_SERVER_VERSION");
+        return mysqli_get_server_info($this->db);
     }
 	
     /**
@@ -217,12 +198,12 @@ class NGPDO extends NGDB {
 
      * @param $type string Query type
      * @param $query string Query content
-     * @param PDOException $e
+     * @param Exception $e
      */
-    function errorReport($type, $query, PDOException $e) {
+    function errorReport($type, $query, Exception $e) {
         $errNo = 'n/a';
         $errMsg = 'n/a';
-        if (get_class($e) == 'PDOException') {
+        if (get_class($e) == 'Exception') {
             $errNo = $e->getCode();
             $errMsg = $e->getMessage();
         }
@@ -237,16 +218,42 @@ class NGPDO extends NGDB {
         return $this->qList;
     }
 
-    // Cursor based operations
+    function tableExists($name) {
+        // Check if data are already saved
+		if (getIsSet($this->table_list[$table]) && is_array($this->table_list)) {
+			return $this->table_list[$table] ? 1 : 0;
+		}
+
+		try {
+            $query = @mysqli_query($this->db, "show tables");
+
+			while ($item = mysqli_fetch_array($query, MYSQLI_NUM)) {
+				$this->table_list[$item[0]] = 1;
+			}
+        } catch (Exception $e) {
+            $this->errorReport('query', $sql, $e);
+            $r = null;
+        }
+		
+		return $this->table_list[$table] ? 1 : 0;
+    }
+	
+	function mysqli_result($result, $row, $field = 0) {
+
+		$result->data_seek($row);
+		$datarow = $result->fetch_array();
+
+		return $datarow[$field];
+	}
+	
+	// Cursor based operations
     /**
      * @param $query
      * @param array $params
      * @return PDOStatement
      */
     function createCursor($query, array $params = array()) {
-        $cursor = $this->db->prepare($query);
-        $cursor->execute($params);
-        return $cursor;
+        
     }
 
     /**
@@ -254,18 +261,12 @@ class NGPDO extends NGDB {
      * @return mixed
      */
     function fetchCursor(PDOStatement $cursor) {
-        return $cursor->fetch(PDO::FETCH_ASSOC);
+        
     }
 
     function closeCursor(PDOStatement $cursor) {
-        return $cursor->closeCursor();
+        
     }
-
-    function tableExists($name) {
-        return count($this->record("show tables like :name", array('name' => $name)))?true:false;
-    }
-
-
 }
 
 

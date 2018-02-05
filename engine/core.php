@@ -54,7 +54,7 @@ global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
 global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $TWIGFUNC;
 global $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
 global $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
-global $timer, $mysql, $ip, $parse, $tpl, $lang;
+global $timer, $mysql, $ip, $parse, $tpl, $lang, $config;
 global $TemplateCache, $siteDomainName;
 global $currentHandler, $ngTrackID, $ngCookieDomain;
 global $twigGlobal, $twig, $twigLoader, $twigStringLoader;
@@ -318,6 +318,7 @@ NGRun(function() {
 
 	$sx = NGEngine::getInstance();
 	$sx->set('db', new NGPDO(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+	//$sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
 	$sx->set('legacyDB', new NGLegacyDB(false));
 	$sx->getLegacyDB()->connect('', '', '');
 	$mysql = $sx->getLegacyDB();
