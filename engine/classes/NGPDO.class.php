@@ -187,7 +187,7 @@ class NGPDO extends NGDB {
      * @return string
      */
     function quote($string)  {
-        return $this->db->quote($string);
+        return mb_substr($this->db->quote($string), 1, -1);
     }
 
 

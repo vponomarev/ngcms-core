@@ -46,7 +46,8 @@ class NGLegacyDB {
     }
 
 	/**	
-	 * Странная конструкция с substr. Происходило обрезание текста. Оригинал substr($this->db->quote($string), 1, -1); 
+	 * Странная конструкция с substr. Происходило обрезание текста. Оригинал substr($this->db->quote($string), 1, -1);
+	 * %Вынесена в NGPDO.class.php
 	 */
     function db_quote($string) {
         return $this->db->quote($string);
