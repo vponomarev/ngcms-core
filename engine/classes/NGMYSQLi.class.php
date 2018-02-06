@@ -16,6 +16,8 @@ class NGMYSQLi extends NGDB {
             throw new Exception('NG_MySQLi: Parameters lost for constructor');
         }
 
+		mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+		
         // Init params
         if (isset($params['softErrors']))
             $this->softErrors = $params['softErrors'];
@@ -80,14 +82,14 @@ class NGMYSQLi extends NGDB {
         $this->qCount++;
 
         try {
-			$query = @mysqli_query($this->db, $sql);
+			$query = mysqli_query($this->db, $sql);
 			
 			$r = array();
 			while ($item = mysqli_fetch_array($query)) {
 				$r[] = $item;
 			}
 			
-        } catch (Exception $e) {
+        } catch (mysqli_sql_exception $e) {
             $this->errorReport('query', $sql, $e);
             $r = null;
         }
@@ -106,7 +108,7 @@ class NGMYSQLi extends NGDB {
             $query = mysqli_query($this->db, $sql);
 			
 			$r = mysqli_fetch_array($query, MYSQLI_BOTH);
-        } catch (Exception $e) {
+        } catch (mysqli_sql_exception $e) {
             $this->errorReport('record', $sql, $e);
             $r = null;
         }
@@ -128,9 +130,9 @@ class NGMYSQLi extends NGDB {
 			if(mb_strtolower(trim($split['0'])) == 'use' ){
 				mysqli_select_db($this->db, $split['1']);
 			} else {
-				$r = @mysqli_query($this->db, $sql);
+				$r = mysqli_query($this->db, $sql);
 			}
-        } catch (Exception $e) {
+        } catch (mysqli_sql_exception $e) {
             $this->errorReport('exec', $sql, $e);
             $r = null;
         }
@@ -147,9 +149,10 @@ class NGMYSQLi extends NGDB {
         $this->qCount++;
 
         try {
-            $query = @mysqli_query($this->db, $sql);
+            $query = mysqli_query($this->db, $sql);
 			$r = $this->mysqli_result($query, 0);
-        } catch (Exception $e) {
+        } catch (mysqli_sql_exception $e) {
+			print 'error';
             $this->errorReport('result', $sql, $e);
             $r = null;
         }
@@ -200,10 +203,10 @@ class NGMYSQLi extends NGDB {
      * @param $query string Query content
      * @param Exception $e
      */
-    function errorReport($type, $query, Exception $e) {
+    function errorReport($type, $query, $e) {
         $errNo = 'n/a';
         $errMsg = 'n/a';
-        if (get_class($e) == 'Exception') {
+        if (get_class($e) == 'mysqli_sql_exception') {
             $errNo = $e->getCode();
             $errMsg = $e->getMessage();
         }
@@ -225,12 +228,12 @@ class NGMYSQLi extends NGDB {
 		}
 
 		try {
-            $query = @mysqli_query($this->db, "show tables");
+            $query = mysqli_query($this->db, "show tables");
 
 			while ($item = mysqli_fetch_array($query, MYSQLI_NUM)) {
 				$this->table_list[$item[0]] = 1;
 			}
-        } catch (Exception $e) {
+        } catch (mysqli_sql_exception $e) {
             $this->errorReport('query', $sql, $e);
             $r = null;
         }
