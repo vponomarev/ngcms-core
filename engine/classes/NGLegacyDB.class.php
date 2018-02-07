@@ -45,10 +45,6 @@ class NGLegacyDB {
         return $this->db->result($sql);
     }
 
-	/**	
-	 * Странная конструкция с substr. Происходило обрезание текста. Оригинал substr($this->db->quote($string), 1, -1);
-	 * %Вынесена в NGPDO.class.php
-	 */
     function db_quote($string) {
         return $this->db->quote($string);
     }
@@ -56,7 +52,23 @@ class NGLegacyDB {
     function qcnt() {
         return $this->db->getQueryCount();
     }
-
+	
+	function num_rows($query) {
+		return $this->db->num_rows($query);
+	}
+	
+	function fetch_row($query) {
+		return $this->db->fetch_row($query);
+	}
+	
+	function affected_rows() {
+		return $this->db->affected_rows();
+	}
+	
+	function lastid($table = '') {
+		return $this->db->lastid($table);
+	}
+	
     function mysql_version() {
         return $this->db->getVersion();
     }

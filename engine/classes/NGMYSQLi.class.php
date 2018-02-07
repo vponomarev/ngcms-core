@@ -165,7 +165,72 @@ class NGMYSQLi extends NGDB {
         }
         return null;
     }
+	
+	function tableExists($name) {
+        // Check if data are already saved
+		if (getIsSet($this->table_list[$table]) && is_array($this->table_list)) {
+			return $this->table_list[$table] ? 1 : 0;
+		}
 
+		try {
+            $query = mysqli_query($this->db, "show tables");
+
+			while ($item = mysqli_fetch_array($query, MYSQLI_NUM)) {
+				$this->table_list[$item[0]] = 1;
+			}
+        } catch (mysqli_sql_exception $e) {
+            $this->errorReport('query', $sql, $e);
+            $r = null;
+        }
+		
+		return $this->table_list[$table] ? 1 : 0;
+    }
+	
+	function num_rows($query) {
+		try {
+			return mysqli_num_rows($query);
+		} catch (mysqli_sql_exception $e) {
+			$this->errorReport('num_rows', $sql, $e);
+		}
+	}
+	
+	function fetch_row($query) {
+		try {
+			return mysqli_fetch_row($query);
+		} catch (mysqli_sql_exception $e) {
+			$this->errorReport('fetch_row', $sql, $e);
+		}
+	}
+	
+	function lastid($table = '') {
+		try {
+			if(empty($table)){
+				return mysqli_insert_id( $this->db);
+			} else {
+				$r = $this->record('SHOW TABLE STATUS LIKE \'' . prefix . '_' . $table . '\'');
+				return ($r['Auto_increment'] - 1);
+			}
+		} catch (mysqli_sql_exception $e) {
+            $this->errorReport('lastid', $sql, $e);
+        }
+	}
+	
+	function affected_rows(){
+		try {
+			return mysqli_affected_rows($this->db);
+		} catch (mysqli_sql_exception $e) {
+            $this->errorReport('affected_rows', $sql, $e);
+        }
+	}
+	
+	function mysqli_result($result, $row, $field = 0) {
+
+		$result->data_seek($row);
+		$datarow = $result->fetch_array();
+
+		return $datarow[$field];
+	}
+	
     /**
      * @param $string
      * @return string
@@ -173,7 +238,6 @@ class NGMYSQLi extends NGDB {
     function quote($string)  {
 		return mysqli_real_escape_string($this->db, $string);
     }
-
 
     /**
      * @return string
@@ -196,7 +260,7 @@ class NGMYSQLi extends NGDB {
         return mysqli_get_server_info($this->db);
     }
 	
-    /**
+	/**
     // Report an SQL error
 
      * @param $type string Query type
@@ -220,34 +284,6 @@ class NGMYSQLi extends NGDB {
     function getQueryList() {
         return $this->qList;
     }
-
-    function tableExists($name) {
-        // Check if data are already saved
-		if (getIsSet($this->table_list[$table]) && is_array($this->table_list)) {
-			return $this->table_list[$table] ? 1 : 0;
-		}
-
-		try {
-            $query = mysqli_query($this->db, "show tables");
-
-			while ($item = mysqli_fetch_array($query, MYSQLI_NUM)) {
-				$this->table_list[$item[0]] = 1;
-			}
-        } catch (mysqli_sql_exception $e) {
-            $this->errorReport('query', $sql, $e);
-            $r = null;
-        }
-		
-		return $this->table_list[$table] ? 1 : 0;
-    }
-	
-	function mysqli_result($result, $row, $field = 0) {
-
-		$result->data_seek($row);
-		$datarow = $result->fetch_array();
-
-		return $datarow[$field];
-	}
 	
 	// Cursor based operations
     /**

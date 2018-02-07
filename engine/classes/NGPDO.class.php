@@ -140,7 +140,7 @@ class NGPDO extends NGDB {
                 $st->execute($params);
                 $st->closeCursor();
             } else {
-                $r = $this->db->query($sql)->closeCursor();
+                $r = $this->db->query($sql);
             }
         } catch (PDOException $e) {
             $this->errorReport('exec', $sql, $e);
@@ -181,7 +181,48 @@ class NGPDO extends NGDB {
         }
         return null;
     }
+	
+	function num_rows($st) {
+		try {
+			$r = $st->fetchColumn();
+		} catch (PDOException $e) {
+            $this->errorReport('num_rows', $sql, $e);
+            $r = null;
+        }
 
+		return $r;
+	}
+	
+	function fetch_row($st) {
+		try {
+			$r = $st->fetch(PDO::FETCH_NUM);
+		} catch (PDOException $e) {
+            $this->errorReport('fetch_row', $sql, $e);
+        }
+		return $r;
+	}
+	
+	function lastid($table = '') {
+		try {
+			if(empty($table)){
+				return $id = $this->db->lastInsertId();
+			} else {
+				$r = $this->record('SHOW TABLE STATUS LIKE \'' . prefix . '_' . $table . '\'');
+				return ($r['Auto_increment'] - 1);
+			}
+		} catch (PDOException $e) {
+            $this->errorReport('lastid', $sql, $e);
+        }
+	}
+	
+	function affected_rows(){
+		try {
+			return $id = $this->db->rowCount();
+		} catch (PDOException $e) {
+            $this->errorReport('affected_rows', $sql, $e);
+        }
+	}
+	
     /**
      * @param $string
      * @return string
@@ -189,7 +230,6 @@ class NGPDO extends NGDB {
     function quote($string)  {
         return mb_substr($this->db->quote($string), 1, -1);
     }
-
 
     /**
      * @return string
@@ -209,7 +249,7 @@ class NGPDO extends NGDB {
      * @return version PDO
      */
 	function getVersion() {
-        return $this->db->getDriver()->getAttribute("PDO::ATTR_SERVER_VERSION");
+        return $this->getDriver()->getAttribute(constant("PDO::ATTR_SERVER_VERSION"));
     }
 	
     /**
