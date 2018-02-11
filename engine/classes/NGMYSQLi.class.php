@@ -223,6 +223,22 @@ class NGMYSQLi extends NGDB {
         }
 	}
 	
+	function close(){
+		try {
+			mysqli_close($this->db);
+		} catch (mysqli_sql_exception $e) {
+            $this->errorReport('close', $sql, $e);
+        }
+	}
+	
+	function db_errno() {
+		try {
+			return mysqli_errno($this->db);
+		} catch (mysqli_sql_exception $e) {
+            $this->errorReport('close', $sql, $e);
+        }
+	}
+	
 	function mysqli_result($result, $row, $field = 0) {
 
 		$result->data_seek($row);

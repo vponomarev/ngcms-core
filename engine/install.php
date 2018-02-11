@@ -17,6 +17,41 @@ define('NGCMS', 1);
 @include_once root . 'includes/inc/multimaster.php';
 @include_once root . 'includes/inc/DBLoad.php';
 
+// ============================================================================
+// Define global directory constants
+// ============================================================================
+define('NGCoreDir', dirname(__FILE__) . '/');				// Location of Core directory
+define('NGRootDir', dirname(dirname(__FILE__)) . '/');		// Location of SiteRoot
+define('NGClassDir', NGCoreDir.'classes/');					// Location of AutoLoaded classes
+
+// Autoloader for NEW STYLE Classes
+spl_autoload_register(function($className) {
+	if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+		require_once $fName;
+	}
+});
+
+// Magic function for immediate closure call
+function NGInstall($f) { $f(); }
+
+// ============================================================================
+// MODULE DEPs check + basic setup
+// ============================================================================
+NGInstall(function() {
+	$depList = array(
+		'sql' => array('pdo' => '', 'pdo_mysql' => ''),
+		'zlib' => 'ob_gzhandler',
+		'iconv' => 'iconv',
+		'GD' => 'imagecreatefromjpeg',
+		'mbstring' => 'mb_internal_encoding'
+	);
+	NGCoreFunctions::resolveDeps($depList);
+
+	$sx = NGEngine::getInstance();
+	$sx->set('events', new NGEvents());
+	$sx->set('errorHandler', new NGErrorHandler());
+});
+
 multi_multisites();
 @define('confroot', root . 'conf/' . ($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/' . $multiDomainName . '/' : ''));
 
@@ -261,35 +296,31 @@ function doConfig_db($check) {
 			$ac = 1;
 		}
 
-		$mysql = DBLoad();
-
-		// Try to connect
-		if (!$error) {
-			if (($link = $mysql->connect($_POST['reg_dbhost'], $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])) === false) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">' . $lang['error.dbconnect'] . ' "' . $_POST['reg_dbhost'] . '":<br/> (' . $mysql->db_errno() . ') ' . $mysql->db_error() . '</div>';
-				$error = 1;
-			}
-		}
-		// Try to fetch SQL version
-		if (!$error) {
-			if (($sqlf = $mysql->query("show variables like 'version'", $link)) === false) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">' . $lang['err.dbversion'] . ' "' . $_POST['reg_dbhost'] . '":<br/> (' . $mysql->db_errno() . ') ' . $mysql->db_error() . '</div>';
-				$error = 1;
+		try {
+			$sx = NGEngine::getInstance();
+			$sx->set('events', new NGEvents());
+			$sx->set('errorHandler', new NGErrorHandler());
+			$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+			$sx->set('legacyDB', new NGLegacyDB(false));
+			$sx->getLegacyDB()->connect('', '', '');
+			$mysql = $sx->getLegacyDB();
+			$sqlr = $mysql->mysql_version();
+			if (preg_match('/^(\d+)\.(\d+)/', $sqlr, $regex)) {
+				$SQL_VERSION = array($sqlr, intval($regex[1]), intval($regex[2]));
 			} else {
-				$sqlr = $mysql->record("show variables like 'version'", -1);
-				if (preg_match('/^(\d+)\.(\d+)/', $sqlr[1], $regex)) {
-					$SQL_VERSION = array($sqlr[1], intval($regex[1]), intval($regex[2]));
-				} else {
-					$SQL_VERSION = $sqlr[1];
-				}
+				$SQL_VERSION = $sqlr;
 			}
+		} catch (Exception $e) {
+			$tvars['vars']['error_message'] = '<div class="errorDiv">' . $lang['error.dbconnect'] . ' "' . $_POST['reg_dbhost'] . '":<br/> (' . $e->getCode() . ') ' . $e->getMessage() . '</div>';
+			$error = 1;
 		}
-
-		@$mysql->close($link);
-
+		
+		if(isset($mysql) != null){
+			$mysql->close($link);
+		}
+		
 		if (!$error)
 			return true;
-
 	}
 
 	foreach (array(
@@ -625,6 +656,7 @@ function doInstall() {
 	$error = 0;
 	$LOG = array();
 	$ERROR = array();
+	$sx = null;
 	do {
 
 		// Stage #01 - Try to create config files
@@ -639,20 +671,24 @@ function doInstall() {
 		array_push($LOG, '');
 
 		if ($error) break;
-
-		$mysql = DBLoad();
-
+		
 		// Stage #02 - Connect to DB
 		// Если заказали автосоздание, то подключаемся рутом
 		if ($_POST['reg_autocreate']) {
-			if (@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbadminuser'], $_POST['reg_dbadminpass'])) {
+			try {
+				$sx = NGEngine::getInstance();
+				$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+				$sx->set('legacyDB', new NGLegacyDB(false));
+				$sx->getLegacyDB()->connect('', '', '');
+				$mysql = $sx->getLegacyDB();
+				
 				// Успешно подключились
 				array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя административный логин "' . $_POST['reg_dbadminuser'] . '" ... OK');
 
 				// 1. Создание БД
-				if (!@$mysql->select_db($_POST['reg_dbname'])) {
+				if ($mysql->select_db($_POST['reg_dbname']) === null) {
 					// БД нет. Пытаемся создать
-					if (!@$mysql->query('CREATE DATABASE ' . $_POST['reg_dbname'])) {
+					if (!$mysql->query('CREATE DATABASE ' . $_POST['reg_dbname'])) {
 						// Не удалось создать. Фатально.
 						array_push($ERROR, 'Не удалось создать БД "' . $_POST['reg_dbname'] . '" используя административную учётную запись. Скорее всего у данной учётной записи нет прав на создание баз данных.');
 						$error = 1;
@@ -665,37 +701,44 @@ function doInstall() {
 				}
 
 				// 2. Предоставление доступа к БД
-				if (!@$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
+				if (!$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
 					array_push($ERROR, 'Невозможно обеспечить доступ пользователя "' . $_POST['reg_dbuser'] . '" к БД "' . $_POST['reg_dbname'] . '" используя административные права.');
 					$error = 1;
 					break;
 				} else {
 					array_push($LOG, 'Предоставление доступа пользователю "' . $_POST['reg_dbuser'] . '" к БД "' . $_POST['reg_dbname'] . '" ... OK');
 				}
-			} else {
+			} catch (Exception $e) {
 				array_push($ERROR, 'Невозможно подключиться к серверу БД "' . $_POST['reg_dbhost'] . '" используя административный логин "' . $_POST['reg_dbadminuser'] . '"');
 				$error = 1;
 				break;
 			}
 			// Отключаемся от сервера
-			$mysql->close();
+			if(isset($mysql) != null){
+				$mysql->close();
+			}
 		}
-
-		// Подключаемся к серверу используя права пользователя
-		if (!@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbuser'], $_POST['reg_dbpass'])) {
+		
+		try {
+			$sx = NGEngine::getInstance();
+			$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+			$sx->set('legacyDB', new NGLegacyDB(false));
+			$sx->getLegacyDB()->connect('', '', '');
+			$mysql = $sx->getLegacyDB();
+			
+			array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя логин "' . $_POST['reg_dbuser'] . '" ... OK');
+			
+			if ($mysql->select_db($_POST['reg_dbname']) === null) {
+				array_push($ERROR, 'Невозможно открыть БД "' . $_POST['reg_dbname'] . '"<br/>Вам необходимо создать эту БД самостоятельно.');
+				$error = 1;
+				break;
+			}
+		} catch (Exception $e) {
 			array_push($ERROR, 'Невозможно подключиться к серверу БД "' . $_POST['reg_dbhost'] . '" используя логин "' . $_POST['reg_dbuser'] . '" (пароль: "' . $_POST['reg_dbpass'] . '")');
 			$error = 1;
 			break;
 		}
-		array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя логин "' . $_POST['reg_dbuser'] . '" ... OK');
-
-		// Открываем нужную БД
-		if (!@$mysql->select_db($_POST['reg_dbname'])) {
-			array_push($ERROR, 'Невозможно открыть БД "' . $_POST['reg_dbname'] . '"<br/>Вам необходимо создать эту БД самостоятельно.');
-			$error = 1;
-			break;
-		}
-
+		
 		// Check if different character set are supported [ version >= 4.1.1 ]
 		$charsetEngine = 0;
 
@@ -725,7 +768,7 @@ function doInstall() {
 
 		// 1.2. Парсим список таблиц
 		$dbsql = explode(';', file_get_contents('trash/tables.sql'));
-
+		
 		// 1.3. Проверяем пересечения
 		foreach ($dbsql as $dbCreateString) {
 			if (!trim($dbCreateString)) {
@@ -749,6 +792,7 @@ function doInstall() {
 				break;
 			}
 		}
+		
 		if ($error) break;
 
 		array_push($LOG, 'Проверка наличия дублирующихся таблиц ... OK');
@@ -760,7 +804,7 @@ function doInstall() {
 		// 1.4. Создаём таблицы
 		for ($i = 0; $i < count($dbsql); $i++) {
 			$dbCreateString = str_replace('XPREFIX_', $_POST['reg_dbprefix'] . '_', $dbsql[$i]) . $charset;
-
+			
 			if ($SUPRESS_CHARSET) {
 				$dbCreateString = str_replace('default charset=utf8', '', $dbCreateString);
 			}
@@ -795,7 +839,7 @@ function doInstall() {
 		}
 		array_push($LOG, 'Все таблицы успешно созданы ... OK');
 		array_push($LOG, '');
-
+		
 		// 1.5 Создание пользователя-администратора
 		$query = "insert into `" . $_POST['reg_dbprefix'] . "_users` (`name`, `pass`, `mail`, `status`, `reg`) VALUES ('" . $mysql->db_quote($_POST['admin_login']) . "', '" . $mysql->db_quote(md5(md5($_POST['admin_password']))) . "', '" . $mysql->db_quote($_POST['admin_email']) . "', '1', unix_timestamp(now()))";
 		if (!@$mysql->query($query)) {

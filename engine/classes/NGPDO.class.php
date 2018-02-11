@@ -149,7 +149,7 @@ class NGPDO extends NGDB {
         $duration = $this->eventLogger->tickStop($tStart);
         $this->eventLogger->registerEvent('NG_PDO', 'EXEC', $sql, $duration);
         $this->qList []= array('query' => $sql, 'duration' => $duration);
-
+		
         return $r;
     }
 
@@ -220,6 +220,23 @@ class NGPDO extends NGDB {
 			return $id = $this->db->rowCount();
 		} catch (PDOException $e) {
             $this->errorReport('affected_rows', $sql, $e);
+        }
+	}
+	
+	function close($query){
+		try {
+			if($this->db != null)
+				$this->db = null;
+		} catch (PDOException $e) {
+            $this->errorReport('close', $sql, $e);
+        }
+	}
+	
+	function db_errno() {
+		try {
+			$this->db->errorInfo()[0];
+		} catch (mysqli_sql_exception $e) {
+            $this->errorReport('close', $sql, $e);
         }
 	}
 	

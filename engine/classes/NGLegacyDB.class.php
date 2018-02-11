@@ -26,7 +26,7 @@ class NGLegacyDB {
     }
 
     function select_db($db) {
-        $this->db->exec("use ".$db);
+        return $this->db->exec("use ".$db);
     }
 
     function select($sql, $assocMode = 1) {
@@ -73,6 +73,14 @@ class NGLegacyDB {
         return $this->db->getVersion();
     }
 
+	function close($query) {
+        return $this->db->close();
+    }
+	
+	function db_errno(){
+		return $this->db->db_errno();
+	}
+	
     function __get($name) {
         if ($name == 'query_list') {
             $qList = array();
