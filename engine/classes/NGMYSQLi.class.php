@@ -128,7 +128,10 @@ class NGMYSQLi extends NGDB {
         try {
 			$split = explode(" ", $sql);
 			if(mb_strtolower(trim($split['0'])) == 'use' ){
-				mysqli_select_db($this->db, $split['1']);
+				if(mysqli_select_db($this->db, $split['1']))
+					$r = true;
+				else 
+					$r = null;
 			} else {
 				$r = mysqli_query($this->db, $sql);
 			}

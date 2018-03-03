@@ -266,9 +266,9 @@ function doConfig_db($check) {
 
 	global $tvars, $tpl, $templateDir, $SQL_VERSION, $lang;
 
-	$myparams = array('action', 'stage', 'reg_dbhost', 'reg_dbname', 'reg_dbuser', 'reg_dbpass', 'reg_dbprefix', 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass');
+	$myparams = array('action', 'stage', 'reg_dbtype', 'reg_dbhost', 'reg_dbname', 'reg_dbuser', 'reg_dbpass', 'reg_dbprefix', 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass');
 	$DEFAULT = array('reg_dbhost' => 'localhost', 'reg_dbprefix' => 'ng');
-
+	
 	// Show form
 	$hinput = array();
 	foreach ($_POST as $k => $v)
@@ -279,7 +279,7 @@ function doConfig_db($check) {
 	if ($check) {
 		// Check passed parameters. Check for required params
 		$error = 0;
-		foreach (array('reg_dbhost', 'reg_dbname', 'reg_dbuser') as $k) {
+		foreach (array('reg_dbtype', 'reg_dbhost', 'reg_dbname', 'reg_dbuser') as $k) {
 			if (!strlen($_POST[$k])) {
 				$tvars['vars']['err:' . $k] = $lang['error.notfilled'];
 				$error++;
@@ -295,12 +295,24 @@ function doConfig_db($check) {
 			}
 			$ac = 1;
 		}
-
+		
 		try {
 			$sx = NGEngine::getInstance();
 			$sx->set('events', new NGEvents());
 			$sx->set('errorHandler', new NGErrorHandler());
-			$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+			
+			switch($_POST['reg_dbtype']){
+				case 'MySQL':
+					$sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+				break;
+				case 'MySQLi':
+					$sx->set('db', new NGMYSQLi(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+				break;
+				case 'PDO':
+					$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+				break;
+			}
+			
 			$sx->set('legacyDB', new NGLegacyDB(false));
 			$sx->getLegacyDB()->connect('', '', '');
 			$mysql = $sx->getLegacyDB();
@@ -322,12 +334,16 @@ function doConfig_db($check) {
 		if (!$error)
 			return true;
 	}
-
+	
 	foreach (array(
-				 'reg_dbhost', 'reg_dbuser', 'reg_dbpass', 'reg_dbname', 'reg_dbprefix',
+				 'reg_dbtype', 'reg_dbhost', 'reg_dbuser', 'reg_dbpass', 'reg_dbname', 'reg_dbprefix',
 				 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass'
 			 ) as $k) {
-		$tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8');
+		if($k == 'reg_dbtype'){
+			foreach(array('MySQL', 'MySQLi', 'PDO') as $s)
+				if($_POST[$k] == $s)
+					$tvars['vars'][$k.'_'.$s] = ' selected';
+		} else $tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8');
 		if (!isset($tvars['vars']['err:' . $k])) $tvars['vars']['err:' . $k] = '';
 	}
 	if ($_POST['reg_autocreate'])
@@ -335,7 +351,11 @@ function doConfig_db($check) {
 
 	$tvars['vars']['menu_db'] = ' class="hover"';
 	printHeader();
-
+	
+	$tvars['regx']["'\[mysql\].*?\[/mysql\]'si"] = (extension_loaded("mysql"))?'$1':'';
+	$tvars['regx']["'\[mysqli\].*?\[/mysqli\]'si"] = (extension_loaded("mysqli"))?'$1':'';
+	$tvars['regx']["'\[pdo\].*?\[/pdo\]'si"] = (extension_loaded("pdo") || extension_loaded("pdo_mysql"))?'$1':'';
+	
 	// Выводим форму проверки
 	$tpl->template('config_db', $templateDir);
 	$tpl->vars('config_db', $tvars);
@@ -677,7 +697,19 @@ function doInstall() {
 		if ($_POST['reg_autocreate']) {
 			try {
 				$sx = NGEngine::getInstance();
-				$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+				
+				switch($_POST['reg_dbtype']){
+					case 'MySQL':
+						$sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+					break;
+					case 'MySQLi':
+						$sx->set('db', new NGMYSQLi(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+					break;
+					case 'PDO':
+						$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+					break;
+				}
+				
 				$sx->set('legacyDB', new NGLegacyDB(false));
 				$sx->getLegacyDB()->connect('', '', '');
 				$mysql = $sx->getLegacyDB();
@@ -721,7 +753,19 @@ function doInstall() {
 		
 		try {
 			$sx = NGEngine::getInstance();
-			$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+			
+			switch($_POST['reg_dbtype']){
+				case 'MySQL':
+					$sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+				break;
+				case 'MySQLi':
+					$sx->set('db', new NGMYSQLi(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+				break;
+				case 'PDO':
+					$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+				break;
+			}
+			
 			$sx->set('legacyDB', new NGLegacyDB(false));
 			$sx->getLegacyDB()->connect('', '', '');
 			$mysql = $sx->getLegacyDB();

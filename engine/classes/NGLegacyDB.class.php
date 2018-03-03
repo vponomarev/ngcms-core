@@ -74,7 +74,7 @@ class NGLegacyDB {
     }
 
 	function close($query) {
-        return $this->db->close();
+        return $this->db->close($query);
     }
 	
 	function db_errno(){
