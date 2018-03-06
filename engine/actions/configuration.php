@@ -72,13 +72,28 @@ function systemConfigSave() {
 	}
 
 	// Check if DB connection params are correct
-	$sqlTest = DBLoad();
-	if (!$sqlTest->connect($save_con['dbhost'], $save_con['dbuser'], $save_con['dbpasswd'], $save_con['dbname'], 1)) {
+	try {
+		$sx = NGEngine::getInstance();
+		
+		switch($save_con['dbtype']){
+			case 'mysqli':
+				$sx->set('db', new NGMYSQLi(array('host' => $save_con['dbhost'], 'user' => $save_con['dbuser'], 'pass' => $save_con['dbpasswd'], 'db' => $save_con['dbname'])));
+			break;
+			case 'pdo':
+				$sx->set('db', new NGPDO(array('host' => $save_con['dbhost'], 'user' => $save_con['dbuser'], 'pass' => $save_con['dbpasswd'], 'db' => $save_con['dbname'])));
+			break;
+		}
+		
+		$sx->set('legacyDB', new NGLegacyDB(false));
+		$sx->getLegacyDB()->connect('', '', '');
+		$sqlTest = $sx->getLegacyDB();
+	} catch (Exception $e) {
 		msgSticker($lang['dbcheck_error'], 'error');
 
 		return false;
-	};
-
+	}
+	
+	
 	// Save our UUID or regenerate LOST UUID
 	$save_con['UUID'] = $config['UUID'];
 	if ($save_con['UUID'] == '') {

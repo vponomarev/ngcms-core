@@ -36,14 +36,35 @@ function admConfigurationTestDB($params) {
 	}
 
 	// Check if DB connection params are correct
-	$sqlTest = DBLoad();
-	if (!$sqlTest->connect($params['dbhost'], $params['dbuser'], $params['dbpasswd'], $params['dbname'], 1)) {
-		if ($sqlTest->error < 2)
-			return array('status' => 0, 'errorCode' => 4, 'errorText' => $lang['dbcheck_noconnect']);
-
-		return array('status' => 0, 'errorCode' => 5, 'errorText' => $lang['dbcheck_nodb']);
-	};
-
+	try {
+		$sx = NGEngine::getInstance();
+		
+		switch($params['dbtype']){
+			case 'mysqli':
+				$sx->set('db', new NGMYSQLi(array('host' => $params['dbhost'], 'user' => $params['dbuser'], 'pass' => $params['dbpasswd'], 'db' => $params['dbname'])));
+			break;
+			case 'pdo':
+				$sx->set('db', new NGPDO(array('host' => $params['dbhost'], 'user' => $params['dbuser'], 'pass' => $params['dbpasswd'], 'db' => $params['dbname'])));
+			break;
+		}
+		
+		$sx->set('legacyDB', new NGLegacyDB(false));
+		$sx->getLegacyDB()->connect('', '', '');
+		$sqlTest = $sx->getLegacyDB();
+	} catch (Exception $e) {
+		switch($e->getCode()){
+			case 1045:
+				return array('status' => 0, 'errorCode' => 4, 'errorText' => $lang['dbcheck_noconnect']);
+			break;
+			case 1049:
+				return array('status' => 0, 'errorCode' => 5, 'errorText' => $lang['dbcheck_nodb']);
+			break;
+			default: 
+				return array('status' => 0, 'errorCode' => 5, 'errorText' => $e->getCode().' '. $lang['dbcheck_noconnect']);
+			break;
+		}
+	}
+	
 	return (array('status' => 1, 'errorCode' => 0, 'errorText' => $lang['dbcheck_ok']));
 }
 

@@ -10,6 +10,18 @@
 		{error_message}
 		<table width="100%" align="center" class="content" cellspacing="0" cellpadding="0">
 			<tr>
+				<td width="70%" class="contentEntry1">{l_db.type}<span class="req">*</span>: <br/>
+					<small>{l_db.type#desc}</small>
+				</td>
+				<td width="30%" class="contentEntry2">
+					<select name="reg_dbtype" style="width: 267px;">
+						[mysql]<option value="MySQL"{reg_dbtype_MySQL}>MySQL</option>[/mysql]
+						[/mysqli]<option value="MySQLi"{reg_dbtype_MySQLi}>MySQLi</option>[/mysqli]
+						[/pdo]<option value="PDO"{reg_dbtype_PDO}>PDO</option>[/pdo]
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td width="70%" class="contentEntry1">{l_db.server}<span class="req">*</span>: {err:reg_dbhost}<br/>
 					<small>{l_db.server#desc}</small>
 				</td>

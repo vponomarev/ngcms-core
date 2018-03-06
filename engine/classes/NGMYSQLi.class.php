@@ -62,7 +62,7 @@ class NGMYSQLi extends NGDB {
         try {
 			$this->db = mysqli_connect($params['host'], $params['user'], $params['pass'], $params['db']);
         } catch(Exception $e) {
-            throw new Exception('NGMYSQLi: Error connecting to DB ('.$e->getCode().") [".$e->getMessage()."]");
+            throw new Exception('NGMYSQLi: Error connecting to DB ('.$e->getCode().") [".$e->getMessage()."]", $e->getCode());
         }
 
         // Try to switch CHARSET

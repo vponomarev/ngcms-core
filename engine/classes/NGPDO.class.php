@@ -61,7 +61,7 @@ class NGPDO extends NGDB {
             $this->db = new PDO('mysql:host='.$params['host'].(isset($params['db'])?';dbname='.$params['db']:''), $params['user'], $params['pass']);
             $this->db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
         } catch(PDOException $e) {
-            throw new Exception('NG_PDO: Error connecting to DB ('.$e->getCode().") [".$e->getMessage()."]");
+            throw new Exception('NG_PDO: Error connecting to DB ('.$e->getCode().") [".$e->getMessage()."]", $e->getCode());
         }
 
         // Try to switch CHARSET
