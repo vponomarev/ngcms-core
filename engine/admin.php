@@ -44,7 +44,7 @@ if (defined('DEBUG')) {
 $PHP_SELF = "admin.php";
 
 // We have only one admin panel skin
-@require_once("./skins/default/index.php");
+//@require_once("./skins/default/index.php");
 
 //
 // Handle LOGIN
@@ -66,18 +66,17 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
 // Show LOGIN screen if user is not logged in
 //
 if (!is_array($userROW)) {
-	$tvars['vars'] = array(
-		'php_self'   => $PHP_SELF,
-		'redirect'   => $REQUEST_URI,
-		'year'       => date("Y"),
-		'home_title' => home_title,
-		'error'      => ($SYSTEM_FLAGS['auth_fail']) ? $lang['msge_login'] : '',
+	$tVars = array(
+		'php_self'		=> $PHP_SELF,
+		'redirect'		=> $REQUEST_URI,
+		'year'			=> date("Y"),
+		'home_title'	=> home_title,
+		'error'			=> ($SYSTEM_FLAGS['auth_fail']) ? $lang['msge_login'] : '',
+		'is_error'		=> ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
 	);
-	$tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '';
-
-	$tpl->template('login', tpl_actions);
-	$tpl->vars('login', $tvars);
-	echo $tpl->show('login');
+	
+	$xt = $twig->loadTemplate(tpl_actions . 'login.tpl');
+	echo $xt->render($tVars);
 	exit;
 }
 
@@ -130,11 +129,6 @@ $permissions = array(
 
 exec_acts("admin_header");
 
-// Print skin header (if we're not in preview mode)
-if ($mod != 'preview') {
-	echo $skin_header;
-}
-
 // Default action
 if (!$mod) {
 	$mod = ($userROW['status'] == 1) ? 'statistics' : 'news';
@@ -150,17 +144,53 @@ if (isset($permissions[$mod]) && ($permissions[$mod])) {
 		load_extras('admin:mod:' . $mod);
 		require("./actions/" . $mod . ".php");
 	} else {
-		msg(array("type" => "error", "text" => $lang['msge_mod']));
+		$notify = msg(array("type" => "error", "text" => $lang['msge_mod']));
 	}
 } else {
-	msg(array("type" => "error", "text" => $lang['msge_mod']));
+	$notify = msg(array("type" => "error", "text" => $lang['msge_mod']));
 }
 
-// Print skin footer (if we're not in preview mode)
+$lang = LoadLang('index', 'admin');
+if (is_array($userROW)) {
+	$newpm = $mysql->result("SELECT count(pmid) FROM " . prefix . "_users_pm WHERE to_id = " . db_squote($userROW['id']) . " AND viewed = '0'");
+	$newpm = ($newpm != "0") ? '<b>' . $newpm . '</b>' : '0';
+	// Calculate number of un-approved news
+	$unapproved = '';
+	if ($userROW['status'] == 1 || $userROW['status'] == 2) {
+		$unapp = $mysql->result("SELECT count(id) FROM " . prefix . "_news WHERE approve = '0'");
+		if ($unapp)
+			$unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>' . $unapp . '</b></font></a> ] ';
+	}
+}
+
+$datetimepicker_lang_default = "
+$.datepicker.setDefaults($.datepicker.regional['" . $lang['langcode'] . "']);
+$.timepicker.setDefaults($.timepicker.regional['" . $lang['langcode'] . "']);
+";
+$datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : "";
+
+$tVars = array(
+	'php_self'				=> $PHP_SELF,
+	'home_title'			=> $config['home_title'],
+	'newpm'					=> $newpm,
+	'unapproved'			=> $unapproved,
+	'main_admin'			=> $main_admin,
+	'notify'				=> $notify,
+	'datetimepicker_lang'	=> $datetimepicker_lang,
+	'h_active_options'		=> (in_array($mod, array('options', 'categories', 'static'))) ? ' class="active"' : '',
+	'h_active_extras'		=> (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
+	'h_active_addnews'		=> (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
+	'h_active_editnews'		=> (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
+	'h_active_images'		=> ($mod == 'images') ? ' class="active"' : '',
+	'h_active_files'		=> ($mod == 'files') ? ' class="active"' : '',
+	'h_active_pm'			=> ($mod == 'pm') ? ' class="active"' : '',
+	'year' 					=> date("Y"),
+);
+
 if (!$mod || ($mod && $mod != "preview")) {
-	echo $skin_footer;
+	$xt = $twig->loadTemplate(dirname(tpl_actions) . '/index.tpl');
+	echo $xt->render($tVars);
 }
-
 if (defined('DEBUG')) {
 	echo "SQL queries:<br />\n-------<br />\n " . implode("<br />\n", $mysql->query_list);
 }

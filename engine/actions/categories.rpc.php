@@ -102,7 +102,7 @@ function admCategoryList($retMode = 0) {
 			return $xt->render($tVars);
 		default:
 			$xt = $twig->loadTemplate('skins/default/tpl/categories/table.tpl');
-			echo $xt->render($tVars);
+			return $xt->render($tVars);
 	}
 }
 

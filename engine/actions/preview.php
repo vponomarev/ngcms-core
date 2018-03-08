@@ -16,4 +16,4 @@ $lang = LoadLang('preview', 'admin');
 include_once root . 'includes/news.php';
 include_once root . 'includes/classes/upload.class.php';
 
-showPreview();
+$main_admin = showPreview();

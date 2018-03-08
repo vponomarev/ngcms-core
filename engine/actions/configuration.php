@@ -48,7 +48,7 @@ $twig->addFunction('mkSelectNY', new Twig_Function_Function('twigmkSelectNY'));
 // Save system config
 function systemConfigSave() {
 
-	global $lang, $config, $mysql;
+	global $lang, $config, $mysql, $notify;
 
 	// Check for permissions
 	if (!checkPermission(array('plugin' => '#admin', 'item' => 'configuration'), null, 'modify')) {
@@ -210,7 +210,7 @@ function systemConfigEditForm() {
 	$tvars['vars']['defaultSection'] = (isset($_REQUEST['selectedOption']) && $_REQUEST['selectedOption']) ? htmlspecialchars($_REQUEST['selectedOption'], ENT_COMPAT | ENT_HTML401, 'UTF-8') : 'news';
 
 	$xt = $twig->loadTemplate('skins/default/tpl/configuration.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 //
@@ -221,6 +221,6 @@ if (isset($_REQUEST['subaction']) && ($_REQUEST['subaction'] == "save") && ($_SE
 }
 
 // Show configuration form
-systemConfigEditForm();
+$main_admin = systemConfigEditForm();
 
 

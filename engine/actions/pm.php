@@ -81,7 +81,7 @@ function pm_list() {
 	);
 	exec_acts('pm');
 	$tpl->vars('table', $tvars);
-	echo $tpl->show('table');
+	return $tpl->show('table');
 }
 
 function pm_read() {
@@ -100,7 +100,7 @@ function pm_read() {
 		);
 		exec_acts('pm_read');
 		$tpl->vars('read', $tvars);
-		echo $tpl->show('read');
+		return $tpl->show('read');
 		if ((!$row['viewed']) && ($row['to_id'] == $userROW['id'])) {
 			$mysql->query("update " . uprefix . "_users_pm set `viewed` = '1' WHERE `pmid` = " . db_squote($row['pmid']));
 		}
@@ -132,7 +132,7 @@ function pm_reply() {
 		$tvars['vars']['smilies'] = ($config['use_smilies'] == "1") ? InsertSmilies("content", 10) : '';
 		exec_acts('pm_reply');
 		$tpl->vars('reply', $tvars);
-		echo $tpl->show('reply');
+		return $tpl->show('reply');
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_bad']));
 	}
@@ -150,7 +150,7 @@ function pm_write() {
 	$tvars['vars']['smilies'] = ($config['use_smilies'] == "1") ? InsertSmilies("content", 10) : '';
 	exec_acts('pm_write');
 	$tpl->vars('write', $tvars);
-	echo $tpl->show('write');
+	return $tpl->show('write');
 }
 
 function pm_delete() {
@@ -172,20 +172,20 @@ function pm_delete() {
 
 switch ($action) {
 	case "read"   :
-		pm_read();
+		$main_admin = pm_read();
 		break;
 	case "reply"  :
-		pm_reply();
+		$main_admin = pm_reply();
 		break;
 	case "send"   :
-		pm_send();
+		$main_admin = pm_send();
 		break;
 	case "write"  :
-		pm_write();
+		$main_admin = pm_write();
 		break;
 	case "delete" :
-		pm_delete();
+		$main_admin = pm_delete();
 		break;
 	default       :
-		pm_list();
+		$main_admin = pm_list();
 }

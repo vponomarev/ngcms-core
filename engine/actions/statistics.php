@@ -199,4 +199,4 @@ foreach (array('register_globals', 'magic_quotes_gpc', 'magic_quotes_runtime', '
 $tVars['flags']['confError'] = ($phpErrors) ? 1 : 0;
 
 $xt = $twig->loadTemplate('skins/default/tpl/statistics.tpl');
-echo $xt->render($tVars);
+$main_admin = $xt->render($tVars);

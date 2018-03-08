@@ -92,7 +92,7 @@ if ($subaction != "deletecomment") {
 		if ($row['text'] != '') {
 			$tpl->template('editcomments', tpl_actions);
 			$tpl->vars('editcomments', $tvars);
-			echo $tpl->show('editcomments');
+			$main_admin = $tpl->show('editcomments');
 		}
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));

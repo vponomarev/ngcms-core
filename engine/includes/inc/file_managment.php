@@ -417,7 +417,7 @@ function manage_showlist($type) {
 		$tvars['regx']["#\[status\].*?\[/status\]#si"] = "";
 	}
 	$tpl->vars('table', $tvars);
-	echo $tpl->show('table');
+	return $tpl->show('table');
 }
 
 //
@@ -494,7 +494,7 @@ function manage_editForm($type, $id) {
 
 	$tpl->template('edit', tpl_actions . $mod);
 	$tpl->vars('edit', $tvars);
-	echo $tpl->show('edit');
+	return $tpl->show('edit');
 }
 
 function manage_editApply($type, $id) {

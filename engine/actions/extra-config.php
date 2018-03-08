@@ -38,7 +38,7 @@ if (!is_array($extras[$plugin])) {
 		'php_self'    => $PHP_SELF
 	);
 	$xt = $twig->loadTemplate('skins/default/tpl/extra-config/nomodule.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 } else {
 	//
 	// Call 'install'/'deinstall' script if it's requested. Else - call config script.
@@ -77,6 +77,6 @@ if (!is_array($extras[$plugin])) {
 			'php_self'    => $PHP_SELF
 		);
 		$xt = $twig->loadTemplate('skins/default/tpl/extra-config/nomodule.tpl');
-		echo $xt->render($tVars);
+		return $xt->render($tVars);
 	}
 }

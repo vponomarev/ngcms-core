@@ -84,7 +84,7 @@ function userEditForm() {
 	ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(1));
 
 	$xt = $twig->loadTemplate('skins/default/tpl/users/edit.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 //
@@ -526,7 +526,7 @@ function userList() {
 	);
 
 	$xt = $twig->loadTemplate('skins/default/tpl/users/table.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 
 }
 
@@ -539,26 +539,26 @@ if ($action == 'editForm') {
 } else {
 	switch ($action) {
 		case 'edit'                :
-			userEdit();
+			$main_admin = userEdit();
 			break;
 		case 'add'                :
-			userAdd();
+			$main_admin = userAdd();
 			break;
 		case 'massActivate'        :
-			userMassActivate();
+			$main_admin = userMassActivate();
 			break;
 		case 'massLock'            :
-			userMassLock();
+			$main_admin = userMassLock();
 			break;
 		case 'massSetStatus'    :
-			userMassSetStatus();
+			$main_admin = userMassSetStatus();
 			break;
 		case 'massDel'            :
-			userMassDelete();
+			$main_admin = userMassDelete();
 			break;
 		case 'massDelInactive'    :
-			userMassDeleteInactive();
+			$main_admin = userMassDeleteInactive();
 			break;
 	}
-	userList();
+	$main_admin = userList();
 }

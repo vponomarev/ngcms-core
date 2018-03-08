@@ -757,7 +757,6 @@ class file_managment {
 		}
 
 		$category = $parse->translit(trim(str_replace(array(' ', '\\', '/', chr(0)), array('-', ''), $category)));
-
 		if (is_dir($dir . $category)) {
 			msg(array("type" => "error", "text" => $lang['upload.error.catexists'], "info" => $lang['upload.error.catexists#info']));
 

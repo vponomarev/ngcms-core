@@ -478,7 +478,7 @@ function templateLoadVariables($die = false, $loadMode = 0) {
 //			2 - return as result
 function msg($params, $mode = 0, $disp = -1) {
 
-	global $config, $tpl, $lang, $template, $PHP_SELF, $TemplateCache;
+	global $config, $tpl, $lang, $template, $PHP_SELF, $TemplateCache, $notify;
 
 	// Set AUTO mode if $disp == -1
 	if ($disp == -1)
@@ -520,7 +520,7 @@ function msg($params, $mode = 0, $disp = -1) {
 			return $message;
 		default:
 			if ($PHP_SELF == 'admin.php') {
-				print $message;
+				$notify = $message;
 			} else {
 				$template['vars']['mainblock'] .= $message;
 			}
@@ -539,7 +539,8 @@ function msg($params, $mode = 0, $disp = -1) {
 //			1 - print
 //			2 - return as result
 function msgSticker($msg, $type = '', $disp = -1) {
-
+	global $notify;
+	
 	$lines = array();
 	if (is_array($msg)) {
 		foreach ($msg as $x) {
@@ -554,7 +555,7 @@ function msgSticker($msg, $type = '', $disp = -1) {
 		join("<br/>", $lines) . '"' .
 		(($type == "error") ? ', {sticked: true, className: "ngStickerClassError"}' : '') .
 		');</script>';
-	print $output;
+	$notify = $output;
 }
 
 function TwigEngineMSG($type, $text, $info = '') {

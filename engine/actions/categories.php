@@ -72,7 +72,7 @@ function admCategoryAddForm() {
 		}
 
 	$xt = $twig->loadTemplate('skins/default/tpl/categories/add.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -298,7 +298,7 @@ function admCategoryEditForm() {
 		}
 
 	$xt = $twig->loadTemplate('skins/default/tpl/categories/edit.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 
 }
 
@@ -456,9 +456,9 @@ function admCategoryEdit() {
 //
 
 if ($action == 'edit') {
-	admCategoryEditForm();
+	$main_admin = admCategoryEditForm();
 } else if ($action == 'add') {
-	admCategoryAddForm();
+	$main_admin = admCategoryAddForm();
 } else {
 	$dosort = 1;
 	switch ($action) {
@@ -477,5 +477,5 @@ if ($action == 'edit') {
 	if ($dosort) {
 		admCategoryReorder();
 	}
-	admCategoryList();
+	$main_admin = admCategoryList();
 }

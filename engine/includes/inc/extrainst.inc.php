@@ -35,7 +35,7 @@ params:
 
 function generate_config_page($module, $params, $values = array()) {
 
-	global $tpl, $lang;
+	global $tpl, $lang, $main_admin;
 
 	function mkParamLine($param) {
 		global $lang;
@@ -120,7 +120,7 @@ function generate_config_page($module, $params, $values = array()) {
 	$tpl->template('table', tpl_actions . 'extra-config');
 	$tvars['vars'] = array('entries' => $entries, 'plugin' => $module, 'php_self' => $PHP_SELF, 'token' => genUToken('admin.extra-config'));
 	$tpl->vars('table', $tvars);
-	echo $tpl->show('table');
+	$main_admin = $tpl->show('table');
 }
 
 // Automatic save values into module parameters DB
@@ -170,12 +170,12 @@ function load_commit_params($cfg, $outparams) {
 // Priint page with config change complition notification
 function print_commit_complete($plugin) {
 
-	global $tpl, $PHP_SELF;
+	global $tpl, $PHP_SELF, $main_admin;
 
 	$tpl->template('done', tpl_actions . 'extra-config');
 	$tvars['vars'] = array('plugin' => $plugin, 'php_self' => $PHP_SELF);
 	$tpl->vars('done', $tvars);
-	echo $tpl->show('done');
+	$main_admin = $tpl->show('done');
 }
 
 // check if table exists
@@ -202,9 +202,9 @@ function get_mysql_field_type($table, $field) {
 }
 
 // Database update during install
-function fixdb_plugin_install($module, $params, $mode = 'install', $silent = false) {
+function fixdb_plugin_install($module, $params, $mode = 'install', $silent = false, &$is_error) {
 
-	global $lang, $tpl, $mysql;
+	global $lang, $tpl, $mysql, $main_admin;
 
 	// Load config
 	plugins_load_config();
@@ -414,7 +414,13 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 		$tpl->vars('install-entries', $tvars);
 		$entries .= $tpl->show('install-entries');
 	}
+	
+	if ($publish_error) {
+		$is_error = 0;
+	}
 
+	$is_error = 1;
+	
 	$tpl->template('install-process', tpl_actions . 'extra-config');
 	$tvars['vars'] = array(
 		'entries'   => $entries,
@@ -425,20 +431,14 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 	);
 	$tpl->vars('install-process', $tvars);
 	if (!$silent) {
-		print $tpl->show('install-process');
+		$main_admin = $tpl->show('install-process');
 	}
-
-	if ($publish_error) {
-		return 0;
-	}
-
-	return 1;
 }
 
 // Create install page
 function generate_install_page($plugin, $text, $stype = 'install') {
 
-	global $tpl, $lang;
+	global $tpl, $lang, $main_admin;
 
 	$tpl->template('install', tpl_actions . 'extra-config');
 	$tvars['vars'] = array(
@@ -450,7 +450,7 @@ function generate_install_page($plugin, $text, $stype = 'install') {
 		'php_self'     => $PHP_SELF
 	);
 	$tpl->vars('install', $tvars);
-	echo $tpl->show('install');
+	$main_admin = $tpl->show('install');
 
 }
 

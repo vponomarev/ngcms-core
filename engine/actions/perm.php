@@ -130,7 +130,7 @@ function showList($grp) {
 	//print "<pre><select size='10' multiple='multiple'>".makeCategoryList(array('skipDisabled' => true, 'noHeader' => true))."</select></pre>";
 	// Print template
 	$xt = $twig->loadTemplate('skins/default/tpl/perm/list.tpl');
-	print $xt->render(array(
+	return $xt->render(array(
 			'CONFIG'       => $data,
 			'PERM'         => $PERM,
 			'GRP'          => $grp,
@@ -260,7 +260,7 @@ function updateConfig() {
 	$execResult = saveUserPermissions();
 
 	$xt = $twig->loadTemplate('skins/default/tpl/perm/result.tpl');
-	print $xt->render(array(
+	return $xt->render(array(
 			'updateList' => $updateList,
 			'GRP'        => $grp,
 			'execResult' => $execResult,
@@ -272,8 +272,8 @@ function updateConfig() {
 //
 //
 if (($_SERVER['REQUEST_METHOD'] == "POST") && isset($_POST['save']) && ($_POST['save'] == 1)) {
-	updateConfig();
+	$main_admin = updateConfig();
 } else {
-	showList($grp);
+	$main_admin = showList($grp);
 	//	showList(array('1' => array('id' => 1, 'title' => 'Администратор')));
 }

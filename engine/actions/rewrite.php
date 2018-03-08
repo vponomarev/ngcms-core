@@ -81,7 +81,7 @@ $tVars = array(
 );
 
 $xt = $twig->loadTemplate('skins/default/tpl/rewrite.tpl');
-echo $xt->render($tVars);
+$main_admin = $xt->render($tVars);
 
 
 //$UH->populateHandler($ULIB, array('pluginName' => 'news', 'handlerName' => 'by.day', 'regex' => '/{year}-{month}-{day}[-page{page}].html'));

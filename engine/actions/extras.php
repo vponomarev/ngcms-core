@@ -65,10 +65,10 @@ function admGeneratePluginList() {
 		if (($extra['permanent']) && (!getPluginStatusActive($id))) {
 			// turn on
 			if (pluginSwitch($id, 'on')) {
-				msg(array("text" => sprintf($lang['msgo_is_on'], $extra['name'])));
+				$notify = msg(array("text" => sprintf($lang['msgo_is_on'], $extra['name'])));
 			} else {
 				// generate error message
-				msg(array("text" => 'ERROR: ' . sprintf($lang['msgo_is_on'], $extra['name'])));
+				$notify = msg(array("text" => 'ERROR: ' . sprintf($lang['msgo_is_on'], $extra['name'])));
 			}
 		}
 
@@ -109,7 +109,7 @@ function admGeneratePluginList() {
 		'cntUninstalled' => $pCount[3]
 	);
 	$xt = $twig->loadTemplate(tpl_actions . 'extras/table.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 function repoSync() {
@@ -155,7 +155,7 @@ $manage = (isset($_REQUEST['manageConfig']) && $_REQUEST['manageConfig'] && isse
 // Check for security token
 if ($enable || $disable || $manage) {
 	if ((!isset($_REQUEST['token'])) || ($_REQUEST['token'] != genUToken('admin.extras'))) {
-		msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+		$notify = msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
 		ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras', 'ds_id' => $id), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));
 		exit;
 	}
@@ -175,7 +175,7 @@ if (isset($_REQUEST['manageConfig']) && $_REQUEST['manageConfig']) {
 		'token'  => genUToken('admin.extras'),
 	);
 	$xt = $twig->loadTemplate('skins/default/tpl/extras/manage_config.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 
 	exit;
 }
@@ -187,7 +187,7 @@ if ($enable) {
 	} else {
 		// generate error message
 		ngSYSLOG(array('plugin' => '#admin', 'item' => 'extras'), array('action' => 'switch_on', 'list' => array('plugin' => $enable)), null, array(0, 'ERROR: ' . $enable));
-		msg(array("text" => 'ERROR: ' . sprintf($lang['msgo_is_on'], $extras[$id]['name'])));
+		$notify = msg(array("text" => 'ERROR: ' . sprintf($lang['msgo_is_on'], $extras[$id]['name'])));
 	}
 }
 
@@ -210,4 +210,4 @@ if ($disable) {
 	}
 }
 
-admGeneratePluginList();
+$main_admin = admGeneratePluginList();

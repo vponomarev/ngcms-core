@@ -23,4 +23,4 @@ $tVars = array(
 );
 
 $xt = $twig->loadTemplate('skins/default/tpl/options.tpl');
-echo $xt->render($tVars);
+$main_admin = $xt->render($tVars);

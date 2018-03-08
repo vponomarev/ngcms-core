@@ -61,7 +61,7 @@ function ParseQueries($sql) {
 //
 // Modify data request
 function systemDboModify() {
-	global $config, $lang, $catz;
+	global $config, $lang, $catz, $notify;
 
 	$db = NGEngine::getInstance()->getDB();
 
@@ -179,7 +179,7 @@ function systemDboModify() {
 			msg(array("type" => "error", "text" => $lang['dbo']['msge_delbackup']));
 		} else {
 			@unlink(root . "backups/" . $filename . ".gz");
-			msg(array("text" => sprintf($lang['dbo']['msgo_delbackup'], $filename)));
+			sg(array("text" => sprintf($lang['dbo']['msgo_delbackup'], $filename)));
 		}
 	}
 
@@ -297,7 +297,7 @@ function systemDboModify() {
 //
 // List tables
 function systemDboForm() {
-	global $lang, $twig, $config, $PHP_SELF;
+	global $lang, $twig, $config, $PHP_SELF, $notify;
 
 	$db = NGEngine::getInstance()->getDB();
 
@@ -333,12 +333,11 @@ function systemDboForm() {
 	);
 
 	$xt = $twig->loadTemplate('skins/default/tpl/dbo.tpl');
-	echo $xt->render($tVars);
-	return true;
+	return $xt->render($tVars);
 }
 
 if (isset($_REQUEST['subaction']) && ($_REQUEST['subaction'] == "modify")) {
-	systemDboModify();
+	$main_admin = systemDboModify();
 }
 
-systemDboForm();
+$main_admin = systemDboForm();
