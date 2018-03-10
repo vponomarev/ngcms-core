@@ -113,7 +113,7 @@ function systemDboModify() {
 		} while($qRowCount > 0);
 		
 		// Update table `news_map`
-		$db->query("truncate table " . prefix . "_news_map");
+		$db->createCursor("truncate table " . prefix . "_news_map");
 		
 		if (strlen($nmap))
 			$db->exec("insert into " . prefix . "_news_map (newsID, categoryID, dt) values " . substr($nmap, 0, -1));

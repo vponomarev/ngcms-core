@@ -82,6 +82,10 @@ class NGMYSQLi extends NGDB {
         $this->qCount++;
 
         try {
+			if(is_array($params))
+				foreach($params as $key => $value)
+					$sql = str_replace(':'.$key, is_int($value)?$value:'\''.$value.'\'', $sql);
+			
 			$query = mysqli_query($this->db, $sql);
 			
 			$r = array();
@@ -133,6 +137,10 @@ class NGMYSQLi extends NGDB {
 				else 
 					$r = null;
 			} else {
+				if(is_array($params))
+					foreach($params as $key => $value)
+						$sql = str_replace(':'.$key, is_int($value)?$value:'\''.$value.'\'', $sql);
+				
 				$r = mysqli_query($this->db, $sql);
 			}
         } catch (mysqli_sql_exception $e) {
@@ -153,9 +161,9 @@ class NGMYSQLi extends NGDB {
 
         try {
             $query = mysqli_query($this->db, $sql);
-			$r = $this->mysqli_result($query, 0);
+			//$r = $this->mysqli_result($query, 0);
+			$r = mysqli_fetch_array($query, MYSQLI_BOTH);
         } catch (mysqli_sql_exception $e) {
-			print 'error';
             $this->errorReport('result', $sql, $e);
             $r = null;
         }
@@ -167,26 +175,6 @@ class NGMYSQLi extends NGDB {
             return $r[array_shift(array_keys($r))];
         }
         return null;
-    }
-	
-	function tableExists($name) {
-        // Check if data are already saved
-		if (getIsSet($this->table_list[$table]) && is_array($this->table_list)) {
-			return $this->table_list[$table] ? 1 : 0;
-		}
-
-		try {
-            $query = mysqli_query($this->db, "show tables");
-
-			while ($item = mysqli_fetch_array($query, MYSQLI_NUM)) {
-				$this->table_list[$item[0]] = 1;
-			}
-        } catch (mysqli_sql_exception $e) {
-            $this->errorReport('query', $sql, $e);
-            $r = null;
-        }
-		
-		return $this->table_list[$table] ? 1 : 0;
     }
 	
 	function num_rows($query) {
@@ -311,19 +299,27 @@ class NGMYSQLi extends NGDB {
      * @return PDOStatement
      */
     function createCursor($query, array $params = array()) {
-        
+        if(is_array($params))
+			foreach($params as $key => $value)
+				$query = str_replace(':'.$key, is_int($value)?$value:'\''.$value.'\'', $query);
+				
+		return mysqli_query($this->db, $query);
     }
 
     /**
      * @param PDOStatement $cursor
      * @return mixed
      */
-    function fetchCursor(PDOStatement $cursor) {
-        
+    function fetchCursor($cursor) {
+		return mysqli_fetch_assoc($cursor);
     }
 
-    function closeCursor(PDOStatement $cursor) {
+    function closeCursor($cursor) {
         
+    }
+	
+	function tableExists($name) {
+		return is_array($this->record('show tables like \''.$name.'\''))?true:false;
     }
 }
 

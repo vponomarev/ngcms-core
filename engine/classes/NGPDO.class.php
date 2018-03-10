@@ -86,7 +86,6 @@ class NGPDO extends NGDB {
                 $st = $this->db->prepare($sql);
                 $st->execute($params);
                 $r = $st->fetchAll(PDO::FETCH_ASSOC);
-
             } else {
                 $r = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             }
@@ -302,7 +301,10 @@ class NGPDO extends NGDB {
      */
     function createCursor($query, array $params = array()) {
         $cursor = $this->db->prepare($query);
-        $cursor->execute($params);
+		if(is_array($params))
+			foreach($params as $key => $value)
+				$cursor->bindParam(':'.$key , $value, is_int($value)?PDO::PARAM_INT:PDO::PARAM_STR);
+        $cursor->execute();
         return $cursor;
     }
 
@@ -310,19 +312,15 @@ class NGPDO extends NGDB {
      * @param PDOStatement $cursor
      * @return mixed
      */
-    function fetchCursor(PDOStatement $cursor) {
+    function fetchCursor($cursor) {
         return $cursor->fetch(PDO::FETCH_ASSOC);
     }
 
-    function closeCursor(PDOStatement $cursor) {
+    function closeCursor($cursor) {
         return $cursor->closeCursor();
     }
 
     function tableExists($name) {
-        return count($this->record("show tables like :name", array('name' => $name)))?true:false;
+        return is_array($this->record("show tables like :name", array('name' => $name)))?true:false;
     }
-
-
 }
-
-

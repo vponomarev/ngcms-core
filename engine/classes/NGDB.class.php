@@ -29,8 +29,8 @@ abstract class NGDB {
     abstract function getVersion();
 	
     abstract function createCursor($query, array $params = array());
-    abstract function fetchCursor(PDOStatement $cursor);
-    abstract function closeCursor(PDOStatement $cursor);
+    abstract function fetchCursor($cursor);
+    abstract function closeCursor($cursor);
     abstract function tableExists($name);
 
 }
