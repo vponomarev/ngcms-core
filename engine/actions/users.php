@@ -535,7 +535,7 @@ function userList() {
 // ==============================================
 
 if ($action == 'editForm') {
-	userEditForm();
+	$main_admin = userEditForm();
 } else {
 	switch ($action) {
 		case 'edit'                :
