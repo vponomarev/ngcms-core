@@ -2002,19 +2002,6 @@ if (!function_exists('json_encode')) {
 	}
 }
 
-//
-// Add json_decode() support for PHP < 5.2.0
-//
-if (!function_exists('json_decode')) {
-	function json_decode($json, $assoc = false) {
-
-		include_once root . 'includes/classes/json.php';
-		$jclass = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
-
-		return $jclass->decode($json);
-	}
-}
-
 // Parse params
 function parseParams($paramLine) {
 
