@@ -22,7 +22,7 @@ class microTimer {
 		$this->last_event = $this->script_start;
 	}
 
-	function stop($points = 2) {
+	function stop($points = 3) {
 
 		list($usec, $sec) = explode(' ', microtime());
 		$script_end = (float)$sec + (float)$usec;

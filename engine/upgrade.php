@@ -80,7 +80,7 @@ $query_list_093svn = array(
 
 );
 
-$query_list_095_10 = array(
+$query_list_095_096 = array(
 	"ALTER DATABASE " . $config['dbname'] ." CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
 
 	"ALTER TABLE " . prefix . "_config CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
@@ -123,7 +123,7 @@ $extras = get_extras_list();
 // Load lang files
 $lang = LoadLang('extra-config', 'admin');
 
-if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['update093svn'] || $_REQUEST['update095_10']) {
+if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['update093svn'] || $_REQUEST['update095_096']) {
 	// Выполнение SQL запросов на обновление
 	print '<br/>Выполнение SQL запросов:<br/>';
 	print '<table width="80%">';
@@ -144,8 +144,8 @@ if ($_REQUEST['update092_093rc1'] || $_REQUEST['xfUpdateDB'] || $_REQUEST['updat
 		$queryList = array_merge($queryList, $query_list_093svn);
 	}
 
-	if ($_REQUEST['update095_10']) {
-		$queryList = array_merge($queryList, $query_list_095_10);
+	if ($_REQUEST['update095_096']) {
+		$queryList = array_merge($queryList, $query_list_095_096);
 	}
 
 	foreach ($queryList as $sql) {
@@ -214,11 +214,11 @@ function questionare() {
   <td width='10%'><input type=checkbox name='xfUpdateDB' value='1' /></td>
  </tr>
   <tr>
-  <td>Выполнить обновление структуры БД 0.9.5 Release => 1.0.0 DEV<br/>
-   <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.5 Release до версии 1.0.0 DEV<br/>
+  <td>Выполнить обновление структуры БД 0.9.5 Release => 0.9.6 Release<br/>
+   <small>Данную операцию требуется произвести единожды при обновлении с версии 0.9.5 Release до версии 0.9.6 Release<br/>
    </small>
   </td>
-  <td width='10%'><input type=checkbox name='update095_10' value='1' /></td>
+  <td width='10%'><input type=checkbox name='update095_096' value='1' /></td>
  </tr>
  </table><br/>
  <input type='submit' value='Начать преобразование!'>

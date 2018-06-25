@@ -1,6 +1,6 @@
 <!-- Preload uploadify engine -->
-<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadify/swfobject.js"></script>
-<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadify/jquery.uploadify.min.js"></script>
+<link rel="stylesheet" href="{scriptLibrary}/jq/plugins/uploadifive/uploadifive.css" type="text/css" />
+<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadifive/jquery.uploadifive.js"></script>
 
 <!-- Main scripts -->
 <script type="text/javascript">
@@ -225,77 +225,88 @@
 			</form>
 
 			<!-- BEGIN: Init UPLOADIFY engine -->
-			<script type="text/javascript">
-				$(document).ready(function () {
-					$('#fileUploadInput').uploadify({
-						'uploader': '{scriptLibrary}/jq/plugins/uploadify/uploadify.swf',
-						'script': '{admin_url}/rpc.php?methodName=admin.files.upload',
-						'cancelImg': '{skins_url}/images/up_cancel.png',
-						'folder': '',
-						'fileExt': '{listExt}',
-						'fileDesc': '{descExt}',
-						'sizeLimit': {maxSize},
-						'auto': false,
-						'multi': true,
-						'buttonText': 'Select files ...',
-						'width': 200,
-						'removeCompleted': true,
-						'onInit': function () {
-							document.getElementById('showRemoveAddButtoms').style.display = 'none';
-						},
-						'onComplete': function (ev, ID, fileObj, res, data) {
-							// Response should be in JSON format
-							var resData;
-							var resStatus = 0;
-							try {
-								resData = eval('(' + res + ')');
-								if (typeof(resData['status']))
-									resStatus = 1;
-							} catch (err) {
-								alert('Error parsing JSON output. Result: ' + res);
-							}
 
-							if (!resStatus) {
-								alert('Upload resp: ' + res);
-								return false;
-							}
+            <script type="text/javascript">
+                $(document).ready(function () {
 
-							flagRequireReload = 1;
+                    var uploader = $('#fileUploadInput').uploadifive({
+                        'auto'             : false,
+                        'uploadScript'     : '{admin_url}/rpc.php?methodName=admin.files.upload',
+                        'cancelImg': '{skins_url}/images/up_cancel.png',
+                        'folder': '',
+                        'fileExt': '{listExt}',
+                        'fileDesc': '{descExt}',
+                        'sizeLimit': {maxSize},
+                        'auto': false,
+                        'multi': true,
+                        'buttonText': 'Select files ...',
+                        'width': 200,
+                        'removeCompleted': true,
+                        'onInit': function () {
+                            document.getElementById('showRemoveAddButtoms').style.display = 'none';
+                        },
+                        'onUploadComplete': function (fileObj, data) {
+                            // Response should be in JSON format
+                            var resData;
+                            var resStatus = 0;
+                            try {
+                                resData = eval('(' + data + ')');
+                                if (typeof(resData['status']))
+                                    resStatus = 1;
+                            } catch (err) {
+                                alert('Error parsing JSON output. Result: ' + res);
+                            }
 
-							// If upload fails
-							if (resData['status'] < 1) {
-								$('#' + $(ev.target).attr('id') + ID).append('<div class="msg">(' + resData['errorCode'] + ') ' + resData['errorText'] + '</div>');
-								if (typeof(resData['errorDescription']) !== 'undefined') {
-									$('#' + $(ev.target).attr('id') + ID).append('<div class="msgInfo">' + resData['errorDescription'] + '</div>');
-								}
-								$('#' + $(ev.target).attr('id') + ID).css('border', '2px solid red');
-								return false;
-							} else {
-								$('#' + $(ev.target).attr('id') + ID).append('<div>' + resData['errorText'] + '</div>');
-								$('#' + $(ev.target).attr('id') + ID).fadeOut(5000);
-							}
-							return true;
-						},
-					});
-				});
+                            if (!resStatus) {
+                                alert('Upload resp: ' + res);
+                                return false;
+                            }
 
-				function uploadifyDoUpload() {
-					// Prepare script data
+                            flagRequireReload = 1;
 
-					var scriptData = new Array();
-					scriptData['ngAuthCookie'] = '{authcookie}';
-					scriptData['uploadType'] = 'image';
-					scriptData['category'] = document.getElementById('categorySelect').value;
-					scriptData['rand'] = document.getElementById('flagRand').checked ? 1 : 0;
-					scriptData['replace'] = document.getElementById('flagReplace').checked ? 1 : 0;
-					scriptData['thumb'] = document.getElementById('flagThumb').checked ? 1 : 0;
-					scriptData['stamp'] = document.getElementById('flagStamp').checked ? 1 : 0;
-					scriptData['shadow'] = document.getElementById('flagShadow').checked ? 1 : 0;
+                            // If upload fails
+                            /**/
 
-					$('#fileUploadInput').uploadifySettings('scriptData', scriptData, true);
-					$('#fileUploadInput').uploadifyUpload();
-				}
-			</script>
+                            var id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+                            if (resData['status'] < 1) {
+                                $('.uploadifive-queue').append('<div id=' + id + '></div>');
+                                $('#'+id).append('<div class="msg">(' + resData['errorCode'] + ') ' + resData['errorText'] + '</div>');
+                                if (typeof(resData['errorDescription']) !== 'undefined') {
+                                    $('#'+id).append('<div class="msgInfo">' + resData['errorDescription'] + '</div>');
+                                }
+                                $('#'+id).css('border', '2px solid red');
+                                $('#'+id).fadeOut(5000);
+                                return false;
+                            } else {
+                                $('.uploadifive-queue').append('<div id=' + id + '></div>');
+                                $('#'+id).append('<div>' + resData['errorText'] + '</div>');
+                                $('#'+id).fadeOut(5000);
+                            }
+
+                            return true;
+                        },
+                        'onUpload': function(filesToUpload, settings) {
+
+                            var scriptData = new Array();
+                            scriptData['ngAuthCookie'] = '{authcookie}';
+                            scriptData['uploadType'] = 'image';
+                            scriptData['category'] = document.getElementById('categorySelect').value;
+                            scriptData['rand'] = document.getElementById('flagRand').checked ? 1 : 0;
+                            scriptData['replace'] = document.getElementById('flagReplace').checked ? 1 : 0;
+                            scriptData['thumb'] = document.getElementById('flagThumb').checked ? 1 : 0;
+                            scriptData['stamp'] = document.getElementById('flagStamp').checked ? 1 : 0;
+                            scriptData['shadow'] = document.getElementById('flagShadow').checked ? 1 : 0;
+
+                            settings.formData = scriptData;
+                        }
+                    });
+                });
+
+                function uploadifyDoUpload() {
+                    // Prepare script data
+                    $('#fileUploadInput').uploadifive('upload');
+                }
+            </script>
 			<!-- END: Init UPLOADIFY engine -->
 		</td>
 
