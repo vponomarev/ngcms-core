@@ -13,9 +13,16 @@
 // ============================================================================
 // Define global directory constants
 // ============================================================================
-define('NGCoreDir', dirname(__FILE__) . '/');				// Location of Core directory
-define('NGRootDir', dirname(dirname(__FILE__)) . '/');		// Location of SiteRoot
-define('NGClassDir', NGCoreDir.'classes/');					// Location of AutoLoaded classes
+
+define('NGCoreDir', __DIR__ . '/');                // Location of Core directory
+define('NGRootDir', dirname(__DIR__) . '/');       // Location of SiteRoot
+define('NGClassDir', NGCoreDir . 'classes/');      // Location of AutoLoaded classes
+define('NGVendorDir', NGRootDir . 'vendor/');      // Location of Vendor classes
+$loader = require NGVendorDir . 'autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function($className) {
@@ -238,10 +245,6 @@ if ((!file_exists(confroot . 'config.php')) || (filesize(confroot . 'config.php'
 // ** Load user groups
 loadGroups();
 
-// ** Preload TWIG engine
-require_once root . 'includes/classes/Twig/Autoloader.php';
-Twig_Autoloader::register();
-
 // ** Init our own exception handler
 set_exception_handler('ngExceptionHandler');
 set_error_handler('ngErrorHandler');
@@ -249,8 +252,24 @@ register_shutdown_function('ngShutdownHandler');
 
 //
 // *** Initialize TWIG engine
-$twigLoader = new Twig_Loader_NGCMS(root);
-$twigStringLoader = new Twig_Loader_String();
+//$twigLoader = new Twig_Loader_NGCMS(root);
+//$twigStringLoader = new Twig_Loader_String();
+
+$twigLoader = new NGTwigLoader(root);
+// replace https://stackoverflow.com/questions/31081910/what-to-use-instead-of-twig-loader-string
+// $twigStringLoader = new Twig_Loader_String();
+/**
+ * Wrapper for template processing. Adds to each template variables:
+ * _templateName
+ * _templatePath
+ */
+abstract class Twig_Template_NGCMS extends Twig_Template {
+    public function render(array $env) {
+        $context['_templateName'] = $this->getTemplateName();
+        $context['_templatePath'] = dirname($this->getTemplateName()).DIRECTORY_SEPARATOR;
+        return parent::render($context);
+    }
+}
 
 // - Configure environment and general parameters
 $twig = new Twig_Environment($twigLoader, array(
@@ -258,7 +277,8 @@ $twig = new Twig_Environment($twigLoader, array(
 	'auto_reload'         => true,
 	'autoescape'          => false,
 	'charset'             => 'UTF-8',
-	'base_template_class' => 'Twig_Template_NGCMS',
+    //'base_template_class' => 'Twig_Template_NGCMS',
+	'base_template_class' => 'Twig_Template',
 ));
 
 $twig->addExtension(new Twig_Extension_StringLoader());
