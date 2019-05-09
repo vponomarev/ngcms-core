@@ -3,6 +3,7 @@
         "vendor-dir": "vendor"
     },
     "require": {
+        "php": ">=5.6",
         "twig/twig": "1.40.1",
         "phpmailer/phpmailer": "6.*",
         "cweagans/composer-patches": "1.*"
