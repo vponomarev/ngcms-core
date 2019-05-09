@@ -433,6 +433,8 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 	if (!$silent) {
 		$main_admin = $tpl->show('install-process');
 	}
+
+    return $is_error;
 }
 
 // Create install page
