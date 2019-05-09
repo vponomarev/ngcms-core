@@ -264,7 +264,7 @@ $twigLoader = new NGTwigLoader(root);
  * _templatePath
  */
 abstract class Twig_Template_NGCMS extends Twig_Template {
-    public function render(array $env) {
+    public function render(array $context) {
         $context['_templateName'] = $this->getTemplateName();
         $context['_templatePath'] = dirname($this->getTemplateName()).DIRECTORY_SEPARATOR;
         return parent::render($context);
@@ -277,8 +277,7 @@ $twig = new Twig_Environment($twigLoader, array(
 	'auto_reload'         => true,
 	'autoescape'          => false,
 	'charset'             => 'UTF-8',
-    //'base_template_class' => 'Twig_Template_NGCMS',
-	'base_template_class' => 'Twig_Template',
+    'base_template_class' => 'Twig_Template_NGCMS',
 ));
 
 $twig->addExtension(new Twig_Extension_StringLoader());
