@@ -80,43 +80,14 @@ $query_list_093svn = array(
 
 );
 
-$query_list_095_096 = array(
-	"ALTER DATABASE " . $config['dbname'] ." CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
 
-	"ALTER TABLE " . prefix . "_config CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_category CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_files CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_flood CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_images CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_ipban CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_news CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_news_map CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_static CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_users CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_users_pm CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_load CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_syslog CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_profiler CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-	"ALTER TABLE " . prefix . "_news_view CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;",
-
-	"ALTER TABLE " . prefix . "_config ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_category ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_files ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_flood ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_images ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_ipban ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_news ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_news_map ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_static ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_users ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_users_pm ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_load ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_syslog ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_profiler ENGINE=InnoDB;",
-	"ALTER TABLE " . prefix . "_news_view ENGINE=InnoDB;",
-
-);
-
+$q = "SHOW TABLES LIKE '" . prefix . "_%'";
+$query_list_095_096[] = "ALTER DATABASE " . $config['dbname'] ." CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
+foreach ($mysql->select($q) as $row) {
+    $table = $row[0];
+    $query_list_095_096[] = "ALTER TABLE " . $table . " CONVERT TO CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
+    $query_list_095_096[] = "ALTER TABLE " . $table . " ENGINE=InnoDB;";
+}
 
 // Load plugin list
 $extras = get_extras_list();
