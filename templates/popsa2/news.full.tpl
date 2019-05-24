@@ -1,5 +1,5 @@
 [TWIG]
-<!--Полная новость-->
+<!--РџРѕР»РЅР°СЏ РЅРѕРІРѕСЃС‚СЊ-->
 <article>
 	<div class="full">
 		<header>
@@ -16,29 +16,29 @@
 			{% if pluginIsActive('basket') %}
 				<div class="clear20"></div>
 				<div class="btn-group">
-					[xfield_price]<span class="btn"><strong class="green_t">[xvalue_price]</strong> <em>рублей</em></span>[/xfield_price]
-					[basket]<a href="#" class="btn btn-success" onclick="rpcBasketRequest('plugin.basket.manage', {'action': 'add', 'ds':1,'id':{news-id},'count':1}); return false;">Купить!</a>[/basket]
+					[xfield_price]<span class="btn"><strong class="green_t">[xvalue_price]</strong> <em>СЂСѓР±Р»РµР№</em></span>[/xfield_price]
+					[basket]<a href="#" class="btn btn-success" onclick="rpcBasketRequest('plugin.basket.manage', {'action': 'add', 'ds':1,'id':{news-id},'count':1}); return false;">РљСѓРїРёС‚СЊ!</a>[/basket]
 				</div>
 				<div class="clear20"></div>
 			{% endif %}
 			<!--/Basket-->
 			{% if pluginIsActive('tags') %}{% if (p.tags.flags.haveTags) %}
-				<b>Метки:</b> {{ tags }}{% endif %}{% endif %}
+				<b>РњРµС‚РєРё:</b> {{ tags }}{% endif %}{% endif %}
 			{% if pluginIsActive('complain') %}{{ plugin_complain }}{% endif %}
 			<div class="clear20"></div>
 			{% if not (global.flags.isLogged) %}
-				<div class="msgi"><p>Уважаемый посетитель, Вы зашли на сайт как незарегистрированный пользователь. Мы
-						рекомендуем Вам <a href="/register/"><b>зарегистрироваться</b></a> <a href="/login/"><b>либо
-								войти</b></a> на сайт под своим именем.</p>
+				<div class="msgi"><p>РЈРІР°Р¶Р°РµРјС‹Р№ РїРѕСЃРµС‚РёС‚РµР»СЊ, Р’С‹ Р·Р°С€Р»Рё РЅР° СЃР°Р№С‚ РєР°Рє РЅРµР·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ. РњС‹
+						СЂРµРєРѕРјРµРЅРґСѓРµРј Р’Р°Рј <a href="/register/"><b>Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊСЃСЏ</b></a> <a href="/login/"><b>Р»РёР±Рѕ
+								РІРѕР№С‚Рё</b></a> РЅР° СЃР°Р№С‚ РїРѕРґ СЃРІРѕРёРј РёРјРµРЅРµРј.</p>
 					{% if pluginIsActive('auth_loginza') %}
 						<a href="http://loginza.ru/api/widget?token_url={{ home }}" class="loginza">
-							<img src="/engine/plugins/auth_loginza/tpl/img/sign_in_button_gray.gif" alt="Войти через loginza"/>
+							<img src="/engine/plugins/auth_loginza/tpl/img/sign_in_button_gray.gif" alt="Р’РѕР№С‚Рё С‡РµСЂРµР· loginza"/>
 						</a>
 					{% endif %}
 				</div>
 			{% endif %}
 		</div>
-		<!--Информация-->
+		<!--РРЅС„РѕСЂРјР°С†РёСЏ-->
 		<div class="pad20_f">
 			<div class="meta_b">
 				<ul class="meta">
@@ -53,12 +53,12 @@
 				<div class="clear"></div>
 			</div>
 		</div>
-		<!--/Информация-->
+		<!--/РРЅС„РѕСЂРјР°С†РёСЏ-->
 	</div>
 </article>
-<!--/Полная новость-->
+<!--/РџРѕР»РЅР°СЏ РЅРѕРІРѕСЃС‚СЊ-->
 {% if pluginIsActive('neighboring_news') %}{{ neighboring_news }}{% endif %}
-<!--Коменты-->
+<!--РљРѕРјРµРЅС‚С‹-->
 {% if pluginIsActive('comments') %}{{ plugin_comments }}{% endif %}
-<!--/Коменты-->
+<!--/РљРѕРјРµРЅС‚С‹-->
 [/TWIG]

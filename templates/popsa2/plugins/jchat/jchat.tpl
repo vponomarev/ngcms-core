@@ -30,7 +30,7 @@
 	}
 </style>
 [:include jchat.script.header.js]
-<h3>Чатик</h3>
+<h3>Р§Р°С‚РёРє</h3>
 <div class="l300_green_blue"></div>
 <div class="block_cal" align="left">
 	<div style="overflow: auto; height: 320px;" onclick="jchatProcessAreaClick(event);">
@@ -49,9 +49,9 @@
 			<div class="clear10"></div>
 			[/not-logged]
 			<textarea id="jChatText" name="text" class="form_pad20" onfocus="jchatCalculateMaxLen(this,'jchatWLen', {maxlen});" onkeyup="jchatCalculateMaxLen(this,'jchatWLen', {maxlen});"></textarea>
-			<small id="jchatWLen">Осталось знаков: <strong>{maxlen}</strong></small>
+			<small id="jchatWLen">РћСЃС‚Р°Р»РѕСЃСЊ Р·РЅР°РєРѕРІ: <strong>{maxlen}</strong></small>
 			[selfwin]&nbsp;&nbsp;<a target="_blank" href="{link_selfwin}">
-				<small>Чат на отдельной странице</small>
+				<small>Р§Р°С‚ РЅР° РѕС‚РґРµР»СЊРЅРѕР№ СЃС‚СЂР°РЅРёС†Рµ</small>
 			</a>
 			<div class="clear10"></div>
 			[/selfwin]

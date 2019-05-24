@@ -42,7 +42,7 @@ function secure_html($string) {
 		return '[UNEXPECTED ARRAY]';
 	}
 
-	return str_replace(array("{", "<", ">"), array("&#123;", "&lt;", "&gt;"), htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'cp1251'));
+	return str_replace(array("{", "<", ">"), array("&#123;", "&lt;", "&gt;"), htmlspecialchars($string, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
 }
 
 function Formatsize($file_size) {
@@ -327,7 +327,7 @@ function checkBanned($ip, $act, $subact, $userRec, $name) {
 		} else if (($act == 'comments') && ($subact == 'add')) {
 			$mode = 3;
 		}
-		if (($locktype = intval(substr($ban_row['flags'], $mode, 1))) > 0) {
+		if (($locktype = intval(mb_substr($ban_row['flags'], $mode, 1))) > 0) {
 			$mysql->query("update " . prefix . "_ipban set hitcount=hitcount+1 where id=" . db_squote($ban_row['id']));
 
 			return $locktype;
@@ -386,10 +386,9 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
 	global $lang, $config;
 
 	// Include new PHP mailer class
-	@include_once root . 'includes/classes/phpmailer/PHPMailerAutoload.php';
-	$mail = new phpmailer;
+    $mail = new PHPMailer();
 
-	$mail->CharSet = 'Windows-1251';
+	$mail->CharSet = 'UTF-8';
 
 	// Fill `sender` field
 	$mail->FromName = 'NGCMS sender';
@@ -478,7 +477,7 @@ function templateLoadVariables($die = false, $loadMode = 0) {
 //			2 - return as result
 function msg($params, $mode = 0, $disp = -1) {
 
-	global $config, $tpl, $lang, $template, $PHP_SELF, $TemplateCache;
+	global $config, $tpl, $lang, $template, $PHP_SELF, $TemplateCache, $notify;
 
 	// Set AUTO mode if $disp == -1
 	if ($disp == -1)
@@ -520,7 +519,7 @@ function msg($params, $mode = 0, $disp = -1) {
 			return $message;
 		default:
 			if ($PHP_SELF == 'admin.php') {
-				print $message;
+				$notify = $message;
 			} else {
 				$template['vars']['mainblock'] .= $message;
 			}
@@ -539,22 +538,23 @@ function msg($params, $mode = 0, $disp = -1) {
 //			1 - print
 //			2 - return as result
 function msgSticker($msg, $type = '', $disp = -1) {
-
+	global $notify;
+	
 	$lines = array();
 	if (is_array($msg)) {
 		foreach ($msg as $x) {
-			$txt = (isset($x[2]) && ($x[2])) ? $x[0] : htmlspecialchars($x[0], ENT_COMPAT | ENT_HTML401, "cp1251");
+			$txt = (isset($x[2]) && ($x[2])) ? $x[0] : htmlspecialchars($x[0], ENT_COMPAT | ENT_HTML401, "UTF-8");
 			$lines [] = (isset($x[1]) && ($x[1] == 'title')) ? ('<b>' . $txt . '</b>') : $txt;
 		}
 	} else {
-		$lines [] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "cp1251");
+		$lines [] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "UTF-8");
 	}
 
 	$output = '<script type="text/javascript" language="javascript">ngNotifySticker("' .
 		join("<br/>", $lines) . '"' .
 		(($type == "error") ? ', {sticked: true, className: "ngStickerClassError"}' : '') .
 		');</script>';
-	print $output;
+	$notify = $output;
 }
 
 function TwigEngineMSG($type, $text, $info = '') {
@@ -799,11 +799,11 @@ function ChangeDate($time = 0, $nodiv = 0) {
 
 //
 // Return a list of files
-// $path		- путь по которому искать файлы
-// $ext			- [scalar/array] расширение (одно или массивом) файла
-// $showExt		- флаг: показывать ли расширение [0 - нет, 1 - показывать, 2 - использовать в значениях]
-// $silentError		- не выводить сообщение об ошибке
-// $returnNullOnError	- возвращать NULL при ошибке
+// $path		- РїСѓС‚СЊ РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РёСЃРєР°С‚СЊ С„Р°Р№Р»С‹
+// $ext			- [scalar/array] СЂР°СЃС€РёСЂРµРЅРёРµ (РѕРґРЅРѕ РёР»Рё РјР°СЃСЃРёРІРѕРј) С„Р°Р№Р»Р°
+// $showExt		- С„Р»Р°Рі: РїРѕРєР°Р·С‹РІР°С‚СЊ Р»Рё СЂР°СЃС€РёСЂРµРЅРёРµ [0 - РЅРµС‚, 1 - РїРѕРєР°Р·С‹РІР°С‚СЊ, 2 - РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ Р·РЅР°С‡РµРЅРёСЏС…]
+// $silentError		- РЅРµ РІС‹РІРѕРґРёС‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ
+// $returnNullOnError	- РІРѕР·РІСЂР°С‰Р°С‚СЊ NULL РїСЂРё РѕС€РёР±РєРµ
 function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnError = 0) {
 
 	$list = array();
@@ -826,7 +826,7 @@ function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnErr
 		// Check file against all extensions
 		foreach ($ext as $e) {
 			if ($e == '') {
-				if (strpos($file, '.') === false) {
+				if (mb_strpos($file, '.') === false) {
 					$list[$file] = $file;
 					break;
 				}
@@ -1053,7 +1053,7 @@ function MakeRandomPassword() {
 
 	global $config;
 
-	return substr(md5($config['crypto_salt'] . uniqid(rand(), 1)), 0, 10);
+	return mb_substr(md5($config['crypto_salt'] . uniqid(rand(), 1)), 0, 10);
 }
 
 function EncodePassword($pass) {
@@ -1160,8 +1160,8 @@ function convert($content) {
 
 	global $byary, $chars;
 
-	$content = strtr(urlencode($content), $byary);
-	$content = strtr($content, $chars);
+	$content = mb_strstr(urlencode($content), $byary);
+	$content = mb_strstr($content, $chars);
 	$content = urldecode($content);
 
 	return $content;
@@ -1280,7 +1280,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()) {
 		}
 
 		foreach ($catz as $k => $v) {
-			if (!substr($v['flags'], 0, 1)) continue;
+			if (!mb_substr($v['flags'], 0, 1)) continue;
 
 			// If tree selector is active - skip unwanted entries
 			if ($treeSelector['defined']) {
@@ -1381,7 +1381,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()) {
 			$flagSkip = false;
 		}
 
-		if (!substr($v['flags'], 0, 1)) {
+		if (!mb_substr($v['flags'], 0, 1)) {
 			$flagSkip = true;
 			$skipLevel = $v['poslevel'];
 			continue;
@@ -1397,7 +1397,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array()) {
 			'icon'      => $v['icon'],
 		);
 		$tvars['regx']['[\[icon\](.*)\[/icon\]]'] = trim($v['icon']) ? '$1' : '';
-		switch (intval(substr($v['flags'], 1, 1))) {
+		switch (intval(mb_substr($v['flags'], 1, 1))) {
 			case 0:
 				$rmode = true;
 				break;
@@ -1556,7 +1556,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 	$page = 1;
 
 	// Check if long part is divided into several pages
-	if ($full && (!$disablePagination) && (strpos($full, "<!--nextpage-->") !== false)) {
+	if ($full && (!$disablePagination) && (mb_strpos($full, "<!--nextpage-->") !== false)) {
 		$page = intval(isset($CurrentHandler['params']['page']) ? $CurrentHandler['params']['page'] : (isset($_REQUEST['page']) ? $_REQUEST['page'] : 0));
 		if ($page < 1) $page = 1;
 
@@ -1686,8 +1686,8 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 		$tvars['vars']['full-link'] = $nlink;
 
 		// Make blocks [fullnews] .. [/fullnews] and [nofullnews] .. [/nofullnews]
-		$tvars['vars']['news']['flags']['hasFullNews'] = strlen($full) ? true : false;
-		if (strlen($full)) {
+		$tvars['vars']['news']['flags']['hasFullNews'] = mb_strlen($full) ? true : false;
+		if (mb_strlen($full)) {
 			// we have full news
 			$tvars['vars']['[fullnews]'] = '';
 			$tvars['vars']['[/fullnews]'] = '';
@@ -1956,7 +1956,7 @@ if (!function_exists('json_encode')) {
 	function _utf8_to_html($data) {
 
 		$ret = 0;
-		foreach ((str_split(strrev(chr((ord($data{0}) % 252 % 248 % 240 % 224 % 192) + 128) . substr($data, 1)))) as $k => $v)
+		foreach ((str_split(strrev(chr((ord($data{0}) % 252 % 248 % 240 % 224 % 192) + 128) . mb_substr($data, 1)))) as $k => $v)
 			$ret += (ord($v) % 128) * pow(64, $k);
 
 		// return "&#$ret;";
@@ -2001,19 +2001,6 @@ if (!function_exists('json_encode')) {
 	}
 }
 
-//
-// Add json_decode() support for PHP < 5.2.0
-//
-if (!function_exists('json_decode')) {
-	function json_decode($json, $assoc = false) {
-
-		include_once root . 'includes/classes/json.php';
-		$jclass = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
-
-		return $jclass->decode($json);
-	}
-}
-
 // Parse params
 function parseParams($paramLine) {
 
@@ -2037,7 +2024,7 @@ function parseParams($paramLine) {
 
 	$keys = array();
 
-	for ($sI = 0; $sI < strlen($paramLine); $sI++) {
+	for ($sI = 0; $sI < mb_strlen($paramLine); $sI++) {
 		// act according current state
 		$x = $paramLine{$sI};
 
@@ -2107,14 +2094,14 @@ function parseParams($paramLine) {
 
 		// Action in case when scanning is complete
 		if ($state == 5) {
-			$keys [strtolower($keyName)] = $keyValue;
+			$keys [mb_strtolower($keyName)] = $keyValue;
 			$state = 0;
 		}
 	}
 
 	// If we finished and we're in stete "scanning value" - register this field
 	if ($state == 4) {
-		$keys [strtolower($keyName)] = $keyValue;
+		$keys [mb_strtolower($keyName)] = $keyValue;
 		$state = 0;
 	}
 
@@ -2335,35 +2322,35 @@ function loadGroups() {
 		$UGROUP[1] = array(
 			'identity' => 'admin',
 			'langName' => array(
-				'russian' => 'Администратор',
+				'russian' => 'РђРґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂ',
 				'english' => 'Administrator',
 			),
 		);
 		$UGROUP[2] = array(
 			'identity' => 'editor',
 			'langName' => array(
-				'russian' => 'Редактор',
+				'russian' => 'Р РµРґР°РєС‚РѕСЂ',
 				'english' => 'Editor',
 			),
 		);
 		$UGROUP[3] = array(
 			'identity' => 'journalist',
 			'langName' => array(
-				'russian' => 'Журналист',
+				'russian' => 'Р–СѓСЂРЅР°Р»РёСЃС‚',
 				'english' => 'Journalist',
 			),
 		);
 		$UGROUP[4] = array(
 			'identity' => 'commentator',
 			'langName' => array(
-				'russian' => 'Комментатор',
+				'russian' => 'РљРѕРјРјРµРЅС‚Р°С‚РѕСЂ',
 				'english' => 'Commentator',
 			),
 		);
 		//		$UGROUP[5] = array(
 		//			'identity'	=> 'tester',
 		//			'langName'	=> array(
-		//				'russian'	=> 'Тестировщик',
+		//				'russian'	=> 'РўРµСЃС‚РёСЂРѕРІС‰РёРє',
 		//				'english'	=> 'Tester',
 		//			),
 		//		);
@@ -2513,13 +2500,14 @@ function ngExceptionHandler($exception) {
 	print "<div class='dmsg'>" . $exception->getMessage() . "</div><br/>";
 	print "<h2>Stack trace</h2>";
 	print "<table class='dtrace'><thead><tr><td>#</td><td>Line #</td><td><i>Class</i>/Function</td><td>File name</td></tr></thead><tbody>";
+	print "<tr><td>X</td><td>".$exception->getLine()."</td><td>".$exception->getCode()."</td><td>".$exception->getFile()."</td></tr>";
 	foreach ($exception->getTrace() as $k => $v) {
 		print "<tr><td>" . $k . "</td><td>" . $v['line'] . "</td><td>" . (isset($v['class']) ? ('<i>' . $v['class'] . '</i>') : $v['function']) . "</td><td>" . $v['file'] . "</td></tr>\n";
 	}
 	print "</tbody></table>";
 }
 
-//Проверяем переменную
+//РџСЂРѕРІРµСЂСЏРµРј РїРµСЂРµРјРµРЅРЅСѓСЋ
 function getIsSet(&$result) {
 
 	if (isset($result))
@@ -3046,7 +3034,7 @@ function coreUserMenu() {
 			} else {
 				// If gravatar integration is active, show avatar from GRAVATAR.COM
 				if ($config['avatars_gravatar']) {
-					$userAvatar = 'http://www.gravatar.com/avatar/' . md5(strtolower($userROW['mail'])) . '.jpg?s=' . $config['avatar_wh'] . '&d=' . urlencode($noAvatarURL);
+					$userAvatar = 'http://www.gravatar.com/avatar/' . md5(mb_strtolower($userROW['mail'])) . '.jpg?s=' . $config['avatar_wh'] . '&d=' . urlencode($noAvatarURL);
 				} else {
 					$userAvatar = $noAvatarURL;
 				}
@@ -3130,7 +3118,7 @@ function jsonFormatter($json) {
 
 	$result = '';
 	$pos = 0;
-	$strLen = strlen($json);
+	$strLen = mb_strlen($json);
 	$indentStr = '  ';
 	$newLine = "\n";
 	$prevChar = '';
@@ -3139,7 +3127,7 @@ function jsonFormatter($json) {
 	for ($i = 0; $i <= $strLen; $i++) {
 
 		// Grab the next character in the string.
-		$char = substr($json, $i, 1);
+		$char = mb_substr($json, $i, 1);
 
 		// Are we inside a quoted string?
 		if ($char == '"' && $prevChar != '\\') {
@@ -3232,7 +3220,7 @@ function ngCollectTrace($style = 0) {
 }
 
 /**
- * Быстрый дебаг
+ * Р‘С‹СЃС‚СЂС‹Р№ РґРµР±Р°Рі
  *
  * @param mixed $obj
  *

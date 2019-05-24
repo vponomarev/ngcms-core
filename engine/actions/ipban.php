@@ -192,7 +192,7 @@ function ipban_list() {
 	);
 
 	$xt = $twig->loadTemplate('skins/default/tpl/ipban.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 //
@@ -201,12 +201,12 @@ function ipban_list() {
 if (isset($_REQUEST['action']) && $_REQUEST['action'])
 	switch ($_REQUEST['action']) {
 		case 'add':
-			ipban_add();
+			$main_admin = ipban_add();
 			break;
 		case 'del':
-			ipban_delete();
+			$main_admin = ipban_delete();
 			break;
 	}
 
-ipban_list();
+$main_admin = ipban_list();
 

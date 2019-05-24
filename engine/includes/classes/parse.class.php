@@ -30,20 +30,20 @@ class parse {
 	// Check for XSS
 	function normalize_url($url) {
 
-		if (((substr($url, 0, 1) == "\"") && (substr($url, -1, 1) == "\"")) ||
-			((substr($url, 0, 1) == "'") && (substr($url, -1, 1) == "'"))
+		if (((mb_substr($url, 0, 1) == "\"") && (mb_substr($url, -1, 1) == "\"")) ||
+			((mb_substr($url, 0, 1) == "'") && (mb_substr($url, -1, 1) == "'"))
 		) {
-			$url = substr($url, 1, strlen($url) - 2);
+			$url = mb_substr($url, 1, mb_strlen($url) - 2);
 		}
 
 		// Check for XSS attack
 		$urlXSS = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";"), '', $url);
-		if (preg_match('/^javascript:/is', $urlXSS)) {
+		if (preg_match('/^javascript:/isu', $urlXSS)) {
 			return false;
 		}
 
 		// Add leading "http://" if needed
-		if (!preg_match("#^(http|ftp|https|news)\://#i", $url)) {
+		if (!preg_match("#^(http|ftp|https|news)\://#iu", $url)) {
 			$url = "http://" . $url;
 		}
 
@@ -73,7 +73,7 @@ class parse {
 
 		$keys = array();
 
-		for ($sI = 0; $sI < strlen($paramLine); $sI++) {
+		for ($sI = 0; $sI < mb_strlen($paramLine); $sI++) {
 			// act according current state
 			$x = $paramLine{$sI};
 
@@ -143,14 +143,14 @@ class parse {
 
 			// Action in case when scanning is complete
 			if ($state == 5) {
-				$keys [strtolower($keyName)] = $keyValue;
+				$keys [mb_strtolower($keyName)] = $keyValue;
 				$state = 0;
 			}
 		}
 
 		// If we finished and we're in stete "scanning value" - register this field
 		if ($state == 4) {
-			$keys [strtolower($keyName)] = $keyValue;
+			$keys [mb_strtolower($keyName)] = $keyValue;
 			$state = 0;
 		}
 
@@ -173,7 +173,7 @@ class parse {
 		if (!$config['use_bbcodes']) return $content;
 
 		// Special BB tag [code] - blocks all other tags inside
-		while (preg_match("#\[code\](.+?)\[/code\]#ies", $content, $res)) {
+		while (preg_match("#\[code\](.+?)\[/code\]#iesu", $content, $res)) {
 			$content = str_replace($res[0], '<pre>' . str_replace(array('[', '<'), array('&#91;', '&lt;'), $res[1]) . '</pre>', $content);
 		}
 
@@ -203,10 +203,10 @@ class parse {
 		$content = preg_replace("#\[br\]#is", "<br/>", $content);
 
 		// Process spoilers
-		while (preg_match("#\[spoiler\](.*?)\[/spoiler\]#is", $content, $null))
+		while (preg_match("#\[spoiler\](.*?)\[/spoiler\]#isu", $content, $null))
 			$content = preg_replace("#\[spoiler\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>' . $lang['bb_spoiler'] . '</div><div class="sp-body">$1</div></div>', $content);
 
-		while (preg_match("#\[spoiler=\"(.+?)\"\](.*?)\[/spoiler\]#is", $content, $null))
+		while (preg_match("#\[spoiler=\"(.+?)\"\](.*?)\[/spoiler\]#isu", $content, $null))
 			$content = preg_replace("#\[spoiler=\"(.+?)\"\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>$1</div><div class="sp-body">$2</div></div>', $content);
 
 		// Process Images
@@ -224,7 +224,7 @@ class parse {
 		// alt: anything
 		// title: anything
 
-		if (preg_match_all("#\[img(\=| *)(.*?)\](.*?)\[\/img\]#is", $content, $pcatch, PREG_SET_ORDER)) {
+		if (preg_match_all("#\[img(\=| *)(.*?)\](.*?)\[\/img\]#isu", $content, $pcatch, PREG_SET_ORDER)) {
 			$rsrc = array();
 			$rdest = array();
 			// Scan all IMG tags
@@ -236,11 +236,11 @@ class parse {
 
 				// Check for possible error in case of using "]" within params/url
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
-				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
+				if ((mb_strpos($alt, ']') !== false) && (mb_strpos($alt, "\"") !== false)) {
 					// Possible bracket error. Make deep analysis
 					$jline = $paramLine . ']' . $alt;
 					$brk = 0;
-					$jlen = strlen($jline);
+					$jlen = mb_strlen($jline);
 					for ($ji = 0; $ji < $jlen; $ji++) {
 						if ($jline[$ji] == "\"") {
 							$brk = !$brk;
@@ -249,8 +249,8 @@ class parse {
 
 						if ((!$brk) && ($jline[$ji] == ']')) {
 							// Found correct delimiter
-							$paramLine = substr($jline, 0, $ji);
-							$alt = substr($jline, $ji + 1);
+							$paramLine = mb_substr($jline, 0, $ji);
+							$alt = mb_substr($jline, $ji + 1);
 							break;
 						}
 					}
@@ -292,8 +292,8 @@ class parse {
 							$outkeys[] = $kn . '="' . intval($kv) . '"';
 							break;
 						case 'align':
-							if (in_array(strtolower($kv), array('left', 'right', 'middle', 'top', 'bottom')))
-								$outkeys[] = $kn . '="' . strtolower($kv) . '"';
+							if (in_array(mb_strtolower($kv), array('left', 'right', 'middle', 'top', 'bottom')))
+								$outkeys[] = $kn . '="' . mb_strtolower($kv) . '"';
 							break;
 						case 'class':
 							$v = str_replace(array(ord(0), ord(9), ord(10), ord(13), ' ', "'", "\"", ";", ":", '<', '>', '&', '[', ']'), '', $kv);
@@ -312,7 +312,7 @@ class parse {
 			$content = str_replace($rsrc, $rdest, $content);
 		}
 
-		// Авто-подсветка URL'ов в тексте новости [ пользуемся обработчиком тега [url] ]
+		// РђРІС‚Рѕ-РїРѕРґСЃРІРµС‚РєР° URL'РѕРІ РІ С‚РµРєСЃС‚Рµ РЅРѕРІРѕСЃС‚Рё [ РїРѕР»СЊР·СѓРµРјСЃСЏ РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРј С‚РµРіР° [url] ]
 		$content = preg_replace("#(^|\s)((http|https|news|ftp)://\w+[^\s\[\]\<]+)#i", "$1[url]$2[/url]", $content);
 
 		// Process URLS
@@ -325,7 +325,7 @@ class parse {
 		// title: anything
 		// external: yes/no - flag if link is opened via external page or not
 
-		if (preg_match_all("#\[url(\=| *)(.*?)\](.*?)\[\/url\]#is", $content, $pcatch, PREG_SET_ORDER)) {
+		if (preg_match_all("#\[url(\=| *)(.*?)\](.*?)\[\/url\]#isu", $content, $pcatch, PREG_SET_ORDER)) {
 			$rsrc = array();
 			$rdest = array();
 			// Scan all URL tags
@@ -337,11 +337,11 @@ class parse {
 
 				// Check for possible error in case of using "]" within params/url
 				// Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
-				if ((strpos($alt, ']') !== false) && (strpos($alt, "\"") !== false)) {
+				if ((mb_strpos($alt, ']') !== false) && (mb_strpos($alt, "\"") !== false)) {
 					// Possible bracket error. Make deep analysis
 					$jline = $paramLine . ']' . $alt;
 					$brk = 0;
-					$jlen = strlen($jline);
+					$jlen = mb_strlen($jline);
 					for ($ji = 0; $ji < $jlen; $ji++) {
 						if ($jline[$ji] == "\"") {
 							$brk = !$brk;
@@ -350,8 +350,8 @@ class parse {
 
 						if ((!$brk) && ($jline[$ji] == ']')) {
 							// Found correct delimiter
-							$paramLine = substr($jline, 0, $ji);
-							$alt = substr($jline, $ji + 1);
+							$paramLine = mb_substr($jline, 0, $ji);
+							$alt = mb_substr($jline, $ji + 1);
 							break;
 						}
 					}
@@ -424,10 +424,10 @@ class parse {
 			$content = str_replace($rsrc, $rdest, $content);
 		}
 
-		// Обработка кириллических символов для украинского языка
+		// РћР±СЂР°Р±РѕС‚РєР° РєРёСЂРёР»Р»РёС‡РµСЃРєРёС… СЃРёРјРІРѕР»РѕРІ РґР»СЏ СѓРєСЂР°РёРЅСЃРєРѕРіРѕ СЏР·С‹РєР°
 		$content = str_replace(array('[CYR_I]', '[CYR_i]', '[CYR_E]', '[CYR_e]', '[CYR_II]', '[CYR_ii]'), array('&#1030;', '&#1110;', '&#1028;', '&#1108;', '&#1031;', '&#1111;'), $content);
 
-		while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#ies", $content, $res)) {
+		while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#iesu", $content, $res)) {
 			$nl = $this->color(array('style' => $res[1], 'text' => $res[2]));
 			$content = str_replace($res[0], $nl, $content);
 		}
@@ -442,11 +442,11 @@ class parse {
 			return false;
 
 		// Make replacement of dangerous symbols
-		if (preg_match('#^(http|https|ftp)://(.+)$#', $url, $mresult))
+		if (preg_match('#^(http|https|ftp)://(.+)$#u', $url, $mresult))
 			return $mresult[1] . '://' . str_replace(array(':', "'", '"', '[', ']'), array('%3A', '%27', '%22', '%5b', '%5d'), $mresult[2]);
 
 		// Process special `magnet` links
-		if (preg_match('#^(magnet\:\?)(.+)$#', $url, $mresult))
+		if (preg_match('#^(magnet\:\?)(.+)$#u', $url, $mresult))
 			return $mresult[1] . str_replace(array(' ', "'", '"'), array('%20', '%27', '%22'), $mresult[2]);
 
 		return str_replace(array(':', "'", '"'), array('%3A', '%27', '%22'), $url);
@@ -504,20 +504,20 @@ class parse {
 
 	function nameCheck($name) {
 
-		return preg_match('#^[a-z0-9\_\-\.]+$#mi', $name);
+		return preg_match('#^[a-z0-9\_\-\.]+$#miu', $name);
 	}
 
 	function translit($content, $allowDash = 0, $allowSlash = 0) {
 
 		// $allowDash is not used any more
 
-		$utf2enS = array('А' => 'a', 'Б' => 'b', 'В' => 'v', 'Г' => 'g', 'Ґ' => 'g', 'Д' => 'd', 'Е' => 'e', 'Ё' => 'jo', 'Є' => 'e', 'Ж' => 'zh', 'З' => 'z', 'И' => 'i', 'І' => 'i', 'Й' => 'i', 'Ї' => 'i', 'К' => 'k', 'Л' => 'l', 'М' => 'm', 'Н' => 'n', 'О' => 'o', 'П' => 'p', 'Р' => 'r', 'С' => 's', 'Т' => 't', 'У' => 'u', 'Ў' => 'u', 'Ф' => 'f', 'Х' => 'h', 'Ц' => 'c', 'Ч' => 'ch', 'Ш' => 'sh', 'Щ' => 'sz', 'Ъ' => '', 'Ы' => 'y', 'Ь' => '', 'Э' => 'e', 'Ю' => 'yu', 'Я' => 'ya');
-		$utf2enB = array('а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'ґ' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'jo', 'є' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'i', 'і' => 'i', 'й' => 'i', 'ї' => 'i', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ў' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sz', 'ъ' => '', 'ы' => 'y', 'ь' => '', 'э' => 'e', 'ю' => 'yu', 'я' => 'ya', '&quot;' => '', '&amp;' => '', 'µ' => 'u', '№' => 'num');
+		$utf2enS = array('Рђ' => 'a', 'Р‘' => 'b', 'Р’' => 'v', 'Р“' => 'g', 'Тђ' => 'g', 'Р”' => 'd', 'Р•' => 'e', 'РЃ' => 'jo', 'Р„' => 'e', 'Р–' => 'zh', 'Р—' => 'z', 'Р' => 'i', 'Р†' => 'i', 'Р™' => 'i', 'Р‡' => 'i', 'Рљ' => 'k', 'Р›' => 'l', 'Рњ' => 'm', 'Рќ' => 'n', 'Рћ' => 'o', 'Рџ' => 'p', 'Р ' => 'r', 'РЎ' => 's', 'Рў' => 't', 'РЈ' => 'u', 'РЋ' => 'u', 'Р¤' => 'f', 'РҐ' => 'h', 'Р¦' => 'c', 'Р§' => 'ch', 'РЁ' => 'sh', 'Р©' => 'sz', 'РЄ' => '', 'Р«' => 'y', 'Р¬' => '', 'Р­' => 'e', 'Р®' => 'yu', 'РЇ' => 'ya');
+		$utf2enB = array('Р°' => 'a', 'Р±' => 'b', 'РІ' => 'v', 'Рі' => 'g', 'Т‘' => 'g', 'Рґ' => 'd', 'Рµ' => 'e', 'С‘' => 'jo', 'С”' => 'e', 'Р¶' => 'zh', 'Р·' => 'z', 'Рё' => 'i', 'С–' => 'i', 'Р№' => 'i', 'С—' => 'i', 'Рє' => 'k', 'Р»' => 'l', 'Рј' => 'm', 'РЅ' => 'n', 'Рѕ' => 'o', 'Рї' => 'p', 'СЂ' => 'r', 'СЃ' => 's', 'С‚' => 't', 'Сѓ' => 'u', 'Сћ' => 'u', 'С„' => 'f', 'С…' => 'h', 'С†' => 'c', 'С‡' => 'ch', 'С€' => 'sh', 'С‰' => 'sz', 'СЉ' => '', 'С‹' => 'y', 'СЊ' => '', 'СЌ' => 'e', 'СЋ' => 'yu', 'СЏ' => 'ya', '&quot;' => '', '&amp;' => '', 'Вµ' => 'u', 'в„–' => 'num');
 
 		$content = trim(strip_tags($content));
 		$content = strtr($content, $utf2enS);
 		$content = strtr($content, $utf2enB);
-
+			
 		$content = str_replace(array(' - '), array('-'), $content);
 		$content = preg_replace("/\s+/ms", "-", $content);
 		$content = preg_replace("/[ ]+/", "-", $content);
@@ -527,7 +527,7 @@ class parse {
 
 		return $content;
 	}
-
+	
 	function color($arr) {
 
 		$style = $arr['style'];
@@ -544,7 +544,7 @@ class parse {
 
 		$alist = array();
 		foreach ($attributes as $aname => $aval) {
-			$mark = (strpos($aval, '"') === false) ? '"' : "'";
+			$mark = (mb_strpos($aval, '"') === false) ? '"' : "'";
 			$alist [] = $aname . '=' . $mark . $aval . $mark;
 		}
 
@@ -553,7 +553,7 @@ class parse {
 
 	function truncateHTML($text, $size = 50, $finisher = '...') {
 
-		$len = strlen($text);
+		$len = mb_strlen($text);
 
 		if ($len <= $size)
 			return $text;
@@ -618,16 +618,16 @@ class parse {
 					// Action on tag closing
 					if ($char == '>') {
 						$tagNameLen = $position - $tagNameStartPos;
-						$tagName = substr($text, $tagNameStartPos, $tagNameLen);
+						$tagName = mb_substr($text, $tagNameStartPos, $tagNameLen);
 						//		print "openTag[1]: $tagName\n";
 
 						// Closing tag
 						if ($tagName{0} == '/') {
-							if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == substr($tagName, 1)))
+							if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == mb_substr($tagName, 1)))
 								array_pop($openTagList);
 						} else {
 							// Opening tag
-							if (substr($tagName, -1, 1) != '/') {
+							if (mb_substr($tagName, -1, 1) != '/') {
 								// And not closed at the same time
 								array_push($openTagList, $tagName);
 							}
@@ -651,16 +651,16 @@ class parse {
 
 					// Action on tag closing
 					if ($char == '>') {
-						$tagName = substr($text, $tagNameStartPos, $tagNameLen);
+						$tagName = mb_substr($text, $tagNameStartPos, $tagNameLen);
 						//		print "openTag: $tagName\n";
 
 						// Closing tag
-						if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == substr($tagName, 1))) {
-							if ($openTagList[count($openTagList)] == substr($tagName, 1))
+						if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == mb_substr($tagName, 1))) {
+							if ($openTagList[count($openTagList)] == mb_substr($tagName, 1))
 								array_pop($openTagList);
 						} else {
 							// Opening tag
-							if (substr($tagName, -1, 1) != '/') {
+							if (mb_substr($tagName, -1, 1) != '/') {
 								// And not closed at the same time
 								array_push($openTagList, $tagName);
 							}
@@ -690,16 +690,16 @@ class parse {
 					}
 
 					if ($char == '>') {
-						$tagName = substr($text, $tagNameStartPos, $tagNameLen);
+						$tagName = mb_substr($text, $tagNameStartPos, $tagNameLen);
 						//			print "openTag: $tagName\n";
 
 						// Closing tag
 						if ($tagName{0} != '/') {
-							if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == substr($tagName, 1)))
+							if ((count($openTagList)) && ($openTagList[count($openTagList) - 1] == mb_substr($tagName, 1)))
 								array_pop($openTagList);
 						} else {
 							// Opening tag
-							if (substr($tagName, -1, 1) != '/') {
+							if (mb_substr($tagName, -1, 1) != '/') {
 								// And not closed at the same time
 								array_push($openTagList, $tagName);
 							}
@@ -714,7 +714,7 @@ class parse {
 			}
 		}
 
-		$output = substr($text, 0, $position + 1) . ((($position + 1) != $len) ? $finisher : '');
+		$output = mb_substr($text, 0, $position + 1) . ((($position + 1) != $len) ? $finisher : '');
 
 		// Check if we have opened tags
 		while ($tag = array_pop($openTagList))
@@ -729,7 +729,7 @@ class parse {
 		global $config;
 
 		$dataCache = array();
-		if (preg_match_all("#\[attach(\#\d+){0,1}\](.*?)\[\/attach\]#is", $content, $pcatch, PREG_SET_ORDER)) {
+		if (preg_match_all("#\[attach(\#\d+){0,1}\](.*?)\[\/attach\]#isu", $content, $pcatch, PREG_SET_ORDER)) {
 			$rsrc = array();
 			$rdest = array();
 
@@ -737,7 +737,7 @@ class parse {
 
 				// Find attach UID
 				if ($catch[1] != '') {
-					$uid = substr($catch[1], 1);
+					$uid = mb_substr($catch[1], 1);
 					$title = $catch[2];
 				} else {
 					$uid = $catch[2];
@@ -774,7 +774,7 @@ class parse {
 		}
 
 		// Scan for separate {attach#ID.url}, {attach#ID.size}, {attach#ID.name}, {attach#ID.ext}
-		if (preg_match_all("#\{attach\#(\d+)\.(url|size|name|ext|fname)\}#is", $content, $pcatch, PREG_SET_ORDER)) {
+		if (preg_match_all("#\{attach\#(\d+)\.(url|size|name|ext|fname)\}#isu", $content, $pcatch, PREG_SET_ORDER)) {
 			$rsrc = array();
 			$rdest = array();
 

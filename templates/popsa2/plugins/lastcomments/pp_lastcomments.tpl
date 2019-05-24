@@ -1,4 +1,4 @@
 <div class="full">
-	<header><h1>Последние комментарии</h1></header>
+	<header><h1>РџРѕСЃР»РµРґРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</h1></header>
 </div>
 {entries}

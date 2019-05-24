@@ -63,4 +63,4 @@ foreach ($tlist as $tver) {
 }
 
 $xt = $twig->loadTemplate('skins/default/tpl/templates.tpl');
-print $xt->render($tVars);
+$main_admin = $xt->render($tVars);

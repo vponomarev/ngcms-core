@@ -53,7 +53,7 @@ function userEditForm() {
 		$status .= ' <option value="' . $ugID . '"' . (($row['status'] == $ugID) ? ' selected' : '') . '>' . $ugID . ' (' . $ugData['name'] . ')</option>';
 	}
 
-	//	Îáðàáàòûâàåì íåîáõîäèìûå ïåðåìåííûå äëÿ øàáëîíà
+	//	ÐžÐ±Ñ€Ð°Ð±Ð°Ñ‚Ñ‹Ð²Ð°ÐµÐ¼ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ñ‹Ðµ Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ðµ Ð´Ð»Ñ ÑˆÐ°Ð±Ð»Ð¾Ð½Ð°
 	$tVars = array(
 		'php_self'   => $PHP_SELF,
 		'name'       => secure_html($row['name']),
@@ -84,7 +84,7 @@ function userEditForm() {
 	ngSYSLOG(array('plugin' => '#admin', 'item' => 'users', 'ds_id' => $id), array('action' => 'editForm'), null, array(1));
 
 	$xt = $twig->loadTemplate('skins/default/tpl/users/edit.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 //
@@ -415,13 +415,13 @@ function userList() {
 		if ($sRec['isActive']) {
 			$sRec['sign'] = ($inSort == $kOrder) ? '&#8595;&#8595;' : '&#8593;&#8593;';
 			$sRec['link'] = admin_url . '/admin.php?mod=users&action=list' .
-				(isset($_REQUEST['name']) && $_REQUEST['name'] ? '&name=' . htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251') : '') .
+				(isset($_REQUEST['name']) && $_REQUEST['name'] ? '&name=' . htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'UTF-8') : '') .
 				(isset($_REQUEST['rpp']) && $_REQUEST['rpp'] ? '&rpp=' . intval($_REQUEST['rpp']) : '') .
 				'&sort=' . $kOrder . (($inSort == $kOrder) ? 'd' : '');
 		} else {
 			$sRec['sign'] = '';
 			$sRec['link'] = admin_url . '/admin.php?mod=users&action=list' .
-				(isset($_REQUEST['name']) && $_REQUEST['name'] ? '&name=' . htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251') : '') .
+				(isset($_REQUEST['name']) && $_REQUEST['name'] ? '&name=' . htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'UTF-8') : '') .
 				(isset($_REQUEST['rpp']) && $_REQUEST['rpp'] ? '&rpp=' . intval($_REQUEST['rpp']) : '') .
 				'&sort=' . $kOrder;
 		}
@@ -489,8 +489,8 @@ function userList() {
 		'current' => $pageNo,
 		'count'   => $pageCount,
 		'url'     => admin_url . '/admin.php?mod=users&action=list' .
-			(isset($_REQUEST['name']) && $_REQUEST['name'] ? '&name=' . htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251') : '') .
-			(isset($_REQUEST['how']) && $_REQUEST['how'] ? '&how=' . htmlspecialchars($_REQUEST['how'], ENT_COMPAT | ENT_HTML401, 'cp1251') : '') .
+			(isset($_REQUEST['name']) && $_REQUEST['name'] ? '&name=' . htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'UTF-8') : '') .
+			(isset($_REQUEST['how']) && $_REQUEST['how'] ? '&how=' . htmlspecialchars($_REQUEST['how'], ENT_COMPAT | ENT_HTML401, 'UTF-8') : '') .
 			(isset($_REQUEST['rpp']) && $_REQUEST['rpp'] ? '&rpp=' . intval($_REQUEST['rpp']) : '') .
 			'&page=%page%'
 	));
@@ -509,7 +509,7 @@ function userList() {
 	$tVars = array(
 		'php_self'   => $PHP_SELF,
 		'rpp'        => $fRPP,
-		'name'       => (isset($_REQUEST['name']) && $_REQUEST['name']) ? htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'cp1251') : '',
+		'name'       => (isset($_REQUEST['name']) && $_REQUEST['name']) ? htmlspecialchars($_REQUEST['name'], ENT_COMPAT | ENT_HTML401, 'UTF-8') : '',
 		'token'      => genUToken('admin.users'),
 		'pagination' => $pagination,
 		'ugroup'     => $tUgroup,
@@ -526,7 +526,7 @@ function userList() {
 	);
 
 	$xt = $twig->loadTemplate('skins/default/tpl/users/table.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 
 }
 
@@ -535,30 +535,30 @@ function userList() {
 // ==============================================
 
 if ($action == 'editForm') {
-	userEditForm();
+	$main_admin = userEditForm();
 } else {
 	switch ($action) {
 		case 'edit'                :
-			userEdit();
+			$main_admin = userEdit();
 			break;
 		case 'add'                :
-			userAdd();
+			$main_admin = userAdd();
 			break;
 		case 'massActivate'        :
-			userMassActivate();
+			$main_admin = userMassActivate();
 			break;
 		case 'massLock'            :
-			userMassLock();
+			$main_admin = userMassLock();
 			break;
 		case 'massSetStatus'    :
-			userMassSetStatus();
+			$main_admin = userMassSetStatus();
 			break;
 		case 'massDel'            :
-			userMassDelete();
+			$main_admin = userMassDelete();
 			break;
 		case 'massDelInactive'    :
-			userMassDeleteInactive();
+			$main_admin = userMassDeleteInactive();
 			break;
 	}
-	userList();
+	$main_admin = userList();
 }

@@ -27,28 +27,28 @@ if ($userROW['status'] > "3" || ($userROW['status'] != "1" && ($action == "image
 
 switch ($subaction) {
 	case "newcat":
-		$fmanager->category_create("file", $_REQUEST['newfolder']);
+		$main_admin = $fmanager->category_create("file", $_REQUEST['newfolder']);
 		break;
 	case "delcat":
-		$fmanager->category_delete("file", $_REQUEST['category']);
+		$main_admin = $fmanager->category_delete("file", $_REQUEST['category']);
 		break;
 	case "delete":
-		manage_delete('file');
+		$main_admin = manage_delete('file');
 		break;
 	case "rename":
-		$fmanager->file_rename(array('type' => 'file', 'id' => $_REQUEST['id'], 'newname' => $_REQUEST['rf']));
+		$main_admin = $fmanager->file_rename(array('type' => 'file', 'id' => $_REQUEST['id'], 'newname' => $_REQUEST['rf']));
 		break;
 	case "move":
-		manage_move('file');
+		$main_admin = manage_move('file');
 		break;
 	case "upload":
 	case "uploadurl":
-		manage_upload('file');
+		$main_admin = manage_upload('file');
 		break;
 
 }
 
-manage_showlist('file');
+$main_admin = manage_showlist('file');
 
 
 

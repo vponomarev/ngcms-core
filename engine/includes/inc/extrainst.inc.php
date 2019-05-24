@@ -35,12 +35,12 @@ params:
 
 function generate_config_page($module, $params, $values = array()) {
 
-	global $tpl, $lang;
+	global $tpl, $lang, $main_admin;
 
 	function mkParamLine($param) {
 		global $lang;
 
-		global $tpl;
+		global $tpl, $lang;
 		if ($param['type'] == 'flat') {
 			return $param['input'];
 		}
@@ -68,17 +68,17 @@ function generate_config_page($module, $params, $values = array()) {
 		}
 
 		if ($param['type'] == 'text') {
-			$tvars['vars']['input'] = '<textarea name="' . $param['name'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . '>' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'cp1251') . '</textarea>';
+			$tvars['vars']['input'] = '<textarea name="' . $param['name'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . '>' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</textarea>';
 		} else if ($param['type'] == 'input') {
-			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="text" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'cp1251') . '" />';
+			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="text" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '" />';
 		} else if ($param['type'] == 'checkbox') {
 			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="checkbox" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="1"' . ($param['value'] ? ' checked' : '') . ' />';
 		} else if ($param['type'] == 'hidden') {
-			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type=hidden value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'cp1251') . '" />';
+			$tvars['vars']['input'] = '<input name="' . $param['name'] . '" type=hidden value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '" />';
 		} else if ($param['type'] == 'select') {
 			$tvars['vars']['input'] = '<select name="' . $param['name'] . '" ' . $param['html_flags'] . '>';
 			foreach ($param['values'] as $oid => $oval) {
-				$tvars['vars']['input'] .= '<option value="' . htmlspecialchars($oid, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"' . ($param['value'] == $oid ? ' selected' : '') . '>' . $oval . '</option>';
+				$tvars['vars']['input'] .= '<option value="' . htmlspecialchars($oid, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"' . ($param['value'] == $oid ? ' selected' : '') . '>' . $oval . '</option>';
 			}
 			$tvars['vars']['input'] .= '</select>';
 		} else if ($param['type'] == 'manual') {
@@ -120,7 +120,7 @@ function generate_config_page($module, $params, $values = array()) {
 	$tpl->template('table', tpl_actions . 'extra-config');
 	$tvars['vars'] = array('entries' => $entries, 'plugin' => $module, 'php_self' => $PHP_SELF, 'token' => genUToken('admin.extra-config'));
 	$tpl->vars('table', $tvars);
-	echo $tpl->show('table');
+	$main_admin = $tpl->show('table');
 }
 
 // Automatic save values into module parameters DB
@@ -170,12 +170,12 @@ function load_commit_params($cfg, $outparams) {
 // Priint page with config change complition notification
 function print_commit_complete($plugin) {
 
-	global $tpl, $PHP_SELF;
+	global $tpl, $PHP_SELF, $main_admin;
 
 	$tpl->template('done', tpl_actions . 'extra-config');
 	$tvars['vars'] = array('plugin' => $plugin, 'php_self' => $PHP_SELF);
 	$tpl->vars('done', $tvars);
-	echo $tpl->show('done');
+	$main_admin = $tpl->show('done');
 }
 
 // check if table exists
@@ -202,9 +202,9 @@ function get_mysql_field_type($table, $field) {
 }
 
 // Database update during install
-function fixdb_plugin_install($module, $params, $mode = 'install', $silent = false) {
+function fixdb_plugin_install($module, $params, $mode = 'install', $silent = false, &$is_error) {
 
-	global $lang, $tpl, $mysql;
+	global $lang, $tpl, $mysql, $main_admin;
 
 	// Load config
 	plugins_load_config();
@@ -322,7 +322,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 			}
 
 			// Check if different character set are supported [ version >= 4.1.1 ]
-			$charset = is_array($mysql->record("show variables like 'character_set_client'")) ? (' DEFAULT CHARSET=' . ($table['charset'] ? $table['charset'] : 'CP1251')) : '';
+			$charset = is_array($mysql->record("show variables like 'character_set_client'")) ? (' DEFAULT CHARSET=' . ($table['charset'] ? $table['charset'] : 'utf8')) : '';
 
 			$query = "create table " . $chgTableName . " (" . implode(', ', $fieldlist) . ($table['key'] ? ', ' . $table['key'] : '') . ")" . $charset . ($table['engine'] ? ' engine=' . $table['engine'] : '');
 			$mysql->query($query);
@@ -414,7 +414,13 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 		$tpl->vars('install-entries', $tvars);
 		$entries .= $tpl->show('install-entries');
 	}
+	
+	if ($publish_error) {
+		$is_error = 0;
+	}
 
+	$is_error = 1;
+	
 	$tpl->template('install-process', tpl_actions . 'extra-config');
 	$tvars['vars'] = array(
 		'entries'   => $entries,
@@ -425,20 +431,16 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 	);
 	$tpl->vars('install-process', $tvars);
 	if (!$silent) {
-		print $tpl->show('install-process');
+		$main_admin = $tpl->show('install-process');
 	}
 
-	if ($publish_error) {
-		return 0;
-	}
-
-	return 1;
+    return $is_error;
 }
 
 // Create install page
 function generate_install_page($plugin, $text, $stype = 'install') {
 
-	global $tpl, $lang;
+	global $tpl, $lang, $main_admin;
 
 	$tpl->template('install', tpl_actions . 'extra-config');
 	$tvars['vars'] = array(
@@ -450,7 +452,7 @@ function generate_install_page($plugin, $text, $stype = 'install') {
 		'php_self'     => $PHP_SELF
 	);
 	$tpl->vars('install', $tvars);
-	echo $tpl->show('install');
+	$main_admin = $tpl->show('install');
 
 }
 

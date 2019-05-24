@@ -1,6 +1,6 @@
 @charset "windows-1251";
-/* css для шаблонов Next Generation CMS от RocketBoy ( www.rocketvip.ru) */
-/* часть выдрана из Easy front-end framework 
+/* css РґР»СЏ С€Р°Р±Р»РѕРЅРѕРІ Next Generation CMS РѕС‚ RocketBoy ( www.rocketvip.ru) */
+/* С‡Р°СЃС‚СЊ РІС‹РґСЂР°РЅР° РёР· Easy front-end framework 
 Copyright (c) 2011 Alen Grakalic
 * http://easyframework.com/license.php  */
 
@@ -547,7 +547,7 @@ p.f11 {
 	text-align: center;
 }
 
-/*---Формы---*/
+/*---Р¤РѕСЂРјС‹---*/
 label {
 	display: block;
 	font-weight: bold;
@@ -701,7 +701,7 @@ textarea, .area {
 }
 
 <!--
-Всякие компоненты-- >
+Р’СЃСЏРєРёРµ РєРѕРјРїРѕРЅРµРЅС‚С‹-- >
 .tabs {
 	margin: 0;
 }
@@ -982,7 +982,7 @@ table {
 	margin-top: 5px;
 }
 
-/*Для картинок*/
+/*Р”Р»СЏ РєР°СЂС‚РёРЅРѕРє*/
 .align_left {
 	float: left;
 	margin-right: 1em;
@@ -1589,7 +1589,7 @@ table {
 	background: #e1e1e1;
 }
 
-/*---Календарь---*/
+/*---РљР°Р»РµРЅРґР°СЂСЊ---*/
 #calendar {
 	text-align: center;
 }
@@ -1786,7 +1786,7 @@ input.important {
 	margin: -2px 0 0 0;
 }
 
-/*---Вывод результатов голосования на сайте---*/
+/*---Р’С‹РІРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РіРѕР»РѕСЃРѕРІР°РЅРёСЏ РЅР° СЃР°Р№С‚Рµ---*/
 .voteprogress {
 	overflow: hidden;
 	height: 11px;

@@ -1,5 +1,6 @@
 #
-# Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru)
+#
+# Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru)
 # Name: .htaccess
 # Description: mod_rewrite htaccess file
 # Author: NGCMS project team
@@ -8,18 +9,12 @@
 DirectoryIndex index.php
 
 <files .htaccess>
-order allow,deny 
+order allow,deny
 deny from all
 </files>
 
-php_flag register_globals off
-php_flag magic_quotes_gpc off
-php_flag magic_quotes_runtime off
-php_flag magic_quotes_sybase off
-php_flag allow_call_time_pass_reference on
-
 RewriteEngine On
-RewriteBase /
+#RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

@@ -19,36 +19,36 @@
 	<title>{{ titles }}</title>
 </head>
 <body>
-<div id="loading-layer"><img src="{{ tpl_url }}/images/ajax-loader.gif" alt="Гружусь"/></div>
-<!--Панель-->
+<div id="loading-layer"><img src="{{ tpl_url }}/images/ajax-loader.gif" alt="Р“СЂСѓР¶СѓСЃСЊ"/></div>
+<!--РџР°РЅРµР»СЊ-->
 <div id="userpanel" class="hidden">
 	{{ personal_menu }}
 </div>
 <div class="panel_line"></div>
-<!--/Панель-->
+<!--/РџР°РЅРµР»СЊ-->
 <header>
-	<!--Лого+меню-+поиск-->
+	<!--Р›РѕРіРѕ+РјРµРЅСЋ-+РїРѕРёСЃРє-->
 	<div id="logo">
 		<div class="in960">
-			<!--Логотип-->
+			<!--Р›РѕРіРѕС‚РёРї-->
 			<div class="k320" name="topper">
 				<div class="pad_logo" id="logo_top"><a href="{{ home }}"><img src="{{ tpl_url }}/images/logo.png"></a>
 				</div>
 			</div>
-			<!--/Логотип-->
-			<!-- Менюшка-->
+			<!--/Р›РѕРіРѕС‚РёРї-->
+			<!-- РњРµРЅСЋС€РєР°-->
 			<div class="k400">
 				<div class="pad_logo_f">
 					<ul class="menu-h">
-						<li><a href="{{ home }}">Главная</a></li>
-						<li><a href="#">О сайте</a></li>
-						<li><a href="#">Контакты</a></li>
+						<li><a href="{{ home }}">Р“Р»Р°РІРЅР°СЏ</a></li>
+						<li><a href="#">Рћ СЃР°Р№С‚Рµ</a></li>
+						<li><a href="#">РљРѕРЅС‚Р°РєС‚С‹</a></li>
 					</ul>
 				</div>
 			</div>
-			<!-- /Менюшка-->
+			<!-- /РњРµРЅСЋС€РєР°-->
 			<div class="k240">
-				<a href="#userpanel" id="nolink" class="popup tooltip" rel="width:auto; height:auto;" title="{% if (global.flags.isLogged) %}Личный кабинет{% else %}Авторизация{% endif %}">
+				<a href="#userpanel" id="nolink" class="popup tooltip" rel="width:auto; height:auto;" title="{% if (global.flags.isLogged) %}Р›РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚{% else %}РђРІС‚РѕСЂРёР·Р°С†РёСЏ{% endif %}">
 					<div class="user_btn"></div>
 				</a>
 				<a href="{{ home }}/rss.xml">
@@ -58,113 +58,113 @@
 					<div class="twitter"></div>
 				</a>
 				<div class="pad_logo_f">
-					<!--Поиск-->
+					<!--РџРѕРёСЃРє-->
 					{{ search_form }}
-					<!--/Поиск-->
+					<!--/РџРѕРёСЃРє-->
 				</div>
 			</div>
 			<div class="clear"></div>
 		</div>
 	</div>
-	<!--/Лого+меню-+поиск-->
-	<!--Меню-->
+	<!--/Р›РѕРіРѕ+РјРµРЅСЋ-+РїРѕРёСЃРє-->
+	<!--РњРµРЅСЋ-->
 	<div id="top">
 		<div id="main_nav">
 			<ul class="menu-h-d">
-				<li><a href="#">О САЙТЕ</a>
-					<!--Выпадающее меню-->
+				<li><a href="#">Рћ РЎРђР™РўР•</a>
+					<!--Р’С‹РїР°РґР°СЋС‰РµРµ РјРµРЅСЋ-->
 					<ul>
-						<li><a href="#">Первый уровень</a>
-							<!--Выпадающее меню 2 уровень-->
+						<li><a href="#">РџРµСЂРІС‹Р№ СѓСЂРѕРІРµРЅСЊ</a>
+							<!--Р’С‹РїР°РґР°СЋС‰РµРµ РјРµРЅСЋ 2 СѓСЂРѕРІРµРЅСЊ-->
 							<ul>
-								<li><a href="#">Второй уровень</a></li>
-								<li><a href="#">Второй уровень</a></li>
-								<li><a href="#">Второй уровень</a></li>
-								<li><a href="#">Второй уровень</a></li>
+								<li><a href="#">Р’С‚РѕСЂРѕР№ СѓСЂРѕРІРµРЅСЊ</a></li>
+								<li><a href="#">Р’С‚РѕСЂРѕР№ СѓСЂРѕРІРµРЅСЊ</a></li>
+								<li><a href="#">Р’С‚РѕСЂРѕР№ СѓСЂРѕРІРµРЅСЊ</a></li>
+								<li><a href="#">Р’С‚РѕСЂРѕР№ СѓСЂРѕРІРµРЅСЊ</a></li>
 							</ul>
-							<!--/Выпадающее меню  2 уровень-->
+							<!--/Р’С‹РїР°РґР°СЋС‰РµРµ РјРµРЅСЋ  2 СѓСЂРѕРІРµРЅСЊ-->
 						</li>
-						<li><a href="#">Первый уровень</a></li>
-						<li><a href="#">Первый уровень</a></li>
-						<li><a href="#">Первый уровень</a></li>
+						<li><a href="#">РџРµСЂРІС‹Р№ СѓСЂРѕРІРµРЅСЊ</a></li>
+						<li><a href="#">РџРµСЂРІС‹Р№ СѓСЂРѕРІРµРЅСЊ</a></li>
+						<li><a href="#">РџРµСЂРІС‹Р№ СѓСЂРѕРІРµРЅСЊ</a></li>
 					</ul>
-					<!--/Выпадающее меню-->
+					<!--/Р’С‹РїР°РґР°СЋС‰РµРµ РјРµРЅСЋ-->
 				</li>
-				<li><a href="#">В МИРЕ</a></li>
-				<li><a href="#">ЭКОНОМИКА</a></li>
-				<li><a href="#">РЕЛИГИЯ</a></li>
-				<li><a href="#">КРИМИНАЛ</a></li>
-				<li><a href="#">СПОРТ</a>
-					<!--Выпадающее меню-->
+				<li><a href="#">Р’ РњРР Р•</a></li>
+				<li><a href="#">Р­РљРћРќРћРњРРљРђ</a></li>
+				<li><a href="#">Р Р•Р›РР“РРЇ</a></li>
+				<li><a href="#">РљР РРњРРќРђР›</a></li>
+				<li><a href="#">РЎРџРћР Рў</a>
+					<!--Р’С‹РїР°РґР°СЋС‰РµРµ РјРµРЅСЋ-->
 					<ul>
-						<li><a href="#">Футбол</a></li>
-						<li><a href="#">Олимпиада 2012</a></li>
-						<li><a href="#">Хоккей</a></li>
-						<li><a href="#">Бузидо шуидо</a></li>
+						<li><a href="#">Р¤СѓС‚Р±РѕР»</a></li>
+						<li><a href="#">РћР»РёРјРїРёР°РґР° 2012</a></li>
+						<li><a href="#">РҐРѕРєРєРµР№</a></li>
+						<li><a href="#">Р‘СѓР·РёРґРѕ С€СѓРёРґРѕ</a></li>
 					</ul>
-					<!--/Выпадающее меню-->
+					<!--/Р’С‹РїР°РґР°СЋС‰РµРµ РјРµРЅСЋ-->
 				</li>
-				<li><a href="#">КУЛЬТУРА</a></li>
-				<li><a href="#">ИНОПРЕССА</a></li>
+				<li><a href="#">РљРЈР›Р¬РўРЈР Рђ</a></li>
+				<li><a href="#">РРќРћРџР Р•РЎРЎРђ</a></li>
 			</ul>
 		</div>
-		<!--Шапка на главной-->
+		<!--РЁР°РїРєР° РЅР° РіР»Р°РІРЅРѕР№-->
 		{% if isHandler('news:main') %}
 			<div class="home_banner">
 				<div class="pad_banner">
-					<h1>Наша DEMO страница</h1>
+					<h1>РќР°С€Р° DEMO СЃС‚СЂР°РЅРёС†Р°</h1>
 				</div>
 			</div>
 		{% endif %}
-		<!--/Шапка на главной-->
+		<!--/РЁР°РїРєР° РЅР° РіР»Р°РІРЅРѕР№-->
 	</div>
-	<!--/Меню-->
+	<!--/РњРµРЅСЋ-->
 </header>
-<!--Контент-->
+<!--РљРѕРЅС‚РµРЅС‚-->
 <div id="content_i">
 	<div class="in960">
 		<div class="clear20"></div>
-		<!--правая колонка-->
+		<!--РїСЂР°РІР°СЏ РєРѕР»РѕРЅРєР°-->
 		<sidebar>
 			<div class="k320">
 				<div class="pad_left_col">
 					<!--Category-->
 					<div class="green_b">
-						<h3>Навигация</h3>
+						<h3>РќР°РІРёРіР°С†РёСЏ</h3>
 						<div class="l300_white"></div>
 						<ul class="cat_b">
-							<li><a href="{{ home }}">Главная</a></li>
+							<li><a href="{{ home }}">Р“Р»Р°РІРЅР°СЏ</a></li>
 							{{ categories }}
 							{% if pluginIsActive('voting') %}
-								<li {% if isHandler('voting') %}class="active"{% endif %}><a href="/plugin/voting/">Опросы</a>
+								<li {% if isHandler('voting') %}class="active"{% endif %}><a href="/plugin/voting/">РћРїСЂРѕСЃС‹</a>
 								</li>{% endif %}
 							{% if pluginIsActive('sitemap') %}
-								<li {% if isHandler('sitemap') %}class="active"{% endif %}><a href="/plugin/sitemap/">Карта
-									сайта</a></li>{% endif %}
+								<li {% if isHandler('sitemap') %}class="active"{% endif %}><a href="/plugin/sitemap/">РљР°СЂС‚Р°
+									СЃР°Р№С‚Р°</a></li>{% endif %}
 						</ul>
 					</div>
 					<div class="clear20"></div>
 					<!--/Category-->
-					<!--Плагин Basket-->
+					<!--РџР»Р°РіРёРЅ Basket-->
 					{% if pluginIsActive('basket') %}
 						{{ plugin_basket }}
 					{% endif %}
-					<!--/Плагин Basket-->
-					<!--Второстепенная менюшка-->
+					<!--/РџР»Р°РіРёРЅ Basket-->
+					<!--Р’С‚РѕСЂРѕСЃС‚РµРїРµРЅРЅР°СЏ РјРµРЅСЋС€РєР°-->
 					<div class="white_b">
-						<h3>Второстепенная менюшка</h3>
+						<h3>Р’С‚РѕСЂРѕСЃС‚РµРїРµРЅРЅР°СЏ РјРµРЅСЋС€РєР°</h3>
 						<div class="l300_green_blue"></div>
 						<ul class="list_b">
-							<li><a href="#">О сайте</a></li>
-							<li><a href="#">В мире</a></li>
-							<li><a href="#">Экономика</a></li>
+							<li><a href="#">Рћ СЃР°Р№С‚Рµ</a></li>
+							<li><a href="#">Р’ РјРёСЂРµ</a></li>
+							<li><a href="#">Р­РєРѕРЅРѕРјРёРєР°</a></li>
 						</ul>
 					</div>
 					<div class="clear20"></div>
-					<!--/Второстепенная менюшка-->
-					<!--Плагин xnews-->
+					<!--/Р’С‚РѕСЂРѕСЃС‚РµРїРµРЅРЅР°СЏ РјРµРЅСЋС€РєР°-->
+					<!--РџР»Р°РіРёРЅ xnews-->
 					<div class="white_b">
-						<h3>Популярные</h3>
+						<h3>РџРѕРїСѓР»СЏСЂРЅС‹Рµ</h3>
 						<div class="l300_green_blue"></div>
 						<ul class="plugin">
 							{{ callPlugin('xnews.show', {'order' : 'views', 'count': '6', 'template' : 'xnews1'}) }}
@@ -172,29 +172,29 @@
 					</div>
 					<div class="clear20"></div>
 					<div class="white_b">
-						<h3>Последние новости</h3>
+						<h3>РџРѕСЃР»РµРґРЅРёРµ РЅРѕРІРѕСЃС‚Рё</h3>
 						<div class="l300_green_blue"></div>
 						<ul class="plugin">
 							{{ callPlugin('xnews.show', {'order' : 'last', 'count': '6', 'template' : 'xnews1'}) }}
 						</ul>
 					</div>
 					<div class="clear20"></div>
-					<!--/Плагин xnews-->
-					<!--Календарь + Архив + Голосовалка-->
+					<!--/РџР»Р°РіРёРЅ xnews-->
+					<!--РљР°Р»РµРЅРґР°СЂСЊ + РђСЂС…РёРІ + Р“РѕР»РѕСЃРѕРІР°Р»РєР°-->
 					<div class="white_b">
 						<!-- TABS START -->
 						<ul class="tabs fixed">
 							{% if pluginIsActive('calendar') %}
-								<li><a href="#tab1">Календарь</a></li>{% endif %}
+								<li><a href="#tab1">РљР°Р»РµРЅРґР°СЂСЊ</a></li>{% endif %}
 							{% if pluginIsActive('archive') %}
-								<li><a href="#tab2">Архив</a></li>{% endif %}
+								<li><a href="#tab2">РђСЂС…РёРІ</a></li>{% endif %}
 							{% if pluginIsActive('voting') %}
-								<li><a href="#tab3">Голосование</a></li>{% endif %}
+								<li><a href="#tab3">Р“РѕР»РѕСЃРѕРІР°РЅРёРµ</a></li>{% endif %}
 						</ul>
 						<div class="clear"></div>
 						{% if pluginIsActive('calendar') %}
 							<div class="tab" id="tab1">
-								<h3>Календарь</h3>
+								<h3>РљР°Р»РµРЅРґР°СЂСЊ</h3>
 								<div class="l300_green_blue"></div>
 								<div class="telo">
 									{{ callPlugin('calendar.show', {}) }}
@@ -203,15 +203,15 @@
 						{% endif %}
 						{% if pluginIsActive('archive') %}
 							<div class="tab" id="tab2">
-								<h3>Архив новостей</h3>
+								<h3>РђСЂС…РёРІ РЅРѕРІРѕСЃС‚РµР№</h3>
 								<div class="l300_green_blue"></div>
-								<!-- Если в архиве более 6 месяцев то с работает спойлер -->
+								<!-- Р•СЃР»Рё РІ Р°СЂС…РёРІРµ Р±РѕР»РµРµ 6 РјРµСЃСЏС†РµРІ С‚Рѕ СЃ СЂР°Р±РѕС‚Р°РµС‚ СЃРїРѕР№Р»РµСЂ -->
 								{{ callPlugin('archive.show', {'maxnum' : 12, 'counter' : 1, 'template': 'archive', 'cacheExpire': 60}) }}
 							</div>
 						{% endif %}
 						{% if pluginIsActive('voting') %}
 							<div class="tab" id="tab3">
-								<h3>Голосование</h3>
+								<h3>Р“РѕР»РѕСЃРѕРІР°РЅРёРµ</h3>
 								<div class="l300_green_blue"></div>
 								<div class="pad20">
 									{{ voting }}
@@ -221,15 +221,15 @@
 						<!-- TABS END -->
 					</div>
 					<div class="clear20"></div>
-					<!--/Календарь + Архив + Голосовалка-->
-					<!--Последние комменты + Чат-->
+					<!--/РљР°Р»РµРЅРґР°СЂСЊ + РђСЂС…РёРІ + Р“РѕР»РѕСЃРѕРІР°Р»РєР°-->
+					<!--РџРѕСЃР»РµРґРЅРёРµ РєРѕРјРјРµРЅС‚С‹ + Р§Р°С‚-->
 					<!-- TABS START -->
 					<div class="white_b">
 						<ul class="tabs fixed">
 							{% if pluginIsActive('lastcomments') %}
-								<li><a href="#tab4">Последние комментарии</a></li>{% endif %}
+								<li><a href="#tab4">РџРѕСЃР»РµРґРЅРёРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё</a></li>{% endif %}
 							{% if pluginIsActive('jchat') %}
-								<li><a href="#tab5">Чатик</a></li>{% endif %}
+								<li><a href="#tab5">Р§Р°С‚РёРє</a></li>{% endif %}
 						</ul>
 						<div class="clear"></div>
 						{% if pluginIsActive('lastcomments') %}
@@ -245,21 +245,21 @@
 						<!-- TABS END -->
 					</div>
 					<div class="clear20"></div>
-					<!--/Последние комменты + Чат-->
-					<!--Реклама-->
+					<!--/РџРѕСЃР»РµРґРЅРёРµ РєРѕРјРјРµРЅС‚С‹ + Р§Р°С‚-->
+					<!--Р РµРєР»Р°РјР°-->
 					<div class="white_b">
-						<h3>Реклама</h3>
+						<h3>Р РµРєР»Р°РјР°</h3>
 						<div class="l300_green_blue"></div>
 						<div class="pad20">
 							<img src="{{ tpl_url }}/images/blank_pix.jpg" class="align_center"/>
 						</div>
 					</div>
 					<div class="clear20"></div>
-					<!--/Реклама-->
-					<!--Переключение шаблонов и языков-->
+					<!--/Р РµРєР»Р°РјР°-->
+					<!--РџРµСЂРµРєР»СЋС‡РµРЅРёРµ С€Р°Р±Р»РѕРЅРѕРІ Рё СЏР·С‹РєРѕРІ-->
 					{% if pluginIsActive('switcher') %}
 						<div class="white_b">
-							<h3>Выбор профиля</h3>
+							<h3>Р’С‹Р±РѕСЂ РїСЂРѕС„РёР»СЏ</h3>
 							<div class="l300_green_blue"></div>
 							<div class="pad20">
 								{{ switcher }}
@@ -267,19 +267,19 @@
 						</div>
 						<div class="clear20"></div>
 					{% endif %}
-					<!--/Переключение шаблонов и языков-->
+					<!--/РџРµСЂРµРєР»СЋС‡РµРЅРёРµ С€Р°Р±Р»РѕРЅРѕРІ Рё СЏР·С‹РєРѕРІ-->
 					<!--tags-->
 					{% if pluginIsActive('tags') %}{{ plugin_tags }}{% endif %}
 					<!--/tags-->
 				</div>
 			</div>
 		</sidebar>
-		<!--/правая колонка-->
+		<!--/РїСЂР°РІР°СЏ РєРѕР»РѕРЅРєР°-->
 		<!--mainblock-->
 		<div class="k640">
-			<!--Хлебные крошки-->
+			<!--РҐР»РµР±РЅС‹Рµ РєСЂРѕС€РєРё-->
 			{% if pluginIsActive('breadcrumbs') %}{{ breadcrumbs }}{% endif %}
-			<!--/Хлебные крошки-->
+			<!--/РҐР»РµР±РЅС‹Рµ РєСЂРѕС€РєРё-->
 			<section>
 				{{ mainblock }}
 			</section>
@@ -289,51 +289,51 @@
 		<div class="clear"></div>
 	</div>
 </div>
-<!--/Контент-->
-<!--Подвал-->
+<!--/РљРѕРЅС‚РµРЅС‚-->
+<!--РџРѕРґРІР°Р»-->
 <footer>
 	<div id="ftr">
 		<div class="in960">
 			<div class="ftr_mid"></div>
-			<!--Копирайты-->
+			<!--РљРѕРїРёСЂР°Р№С‚С‹-->
 			<div class="k320">
 				<div class="pad20_f">
 					<p>&copy; <a title="{{ home_title }}" href="{{ home }}">{{ home_title }}</a></p>
 				</div>
 			</div>
-			<!--/Копирайты-->
+			<!--/РљРѕРїРёСЂР°Р№С‚С‹-->
 			<div class="k640"><a href="#logo_top" class="jump">
 					<div class="go_top"></div>
 				</a>
 				<div class="pad20_f">
-					<p>Эвтектика, по которому один блок опускается относительно другого, интенсивно прекращает цокольный
-						генезис, и в то же время устанавливается достаточно приподнятый над уровнем моря коренной
-						цоколь.</p>
+					<p>Р­РІС‚РµРєС‚РёРєР°, РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РѕРґРёРЅ Р±Р»РѕРє РѕРїСѓСЃРєР°РµС‚СЃСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РґСЂСѓРіРѕРіРѕ, РёРЅС‚РµРЅСЃРёРІРЅРѕ РїСЂРµРєСЂР°С‰Р°РµС‚ С†РѕРєРѕР»СЊРЅС‹Р№
+						РіРµРЅРµР·РёСЃ, Рё РІ С‚Рѕ Р¶Рµ РІСЂРµРјСЏ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚СЃСЏ РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂРёРїРѕРґРЅСЏС‚С‹Р№ РЅР°Рґ СѓСЂРѕРІРЅРµРј РјРѕСЂСЏ РєРѕСЂРµРЅРЅРѕР№
+						С†РѕРєРѕР»СЊ.</p>
 				</div>
 			</div>
 			<div class="clear"></div>
 			<div class="k320">&nbsp;</div>
-			<!--Всякая нужная и ненужная хрень-->
+			<!--Р’СЃСЏРєР°СЏ РЅСѓР¶РЅР°СЏ Рё РЅРµРЅСѓР¶РЅР°СЏ С…СЂРµРЅСЊ-->
 			<div class="k320">
 				<div class="pad20_f">
-					<p class="f12">SQL запросов: <b>{{ queries }}</b> | Генерация страницы: <b>{{ exectime }}</b> сек |
+					<p class="f12">SQL Р·Р°РїСЂРѕСЃРѕРІ: <b>{{ queries }}</b> | Р“РµРЅРµСЂР°С†РёСЏ СЃС‚СЂР°РЅРёС†С‹: <b>{{ exectime }}</b> СЃРµРє |
 						<b>{{ memPeakUsage }}</b> Mb&nbsp;</p>
 				</div>
 			</div>
-			<!--/Всякая нужная и ненужная хрень-->
-			<!--Ссылки не убирать!!!!-->
+			<!--/Р’СЃСЏРєР°СЏ РЅСѓР¶РЅР°СЏ Рё РЅРµРЅСѓР¶РЅР°СЏ С…СЂРµРЅСЊ-->
+			<!--РЎСЃС‹Р»РєРё РЅРµ СѓР±РёСЂР°С‚СЊ!!!!-->
 			<div class="k320">
-				<a href="http://rocketvip.ru" target="_blank"><img src="{{ tpl_url }}/images/rocketvip.png" class="right_s" alt="Создание, разработка и изготовление сайтов"/><font class="graphic">Создание,
-						разработка и изготовление сайтов</font></a>
+				<a href="http://rocketvip.ru" target="_blank"><img src="{{ tpl_url }}/images/rocketvip.png" class="right_s" alt="РЎРѕР·РґР°РЅРёРµ, СЂР°Р·СЂР°Р±РѕС‚РєР° Рё РёР·РіРѕС‚РѕРІР»РµРЅРёРµ СЃР°Р№С‚РѕРІ"/><font class="graphic">РЎРѕР·РґР°РЅРёРµ,
+						СЂР°Р·СЂР°Р±РѕС‚РєР° Рё РёР·РіРѕС‚РѕРІР»РµРЅРёРµ СЃР°Р№С‚РѕРІ</font></a>
 				&nbsp;
-				<a href="http://ngcms.ru" target="_blank"><img src="{{ tpl_url }}/images/ngcms.png" class="right_s" alt="NGCMS - бесплатная система управления сайтом"/><font class="graphic">NGCMS
-						- бесплатная система управления сайтом</font></a>
+				<a href="http://ngcms.ru" target="_blank"><img src="{{ tpl_url }}/images/ngcms.png" class="right_s" alt="NGCMS - Р±РµСЃРїР»Р°С‚РЅР°СЏ СЃРёСЃС‚РµРјР° СѓРїСЂР°РІР»РµРЅРёСЏ СЃР°Р№С‚РѕРј"/><font class="graphic">NGCMS
+						- Р±РµСЃРїР»Р°С‚РЅР°СЏ СЃРёСЃС‚РµРјР° СѓРїСЂР°РІР»РµРЅРёСЏ СЃР°Р№С‚РѕРј</font></a>
 			</div>
-			<!--/Ссылки не убирать!!!!-->
+			<!--/РЎСЃС‹Р»РєРё РЅРµ СѓР±РёСЂР°С‚СЊ!!!!-->
 			<div class="clear20"></div>
 		</div>
 </footer>
-<!--/Подвал-->
+<!--/РџРѕРґРІР°Р»-->
 [debug]{debug_queries}<br/>{debug_profiler}[/debug]
 </body>
 <script src="{{ tpl_url }}/js/easy.js"></script>

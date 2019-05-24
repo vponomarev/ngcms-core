@@ -1,17 +1,17 @@
 <article>
 	<div class="full">
-		<header><h1>Ваша корзина</h1></header>
+		<header><h1>Р’Р°С€Р° РєРѕСЂР·РёРЅР°</h1></header>
 		<div class="telo">
 			{% if (recs > 0) %}
 				<table class="table">
 					<thead>
 					<tr valign="top">
 						<td>#</td>
-						<td>Наименование</td>
-						<td>Размер</td>
-						<td>Цена</td>
-						<td>Кол-во</td>
-						<td>Стоимость</td>
+						<td>РќР°РёРјРµРЅРѕРІР°РЅРёРµ</td>
+						<td>Р Р°Р·РјРµСЂ</td>
+						<td>Р¦РµРЅР°</td>
+						<td>РљРѕР»-РІРѕ</td>
+						<td>РЎС‚РѕРёРјРѕСЃС‚СЊ</td>
 					</tr>
 					</thead>
 					<tbody>
@@ -28,13 +28,13 @@
 					</tbody>
 					<tfoot>
 					<tr>
-						<td colspan="4">Итого:</td>
+						<td colspan="4">РС‚РѕРіРѕ:</td>
 						<td align="right"><strong>{{ total }}</strong></td>
 					</tr>
 					</tfoot>
 				</table>
 			{% else %}
-				<div class="msge">Ваша корзина пуста! 111</div>
+				<div class="msge">Р’Р°С€Р° РєРѕСЂР·РёРЅР° РїСѓСЃС‚Р°! 111</div>
 			{% endif %}
 		</div>
 	</div>

@@ -7,7 +7,7 @@
 // Author: Vitaly Ponomarev
 //
 
-@header('content-type: text/html; charset=Windows-1251');
+@header('content-type: text/html; charset=utf-8');
 
 @error_reporting(E_ALL ^ E_NOTICE);
 define('NGCMS', 1);
@@ -16,6 +16,41 @@ define('NGCMS', 1);
 @define('root', dirname(__FILE__) . '/');
 @include_once root . 'includes/inc/multimaster.php';
 @include_once root . 'includes/inc/DBLoad.php';
+
+// ============================================================================
+// Define global directory constants
+// ============================================================================
+define('NGCoreDir', dirname(__FILE__) . '/');				// Location of Core directory
+define('NGRootDir', dirname(dirname(__FILE__)) . '/');		// Location of SiteRoot
+define('NGClassDir', NGCoreDir.'classes/');					// Location of AutoLoaded classes
+
+// Autoloader for NEW STYLE Classes
+spl_autoload_register(function($className) {
+	if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+		require_once $fName;
+	}
+});
+
+// Magic function for immediate closure call
+function NGInstall($f) { $f(); }
+
+// ============================================================================
+// MODULE DEPs check + basic setup
+// ============================================================================
+NGInstall(function() {
+	$depList = array(
+		'sql' => array('pdo' => '', 'pdo_mysql' => ''),
+		'zlib' => 'ob_gzhandler',
+		'iconv' => 'iconv',
+		'GD' => 'imagecreatefromjpeg',
+		'mbstring' => 'mb_internal_encoding'
+	);
+	NGCoreFunctions::resolveDeps($depList);
+
+	$sx = NGEngine::getInstance();
+	$sx->set('events', new NGEvents());
+	$sx->set('errorHandler', new NGErrorHandler());
+});
 
 multi_multisites();
 @define('confroot', root . 'conf/' . ($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/' . $multiDomainName . '/' : ''));
@@ -202,7 +237,7 @@ function notAgree() {
 	exit;
 }
 
-// Вывод формы для ввода параметров установки
+// Р’С‹РІРѕРґ С„РѕСЂРјС‹ РґР»СЏ РІРІРѕРґР° РїР°СЂР°РјРµС‚СЂРѕРІ СѓСЃС‚Р°РЅРѕРІРєРё
 function doConfig() {
 
 	switch ($_POST['stage']) {
@@ -231,20 +266,20 @@ function doConfig_db($check) {
 
 	global $tvars, $tpl, $templateDir, $SQL_VERSION, $lang;
 
-	$myparams = array('action', 'stage', 'reg_dbhost', 'reg_dbname', 'reg_dbuser', 'reg_dbpass', 'reg_dbprefix', 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass');
+	$myparams = array('action', 'stage', 'reg_dbtype', 'reg_dbhost', 'reg_dbname', 'reg_dbuser', 'reg_dbpass', 'reg_dbprefix', 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass');
 	$DEFAULT = array('reg_dbhost' => 'localhost', 'reg_dbprefix' => 'ng');
-
+	
 	// Show form
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 	$tvars['vars']['error_message'] = '';
 	if ($check) {
 		// Check passed parameters. Check for required params
 		$error = 0;
-		foreach (array('reg_dbhost', 'reg_dbname', 'reg_dbuser') as $k) {
+		foreach (array('reg_dbtype', 'reg_dbhost', 'reg_dbname', 'reg_dbuser') as $k) {
 			if (!strlen($_POST[$k])) {
 				$tvars['vars']['err:' . $k] = $lang['error.notfilled'];
 				$error++;
@@ -260,43 +295,55 @@ function doConfig_db($check) {
 			}
 			$ac = 1;
 		}
-
-		$mysql = DBLoad();
-
-		// Try to connect
-		if (!$error) {
-			if (($link = $mysql->connect($_POST['reg_dbhost'], $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])) === false) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">' . $lang['error.dbconnect'] . ' "' . $_POST['reg_dbhost'] . '":<br/> (' . $mysql->db_errno() . ') ' . $mysql->db_error() . '</div>';
-				$error = 1;
+		
+		try {
+			$sx = NGEngine::getInstance();
+			$sx->set('events', new NGEvents());
+			$sx->set('errorHandler', new NGErrorHandler());
+			
+			switch($_POST['reg_dbtype']){
+				case 'MySQL':
+					$sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+				break;
+				case 'MySQLi':
+					$sx->set('db', new NGMYSQLi(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+				break;
+				case 'PDO':
+					$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
+				break;
 			}
-		}
-		// Try to fetch SQL version
-		if (!$error) {
-			if (($sqlf = $mysql->query("show variables like 'version'", $link)) === false) {
-				$tvars['vars']['error_message'] = '<div class="errorDiv">' . $lang['err.dbversion'] . ' "' . $_POST['reg_dbhost'] . '":<br/> (' . $mysql->db_errno() . ') ' . $mysql->db_error() . '</div>';
-				$error = 1;
+			
+			$sx->set('legacyDB', new NGLegacyDB(false));
+			$sx->getLegacyDB()->connect('', '', '');
+			$mysql = $sx->getLegacyDB();
+			$sqlr = $mysql->mysql_version();
+			if (preg_match('/^(\d+)\.(\d+)/', $sqlr, $regex)) {
+				$SQL_VERSION = array($sqlr, intval($regex[1]), intval($regex[2]));
 			} else {
-				$sqlr = $mysql->record("show variables like 'version'", -1);
-				if (preg_match('/^(\d+)\.(\d+)/', $sqlr[1], $regex)) {
-					$SQL_VERSION = array($sqlr[1], intval($regex[1]), intval($regex[2]));
-				} else {
-					$SQL_VERSION = $sqlr[1];
-				}
+				$SQL_VERSION = $sqlr;
 			}
+		} catch (Exception $e) {
+			$tvars['vars']['error_message'] = '<div class="errorDiv">' . $lang['error.dbconnect'] . ' "' . $_POST['reg_dbhost'] . '":<br/> (' . $e->getCode() . ') ' . $e->getMessage() . '</div>';
+			$error = 1;
 		}
-
-		@$mysql->close($link);
-
+		
+		if(isset($mysql) != null){
+			$mysql->close($link);
+		}
+		
 		if (!$error)
 			return true;
-
 	}
-
+	
 	foreach (array(
-				 'reg_dbhost', 'reg_dbuser', 'reg_dbpass', 'reg_dbname', 'reg_dbprefix',
+				 'reg_dbtype', 'reg_dbhost', 'reg_dbuser', 'reg_dbpass', 'reg_dbname', 'reg_dbprefix',
 				 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass'
 			 ) as $k) {
-		$tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'cp1251');
+		if($k == 'reg_dbtype'){
+			foreach(array('MySQL', 'MySQLi', 'PDO') as $s)
+				if($_POST[$k] == $s)
+					$tvars['vars'][$k.'_'.$s] = ' selected';
+		} else $tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8');
 		if (!isset($tvars['vars']['err:' . $k])) $tvars['vars']['err:' . $k] = '';
 	}
 	if ($_POST['reg_autocreate'])
@@ -304,8 +351,12 @@ function doConfig_db($check) {
 
 	$tvars['vars']['menu_db'] = ' class="hover"';
 	printHeader();
-
-	// Выводим форму проверки
+	
+	$tvars['regx']["'\[mysql\].*?\[/mysql\]'si"] = (extension_loaded("mysql"))?'$1':'';
+	$tvars['regx']["'\[mysqli\].*?\[/mysqli\]'si"] = (extension_loaded("mysqli"))?'$1':'';
+	$tvars['regx']["'\[pdo\].*?\[/pdo\]'si"] = (extension_loaded("pdo") || extension_loaded("pdo_mysql"))?'$1':'';
+	
+	// Р’С‹РІРѕРґРёРј С„РѕСЂРјСѓ РїСЂРѕРІРµСЂРєРё
 	$tpl->template('config_db', $templateDir);
 	$tpl->vars('config_db', $tvars);
 	echo $tpl->show('config_db');
@@ -377,10 +428,10 @@ function doConfig_perm() {
 	}
 
 	// XML support
-	if (function_exists('xml_parser_create')) {
-		$tvars['vars']['xml'] = $lang['perm.yes'];
+	if (extension_loaded('mbstring')) {
+		$tvars['vars']['mb'] = $lang['perm.yes'];
 	} else {
-		$tvars['vars']['xml'] = '<font color="red">' . $lang['perm.no'] . '</font>';
+		$tvars['vars']['mb'] = '<font color="red">' . $lang['perm.no'] . '</font>';
 		$error = 1;
 	}
 
@@ -419,10 +470,10 @@ function doConfig_perm() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
-	// Выводим форму проверки
+	// Р’С‹РІРѕРґРёРј С„РѕСЂРјСѓ РїСЂРѕРІРµСЂРєРё
 	$tpl->template('config_perm', $templateDir);
 	$tpl->vars('config_perm', $tvars);
 	echo $tpl->show('config_perm');
@@ -496,10 +547,10 @@ function doConfig_plugins() {
 	$myparams = array('action', 'stage');
 	foreach ($_POST as $k => $v)
 		if ((array_search($k, $myparams) === false) && (!preg_match('/^plugin\:/', $k)))
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
-	// Выводим форму проверки
+	// Р’С‹РІРѕРґРёРј С„РѕСЂРјСѓ РїСЂРѕРІРµСЂРєРё
 	$tpl->template('config_plugins', $templateDir);
 	$tpl->vars('config_plugins', $tvars);
 	echo $tpl->show('config_plugins');
@@ -565,10 +616,10 @@ function doConfig_templates() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
-	// Выводим форму проверки
+	// Р’С‹РІРѕРґРёРј С„РѕСЂРјСѓ РїСЂРѕРІРµСЂРєРё
 	$tpl->template('config_templates', $templateDir);
 	$tpl->vars('config_templates', $tvars);
 	echo $tpl->show('config_templates');
@@ -586,7 +637,7 @@ function doConfig_common() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
 	// Preconfigure some paratemers
@@ -594,18 +645,18 @@ function doConfig_common() {
 	if (!isset($_POST['home_title'])) $_POST['home_title'] = $lang['common.title.default'];
 
 	foreach (array('admin_login', 'admin_password', 'admin_email', 'home_url', 'home_title') as $k) {
-		$tvars['vars'][$k] = isset($_POST[$k]) ? htmlspecialchars($_POST[$k], ENT_COMPAT | ENT_HTML401, 'cp1251') : '';
+		$tvars['vars'][$k] = isset($_POST[$k]) ? htmlspecialchars($_POST[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8') : '';
 	}
 
 	$tvars['vars']['autodata_checked'] = (isset($_POST['autodata']) && ($_POST['autodata'] == '1')) ? ' checked="checked"' : '';
 
-	// Выводим форму проверки
+	// Р’С‹РІРѕРґРёРј С„РѕСЂРјСѓ РїСЂРѕРІРµСЂРєРё
 	$tpl->template('config_common', $templateDir);
 	$tpl->vars('config_common', $tvars);
 	echo $tpl->show('config_common');
 }
 
-// Генерация конфигурационного файла
+// Р“РµРЅРµСЂР°С†РёСЏ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р°
 function doInstall() {
 
 	global $tvars, $tpl, $templateDir, $installDir, $adminDirName, $pluginInstallList, $lang, $currentLanguage;
@@ -617,7 +668,7 @@ function doInstall() {
 	$hinput = array();
 	foreach ($_POST as $k => $v)
 		if (array_search($k, $myparams) === false)
-			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'cp1251') . '"/>';
+			$hinput[] = '<input type="hidden" name="' . $k . '" value="' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"/>';
 	$tvars['vars']['hinput'] = join("\n", $hinput);
 
 	// Error indicator
@@ -625,6 +676,7 @@ function doInstall() {
 	$error = 0;
 	$LOG = array();
 	$ERROR = array();
+	$sx = null;
 	do {
 
 		// Stage #01 - Try to create config files
@@ -639,81 +691,116 @@ function doInstall() {
 		array_push($LOG, '');
 
 		if ($error) break;
-
-		$mysql = DBLoad();
-
+		
 		// Stage #02 - Connect to DB
-		// Если заказали автосоздание, то подключаемся рутом
+		// Р•СЃР»Рё Р·Р°РєР°Р·Р°Р»Рё Р°РІС‚РѕСЃРѕР·РґР°РЅРёРµ, С‚Рѕ РїРѕРґРєР»СЋС‡Р°РµРјСЃСЏ СЂСѓС‚РѕРј
 		if ($_POST['reg_autocreate']) {
-			if (@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbadminuser'], $_POST['reg_dbadminpass'])) {
-				// Успешно подключились
-				array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя административный логин "' . $_POST['reg_dbadminuser'] . '" ... OK');
+			try {
+				$sx = NGEngine::getInstance();
+				
+				switch($_POST['reg_dbtype']){
+					case 'MySQL':
+						$sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+					break;
+					case 'MySQLi':
+						$sx->set('db', new NGMYSQLi(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+					break;
+					case 'PDO':
+						$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
+					break;
+				}
+				
+				$sx->set('legacyDB', new NGLegacyDB(false));
+				$sx->getLegacyDB()->connect('', '', '');
+				$mysql = $sx->getLegacyDB();
+				
+				// РЈСЃРїРµС€РЅРѕ РїРѕРґРєР»СЋС‡РёР»РёСЃСЊ
+				array_push($LOG, 'РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ Р‘Р” "' . $_POST['reg_dbhost'] . '" РёСЃРїРѕР»СЊР·СѓСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅС‹Р№ Р»РѕРіРёРЅ "' . $_POST['reg_dbadminuser'] . '" ... OK');
 
-				// 1. Создание БД
-				if (!@$mysql->select_db($_POST['reg_dbname'])) {
-					// БД нет. Пытаемся создать
-					if (!@$mysql->query('CREATE DATABASE ' . $_POST['reg_dbname'])) {
-						// Не удалось создать. Фатально.
-						array_push($ERROR, 'Не удалось создать БД "' . $_POST['reg_dbname'] . '" используя административную учётную запись. Скорее всего у данной учётной записи нет прав на создание баз данных.');
+				// 1. РЎРѕР·РґР°РЅРёРµ Р‘Р”
+				if ($mysql->select_db($_POST['reg_dbname']) === null) {
+					// Р‘Р” РЅРµС‚. РџС‹С‚Р°РµРјСЃСЏ СЃРѕР·РґР°С‚СЊ
+					if (!$mysql->query('CREATE DATABASE ' . $_POST['reg_dbname'])) {
+						// РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ. Р¤Р°С‚Р°Р»СЊРЅРѕ.
+						array_push($ERROR, 'РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ Р‘Р” "' . $_POST['reg_dbname'] . '" РёСЃРїРѕР»СЊР·СѓСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅСѓСЋ СѓС‡С‘С‚РЅСѓСЋ Р·Р°РїРёСЃСЊ. РЎРєРѕСЂРµРµ РІСЃРµРіРѕ Сѓ РґР°РЅРЅРѕР№ СѓС‡С‘С‚РЅРѕР№ Р·Р°РїРёСЃРё РЅРµС‚ РїСЂР°РІ РЅР° СЃРѕР·РґР°РЅРёРµ Р±Р°Р· РґР°РЅРЅС‹С….');
 						$error = 1;
 						break;
 					} else {
-						array_push($LOG, 'Создание БД "' . $_POST['reg_dbname'] . '" ... OK');
+						array_push($LOG, 'РЎРѕР·РґР°РЅРёРµ Р‘Р” "' . $_POST['reg_dbname'] . '" ... OK');
 					}
 				} else {
-					array_push($LOG, 'БД "' . $_POST['reg_dbname'] . '" уже существует ... OK');
+					array_push($LOG, 'Р‘Р” "' . $_POST['reg_dbname'] . '" СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ ... OK');
 				}
 
-				// 2. Предоставление доступа к БД
-				if (!@$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
-					array_push($ERROR, 'Невозможно обеспечить доступ пользователя "' . $_POST['reg_dbuser'] . '" к БД "' . $_POST['reg_dbname'] . '" используя административные права.');
+				// 2. РџСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёРµ РґРѕСЃС‚СѓРїР° Рє Р‘Р”
+				if (!$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
+					array_push($ERROR, 'РќРµРІРѕР·РјРѕР¶РЅРѕ РѕР±РµСЃРїРµС‡РёС‚СЊ РґРѕСЃС‚СѓРї РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ "' . $_POST['reg_dbuser'] . '" Рє Р‘Р” "' . $_POST['reg_dbname'] . '" РёСЃРїРѕР»СЊР·СѓСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅС‹Рµ РїСЂР°РІР°.');
 					$error = 1;
 					break;
 				} else {
-					array_push($LOG, 'Предоставление доступа пользователю "' . $_POST['reg_dbuser'] . '" к БД "' . $_POST['reg_dbname'] . '" ... OK');
+					array_push($LOG, 'РџСЂРµРґРѕСЃС‚Р°РІР»РµРЅРёРµ РґРѕСЃС‚СѓРїР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ "' . $_POST['reg_dbuser'] . '" Рє Р‘Р” "' . $_POST['reg_dbname'] . '" ... OK');
 				}
-			} else {
-				array_push($ERROR, 'Невозможно подключиться к серверу БД "' . $_POST['reg_dbhost'] . '" используя административный логин "' . $_POST['reg_dbadminuser'] . '"');
+			} catch (Exception $e) {
+				array_push($ERROR, 'РќРµРІРѕР·РјРѕР¶РЅРѕ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє СЃРµСЂРІРµСЂСѓ Р‘Р” "' . $_POST['reg_dbhost'] . '" РёСЃРїРѕР»СЊР·СѓСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅС‹Р№ Р»РѕРіРёРЅ "' . $_POST['reg_dbadminuser'] . '"');
 				$error = 1;
 				break;
 			}
-			// Отключаемся от сервера
-			$mysql->close();
+			// РћС‚РєР»СЋС‡Р°РµРјСЃСЏ РѕС‚ СЃРµСЂРІРµСЂР°
+			if(isset($mysql) != null){
+				$mysql->close();
+			}
 		}
-
-		// Подключаемся к серверу используя права пользователя
-		if (!@$mysql->connect($_POST['reg_dbhost'], $_POST['reg_dbuser'], $_POST['reg_dbpass'])) {
-			array_push($ERROR, 'Невозможно подключиться к серверу БД "' . $_POST['reg_dbhost'] . '" используя логин "' . $_POST['reg_dbuser'] . '" (пароль: "' . $_POST['reg_dbpass'] . '")');
+		
+		try {
+			$sx = NGEngine::getInstance();
+			
+			switch($_POST['reg_dbtype']){
+				case 'MySQL':
+					$sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+				break;
+				case 'MySQLi':
+					$sx->set('db', new NGMYSQLi(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+				break;
+				case 'PDO':
+					$sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
+				break;
+			}
+			
+			$sx->set('legacyDB', new NGLegacyDB(false));
+			$sx->getLegacyDB()->connect('', '', '');
+			$mysql = $sx->getLegacyDB();
+			
+			array_push($LOG, 'РџРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ Р‘Р” "' . $_POST['reg_dbhost'] . '" РёСЃРїРѕР»СЊР·СѓСЏ Р»РѕРіРёРЅ "' . $_POST['reg_dbuser'] . '" ... OK');
+			
+			if ($mysql->select_db($_POST['reg_dbname']) === null) {
+				array_push($ERROR, 'РќРµРІРѕР·РјРѕР¶РЅРѕ РѕС‚РєСЂС‹С‚СЊ Р‘Р” "' . $_POST['reg_dbname'] . '"<br/>Р’Р°Рј РЅРµРѕР±С…РѕРґРёРјРѕ СЃРѕР·РґР°С‚СЊ СЌС‚Сѓ Р‘Р” СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ.');
+				$error = 1;
+				break;
+			}
+		} catch (Exception $e) {
+			array_push($ERROR, 'РќРµРІРѕР·РјРѕР¶РЅРѕ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє СЃРµСЂРІРµСЂСѓ Р‘Р” "' . $_POST['reg_dbhost'] . '" РёСЃРїРѕР»СЊР·СѓСЏ Р»РѕРіРёРЅ "' . $_POST['reg_dbuser'] . '" (РїР°СЂРѕР»СЊ: "' . $_POST['reg_dbpass'] . '")');
 			$error = 1;
 			break;
 		}
-		array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя логин "' . $_POST['reg_dbuser'] . '" ... OK');
-
-		// Открываем нужную БД
-		if (!@$mysql->select_db($_POST['reg_dbname'])) {
-			array_push($ERROR, 'Невозможно открыть БД "' . $_POST['reg_dbname'] . '"<br/>Вам необходимо создать эту БД самостоятельно.');
-			$error = 1;
-			break;
-		}
-
+		
 		// Check if different character set are supported [ version >= 4.1.1 ]
 		$charsetEngine = 0;
 
 		if (($msq = $mysql->query("show variables like 'character_set_client'")) && ($mysql->num_rows($msq))) {
 			$charsetEngine = 1;
 		}
-		$charset = $charsetEngine ? ' default charset=cp1251' : '';
+		$charset = $charsetEngine ? ' default charset=utf8' : '';
 
-		array_push($LOG, 'Ваша версия сервера БД mySQL ' . ((!$charsetEngine) ? 'не' : '') . 'поддерживает множественные кодировки.');
+		array_push($LOG, 'Р’Р°С€Р° РІРµСЂСЃРёСЏ СЃРµСЂРІРµСЂР° Р‘Р” mySQL ' . ((!$charsetEngine) ? 'РЅРµ' : '') . 'РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РјРЅРѕР¶РµСЃС‚РІРµРЅРЅС‹Рµ РєРѕРґРёСЂРѕРІРєРё.');
 
-		// Создаём таблицы в mySQL
-		// 1. Проверяем наличие пересекающихся таблиц
-		// 1.1. Загружаем список таблиц из БД
+		// РЎРѕР·РґР°С‘Рј С‚Р°Р±Р»РёС†С‹ РІ mySQL
+		// 1. РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РїРµСЂРµСЃРµРєР°СЋС‰РёС…СЃСЏ С‚Р°Р±Р»РёС†
+		// 1.1. Р—Р°РіСЂСѓР¶Р°РµРј СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС† РёР· Р‘Р”
 
 		$list = array();
 
 		if (!($query = $mysql->query("show tables"))) {
-			array_push($ERROR, 'Внутренняя ошибка SQL при получении списка таблиц БД. Обратитесь к автору проект за разъяснениями.');
+			array_push($ERROR, 'Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° SQL РїСЂРё РїРѕР»СѓС‡РµРЅРёРё СЃРїРёСЃРєР° С‚Р°Р±Р»РёС† Р‘Р”. РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РІС‚РѕСЂСѓ РїСЂРѕРµРєС‚ Р·Р° СЂР°Р·СЉСЏСЃРЅРµРЅРёСЏРјРё.');
 			$error = 1;
 			break;
 		}
@@ -723,49 +810,50 @@ function doInstall() {
 			$SQL_table[$item[0]] = 1;
 		}
 
-		// 1.2. Парсим список таблиц
+		// 1.2. РџР°СЂСЃРёРј СЃРїРёСЃРѕРє С‚Р°Р±Р»РёС†
 		$dbsql = explode(';', file_get_contents('trash/tables.sql'));
-
-		// 1.3. Проверяем пересечения
+		
+		// 1.3. РџСЂРѕРІРµСЂСЏРµРј РїРµСЂРµСЃРµС‡РµРЅРёСЏ
 		foreach ($dbsql as $dbCreateString) {
 			if (!trim($dbCreateString)) {
 				continue;
 			}
 
-			// Добавляем кодировку (если поддерживается)
+			// Р”РѕР±Р°РІР»СЏРµРј РєРѕРґРёСЂРѕРІРєСѓ (РµСЃР»Рё РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ)
 			$dbCreateString .= $charset;
 
-			// Получаем имя таблицы
+			// РџРѕР»СѓС‡Р°РµРј РёРјСЏ С‚Р°Р±Р»РёС†С‹
 			if (preg_match('/CREATE TABLE `(.+?)`/', $dbCreateString, $match)) {
 				$tname = str_replace('XPREFIX_', $_POST['reg_dbprefix'] . '_', $match[1]);
 				if ($SQL_table[$tname]) {
-					array_push($ERROR, 'В БД "' . $_POST['reg_dbname'] . '" уже существует таблица "' . $tname . '"<br/>Используйте другой префикс для создания таблиц!');
+					array_push($ERROR, 'Р’ Р‘Р” "' . $_POST['reg_dbname'] . '" СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ С‚Р°Р±Р»РёС†Р° "' . $tname . '"<br/>РСЃРїРѕР»СЊР·СѓР№С‚Рµ РґСЂСѓРіРѕР№ РїСЂРµС„РёРєСЃ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ С‚Р°Р±Р»РёС†!');
 					$error = 1;
 					break;
 				}
 			} else {
-				array_push($ERROR, 'Внутренняя ошибка парсера SQL. Обратитесь к автору проект за разъяснениями [' . $dbCreateString . ']');
+				array_push($ERROR, 'Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° РїР°СЂСЃРµСЂР° SQL. РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РІС‚РѕСЂСѓ РїСЂРѕРµРєС‚ Р·Р° СЂР°Р·СЉСЏСЃРЅРµРЅРёСЏРјРё [' . $dbCreateString . ']');
 				$error = 1;
 				break;
 			}
 		}
+		
 		if ($error) break;
 
-		array_push($LOG, 'Проверка наличия дублирующихся таблиц ... OK');
+		array_push($LOG, 'РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РґСѓР±Р»РёСЂСѓСЋС‰РёС…СЃСЏ С‚Р°Р±Р»РёС† ... OK');
 		array_push($LOG, '');
 
 		$SUPRESS_CHARSET = 0;
 		$SUPRESS_ENGINE = 0;
 
-		// 1.4. Создаём таблицы
+		// 1.4. РЎРѕР·РґР°С‘Рј С‚Р°Р±Р»РёС†С‹
 		for ($i = 0; $i < count($dbsql); $i++) {
 			$dbCreateString = str_replace('XPREFIX_', $_POST['reg_dbprefix'] . '_', $dbsql[$i]) . $charset;
-
+			
 			if ($SUPRESS_CHARSET) {
-				$dbCreateString = str_replace('default charset=cp1251', '', $dbCreateString);
+				$dbCreateString = str_replace('default charset=utf8', '', $dbCreateString);
 			}
 			if ($SUPRESS_ENGINE) {
-				$dbCreateString = str_replace('ENGINE=MyISAM', '', $dbCreateString);
+				$dbCreateString = str_replace('ENGINE=InnoDB', '', $dbCreateString);
 			}
 
 			if (preg_match('/CREATE TABLE `(.+?)`/', $dbCreateString, $match)) {
@@ -776,41 +864,41 @@ function doInstall() {
 				if ($mysql->db_errno()) {
 					if (!$SUPRESS_CHARSET) {
 						$SUPRESS_CHARSET = 1;
-						array_push($LOG, 'Внимание! Попытка отключить настройки кодовой страницы');
+						array_push($LOG, 'Р’РЅРёРјР°РЅРёРµ! РџРѕРїС‹С‚РєР° РѕС‚РєР»СЋС‡РёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё РєРѕРґРѕРІРѕР№ СЃС‚СЂР°РЅРёС†С‹');
 						$i--;
 						continue;
 					}
 					if (!$SUPRESS_ENGINE) {
 						$SUPRESS_ENGINE = 1;
-						array_push($LOG, 'Внимание! Попытка отключить настройки формата хранения данных');
+						array_push($LOG, 'Р’РЅРёРјР°РЅРёРµ! РџРѕРїС‹С‚РєР° РѕС‚РєР»СЋС‡РёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё С„РѕСЂРјР°С‚Р° С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С…');
 						$i--;
 						continue;
 					}
-					array_push($ERROR, 'Не могу создать таблицу "' . $tname . '"!<br>Обратитесь к автору проекта за разъяснениями<br>Код SQL запроса:<br>' . $dbCreateString);
+					array_push($ERROR, 'РќРµ РјРѕРіСѓ СЃРѕР·РґР°С‚СЊ С‚Р°Р±Р»РёС†Сѓ "' . $tname . '"!<br>РћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РІС‚РѕСЂСѓ РїСЂРѕРµРєС‚Р° Р·Р° СЂР°Р·СЉСЏСЃРЅРµРЅРёСЏРјРё<br>РљРѕРґ SQL Р·Р°РїСЂРѕСЃР°:<br>' . $dbCreateString);
 					$error = 1;
 					break;
 				}
-				array_push($LOG, 'Создание таблицы "<b>' . $tname . '</b>" ... OK');
+				array_push($LOG, 'РЎРѕР·РґР°РЅРёРµ С‚Р°Р±Р»РёС†С‹ "<b>' . $tname . '</b>" ... OK');
 			}
 		}
-		array_push($LOG, 'Все таблицы успешно созданы ... OK');
+		array_push($LOG, 'Р’СЃРµ С‚Р°Р±Р»РёС†С‹ СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅС‹ ... OK');
 		array_push($LOG, '');
-
-		// 1.5 Создание пользователя-администратора
+		
+		// 1.5 РЎРѕР·РґР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ-Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°
 		$query = "insert into `" . $_POST['reg_dbprefix'] . "_users` (`name`, `pass`, `mail`, `status`, `reg`) VALUES ('" . $mysql->db_quote($_POST['admin_login']) . "', '" . $mysql->db_quote(md5(md5($_POST['admin_password']))) . "', '" . $mysql->db_quote($_POST['admin_email']) . "', '1', unix_timestamp(now()))";
 		if (!@$mysql->query($query)) {
-			array_push($LOG, 'Активация пользователя-администратора ... <font color="red">FAIL</font>');
+			array_push($LOG, 'РђРєС‚РёРІР°С†РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ-Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° ... <font color="red">FAIL</font>');
 		} else {
-			array_push($LOG, 'Активация пользователя-администратора ... OK');
+			array_push($LOG, 'РђРєС‚РёРІР°С†РёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ-Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР° ... OK');
 		}
-		// 1.6 Сохраняем конфигурационную переменную database.engine.version
+		// 1.6 РЎРѕС…СЂР°РЅСЏРµРј РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅСѓСЋ РїРµСЂРµРјРµРЅРЅСѓСЋ database.engine.version
 		@$mysql->query("insert into `" . $_POST['reg_dbprefix'] . "_config` (name, value) values ('database.engine.version', '0.9.2 Release+SVN')");
 
-		// Вычищаем лишний перевод строки из 'home_url'
+		// Р’С‹С‡РёС‰Р°РµРј Р»РёС€РЅРёР№ РїРµСЂРµРІРѕРґ СЃС‚СЂРѕРєРё РёР· 'home_url'
 		if (substr($_POST['home_url'], -1, 1) == '/')
 			$_POST['home_url'] = substr($_POST['home_url'], 0, -1);
 
-		// 1.7. Формируем конфигурационный файл
+		// 1.7. Р¤РѕСЂРјРёСЂСѓРµРј РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅС‹Р№ С„Р°Р№Р»
 		$newconf = array(
 			'dbhost'              => $_POST['reg_dbhost'],
 			'dbname'              => $_POST['reg_dbname'],
@@ -832,10 +920,10 @@ function doInstall() {
 			'home_title'          => $_POST['home_title'],
 			'admin_mail'          => $_POST['admin_email'],
 			'lock'                => '0',
-			'lock_reason'         => 'Сайт на реконструкции!',
+			'lock_reason'         => 'РЎР°Р№С‚ РЅР° СЂРµРєРѕРЅСЃС‚СЂСѓРєС†РёРё!',
 			'meta'                => '1',
-			'description'         => 'Здесь описание вашего сайта',
-			'keywords'            => 'Здесь ключевые слова, через запятую (,)',
+			'description'         => 'Р—РґРµСЃСЊ РѕРїРёСЃР°РЅРёРµ РІР°С€РµРіРѕ СЃР°Р№С‚Р°',
+			'keywords'            => 'Р—РґРµСЃСЊ РєР»СЋС‡РµРІС‹Рµ СЃР»РѕРІР°, С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ (,)',
 			'skin'                => 'default',
 			'theme'               => $_POST['template'],
 			'default_lang'        => $currentLanguage,
@@ -890,18 +978,18 @@ function doInstall() {
 			'UUID'                => md5(mt_rand() . mt_rand()) . md5(mt_rand() . mt_rand()),
 		);
 
-		array_push($LOG, "Подготовка параметров конфигурационного файла ... OK");
+		array_push($LOG, "РџРѕРґРіРѕС‚РѕРІРєР° РїР°СЂР°РјРµС‚СЂРѕРІ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р° ... OK");
 
-		// Записываем конфиг
+		// Р—Р°РїРёСЃС‹РІР°РµРј РєРѕРЅС„РёРі
 		$confData = "<?php\n" . '$config = ' . var_export($newconf, true) . ";\n";
 
 		if (!fwrite($frec['config.php'], $confData)) {
-			array_push($ERROR, 'Ошибка записи конфигурационного файла!');
+			array_push($ERROR, 'РћС€РёР±РєР° Р·Р°РїРёСЃРё РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р°!');
 			$error = 1;
 			break;
 		}
 
-		// Активируем плагин auth_basic
+		// РђРєС‚РёРІРёСЂСѓРµРј РїР»Р°РіРёРЅ auth_basic
 		$plugConf = array(
 			'active'  => array(
 				'auth_basic' => 'auth_basic'
@@ -914,13 +1002,14 @@ function doInstall() {
 		);
 
 		$plugData = "<?php\n" . '$array = ' . var_export($plugConf, true) . ";\n";
+		$plugData = mb_convert_encoding($plugData, 'UTF-8', 'auto');
 		if (!fwrite($frec['plugins.php'], $plugData)) {
-			array_push($ERROR, 'Ошибка записи конфигурационного файла [список активных плагинов]!');
+			array_push($ERROR, 'РћС€РёР±РєР° Р·Р°РїРёСЃРё РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р° [СЃРїРёСЃРѕРє Р°РєС‚РёРІРЅС‹С… РїР»Р°РіРёРЅРѕРІ]!');
 			$error = 1;
 			break;
 		}
 
-		// А теперь - включаем необходимые плагины
+		// Рђ С‚РµРїРµСЂСЊ - РІРєР»СЋС‡Р°РµРј РЅРµРѕР±С…РѕРґРёРјС‹Рµ РїР»Р°РіРёРЅС‹
 		$pluginInstallList = array();
 		foreach ($_POST as $k => $v) {
 			if (preg_match('/^plugin\:(.+?)$/', $k, $m) && ($v == 1)) {
@@ -928,13 +1017,13 @@ function doInstall() {
 			}
 		}
 
-		// Закрываем все файлы
+		// Р—Р°РєСЂС‹РІР°РµРј РІСЃРµ С„Р°Р№Р»С‹
 		foreach (array_keys($frec) as $k)
 			fclose($frec[$k]);
 
-		array_push($LOG, 'Сохранение конфигурационного файла ... OK');
+		array_push($LOG, 'РЎРѕС…СЂР°РЅРµРЅРёРµ РєРѕРЅС„РёРіСѓСЂР°С†РёРѕРЅРЅРѕРіРѕ С„Р°Р№Р»Р° ... OK');
 
-		// А теперь - включаем необходимые плагины
+		// Рђ С‚РµРїРµСЂСЊ - РІРєР»СЋС‡Р°РµРј РЅРµРѕР±С…РѕРґРёРјС‹Рµ РїР»Р°РіРёРЅС‹
 		include_once root . "core.php";
 		include_once root . "includes/inc/extraconf.inc.php";
 		include_once root . "includes/inc/extrainst.inc.php";
@@ -942,7 +1031,7 @@ function doInstall() {
 		// Now let's install plugins
 		// First: Load informational `version` files
 		$list = get_extras_list();
-		// Подготавливаем список плагинов для установки
+		// РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј СЃРїРёСЃРѕРє РїР»Р°РіРёРЅРѕРІ РґР»СЏ СѓСЃС‚Р°РЅРѕРІРєРё
 		$pluginInstallList = array();
 		foreach ($_POST as $k => $v) {
 			if (preg_match('/^plugin\:(.+?)$/', $k, $m) && ($v == 1)) {
@@ -956,20 +1045,20 @@ function doInstall() {
 	if ($error) {
 		$output .= "<br/>\n";
 		foreach ($ERROR as $errText) {
-			$output .= '<div class="errorDiv"><b><u>Ошибка</u>!</b><br/>' . $errText . '</div>';
+			$output .= '<div class="errorDiv"><b><u>РћС€РёР±РєР°</u>!</b><br/>' . $errText . '</div>';
 		}
 
 		// Make navigation menu
 		$output .= '<div class="warningDiv">';
-		$output .= '<input type="button" style="width: 230px;" value="Вернуться к настройке БД" onclick="document.getElementById(\'stage\').value=\'0\'; form.submit();"/> - если Вы что-то неверно ввели в настройках БД, то Вы можете исправить ошибку.<br/>';
-		$output .= '<input type="button" style="width: 230px;" value="Попробовать ещё раз" onclick="document.getElementById(\'action\').value=\'install\'; form.submit();"/> - если Вы самостоятельно устранили ошибку, то нажмите сюда.';
+		$output .= '<input type="button" style="width: 230px;" value="Р’РµСЂРЅСѓС‚СЊСЃСЏ Рє РЅР°СЃС‚СЂРѕР№РєРµ Р‘Р”" onclick="document.getElementById(\'stage\').value=\'0\'; form.submit();"/> - РµСЃР»Рё Р’С‹ С‡С‚Рѕ-С‚Рѕ РЅРµРІРµСЂРЅРѕ РІРІРµР»Рё РІ РЅР°СЃС‚СЂРѕР№РєР°С… Р‘Р”, С‚Рѕ Р’С‹ РјРѕР¶РµС‚Рµ РёСЃРїСЂР°РІРёС‚СЊ РѕС€РёР±РєСѓ.<br/>';
+		$output .= '<input type="button" style="width: 230px;" value="РџРѕРїСЂРѕР±РѕРІР°С‚СЊ РµС‰С‘ СЂР°Р·" onclick="document.getElementById(\'action\').value=\'install\'; form.submit();"/> - РµСЃР»Рё Р’С‹ СЃР°РјРѕСЃС‚РѕСЏС‚РµР»СЊРЅРѕ СѓСЃС‚СЂР°РЅРёР»Рё РѕС€РёР±РєСѓ, С‚Рѕ РЅР°Р¶РјРёС‚Рµ СЃСЋРґР°.';
 		$output .= '</div>';
 
 	}
 
 	$tvars['vars']['actions'] = $output;
 
-	// Выводим форму проверки
+	// Р’С‹РІРѕРґРёРј С„РѕСЂРјСѓ РїСЂРѕРІРµСЂРєРё
 	$tpl->template('config_process', $templateDir);
 	$tpl->vars('config_process', $tvars);
 	print $tpl->show('config_process');

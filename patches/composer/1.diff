@@ -1,0 +1,40 @@
+--- a/vendor/twig/twig/src/Environment.php
++++ b/vendor/twig/twig/src/Environment.php
+@@ -1403,6 +1403,37 @@
+     }
+ 
+     /**
++     * Registers a Global by Reference.
++     *
++     * New globals can be added before compiling or rendering a template;
++     * but after, you can only update existing globals.
++     *
++     * @param string $name  The global name
++     * @param mixed  $value The global value
++     */
++    public function addGlobalRef($name, &$value)
++    {
++        if ($this->extensionInitialized || $this->runtimeInitialized) {
++            if (null === $this->globals) {
++                $this->globals = $this->initGlobals();
++            }
++
++            if (!\array_key_exists($name, $this->globals)) {
++                // The deprecation notice must be turned into the following exception in Twig 2.0
++                @trigger_error(sprintf('Registering global variable "%s" at runtime or when the extensions have already been initialized is deprecated since version 1.21.', $name), E_USER_DEPRECATED);
++                //throw new \LogicException(sprintf('Unable to add global "%s" as the runtime or the extensions have already been initialized.', $name));
++            }
++        }
++
++        if ($this->extensionInitialized || $this->runtimeInitialized) {
++            // update the value
++            $this->globals[$name] = $value;
++        } else {
++            $this->staging->addGlobalRef($name, $value);
++        }
++    }
++
++    /**
+      * Gets the registered Globals.
+      *
+      * @return array An array of globals

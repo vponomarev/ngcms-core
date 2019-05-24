@@ -1,7 +1,7 @@
 <form method="POST" action="{{ php_self }}?action=delete&pmid={{ pmid }}&location={{ location }}" style="display: inline;">
 	<div class="post">
 		<div class="post-header">
-			<div class="post-title">{{ subject }} {% if (ifinbox) %}от{% endif %} {% if not (ifinbox) %}для{% endif %} {{ author }} {{ pmdate|date('Y-m-d H:i') }}</div>
+			<div class="post-title">{{ subject }} {% if (ifinbox) %}РѕС‚{% endif %} {% if not (ifinbox) %}РґР»СЏ{% endif %} {{ author }} {{ pmdate|date('Y-m-d H:i') }}</div>
 		</div>
 		<div style="height: 10px;"></div>
 		<div class="post-text">

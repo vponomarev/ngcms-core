@@ -1,0 +1,21 @@
+{
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "require": {
+        "php": ">=5.6",
+        "twig/twig": "1.40.1",
+        "phpmailer/phpmailer": "6.*",
+        "cweagans/composer-patches": "1.*"
+    },
+    "extra": {
+        "composer-exit-on-patch-failure": true,
+        "patches": {
+            "twig/twig": {
+                "P-1: addGlobalRef": "patches/composer/1.diff",
+                "P-2: addGlobalRef": "patches/composer/2.diff"
+            }
+        }
+    }
+    
+} 

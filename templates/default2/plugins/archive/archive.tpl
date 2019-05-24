@@ -11,4 +11,4 @@
 		{% endif %}
 	{% endfor %}
 </ul>
-{% if (entries|length >=7) %}<a style="cursor: pointer;" id="show_all_archive" class="more">Полный архив</a>{% endif %}
+{% if (entries|length >=7) %}<a style="cursor: pointer;" id="show_all_archive" class="more">РџРѕР»РЅС‹Р№ Р°СЂС…РёРІ</a>{% endif %}

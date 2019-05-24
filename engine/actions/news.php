@@ -219,7 +219,7 @@ function editNewsForm() {
 		}
 
 	$xt = $twig->loadTemplate('skins/default/tpl/news/edit.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 //
@@ -618,7 +618,7 @@ function listNewsForm() {
 
 	//$xt = $twig->loadTemplate('skins/default/tpl/news/table_catalog.tpl');
 	$xt = $twig->loadTemplate('skins/default/tpl/news/table.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 // ======================================================================================================
@@ -703,7 +703,7 @@ function addNewsForm($retry = '') {
 		}
 
 	$xt = $twig->loadTemplate('skins/default/tpl/news/add.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 // #==============================================================================#
@@ -723,18 +723,19 @@ do {
 				$replay = true;
 			}
 		}
-		addNewsForm($replay ? json_encode(arrayCharsetConvert(0, $_POST)) : null);
+		//$main_admin = addNewsForm($replay ? json_encode(arrayCharsetConvert(0, $_POST)) : null);
+		$main_admin = addNewsForm($replay ? json_encode($_POST) : null);
 		break;
 	}
 
 	if ($action == "edit") {
 		if ($subaction == "submit") {
-			editNews();
+			$main_admin = editNews();
 		}
 		if ($subaction == "mass_com_delete") {
-			massCommentDelete();
+			$main_admin = massCommentDelete();
 		}
-		editNewsForm();
+		$main_admin = editNewsForm();
 		break;
 	}
 
@@ -742,31 +743,31 @@ do {
 		switch ($subaction) {
 			case 'mass_currdate'    :
 				$curdate = time() + ($config['date_adjust'] * 60);
-				massNewsModify(array('postdate' => $curdate), 'msgo_currdate', 'capprove');
+				$main_admin = massNewsModify(array('postdate' => $curdate), 'msgo_currdate', 'capprove');
 				break;
 			case 'mass_approve'      :
-				massNewsModify(array('approve' => 1), 'msgo_approved', 'approve');
+				$main_admin = massNewsModify(array('approve' => 1), 'msgo_approved', 'approve');
 				break;
 			case 'mass_mainpage'     :
-				massNewsModify(array('mainpage' => 1), 'msgo_mainpaged', 'mainpage');
+				$main_admin = massNewsModify(array('mainpage' => 1), 'msgo_mainpaged', 'mainpage');
 				break;
 			case 'mass_unmainpage'   :
-				massNewsModify(array('mainpage' => 0), 'msgo_unmainpage', 'unmainpage');
+				$main_admin = massNewsModify(array('mainpage' => 0), 'msgo_unmainpage', 'unmainpage');
 				break;
 			case 'mass_forbidden'    :
-				massNewsModify(array('approve' => 0), 'msgo_forbidden', 'forbidden');
+				$main_admin = massNewsModify(array('approve' => 0), 'msgo_forbidden', 'forbidden');
 				break;
 			case 'mass_com_forbidden':
-				massNewsModify(array('allow_com' => 0), 'msgo_cforbidden', 'cforbidden');
+				$main_admin = massNewsModify(array('allow_com' => 0), 'msgo_cforbidden', 'cforbidden');
 				break;
 			case 'mass_com_approve'  :
-				massNewsModify(array('allow_com' => 1), 'msgo_capproved', 'capprove');
+				$main_admin = massNewsModify(array('allow_com' => 1), 'msgo_capproved', 'capprove');
 				break;
 			case 'mass_delete'       :
-				massNewsDelete();
+				$main_admin = massNewsDelete();
 				break;
 		}
 	}
-	listNewsForm();
+	$main_admin = listNewsForm();
 
 } while (false);

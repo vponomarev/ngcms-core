@@ -1,6 +1,6 @@
 <form method="POST" action="{{ php_self }}?action=delete&pmid={{ pmid }}&location={{ location }}" style="display: inline;">
 	<div class="full">
-		<h1>{{ subject }} {% if (ifinbox) %}от{% endif %} {% if not (ifinbox) %}для{% endif %} {{ author }} {{ pmdate|date('Y-m-d H:i') }}</h1>
+		<h1>{{ subject }} {% if (ifinbox) %}РѕС‚{% endif %} {% if not (ifinbox) %}РґР»СЏ{% endif %} {{ author }} {{ pmdate|date('Y-m-d H:i') }}</h1>
 		<div class="pad20_f">
 			<div class="btn-group">
 				<a href="/plugin/pm/">{{ lang['pm:inbox'] }}</a> |

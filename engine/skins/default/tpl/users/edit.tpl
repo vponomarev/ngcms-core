@@ -87,17 +87,17 @@
 {% if (pluginIsActive('xfields')) %}
 	<table width="100%">
 		<tr>
-			<td colspan="8" width="100%" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8">Доп.
-				поля в профиле пользователя (только просмотр)
+			<td colspan="8" width="100%" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8">Р”РѕРї.
+				РїРѕР»СЏ РІ РїСЂРѕС„РёР»Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (С‚РѕР»СЊРєРѕ РїСЂРѕСЃРјРѕС‚СЂ)
 			</td>
 		</tr>
 		<tr align="left">
-			<td class="contentHead"><b>ID поля</b></td>
-			<td class="contentHead"><b>Название поля</b></td>
-			<td class="contentHead"><b>Тип поля</b></td>
-			<td class="contentHead"><b>Блок</b></td>
+			<td class="contentHead"><b>ID РїРѕР»СЏ</b></td>
+			<td class="contentHead"><b>РќР°Р·РІР°РЅРёРµ РїРѕР»СЏ</b></td>
+			<td class="contentHead"><b>РўРёРї РїРѕР»СЏ</b></td>
+			<td class="contentHead"><b>Р‘Р»РѕРє</b></td>
 			<!-- <td class="contentHead"><b>V</b></td> -->
-			<td class="contentHead"><b>Значение</b></td>
+			<td class="contentHead"><b>Р—РЅР°С‡РµРЅРёРµ</b></td>
 		</tr>
 		{% for xFN,xfV in p.xfields.fields %}
 			<tr>

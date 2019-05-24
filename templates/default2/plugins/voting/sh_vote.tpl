@@ -4,4 +4,4 @@
 <div class="well">
 	{votelines}
 </div>
-<small>Всего проголосовало: {vcount}</small>
+<small>Р’СЃРµРіРѕ РїСЂРѕРіРѕР»РѕСЃРѕРІР°Р»Рѕ: {vcount}</small>

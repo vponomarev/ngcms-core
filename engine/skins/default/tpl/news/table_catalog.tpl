@@ -7,13 +7,13 @@
 	<table width="1000" border="0" cellspacing="0" cellpadding="0" class="editfilter">
 		<tr>
 			<td valign="top" width="100%">
-				&nbsp; Поиск: <input name="sl" type="text" class="bfsearch" size="60" value="{{ sl }}"/>
+				&nbsp; РџРѕРёСЃРє: <input name="sl" type="text" class="bfsearch" size="60" value="{{ sl }}"/>
 				<input type="submit" value="{{ lang.editnews['do_show'] }}"/>
 			</td>
 		</tr>
 	</table>
 </form>
-<!-- Конец блока фильтрации -->
+<!-- РљРѕРЅРµС† Р±Р»РѕРєР° С„РёР»СЊС‚СЂР°С†РёРё -->
 
 <br/>
 <form action="{{ php_self }}?mod=news" method="post" name="editnews">
@@ -23,14 +23,14 @@
 				<table width="250" cellspacing="0" cellpadding="0" border="0" style="margin-right: 2px;">
 					<thead>
 					<tr class="contHead">
-						<td>Категории</td>
+						<td>РљР°С‚РµРіРѕСЂРёРё</td>
 					</tr>
 					</thead>
 					<tbody>
 					<tr>
 						<td {% if (cat_active < 1) %}style="background-color: #EEEEEE;"{% endif %}>
 							<img alt="+" height="18" width="18" src="{{ skins_url }}/images/catmenu/plus.gif"/>
-							<a href="?mod=news">Все категории</a></td>
+							<a href="?mod=news">Р’СЃРµ РєР°С‚РµРіРѕСЂРёРё</a></td>
 					</tr>
 					{% for cat in catmenu %}
 						<tr>
@@ -67,7 +67,7 @@
 							<td class="contentEntry1">
 								<a href="{{ php_self }}?mod=news&amp;action=edit&amp;id={{ entry.newsid }}">{{ entry.title }}</a><br/>
 								<small>{% if entry.flags.status %}
-										<a href="{{ entry.link }}">{{ entry.link }}</a>{% else %}нет ссылки{% endif %}
+										<a href="{{ entry.link }}">{{ entry.link }}</a>{% else %}РЅРµС‚ СЃСЃС‹Р»РєРё{% endif %}
 								</small>
 							</td>
 							<td class="contentEntry1">{% if entry.flags.status %}

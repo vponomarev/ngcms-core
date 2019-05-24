@@ -96,7 +96,7 @@ function listStatic() {
 	exec_acts('static_list');
 
 	$xt = $twig->loadTemplate('skins/default/tpl/static/table.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 //
@@ -311,7 +311,7 @@ function addEditStaticForm($operationMode = 1, $sID = 0) {
 		}
 
 	$xt = $twig->loadTemplate('skins/default/tpl/static/edit.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 
 	return 1;
 }
@@ -528,42 +528,42 @@ $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 switch ($action) {
 	case 'add':
 		if ($id = addStatic()) {
-			addEditStaticForm(3, $id);
+			$main_admin = addEditStaticForm(3, $id);
 		} else {
-			addEditStaticForm(2);
+			$main_admin = addEditStaticForm(2);
 		}
 		break;
 
 	case 'addForm':
-		addEditStaticForm(1);
+		$main_admin = addEditStaticForm(1);
 		break;
 
 	case 'edit':
 		if (($id = editStatic()) > 0) {
-			addEditStaticForm(3, $id);
+			$main_admin = addEditStaticForm(3, $id);
 		} else if ($id == 0) {
-			addEditStaticForm(4);
+			$main_admin = addEditStaticForm(4);
 		} else {
-			listStatic();
+			$main_admin = listStatic();
 		}
 		break;
 
 	case 'editForm':
-		addEditStaticForm(3);
+		$main_admin = addEditStaticForm(3);
 		break;
 
 	default: {
 		switch ($action) {
 			case 'do_mass_approve':
-				massStaticModify('approve = 1', 'msgo_approved', 'approve');
+				$main_admin = massStaticModify('approve = 1', 'msgo_approved', 'approve');
 				break;
 			case 'do_mass_forbidden':
-				massStaticModify('approve = 0', 'msgo_forbidden', 'forbidden');
+				$main_admin = massStaticModify('approve = 0', 'msgo_forbidden', 'forbidden');
 				break;
 			case 'do_mass_delete':
-				massStaticDelete();
+				$main_admin = massStaticDelete();
 				break;
 		}
-		listStatic();
+		$main_admin = listStatic();
 	}
 }

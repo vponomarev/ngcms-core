@@ -6,4 +6,4 @@
 	}
 </script>
 <select id="switcher_selector" style="width: 170px;">{list}</select>
-<input type=button onclick="sw_update();" class="btn btn-primary btn-large" value="Âûáğàòü">
+<input type=button onclick="sw_update();" class="btn btn-primary btn-large" value="Ğ’Ñ‹Ğ±Ñ€Ğ°Ñ‚ÑŒ">

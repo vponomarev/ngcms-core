@@ -6,7 +6,7 @@
 			{entries}
 			[captcha]
 			<div class="input">
-				<label>Проверочный код</label>
+				<label>РџСЂРѕРІРµСЂРѕС‡РЅС‹Р№ РєРѕРґ</label>
 				<img src="{admin_url}/captcha.php" class="left" onclick="reload_captcha();" id="img_captcha" style="cursor: pointer;" alt="Security code"/>
 				<input type="text" name="vcode" style="width:80px"/>
 				<div class="clear10"></div>

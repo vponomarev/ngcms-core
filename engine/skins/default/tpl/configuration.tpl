@@ -10,6 +10,7 @@
 			params: json_encode(
 				{
 					'token': '{{ token }}',
+					'dbtype': $("#db_dbtype").val(),
 					'dbhost': $("#db_dbhost").val(),
 					'dbname': $("#db_dbname").val(),
 					'dbuser': $("#db_dbuser").val(),
@@ -108,7 +109,7 @@
 				ngNotifyWindow('{{ lang['rpc_jsonError'] }} ' + data, '{{ lang['notifyWindowError'] }}');
 			}
 			if (!resTX['status']) {
-				ngNotifyWindow('Error [' + resTX['errorCode'] + ']: ' + resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
+				ngNotifyWindow('{{ lang['notifyWindowError'] }} [' + resTX['errorCode'] + ']: ' + resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
 			} else {
 				ngNotifyWindow(resTX['errorText'], '{{ lang['notifyWindowInfo'] }}');
 			}
@@ -151,15 +152,22 @@
 			<!-- TABLE DB//Connection -->
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
-					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['db_connect'] }}</td>
+					<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['db_connect'] }}</td>
+				</tr>
+				<tr>
+					<td width="50%" class="contentEntry1">{{ lang['dbtype'] }}<br/>
+						<small>{{ lang['example'] }} pdo</small>
+					</td>
+					<td class="contentEntry2" valign="middle">
+						{{ mkSelect({'name' : 'save_con[dbtype]', 'value' : config['dbtype'], 'id' : 'db_dbtype', 'values' : { 'mysqli' : lang['mysqli'], 'pdo' : lang['pdo'] } }) }}
+					</td>
 				</tr>
 				<tr>
 					<td width="50%" class="contentEntry1">{{ lang['dbhost'] }}<br/>
 						<small>{{ lang['example'] }} localhost</small>
 					</td>
 					<td width="50%" class="contentEntry2" valign="middle">
-						<input class="important" type="text" name='save_con[dbhost]' value='{{ config['dbhost'] }}' id="db_dbhost" size="40"/>
+						<input class="important" type="text" name="save_con[dbhost]" value="{{ config['dbhost'] }}" id="db_dbhost" size="40"/>
 					</td>
 				</tr>
 				<tr>

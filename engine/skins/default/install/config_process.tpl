@@ -4,7 +4,7 @@
 		<input type="hidden" name="stage" value="4" id="stage"/>
 		{hinput}
 		<p style="width: 99%;">
-			<b><u>Список выполненных действий:</u></b>
+			<b><u>РЎРїРёСЃРѕРє РІС‹РїРѕР»РЅРµРЅРЅС‹С… РґРµР№СЃС‚РІРёР№:</u></b>
 		</p>
 		{actions}
 	</form>

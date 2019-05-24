@@ -6,7 +6,7 @@
 	}
 </script>
 <div class="block archive-block">
-	<div class="block-title">Выбор профиля</div>
+	<div class="block-title">Р’С‹Р±РѕСЂ РїСЂРѕС„РёР»СЏ</div>
 	<select id="switcher_selector">{list}</select>
-	<input type=button onclick="sw_update();" class="button" value="Выбрать">
+	<input type=button onclick="sw_update();" class="button" value="Р’С‹Р±СЂР°С‚СЊ">
 </div>

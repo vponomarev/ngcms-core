@@ -26,88 +26,88 @@
 	<input type="hidden" name="stage" value="2"/>
 
 	<p style="padding: 5px 0px 5px 15px;">
-		Будте внимательны при вводе данных, они очень важны!<br/>
+		Р‘СѓРґС‚Рµ РІРЅРёРјР°С‚РµР»СЊРЅС‹ РїСЂРё РІРІРѕРґРµ РґР°РЅРЅС‹С…, РѕРЅРё РѕС‡РµРЅСЊ РІР°Р¶РЅС‹!<br/>
 
 		$ERR[general_error]
 		$ERR[general_error_info]
 	<table width="650" align="center" class="content">
 		<tr>
-			<td width="50%" class="contentEntry1">Сервер БД: $ERR[reg_dbhost]</td>
+			<td width="50%" class="contentEntry1">РЎРµСЂРІРµСЂ Р‘Р”: $ERR[reg_dbhost]</td>
 			<td width="50%" class="contentEntry2"><input type="text" size="40" name="reg_dbhost" value="{reg_dbhost}">
 			</td>
 		</tr>
 		<tr>
-			<td width="50%" class="contentEntry1">Имя пользователя БД: $ERR[reg_dbuser]</td>
+			<td width="50%" class="contentEntry1">РРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Р‘Р”: $ERR[reg_dbuser]</td>
 			<td width="50%" class="contentEntry2"><input type="text" size="40" name="reg_dbuser" value="{reg_dbuser}">
 			</td>
 		</tr>
 		<tr>
-			<td width="50%" class="contentEntry1">Пароль БД:</td>
+			<td width="50%" class="contentEntry1">РџР°СЂРѕР»СЊ Р‘Р”:</td>
 			<td width="50%" class="contentEntry2"><input type="text" size="40" name="reg_dbpass" value="{reg_dbpass}">
 			</td>
 		</tr>
 		<tr class="odd">
-			<td width="50%" class="contentEntry1">Название БД: $ERR[reg_dbname]</td>
+			<td width="50%" class="contentEntry1">РќР°Р·РІР°РЅРёРµ Р‘Р”: $ERR[reg_dbname]</td>
 			<td width="50%" class="contentEntry2"><input type="text" size="40" name="reg_dbname" value="{reg_dbname}">
 			</td>
 		</tr>
 		<tr class="even">
-			<td width="50%" class="contentEntry1">Префикс имени БД:</td>
+			<td width="50%" class="contentEntry1">РџСЂРµС„РёРєСЃ РёРјРµРЅРё Р‘Р”:</td>
 			<td width="50%" class="contentEntry2">
 				<input type="text" size="40" name="reg_dbprefix" value="{reg_dbprefix}"></td>
 		</tr>
 		<tr class="odd">
-			<td width="50%" class="contentEntry1">Автосоздание пользователя и БД в mySQL<br>Требуется административный
-				доступ к серверу БД
+			<td width="50%" class="contentEntry1">РђРІС‚РѕСЃРѕР·РґР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё Р‘Р” РІ mySQL<br>РўСЂРµР±СѓРµС‚СЃСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅС‹Р№
+				РґРѕСЃС‚СѓРї Рє СЃРµСЂРІРµСЂСѓ Р‘Р”
 			</td>
 			<td width="50%" class="contentEntry2">
 				<input type=checkbox name="reg_autocreate" value="1" $DATA[reg_autocreate]></td>
 		</tr>
 		<tr class="even">
-			<td width="50%" class="contentEntry1">Административный логин для сервера БД: $ERR[reg_dbadminuser]</td>
+			<td width="50%" class="contentEntry1">РђРґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅС‹Р№ Р»РѕРіРёРЅ РґР»СЏ СЃРµСЂРІРµСЂР° Р‘Р”: $ERR[reg_dbadminuser]</td>
 			<td width="50%" class="contentEntry2">
 				<input type="text" size="40" name="reg_dbadminuser" value="$DATA[reg_dbadminuser]"></td>
 		</tr>
 		<tr class="odd">
-			<td width="50%" class="contentEntry1">Административный пароль для сервера БД:</td>
+			<td width="50%" class="contentEntry1">РђРґРјРёРЅРёСЃС‚СЂР°С‚РёРІРЅС‹Р№ РїР°СЂРѕР»СЊ РґР»СЏ СЃРµСЂРІРµСЂР° Р‘Р”:</td>
 			<td width="50%" class="contentEntry2">
 				<input type="text" size="40" name="reg_dbadminpass" value="$DATA[reg_dbadminpass]"></td>
 		</tr>
 		<tr class="even">
 			<td colspan="2">
-				<input type=button value="Проверить подключение к серверу БД" class="filterbutton" onclick="check_connection();">&nbsp;<br>
+				<input type=button value="РџСЂРѕРІРµСЂРёС‚СЊ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє СЃРµСЂРІРµСЂСѓ Р‘Р”" class="filterbutton" onclick="check_connection();">&nbsp;<br>
 		</tr>
 		<tr class="odd">
 			<td colspan="2">&nbsp;</td>
 		</tr>
 		<tr>
-			<td width="50%" class="contentEntry1">Адрес сайта: $ERR[home_url]</td>
+			<td width="50%" class="contentEntry1">РђРґСЂРµСЃ СЃР°Р№С‚Р°: $ERR[home_url]</td>
 			<td width="50%" class="contentEntry2">
 				<input type="text" name="home_url" value="$DATA[home_url]" size="40"><br/>
-				<small>начиная с http:// и без слэша на конце</small>
+				<small>РЅР°С‡РёРЅР°СЏ СЃ http:// Рё Р±РµР· СЃР»СЌС€Р° РЅР° РєРѕРЅС†Рµ</small>
 			</td>
 		</tr>
 		<tr>
-			<td width="50%" class="contentEntry1">Имя администратора: $ERR[reg_username]</td>
+			<td width="50%" class="contentEntry1">РРјСЏ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°: $ERR[reg_username]</td>
 			<td width="50%" class="contentEntry2">
 				<input type="text" size="40" name="reg_username" value="$DATA[reg_username]">
 		</tr>
 		<tr>
-			<td width="50%" class="contentEntry1">Пароль администратора: $ERR[reg_password1]</td>
+			<td width="50%" class="contentEntry1">РџР°СЂРѕР»СЊ Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°: $ERR[reg_password1]</td>
 			<td width="50%" class="contentEntry2"><input type="password" size="40" name="reg_password1">
 		</tr>
 		<tr>
-			<td width="50%" class="contentEntry1">Пароль еще раз:</td>
+			<td width="50%" class="contentEntry1">РџР°СЂРѕР»СЊ РµС‰Рµ СЂР°Р·:</td>
 			<td width="50%" class="contentEntry2"><input type="password" size="40" name="reg_password2"></td>
 		</tr>
 		<tr>
-			<td width="50%" class="contentEntry1">Email администратора:</td>
+			<td width="50%" class="contentEntry1">Email Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°:</td>
 			<td width="50%" class="contentEntry2">
 				<input type="text" size="40" name="reg_email" value="$DATA[reg_email]"></td>
 		</tr>
 		<tr>
 			<td width="50%" class="contentEntry1" colspan="2">
-				<input type="submit" value="Продолжить установку!" class="filterbutton"/></td>
+				<input type="submit" value="РџСЂРѕРґРѕР»Р¶РёС‚СЊ СѓСЃС‚Р°РЅРѕРІРєСѓ!" class="filterbutton"/></td>
 		</tr>
 	</table>
 	</p>

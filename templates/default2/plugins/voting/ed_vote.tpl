@@ -19,7 +19,7 @@
 
 		var voteid = form.voteid.value;
 		if (mode && (choice < 0)) {
-			alert('Ñíà÷àëà íåîáõîäèìî âûáðàòü âàðèàíò!');
+			alert('Ð¡Ð½Ð°Ñ‡Ð°Ð»Ð° Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ð¾ Ð²Ñ‹Ð±Ñ€Ð°Ñ‚ÑŒ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚!');
 			return false;
 		}
 
@@ -51,7 +51,7 @@
 		<input type="hidden" name="mode" value="vote"/>
 		<input type="hidden" name="voteid" value="{voteid}"/>
 		<input type="hidden" name="referer" value="{REFERER}"/>
-		<input type="submit" onclick="return make_vote(1);" class="btn" value="Ãîëîñîâàòü">
-		<input type="button" onclick="return make_vote(0);" class="btn" value="Ðåçóëüòàòû">
+		<input type="submit" onclick="return make_vote(1);" class="btn" value="Ð“Ð¾Ð»Ð¾ÑÐ¾Ð²Ð°Ñ‚ÑŒ">
+		<input type="button" onclick="return make_vote(0);" class="btn" value="Ð ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ñ‹">
 	</form>
 </div>

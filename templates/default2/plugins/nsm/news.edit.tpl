@@ -44,42 +44,42 @@
 	<input type="hidden" name="subaction" value="submit"/>
 	<div class="post">
 		<div class="post-header">
-			<div class="post-title">Редактирование новости:</div>
+			<div class="post-title">Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ РЅРѕРІРѕСЃС‚Рё:</div>
 		</div>
 		<div style="height: 10px;"></div>
 		<div class="post-text">
 			<p>
 			<table border="0" width="100%">
 				<tr>
-					<th><a role="button" href="{{ listURL }}">Перейти к списку ваших новостей</a></th>
+					<th><a role="button" href="{{ listURL }}">РџРµСЂРµР№С‚Рё Рє СЃРїРёСЃРєСѓ РІР°С€РёС… РЅРѕРІРѕСЃС‚РµР№</a></th>
 				</tr>
 			</table>
 			<div style="height: 20px;"></div>
 			<table border="0" width="100%">
 				<tr>
-					<td width="30%">Заголовок:</td>
+					<td width="30%">Р—Р°РіРѕР»РѕРІРѕРє:</td>
 					<td width="70%"><input type="text" name="title" class="input" value="{{ title }}"/></td>
 				</tr>
 				<tr>
-					<td width="30%">Альт. имя:</td>
+					<td width="30%">РђР»СЊС‚. РёРјСЏ:</td>
 					<td width="70%">
 						<input type="text" name="alt_name" class="input" value="{{ alt_name }}" {% if flags['altname.disabled'] %}disabled="disabled" {% endif %} />
 					</td>
 				</tr>
 				<tr>
-					<td width="30%">Категория:</td>
+					<td width="30%">РљР°С‚РµРіРѕСЂРёСЏ:</td>
 					<td width="70%">{{ mastercat }}</td>
 				</tr>
 				{% if flags['multicat.show'] %}
 					<tr>
-						<td width="30%">Дополнительные категории:</td>
+						<td width="30%">Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё:</td>
 						<td width="70%">{{ extcat }}</td>
 					</tr>
 				{% endif %}
 				{% if (flags.edit_split) %}
 					<tr>
 						<td colspan="2">
-							<b>Вводная часть материала:</b> (Обязательно)
+							<b>Р’РІРѕРґРЅР°СЏ С‡Р°СЃС‚СЊ РјР°С‚РµСЂРёР°Р»Р°:</b> (РћР±СЏР·Р°С‚РµР»СЊРЅРѕ)
 							<div>
 								<div>{{ quicktags }}<br/> {{ smilies }}</div>
 								<textarea onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" id="ng_news_content_short" style="width:98%;" rows="15" class="textarea">{{ content.short }}</textarea>
@@ -88,7 +88,7 @@
 					</tr>
 					{% if (flags.extended_more) %}
 						<tr>
-							<td width="30%">Разделитель:</td>
+							<td width="30%">Р Р°Р·РґРµР»РёС‚РµР»СЊ:</td>
 							<td width="70%">
 								<input tabindex="2" type="text" name="content_delimiter" value="{{ content.delimiter }}" style="width: 98%;" class="input" value=""/>
 							</td>
@@ -96,7 +96,7 @@
 					{% endif %}
 					<tr>
 						<td colspan="2">
-							<b>Материал полностью:</b> (Необязательно)
+							<b>РњР°С‚РµСЂРёР°Р» РїРѕР»РЅРѕСЃС‚СЊСЋ:</b> (РќРµРѕР±СЏР·Р°С‚РµР»СЊРЅРѕ)
 							<div>
 								<div>{{ quicktags }}<br/> {{ smilies }}</div>
 								<textarea onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" id="ng_news_content_full" style="width:98%;" rows="15" class="textarea">{{ content.full }}</textarea>
@@ -145,16 +145,16 @@
 					<tr>
 						<td colspan="2">
 							<div>
-								Обратите снимание - у вас недостаточно прав для полноценного редактирования
-								новости.<br/>
-								При сохранении будут произведены следующие изменения:<br/><br/>
-								{% if flags['publish.lost'] %}&#8594; Новость будет снята с публикации{% endif %}
-								{% if flags['html.lost'] %}&#8594; В новости будет запрещено использование HTML тегов и автоформатирование{% endif %}
-								{% if flags['mainpage.lost'] %}&#8594; Новость будет убрана с главной страницы{% endif %}
-								{% if flags['pinned.lost'] %}&#8594; С новости будет снято прикрепление на главной{% endif %}
-								{% if flags['catpinned.lost'] %}&#8594; С новости будет снято прикрепление в категории{% endif %}
-								{% if flags['favorite.lost'] %}&#8594; Новость будет удалена из закладок администратора{% endif %}
-								{% if flags['multicat.lost'] %}&#8594; Из новости будут удалены все дополнительные категории{% endif %}
+								РћР±СЂР°С‚РёС‚Рµ СЃРЅРёРјР°РЅРёРµ - Сѓ РІР°СЃ РЅРµРґРѕСЃС‚Р°С‚РѕС‡РЅРѕ РїСЂР°РІ РґР»СЏ РїРѕР»РЅРѕС†РµРЅРЅРѕРіРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
+								РЅРѕРІРѕСЃС‚Рё.<br/>
+								РџСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё Р±СѓРґСѓС‚ РїСЂРѕРёР·РІРµРґРµРЅС‹ СЃР»РµРґСѓСЋС‰РёРµ РёР·РјРµРЅРµРЅРёСЏ:<br/><br/>
+								{% if flags['publish.lost'] %}&#8594; РќРѕРІРѕСЃС‚СЊ Р±СѓРґРµС‚ СЃРЅСЏС‚Р° СЃ РїСѓР±Р»РёРєР°С†РёРё{% endif %}
+								{% if flags['html.lost'] %}&#8594; Р’ РЅРѕРІРѕСЃС‚Рё Р±СѓРґРµС‚ Р·Р°РїСЂРµС‰РµРЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ HTML С‚РµРіРѕРІ Рё Р°РІС‚РѕС„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРёРµ{% endif %}
+								{% if flags['mainpage.lost'] %}&#8594; РќРѕРІРѕСЃС‚СЊ Р±СѓРґРµС‚ СѓР±СЂР°РЅР° СЃ РіР»Р°РІРЅРѕР№ СЃС‚СЂР°РЅРёС†С‹{% endif %}
+								{% if flags['pinned.lost'] %}&#8594; РЎ РЅРѕРІРѕСЃС‚Рё Р±СѓРґРµС‚ СЃРЅСЏС‚Рѕ РїСЂРёРєСЂРµРїР»РµРЅРёРµ РЅР° РіР»Р°РІРЅРѕР№{% endif %}
+								{% if flags['catpinned.lost'] %}&#8594; РЎ РЅРѕРІРѕСЃС‚Рё Р±СѓРґРµС‚ СЃРЅСЏС‚Рѕ РїСЂРёРєСЂРµРїР»РµРЅРёРµ РІ РєР°С‚РµРіРѕСЂРёРё{% endif %}
+								{% if flags['favorite.lost'] %}&#8594; РќРѕРІРѕСЃС‚СЊ Р±СѓРґРµС‚ СѓРґР°Р»РµРЅР° РёР· Р·Р°РєР»Р°РґРѕРє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂР°{% endif %}
+								{% if flags['multicat.lost'] %}&#8594; РР· РЅРѕРІРѕСЃС‚Рё Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹ РІСЃРµ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹Рµ РєР°С‚РµРіРѕСЂРёРё{% endif %}
 							</div>
 						</td>
 					</tr>
@@ -177,12 +177,12 @@
 								{% if flags.can_publish %}
 									<option value="1" {% if (approve == 1) %}selected="selected"{% endif %}>{{ lang.editnews['state.published'] }}</option>{% endif %}
 							</select>
-							<button class="btn" type="submit" onclick="return approveMode(-1);"><span>Отправить</span>
+							<button class="btn" type="submit" onclick="return approveMode(-1);"><span>РћС‚РїСЂР°РІРёС‚СЊ</span>
 							</button>{% endif %}
-						<button class="btn" type="button" onClick="preview()"><span>Просмотр</span></button>
+						<button class="btn" type="button" onClick="preview()"><span>РџСЂРѕСЃРјРѕС‚СЂ</span></button>
 						{% if flags.deleteable %}
 							<button class="btn" type="button" onClick="confirmit('{{ deleteURL }}', '{{ lang.editnews['sure_del'] }}')">
-								<span>Удалить</span></button>{% endif %}
+								<span>РЈРґР°Р»РёС‚СЊ</span></button>{% endif %}
 					</td>
 				</tr>
 			</table>

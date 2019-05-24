@@ -35,11 +35,11 @@
 					<table id="table3" cellspacing="0" cellpadding="0">
 						<tr>
 							<td id="month">
-								<a href="{{ prevMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'prev'); return false;" class="prev-month">«</a>
+								<a href="{{ prevMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'prev'); return false;" class="prev-month">Â«</a>
 								&nbsp;&nbsp;
 								<a href="{{ currentMonth.link }}">{{ currentMonth.name }} {{ currentEntry.year }}</a>
 								&nbsp;&nbsp;
-								<a href="{{ nextMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'next'); return false;" class="next-month">»</a>
+								<a href="{{ nextMonth.link }}" onclick="ng_calendar_walk({{ currentEntry.month }}, {{ currentEntry.year }}, 'next'); return false;" class="next-month">Â»</a>
 							</td>
 						</tr>
 					</table>

@@ -3,7 +3,7 @@
 	<div class="pad20_f">
 		{votelines}<br/>
 		<div align="center">
-			Всего проголосовало: {vcount}
+			Р’СЃРµРіРѕ РїСЂРѕРіРѕР»РѕСЃРѕРІР°Р»Рѕ: {vcount}
 		</div>
 		<br/>
 	</div>

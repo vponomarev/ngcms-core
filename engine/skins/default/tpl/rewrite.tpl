@@ -48,7 +48,7 @@
 			<td colspan="4">&nbsp;</td>
 			<td colspan="2">
 				<!--
-				Переопределение значений переменных:
+				РџРµСЂРµРѕРїСЂРµРґРµР»РµРЅРёРµ Р·РЅР°С‡РµРЅРёР№ РїРµСЂРµРјРµРЅРЅС‹С…:
 				<table width="100%">
 				<tr><td>altname</td><td width="20"><input type="checkbox"></td><td><input type="text"/></td></tr>
 				</table>
@@ -252,17 +252,17 @@
 				alert('{{ lang['fmsg.edit.shouldleave'] }}');
 				return false;
 			}
-			// Самую первую строчку некуда двигать
+			// РЎР°РјСѓСЋ РїРµСЂРІСѓСЋ СЃС‚СЂРѕС‡РєСѓ РЅРµРєСѓРґР° РґРІРёРіР°С‚СЊ
 			if (id == 0) {
 				return false;
 			}
 
-			// Меняем местами строки
+			// РњРµРЅСЏРµРј РјРµСЃС‚Р°РјРё СЃС‚СЂРѕРєРё
 			var tmp = dData[id - 1];
 			dData[id - 1] = dData[id];
 			dData[id] = tmp;
 
-			// Обновляем счетчики
+			// РћР±РЅРѕРІР»СЏРµРј СЃС‡РµС‚С‡РёРєРё
 			dData[id]['id'] = id;
 			dData[id - 1]['id'] = id - 1;
 
@@ -278,12 +278,12 @@
 			}
 			var dCounter = document.getElementById('cfg.body').rows.length;
 
-			// Самую последнюю строчку некуда двигать
+			// РЎР°РјСѓСЋ РїРѕСЃР»РµРґРЅСЋСЋ СЃС‚СЂРѕС‡РєСѓ РЅРµРєСѓРґР° РґРІРёРіР°С‚СЊ
 			if ((id + 1) >= dCounter) {
 				return false;
 			}
 
-			// Вызываем обработчик "move UP"
+			// Р’С‹Р·С‹РІР°РµРј РѕР±СЂР°Р±РѕС‚С‡РёРє "move UP"
 			reMoveUp(id + 1);
 			return true;
 		}

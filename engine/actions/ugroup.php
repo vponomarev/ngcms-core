@@ -58,7 +58,7 @@ function ugroupList() {
 	);
 
 	$xt = $twig->loadTemplate('skins/default/tpl/ugroup/list.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 function ugroupForm() {
@@ -120,7 +120,7 @@ function ugroupForm() {
 	);
 
 	$xt = $twig->loadTemplate('skins/default/tpl/ugroup/addEdit.tpl');
-	echo $xt->render($tVars);
+	return $xt->render($tVars);
 }
 
 function ugroupCommit() {
@@ -257,7 +257,7 @@ function ugroupCommit() {
 }
 
 if (($action == 'editForm') || ($action == 'addForm')) {
-	ugroupForm();
+	$main_admin = ugroupForm();
 } else {
 	switch ($action) {
 		case 'edit'        :
@@ -266,6 +266,6 @@ if (($action == 'editForm') || ($action == 'addForm')) {
 			ugroupCommit();
 			break;
 	}
-	ugroupList();
+	$main_admin = ugroupList();
 }
 

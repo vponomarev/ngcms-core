@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2016 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2017 Next Generation CMS (http://ngcms.ru)
 // Name: core.php
 // Description: core
 // Author: NGCMS project team
@@ -11,13 +11,57 @@
 @error_reporting(E_ALL ^ E_NOTICE);
 
 // ============================================================================
+// Define global directory constants
+// ============================================================================
+
+define('NGCoreDir', __DIR__ . '/');                // Location of Core directory
+define('NGRootDir', dirname(__DIR__) . '/');       // Location of SiteRoot
+define('NGClassDir', NGCoreDir . 'classes/');      // Location of AutoLoaded classes
+define('NGVendorDir', NGRootDir . 'vendor/');      // Location of Vendor classes
+$loader = require NGVendorDir . 'autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+// Autoloader for NEW STYLE Classes
+spl_autoload_register(function($className) {
+	if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+		require_once $fName;
+	}
+});
+
+// Magic function for immediate closure call
+function NGRun($f) { $f(); }
+
+// ============================================================================
+// MODULE DEPs check + basic setup
+// ============================================================================
+NGRun(function() {
+	$depList = array(
+		'sql' => array('pdo' => '', 'pdo_mysql' => ''),
+		'zlib' => 'ob_gzhandler',
+		'iconv' => 'iconv',
+		'GD' => 'imagecreatefromjpeg',
+		'mbstring' => 'mb_internal_encoding'
+	);
+	NGCoreFunctions::resolveDeps($depList);
+
+	$sx = NGEngine::getInstance();
+	$sx->set('events', new NGEvents());
+	$sx->set('errorHandler', new NGErrorHandler());
+});
+
+
+
+// ============================================================================
 // Global variables definition
 // ============================================================================
 global $PLUGINS, $EXTRA_HTML_VARS, $EXTRA_CSS;
 global $AUTH_METHOD, $AUTH_CAPABILITIES, $PPAGES, $PFILTERS, $RPCFUNC, $TWIGFUNC;
 global $RPCADMFUNC, $SUPRESS_TEMPLATE_SHOW, $SUPRESS_MAINBLOCK_SHOW, $SYSTEM_FLAGS;
 global $DSlist, $PERM, $confPerm, $confPermUser, $systemAccessURL, $cron;
-global $timer, $mysql, $ip, $parse, $tpl, $lang;
+global $timer, $mysql, $ip, $parse, $tpl, $lang, $config;
 global $TemplateCache, $siteDomainName;
 global $currentHandler, $ngTrackID, $ngCookieDomain;
 global $twigGlobal, $twig, $twigLoader, $twigStringLoader;
@@ -49,7 +93,7 @@ $lang = array();
 $SYSTEM_FLAGS = array(
 	'actions.disabled' => array(),
 	'http.headers'     => array(
-		'content-type'  => 'text/html; charset=Windows-1251',
+		'content-type'  => 'text/html; charset=utf-8',
 		'cache-control' => 'private',
 	)
 );
@@ -80,30 +124,8 @@ $PLUGINS = array(
 	'config:loaded' => 0,
 );
 
-// ===========================================================
-// Check for support of mondatory modules
-// ===========================================================
-{
-	foreach (array('sql' => array('mysql' => 'mysql_connect', 'mysqli' => 'mysqli_connect'), 'zlib' => 'ob_gzhandler', 'iconv' => 'iconv', 'GD' => 'imagecreatefromjpeg') as $pModule => $pFunction) {
-		$is_error = false;
-		if (is_array($pFunction)) {
-			foreach ($pFunction as $kModule => $vFunction) {
-				if (extension_loaded($kModule) && function_exists($vFunction)) break;
-				if (!next($pFunction)) $is_error = true;
-			}
-		} else if (!extension_loaded($pModule) || !function_exists($pFunction)) {
-			$kModule = $pModule;
-			$vFunction = $pFunction;
-			$is_error = true;
-		}
-
-		if ($is_error) {
-			print "<html>\n<head><title>FATAL EXECUTION ERROR</title></head>\n<body>\n<div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR</span><br/><span style=\"font: 16px arial;\"> Cannot load file CORE libraries of <a href=\"http://ngcms.ru/\">NGCMS</a> (<b>engine/core.php</b>), PHP extension [" . $kModule . "] with function [" . $vFunction . "] is not loaded!</span></div>\n</body>\n</html>\n";
-			//print str_replace(array('{extension}', '{function}'), array($kModule, $vFunction), $lang['fatal.lostlib']);
-			die();
-		}
-	}
-}
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
 
 // Define global constants "root", "site_root"
 define('root', dirname(__FILE__) . '/');
@@ -111,6 +133,10 @@ define('site_root', dirname(dirname(__FILE__)) . '/');
 
 // Define domain name for cookies
 $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $mHost[1] : $_SERVER['HTTP_HOST'];
+// Remove non-standart port from domain
+if (preg_match_all("#^(.+?)\:\d+$#", $ngCookieDomain, $m)) {
+	$ngCookieDomain = $m[1];
+}
 
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
@@ -144,7 +170,7 @@ foreach ($confArray['predefined'] as $key => $value) {
 // Prepare variable with access URL
 $systemAccessURL = $_SERVER['REQUEST_URI'];
 if (($tmp_pos = strpos($systemAccessURL, '?')) !== false) {
-	$systemAccessURL = substr($systemAccessURL, 0, $tmp_pos);
+	$systemAccessURL = mb_substr($systemAccessURL, 0, $tmp_pos);
 }
 
 // ============================================================================
@@ -219,10 +245,6 @@ if ((!file_exists(confroot . 'config.php')) || (filesize(confroot . 'config.php'
 // ** Load user groups
 loadGroups();
 
-// ** Preload TWIG engine
-require_once root . 'includes/classes/Twig/Autoloader.php';
-Twig_Autoloader::register();
-
 // ** Init our own exception handler
 set_exception_handler('ngExceptionHandler');
 set_error_handler('ngErrorHandler');
@@ -230,16 +252,32 @@ register_shutdown_function('ngShutdownHandler');
 
 //
 // *** Initialize TWIG engine
-$twigLoader = new Twig_Loader_NGCMS(root);
-$twigStringLoader = new Twig_Loader_String();
+//$twigLoader = new Twig_Loader_NGCMS(root);
+//$twigStringLoader = new Twig_Loader_String();
+
+$twigLoader = new NGTwigLoader(root);
+// replace https://stackoverflow.com/questions/31081910/what-to-use-instead-of-twig-loader-string
+// $twigStringLoader = new Twig_Loader_String();
+/**
+ * Wrapper for template processing. Adds to each template variables:
+ * _templateName
+ * _templatePath
+ */
+abstract class Twig_Template_NGCMS extends Twig_Template {
+    public function render(array $context) {
+        $context['_templateName'] = $this->getTemplateName();
+        $context['_templatePath'] = dirname($this->getTemplateName()).DIRECTORY_SEPARATOR;
+        return parent::render($context);
+    }
+}
 
 // - Configure environment and general parameters
 $twig = new Twig_Environment($twigLoader, array(
 	'cache'               => root . 'cache/twig/',
 	'auto_reload'         => true,
 	'autoescape'          => false,
-	'charset'             => 'cp1251',
-	'base_template_class' => 'Twig_Template_NGCMS',
+	'charset'             => 'UTF-8',
+    'base_template_class' => 'Twig_Template_NGCMS',
 ));
 
 $twig->addExtension(new Twig_Extension_StringLoader());
@@ -289,8 +327,32 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 @include_once root . 'includes/classes/cache.class.php';
 @include_once root . 'includes/inc/DBLoad.php';
 
-$mysql = DBLoad();
-$mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+// OLD :: MySQLi driver
+// $mysql = DBLoad();
+// $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
+
+// NEW :: PDO driver with global classes handler
+NGRun(function() {
+	global $config, $mysql;
+
+	$sx = NGEngine::getInstance();
+	
+	switch($config['dbtype']){
+		case 'mysqli':
+			$sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+		break;
+		case 'pdo':
+			$sx->set('db', new NGPDO(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+		break;
+		default:
+			$sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+	}
+	
+	$sx->set('legacyDB', new NGLegacyDB(false));
+	$sx->getLegacyDB()->connect('', '', '');
+	$mysql = $sx->getLegacyDB();
+});
+
 
 // [[MARKER]] MySQL connection is established
 $timer->registerEvent('DB connection established');
@@ -397,10 +459,5 @@ $lang = LoadLangTheme();
 
 $langShortMonths = explode(",", $lang['short_months']);
 $langMonths = explode(",", $lang['months']);
-
-$f = $langShortMonths;
-$f2 = array('01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12');
-$f3 = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-$r = explode(",", $lang['months']);
 
 $timer->registerEvent('* CORE.PHP is complete');

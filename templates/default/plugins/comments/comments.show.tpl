@@ -6,8 +6,8 @@
 		<div class="comment-content">
 			<div class="comment-name">[profile]<a href="{profile_link}" target="_blank" title="{l_profile}">[/profile]{author}[profile]</a>[/profile]
 			</div>
-			<div class="meta">{date} | [quote]<a onclick="quote('{author}');" style="cursor: pointer;">Ответить</a>[/quote][if-have-perm]|
-				[edit-com]Изменить[/edit-com] | [del-com]Удалить[/del-com][/if-have-perm]
+			<div class="meta">{date} | [quote]<a onclick="quote('{author}');" style="cursor: pointer;">РћС‚РІРµС‚РёС‚СЊ</a>[/quote][if-have-perm]|
+				[edit-com]РР·РјРµРЅРёС‚СЊ[/edit-com] | [del-com]РЈРґР°Р»РёС‚СЊ[/del-com][/if-have-perm]
 			</div>
 			<div class="comment-text">
 				{comment-short}[comment_full]<span id="comment_full{comnum}" style="display: none;">{comment-full}</span>

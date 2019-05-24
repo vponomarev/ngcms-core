@@ -34,8 +34,8 @@ if ($subaction == "doeditcomment") {
 	if (!trim($_REQUEST['poster'])) {
 		msg(array("type" => "error", "text" => $lang['msge_namefield']));
 	} else {
-		$comment = str_replace("{", "&#123;", str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['comment']), ENT_COMPAT, 'cp1251')));
-		$content = str_replace("{", "&#123;", str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['content']), ENT_COMPAT, 'cp1251')));
+		$comment = str_replace("{", "&#123;", str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['comment']), ENT_COMPAT, 'UTF-8')));
+		$content = str_replace("{", "&#123;", str_replace("\r\n", "<br />", htmlspecialchars(trim($_REQUEST['content']), ENT_COMPAT, 'UTF-8')));
 
 		$mail = trim($_REQUEST['mail']);
 
@@ -92,7 +92,7 @@ if ($subaction != "deletecomment") {
 		if ($row['text'] != '') {
 			$tpl->template('editcomments', tpl_actions);
 			$tpl->vars('editcomments', $tvars);
-			echo $tpl->show('editcomments');
+			$main_admin = $tpl->show('editcomments');
 		}
 	} else {
 		msg(array("type" => "error", "text" => $lang['msge_not_found']));

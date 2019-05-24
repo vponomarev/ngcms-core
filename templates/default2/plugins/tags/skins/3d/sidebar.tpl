@@ -1,4 +1,4 @@
-<div id="insertTagCloud">{entries}</div><br/><a href="/plugin/tags/" class="more">Показать все теги</a>
+<div id="insertTagCloud">{entries}</div><br/><a href="/plugin/tags/" class="more">РџРѕРєР°Р·Р°С‚СЊ РІСЃРµ С‚РµРіРё</a>
 <script type="text/javascript" src="{tpl_url}/plugins/tags/skins/3d/js/swfobject.js"></script>
 <script language="javascript">
 	var insertCloudElementID = 'insertTagCloud';

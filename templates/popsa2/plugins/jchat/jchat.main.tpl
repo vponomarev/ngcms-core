@@ -31,7 +31,7 @@
 </style>
 [:include jchat.script.header.js]
 <div class="full">
-	<h1>Чат-бокс</h1>
+	<h1>Р§Р°С‚-Р±РѕРєСЃ</h1>
 	<div class="pad20_f">
 		<div style="overflow: auto; height: 400px;" onclick="jchatProcessAreaClick(event);">
 			<table id="jChatTable" cellspacing="0" cellpadding="0" width="100%">
@@ -51,7 +51,7 @@
 			<div>
 				<textarea id="jChatText" name="text" style="width: 98%; height: 60px;" onfocus="jchatCalculateMaxLen(this,'jchatWLen', {maxlen});" onkeyup="jchatCalculateMaxLen(this,'jchatWLen', {maxlen});"></textarea>
 			</div>
-			<small id="jchatWLen">Осталось знаков: <strong>{maxlen}</strong></small>
+			<small id="jchatWLen">РћСЃС‚Р°Р»РѕСЃСЊ Р·РЅР°РєРѕРІ: <strong>{maxlen}</strong></small>
 			<div class="clear10"></div>
 			<input id="jChatSubmit" type="submit" class="btn btn-primary btn-large" value="{l_jchat:button.post}"/>
 		</form>

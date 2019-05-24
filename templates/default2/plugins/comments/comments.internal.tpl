@@ -1,17 +1,17 @@
 <div id="comments">
 	[comheader]
-	<div class="title">Комменарии:</div>
+	<div class="title">РљРѕРјРјРµРЅР°СЂРёРё:</div>
 	[/comheader]
 	<!-- Here is user's comments -->
 	<div id="new_comments_rev"></div>
 	{entries}
 	<!-- Here is `add comments` form -->
 	[regonly]
-	<div class="ng-message">Только зарегистрированные пользователи могут оставлять в данной новости свои комментарии.
+	<div class="ng-message">РўРѕР»СЊРєРѕ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё РјРѕРіСѓС‚ РѕСЃС‚Р°РІР»СЏС‚СЊ РІ РґР°РЅРЅРѕР№ РЅРѕРІРѕСЃС‚Рё СЃРІРѕРё РєРѕРјРјРµРЅС‚Р°СЂРёРё.
 	</div>
 	[/regonly]
 	[commforbidden]
-	<div class="ng-message">Комментирование данной новости запрещено.</div>
+	<div class="ng-message">РљРѕРјРјРµРЅС‚РёСЂРѕРІР°РЅРёРµ РґР°РЅРЅРѕР№ РЅРѕРІРѕСЃС‚Рё Р·Р°РїСЂРµС‰РµРЅРѕ.</div>
 	[/commforbidden]
 	[more_comments]
 	<div class="paginator nonebr" style="margin-top: 25px; margin-bottom: 25px;">

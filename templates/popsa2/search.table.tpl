@@ -1,8 +1,8 @@
 [found]
 <div class="short">
 	<div class="pad20">
-		<header><h1>Результаты поиска</h1></header>
-		По запросу - <b>{search}</b> найдено <b class="green_t">{count}</b> материалов
+		<header><h1>Р РµР·СѓР»СЊС‚Р°С‚С‹ РїРѕРёСЃРєР°</h1></header>
+		РџРѕ Р·Р°РїСЂРѕСЃСѓ - <b>{search}</b> РЅР°Р№РґРµРЅРѕ <b class="green_t">{count}</b> РјР°С‚РµСЂРёР°Р»РѕРІ
 	</div>
 </div>
 [/found]
@@ -16,13 +16,13 @@
 [error]
 <div class="short">
 	<div class="pad20">
-		<div class="msge">Ошибка: {l_search.error}</div>
+		<div class="msge">РћС€РёР±РєР°: {l_search.error}</div>
 	</div>
 </div>
 [/error]
 <div class="short">
 	<div class="telo">
-		<h3>Расширенный поиск</h3>
+		<h3>Р Р°СЃС€РёСЂРµРЅРЅС‹Р№ РїРѕРёСЃРє</h3>
 		<form method="get" action="{form_url}">
 			<div class="input">
 				<label>{l_search.filter.author}</label>
