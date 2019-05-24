@@ -3,7 +3,9 @@
 @include_once '..\core.php';
 
 // Protect against hack attempts
-if (!defined('NGCMS')) die ('HAL');
+if (!defined('NGCMS')) {
+    die('HAL');
+}
 
 include_once '../includes/classes/uhandler.class.php';
 $ULIB = new urlLibrary();
@@ -12,14 +14,16 @@ $ULIB->loadConfig();
 $UHANDLER = new urlHandler();
 $UHANDLER->loadConfig();
 
-$ULIB->registerCommand('news', 'all',
-	array(
-		'vars'  =>
-			array(
-				'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
-			),
-		'descr' => array('russian' => 'Лента новостей'),
-	)
+$ULIB->registerCommand(
+    'news',
+    'all',
+    array(
+        'vars'  =>
+            array(
+                'page' => array('matchRegex' => '\d+', 'descr' => array('russian' => 'Страница')),
+            ),
+            'descr' => array('russian' => 'Лента новостей'),
+    )
 );
 
 /*

@@ -8,7 +8,9 @@
 //
 
 // Protect against hack attempts
-if (!defined('NGCMS')) die ('HAL');
+if (!defined('NGCMS')) {
+    die('HAL');
+}
 
 $lang = LoadLang('preview', 'admin');
 

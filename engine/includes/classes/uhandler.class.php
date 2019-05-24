@@ -23,118 +23,130 @@
 
 */
 
-class urlLibrary {
+class urlLibrary
+{
 
-	// Constructor
-	function urlLibrary() {
+    // Constructor
+    function urlLibrary()
+    {
 
-		global $config;
+        global $config;
 
-		$this->CMD = array();
-		$this->configLoaded = false;
-		$this->fatalError = false;
-		$this->configFileName = confroot . 'urlconf.php';
-	}
+        $this->CMD = array();
+        $this->configLoaded = false;
+        $this->fatalError = false;
+        $this->configFileName = confroot . 'urlconf.php';
+    }
 
-	// Load config from DISK
-	function loadConfig() {
+    // Load config from DISK
+    function loadConfig()
+    {
 
-		// Check if config already loaded
-		if ($this->configLoaded) {
-			return true;
-		}
+        // Check if config already loaded
+        if ($this->configLoaded) {
+            return true;
+        }
 
-		// Try to read config file
-		if (is_file($this->configFileName)) {
-			// Include REC
-			include $this->configFileName;
-			if (!isset($urlLibrary)) {
-				$this->fatalError = 1;
+        // Try to read config file
+        if (is_file($this->configFileName)) {
+            // Include REC
+            include $this->configFileName;
+            if (!isset($urlLibrary)) {
+                $this->fatalError = 1;
 
-				return false;
-			}
-			$this->CMD = $urlLibrary;
-		}
-		$this->configLoaded = true;
+                return false;
+            }
+            $this->CMD = $urlLibrary;
+        }
+        $this->configLoaded = true;
 
-		return true;
-	}
+        return true;
+    }
 
-	// Save config to DISK
-	function saveConfig() {
+    // Save config to DISK
+    function saveConfig()
+    {
 
-		// No save if config file is not loaded
-		if (!$this->configLoaded)
-			return false;
+        // No save if config file is not loaded
+        if (!$this->configLoaded) {
+            return false;
+        }
 
-		// Try to write config file
-		if (($f = fopen($this->configFileName, 'w')) === false) {
-			// Error
-			$this->fatalError = true;
+        // Try to write config file
+        if (($f = fopen($this->configFileName, 'w')) === false) {
+            // Error
+            $this->fatalError = true;
 
-			return false;
-		}
+            return false;
+        }
 
-		fwrite($f, '<?php' . "\n" . '$urlLibrary = ' . var_export($this->CMD, true) . ';');
-		fclose($f);
+        fwrite($f, '<?php' . "\n" . '$urlLibrary = ' . var_export($this->CMD, true) . ';');
+        fclose($f);
 
-		return true;
-	}
+        return true;
+    }
 
-	// Register supported commands
-	function registerCommand($plugin, $cmd, $params) {
+    // Register supported commands
+    function registerCommand($plugin, $cmd, $params)
+    {
 
-		if (!$this->loadConfig()) {
-			return false;
-		}
+        if (!$this->loadConfig()) {
+            return false;
+        }
 
-		$this->CMD[$plugin][$cmd] = $params;
+        $this->CMD[$plugin][$cmd] = $params;
 
-		return true;
-	}
+        return true;
+    }
 
-	// Remove recently registered command
-	function removeCommand($plugin, $cmd) {
+    // Remove recently registered command
+    function removeCommand($plugin, $cmd)
+    {
 
-		if (!$this->loadConfig()) {
-			return false;
-		}
+        if (!$this->loadConfig()) {
+            return false;
+        }
 
-		// Check if command exists
-		if (isset($this->CMD[$plugin][$cmd])) {
-			unset($this->CMD[$plugin][$cmd]);
+        // Check if command exists
+        if (isset($this->CMD[$plugin][$cmd])) {
+            unset($this->CMD[$plugin][$cmd]);
 
-			// Check if there're no more commands for this plugin
-			if (is_array($this->CMD[$plugin]) && (!count($this->CMD[$plugin]))) {
-				unset($this->CMD[$plugin]);
-			}
-		}
+            // Check if there're no more commands for this plugin
+            if (is_array($this->CMD[$plugin]) && (!count($this->CMD[$plugin]))) {
+                unset($this->CMD[$plugin]);
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	// Fetch command data
-	function fetchCommand($plugin, $cmd) {
+    // Fetch command data
+    function fetchCommand($plugin, $cmd)
+    {
 
-		return isset($this->CMD[$plugin][$cmd]) ? $this->CMD[$plugin][$cmd] : false;
-	}
+        return isset($this->CMD[$plugin][$cmd]) ? $this->CMD[$plugin][$cmd] : false;
+    }
 
-	// Extract line with most matching language
-	function extractLangRec($data, $pl = '') {
+    // Extract line with most matching language
+    function extractLangRec($data, $pl = '')
+    {
 
-		global $config;
+        global $config;
 
-		if (!is_array($data))
-			return false;
+        if (!is_array($data)) {
+            return false;
+        }
 
-		if ($pl == '')
-			$pl = $config['default_lang'];
+        if ($pl == '') {
+            $pl = $config['default_lang'];
+        }
 
-		if (isset($data[$pl]))
-			return $data[$pl];
+        if (isset($data[$pl])) {
+            return $data[$pl];
+        }
 
-		return isset($data['english']) ? $data['english'] : $data[0];
-	}
+        return isset($data['english']) ? $data['english'] : $data[0];
+    }
 }
 
 /*
@@ -237,477 +249,509 @@ class urlLibrary {
 
 */
 
-class urlHandler {
-
-	// constructor
-	function urlHandler($options = array()) {
-
-		global $config;
-
-		$this->hList = array();
-		$this->configLoaded = false;
-		$this->configFileName = confroot . 'rewrite.php';
-
-		$this->options = $options;
-	}
-
-	// Populate handler record from HTTP submit interface
-	function populateHandler($ULIB, $data) {
-
-		//
-		// First - find references from URL library
-		if (!isset($data['pluginName']) || !isset($data['handlerName']) || !isset($ULIB->CMD[$data['pluginName']][$data['handlerName']])) {
-			return array(array(1, 'No match with URL library' . var_export($data, true)), false);
-		}
-
-		// Command catched
-		$cmd = $ULIB->CMD[$data['pluginName']][$data['handlerName']];
-
-		// Scan 'regex' line & prepare output regex
-
-		// Stateful machine status
-		// 0 - scanning text
-		// 1 - scanning tag name
-		$state = 0;
-		$dataStartPos = 0;
-
-		$pos = 0;
-		$rcmd = $data['regex'];
-		$len = strlen($rcmd);
-
-		$variativeID = 0;
-		$variative = 0;
-		$closeit = false;
-
-		$genmap = array();
-
-		while ($pos < $len) {
-			switch ($state) {
-				case '0':
-					if ($rcmd[$pos] == '[') {
-						// Begin of variative block
-						$newVariative = ++$variativeID;
-						$closeit = true;
-					}
-					if ($rcmd[$pos] == ']') {
-						$newVariative = 0;
-						$closeit = true;
-					}
-
-					if ($rcmd[$pos] == '{') {
-						$state = 1;
-						$closeit = true;
-						$newVariative = $variative;
-					}
-					if ($closeit) {
-						$closeit = false;
-
-						if ($pos > $dataStartPos) {
-							$text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-							$genmap[] = array(0, $text, $variative);
-						}
-						$variative = $newVariative;
-						$dataStartPos = $pos + 1;
-						break;
-					}
-					break;
-				case '1':
-					if ($rcmd[$pos] == '}') {
-						// End of the variable
-						$text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-						$genmap[] = array(getIsSet($cmd['vars'][$text]['isSecure']) ? 2 : 1, $text, $variative);
-						$dataStartPos = $pos + 1;
-						$state = 0;
-						break;
-					}
-					break;
-			}
-			$pos++;
-		}
-
-		// Check for last block
-		if ($state) {
-			// ERROR - not finished variable !!
-			return array(array(2, 'Variable is not closed'), false);
-		} else if ($variative) {
-			// ERROR - not closed variative block !!
-			return array(array(3, 'Variative block is not closed'), false);
-		} else {
-			if ($dataStartPos < $pos) {
-				$text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-				$genmap[] = array(0, $text, 0);
-			}
-		}
-
-		//print "Incoming cmd: [".$rcmd."]<br/><pre>";
-		//print var_export($genmap, true);
-		//print "</pre>";
-
-		// Now we can generate processing REGEX
-		$regex = '#^';
-		$regexMAP = array();
-		$paramNum = 1;
-		$vmatch = 0;
-		foreach ($genmap as $rec) {
-			if ($rec[2] != $vmatch) {
-				if (!$vmatch) {
-					$vmatch = $rec[2];
-					$regex .= '(?:';
-				} else if (!$rec[2]) {
-					$vmatch = 0;
-					$regex .= '){0,1}';
-				} else {
-					$vmatch = $rec[2];
-					$regex .= '){0,1}(?:';
-				}
-			}
-			if ($rec[0]) {
-				if (!isset($cmd['vars'][$rec[1]])) {
-					return array(array(4, 'Variable "' . $rec[1] . '" is unknown'), false);
-				}
-				$regex .= '(' . $cmd['vars'][$rec[1]]['matchRegex'] . ')';
-				$regexMAP[$paramNum++] = $rec[1];
-			} else {
-				$regex .= $rec[1];
-			}
-		}
-
-		// If we have closing variative block at the end - process it
-		if ($vmatch) {
-			$vmatch = 0;
-			$regex .= '){0,1}';
-		}
-		// Closing REGEX tag
-		$regex .= '$#';
-
-		//print "Outgoing regex: [".$regex."]<br/><pre>";
-		//print var_export($regexMAP, true);
-		//print "</pre>";
-
-		// Prepare outgoing structure
-		$dcfg = array(
-			'pluginName'       => $data['pluginName'],
-			'handlerName'      => $data['handlerName'],
-			'flagPrimary'      => $data['flagPrimary'] ? true : false,
-			'flagFailContinue' => $data['flagFailContinue'] ? true : false,
-			'flagDisabled'     => $data['flagDisabled'] ? true : false,
-			'rstyle'           => array(
-				'rcmd'     => $rcmd,
-				'regex'    => $regex,
-				'regexMap' => $regexMAP,
-				'reqCheck' => array(),
-				'setVars'  => array(),
-				'genrMAP'  => $genmap,
-			),
-		);
-
-		//print "<b><u>Output data struct:</u></b> <br/><pre>\n";
-		//print var_export($dcfg, true);
-		//print "</pre>";
-
-		return array(array(0, 0), $dcfg);
-	}
-
-	// register handler
-	function registerHandler($position, $handler) {
-
-		if (!$this->configLoaded)
-			return false;
-
-		if ($position == 0) {
-			array_unshift($this->hList, $handler);
-		} else if ($position == -1) {
-			array_push($this->hList, $handler);
-		} else {
-			$tdata = array_slice($this->hList, 0, $position) + array($handler) + array_slice($this->hList, $position + 1);
-			$this->hList = $tdata;
-		}
-
-		return true;
-	}
-
-	// remove handler from specific position
-	// All parameters are mondatory! $pluginName and $handlerName are added to avoid mistakes
-	// $position - position of handler in current list of handlers
-	// $pluginName - 'pluginName' value for deleted handler
-	// $handlerName - 'handlerName' value for deleted handler
-	function removeHandler($position, $pluginName, $handlerName) {
-
-		if (!$this->configLoaded)
-			return false;
-
-		if (isset($this->hList[$position])) {
-			// Position found. Check parameters
-			$h = $this->hList[$position];
-			if (isset($h['pluginName']) && ($h['pluginName'] == $pluginName) && isset($h['handlerName']) && ($h['handlerName'] == $handlerName)) {
-				// Yes, we can delete
-				array_splice($this->hList, $position, 1);
-
-				// Confirm success deletion
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	// Remove handlers for specific plugin
-	// $pluginName - name of plugin
-	// $handlerName - name of specific handler or '*' if you need to delete all handlers of this plugin
-	function removePluginHandlers($pluginName, $handlerName = '*') {
-
-		if (!$this->configLoaded)
-			return false;
-
-		$position = count($this->hList);
-		while ($position >= 0) {
-			$h = $this->hList[$position];
-			if ((isset($h['pluginName'])) && ($h['pluginName'] == $pluginName) && (isset($h['handlerName'])) && (($handlerName == '*') || ($h['handlerName'] == $handlerName))) {
-				array_splice($this->hList, $position, 1);
-			}
-			$position--;
-		}
-
-		return true;
-	}
-
-	// Return current list of handlers
-	function listHandlers() {
-
-		if (!$this->configLoaded)
-			return false;
-
-		return $this->hList;
-	}
-
-	// Load config from DISK
-	function loadConfig() {
-
-		// Try to read config file
-		if (is_file($this->configFileName)) {
-			// Include REC
-			include $this->configFileName;
-			if (!isset($handlerList) || !isset($handlerPrimary)) {
-				$this->fatalError = 1;
-
-				return false;
-			}
-			$this->hList = $handlerList;
-			$this->hPrimary = $handlerPrimary;
-		}
-		$this->configLoaded = true;
-
-		return true;
-	}
-
-	// Save config to DISK
-	function saveConfig() {
-
-		// No save if config file is not loaded
-		if (!$this->configLoaded)
-			return false;
-
-		// Try to write config file
-		if (($f = fopen($this->configFileName, 'w')) === false) {
-			// Error
-			$this->fatalError = true;
-
-			return false;
-		}
-
-		// Generate helper $handlerPrimary table
-		$hPrimary = array();
-		foreach ($this->hList as $hId => $hData) {
-			// Skip disabled records
-			if ($hData['flagDisabled']) {
-				continue;
-			}
-			if (isset($hPrimary[$hData['pluginName']][$hData['handlerName']])) {
-				if (!$hPrimary[$hData['pluginName']][$hData['handlerName']][1] && ($hData['flagPrimary'])) {
-					$hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
-				}
-			} else {
-				$hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
-			}
-		}
-
-		fwrite($f, '<?php' . "\n" . '$handlerList = ' . var_export($this->hList, true) . ";\n" . '$handlerPrimary = ' . var_export($hPrimary, true) . ';');
-		fclose($f);
-
-		return true;
-	}
-
-	// Set configuration options
-	function setOptions($options = array()) {
-
-		foreach ($options as $k => $v) {
-			$this->options[$k] = $v;
-		}
-	}
-
-	// RUN callback functions
-	function run($url = null, $flags = array()) {
-
-		// Init URL if it's not passed in params
-		if ($url == null) {
-			$url = $_SERVER['REQUEST_URI'];
-			if (($tmp_pos = mb_strpos($url, '?')) !== false) {
-				$url = mb_substr($url, 0, $tmp_pos);
-			}
-		}
-
-		// Merge flags with default options
-		foreach ($this->options as $optName => $optValue) {
-			if (!isset($flags[$optName]))
-				$flags[$optName] = $optValue;
-		}
-
-		if ($flags['debug'])
-			print "urlHandler :: RUN(" . $url . ")<br>\n";
-
-		// Modity calling URL if localPrefix is defined
-		if (isset($flags['localPrefix']) && ($flags['localPrefix'] != '')) {
-			if (mb_substr($url, 0, mb_strlen($flags['localPrefix'])) == $flags['localPrefix']) {
-				// Catched prefix
-				$url = mb_substr($url, mb_strlen($flags['localPrefix']));
-				if ($flags['debug'])
-					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] (" . $url . ")<br/>\n";
-			} else {
-				// URL doesn't correspond to LOCAL PREFIX
-				if ($flags['debug'])
-					print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] - <i><b>ERROR: URL DOES NOT CORRESPOND TO PREFIX</b></i><br/>\n";
-
-				return 0;
-			}
-		}
-
-		$catchCount = 0;
-
-		foreach ($this->hList as $hNum => $h) {
-			if ($flags['debug'])
-				print "&raquo; " . ($h['flagDisabled'] ? '<b><font color="red">DISABLED</font></b> ' : '') . "Scan (" . $hNum . ")[" . $h['pluginName'] . "][" . $h['handlerName'] . "] ReGEX check [ <b><font color=blue>" . $h['rstyle']['regex'] . " </font></b>]<br>\n";
-
-			// Skip disabled records
-			if ($h['flagDisabled'])
-				continue;
-
-			if (preg_match($h['rstyle']['regex'], $url, $scan)) {
-				$result = array('0' => $scan[0]);
-				$handlerParams = array('num' => $hNum, 'value' => $h);
-
-				foreach ($scan as $k => $v)
-					if (isset($h['rstyle']['regexMap'][$k]))
-						$result[$h['rstyle']['regexMap'][$k]] = urldecode($v);
-
-				if ($flags['debug'])
-					print "Find match [plugin: <b>" . $h['pluginName'] . "</b>, handler: <b>" . $h['handlerName'] . "</b>] with REGex <b><font color=blue>" . $h['rstyle']['regex'] . "</font></b>, params: <pre>" . var_export($result, true) . "</pre><br>\n";
-
-				if (!isset($h['callback']))
-					$h['callback'] = '_MASTER_URL_PROCESSOR';
-
-				// Set configured vars
-				if (isset($h['rstyle']['setVars']) && is_array($h['rstyle']['setVars']))
-					foreach ($h['rstyle']['setVars'] as $k => $v) {
-						if (is_array($v)) {
-							if ($v[0] == 0) {
-								$result[$k] = $v[1];
-							} else if (($v[0] == 1) && isset($result[$v[1]])) {
-								$result[$k] = $result[$v[1]];
-							}
-						}
-					}
-
-				$skip = array('FFC' => $h['flagFailContinue'] ? true : false);
-				$res = call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, $skip, $handlerParams);
-				if (is_array($res) && isset($res['fail']) && $res['fail'])
-					continue;
-
-				return ++$catchCount;
-			}
-
-		}
-
-		return $catchCount;
-	}
-
-	//
-	// Generate link
-	// Params:
-	// $pluginName	- ID of plugin
-	// $handlerName	- Handler name
-	// $params	- Params to pass to processor
-	// $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
-	// $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
-	// $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
-	function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false) {
-
-		$flagCommon = false;
-
-		// Check if we have handler for requested plugin
-		if (!isset($this->hPrimary[$pluginName][$handlerName])) {
-			// No handler. Let's use "COMMON WAY"
-			$params['plugin'] = $pluginName;
-			$params['handler'] = $handlerName;
-
-			$pluginName = 'core';
-			$handlerName = 'plugin';
-			$flagCommon = true;
-		}
-
-		// Fetch identity [ array( recNo, primaryFlagStatus ) ]
-		$hId = $this->hPrimary[$pluginName][$handlerName];
-		// Fetch record
-		$hRec = $this->hList[$hId[0]];
-
-		// Check integrity
-		if (!is_array($hRec) || !is_array($hRec['rstyle']['genrMAP']))
-			return false;
-
-		// First: find block dependency
-		$depMAP = array();
-		foreach ($hRec['rstyle']['genrMAP'] as $rec) {
-			// If dependent block & this is variable & no rec in $depMAP - save
-			if ($rec[2] && $rec[0] && !isset($depMAP[$rec[2]]))
-				$depMAP[$rec[2]] = $rec[1];
-		}
-
-		// Now we can generate URL
-		$url = array();
-		foreach ($hRec['rstyle']['genrMAP'] as $rec) {
-			if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
-				switch ($rec[0]) {
-					case 0:
-						$url[] = $rec[1];
-						break;
-					case 1:
-						$url[] = urlencode($params[$rec[1]]);
-						break;
-					case 2:
-						$url[] = $params[$rec[1]];
-						break;
-				}
-			}
-		}
-
-		// Add params in case of common mode
-		$uparams = array();
-		if ($flagCommon) {
-			unset($params['plugin']);
-			unset($params['handler']);
-			$xparams = array_merge($params, $xparams);
-		}
-
-		foreach ($xparams as $k => $v) {
-			if (($k != 'plugin') && ($k != 'handler'))
-				$uparams[] = $k . '=' . urlencode($v);
-		}
-
-		$linkPrefix = ($absoluteLink && isset($this->options['domainPrefix']) && ($this->options['domainPrefix'] != '')) ?
-			$this->options['domainPrefix'] :
-			((isset($this->options['localPrefix']) && ($this->options['localPrefix'] != '')) ? $this->options['localPrefix'] : '');
-
-		return $linkPrefix .
-			join('', $url) .
-			(count($uparams) ? '?' . join('&' . ($intLink ? 'amp;' : ''), $uparams) : '');
-	}
+class urlHandler
+{
+
+    // constructor
+    function urlHandler($options = array())
+    {
+
+        global $config;
+
+        $this->hList = array();
+        $this->configLoaded = false;
+        $this->configFileName = confroot . 'rewrite.php';
+
+        $this->options = $options;
+    }
+
+    // Populate handler record from HTTP submit interface
+    function populateHandler($ULIB, $data)
+    {
+
+        //
+        // First - find references from URL library
+        if (!isset($data['pluginName']) || !isset($data['handlerName']) || !isset($ULIB->CMD[$data['pluginName']][$data['handlerName']])) {
+            return array(array(1, 'No match with URL library' . var_export($data, true)), false);
+        }
+
+        // Command catched
+        $cmd = $ULIB->CMD[$data['pluginName']][$data['handlerName']];
+
+        // Scan 'regex' line & prepare output regex
+
+        // Stateful machine status
+        // 0 - scanning text
+        // 1 - scanning tag name
+        $state = 0;
+        $dataStartPos = 0;
+
+        $pos = 0;
+        $rcmd = $data['regex'];
+        $len = strlen($rcmd);
+
+        $variativeID = 0;
+        $variative = 0;
+        $closeit = false;
+
+        $genmap = array();
+
+        while ($pos < $len) {
+            switch ($state) {
+                case '0':
+                    if ($rcmd[$pos] == '[') {
+                        // Begin of variative block
+                        $newVariative = ++$variativeID;
+                        $closeit = true;
+                    }
+                    if ($rcmd[$pos] == ']') {
+                        $newVariative = 0;
+                        $closeit = true;
+                    }
+
+                    if ($rcmd[$pos] == '{') {
+                        $state = 1;
+                        $closeit = true;
+                        $newVariative = $variative;
+                    }
+                    if ($closeit) {
+                        $closeit = false;
+
+                        if ($pos > $dataStartPos) {
+                            $text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+                            $genmap[] = array(0, $text, $variative);
+                        }
+                        $variative = $newVariative;
+                        $dataStartPos = $pos + 1;
+                        break;
+                    }
+                    break;
+                case '1':
+                    if ($rcmd[$pos] == '}') {
+                        // End of the variable
+                        $text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+                        $genmap[] = array(getIsSet($cmd['vars'][$text]['isSecure']) ? 2 : 1, $text, $variative);
+                        $dataStartPos = $pos + 1;
+                        $state = 0;
+                        break;
+                    }
+                    break;
+            }
+            $pos++;
+        }
+
+        // Check for last block
+        if ($state) {
+            // ERROR - not finished variable !!
+            return array(array(2, 'Variable is not closed'), false);
+        } elseif ($variative) {
+            // ERROR - not closed variative block !!
+            return array(array(3, 'Variative block is not closed'), false);
+        } else {
+            if ($dataStartPos < $pos) {
+                $text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
+                $genmap[] = array(0, $text, 0);
+            }
+        }
+
+        //print "Incoming cmd: [".$rcmd."]<br/><pre>";
+        //print var_export($genmap, true);
+        //print "</pre>";
+
+        // Now we can generate processing REGEX
+        $regex = '#^';
+        $regexMAP = array();
+        $paramNum = 1;
+        $vmatch = 0;
+        foreach ($genmap as $rec) {
+            if ($rec[2] != $vmatch) {
+                if (!$vmatch) {
+                    $vmatch = $rec[2];
+                    $regex .= '(?:';
+                } elseif (!$rec[2]) {
+                    $vmatch = 0;
+                    $regex .= '){0,1}';
+                } else {
+                    $vmatch = $rec[2];
+                    $regex .= '){0,1}(?:';
+                }
+            }
+            if ($rec[0]) {
+                if (!isset($cmd['vars'][$rec[1]])) {
+                    return array(array(4, 'Variable "' . $rec[1] . '" is unknown'), false);
+                }
+                $regex .= '(' . $cmd['vars'][$rec[1]]['matchRegex'] . ')';
+                $regexMAP[$paramNum++] = $rec[1];
+            } else {
+                $regex .= $rec[1];
+            }
+        }
+
+        // If we have closing variative block at the end - process it
+        if ($vmatch) {
+            $vmatch = 0;
+            $regex .= '){0,1}';
+        }
+        // Closing REGEX tag
+        $regex .= '$#';
+
+        //print "Outgoing regex: [".$regex."]<br/><pre>";
+        //print var_export($regexMAP, true);
+        //print "</pre>";
+
+        // Prepare outgoing structure
+        $dcfg = array(
+            'pluginName'       => $data['pluginName'],
+            'handlerName'      => $data['handlerName'],
+            'flagPrimary'      => $data['flagPrimary'] ? true : false,
+            'flagFailContinue' => $data['flagFailContinue'] ? true : false,
+            'flagDisabled'     => $data['flagDisabled'] ? true : false,
+            'rstyle'           => array(
+                'rcmd'     => $rcmd,
+                'regex'    => $regex,
+                'regexMap' => $regexMAP,
+                'reqCheck' => array(),
+                'setVars'  => array(),
+                'genrMAP'  => $genmap,
+            ),
+        );
+
+        //print "<b><u>Output data struct:</u></b> <br/><pre>\n";
+        //print var_export($dcfg, true);
+        //print "</pre>";
+
+        return array(array(0, 0), $dcfg);
+    }
+
+    // register handler
+    function registerHandler($position, $handler)
+    {
+
+        if (!$this->configLoaded) {
+            return false;
+        }
+
+        if ($position == 0) {
+            array_unshift($this->hList, $handler);
+        } elseif ($position == -1) {
+            array_push($this->hList, $handler);
+        } else {
+            $tdata = array_slice($this->hList, 0, $position) + array($handler) + array_slice($this->hList, $position + 1);
+            $this->hList = $tdata;
+        }
+
+        return true;
+    }
+
+    // remove handler from specific position
+    // All parameters are mondatory! $pluginName and $handlerName are added to avoid mistakes
+    // $position - position of handler in current list of handlers
+    // $pluginName - 'pluginName' value for deleted handler
+    // $handlerName - 'handlerName' value for deleted handler
+    function removeHandler($position, $pluginName, $handlerName)
+    {
+
+        if (!$this->configLoaded) {
+            return false;
+        }
+
+        if (isset($this->hList[$position])) {
+            // Position found. Check parameters
+            $h = $this->hList[$position];
+            if (isset($h['pluginName']) && ($h['pluginName'] == $pluginName) && isset($h['handlerName']) && ($h['handlerName'] == $handlerName)) {
+                // Yes, we can delete
+                array_splice($this->hList, $position, 1);
+
+                // Confirm success deletion
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Remove handlers for specific plugin
+    // $pluginName - name of plugin
+    // $handlerName - name of specific handler or '*' if you need to delete all handlers of this plugin
+    function removePluginHandlers($pluginName, $handlerName = '*')
+    {
+
+        if (!$this->configLoaded) {
+            return false;
+        }
+
+        $position = count($this->hList);
+        while ($position >= 0) {
+            $h = $this->hList[$position];
+            if ((isset($h['pluginName'])) && ($h['pluginName'] == $pluginName) && (isset($h['handlerName'])) && (($handlerName == '*') || ($h['handlerName'] == $handlerName))) {
+                array_splice($this->hList, $position, 1);
+            }
+            $position--;
+        }
+
+        return true;
+    }
+
+    // Return current list of handlers
+    function listHandlers()
+    {
+
+        if (!$this->configLoaded) {
+            return false;
+        }
+
+        return $this->hList;
+    }
+
+    // Load config from DISK
+    function loadConfig()
+    {
+
+        // Try to read config file
+        if (is_file($this->configFileName)) {
+            // Include REC
+            include $this->configFileName;
+            if (!isset($handlerList) || !isset($handlerPrimary)) {
+                $this->fatalError = 1;
+
+                return false;
+            }
+            $this->hList = $handlerList;
+            $this->hPrimary = $handlerPrimary;
+        }
+        $this->configLoaded = true;
+
+        return true;
+    }
+
+    // Save config to DISK
+    function saveConfig()
+    {
+
+        // No save if config file is not loaded
+        if (!$this->configLoaded) {
+            return false;
+        }
+
+        // Try to write config file
+        if (($f = fopen($this->configFileName, 'w')) === false) {
+            // Error
+            $this->fatalError = true;
+
+            return false;
+        }
+
+        // Generate helper $handlerPrimary table
+        $hPrimary = array();
+        foreach ($this->hList as $hId => $hData) {
+            // Skip disabled records
+            if ($hData['flagDisabled']) {
+                continue;
+            }
+            if (isset($hPrimary[$hData['pluginName']][$hData['handlerName']])) {
+                if (!$hPrimary[$hData['pluginName']][$hData['handlerName']][1] && ($hData['flagPrimary'])) {
+                    $hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
+                }
+            } else {
+                $hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
+            }
+        }
+
+        fwrite($f, '<?php' . "\n" . '$handlerList = ' . var_export($this->hList, true) . ";\n" . '$handlerPrimary = ' . var_export($hPrimary, true) . ';');
+        fclose($f);
+
+        return true;
+    }
+
+    // Set configuration options
+    function setOptions($options = array())
+    {
+
+        foreach ($options as $k => $v) {
+            $this->options[$k] = $v;
+        }
+    }
+
+    // RUN callback functions
+    function run($url = null, $flags = array())
+    {
+
+        // Init URL if it's not passed in params
+        if ($url == null) {
+            $url = $_SERVER['REQUEST_URI'];
+            if (($tmp_pos = mb_strpos($url, '?')) !== false) {
+                $url = mb_substr($url, 0, $tmp_pos);
+            }
+        }
+
+        // Merge flags with default options
+        foreach ($this->options as $optName => $optValue) {
+            if (!isset($flags[$optName])) {
+                $flags[$optName] = $optValue;
+            }
+        }
+
+        if ($flags['debug']) {
+            print "urlHandler :: RUN(" . $url . ")<br>\n";
+        }
+
+        // Modity calling URL if localPrefix is defined
+        if (isset($flags['localPrefix']) && ($flags['localPrefix'] != '')) {
+            if (mb_substr($url, 0, mb_strlen($flags['localPrefix'])) == $flags['localPrefix']) {
+                // Catched prefix
+                $url = mb_substr($url, mb_strlen($flags['localPrefix']));
+                if ($flags['debug']) {
+                    print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] (" . $url . ")<br/>\n";
+                }
+            } else {
+                // URL doesn't correspond to LOCAL PREFIX
+                if ($flags['debug']) {
+                    print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] - <i><b>ERROR: URL DOES NOT CORRESPOND TO PREFIX</b></i><br/>\n";
+                }
+
+                return 0;
+            }
+        }
+
+        $catchCount = 0;
+
+        foreach ($this->hList as $hNum => $h) {
+            if ($flags['debug']) {
+                print "&raquo; " . ($h['flagDisabled'] ? '<b><font color="red">DISABLED</font></b> ' : '') . "Scan (" . $hNum . ")[" . $h['pluginName'] . "][" . $h['handlerName'] . "] ReGEX check [ <b><font color=blue>" . $h['rstyle']['regex'] . " </font></b>]<br>\n";
+            }
+
+            // Skip disabled records
+            if ($h['flagDisabled']) {
+                continue;
+            }
+
+            if (preg_match($h['rstyle']['regex'], $url, $scan)) {
+                $result = array('0' => $scan[0]);
+                $handlerParams = array('num' => $hNum, 'value' => $h);
+
+                foreach ($scan as $k => $v) {
+                    if (isset($h['rstyle']['regexMap'][$k])) {
+                        $result[$h['rstyle']['regexMap'][$k]] = urldecode($v);
+                    }
+                }
+
+                if ($flags['debug']) {
+                    print "Find match [plugin: <b>" . $h['pluginName'] . "</b>, handler: <b>" . $h['handlerName'] . "</b>] with REGex <b><font color=blue>" . $h['rstyle']['regex'] . "</font></b>, params: <pre>" . var_export($result, true) . "</pre><br>\n";
+                }
+
+                if (!isset($h['callback'])) {
+                    $h['callback'] = '_MASTER_URL_PROCESSOR';
+                }
+
+                // Set configured vars
+                if (isset($h['rstyle']['setVars']) && is_array($h['rstyle']['setVars'])) {
+                    foreach ($h['rstyle']['setVars'] as $k => $v) {
+                        if (is_array($v)) {
+                            if ($v[0] == 0) {
+                                $result[$k] = $v[1];
+                            } elseif (($v[0] == 1) && isset($result[$v[1]])) {
+                                $result[$k] = $result[$v[1]];
+                            }
+                        }
+                    }
+                }
+
+                $skip = array('FFC' => $h['flagFailContinue'] ? true : false);
+                $res = call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, $skip, $handlerParams);
+                if (is_array($res) && isset($res['fail']) && $res['fail']) {
+                    continue;
+                }
+
+                return ++$catchCount;
+            }
+
+        }
+
+        return $catchCount;
+    }
+
+    //
+    // Generate link
+    // Params:
+    // $pluginName	- ID of plugin
+    // $handlerName	- Handler name
+    // $params	- Params to pass to processor
+    // $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
+    // $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
+    // $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
+    function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false)
+    {
+
+        $flagCommon = false;
+
+        // Check if we have handler for requested plugin
+        if (!isset($this->hPrimary[$pluginName][$handlerName])) {
+            // No handler. Let's use "COMMON WAY"
+            $params['plugin'] = $pluginName;
+            $params['handler'] = $handlerName;
+
+            $pluginName = 'core';
+            $handlerName = 'plugin';
+            $flagCommon = true;
+        }
+
+        // Fetch identity [ array( recNo, primaryFlagStatus ) ]
+        $hId = $this->hPrimary[$pluginName][$handlerName];
+        // Fetch record
+        $hRec = $this->hList[$hId[0]];
+
+        // Check integrity
+        if (!is_array($hRec) || !is_array($hRec['rstyle']['genrMAP'])) {
+            return false;
+        }
+
+        // First: find block dependency
+        $depMAP = array();
+        foreach ($hRec['rstyle']['genrMAP'] as $rec) {
+            // If dependent block & this is variable & no rec in $depMAP - save
+            if ($rec[2] && $rec[0] && !isset($depMAP[$rec[2]])) {
+                $depMAP[$rec[2]] = $rec[1];
+            }
+        }
+
+        // Now we can generate URL
+        $url = array();
+        foreach ($hRec['rstyle']['genrMAP'] as $rec) {
+            if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
+                switch ($rec[0]) {
+                    case 0:
+                        $url[] = $rec[1];
+                        break;
+                    case 1:
+                        $url[] = urlencode($params[$rec[1]]);
+                        break;
+                    case 2:
+                        $url[] = $params[$rec[1]];
+                        break;
+                }
+            }
+        }
+
+        // Add params in case of common mode
+        $uparams = array();
+        if ($flagCommon) {
+            unset($params['plugin']);
+            unset($params['handler']);
+            $xparams = array_merge($params, $xparams);
+        }
+
+        foreach ($xparams as $k => $v) {
+            if (($k != 'plugin') && ($k != 'handler')) {
+                $uparams[] = $k . '=' . urlencode($v);
+            }
+        }
+
+        $linkPrefix = ($absoluteLink && isset($this->options['domainPrefix']) && ($this->options['domainPrefix'] != '')) ?
+            $this->options['domainPrefix'] :
+            ((isset($this->options['localPrefix']) && ($this->options['localPrefix'] != '')) ? $this->options['localPrefix'] : '');
+
+        return $linkPrefix .
+            join('', $url) .
+            (count($uparams) ? '?' . join('&' . ($intLink ? 'amp;' : ''), $uparams) : '');
+    }
 }

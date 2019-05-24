@@ -39,7 +39,8 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
     {
         return $this->paths;
     }
-    public function setDefaultContent($name, $content) {
+    public function setDefaultContent($name, $content)
+    {
         if ((substr($name, 0, 1) == '/')||preg_match('#^[a-z]\:\/#', $name)) {
             $this->defaultContent[$name] = $content;
         } else {
@@ -65,8 +66,9 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
                 $path = substr($path, 0, -1);
             }
             // Lowercase if using WINDOWS
-            if (substr($path, 1, 1) == ':')
+            if (substr($path, 1, 1) == ':') {
                 $path = strtolower($path);
+            }
             if (!is_dir($path)) {
                 throw new Twig_Error_Loader(sprintf('The "%s" directory does not exist.', $path));
             }
@@ -98,7 +100,8 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
      *
      * @return bool If the template source code is handled by this loader or not
      */
-    public function exists($name) {
+    public function exists($name)
+    {
         if ($this->findTemplate($name)) {
             return true;
         }
@@ -131,18 +134,21 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
                 array(
                     "{{ lang['$1'] }}",
                 ),
-                $content);
+                $content
+            );
             // - dynamic conversion
             // -- [isplugin] + [isnplugin]
-            $content = preg_replace_callback(
-                "#\[is(n){0,1}plugin (.+?)\](.+?)\[\/isplugin\]#is",
-                create_function('$m','return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";'),
-                $content);
+                $content = preg_replace_callback(
+                    "#\[is(n){0,1}plugin (.+?)\](.+?)\[\/isplugin\]#is",
+                    create_function('$m', 'return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";'),
+                    $content
+                );
             // -- [ifhander:<Plugin>] + [ifhandler:<Plugin>:<Handler>] + [ifnhander:<Plugin>] + [ifnhandler:<Plugin>:<Handler>]
-            $content = preg_replace_callback(
-                "#\[if(n){0,1}handler (.+?)\](.+?)\[\/if(n){0,1}handler\]#is",
-                create_function('$m','return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";'),
-                $content);
+                $content = preg_replace_callback(
+                    "#\[if(n){0,1}handler (.+?)\](.+?)\[\/if(n){0,1}handler\]#is",
+                    create_function('$m', 'return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";'),
+                    $content
+                );
         }
         // Process REGEX conversion
         if (isset($this->templateConversionRegex[$name]) && is_array($this->templateConversionRegex[$name])) {
@@ -156,10 +162,11 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
         }
         return $content;
     }
-    public function setConversion($name, $variables, $regexp = array(), $options = array()) {
-        $this->templateConversion[$name]		= $variables;
-        $this->templateConversionRegex[$name]	= $regexp;
-        $this->templateOptions[$name]			= $options;
+    public function setConversion($name, $variables, $regexp = array(), $options = array())
+    {
+        $this->templateConversion[$name]        = $variables;
+        $this->templateConversionRegex[$name]   = $regexp;
+        $this->templateOptions[$name]           = $options;
         return true;
     }
     /**
@@ -207,8 +214,9 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
                         return $this->cache[$name] = $path.'/'.$xname;
                     }
                     // Check for default content
-                    if ($this->defaultContent[$xname])
+                    if ($this->defaultContent[$xname]) {
                         return $this->cache[$name] = $path.'/'.$xname;
+                    }
                     throw new Twig_Error_Loader(sprintf('Unable to find template [ABSOLUTE PATH] "%s" (looked into: %s).', $name, $path));
                 }
             }
@@ -219,8 +227,9 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
                 return $this->cache[$name] = $path.'/'.$name;
             }
             // Check for default content
-            if (isset($this->defaultContent[$path.'/'.$name]) && $this->defaultContent[$path.'/'.$name])
+            if (isset($this->defaultContent[$path.'/'.$name]) && $this->defaultContent[$path.'/'.$name]) {
                 return $this->cache[$name] = $path.'/'.$name;
+            }
         }
         throw new Twig_Error_Loader(sprintf('Unable to find template "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
     }
