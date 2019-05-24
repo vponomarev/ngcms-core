@@ -203,7 +203,7 @@ function systemConfigEditForm() {
 	if (is_array($multiconfig)) {
 		foreach ($multiconfig as $mid => $mline) {
 			$tmpdom = implode("\n", $mline['domains']);
-			$tmpline .= "<tr class='contentEntry1'><td>" . ($mline['active'] ? 'On' : 'Off') . "</td><td>$mid</td><td>" . ($tmpdom ? $tmpdom : '-не указано-') . "</td><td>&nbsp;</td></tr>\n";
+			$tmpline .= "<tr class='contentEntry1'><td>" . ($mline['active'] ? 'On' : 'Off') . "</td><td>$mid</td><td>" . ($tmpdom ? $tmpdom : '-РЅРµ СѓРєР°Р·Р°РЅРѕ-') . "</td><td>&nbsp;</td></tr>\n";
 		}
 	}
 	$tvars['vars']['multilist'] = $tmpline;
