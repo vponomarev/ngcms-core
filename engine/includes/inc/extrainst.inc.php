@@ -202,7 +202,7 @@ function get_mysql_field_type($table, $field) {
 }
 
 // Database update during install
-function fixdb_plugin_install($module, $params, $mode = 'install', $silent = false, &$is_error) {
+function fixdb_plugin_install($module, $params, $mode = 'install', $silent = false, &$is_error = 0) {
 
 	global $lang, $tpl, $mysql, $main_admin;
 

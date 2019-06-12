@@ -2801,7 +2801,7 @@ function twigIsNews($rules) {
 			// -- NEWS
 			case 'news':
 				if (!isset($SYSTEM_FLAGS['news']['db.id']))
-					continue;
+					continue 2;
 
 				foreach ($rVal as $key) {
 					if (ctype_digit($key)) {
@@ -2818,7 +2818,7 @@ function twigIsNews($rules) {
 			case 'mastercat':
 			case 'cat':
 				if ((!isset($SYSTEM_FLAGS['news']['db.categories'])) || ($SYSTEM_FLAGS['news']['db.categories'] == ''))
-					continue;
+					continue 2;
 
 				// List of categories from news
 				foreach ($rVal as $key) {
