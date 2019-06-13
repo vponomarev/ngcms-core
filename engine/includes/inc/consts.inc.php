@@ -9,17 +9,17 @@
 
 // Determine current admin working directory
 {
-	$tempVariable = preg_split('/(\\\|\/)/', root, -1, PREG_SPLIT_NO_EMPTY);
-	define('adminDirName', array_pop($tempVariable));
-	unset($tempVariable);
+    $tempVariable = preg_split('/(\\\|\/)/', root, -1, PREG_SPLIT_NO_EMPTY);
+    define('adminDirName', array_pop($tempVariable));
+    unset($tempVariable);
 }
 
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.6 RC1');
+@define('engineVersion', '0.9.6 RC2');
 @define('engineVersionType', 'GIT');
-@define('engineVersionBuild', '20190524');
+@define('engineVersionBuild', '20190613');
 
 @define('prefix', $config['prefix']);
 @define('uprefix', $config['uprefix']);
@@ -49,4 +49,3 @@
 
 @define('conf_pactive', confroot . 'plugins.php', true);
 @define('conf_pconfig', confroot . 'plugdata.php', true);
-

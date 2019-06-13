@@ -1,6 +1,7 @@
 <?php
 
-abstract class NGDB {
+abstract class NGDB
+{
     // Implement connection to DB
     abstract function __construct($params);
 
@@ -25,12 +26,11 @@ abstract class NGDB {
     // Return raw class of DB engine driver
     abstract function getDriver();
 
-	// Return version
+    // Return version
     abstract function getVersion();
-	
+    
     abstract function createCursor($query, array $params = array());
     abstract function fetchCursor($cursor);
     abstract function closeCursor($cursor);
     abstract function tableExists($name);
-
 }

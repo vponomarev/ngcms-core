@@ -8,7 +8,9 @@
 //
 
 // Protect against hack attempts
-if (!defined('NGCMS')) die ('HAL');
+if (!defined('NGCMS')) {
+    die('HAL');
+}
 
 $lang = LoadLang('images', 'admin');
 @include_once root . 'includes/classes/upload.class.php';
@@ -22,39 +24,37 @@ $lang = LoadLang('images', 'admin');
 $fmanager = new file_managment();
 
 if ($userROW['status'] > "3" || ($userROW['status'] != "1" && ($action == "imagedelete" || $action == "move")) || ($userROW['status'] > "3" && $action == "rename")) {
-	msg(array("type" => "error", "text" => $lang['msge_mod']));
+    msg(array("type" => "error", "text" => $lang['msge_mod']));
 }
 
 switch ($subaction) {
-	case "newcat":
-		$main_admin = $fmanager->category_create("image", $_REQUEST['newfolder']);
-		break;
-	case "delcat":
-		$main_admin = $fmanager->category_delete("image", $_REQUEST['category']);
-		break;
-	case "delete":
-		$main_admin = manage_delete('image');
-		break;
-	case "rename":
-		$main_admin = $fmanager->file_rename(array('type' => 'image', 'id' => $_REQUEST['id'], 'newname' => $_REQUEST['rf']));
-		break;
-	case "move":
-		$main_admin = manage_move('image');
-		break;
-	case "upload":
-	case "uploadurl":
-		$main_admin = manage_upload('image');
-		break;
-	case "editForm":
-		$main_admin = manage_editForm('image', $_REQUEST['id']);
-		break;
-	case "editApply":
-		$main_admin = manage_editApply('image', $_POST['id']);
-		break;
+    case "newcat":
+        $main_admin = $fmanager->category_create("image", $_REQUEST['newfolder']);
+        break;
+    case "delcat":
+        $main_admin = $fmanager->category_delete("image", $_REQUEST['category']);
+        break;
+    case "delete":
+        $main_admin = manage_delete('image');
+        break;
+    case "rename":
+        $main_admin = $fmanager->file_rename(array('type' => 'image', 'id' => $_REQUEST['id'], 'newname' => $_REQUEST['rf']));
+        break;
+    case "move":
+        $main_admin = manage_move('image');
+        break;
+    case "upload":
+    case "uploadurl":
+        $main_admin = manage_upload('image');
+        break;
+    case "editForm":
+        $main_admin = manage_editForm('image', $_REQUEST['id']);
+        break;
+    case "editApply":
+        $main_admin = manage_editApply('image', $_POST['id']);
+        break;
 }
 
-if (($subaction != 'editForm') && ($subaction != 'editApply'))
-	$main_admin = manage_showlist('image');
-
-
-
+if (($subaction != 'editForm') && ($subaction != 'editApply')) {
+    $main_admin = manage_showlist('image');
+}

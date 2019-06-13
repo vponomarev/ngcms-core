@@ -1,6 +1,6 @@
 <?php
 return array (
-  0 => 
+  0 =>
   array (
     'min' => '0',
     'hour' => '2',
@@ -10,7 +10,7 @@ return array (
     'plugin' => 'core',
     'handler' => 'db_backup',
   ),
-  1 => 
+  1 =>
   array (
     'min' => '0,15,30,45',
     'hour' => '*',
@@ -20,7 +20,7 @@ return array (
     'plugin' => 'core',
     'handler' => 'news_views',
   ),
-  2 => 
+  2 =>
   array (
     'min' => '20',
     'hour' => '2',

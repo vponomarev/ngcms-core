@@ -25,31 +25,34 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 // Autoloader for NEW STYLE Classes
-spl_autoload_register(function($className) {
-	if (file_exists($fName = NGClassDir.$className.'.class.php')) {
-		require_once $fName;
-	}
+spl_autoload_register(function ($className) {
+    if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+        require_once $fName;
+    }
 });
 
 // Magic function for immediate closure call
-function NGRun($f) { $f(); }
+function NGRun($f)
+{
+    $f();
+}
 
 // ============================================================================
 // MODULE DEPs check + basic setup
 // ============================================================================
-NGRun(function() {
-	$depList = array(
-		'sql' => array('pdo' => '', 'pdo_mysql' => ''),
-		'zlib' => 'ob_gzhandler',
-		'iconv' => 'iconv',
-		'GD' => 'imagecreatefromjpeg',
-		'mbstring' => 'mb_internal_encoding'
-	);
-	NGCoreFunctions::resolveDeps($depList);
+NGRun(function () {
+    $depList = array(
+        'sql' => array('pdo' => '', 'pdo_mysql' => ''),
+        'zlib' => 'ob_gzhandler',
+        'iconv' => 'iconv',
+        'GD' => 'imagecreatefromjpeg',
+        'mbstring' => 'mb_internal_encoding'
+    );
+    NGCoreFunctions::resolveDeps($depList);
 
-	$sx = NGEngine::getInstance();
-	$sx->set('events', new NGEvents());
-	$sx->set('errorHandler', new NGErrorHandler());
+    $sx = NGEngine::getInstance();
+    $sx->set('events', new NGEvents());
+    $sx->set('errorHandler', new NGErrorHandler());
 });
 
 
@@ -91,37 +94,37 @@ $CurrentHandler = array();
 $TemplateCache = array();
 $lang = array();
 $SYSTEM_FLAGS = array(
-	'actions.disabled' => array(),
-	'http.headers'     => array(
-		'content-type'  => 'text/html; charset=utf-8',
-		'cache-control' => 'private',
-	)
+    'actions.disabled' => array(),
+    'http.headers'     => array(
+        'content-type'  => 'text/html; charset=utf-8',
+        'cache-control' => 'private',
+    )
 );
 
 $twigGlobal = array(
-	'flags' => array(
-		'isLogged' => 0,
-	),
+    'flags' => array(
+        'isLogged' => 0,
+    ),
 );
 
 // List of DataSources
 $DSlist = array(
-	'news'           => 1,
-	'categories'     => 2,
-	'comments'       => 3,
-	'users'          => 4,
-	'files'          => 10,
-	'images'         => 11,
-	'#xfields:tdata' => 51,
+    'news'           => 1,
+    'categories'     => 2,
+    'comments'       => 3,
+    'users'          => 4,
+    'files'          => 10,
+    'images'         => 11,
+    '#xfields:tdata' => 51,
 );
 
 $PLUGINS = array(
-	'active'        => array(),
-	'active:loaded' => 0,
-	'loaded'        => array(),
-	'loaded:files'  => array(),
-	'config'        => array(),
-	'config:loaded' => 0,
+    'active'        => array(),
+    'active:loaded' => 0,
+    'loaded'        => array(),
+    'loaded:files'  => array(),
+    'config'        => array(),
+    'config:loaded' => 0,
 );
 
 mb_internal_encoding('UTF-8');
@@ -135,42 +138,42 @@ define('site_root', dirname(dirname(__FILE__)) . '/');
 $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $mHost[1] : $_SERVER['HTTP_HOST'];
 // Remove non-standart port from domain
 if (preg_match_all("#^(.+?)\:\d+$#", $ngCookieDomain, $m)) {
-	$ngCookieDomain = $m[1];
+    $ngCookieDomain = $m[1];
 }
 
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
 if (!isset($_COOKIE['ngTrackID'])) {
-	$ngTrackID = md5(md5(uniqid(rand(), 1)));
-	@setcookie('ngTrackID', $ngTrackID, time() + 86400 * 365, '/', $ngCookieDomain, 0, 1);
+    $ngTrackID = md5(md5(uniqid(rand(), 1)));
+    @setcookie('ngTrackID', $ngTrackID, time() + 86400 * 365, '/', $ngCookieDomain, 0, 1);
 } else {
-	$ngTrackID = $_COOKIE['ngTrackID'];
+    $ngTrackID = $_COOKIE['ngTrackID'];
 }
 
 // Initialize last variables
 $confArray = array(
-	// Pre-defined init values
-	'predefined' => array(
-		'HTTP_REFERER' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-		'PHP_SELF'     => isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '',
-		'REQUEST_URI'  => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
-		'config'       => array(),
-		'catz'         => array(),
-		'catmap'       => array(),
-		'is_logged'    => false,
-	)
+    // Pre-defined init values
+    'predefined' => array(
+        'HTTP_REFERER' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
+        'PHP_SELF'     => isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '',
+        'REQUEST_URI'  => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
+        'config'       => array(),
+        'catz'         => array(),
+        'catmap'       => array(),
+        'is_logged'    => false,
+    )
 );
 
 // Load pre-defined variables
 foreach ($confArray['predefined'] as $key => $value) {
-	unset($_GET[$key], $_POST[$key], $_SESSION[$key], $_COOKIE[$key], $_ENV[$key]);
-	$$key = $value;
+    unset($_GET[$key], $_POST[$key], $_SESSION[$key], $_COOKIE[$key], $_ENV[$key]);
+    $$key = $value;
 }
 
 // Prepare variable with access URL
 $systemAccessURL = $_SERVER['REQUEST_URI'];
 if (($tmp_pos = strpos($systemAccessURL, '?')) !== false) {
-	$systemAccessURL = mb_substr($systemAccessURL, 0, $tmp_pos);
+    $systemAccessURL = mb_substr($systemAccessURL, 0, $tmp_pos);
 }
 
 // ============================================================================
@@ -191,7 +194,7 @@ multi_multisites();
 @include_once confroot . 'config.php';
 // [[FIX config variables]]
 if (!isset($config['uprefix'])) {
-	$config['uprefix'] = $config['prefix'];
+    $config['uprefix'] = $config['prefix'];
 }
 
 // Set up default timezone [ default: Europe/Moscow ]
@@ -233,13 +236,13 @@ $ip = checkIP();
 
 // ** Load configuration file
 if ((!file_exists(confroot . 'config.php')) || (filesize(confroot . 'config.php') < 10)) {
-	if (preg_match("#^(.*?)(\/index\.php|\/engine\/admin\.php)$#", $_SERVER['PHP_SELF'], $ms)) {
-		@header("Location: " . $ms[1] . "/engine/install.php");
-	} else {
-		@header("Location: " . adminDirName . "/install.php");
-	}
-	echo "NGCMS: Engine is not installed yet. Please run installer from /engine/install.php";
-	exit;
+    if (preg_match("#^(.*?)(\/index\.php|\/engine\/admin\.php)$#", $_SERVER['PHP_SELF'], $ms)) {
+        @header("Location: " . $ms[1] . "/engine/install.php");
+    } else {
+        @header("Location: " . adminDirName . "/install.php");
+    }
+    echo "NGCMS: Engine is not installed yet. Please run installer from /engine/install.php";
+    exit;
 }
 
 // ** Load user groups
@@ -263,8 +266,10 @@ $twigLoader = new NGTwigLoader(root);
  * _templateName
  * _templatePath
  */
-abstract class Twig_Template_NGCMS extends Twig_Template {
-    public function render(array $context) {
+abstract class Twig_Template_NGCMS extends Twig_Template
+{
+    public function render(array $context)
+    {
         $context['_templateName'] = $this->getTemplateName();
         $context['_templatePath'] = dirname($this->getTemplateName()).DIRECTORY_SEPARATOR;
         return parent::render($context);
@@ -273,10 +278,10 @@ abstract class Twig_Template_NGCMS extends Twig_Template {
 
 // - Configure environment and general parameters
 $twig = new Twig_Environment($twigLoader, array(
-	'cache'               => root . 'cache/twig/',
-	'auto_reload'         => true,
-	'autoescape'          => false,
-	'charset'             => 'UTF-8',
+    'cache'               => root . 'cache/twig/',
+    'auto_reload'         => true,
+    'autoescape'          => false,
+    'charset'             => 'UTF-8',
     'base_template_class' => 'Twig_Template_NGCMS',
 ));
 
@@ -320,8 +325,9 @@ $timer->registerEvent('Template engine is activated');
 $UHANDLER->setOptions(array('domainPrefix' => $config['home_url']));
 
 // Check if engine is installed in subdirectory
-if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
-	$UHANDLER->setOptions(array('localPrefix' => $match[2]));
+if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match)) {
+    $UHANDLER->setOptions(array('localPrefix' => $match[2]));
+}
 
 // ** Load cache engine
 @include_once root . 'includes/classes/cache.class.php';
@@ -332,25 +338,25 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match))
 // $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
 
 // NEW :: PDO driver with global classes handler
-NGRun(function() {
-	global $config, $mysql;
+NGRun(function () {
+    global $config, $mysql;
 
-	$sx = NGEngine::getInstance();
-	
-	switch($config['dbtype']){
-		case 'mysqli':
-			$sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
-		break;
-		case 'pdo':
-			$sx->set('db', new NGPDO(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
-		break;
-		default:
-			$sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
-	}
-	
-	$sx->set('legacyDB', new NGLegacyDB(false));
-	$sx->getLegacyDB()->connect('', '', '');
-	$mysql = $sx->getLegacyDB();
+    $sx = NGEngine::getInstance();
+    
+    switch ($config['dbtype']) {
+        case 'mysqli':
+            $sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+            break;
+        case 'pdo':
+            $sx->set('db', new NGPDO(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+            break;
+        default:
+            $sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+    }
+    
+    $sx->set('legacyDB', new NGLegacyDB(false));
+    $sx->getLegacyDB()->connect('', '', '');
+    $mysql = $sx->getLegacyDB();
 });
 
 
@@ -365,14 +371,15 @@ $timer->registerEvent('DB category list is loaded');
 
 // ** Load compatibility engine [ rewrite old links ]
 if ($config['libcompat']) {
-	include_once root . 'includes/inc/libcompat.php';
-	compatRedirector();
+    include_once root . 'includes/inc/libcompat.php';
+    compatRedirector();
 }
 
 //
 // Special way to pass authentication cookie via POST params
-if (!isset($_COOKIE['zz_auth']) && isset($_POST['ngAuthCookie']))
-	$_COOKIE['zz_auth'] = $_POST['ngAuthCookie'];
+if (!isset($_COOKIE['zz_auth']) && isset($_POST['ngAuthCookie'])) {
+    $_COOKIE['zz_auth'] = $_POST['ngAuthCookie'];
+}
 
 // [[MARKER]] Ready to load auth plugins
 $timer->registerEvent('Ready to load auth plugins');
@@ -386,49 +393,49 @@ loadPermissions();
 // ============================================================================
 // System protection
 if (!$AUTH_CAPABILITIES[$config['auth_module']]['login']) {
-	$config['auth_module'] = 'basic';
+    $config['auth_module'] = 'basic';
 }
 if (!$AUTH_CAPABILITIES[$config['auth_db']]['db']) {
-	$config['auth_db'] = 'basic';
+    $config['auth_db'] = 'basic';
 }
 
 if ((is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD[$config['auth_db']]))) {
-	// Auth subsystem is activated
-	// * choose default or user defined auth module
-	if (isset($_REQUEST['auth_module']) && $AUTH_CAPABILITIES[$_REQUEST['auth_module']]['login'] && is_object($AUTH_METHOD[$_REQUEST['auth_module']])) {
-		$auth = &$AUTH_METHOD[$_REQUEST['auth_module']];
-	} else {
-		$auth = &$AUTH_METHOD[$config['auth_module']];
-	}
-	$auth_db = &$AUTH_METHOD[$config['auth_db']];
+    // Auth subsystem is activated
+    // * choose default or user defined auth module
+    if (isset($_REQUEST['auth_module']) && $AUTH_CAPABILITIES[$_REQUEST['auth_module']]['login'] && is_object($AUTH_METHOD[$_REQUEST['auth_module']])) {
+        $auth = &$AUTH_METHOD[$_REQUEST['auth_module']];
+    } else {
+        $auth = &$AUTH_METHOD[$config['auth_module']];
+    }
+    $auth_db = &$AUTH_METHOD[$config['auth_db']];
 
-	$xrow = $auth_db->check_auth();
-	$CURRENT_USER = $xrow;
+    $xrow = $auth_db->check_auth();
+    $CURRENT_USER = $xrow;
 
-	if (isset($xrow['name']) && $xrow['name']) {
-		$is_logged_cookie = true;
-		$is_logged = true;
-		$username = $xrow['name'];
-		$userROW = $xrow;
-		if ($config['x_ng_headers']) {
-			header("X-NG-UserID: " . intval($userROW['id']));
-			header("X-NG-Login: " . htmlentities($username));
-		}
+    if (isset($xrow['name']) && $xrow['name']) {
+        $is_logged_cookie = true;
+        $is_logged = true;
+        $username = $xrow['name'];
+        $userROW = $xrow;
+        if ($config['x_ng_headers']) {
+            header("X-NG-UserID: " . intval($userROW['id']));
+            header("X-NG-Login: " . htmlentities($username));
+        }
 
-		// - Now every TWIG template will know if user is logged in
-		$twigGlobal['flags']['isLogged'] = 1;
-		$twigGlobal['user'] = $userROW;
-		//$twig->addGlobalRef('user',	$userROW);
-	}
+        // - Now every TWIG template will know if user is logged in
+        $twigGlobal['flags']['isLogged'] = 1;
+        $twigGlobal['user'] = $userROW;
+        //$twig->addGlobalRef('user',	$userROW);
+    }
 } else {
-	echo "Fatal error: No auth module is found.<br />To fix problem please run <i>upgrade.php</i> script<br /><br />\n";
+    echo "Fatal error: No auth module is found.<br />To fix problem please run <i>upgrade.php</i> script<br /><br />\n";
 }
 
 // [[MARKER]] Authentification process is complete
 $timer->registerEvent('Auth procedure is finished');
 
 if ($is_logged) {
-	@define('name', $userROW['name']);
+    @define('name', $userROW['name']);
 }
 
 // Init internal cron module

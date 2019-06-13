@@ -1,628 +1,628 @@
 <?php
 $urlLibrary = array (
-  'news' => 
+  'news' =>
   array (
-    'main' => 
+    'main' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Главная новостная страница',
       ),
     ),
-    'by.category' => 
+    'by.category' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'category' => 
+        'category' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя категории',
           ),
         ),
-        'catid' => 
+        'catid' =>
         array (
           'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID категории',
           ),
         ),
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Новости из заданной категории',
       ),
     ),
-    'news' => 
+    'news' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'category' => 
+        'category' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя категории',
           ),
         ),
-        'catid' => 
+        'catid' =>
         array (
           'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID категории',
           ),
         ),
-        'year' => 
+        'year' =>
         array (
           'matchRegex' => '\\d{4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Год',
           ),
         ),
-        'month' => 
+        'month' =>
         array (
           'matchRegex' => '\\d{2}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Месяц',
           ),
         ),
-        'day' => 
+        'day' =>
         array (
           'matchRegex' => '\\d{2}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'День',
           ),
         ),
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница внутри новости',
           ),
         ),
-        'altname' => 
+        'altname' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя новости',
           ),
         ),
-        'id' => 
+        'id' =>
         array (
           'matchRegex' => '\\d{1,7}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID новости',
           ),
         ),
-        'zid' => 
+        'zid' =>
         array (
           'matchRegex' => '\\d{4,7}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID новости с ведущими нулями (4 цифры)',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Отображение полной новости',
       ),
     ),
-    'by.year' => 
+    'by.year' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'year' => 
+        'year' =>
         array (
           'matchRegex' => '\\d{4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Год',
           ),
         ),
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Новости за год',
       ),
     ),
-    'by.month' => 
+    'by.month' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'year' => 
+        'year' =>
         array (
           'matchRegex' => '\\d{4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Год',
           ),
         ),
-        'month' => 
+        'month' =>
         array (
           'matchRegex' => '\\d{2}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Месяц',
           ),
         ),
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Новости за месяц',
       ),
     ),
-    'by.day' => 
+    'by.day' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'year' => 
+        'year' =>
         array (
           'matchRegex' => '\\d{4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Год',
           ),
         ),
-        'month' => 
+        'month' =>
         array (
           'matchRegex' => '\\d{2}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Месяц',
           ),
         ),
-        'day' => 
+        'day' =>
         array (
           'matchRegex' => '\\d{2}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'День',
           ),
         ),
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Новости за день',
       ),
     ),
-    'print' => 
+    'print' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'category' => 
+        'category' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя категории',
           ),
         ),
-        'catid' => 
+        'catid' =>
         array (
           'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID категории',
           ),
         ),
-        'year' => 
+        'year' =>
         array (
           'matchRegex' => '\\d{4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Год',
           ),
         ),
-        'month' => 
+        'month' =>
         array (
           'matchRegex' => '\\d{2}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Месяц',
           ),
         ),
-        'day' => 
+        'day' =>
         array (
           'matchRegex' => '\\d{2}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'День',
           ),
         ),
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница внутри новости',
           ),
         ),
-        'altname' => 
+        'altname' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя новости',
           ),
         ),
-        'id' => 
+        'id' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID новости',
           ),
         ),
-        'zid' => 
+        'zid' =>
         array (
           'matchRegex' => '\\d{4,7}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID новости с ведущими нулями (4 цифры)',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Страница для печати полной новости',
       ),
     ),
-    'all' => 
+    'all' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'page' => 
+        'page' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Страница',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Лента новостей',
       ),
     ),
   ),
-  'rss_export' => 
+  'rss_export' =>
   array (
-    '' => 
+    '' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Основной RSS поток',
       ),
     ),
-    'category' => 
+    'category' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'category' => 
+        'category' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя категории',
           ),
         ),
-        'catid' => 
+        'catid' =>
         array (
           'matchRegex' => '\\d{1,4}(?:\\-[0-9\\-]+)?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID категории',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'RSS поток указанной категории',
       ),
     ),
-    'main' => 
+    'main' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Основной RSS поток',
       ),
     ),
   ),
-  'core' => 
+  'core' =>
   array (
-    'plugin' => 
+    'plugin' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'plugin' => 
+        'plugin' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID плагина',
           ),
         ),
-        'handler' => 
+        'handler' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Передаваемая команда',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Страница плагина',
       ),
     ),
-    'registration' => 
+    'registration' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Регистрация нового пользователя',
       ),
     ),
-    'activation' => 
+    'activation' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'userid' => 
+        'userid' =>
         array (
           'matchRegex' => '\\d+',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID пользователя',
           ),
         ),
-        'code' => 
+        'code' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Код активации',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Активация нового пользователя',
       ),
     ),
-    'lostpassword' => 
+    'lostpassword' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'userid' => 
+        'userid' =>
         array (
           'matchRegex' => '\\d+',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID пользователя',
           ),
         ),
-        'code' => 
+        'code' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Код активации',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Восстановление потерянного пароля',
       ),
     ),
-    'login' => 
+    'login' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Вход на сайт (авторизация)',
       ),
     ),
-    'logout' => 
+    'logout' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Выход с сайта',
       ),
     ),
   ),
-  'uprofile' => 
+  'uprofile' =>
   array (
-    'edit' => 
+    'edit' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Редактирование собственного профиля',
       ),
     ),
-    'show' => 
+    'show' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'name' => 
+        'name' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Логин пользователя',
           ),
         ),
-        'id' => 
+        'id' =>
         array (
           'matchRegex' => '\\d+',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID пользователя',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Показать профиль конкретного пользователя',
       ),
     ),
   ),
-  'static' => 
+  'static' =>
   array (
-    '' => 
+    '' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'altname' => 
+        'altname' =>
         array (
           'isSecure' => 1,
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя статической страницы',
           ),
         ),
-        'id' => 
+        'id' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID статической страницы',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Отображение статической страницы',
       ),
     ),
-    'print' => 
+    'print' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'altname' => 
+        'altname' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Альт. имя статической страницы',
           ),
         ),
-        'id' => 
+        'id' =>
         array (
           'matchRegex' => '\\d{1,4}',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'ID статической страницы',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Печать статической страницы',
       ),
     ),
   ),
-  'search' => 
+  'search' =>
   array (
-    '' => 
+    '' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Страница поиска',
       ),
     ),
   ),
-  'a_test' => 
+  'a_test' =>
   array (
-    '' => 
+    '' =>
     array (
-      'vars' => 
+      'vars' =>
       array (
-        'action' => 
+        'action' =>
         array (
           'matchRegex' => '.+?',
-          'descr' => 
+          'descr' =>
           array (
             'russian' => 'Super action',
           ),
         ),
       ),
-      'descr' => 
+      'descr' =>
       array (
         'russian' => 'Super description',
       ),
