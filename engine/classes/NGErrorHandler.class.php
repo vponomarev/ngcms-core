@@ -1,11 +1,14 @@
 <?php
 
-class NGErrorHandler {
-    function __construct() {
+class NGErrorHandler
+{
+    function __construct()
+    {
 
     }
 
-    function throwError($area, $params = array(), Exception $e = null) {
+    function throwError($area, $params = array(), Exception $e = null)
+    {
         // SQL error handler
         if ($area == 'SQL') {
             $mode = NGEngine::getInstance()->getConfigParam('sql_error_show', 0);
