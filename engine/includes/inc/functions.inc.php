@@ -3008,7 +3008,7 @@ function twigIsNews($rules)
             // -- NEWS
             case 'news':
                 if (!isset($SYSTEM_FLAGS['news']['db.id'])) {
-                    continue;
+                    continue 2;
                 }
 
                 foreach ($rVal as $key) {
@@ -3028,7 +3028,7 @@ function twigIsNews($rules)
             case 'mastercat':
             case 'cat':
                 if ((!isset($SYSTEM_FLAGS['news']['db.categories'])) || ($SYSTEM_FLAGS['news']['db.categories'] == '')) {
-                    continue;
+                    continue 2;
                 }
 
                 // List of categories from news
@@ -3461,7 +3461,7 @@ function ngCollectTrace($style = 0)
 }
 
 /**
- * Быстрый дебаг
+ * debug
  *
  * @param mixed $obj
  *
