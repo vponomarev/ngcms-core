@@ -353,7 +353,8 @@ NGRun(function () {
         default:
             $sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
     }
-    
+
+    $sx->set('config', $config);
     $sx->set('legacyDB', new NGLegacyDB(false));
     $sx->getLegacyDB()->connect('', '', '');
     $mysql = $sx->getLegacyDB();
