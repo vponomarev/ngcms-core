@@ -65,7 +65,7 @@ if (!is_array($extras[$plugin])) {
         // Include required script file
         ob_start();
         @include extras_dir . '/' . $extras[$plugin]['dir'] . '/' . $extras[$plugin][$stype];
-        $main_admin = ob_get_contents();
+        $main_admin .= ob_get_contents();
         ob_end_clean();
 
         //
