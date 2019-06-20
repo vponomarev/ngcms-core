@@ -88,8 +88,18 @@ list($adminDirName) = array_slice($ADN = preg_split('/(\\\|\/)/', root, -1, PREG
 $installDir = ((substr(root, 0, 1) == '/') ? '/' : '') . join("/", array_slice($ADN, 0, -1));
 $templateDir = root . 'skins/default/install';
 
+// Determine request protocol
+$requestProtocol = 'http';
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) {
+    $requestProtocol = 'https';
+} elseif (isset($_SERVER['https']) && ($_SERVER['https'] == 'on')) {
+    $requestProtocol = 'https';
+} elseif (isset($_SERVER['REQUEST_SCHEME']) && ($_SERVER['REQUEST_SCHEME'] == 'https')) {
+    $requestProtocol = 'https';
+}
+
 // Determine installation URL
-$homeURL = 'http://' . $_SERVER['HTTP_HOST'] . '/' . ($a = join("/", array_slice(preg_split('/(\\\|\/)/', $_SERVER['REQUEST_URI'], -1, PREG_SPLIT_NO_EMPTY), 0, -2))) . ($a ? '/' : '');
+$homeURL = $requestProtocol . '://' . $_SERVER['HTTP_HOST'] . '/' . ($a = join("/", array_slice(preg_split('/(\\\|\/)/', $_SERVER['REQUEST_URI'], -1, PREG_SPLIT_NO_EMPTY), 0, -2))) . ($a ? '/' : '');
 $templateURL = $homeURL . $adminDirName . '/skins/default/install';
 $scriptLibrary = $homeURL . 'lib';
 $ERR = array();
