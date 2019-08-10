@@ -88,7 +88,7 @@ function editNewsForm()
     $row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from " . prefix . "_files where (linked_ds = 1) and (linked_id = " . db_squote($row['id']) . ')', 1);
     $row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from " . prefix . "_images where (linked_ds = 1) and (linked_id = " . db_squote($row['id']) . ')', 1);
 
-    $cats = (strlen($row['catid']) > 0) ? explode(",", $row['catid']) : array();
+    $cats = (mb_strlen($row['catid']) > 0) ? explode(",", $row['catid']) : array();
     $content = $row['content'];
     $tVars = array(
         'php_self'    => $PHP_SELF,
@@ -535,7 +535,7 @@ function listNewsForm()
             'images_count' => $row['num_images'],
             'itemdate'     => date("d.m.Y", $row['postdate']),
             'allcats'      => resolveCatNames($cats) . ' &nbsp;',
-            'title'        => secure_html((strlen($row['title']) > 70) ? substr($row['title'], 0, 70) . " ..." : $row['title']),
+            'title'        => secure_html((mb_strlen($row['title']) > 70) ? mb_substr($row['title'], 0, 70) . " ..." : $row['title']),
             'link'         => newsGenerateLink($row, false, 0, true),
             'state'        => $row['approve'],
             'flags'        => array(
