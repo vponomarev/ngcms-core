@@ -48,7 +48,7 @@ function admExtrasGetConfig($params)
     plugins_load_config();
 
     //$confLine = arrayCharsetConvert(0, $PLUGINS['config']);
-    $confLine = json_encode(arrayCharsetConvert(0, $PLUGINS['config']));
+    $confLine = json_encode($PLUGINS['config']);
     //$confLine = preg_replace('#\\(\\u....)#', '$1', $confLine);
     $confLine = jsonFormatter($confLine);
 
