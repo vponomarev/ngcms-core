@@ -282,7 +282,7 @@ function admCategoriesRPCmodify($params)
                 $data = '[permission denied]';
             }
 
-            return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => 1, 'infoText' => 'Category was deleted', 'content' => arrayCharsetConvert(0, $data)));
+            return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => 1, 'infoText' => 'Category was deleted', 'content' => $data));
 
         // Move category UP/DOWN
         case 'up':
@@ -292,7 +292,7 @@ function admCategoriesRPCmodify($params)
             // * Rewrite page content
             $data = admCategoryList(2);
 
-            return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => intval($moveResult), 'infoText' => arrayCharsetConvert(0, '<img src="/engine/skins/default/images/' . $params['mode'] . '.gif"/> ' . $catz[$catmap[$params['id']]]['name']), 'content' => arrayCharsetConvert(0, $data)));
+            return (array('status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => intval($moveResult), 'infoText' => '<img src="/engine/skins/default/images/' . $params['mode'] . '.gif"/> ' . $catz[$catmap[$params['id']]]['name'], 'content' => $data));
 
     }
 

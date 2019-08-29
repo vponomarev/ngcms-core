@@ -172,7 +172,7 @@ if (isset($_REQUEST['manageConfig']) && $_REQUEST['manageConfig']) {
     if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'commit')) {
         print "TRY COMMIT";
     }
-    $confLine = json_encode(arrayCharsetConvert(0, $PLUGINS['config']));
+    $confLine = json_encode($PLUGINS['config']);
     $confLine = jsonFormatter($confLine);
 
     $tVars = array(
