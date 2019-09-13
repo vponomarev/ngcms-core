@@ -411,7 +411,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
     global $lang, $config;
 
     // Include new PHP mailer class
-    $mail = new PHPMailer();
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
     $mail->CharSet = 'UTF-8';
 
@@ -569,7 +569,7 @@ function msg($params, $mode = 0, $disp = -1)
 function msgSticker($msg, $type = '', $disp = -1)
 {
     global $notify;
-    
+
     $lines = array();
     if (is_array($msg)) {
         foreach ($msg as $x) {
