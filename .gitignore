@@ -10,3 +10,6 @@
 /engine/trash/admin_note.inc.txt
 /uploads
 /vendor
+.phpunit.result.cache
+composer.lock
+npm-debug.log
