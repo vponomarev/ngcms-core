@@ -1,3 +1,4 @@
+
 --- a/vendor/twig/twig/src/Environment.php
 +++ b/vendor/twig/twig/src/Environment.php
 @@ -1403,6 +1403,37 @@

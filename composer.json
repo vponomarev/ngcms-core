@@ -1,5 +1,6 @@
 {
     "config": {
+        "preferred-install": "source",
         "vendor-dir": "vendor"
     },
     "require": {
@@ -17,5 +18,4 @@
             }
         }
     }
-    
-} 
+}
