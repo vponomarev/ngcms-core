@@ -53,6 +53,7 @@ NGInstall(function () {
     $sx = NGEngine::getInstance();
     $sx->set('events', new NGEvents());
     $sx->set('errorHandler', new NGErrorHandler());
+    $sx->set('config', array('sql_error_show' => 2));
 });
 
 multi_multisites();
@@ -777,7 +778,8 @@ function doInstall()
                 array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя административный логин "' . $_POST['reg_dbadminuser'] . '" ... OK');
 
                 // 1. Создание БД
-                if ($mysql->select_db($_POST['reg_dbname']) === null) {
+                if (count($mysql->select("show databases like '".$_POST['reg_dbname']."'")) < 1) {
+                // if ($mysql->select_db($_POST['reg_dbname']) === null) {
                     // БД нет. Пытаемся создать
                     if (!$mysql->query('CREATE DATABASE ' . $_POST['reg_dbname'])) {
                         // Не удалось создать. Фатально.
@@ -813,7 +815,7 @@ function doInstall()
             }
             // Отключаемся от сервера
             if (isset($mysql) != null) {
-                $mysql->close();
+                $mysql->close($link);
             }
         }
         
