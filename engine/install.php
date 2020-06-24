@@ -792,7 +792,7 @@ function doInstall()
                 }
 
                 // FIX: Starting with mysql 8 we cannot create a user with `grant privileges` command
-                if (!$mysql->query("create user '".$_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
+                if (!$mysql->query("create user '".$_POST['reg_dbuser'] . "'@'%' identified by '" . $_POST['reg_dbpass'] . "'")) {
                     array_push($ERROR, 'Невозможно создать пользователя  "' . $_POST['reg_dbuser'] . '" в БД используя административные права');
                     $error = 1;
                     break;
