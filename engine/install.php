@@ -61,7 +61,7 @@ multi_multisites();
 // Check if config file already exists
 if ((@fopen(confroot . 'config.php', 'r')) && (filesize(confroot . 'config.php'))) {
     //printHeader();
-    echo "<font color=red><b>Error: configuration file already exists!</b></font><br />Delete it and continue.<br />\n";
+    echo "<div style='color: red; font-weight: bold;'>Error: configuration file already exists!</div><br />Delete it and continue.<br />\n";
 
     return;
 }
@@ -312,7 +312,7 @@ function doConfig_db($check)
         if ($_POST['reg_autocreate']) {
             // Check for user filled
             if (!strlen($_POST['reg_dbadminuser'])) {
-                $tvars['vars']['err:reg_dbadminuser'] = '<font color="red">' . $lang['err.reg_dbadminuser'] . '</font>';
+                $tvars['vars']['err:reg_dbadminuser'] = '<span style="color: red;">' . $lang['err.reg_dbadminuser'] . '</span>';
                 $error++;
             }
             $ac = 1;
@@ -414,7 +414,7 @@ function doConfig_perm()
     );
     foreach ($permList as $dir) {
         $perms = (($x = @fileperms($installDir . '/' . $dir)) === false) ? 'n/a' : (decoct($x) % 1000);
-        $chmod .= '<tr><td>./' . $dir . '</td><td>' . $perms . '</td><td>' . (is_writable($installDir . '/' . $dir) ? $lang['perm.access.on'] : '<font color="red"><b>' . $lang['perm.access.off'] . '</b></font>') . '</td></tr>';
+        $chmod .= '<tr><td>./' . $dir . '</td><td>' . $perms . '</td><td>' . (is_writable($installDir . '/' . $dir) ? $lang['perm.access.on'] : '<span style="color: red; font-weight: bold;">' . $lang['perm.access.off'] . '</span>') . '</td></tr>';
         if (!is_writable($installDir . '/' . $dir)) {
             $error++;
         }
@@ -424,7 +424,7 @@ function doConfig_perm()
 
     // PHP Version
     if (version_compare(phpversion(), '5.3') < 0) {
-        $tvars['vars']['php_version'] = '<font color="red">' . phpversion() . '</font>';
+        $tvars['vars']['php_version'] = '<span style="color: red;">' . phpversion() . '</span>';
         $error = 1;
     } else {
         $tvars['vars']['php_version'] = phpversion();
@@ -432,11 +432,11 @@ function doConfig_perm()
 
     // SQL Version
     if (!is_array($SQL_VERSION)) {
-        $tvars['vars']['sql_version'] = '<font color="red">unknown</font>';
+        $tvars['vars']['sql_version'] = '<span style="color: red;">unknown</span>';
         $error = 1;
     } else {
         if (($SQL_VERSION[1] < 3) || (($SQL_VERSION[1] == 3) && ($SQL_VERSION[2] < 23))) {
-            $tvars['vars']['sql_version'] = '<font color="red">' . $SQL_VERSION[0] . '</font>';
+            $tvars['vars']['sql_version'] = '<span style="color: red;">' . $SQL_VERSION[0] . '</span>';
             $error = 1;
         } else {
             $tvars['vars']['sql_version'] = $SQL_VERSION[0];
@@ -447,7 +447,7 @@ function doConfig_perm()
     if (extension_loaded('zlib') && function_exists('ob_gzhandler')) {
         $tvars['vars']['gzip'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['gzip'] = '<font color="red">' . $lang['perm.no'] . '</font>';
+        $tvars['vars']['gzip'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
         $error = 1;
     }
 
@@ -455,7 +455,7 @@ function doConfig_perm()
     if (extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) {
         $tvars['vars']['pdo'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['pdo'] = '<font color="red">' . $lang['perm.no'] . '</font>';
+        $tvars['vars']['pdo'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
         $error = 0;
     }
 
@@ -463,7 +463,7 @@ function doConfig_perm()
     if (extension_loaded('mbstring')) {
         $tvars['vars']['mb'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['mb'] = '<font color="red">' . $lang['perm.no'] . '</font>';
+        $tvars['vars']['mb'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
         $error = 1;
     }
 
@@ -471,7 +471,7 @@ function doConfig_perm()
     if (function_exists('imagecreatetruecolor')) {
         $tvars['vars']['gdlib'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['gdlib'] = '<font color="red">' . $lang['perm.no'] . '</font>';
+        $tvars['vars']['gdlib'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
         $error = 1;
     }
 
@@ -481,7 +481,7 @@ function doConfig_perm()
 
     // * flags that should be turned off
     foreach (array('register_globals', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase') as $flag) {
-        $tvars['vars']['flag:' . $flag] = ini_get($flag) ? '<font color="red">' . $lang['perm.php.on'] . '</font>' : $lang['perm.php.off'];
+        $tvars['vars']['flag:' . $flag] = ini_get($flag) ? '<span style="color: red;">' . $lang['perm.php.on'] . '</span>' : $lang['perm.php.off'];
         if (ini_get($flag)) {
             $warning++;
         }
@@ -955,7 +955,7 @@ function doInstall()
         // 1.5 Создание пользователя-администратора
         $query = "insert into `" . $_POST['reg_dbprefix'] . "_users` (`name`, `pass`, `mail`, `status`, `reg`) VALUES ('" . $mysql->db_quote($_POST['admin_login']) . "', '" . $mysql->db_quote(md5(md5($_POST['admin_password']))) . "', '" . $mysql->db_quote($_POST['admin_email']) . "', '1', unix_timestamp(now()))";
         if (!@$mysql->query($query)) {
-            array_push($LOG, 'Активация пользователя-администратора ... <font color="red">FAIL</font>');
+            array_push($LOG, 'Активация пользователя-администратора ... <span style="color: red;">FAIL</span>');
         } else {
             array_push($LOG, 'Активация пользователя-администратора ... OK');
         }
