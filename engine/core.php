@@ -137,10 +137,9 @@ define('site_root', dirname(dirname(__FILE__)) . '/');
 // Define domain name for cookies
 $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $mHost[1] : $_SERVER['HTTP_HOST'];
 // Remove non-standart port from domain
-if (preg_match_all("#^(.+?)\:\d+$#", $ngCookieDomain, $m)) {
+if (preg_match("#^(.+?)\:\d+$#", $ngCookieDomain, $m)) {
     $ngCookieDomain = $m[1];
 }
-
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
 if (!isset($_COOKIE['ngTrackID'])) {
