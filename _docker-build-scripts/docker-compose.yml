@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./web-server/config:/etc/nginx/conf.d
+      - ./web-server/www:/var/www
+      - ./web-server/logs:/var/log/nginx
+      - ./ngcms:/var/www/ngcms
+    links:
+      - ngdev00
+
+  ngdev00:
+    image: ng-dev00
+    container_name: ng-dev00-deploy
+    volumes:
+      - ./ngcms:/var/www/ngcms
+    ports:
+      - "9000:9000"
+    links:
+      - db
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: example
