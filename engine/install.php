@@ -791,6 +791,13 @@ function doInstall()
                     array_push($LOG, 'БД "' . $_POST['reg_dbname'] . '" уже существует ... OK');
                 }
 
+                // FIX: Starting with mysql 8 we cannot create a user with `grant privileges` command
+                if (!$mysql->query("create user ".$_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
+                    array_push($ERROR, 'Невозможно создать пользователя  "' . $_POST['reg_dbuser'] . '" в БД используя административные права');
+                    $error = 1;
+                    break;
+                }
+
                 // 2. Предоставление доступа к БД
                 if (!$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
                     array_push($ERROR, 'Невозможно обеспечить доступ пользователя "' . $_POST['reg_dbuser'] . '" к БД "' . $_POST['reg_dbname'] . '" используя административные права.');
