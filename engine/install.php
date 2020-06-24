@@ -799,7 +799,7 @@ function doInstall()
                 }
 
                 // 2. Предоставление доступа к БД
-                if (!$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
+                if (!$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'%''")) {
                     array_push($ERROR, 'Невозможно обеспечить доступ пользователя "' . $_POST['reg_dbuser'] . '" к БД "' . $_POST['reg_dbname'] . '" используя административные права.');
                     $error = 1;
                     break;
