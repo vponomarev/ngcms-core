@@ -38,7 +38,7 @@
 	}
 </script>
 <form action="{php_self}?mod=files&amp;action=list" method="post" name="options_bar">
-	<input type="hidden" name="area" value="{area}"/>
+	<input type="hidden" name="area" value="{area}" />
 	<table border="0" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<td width=100% colspan="5" class="contentHead">
@@ -48,33 +48,37 @@
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr align="center">
 			<td width="100%" class="contentNav" align="center" valign="top">
-				<input type="button" onmousedown="javascript:ChangeOption('list')" value="{l_list}" class="navbutton"/>
-				[status]<input type="button" onmousedown="javascript:ChangeOption('categories')" value="{l_categories}" class="navbutton"/>[/status]
-				<input type="button" onmousedown="javascript:ChangeOption('uploadnew')" value="{l_uploadnew}" class="navbutton"/>
+				<input type="button" onmousedown="javascript:ChangeOption('list')" value="{l_list}" class="navbutton" />
+				[status]<input type="button" onmousedown="javascript:ChangeOption('categories')" value="{l_categories}"
+					class="navbutton" />[/status]
+				<input type="button" onmousedown="javascript:ChangeOption('uploadnew')" value="{l_uploadnew}"
+					class="navbutton" />
 			</td>
 		</tr>
 	</table>
-	<br/>
+	<br />
 	<table id="list" border="0" width="100%" cellspacing="0" cellpadding="0" align="center" class="contentNav">
 		<tr>
 			<td width="20%" style="padding-left : 10px;">{l_sort}</td>
 			<td width="20%">{l_month} <select name="postdate">
 					<option selected value="">- {l_all} -</option>
-					{dateslist}</select></td>
+					{dateslist}
+				</select></td>
 			<td width="20%">{l_category} {dirlistcat}</td>
 			<td width="20%">[status]{l_author} <select name="author">
 					<option value="">- {l_all} -</option>
-					{authorlist}</select>[/status]
+					{authorlist}
+				</select>[/status]
 			</td>
-			<td width="20%">{l_per_page} <input style="text-align: center" name="npp" value="{npp}" type=text size=3/>
-				<input type=submit value="{l_show}" class="button"/></td>
+			<td width="20%">{l_per_page} <input style="text-align: center" name="npp" value="{npp}" type=text size=3 />
+				<input type=submit value="{l_show}" class="button" /></td>
 		</tr>
 	</table>
 </form>
-<br/>
+<br />
 <form action="{php_self}?mod=files" method="post" name="delform" id="delform">
-	<input type="hidden" name="area" value="{area}"/>
-	<input type="hidden" name="subaction" value=""/>
+	<input type="hidden" name="area" value="{area}" />
+	<input type="hidden" name="subaction" value="" />
 	<table id="entries" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 		<tr align="left" class="contHead">
 			<td width="5%">#</td>
@@ -84,7 +88,8 @@
 			<td width="15%">{l_category}</td>
 			<td width="10%">{l_author}</td>
 			<td width="5%">
-				<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(delform)"/>
+				<input class="check" type="checkbox" name="master_box" title="{l_select_all}"
+					onclick="javascript:check_uncheck_all(delform)" />
 			</td>
 		</tr>
 		{entries}
@@ -92,12 +97,13 @@
 
 
 			<td colspan="3" class="contentEdit">{pagesss}</td>
-			<td colspan="1" align="left" class="contentEdit">[status]<br/>
-				<div><input type=submit class="button" onclick="setStatus('delete');" value="{l_delete}"/></div>
+			<td colspan="1" align="left" class="contentEdit">[status]<br />
+				<div><input type=submit class="button" onclick="setStatus('delete');" value="{l_delete}" /></div>
 				[/status]
 			</td>
 			<td colspan="3" align="right" class="contentEdit">[status]
-				<div>{l_move}: {dirlist} <input type=submit class=button onclick="setStatus('move');" value="OK"/></div>
+				<div>{l_move}: {dirlist} <input type=submit class=button onclick="setStatus('move');" value="OK" />
+				</div>
 				[/status]
 			</td>
 		</tr>
@@ -107,51 +113,55 @@
 	</table>
 </form>
 [status]
-<table id="categories" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
+<table id="categories" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0"
+	class="content" align="center">
 	<tr>
-		<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"/>{l_addnewcat}</td>
-		<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"/>{l_delcat}</td>
+		<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" />{l_addnewcat}</td>
+		<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" />{l_delcat}</td>
 	</tr>
 	<tr>
 		<td width="50%" class="contentEntry1">
 			<form action="{php_self}?mod=files" method="post" name="newcat">
-				<input type="hidden" name="area" value="{area}"/>
-				<input type="hidden" name="subaction" value="newcat"/>
-				{l_name} <input type="text" name="newfolder" size="30"/>
-				&nbsp; <input type="submit" value="OK" class="button"/>
+				<input type="hidden" name="area" value="{area}" />
+				<input type="hidden" name="subaction" value="newcat" />
+				{l_name} <input type="text" name="newfolder" size="30" />
+				&nbsp; <input type="submit" value="OK" class="button" />
 			</form>
 		</td>
 		<td width="50%" class="contentEntry1">
 			<form action="{php_self}?mod=files" method="post" name="delcat">
-				<input type="hidden" name="area" value="{area}"/>
-				<input type="hidden" name="subaction" value="delcat"/>
-				{l_name} {dirlist}&nbsp; <input type="submit" value="OK" class="button"/>
+				<input type="hidden" name="area" value="{area}" />
+				<input type="hidden" name="subaction" value="delcat" />
+				{l_name} {dirlist}&nbsp; <input type="submit" value="OK" class="button" />
 			</form>
 		</td>
 	</tr>
 </table>
 [/status]
 
-<table id="uploadnew" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0" class="content">
+<table id="uploadnew" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0"
+	class="content">
 	<tr>
 		<td width="50%" valign="top" class="contentEntry1">
 			<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 				<tr>
-					<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt=""/>{l_upload_file}
+					<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt="" />{l_upload_file}
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<br/>
+						<br />
 
 						<form action="{php_self}?mod=files" method="post" enctype="multipart/form-data" name="sn">
-							<input type="hidden" name="area" value="{area}"/>
-							<input type="hidden" name="subaction" value="upload"/>
+							<input type="hidden" name="area" value="{area}" />
+							<input type="hidden" name="subaction" value="upload" />
 							{dirlistS}&nbsp;
 							<span id="showRemoveAddButtoms">
-<input type="button" class="button" value='{l_delone}' onClick="RemoveFiles();return false;"/>&nbsp;
-<input type="button" class="button" value='{l_onemore}' onClick="AddFiles();return false;"/><br/><br/>
-</span>
+								<input type="button" class="button" value='{l_delone}'
+									onClick="RemoveFiles();return false;" />&nbsp;
+								<input type="button" class="button" value='{l_onemore}'
+									onClick="AddFiles();return false;" /><br /><br />
+							</span>
 							<script language="javascript" type="text/javascript">
 								function AddFiles() {
 									var tbl = document.getElementById('fileup');
@@ -181,90 +191,92 @@
 							<table id="fileup" class="upload">
 								<tr id="row">
 									<td>1:</td>
-									<td><input type="file" id="fileUploadInput" size="30" name="userfile[0]"/></td>
+									<td><input type="file" id="fileUploadInput" size="30" name="userfile[0]" /></td>
 								</tr>
 							</table>
-							<br/><br/>
+							<br /><br />
 							<div class="list">
-								<input type="checkbox" name="replace" value="replace" id="flagReplace" class="check" value="1"/>
-								<label for="flagReplace">{l_do_replace}</label><br/>
-								<input type="checkbox" name="rand" value='rand' id="flagRand" class="check" value="1"/>
-								<label for="flagRand">{l_do_rand}</label><br/>
+								<input type="checkbox" name="replace" value="replace" id="flagReplace" class="check"
+									value="1" />
+								<label for="flagReplace">{l_do_replace}</label><br />
+								<input type="checkbox" name="rand" value='rand' id="flagRand" class="check" value="1" />
+								<label for="flagRand">{l_do_rand}</label><br />
 							</div>
-							<br/><input type="submit" value='{l_upload}' class="button" onclick="uploadifyDoUpload(); return false;"/>
+							<br /><input type="submit" value='{l_upload}' class="button"
+								onclick="uploadifyDoUpload(); return false;" />
 						</form>
 
 						<!-- BEGIN: Init UPLOADIFY engine -->
 						<script type="text/javascript">
 							$(document).ready(function () {
 
-                                var uploader = $('#fileUploadInput').uploadifive({
-                                    'auto'             : false,
-                                    'uploadScript'     : '{admin_url}/rpc.php?methodName=admin.files.upload',
-                                    'cancelImg': '{skins_url}/images/up_cancel.png',
-                                    'folder': '',
-                                    'fileExt': '{listExt}',
-                                    'fileDesc': '{descExt}',
-                                    'sizeLimit': {maxSize},
-                                    'auto': false,
-                                    'multi': true,
-                                    'buttonText': 'Select files ...',
-                                    'width': 200,
-                                    'removeCompleted': true,
-                                    'onInit': function () {
-                                        document.getElementById('showRemoveAddButtoms').style.display = 'none';
-                                    },
-                                    'onUploadComplete': function (fileObj, data) {
-                                        // Response should be in JSON format
-                                        var resData;
-                                        var resStatus = 0;
-                                        try {
-                                            resData = eval('(' + data + ')');
-                                            if (typeof(resData['status']))
-                                                resStatus = 1;
-                                        } catch (err) {
-                                            alert('Error parsing JSON output. Result: ' + res);
-                                        }
+								var uploader = $('#fileUploadInput').uploadifive({
+									'auto': false,
+									'uploadScript': '{admin_url}/rpc.php?methodName=admin.files.upload',
+									'cancelImg': '{skins_url}/images/up_cancel.png',
+									'folder': '',
+									'fileExt': '{listExt}',
+									'fileDesc': '{descExt}',
+									'sizeLimit': { maxSize },
+									'auto': false,
+									'multi': true,
+									'buttonText': 'Select files ...',
+									'width': 200,
+									'removeCompleted': true,
+									'onInit': function () {
+										document.getElementById('showRemoveAddButtoms').style.display = 'none';
+									},
+									'onUploadComplete': function (fileObj, data) {
+										// Response should be in JSON format
+										var resData;
+										var resStatus = 0;
+										try {
+											resData = eval('(' + data + ')');
+											if (typeof (resData['status']))
+												resStatus = 1;
+										} catch (err) {
+											alert('Error parsing JSON output. Result: ' + res);
+										}
 
-                                        if (!resStatus) {
-                                            alert('Upload resp: ' + res);
-                                            return false;
-                                        }
+										if (!resStatus) {
+											alert('Upload resp: ' + res);
+											return false;
+										}
 
-                                        flagRequireReload = 1;
+										flagRequireReload = 1;
 
-                                        // If upload fails
+										// If upload fails
 										/**/
 
 										var id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-                                        if (resData['status'] < 1) {
-                                            $('.uploadifive-queue').append('<div id=' + id + '></div>');
-                                            $('#'+id).append('<div class="msg">(' + resData['errorCode'] + ') ' + resData['errorText'] + '</div>');
-                                            if (typeof(resData['errorDescription']) !== 'undefined') {
-                                                $('#'+id).append('<div class="msgInfo">' + resData['errorDescription'] + '</div>');
-                                            }
-                                            $('#'+id).css('border', '2px solid red');
-                                            $('#'+id).fadeOut(5000);
-                                            return false;
-                                        } else {
-                                            $('.uploadifive-queue').append('<div id=' + id + '></div>');
-                                            $('#'+id).append('<div>' + resData['errorText'] + '</div>');
-                                            $('#'+id).fadeOut(5000);
-                                        }
+										if (resData['status'] < 1) {
+											$('.uploadifive-queue').append('<div id=' + id + '></div>');
+											$('#' + id).append('<div class="msg">(' + resData['errorCode'] + ') ' + resData['errorText'] + '</div>');
+											if (typeof (resData['errorDescription']) !== 'undefined') {
+												$('#' + id).append('<div class="msgInfo">' + resData['errorDescription'] + '</div>');
+											}
+											$('#' + id).css('border', '2px solid red');
+											$('#' + id).fadeOut(5000);
+											return false;
+										} else {
+											$('.uploadifive-queue').append('<div id=' + id + '></div>');
+											$('#' + id).append('<div>' + resData['errorText'] + '</div>');
+											$('#' + id).fadeOut(5000);
+										}
 
-                                        return true;
-                                    },
-                                    'onUpload': function(filesToUpload, settings) {
+										return true;
+									},
+									'onUpload': function (filesToUpload, settings) {
 
-                                        var scriptData = new Array();
-                                        scriptData['ngAuthCookie'] = '{authcookie}';
-                                        scriptData['uploadType'] = 'file';
-                                        scriptData['category'] = document.getElementById('categorySelect').value;
-                                        scriptData['rand'] = document.getElementById('flagRand').checked ? 1 : 0;
-                                        scriptData['replace'] = document.getElementById('flagReplace').checked ? 1 : 0;
+										var scriptData = new Array();
+										scriptData['ngAuthCookie'] = '{authcookie}';
+										scriptData['uploadType'] = 'file';
+										scriptData['category'] = document.getElementById('categorySelect').value;
+										scriptData['rand'] = document.getElementById('flagRand').checked ? 1 : 0;
+										scriptData['replace'] = document.getElementById('flagReplace').checked ? 1 : 0;
 
-                                        settings.formData = scriptData;
-                                    }
+										settings.formData = scriptData;
+									}
 								});
 							});
 
@@ -282,18 +294,21 @@
 		<td width="50%" class="contentEntry1" valign="top">
 			<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 				<tr>
-					<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt=""/>{l_upload_file_url}
+					<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"
+							alt="" />{l_upload_file_url}
 					</td>
 				</tr>
 				<tr>
-					<td><br/>
+					<td><br />
 
 						<form action="{php_self}?mod=files" method="post" name="snup">
-							<input type="hidden" name="subaction" value="uploadurl"/>
-							<input type="hidden" name="area" value="{area}"/>
-							<br/>{dirlist}&nbsp;
-							<input type="button" class="button" value='{l_delone}' onClick="RemoveFiles2();return false;"/>&nbsp;
-							<input type="button" class="button" value='{l_onemore}' onClick="AddFiles2();return false;"/><br/><br/>
+							<input type="hidden" name="subaction" value="uploadurl" />
+							<input type="hidden" name="area" value="{area}" />
+							<br />{dirlist}&nbsp;
+							<input type="button" class="button" value='{l_delone}'
+								onClick="RemoveFiles2();return false;" />&nbsp;
+							<input type="button" class="button" value='{l_onemore}'
+								onClick="AddFiles2();return false;" /><br /><br />
 							<script language="javascript" type="text/javascript">
 								function AddFiles2() {
 									var tbl = document.getElementById('fileup2');
@@ -310,31 +325,32 @@
 									el.setAttribute('name', 'userurl[' + iteration + ']');
 									el.setAttribute('size', '30');
 									cellRight.appendChild(el);
-//	document.getElementById('files_number').value = iteration;
+									//	document.getElementById('files_number').value = iteration;
 								}
 								function RemoveFiles2() {
 									var tbl = document.getElementById('fileup2');
 									var lastRow = tbl.rows.length;
 									if (lastRow > 1) {
 										tbl.deleteRow(lastRow - 1);
-//		document.getElementById('files_number').value =  document.getElementById('files_number').value - 1;
+										//		document.getElementById('files_number').value =  document.getElementById('files_number').value - 1;
 									}
 								}
 							</script>
 							<table id="fileup2" class="upload">
 								<tr id="row">
 									<td>1:</td>
-									<td><input type="text" size="30" name="userurl[0]"/></td>
+									<td><input type="text" size="30" name="userurl[0]" /></td>
 								</tr>
 							</table>
-							<br/>
+							<br />
 							<div class="list">
-								<input type=checkbox name="replace" value='replace' id=replace class='check'/>
-								<label for=replace>{l_do_replace}</label><br/>
-								<input type=checkbox name="rand" value='rand' id=rand class='check'/> <label for=rand>{l_do_rand}</label><br/>
+								<input type=checkbox name="replace" value='replace' id=replace class='check' />
+								<label for=replace>{l_do_replace}</label><br />
+								<input type=checkbox name="rand" value='rand' id=rand class='check' /> <label
+									for=rand>{l_do_rand}</label><br />
 							</div>
-							<br/>
-							<input type="submit" value='{l_upload}' class="button"/>
+							<br />
+							<input type="submit" value='{l_upload}' class="button" />
 						</form>
 					</td>
 				</tr>

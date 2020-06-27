@@ -12,7 +12,7 @@
 			case 'down':
 			case 'del':
 				rpcCommand = 'admin.categories.modify';
-				rpcParams = {'mode': cmd, 'id': cid, 'token': categoryUToken};
+				rpcParams = { 'mode': cmd, 'id': cid, 'token': categoryUToken };
 				break;
 		}
 		if (rpcCommand == '') {
@@ -44,7 +44,7 @@
 				} else {
 					if (resTX['content'] !== 'undefined') {
 						if (resTX['infoText']) {
-							ngNotifySticker(resTX['infoText'], {className: resTX['infoCode'] ? 'ngStickerClassClassic' : 'ngStickerClassError'});
+							ngNotifySticker(resTX['infoText'], { className: resTX['infoCode'] ? 'ngStickerClassClassic' : 'ngStickerClassError' });
 						}
 						document.getElementById('admCatList').innerHTML = resTX['content'];
 					} else {
@@ -63,37 +63,38 @@
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 	<tr>
 		<td width="100%" colspan="5" class="contentHead">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=categories">{{ lang['categories_title'] }}</a>
+			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a
+				href="?mod=categories">{{ lang['categories_title'] }}</a>
 		</td>
 	</tr>
 </table>
 <div id="list">
 	<table width="97%" class="content" border="0" cellspacing="0" cellpadding="0" align="center">
 		<thead>
-		<tr align="left" class="contHead">
-			<td width="5%">#</td>
-			<td>{{ lang['title'] }}</td>
-			<td>ID</td>
-			<td>{{ lang['alt_name'] }}</td>
-			<td>{{ lang['category.header.menushow'] }}</td>
-			<td>{{ lang['category.header.template'] }}</td>
-			<td>{{ lang['news'] }}</td>
-			<td width="160">{{ lang['action'] }}</td>
-		</tr>
+			<tr align="left" class="contHead">
+				<td width="5%">#</td>
+				<td>{{ lang['title'] }}</td>
+				<td>ID</td>
+				<td>{{ lang['alt_name'] }}</td>
+				<td>{{ lang['category.header.menushow'] }}</td>
+				<td>{{ lang['category.header.template'] }}</td>
+				<td>{{ lang['news'] }}</td>
+				<td width="160">{{ lang['action'] }}</td>
+			</tr>
 		</thead>
 		<tbody id="admCatList">
-		{% include localPath(0)~"entries.tpl" %}
+			{% include localPath(0)~"entries.tpl" %}
 		</tbody>
 		<tfoot>
-		<tr>
-			<td colspan="8" class="contentEdit" align="right">&nbsp; {% if (flags.canModify) %}
+			<tr>
+				<td colspan="8" class="contentEdit" align="right">&nbsp; {% if (flags.canModify) %}
 					<form method="get" action="">
-					<input type="hidden" name="mod" value="categories"/><input type="hidden" name="action" value="add"/><input type="submit" value="{{ lang['addnew'] }}" class="button"/>
+						<input type="hidden" name="mod" value="categories" /><input type="hidden" name="action"
+							value="add" /><input type="submit" value="{{ lang['addnew'] }}" class="button" />
 					</form>{% endif %}</td>
-		</tr>
+			</tr>
 		</tfoot>
 	</table>
 
 	</form>
 </div>
-

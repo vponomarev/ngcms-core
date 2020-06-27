@@ -5,5 +5,5 @@
 	<td class="contentEntry1">{size}</td>
 	<td class="contentEntry1">{folder}</td>
 	<td class="contentEntry1">{user}</td>
-	<td class="contentEntry1"><input type="checkbox" name=files[] value="{id}" class="check"/></td>
+	<td class="contentEntry1"><input type="checkbox" name=files[] value="{id}" class="check" /></td>
 </tr>

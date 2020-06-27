@@ -7,16 +7,17 @@
 </table>
 
 <form method="post" action="?mod=extras&manageConfig=1">
-	<input type="hidden" name="token" value="{{ token }}"/>
-	<input type="hidden" name="mod" value="extras"/>
-	<input type="hidden" name="manageConfig" value="1"/>
-	<input type="hidden" name="action" value="commit"/>
+	<input type="hidden" name="token" value="{{ token }}" />
+	<input type="hidden" name="mod" value="extras" />
+	<input type="hidden" name="manageConfig" value="1" />
+	<input type="hidden" name="action" value="commit" />
 
 	<div id="configAreaX"></div>
-	<textarea name="config" id="configArea" cols="120" rows="40" style="width: 99%; font: normal 11px/14px Courier,Tahoma,sans-serif;"></textarea>
+	<textarea name="config" id="configArea" cols="120" rows="40"
+		style="width: 99%; font: normal 11px/14px Courier,Tahoma,sans-serif;"></textarea>
 	<!-- <input type="submit" value="Commit changes"/> --> &nbsp;
-	<input type="button" value="Load data" onclick="loadData(); return false;"/> &nbsp;
-	<input type="button" value="Show content" onclick="showContent(); return false;"/>
+	<input type="button" value="Load data" onclick="loadData(); return false;" /> &nbsp;
+	<input type="button" value="Show content" onclick="showContent(); return false;" />
 </form>
 
 <script type="text/javascript" language="javascript">
@@ -25,7 +26,7 @@
 			json: 1,
 			methodName: 'admin.extras.getPluginConfig',
 			rndval: new Date().getTime(),
-			params: json_encode({token: '{{ token }}'})
+			params: json_encode({ token: '{{ token }}' })
 		}, function (data) {
 			ngHideLoading();
 			// Try to decode incoming data

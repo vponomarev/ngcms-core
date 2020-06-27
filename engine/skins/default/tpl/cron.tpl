@@ -1,10 +1,11 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tbody>
-	<tr>
-		<td colspan="5" class="contentHead" width="100%">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=cron" title="{{ lang.cron['title'] }}">{{ lang.cron['title'] }}</a>
-		</td>
-	</tr>
+		<tr>
+			<td colspan="5" class="contentHead" width="100%">
+				<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=cron"
+					title="{{ lang.cron['title'] }}">{{ lang.cron['title'] }}</a>
+			</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -18,7 +19,7 @@
 			<td style="background-color: #EEEEEE; padding-bottom: 5px;" colspan="2">{{ lang.cron['title#desc'] }}</td>
 		</tr>
 		<tr>
-			<td valign="top" width="60%"><br/><br/>{{ lang.cron['legend'] }}</td>
+			<td valign="top" width="60%"><br /><br />{{ lang.cron['legend'] }}</td>
 			<td valign="top">
 				<table width="550">
 					<tr align="left">
@@ -32,26 +33,29 @@
 					</tr>
 
 					{% for entry in entries %}
-						<tr align="left">
-							<td>
-								<input name="data[{{ entry.id }}][plugin]" style="width: 85px;" value="{{ entry.plugin }}"/></b>
-							</td>
-							<td>
-								<input name="data[{{ entry.id }}][handler]" style="width: 90px;" value="{{ entry.handler }}"/>
-							</td>
-							<td><input name="data[{{ entry.id }}][min]" style="width: 70px" value="{{ entry.min }}"/>
-							</td>
-							<td><input name="data[{{ entry.id }}][hour]" style="width: 70px" value="{{ entry.hour }}"/>
-							</td>
-							<td><input name="data[{{ entry.id }}][day]" style="width: 70px" value="{{ entry.day }}"/>
-							</td>
-							<td>
-								<input name="data[{{ entry.id }}][month]" style="width: 70px" value="{{ entry.month }}"/></b>
-							</td>
-							<td>
-								<input name="data[{{ entry.id }}][dow]" style="width: 70px" value="{{ entry.dow }}"/></b>
-							</td>
-						</tr>
+					<tr align="left">
+						<td>
+							<input name="data[{{ entry.id }}][plugin]" style="width: 85px;"
+								value="{{ entry.plugin }}" /></b>
+						</td>
+						<td>
+							<input name="data[{{ entry.id }}][handler]" style="width: 90px;"
+								value="{{ entry.handler }}" />
+						</td>
+						<td><input name="data[{{ entry.id }}][min]" style="width: 70px" value="{{ entry.min }}" />
+						</td>
+						<td><input name="data[{{ entry.id }}][hour]" style="width: 70px" value="{{ entry.hour }}" />
+						</td>
+						<td><input name="data[{{ entry.id }}][day]" style="width: 70px" value="{{ entry.day }}" />
+						</td>
+						<td>
+							<input name="data[{{ entry.id }}][month]" style="width: 70px"
+								value="{{ entry.month }}" /></b>
+						</td>
+						<td>
+							<input name="data[{{ entry.id }}][dow]" style="width: 70px" value="{{ entry.dow }}" /></b>
+						</td>
+					</tr>
 					{% endfor %}
 				</table>
 			</td>
@@ -62,7 +66,8 @@
 		<tr>&nbsp;</tr>
 		<tr align="center">
 			<td class="contentEdit" valign="top" width="100%">
-				<input value="{{ lang.cron['commit_change'] }}" class="button" type="submit" onclick='document.location="?mod=extra-config&plugin=xfields&action=add&section={{ sectionID }}";'>
+				<input value="{{ lang.cron['commit_change'] }}" class="button" type="submit"
+					onclick='document.location="?mod=extra-config&plugin=xfields&action=add&section={{ sectionID }}";'>
 			</td>
 		</tr>
 	</table>

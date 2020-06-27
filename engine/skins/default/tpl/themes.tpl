@@ -7,12 +7,12 @@
 <!-- Info content -->
 <div class="page-main">
     <div class="row">
-        
+
     </div>
 </div>
 
 <script>
-if (typeof(localStorage) == "undefined") {
- $.notify({message: 'Sorry! No Web Storage support . . .'},{type: 'danger'});
-}
+    if (typeof (localStorage) == "undefined") {
+        $.notify({ message: 'Sorry! No Web Storage support . . .' }, { type: 'danger' });
+    }
 </script>

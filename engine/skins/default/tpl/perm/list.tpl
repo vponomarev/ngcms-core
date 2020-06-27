@@ -37,8 +37,8 @@
 
 <!-- Form header -->
 <form id="permSubmit" name="permSubmit" method="POST">
-	<input type="hidden" name="save" value="1"/>
-	<input type="hidden" name="token" value="{{ token }}"/>
+	<input type="hidden" name="save" value="1" />
+	<input type="hidden" name="token" value="{{ token }}" />
 	<!-- /Form header -->
 
 
@@ -46,55 +46,59 @@
 	<div id="userTabs">
 		<ul>
 			{% for group in GRP %}
-				<li><a href="#userTabs-{{ group.id }}">{{ group.title }}</a></li>
+			<li><a href="#userTabs-{{ group.id }}">{{ group.title }}</a></li>
 			{% endfor %}
 		</ul>
 
 		<!-- Group content header -->
 		{% for group in GRP %}
-			<!-- Content for group [{{ group.id }}] {{ group.title }} -->
-			<div id="userTabs-{{ group.id }}">
-				<div><i>{{ lang['permissions_for_user_group'] }}: <b>{{ group.title }}</b></i></div>
-				<br/>
+		<!-- Content for group [{{ group.id }}] {{ group.title }} -->
+		<div id="userTabs-{{ group.id }}">
+			<div><i>{{ lang['permissions_for_user_group'] }}: <b>{{ group.title }}</b></i></div>
+			<br />
 
-				{% for block in CONFIG %}
-					<div class="pconf">
-						<h1>{{ block.title }}</h1>
-						{% if (block.description) %}   <i>{{ block.description }}</i><br/>{% endif %}
+			{% for block in CONFIG %}
+			<div class="pconf">
+				<h1>{{ block.title }}</h1>
+				{% if (block.description) %} <i>{{ block.description }}</i><br />{% endif %}
 
-						{% for area in block.items %}
-							<h2>{{ area.title }}</h2>
-							{% if (area.description) %}   <i>{{ area.description }}</i><br/><br/>{% endif %}
+				{% for area in block.items %}
+				<h2>{{ area.title }}</h2>
+				{% if (area.description) %} <i>{{ area.description }}</i><br /><br />{% endif %}
 
-							<table width="100%" class="content">
-								<thead>
-								<tr class="contHead">
-									<td><b>#ID</b></td>
-									<td><b>{{ lang['description'] }}</b></td>
-									<td width="90"><b>{{ lang['access'] }}</b></td>
-									</td>
-								</thead>
-								{% for entry in area.items %}
-									<tr class="contentEntry1">
-										<td><strong>{{ entry.id }}</strong></td>
-										<td>{{ entry.title }}</td>
-										<td>
-											<select name="{{ entry.name }}|{{ group.id }}" onchange="onUpdatePerm('{{ entry.name }}|{{ group.id }}');" value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
-												<option value="-1">--</option>
-												<option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['noa'] }}</option>
-												<option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['yesa'] }}</option>
-											</select>
-										</td>
-									</tr>
-								{% endfor %}
-							</table>
-							<br/>
-						{% endfor %}
-					</div>
+				<table width="100%" class="content">
+					<thead>
+						<tr class="contHead">
+							<td><b>#ID</b></td>
+							<td><b>{{ lang['description'] }}</b></td>
+							<td width="90"><b>{{ lang['access'] }}</b></td>
+							</td>
+					</thead>
+					{% for entry in area.items %}
+					<tr class="contentEntry1">
+						<td><strong>{{ entry.id }}</strong></td>
+						<td>{{ entry.title }}</td>
+						<td>
+							<select name="{{ entry.name }}|{{ group.id }}"
+								onchange="onUpdatePerm('{{ entry.name }}|{{ group.id }}');"
+								value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
+								<option value="-1">--</option>
+								<option value="0" {% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %}
+									selected="selected" {% endif %}>{{ lang['noa'] }}</option>
+								<option value="1" {% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %}
+									selected="selected" {% endif %}>{{ lang['yesa'] }}</option>
+							</select>
+						</td>
+					</tr>
+					{% endfor %}
+				</table>
+				<br />
 				{% endfor %}
-
 			</div>
-			<!-- /Content for group [{{ group.id }}] {{ group.title }} -->
+			{% endfor %}
+
+		</div>
+		<!-- /Content for group [{{ group.id }}] {{ group.title }} -->
 		{% endfor %}
 	</div>
 
@@ -103,7 +107,7 @@
 			$("#userTabs").tabs();
 		});
 	</script>
-	<br/>
+	<br />
 
-	<input type="submit" value="{{ lang['save'] }}" onclick="return onUpdateSubmit();" class="button"/>
+	<input type="submit" value="{{ lang['save'] }}" onclick="return onUpdateSubmit();" class="button" />
 </form>

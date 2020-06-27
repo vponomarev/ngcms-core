@@ -13,16 +13,16 @@
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
 
 		<thead>
-		<tr class="contHead">
-			<td>&nbsp;</td>
-			<td width="20">#</td>
-			<td width="60">{{ lang['hdr.plugin'] }}</td>
-			<td width="80">{{ lang['hdr.action'] }}</td>
-			<td>{{ lang['hdr.description'] }}</td>
-			<td>URL</td>
-			<td>{{ lang['hdr.flags'] }}</td>
-			<td>&nbsp;</td>
-		</tr>
+			<tr class="contHead">
+				<td>&nbsp;</td>
+				<td width="20">#</td>
+				<td width="60">{{ lang['hdr.plugin'] }}</td>
+				<td width="80">{{ lang['hdr.action'] }}</td>
+				<td>{{ lang['hdr.description'] }}</td>
+				<td>URL</td>
+				<td>{{ lang['hdr.flags'] }}</td>
+				<td>&nbsp;</td>
+			</tr>
 		</thead>
 		<tbody id="cfg.body">
 		</tbody>
@@ -34,14 +34,16 @@
 			<td id="row.pluginName">*&nbsp;</td>
 			<td id="row.cmd">&nbsp;</td>
 			<td id="row.description">&nbsp;</td>
-			<td id="row.url"><input type="text" id="ed.regex" style="width: 90%;"/><br/>
-				{{ lang['tbl.available_vars'] }}:<br/><span id="ed.varlist"></span>
+			<td id="row.url"><input type="text" id="ed.regex" style="width: 90%;" /><br />
+				{{ lang['tbl.available_vars'] }}:<br /><span id="ed.varlist"></span>
 			</td>
-			<td id="row.flags"><input id="ed.flagPrimary" type="checkbox"/>
-				<input id="ed.flagFailContinue" type="checkbox"/> <input id="ed.flagDisabled" type="checkbox"/></td>
+			<td id="row.flags"><input id="ed.flagPrimary" type="checkbox" />
+				<input id="ed.flagFailContinue" type="checkbox" /> <input id="ed.flagDisabled" type="checkbox" /></td>
 			<td nowrap>
-				<input type="button" onclick="reSubmitEdit();" id="ed.button" value="Add" class="button" style="padding: 2px 2px;"/>
-				<input type="button" id="ed.bcancel" onclick="reCancelEdit();" class="button" style="padding: 2px 2px;" value="Cancel"/>
+				<input type="button" onclick="reSubmitEdit();" id="ed.button" value="Add" class="button"
+					style="padding: 2px 2px;" />
+				<input type="button" id="ed.bcancel" onclick="reCancelEdit();" class="button" style="padding: 2px 2px;"
+					value="Cancel" />
 			</td>
 		</tr>
 		<tr id="row.editRow2" valign="top" class="rewriteEditLine">
@@ -60,10 +62,10 @@
 
 	</table>
 
-	<input type="button" value="SAVE" onclick="reServerSubmit();" class="button"/>
+	<input type="button" value="SAVE" onclick="reServerSubmit();" class="button" />
 
 	<script type="text/javascript" language="javascript">
-		<!--
+		< !--
 		// Connect to configuration data
 		var dConfig = {{ json.config }};
 		var dData = {{ json.data }};
@@ -164,7 +166,7 @@
 		function reUpdateDescr(plugin, cmd) {
 			var tmp, vName;
 			var rd = document.getElementById('row.description');
-// alert('reUpdateDescr('+plugin+', '+cmd+') :'+rd.innerHTML);
+			// alert('reUpdateDescr('+plugin+', '+cmd+') :'+rd.innerHTML);
 
 			if ((dConfig[plugin] != null) && (dConfig[plugin][cmd] != null) && (dConfig[plugin][cmd]['descr'] != null)) {
 				// Description
@@ -240,7 +242,7 @@
 					dData[i] = dData[i + 1];
 					dData[i]['id'] = i;
 				}
-				delete(dData[dCounter]);
+				delete (dData[dCounter]);
 				populateCfg();
 			}
 			return true;
@@ -367,4 +369,3 @@
 
 		-->
 	</script>
-

@@ -11,7 +11,8 @@
 					</tr>
 					<tr>
 						<td width=100% class="contentEntry1">
-							{quicktags}<br/>{smilies}<br/><textarea name="content" id="content" rows="10" cols="60" tabindex="1" maxlength="3000"/></textarea>
+							{quicktags}<br />{smilies}<br /><textarea name="content" id="content" rows="10" cols="60"
+								tabindex="1" maxlength="3000" /></textarea>
 						</td>
 					</tr>
 				</table>
@@ -19,7 +20,7 @@
 		</tr>
 		<tr align="center">
 			<td width="100%" colspan="2" class="contentEdit" valign="top">
-				<input type="submit" value="{l_send}" accesskey="s" class="button"/>
+				<input type="submit" value="{l_send}" accesskey="s" class="button" />
 			</td>
 		</tr>
 	</table>

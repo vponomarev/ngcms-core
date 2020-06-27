@@ -38,7 +38,10 @@
 		document.getElementById('modalmsgDialog').style.display = 'none';
 	}
 </script>
-<div id="modalmsgDialog" onclick="_modal_close();"><span id="modalmsgWindow"><div id="modalmsgWindowText"></div><div id="modalmsgWindowButton"><input type="button" value="OK"/></div></span>
+<div id="modalmsgDialog" onclick="_modal_close();"><span id="modalmsgWindow">
+		<div id="modalmsgWindowText"></div>
+		<div id="modalmsgWindowButton"><input type="button" value="OK" /></div>
+	</span>
 </div>
 
 <table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
@@ -47,7 +50,7 @@
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['server'] }}</td>
+						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['server'] }}</td>
 				</tr>
 				<tr>
 					<td width="50%" class="contentEntry1">{{ lang['os'] }}</td>
@@ -70,7 +73,8 @@
 		<td width="50%" style="padding-left:10px;" valign="top">
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
-					<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>Next
+					<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8"
+							alt="" />Next
 						Generation CMS
 					</td>
 				</tr>
@@ -98,7 +102,7 @@
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td colspan="4" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['size'] }}</td>
+						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['size'] }}</td>
 				</tr>
 				<tr>
 					<td class="contentEntry1">{{ lang['group'] }}</td>
@@ -139,15 +143,15 @@
 			</table>
 
 			<script type="text/javascript" language="JavaScript">
-				{{ versionNotify }}
+				{ { versionNotify } }
 			</script>
 
-			<br/><br/>
+			<br /><br />
 
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['size'] }}</td>
+						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['size'] }}</td>
 				</tr>
 				<tr>
 					<td width="50%" class="contentEntry1">{{ lang['allowed_size'] }}</td>
@@ -164,7 +168,7 @@
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['system'] }}</td>
+						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['system'] }}</td>
 				</tr>
 				<tr>
 					<td width="70%" class="contentEntry1">{{ lang['all_cats'] }}</td>
@@ -216,14 +220,17 @@
 			<table border="0" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['note'] }}</td>
+						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['note'] }}</td>
 				</tr>
 				<tr>
 					<td width="50%" colspan="2" class="contentEntry1">
 						<form method="post" action="{{ php_self }}?mod=statistics">
-							<input type="hidden" name="action" value="save"/>
-							<textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow; width: 100%; margin-bottom: 5px;" {% if (not admin_note) %}placeholder="{{ lang['no_notes'] }}"{% endif %}>{{ admin_note }}</textarea><br/>
-							<input type="submit" class="button" value="{{ lang['save_note'] }}"/>
+							<input type="hidden" name="action" value="save" />
+							<textarea name="note" rows="6" cols="70"
+								style="border: 1px solid #ccc; background-color: lightyellow; width: 100%; margin-bottom: 5px;"
+								{% if (not admin_note) %}placeholder="{{ lang['no_notes'] }}"
+								{% endif %}>{{ admin_note }}</textarea><br />
+							<input type="submit" class="button" value="{{ lang['save_note'] }}" />
 						</form>
 					</td>
 				</tr>
@@ -231,51 +238,53 @@
 		</td>
 		<td width="50%" style="padding-left:10px;" valign="top">
 			{% if (flags.confError) %}
-				<!-- Configuration errors -->
-				<table border="0" width="100%" cellspacing="0" cellpadding="0">
-					<tr>
-						<td colspan="2" class="contentHead">
-							<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/><font color="red">{{ lang['pconfig.error'] }}</font>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<table width="100%">
-								<thead>
+			<!-- Configuration errors -->
+			<table border="0" width="100%" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="2" class="contentHead">
+						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />
+						<font color="red">{{ lang['pconfig.error'] }}</font>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table width="100%">
+							<thead>
 								<tr>
 									<td>{{ lang['perror.parameter'] }}</td>
 									<td>{{ lang['perror.shouldbe'] }}</td>
 									<td>{{ lang['perror.set'] }}</td>
-								</thead>
-								<tr>
-									<td>Register Globals</td>
-									<td>Отключено</td>
-									<td>{{ flags.register_globals }}</td>
-								</tr>
-								<tr>
-									<td>Magic Quotes GPC</td>
-									<td>Отключено</td>
-									<td>{{ flags.magic_quotes_gpc }}</td>
-								</tr>
-								<tr>
-									<td>Magic Quotes Runtime</td>
-									<td>Отключено</td>
-									<td>{{ flags.magic_quotes_runtime }}</td>
-								</tr>
-								<tr>
-									<td>Magic Quotes Sybase</td>
-									<td>Отключено</td>
-									<td>{{ flags.magic_quotes_sybase }}</td>
-								</tr>
-							</table>
-							<br/>
-							&nbsp;<a style="cursor: pointer; color: red;" onclick="document.getElementById('perror_resolve').style.display='block';">{{ lang['perror.howto'] }}</a><br/>
-							<div id="perror_resolve" style="display: none;">
-								{{ lang['perror.descr'] }}
-							</div>
-						</td>
-					</tr>
-				</table>
+							</thead>
+							<tr>
+								<td>Register Globals</td>
+								<td>Отключено</td>
+								<td>{{ flags.register_globals }}</td>
+							</tr>
+							<tr>
+								<td>Magic Quotes GPC</td>
+								<td>Отключено</td>
+								<td>{{ flags.magic_quotes_gpc }}</td>
+							</tr>
+							<tr>
+								<td>Magic Quotes Runtime</td>
+								<td>Отключено</td>
+								<td>{{ flags.magic_quotes_runtime }}</td>
+							</tr>
+							<tr>
+								<td>Magic Quotes Sybase</td>
+								<td>Отключено</td>
+								<td>{{ flags.magic_quotes_sybase }}</td>
+							</tr>
+						</table>
+						<br />
+						&nbsp;<a style="cursor: pointer; color: red;"
+							onclick="document.getElementById('perror_resolve').style.display='block';">{{ lang['perror.howto'] }}</a><br />
+						<div id="perror_resolve" style="display: none;">
+							{{ lang['perror.descr'] }}
+						</div>
+					</td>
+				</tr>
+			</table>
 			{% endif %}
 		</td>
 	</tr>

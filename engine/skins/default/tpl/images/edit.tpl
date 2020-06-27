@@ -14,13 +14,13 @@
 		</td>
 	</tr>
 </table>
-<br/>
+<br />
 <a href="{link_back}"><strong>{l_back_to_list}</strong></a>
-<br/>
+<br />
 <form method="post" action="admin.php">
-	<input type="hidden" name="mod" value="images"/>
-	<input type="hidden" name="subaction" value="editApply"/>
-	<input type="hidden" name="id" value="{id}"/>
+	<input type="hidden" name="mod" value="images" />
+	<input type="hidden" name="subaction" value="editApply" />
+	<input type="hidden" name="id" value="{id}" />
 
 	<table class="contentNav" border="0" cellspacing="0" cellpadding="2" width="100%">
 		<tr class="contRow2">
@@ -54,40 +54,42 @@
 		</tr>
 		<tr class="contRow1">
 			<td>{l_wmimage}:</td>
-			<td>[have_stamp]{l_added}[/have_stamp][no_stamp]<label><input type="checkbox" name="createStamp" value="1"/>
+			<td>[have_stamp]{l_added}[/have_stamp][no_stamp]<label><input type="checkbox" name="createStamp"
+						value="1" />
 					{l_add}[/no_stamp]</td>
 		</tr>
 		<tr class="contRow1">
 			<td>{l_preview}:</td>
 			<td>
 				{l_status}: {preview_status}
-				[preview]<br/>{l_s_size}: {preview_width} x {preview_height} ( {preview_size} )[/preview]<br/><br/>
-				<a href="#" onclick="document.getElementById('bk_createPreview').style.display='block'; this.style.display='none';">{l_create_edit}</a>
+				[preview]<br />{l_s_size}: {preview_width} x {preview_height} ( {preview_size} )[/preview]<br /><br />
+				<a href="#"
+					onclick="document.getElementById('bk_createPreview').style.display='block'; this.style.display='none';">{l_create_edit}</a>
 				<div id="bk_createPreview" style="display: none;">
 					<fieldset>
 						<legend>{l_preview}</legend>
 						<table>
 							<tr>
-								<td colspan="2"><label><input type="checkbox" name="flagPreview" value="1"/>
+								<td colspan="2"><label><input type="checkbox" name="flagPreview" value="1" />
 										{l_create_edit_preview}</label></td>
 							</tr>
 							<tr>
 								<td>{l_size_max}:</td>
-								<td><input size="4" name="thumbSizeX" value="{thumb_size_x}"/> x
-									<input size="4" name="thumbSizeY" value="{thumb_size_y}"/> {l_pixels}
+								<td><input size="4" name="thumbSizeX" value="{thumb_size_x}" /> x
+									<input size="4" name="thumbSizeY" value="{thumb_size_y}" /> {l_pixels}
 								</td>
 							</tr>
 							<tr>
 								<td>{l_quality_jpeg}:</td>
-								<td><input size="2" name="thumbQuality" value="{thumb_quality}"/> %</td>
+								<td><input size="2" name="thumbQuality" value="{thumb_quality}" /> %</td>
 							</tr>
 							<tr>
 								<td>{l_s_wmimage}:</td>
-								<td><label><input type="checkbox" name="flagStamp" value="1"/> {l_set_up}</label></td>
+								<td><label><input type="checkbox" name="flagStamp" value="1" /> {l_set_up}</label></td>
 							</tr>
 							<tr>
 								<td>{l_s_shadow}:</td>
-								<td><label><input type="checkbox" name="flagShadow" value="1"/> {l_add}</label></td>
+								<td><label><input type="checkbox" name="flagShadow" value="1" /> {l_add}</label></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -101,7 +103,7 @@
 		</tr>
 		<tr class="contRow1">
 			<td>&nbsp;</td>
-			<td><img src="{thumburl}" border="0"/></td>
+			<td><img src="{thumburl}" border="0" /></td>
 		</tr>
 		[/preview]
 		<tr class="contRow1">
@@ -109,7 +111,7 @@
 			<td><textarea name="description" cols="80" rows="2">{description}</textarea></td>
 		</tr>
 		<tr class="contRow1">
-			<td colspan="2"><input type="submit" style="width: 300px;" value="{l_save}" class="button"/></td>
+			<td colspan="2"><input type="submit" style="width: 300px;" value="{l_save}" class="button" /></td>
 		</tr>
 	</table>
 </form>
