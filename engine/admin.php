@@ -15,7 +15,7 @@ $AFILTERS = array();
 @include_once 'core.php';
 
 // Protect against hack attempts
-if (!defined('NGCMS')) die ('HAL');
+if (!defined('NGCMS')) die('HAL');
 
 @header("Cache-Control: no-store, no-cache, must-revalidate");
 @header("Cache-Control: post-check=0, pre-check=0", false);
@@ -174,15 +174,17 @@ $skins_url = skins_url;
 
 //////////////
 LoadPluginLibrary('uprofile', 'lib');
-$skin_UAvatar = ( isset($userROW['avatar']) and !empty($userROW['avatar']) and function_exists('userGetAvatar'))? userGetAvatar($userROW)[1] : $skins_url . '/assets/img/default-avatar.jpg';
+$skin_UAvatar = (isset($userROW['avatar']) and !empty($userROW['avatar']) and function_exists('userGetAvatar')) ? userGetAvatar($userROW)[1] : $skins_url . '/assets/img/default-avatar.jpg';
 $skin_UStatus = $UGROUP[$userROW['status']]['langName'][$config['default_lang']];
 ///////////////////
 
 // switchTheme
-if ( isset($_COOKIE['theme-style'] )
+if (
+	isset($_COOKIE['theme-style'])
 	and $_COOKIE['theme-style'] != 'default'
 	and $_COOKIE['theme-style'] != 'undefined'
-	and !empty($_COOKIE['theme-style']) ) {
+	and !empty($_COOKIE['theme-style'])
+) {
 	$themeStyle = $skins_url . '/assets/css/themes/' . $_COOKIE["theme-style"] . '.css';
 } else {
 	$themeStyle = $skins_url . '/assets/css/bootstrap.css';
@@ -194,28 +196,28 @@ if (is_array($userROW)) {
 	$unapp1 = '';
 	$unapp2 = '';
 
-	$newpm = $mysql->result("SELECT count(pmid) FROM ".prefix."_users_pm WHERE to_id = ".db_squote($userROW['id'])." AND viewed = '0'");
+	$newpm = $mysql->result("SELECT count(pmid) FROM " . prefix . "_users_pm WHERE to_id = " . db_squote($userROW['id']) . " AND viewed = '0'");
 	$newpmText = ($newpm != "0") ? $newpm . ' ' . Padeg($newpm, $lang['head_pm_skl']) : $lang['head_pm_no'];
 
 	// Calculate number of un-approved news
-	if ( $userROW['status'] == 1 || $userROW['status'] == 2 ) {
-		$unapp1 = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '-1'");
-		$unapp2 = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
-		$unapp3 = $mysql->result("SELECT count(id) FROM ".prefix."_static WHERE approve = '0'");
+	if ($userROW['status'] == 1 || $userROW['status'] == 2) {
+		$unapp1 = $mysql->result("SELECT count(id) FROM " . prefix . "_news WHERE approve = '-1'");
+		$unapp2 = $mysql->result("SELECT count(id) FROM " . prefix . "_news WHERE approve = '0'");
+		$unapp3 = $mysql->result("SELECT count(id) FROM " . prefix . "_static WHERE approve = '0'");
 		if ($unapp1)
-			$unapproved1 = '<li><a href="'.$PHP_SELF.'?mod=news&status=1"><i class="fa fa-ban"></i> ' . $unapp1 . ' ' . Padeg($unapp1, $lang['head_news_draft_skl']) . '</a></li>';
+			$unapproved1 = '<li><a href="' . $PHP_SELF . '?mod=news&status=1"><i class="fa fa-ban"></i> ' . $unapp1 . ' ' . Padeg($unapp1, $lang['head_news_draft_skl']) . '</a></li>';
 		if ($unapp2)
-			$unapproved2 = '<li><a href="'.$PHP_SELF.'?mod=news&status=2"><i class="fa fa-times"></i> ' . $unapp2 . ' ' . Padeg($unapp2, $lang['head_news_pending_skl']) . '</a></li>';
+			$unapproved2 = '<li><a href="' . $PHP_SELF . '?mod=news&status=2"><i class="fa fa-times"></i> ' . $unapp2 . ' ' . Padeg($unapp2, $lang['head_news_pending_skl']) . '</a></li>';
 		if ($unapp3)
-			$unapproved3 = '<li><a href="'.$PHP_SELF.'?mod=static"><i class="fa fa-times"></i> ' . $unapp3 . ' ' . Padeg($unapp3, $lang['head_stat_pending_skl']) . '</a></li>';
+			$unapproved3 = '<li><a href="' . $PHP_SELF . '?mod=static"><i class="fa fa-times"></i> ' . $unapp3 . ' ' . Padeg($unapp3, $lang['head_stat_pending_skl']) . '</a></li>';
 	}
 
-	$unnAppCount = (int)$newpm + (int)$unapp1 + (int)$unapp2 + (int)$unapp3;
-	$unnAppLabel = ($unnAppCount != "0" ) ? '<span class="label label-danger">' . $unnAppCount . '</span>' : '';
-	$unnAppText = $lang['head_notify'] . (($unnAppCount != "0") ? $unnAppCount . ' ' . Padeg($unnAppCount, $lang['head_notify_skl']) : $lang['head_notify_no'] );
+	$unnAppCount = (int) $newpm + (int) $unapp1 + (int) $unapp2 + (int) $unapp3;
+	$unnAppLabel = ($unnAppCount != "0") ? '<span class="label label-danger">' . $unnAppCount . '</span>' : '';
+	$unnAppText = $lang['head_notify'] . (($unnAppCount != "0") ? $unnAppCount . ' ' . Padeg($unnAppCount, $lang['head_notify_skl']) : $lang['head_notify_no']);
 }
 
-$mod = $_REQUEST['mod']? $_REQUEST['mod'] : 'statistics';
+$mod = $_REQUEST['mod'] ? $_REQUEST['mod'] : 'statistics';
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 
@@ -233,15 +235,15 @@ $tVars = array(
 	'main_admin'			=> $main_admin,
 	'notify'				=> $notify,
 	'datetimepicker_lang'	=> $datetimepicker_lang,
-	'h_active_users'        => (($mod=='users')||($mod=='ipban')||($mod=='ugroup')||($mod=='perm'))?' class="active"':'',
-	'h_active_content'      => ( $mod=='news' || $mod=='categories' || $mod=='static' || $mod=='images' || $mod=='files' )?' class="active"':'',
-	'h_active_options'		=> (($mod=='')||($mod=='options')||($mod=='configuration')||($mod=='statistics')||($mod=='dbo')||($mod=='rewrite')||($mod=='cron'))?' class="active"':'',
+	'h_active_users'        => (($mod == 'users') || ($mod == 'ipban') || ($mod == 'ugroup') || ($mod == 'perm')) ? ' class="active"' : '',
+	'h_active_content'      => ($mod == 'news' || $mod == 'categories' || $mod == 'static' || $mod == 'images' || $mod == 'files') ? ' class="active"' : '',
+	'h_active_options'		=> (($mod == '') || ($mod == 'options') || ($mod == 'configuration') || ($mod == 'statistics') || ($mod == 'dbo') || ($mod == 'rewrite') || ($mod == 'cron')) ? ' class="active"' : '',
 	'h_active_extras'		=> (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
 	'h_active_addnews'		=> (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
 	'h_active_editnews'		=> (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
 	'h_active_images'		=> ($mod == 'images') ? ' class="active"' : '',
 	'h_active_files'		=> ($mod == 'files') ? ' class="active"' : '',
-	'h_active_templates'    => ($mod=='templates')?' class="active"':'',
+	'h_active_templates'    => ($mod == 'templates') ? ' class="active"' : '',
 	'h_active_pm'			=> ($mod == 'pm') ? ' class="active"' : '',
 	'year' 					=> date("Y"),
 	'themeStyle'            => $themeStyle,
@@ -253,14 +255,14 @@ $tVars = array(
 	'unnAppText'            => $unnAppText,
 	'unnAppLabel'           => $unnAppLabel,
 	'user' => array(
-            'id' => $userROW['id'],
-            'name' => $userROW['name'],
-            'status' => $status,
-            'avatar' => $userAvatar,
-            'flags' => array(
-                'hasAvatar' => $config['use_avatars'] and $userAvatar,
-            ),
-        ),
+		'id' => $userROW['id'],
+		'name' => $userROW['name'],
+		'status' => $status,
+		'avatar' => $userAvatar,
+		'flags' => array(
+			'hasAvatar' => $config['use_avatars'] and $userAvatar,
+		),
+	),
 	'newpmText' => $newpmText,
 );
 
