@@ -1,0 +1,35 @@
+.navbar,
+.navbar-header,
+.navbar-brand,
+.navbar-nav,
+.navbar-nav li,
+.navbar-nav ul,
+.navbar-nav a,
+.navbar-nav li:hover li a {
+  color: #bbb;
+  background: #222;
+}
+
+.navbar a:hover,
+.navbar-nav li:hover a,
+.navbar-nav li:hover li a:hover,
+.navbar-nav li:hover li:hover a {
+	background: #111;
+	color: #fff;
+}
+
+input.navbutton, .navbutton {
+  background: #f8f8f8;
+  border: 1px solid #c8c8c8;
+  color: #444;
+}
+input.navbutton:hover, .navbutton:hover {
+  background: #111;
+  border: 1px solid #111;
+  color: #fff;
+}
+.navbutton.active {
+	color: #fff;
+	background: #222;
+	border: 1px solid #222;
+}

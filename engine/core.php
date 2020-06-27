@@ -26,7 +26,7 @@ use PHPMailer\PHPMailer\Exception;
 
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function ($className) {
-    if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+    if (file_exists($fName = NGClassDir . $className . '.class.php')) {
         require_once $fName;
     }
 });
@@ -140,6 +140,7 @@ $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $
 if (preg_match("#^(.+?)\:\d+$#", $ngCookieDomain, $m)) {
     $ngCookieDomain = $m[1];
 }
+
 // Manage trackID cookie - can be used for plugins that don't require authentication,
 // but need to track user according to his ID
 if (!isset($_COOKIE['ngTrackID'])) {
@@ -270,7 +271,7 @@ abstract class Twig_Template_NGCMS extends Twig_Template
     public function render(array $context)
     {
         $context['_templateName'] = $this->getTemplateName();
-        $context['_templatePath'] = dirname($this->getTemplateName()).DIRECTORY_SEPARATOR;
+        $context['_templatePath'] = dirname($this->getTemplateName()) . DIRECTORY_SEPARATOR;
         return parent::render($context);
     }
 }
@@ -341,7 +342,7 @@ NGRun(function () {
     global $config, $mysql;
 
     $sx = NGEngine::getInstance();
-    
+
     switch ($config['dbtype']) {
         case 'mysqli':
             $sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));

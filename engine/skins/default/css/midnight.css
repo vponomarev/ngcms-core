@@ -1,0 +1,33 @@
+.navbar,
+.navbar-header,
+.navbar-nav,
+.navbar-nav li,
+.navbar-nav ul,
+.navbar-nav li:hover li a {
+	background: #34495e;
+	color: #bbb;
+}
+
+.navbar a:hover,
+.navbar-nav li:hover a,
+.navbar-nav li:hover li a:hover,
+.navbar-nav li:hover li:hover a {
+	background: #2C3E50;
+	color: #fff;
+}
+
+input.navbutton, .navbutton {
+  background: #f8f8f8;
+  border: 1px solid #c8c8c8;
+  border-radius: 0;
+  color: #444;
+  padding: 4px 8px;
+  margin-left: 0;
+  margin-right: 0;
+  float: left;
+}
+.navbutton.active {
+	color: #fff;
+	background: #34495e;
+	border: 1px solid #34495e;
+}

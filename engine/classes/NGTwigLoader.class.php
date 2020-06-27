@@ -162,17 +162,14 @@ class NGTwigLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, 
         }
         return $content;
     }
-
     public function isPluginHandlerCallback($m)
     {
         return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";
     }
-
     public function isHandlerCallback($m)
     {
         return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";
     }
-
     public function setConversion($name, $variables, $regexp = array(), $options = array())
     {
         $this->templateConversion[$name]        = $variables;

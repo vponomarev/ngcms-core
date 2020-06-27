@@ -1,27 +1,24 @@
 <?php
-
 //
 // Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
 // Name: extras.php
 // Description: List plugins
 // Author: Vitaly Ponomarev
 //
-
 // Protect against hack attempts
 if (!defined('NGCMS')) {
     die('HAL');
 }
-
 // ==============================================================
 //  Module functions
 // ==============================================================
 @include_once root . 'includes/inc/extraconf.inc.php';
 @include_once root . 'includes/inc/httpget.inc.php';
-
+// clear Cache Files
+if ('clearCacheFiles' == $action) clearCacheFiles();
 // ==========================================================
 // Functions
 // ==========================================================
-
 //
 // Generate list of plugins
 function admGeneratePluginList()

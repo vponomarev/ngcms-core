@@ -1,0 +1,17 @@
+.navbar,
+.navbar-header,
+.navbar-nav,
+.navbar-nav li,
+.navbar-nav ul,
+.navbar-nav li:hover li a {
+	background: #9B59B6;
+	color: #bbb;
+}
+
+.navbar a:hover,
+.navbar-nav li:hover a,
+.navbar-nav li:hover li a:hover,
+.navbar-nav li:hover li:hover a {
+	background: #8E44AD;
+	color: #fff;
+}
