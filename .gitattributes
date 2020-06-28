@@ -1,0 +1,12 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Declare files that will always have LF line endings on checkout.
+patches/composer/*.diff text eol=lf
+
+# Exclude templates from project's language statistics.
+engine/skins/**/*.tpl -linguist-detectable
+templates/**/*.tpl -linguist-detectable
+
+# Exclude documentation files from project's language statistics.
+readme/* linguist-documentation
