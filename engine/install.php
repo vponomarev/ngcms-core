@@ -53,7 +53,6 @@ NGInstall(function () {
     $sx = NGEngine::getInstance();
     $sx->set('events', new NGEvents());
     $sx->set('errorHandler', new NGErrorHandler());
-    $sx->set('config', array('sql_error_show' => 2));
 });
 
 multi_multisites();
@@ -62,7 +61,7 @@ multi_multisites();
 // Check if config file already exists
 if ((@fopen(confroot . 'config.php', 'r')) && (filesize(confroot . 'config.php'))) {
     //printHeader();
-    echo "<div style='color: red; font-weight: bold;'>Error: configuration file already exists!</div><br />Delete it and continue.<br />\n";
+    echo "<font color=red><b>Error: configuration file already exists!</b></font><br />Delete it and continue.<br />\n";
 
     return;
 }
@@ -289,7 +288,7 @@ function doConfig_db($check)
 
     $myparams = array('action', 'stage', 'reg_dbtype', 'reg_dbhost', 'reg_dbname', 'reg_dbuser', 'reg_dbpass', 'reg_dbprefix', 'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass');
     $DEFAULT = array('reg_dbhost' => 'localhost', 'reg_dbprefix' => 'ng');
-    
+
     // Show form
     $hinput = array();
     foreach ($_POST as $k => $v) {
@@ -313,17 +312,17 @@ function doConfig_db($check)
         if ($_POST['reg_autocreate']) {
             // Check for user filled
             if (!strlen($_POST['reg_dbadminuser'])) {
-                $tvars['vars']['err:reg_dbadminuser'] = '<span style="color: red;">' . $lang['err.reg_dbadminuser'] . '</span>';
+                $tvars['vars']['err:reg_dbadminuser'] = '<font color="red">' . $lang['err.reg_dbadminuser'] . '</font>';
                 $error++;
             }
             $ac = 1;
         }
-        
+
         try {
             $sx = NGEngine::getInstance();
             $sx->set('events', new NGEvents());
             $sx->set('errorHandler', new NGErrorHandler());
-            
+
             switch ($_POST['reg_dbtype']) {
                 case 'MySQL':
                     $sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
@@ -335,7 +334,7 @@ function doConfig_db($check)
                     $sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'user'], 'pass' => $_POST['reg_db' . ($ac ? 'admin' : '') . 'pass'])));
                     break;
             }
-            
+
             $sx->set('legacyDB', new NGLegacyDB(false));
             $sx->getLegacyDB()->connect('', '', '');
             $mysql = $sx->getLegacyDB();
@@ -349,16 +348,16 @@ function doConfig_db($check)
             $tvars['vars']['error_message'] = '<div class="errorDiv">' . $lang['error.dbconnect'] . ' "' . $_POST['reg_dbhost'] . '":<br/> (' . $e->getCode() . ') ' . $e->getMessage() . '</div>';
             $error = 1;
         }
-        
+
         if (isset($mysql) != null) {
             $mysql->close($link);
         }
-        
+
         if (!$error) {
             return true;
         }
     }
-    
+
     foreach (array(
                  'reg_dbtype', 'reg_dbhost', 'reg_dbuser', 'reg_dbpass', 'reg_dbname', 'reg_dbprefix',
                  'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass'
@@ -382,11 +381,11 @@ function doConfig_db($check)
 
     $tvars['vars']['menu_db'] = ' class="hover"';
     printHeader();
-    
+
     $tvars['regx']["'\[mysql\].*?\[/mysql\]'si"] = (extension_loaded("mysql"))?'$1':'';
     $tvars['regx']["'\[mysqli\].*?\[/mysqli\]'si"] = (extension_loaded("mysqli"))?'$1':'';
     $tvars['regx']["'\[pdo\].*?\[/pdo\]'si"] = (extension_loaded("pdo") || extension_loaded("pdo_mysql"))?'$1':'';
-    
+
     // Выводим форму проверки
     $tpl->template('config_db', $templateDir);
     $tpl->vars('config_db', $tvars);
@@ -415,7 +414,7 @@ function doConfig_perm()
     );
     foreach ($permList as $dir) {
         $perms = (($x = @fileperms($installDir . '/' . $dir)) === false) ? 'n/a' : (decoct($x) % 1000);
-        $chmod .= '<tr><td>./' . $dir . '</td><td>' . $perms . '</td><td>' . (is_writable($installDir . '/' . $dir) ? $lang['perm.access.on'] : '<span style="color: red; font-weight: bold;">' . $lang['perm.access.off'] . '</span>') . '</td></tr>';
+        $chmod .= '<tr><td>./' . $dir . '</td><td>' . $perms . '</td><td>' . (is_writable($installDir . '/' . $dir) ? $lang['perm.access.on'] : '<font color="red"><b>' . $lang['perm.access.off'] . '</b></font>') . '</td></tr>';
         if (!is_writable($installDir . '/' . $dir)) {
             $error++;
         }
@@ -424,8 +423,8 @@ function doConfig_perm()
     $tvars['vars']['chmod'] = $chmod;
 
     // PHP Version
-    if (version_compare(phpversion(), '5.3') < 0) {
-        $tvars['vars']['php_version'] = '<span style="color: red;">' . phpversion() . '</span>';
+    if (version_compare(phpversion(), '7.2.5') < 0) {
+        $tvars['vars']['php_version'] = '<font color="red">' . phpversion() . '</font>';
         $error = 1;
     } else {
         $tvars['vars']['php_version'] = phpversion();
@@ -433,11 +432,11 @@ function doConfig_perm()
 
     // SQL Version
     if (!is_array($SQL_VERSION)) {
-        $tvars['vars']['sql_version'] = '<span style="color: red;">unknown</span>';
+        $tvars['vars']['sql_version'] = '<font color="red">unknown</font>';
         $error = 1;
     } else {
         if (($SQL_VERSION[1] < 3) || (($SQL_VERSION[1] == 3) && ($SQL_VERSION[2] < 23))) {
-            $tvars['vars']['sql_version'] = '<span style="color: red;">' . $SQL_VERSION[0] . '</span>';
+            $tvars['vars']['sql_version'] = '<font color="red">' . $SQL_VERSION[0] . '</font>';
             $error = 1;
         } else {
             $tvars['vars']['sql_version'] = $SQL_VERSION[0];
@@ -448,7 +447,7 @@ function doConfig_perm()
     if (extension_loaded('zlib') && function_exists('ob_gzhandler')) {
         $tvars['vars']['gzip'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['gzip'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
+        $tvars['vars']['gzip'] = '<font color="red">' . $lang['perm.no'] . '</font>';
         $error = 1;
     }
 
@@ -456,7 +455,7 @@ function doConfig_perm()
     if (extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) {
         $tvars['vars']['pdo'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['pdo'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
+        $tvars['vars']['pdo'] = '<font color="red">' . $lang['perm.no'] . '</font>';
         $error = 0;
     }
 
@@ -464,7 +463,7 @@ function doConfig_perm()
     if (extension_loaded('mbstring')) {
         $tvars['vars']['mb'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['mb'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
+        $tvars['vars']['mb'] = '<font color="red">' . $lang['perm.no'] . '</font>';
         $error = 1;
     }
 
@@ -472,7 +471,7 @@ function doConfig_perm()
     if (function_exists('imagecreatetruecolor')) {
         $tvars['vars']['gdlib'] = $lang['perm.yes'];
     } else {
-        $tvars['vars']['gdlib'] = '<span style="color: red;">' . $lang['perm.no'] . '</span>';
+        $tvars['vars']['gdlib'] = '<font color="red">' . $lang['perm.no'] . '</font>';
         $error = 1;
     }
 
@@ -482,7 +481,7 @@ function doConfig_perm()
 
     // * flags that should be turned off
     foreach (array('register_globals', 'magic_quotes_gpc', 'magic_quotes_runtime', 'magic_quotes_sybase') as $flag) {
-        $tvars['vars']['flag:' . $flag] = ini_get($flag) ? '<span style="color: red;">' . $lang['perm.php.on'] . '</span>' : $lang['perm.php.off'];
+        $tvars['vars']['flag:' . $flag] = ini_get($flag) ? '<font color="red">' . $lang['perm.php.on'] . '</font>' : $lang['perm.php.off'];
         if (ini_get($flag)) {
             $warning++;
         }
@@ -751,13 +750,13 @@ function doInstall()
         if ($error) {
             break;
         }
-        
+
         // Stage #02 - Connect to DB
         // Если заказали автосоздание, то подключаемся рутом
         if ($_POST['reg_autocreate']) {
             try {
                 $sx = NGEngine::getInstance();
-                
+
                 switch ($_POST['reg_dbtype']) {
                     case 'MySQL':
                         $sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
@@ -769,17 +768,16 @@ function doInstall()
                         $sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass'])));
                         break;
                 }
-                
+
                 $sx->set('legacyDB', new NGLegacyDB(false));
                 $sx->getLegacyDB()->connect('', '', '');
                 $mysql = $sx->getLegacyDB();
-                
+
                 // Успешно подключились
                 array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя административный логин "' . $_POST['reg_dbadminuser'] . '" ... OK');
 
                 // 1. Создание БД
-                if (count($mysql->select("show databases like '".$_POST['reg_dbname']."'")) < 1) {
-                // if ($mysql->select_db($_POST['reg_dbname']) === null) {
+                if ($mysql->select_db($_POST['reg_dbname']) === null) {
                     // БД нет. Пытаемся создать
                     if (!$mysql->query('CREATE DATABASE ' . $_POST['reg_dbname'])) {
                         // Не удалось создать. Фатально.
@@ -793,15 +791,8 @@ function doInstall()
                     array_push($LOG, 'БД "' . $_POST['reg_dbname'] . '" уже существует ... OK');
                 }
 
-                // FIX: Starting with mysql 8 we cannot create a user with `grant privileges` command
-                if (!$mysql->query("create user '".$_POST['reg_dbuser'] . "'@'%' identified by '" . $_POST['reg_dbpass'] . "'")) {
-                    array_push($ERROR, 'Невозможно создать пользователя  "' . $_POST['reg_dbuser'] . '" в БД используя административные права');
-                    $error = 1;
-                    break;
-                }
-
                 // 2. Предоставление доступа к БД
-                if (!$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'%'")) {
+                if (!$mysql->query("grant all privileges on " . $_POST['reg_dbname'] . ".* to '" . $_POST['reg_dbuser'] . "'@'" . $_POST['reg_dbhost'] . "' identified by '" . $_POST['reg_dbpass'] . "'")) {
                     array_push($ERROR, 'Невозможно обеспечить доступ пользователя "' . $_POST['reg_dbuser'] . '" к БД "' . $_POST['reg_dbname'] . '" используя административные права.');
                     $error = 1;
                     break;
@@ -815,13 +806,13 @@ function doInstall()
             }
             // Отключаемся от сервера
             if (isset($mysql) != null) {
-                $mysql->close($link);
+                $mysql->close();
             }
         }
-        
+
         try {
             $sx = NGEngine::getInstance();
-            
+
             switch ($_POST['reg_dbtype']) {
                 case 'MySQL':
                     $sx->set('db', new NGMYSQL(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
@@ -833,13 +824,13 @@ function doInstall()
                     $sx->set('db', new NGPDO(array('host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass'])));
                     break;
             }
-            
+
             $sx->set('legacyDB', new NGLegacyDB(false));
             $sx->getLegacyDB()->connect('', '', '');
             $mysql = $sx->getLegacyDB();
-            
+
             array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя логин "' . $_POST['reg_dbuser'] . '" ... OK');
-            
+
             if ($mysql->select_db($_POST['reg_dbname']) === null) {
                 array_push($ERROR, 'Невозможно открыть БД "' . $_POST['reg_dbname'] . '"<br/>Вам необходимо создать эту БД самостоятельно.');
                 $error = 1;
@@ -850,7 +841,7 @@ function doInstall()
             $error = 1;
             break;
         }
-        
+
         // Check if different character set are supported [ version >= 4.1.1 ]
         $charsetEngine = 0;
 
@@ -880,7 +871,7 @@ function doInstall()
 
         // 1.2. Парсим список таблиц
         $dbsql = explode(';', file_get_contents('trash/tables.sql'));
-        
+
         // 1.3. Проверяем пересечения
         foreach ($dbsql as $dbCreateString) {
             if (!trim($dbCreateString)) {
@@ -904,7 +895,7 @@ function doInstall()
                 break;
             }
         }
-        
+
         if ($error) {
             break;
         }
@@ -918,7 +909,7 @@ function doInstall()
         // 1.4. Создаём таблицы
         for ($i = 0; $i < count($dbsql); $i++) {
             $dbCreateString = str_replace('XPREFIX_', $_POST['reg_dbprefix'] . '_', $dbsql[$i]) . $charset;
-            
+
             if ($SUPRESS_CHARSET) {
                 $dbCreateString = str_replace('default charset=utf8', '', $dbCreateString);
             }
@@ -953,11 +944,11 @@ function doInstall()
         }
         array_push($LOG, 'Все таблицы успешно созданы ... OK');
         array_push($LOG, '');
-        
+
         // 1.5 Создание пользователя-администратора
         $query = "insert into `" . $_POST['reg_dbprefix'] . "_users` (`name`, `pass`, `mail`, `status`, `reg`) VALUES ('" . $mysql->db_quote($_POST['admin_login']) . "', '" . $mysql->db_quote(md5(md5($_POST['admin_password']))) . "', '" . $mysql->db_quote($_POST['admin_email']) . "', '1', unix_timestamp(now()))";
         if (!@$mysql->query($query)) {
-            array_push($LOG, 'Активация пользователя-администратора ... <span style="color: red;">FAIL</span>');
+            array_push($LOG, 'Активация пользователя-администратора ... <font color="red">FAIL</font>');
         } else {
             array_push($LOG, 'Активация пользователя-администратора ... OK');
         }

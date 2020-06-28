@@ -14,5 +14,5 @@
 	<td>{folder}</td>
 	<td>{user}</td>
 	<td><a href="{edit_link}">{l_edit}</a></td>
-	<td><input type=checkbox name=files[] value="{id}" class="check" /></td>
+	<td><input type=checkbox name=files[] value="{id}" class="check"/></td>
 </tr>

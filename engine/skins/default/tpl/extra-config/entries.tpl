@@ -1,5 +1,5 @@
 <tr>
-	<td class="contentEntry1" valign=top>{title}<br />[descr]
+	<td class="contentEntry1" valign=top>{title}<br/>[descr]
 		<small>{descr}</small>
 		[/descr]{error}
 	</td>
