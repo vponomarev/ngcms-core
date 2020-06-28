@@ -10,43 +10,43 @@
 class cacheClassAbstract
 {
 
-	function get($plugin, $key, $expire = -1)
+	public function get($plugin, $key, $expire = -1)
 	{
 
 		return false;
 	}
 
-	function set($plugin, $key, $value, $expire = -1)
+	public function set($plugin, $key, $value, $expire = -1)
 	{
 
 		return false;
 	}
 
-	function del($plugin, $key)
+	public function del($plugin, $key)
 	{
 
 		return false;
 	}
 
-	function getMulti($plugin, $keyList, $expire = -1)
+	public function getMulti($plugin, $keyList, $expire = -1)
 	{
 
 		return false;
 	}
 
-	function setMulti($plugin, $dataList, $expire = -1)
+	public function setMulti($plugin, $dataList, $expire = -1)
 	{
 
 		return false;
 	}
 
-	function increment($plugin, $key, $offset = 1)
+	public function increment($plugin, $key, $offset = 1)
 	{
 
 		return false;
 	}
 
-	function decrement($plugin, $key, $offset = 1)
+	public function decrement($plugin, $key, $offset = 1)
 	{
 
 		return false;
@@ -56,7 +56,7 @@ class cacheClassAbstract
 class cacheClassFile extends cacheClassAbstract
 {
 
-	function get($plugin, $key, $expire = -1)
+	public function get($plugin, $key, $expire = -1)
 	{
 
 		// Default expiration time = 120 sec
@@ -104,7 +104,7 @@ class cacheClassFile extends cacheClassAbstract
 		return $data;
 	}
 
-	function getMulti($plugin, $keyList, $expire = -1)
+	public function getMulti($plugin, $keyList, $expire = -1)
 	{
 
 		$res = array();
@@ -115,7 +115,7 @@ class cacheClassFile extends cacheClassAbstract
 		return $res;
 	}
 
-	function set($plugin, $key, $value, $expire = -1)
+	public function set($plugin, $key, $value, $expire = -1)
 	{
 
 		// Default expiration time = 120 sec
@@ -154,7 +154,7 @@ class cacheClassFile extends cacheClassAbstract
 		return true;
 	}
 
-	function setMulti($plugin, $keyList, $expire = -1)
+	public function setMulti($plugin, $keyList, $expire = -1)
 	{
 
 		$res = array();
@@ -172,7 +172,7 @@ class cacheClassMemcached extends cacheClassAbstract
 	public $cache;
 	public $params;
 
-	function __construct($params = array())
+	public function __construct($params = array())
 	{
 
 		$this->cache = new Memcached();
@@ -189,19 +189,19 @@ class cacheClassMemcached extends cacheClassAbstract
 		$this->params = $params;
 	}
 
-	function connect($host, $port)
+	public function connect($host, $port)
 	{
 
 		return $this->cache->addServer($host, $port);
 	}
 
-	function get($plugin, $key, $expire)
+	public function get($plugin, $key, $expire)
 	{
 
 		return $this->cache->get($this->params['prefix'] . ':' . $plugin . ':' . $key);
 	}
 
-	function getMulti($plugin, $keyList, $expire)
+	public function getMulti($plugin, $keyList, $expire)
 	{
 
 		$keyResult = array();
@@ -214,13 +214,13 @@ class cacheClassMemcached extends cacheClassAbstract
 		return $this->cache->getMulti($keyResult);
 	}
 
-	function set($plugin, $key, $value, $expiration = -1)
+	public function set($plugin, $key, $value, $expiration = -1)
 	{
 
 		return $this->cache->set($this->params['prefix'] . ':' . $plugin . ':' . $key, $value, ($expiration >= 0) ? $expiration : $this->params['expiration']);
 	}
 
-	function setMulti($plugin, $keyList, $expiration = 0)
+	public function setMulti($plugin, $keyList, $expiration = 0)
 	{
 
 		$keyResult = array();
@@ -233,43 +233,43 @@ class cacheClassMemcached extends cacheClassAbstract
 		return $this->cache->setMulti($keyResult, ($expiration >= 0) ? $expiration : $this->params['expiration']);
 	}
 
-	function getResultCode()
+	public function getResultCode()
 	{
 
 		return $this->cache->getResultCode();
 	}
 
-	function getResultMessage()
+	public function getResultMessage()
 	{
 
 		return $this->cache->getResultMessage();
 	}
 
-	function getResult()
+	public function getResult()
 	{
 
 		return array($this->cache->getResultCode(), $this->cache->getResultMessage());
 	}
 
-	function touch($plugin, $key, $expiration)
+	public function touch($plugin, $key, $expiration)
 	{
 
 		return $this->cache->touch($this->params['prefix'] . ':' . $plugin . ':' . $key, $value, $expiration);
 	}
 
-	function increment($plugin, $key, $offset = 1)
+	public function increment($plugin, $key, $offset = 1)
 	{
 
 		return $this->cache->increment($this->params['prefix'] . ':' . $plugin . ':' . $key, $offset);
 	}
 
-	function decrement($plugin, $key, $offset = 1)
+	public function decrement($plugin, $key, $offset = 1)
 	{
 
 		return $this->cache->decrement($this->params['prefix'] . ':' . $plugin . ':' . $key, $offset);
 	}
 
-	function del($plugin, $key)
+	public function del($plugin, $key)
 	{
 
 		return $this->cache->del($this->params['prefix'] . ':' . $plugin . ':' . $key);
