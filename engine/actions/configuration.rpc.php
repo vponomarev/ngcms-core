@@ -12,6 +12,8 @@ if (!defined('NGCMS')) {
     die('HAL');
 }
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 // Load library
 @include_once root . 'includes/classes/upload.class.php';
 $lang = LoadLang('configuration', 'admin');
