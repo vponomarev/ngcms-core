@@ -33,7 +33,7 @@
         "lib-iconv": "*",
         "cweagans/composer-patches": "1.*",
         "phpmailer/phpmailer": "6.*",
-        "twig/twig": "1.42.5"
+        "twig/twig": "^3.0"
     },
     "require-dev": {},
     "autoload": {},
@@ -44,14 +44,5 @@
         "preferred-install": "source",
         "vendor-dir": "vendor"
     },
-    "extra": {
-        "enable-patching": true,
-        "composer-exit-on-patch-failure": true,
-        "patches": {
-            "twig/twig": {
-                "P-1: addGlobalRef": "patches/composer/1.diff",
-                "P-2: addGlobalRef": "patches/composer/2.diff"
-            }
-        }
-    }
+    "extra": {}
 }
