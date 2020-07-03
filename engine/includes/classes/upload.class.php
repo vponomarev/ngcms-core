@@ -871,7 +871,7 @@ class image_managment
 
     // Params:
     //	rpc			- flag if we're called via RPC call
-    function create_thumb($dir, $file, $sizeX, $sizeY, $quality = 0, $param)
+    function create_thumb($dir, $file, $sizeX, $sizeY, $quality = 0, $param = [])
     {
 
         global $lang;
