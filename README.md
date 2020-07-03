@@ -19,4 +19,13 @@ ngcms-core
 Последовательность установки:
 1. Установить docker-compose на системе: `apt install docker-compose`
 2. Скачать скрипты автоустановки в текущий каталог из каталога `/_docker-build-scripts/`
-3. Запустить `build-docker-image.sh`
+3. Запустить `docker-build-image.sh` для сборки image
+4. Запустить `docker-start.sh` (или `docker-compose up`) для запуска контейнеров
+
+Git версия NGCMS разворачивается в каталог ngcms/ и содержимое сохраняется при перезапуске контейнеров.
+
+При необходимости обновления исходных кодов (пересборка контейнера с новой версией) необходимо запустить скрипт `docker-redeploy-with-config-preserve.sh` и перезапустить контейнеры.
+
+Для сборки версии NGCMS из конкретного PULL Request'а вместо шага #3 необходимо запустить скрипт `docker-build-image-pull-request.sh` с передачей ему параметра окружения PULL_REQUEST=<ID Pull Request'а>.
+
+Пример запуска: `PULL_REQUEST=57 ./docker-build-image-pull-request.sh`
