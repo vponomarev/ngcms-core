@@ -40,7 +40,7 @@ if (!is_array($extras[$plugin])) {
         'php_self'    => $PHP_SELF
     );
     $xt = $twig->loadTemplate('skins/default/tpl/extra-config/nomodule.tpl');
-    return $xt->render($tVars);
+    $main_admin = $xt->render($tVars);
 } else {
     //
     // Call 'install'/'deinstall' script if it's requested. Else - call config script.
@@ -75,13 +75,13 @@ if (!is_array($extras[$plugin])) {
         }
 
     } else {
-        $tVars['vars'] = array(
+        $tVars = array(
             'action'      => $lang[$stype . '_text'],
             'action_text' => $lang['nomod_' . $stype],
             'plugin'      => $plugin,
             'php_self'    => $PHP_SELF
         );
         $xt = $twig->loadTemplate('skins/default/tpl/extra-config/nomodule.tpl');
-        return $xt->render($tVars);
+        $main_admin = $xt->render($tVars);
     }
 }

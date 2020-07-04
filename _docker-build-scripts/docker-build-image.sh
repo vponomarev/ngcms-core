@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#
+# Script for building docker image
+#
+
 # Remove old build
 rm -rf build/
 

@@ -15,9 +15,9 @@
 				</td>
 				<td width="30%" class="contentEntry2">
 					<select name="reg_dbtype" style="width: 267px;">
-						[mysql]<option value="MySQL"{reg_dbtype_MySQL}>MySQL</option>[/mysql]
-						[/mysqli]<option value="MySQLi"{reg_dbtype_MySQLi}>MySQLi</option>[/mysqli]
-						[/pdo]<option value="PDO"{reg_dbtype_PDO}>PDO</option>[/pdo]
+						[pdo]<option value="pdo"{reg_dbtype_pdo}>PDO</option>[/pdo]
+						[mysqli]<option value="mysqli"{reg_dbtype_mysqli}>MySQLi</option>[/mysqli]
+						[mysql]<option value="mysql"{reg_dbtype_mysql}>MySQL</option>[/mysql]
 					</select>
 				</td>
 			</tr>

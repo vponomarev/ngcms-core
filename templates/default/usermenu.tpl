@@ -8,7 +8,7 @@
 				<div class="title">{{ lang.profile }}</div>
 				<ul>
 					[if-have-perm]
-					<li><a href="{{ admin_url }}" target="_blank"><b>{{ lang.admin_panel }}</b></a></li>
+					<li><a href="{{ admin_url }}/" target="_blank"><b>{{ lang.admin_panel }}</b></a></li>
 					<li><a href="{{ addnews_link }}">{{ lang.add_news }}</a></li>
 					[/if-have-perm]
 					{% if pluginIsActive('uprofile') %}
