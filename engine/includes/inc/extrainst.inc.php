@@ -452,7 +452,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 function generate_install_page($plugin, $text, $stype = 'install')
 {
 
-    global $tpl, $lang, $main_admin;
+    global $tpl, $lang, $main_admin, $PHP_SELF;
 
     $tpl->template('install', tpl_actions . 'extra-config');
     $tvars['vars'] = array(
