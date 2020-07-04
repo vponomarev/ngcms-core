@@ -62,7 +62,7 @@
 		<tr>&nbsp;</tr>
 		<tr align="center">
 			<td class="contentEdit" valign="top" width="100%">
-				<input value="{{ lang.cron['commit_change'] }}" class="button" type="submit" onclick='document.location="?mod=extra-config&plugin=xfields&action=add&section={{ sectionID }}";'>
+				<input value="{{ lang.cron['commit_change'] }}" class="button" type="submit" />
 			</td>
 		</tr>
 	</table>
