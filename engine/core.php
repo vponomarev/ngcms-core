@@ -254,12 +254,7 @@ register_shutdown_function('ngShutdownHandler');
 
 //
 // *** Initialize TWIG engine
-//$twigLoader = new Twig_Loader_NGCMS(root);
-//$twigStringLoader = new Twig_Loader_String();
-
 $twigLoader = new NGTwigLoader(root);
-// replace https://stackoverflow.com/questions/31081910/what-to-use-instead-of-twig-loader-string
-// $twigStringLoader = new Twig_Loader_String();
 
 // - Configure environment and general parameters
 $twig = new NGTwigEnvironment($twigLoader, array(
@@ -267,41 +262,7 @@ $twig = new NGTwigEnvironment($twigLoader, array(
     'auto_reload'         => true,
     'autoescape'          => false,
     'charset'             => 'UTF-8',
-    'base_template_class' => 'NGTwigTemplate',
 ));
-
-$twig->addExtension(new \Twig\Extension\StringLoaderExtension());
-
-// - Global variables [by REFERENCE]
-// $twig->addGlobalRef('lang', $lang);
-// $twig->addGlobalRef('handler', $CurrentHandler);
-// $twig->addGlobalRef('global', $twigGlobal);
-// $twig->addGlobalRef('system_flags', $SYSTEM_FLAGS);
-
-// - Global variables [by VALUE]
-$twig->addGlobal('skins_url', skins_url);
-$twig->addGlobal('admin_url', admin_url);
-$twig->addGlobal('home', home);
-$twig->addGlobal('currentURL', $systemAccessURL);
-
-// - Define functions
-$twig->addFunction(new \Twig\TwigFunction('pluginIsActive', 'getPluginStatusActive'));
-$twig->addFunction(new \Twig\TwigFunction('localPath', 'twigLocalPath', array('needs_context' => true)));
-$twig->addFunction(new \Twig\TwigFunction('getLang', 'twigGetLang'));
-$twig->addFunction(new \Twig\TwigFunction('isLang', 'twigIsLang'));
-$twig->addFunction(new \Twig\TwigFunction('isHandler', 'twigIsHandler'));
-$twig->addFunction(new \Twig\TwigFunction('isCategory', 'twigIsCategory'));
-$twig->addFunction(new \Twig\TwigFunction('isNews', 'twigIsNews'));
-$twig->addFunction(new \Twig\TwigFunction('isPerm', 'twigIsPerm'));
-$twig->addFunction(new \Twig\TwigFunction('callPlugin', 'twigCallPlugin'));
-$twig->addFunction(new \Twig\TwigFunction('isSet', 'twigIsSet', array('needs_context' => true)));
-$twig->addFunction(new \Twig\TwigFunction('debugContext', 'twigDebugContext', array('needs_context' => true)));
-$twig->addFunction(new \Twig\TwigFunction('debugValue', 'twigDebugValue'));
-$twig->addFunction(new \Twig\TwigFunction('getCategoryTree', 'twigGetCategoryTree'));
-$twig->addFunction(new \Twig\TwigFunction('engineMSG', 'twigEngineMSG'));
-
-// - Define filters
-$twig->addFilter(new \Twig\TwigFilter('truncateHTML', 'twigTruncateHTML'));
 
 // [[MARKER]] TWIG template engine is loaded
 $timer->registerEvent('Template engine is activated');

@@ -2779,11 +2779,10 @@ print "</div>";
     return false;
 }
 
-function twigLocalPath($context)
-{
 
-    //print $var1->getTemplateName();
-    return $context['_templatePath'];
+function twigLocalPath($templateName)
+{
+    return dirname($templateName).DIRECTORY_SEPARATOR;
 }
 
 //

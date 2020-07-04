@@ -1,25 +1,11 @@
 <?php
 
+// namespace NG\Twig;
+
 use Twig\Environment;
 use Twig\Loader\LoaderInterface;
 
-use Twig\Extension\AbstractExtension;
-use Twig\Extension\GlobalsInterface;
-
-class NGTwigGlobalExtension extends AbstractExtension implements GlobalsInterface
-{    
-    public function getGlobals(): array
-    {
-        global $lang, $CurrentHandler, $twigGlobal, $SYSTEM_FLAGS;
-
-        return [
-            'lang' => &$lang,
-            'handler' => &$CurrentHandler,
-            'global' => &$twigGlobal,
-            'system_flags' => &$SYSTEM_FLAGS,
-        ];
-    }
-}
+use Twig\Extension\StringLoaderExtension;
 
 class NGTwigEnvironment
 {
@@ -38,7 +24,8 @@ class NGTwigEnvironment
     {
         $this->env = new Environment($loader, $options);
 
-        $this->env->addExtension(new NGTwigGlobalExtension());
+        $this->env->addExtension(new StringLoaderExtension());
+        $this->env->addExtension(new NGTwigExtension());
     }
 
     public function __call($method, $parameters)
