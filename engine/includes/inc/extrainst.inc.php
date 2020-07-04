@@ -37,14 +37,12 @@ params:
 
 function generate_config_page($module, $params, $values = array())
 {
-
-    global $tpl, $lang, $main_admin;
+    global $tpl, $lang, $main_admin, $PHP_SELF;
 
     function mkParamLine($param)
     {
-        global $lang;
-
         global $tpl, $lang;
+
         if ($param['type'] == 'flat') {
             return $param['input'];
         }
@@ -130,7 +128,6 @@ function generate_config_page($module, $params, $values = array())
 // Automatic save values into module parameters DB
 function commit_plugin_config_changes($module, $params)
 {
-
     // Load cofig
     plugins_load_config();
 
@@ -163,7 +160,6 @@ function commit_plugin_config_changes($module, $params)
 // Load params sent by POST request in plugin configuration
 function load_commit_params($cfg, $outparams)
 {
-
     foreach ($cfg as $param) {
         if ($param['name']) {
             $outparams[$param['name']] = $_POST[$param['name']];
@@ -176,7 +172,6 @@ function load_commit_params($cfg, $outparams)
 // Priint page with config change complition notification
 function print_commit_complete($plugin)
 {
-
     global $tpl, $PHP_SELF, $main_admin;
 
     $tpl->template('done', tpl_actions . 'extra-config');
@@ -188,7 +183,6 @@ function print_commit_complete($plugin)
 // check if table exists
 function mysql_table_exists($table)
 {
-
     global $config, $mysql;
 
     if (is_array($mysql->record("show tables like " . db_squote($table)))) {
@@ -214,8 +208,7 @@ function get_mysql_field_type($table, $field)
 // Database update during install
 function fixdb_plugin_install($module, $params, $mode = 'install', $silent = false, &$is_error = 0)
 {
-
-    global $lang, $tpl, $mysql, $main_admin;
+    global $lang, $tpl, $mysql, $main_admin, $PHP_SELF;
 
     // Load config
     plugins_load_config();
@@ -425,13 +418,13 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
         $tpl->vars('install-entries', $tvars);
         $entries .= $tpl->show('install-entries');
     }
-    
+
     if ($publish_error) {
         $is_error = 0;
     }
 
     $is_error = 1;
-    
+
     $tpl->template('install-process', tpl_actions . 'extra-config');
     $tvars['vars'] = array(
         'entries'   => $entries,
@@ -451,7 +444,6 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 // Create install page
 function generate_install_page($plugin, $text, $stype = 'install')
 {
-
     global $tpl, $lang, $main_admin, $PHP_SELF;
 
     $tpl->template('install', tpl_actions . 'extra-config');
@@ -471,13 +463,11 @@ function generate_install_page($plugin, $text, $stype = 'install')
 //
 class permissionRuleManager
 {
-
     private $isLoaded = false;
     private $rules = array();
 
-    function load()
+    public function load()
     {
-
         if (is_file(confroot . 'perm.rules.php')) {
             // Try to load it
             include confroot . 'perm.rules.php';
@@ -494,9 +484,8 @@ class permissionRuleManager
         return false;
     }
 
-    function save()
+    public function save()
     {
-
         if (!$this->isLoaded) {
             return false;
         }
@@ -515,9 +504,8 @@ class permissionRuleManager
         return false;
     }
 
-    function getPluginTree($plugin)
+    public function getPluginTree($plugin)
     {
-
         if (!$this->isLoaded) {
             return false;
         }
@@ -525,20 +513,19 @@ class permissionRuleManager
         return $this->rules[$plugin];
     }
 
-    function setPluginTree($plugin, $tree)
+    public function setPluginTree($plugin, $tree)
     {
-
         if (!$this->isLoaded) {
             return false;
         }
+
         $this->rules[$plugin] = $tree;
 
         return true;
     }
 
-    function removePlugin($plugin)
+    public function removePlugin($plugin)
     {
-
         if (!$this->isLoaded || ($plugin == '#admin')) {
             return false;
         }
@@ -549,9 +536,8 @@ class permissionRuleManager
         return true;
     }
 
-    function listPlugins()
+    public function listPlugins()
     {
-
         if (!$this->isLoaded) {
             return false;
         }
@@ -566,9 +552,8 @@ class permissionRuleManager
         return $x;
     }
 
-    function getList()
+    public function getList()
     {
-
         if (!$this->isLoaded) {
             return false;
         }
