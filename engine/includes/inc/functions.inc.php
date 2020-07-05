@@ -548,7 +548,7 @@ function msg($params, $mode = 0, $disp = -1)
             return $message;
         default:
             if ($PHP_SELF == 'admin.php') {
-                $notify = $message;
+                $notify .= $message;
             } else {
                 $template['vars']['mainblock'] .= $message;
             }
