@@ -304,6 +304,10 @@ NGRun(function () {
     $sx->set('legacyDB', new NGLegacyDB(false));
     $sx->getLegacyDB()->connect('', '', '');
     $mysql = $sx->getLegacyDB();
+
+    // Sync PHP <=> MySQL timezones
+    $mysql->query('SET @@session.time_zone = "'.date('P').'"');
+
 });
 
 
