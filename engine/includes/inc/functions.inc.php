@@ -548,7 +548,7 @@ function msg($params, $mode = 0, $disp = -1)
             return $message;
         default:
             if ($PHP_SELF == 'admin.php') {
-                $notify = $message;
+                $notify .= $message;
             } else {
                 $template['vars']['mainblock'] .= $message;
             }
@@ -2779,11 +2779,10 @@ print "</div>";
     return false;
 }
 
-function twigLocalPath($context)
-{
 
-    //print $var1->getTemplateName();
-    return $context['_templatePath'];
+function twigLocalPath($templateName)
+{
+    return dirname($templateName).DIRECTORY_SEPARATOR;
 }
 
 //

@@ -45,9 +45,9 @@ function twigmkSelectNY($params)
     return twigmkSelect($params);
 }
 
-$twig->addFunction('mkSelect', new Twig_Function_Function('twigmkSelect'));
-$twig->addFunction('mkSelectYN', new Twig_Function_Function('twigmkSelectYN'));
-$twig->addFunction('mkSelectNY', new Twig_Function_Function('twigmkSelectNY'));
+$twig->addFunction(new \Twig\TwigFunction('mkSelect', 'twigmkSelect'));
+$twig->addFunction(new \Twig\TwigFunction('mkSelectYN', 'twigmkSelectYN'));
+$twig->addFunction(new \Twig\TwigFunction('mkSelectNY', 'twigmkSelectNY'));
 
 //
 // Save system config
