@@ -303,6 +303,7 @@ function manage_showlist($type)
 
         $tpl->template('entries', tpl_actions . $mod);
         $tvars['vars'] = array(
+            'php_self'     => $PHP_SELF,
             'rename'       => $rename,
             'view_thumb'   => $row['preview'] ? $row['view_thumb'] : '',
             'file_link'    => $file_link,
@@ -461,7 +462,7 @@ function manage_showlist($type)
 function manage_editForm($type, $id)
 {
 
-    global $config, $mysql, $tpl, $mod, $lang, $userROW, $fmanager, $langMonths;
+    global $config, $mysql, $tpl, $mod, $lang, $userROW, $fmanager, $langMonths, $PHP_SELF;
 
     // Determine SQL table / directory for files
     $fmanager->get_limits($type);
@@ -482,6 +483,7 @@ function manage_editForm($type, $id)
                 $thumbsize = is_readable($thumbname) ? FormatSize(@filesize($thumbname)) : '-';
 
                 $tvars['vars'] = array(
+                    'php_self'       => $PHP_SELF,
                     'id'             => $irow['id'],
                     'name'           => $irow['name'],
                     'orig_name'      => $irow['orig_name'],
