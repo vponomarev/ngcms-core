@@ -580,7 +580,7 @@ function msgSticker($msg, $type = '', $disp = -1)
         $lines [] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "UTF-8");
     }
 
-    $notify .= $twig->render('skins/default/tpl/sticker.tpl', [
+    $notify .= $twig->render(tpl_actions.'sticker.tpl', [
         'message' => join("<br/>", $lines),
         'type' => $type,
 
