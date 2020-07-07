@@ -568,7 +568,7 @@ function msg($params, $mode = 0, $disp = -1)
 //			2 - return as result
 function msgSticker($msg, $type = '', $disp = -1)
 {
-    global $notify;
+    global $notify, $twig;
 
     $lines = array();
     if (is_array($msg)) {
@@ -580,11 +580,11 @@ function msgSticker($msg, $type = '', $disp = -1)
         $lines [] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "UTF-8");
     }
 
-    $output = '<script type="text/javascript" language="javascript">ngNotifySticker("' .
-        join("<br/>", $lines) . '"' .
-        (($type == "error") ? ', {sticked: true, className: "ngStickerClassError"}' : '') .
-        ');</script>';
-    $notify = $output;
+    $notify .= $twig->render(tpl_actions.'sticker.tpl', [
+        'message' => join("<br/>", $lines),
+        'type' => $type,
+
+    ]);
 }
 
 function TwigEngineMSG($type, $text, $info = '')
