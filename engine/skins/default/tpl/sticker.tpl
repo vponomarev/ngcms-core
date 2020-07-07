@@ -5,11 +5,11 @@
 </noscript>
 
 <script>
-	document.addEventListener('DOMContentLoaded', function(event) {
-		ngNotifySticker('{{ message }}', {
-			className: '{{ ('error' == type) ? 'ngStickerClassError' : 'ngStickerClassClassic' }}',
-			sticked: {{ 'error' == type ? 'true' : 'false' }},
-	        closeBTN: true,
-		});
-	});
+    document.addEventListener('DOMContentLoaded', function(event) {
+        ngNotifySticker('{{ message }}', {
+            className: '{{ ('error ' == type) ? 'ngStickerClassError ' : 'ngStickerClassClassic ' }}',
+            sticked: {{ 'error' == type ? 'true' : 'false' }},
+            closeBTN: true,
+        });
+    });
 </script>
