@@ -19,6 +19,7 @@
 	<title>{{ titles }}</title>
 </head>
 <body>
+{% block body %}
 <div id="loading-layer"><img src="{{ tpl_url }}/images/ajax-loader.gif" alt="Гружусь"/></div>
 <!--Панель-->
 <div id="userpanel" class="hidden">
@@ -335,6 +336,7 @@
 </footer>
 <!--/Подвал-->
 [debug]{debug_queries}<br/>{debug_profiler}[/debug]
+{% endblock %}
 </body>
 <script src="{{ tpl_url }}/js/easy.js"></script>
 <script src="{{ tpl_url }}/js/main.js"></script>

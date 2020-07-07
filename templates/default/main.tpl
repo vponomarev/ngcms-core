@@ -31,6 +31,7 @@
 	<title>{{ titles }}</title>
 </head>
 <body>
+{% block body %}
 <div id="loading-layer"><img src="{{ tpl_url }}/img/loading.gif" alt=""/></div>
 <div id="wrapper">
 	<header id="header">
@@ -158,6 +159,7 @@
 	<script src="{{ tpl_url }}/js/jquery.custom-scrollbar.min.js"></script>{% endif %}
 <script src="{{ tpl_url }}/js/slider.js"></script>
 <script src="{{ tpl_url }}/js/script.js"></script>
+{% endblock %}
 </body>
 </html>
 [debug]
