@@ -18,6 +18,7 @@
 	<title>{{ titles }}</title>
 </head>
 <body>
+{% block body %}
 <div id="loading-layer" style="display:none;"><img src="{{ tpl_url }}/img/loading.gif" alt=""/></div>
 <div id="wrapper">
 	<div id="header">
@@ -166,6 +167,7 @@
 	</div><!--#FOOTER END-->
 </div><!--#WRAPPER END-->
 <script src="{{ tpl_url }}/js/script.js"></script>
+{% endblock %}
 </body>
 </html>
 [debug]
