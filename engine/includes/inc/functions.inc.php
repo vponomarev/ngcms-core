@@ -2079,75 +2079,6 @@ function GetCategoryById($id)
     return array();
 }
 
-if (!function_exists('json_encode')) {
-    function utf8_to_html($data)
-    {
-
-        return preg_replace("/([\\xC0-\\xF7]{1,1}[\\x80-\\xBF]+)/e", '_utf8_to_html("\\1")', $data);
-    }
-
-    function _utf8_to_html($data)
-    {
-
-        $ret = 0;
-        foreach ((str_split(strrev(chr((ord($data{0}) % 252 % 248 % 240 % 224 % 192) + 128) . mb_substr($data, 1)))) as $k => $v) {
-            $ret += (ord($v) % 128) * pow(64, $k);
-        }
-
-        // return "&#$ret;";
-        return sprintf("\u%04x", $ret);
-    }
-
-    function json_encode($a = false)
-    {
-
-        if (is_null($a)) {
-            return 'null';
-        }
-        if ($a === false) {
-            return 'false';
-        }
-        if ($a === true) {
-            return 'true';
-        }
-        if (is_scalar($a)) {
-            if (is_float($a)) {
-                // Always use "." for floats.
-                return floatval(str_replace(",", ".", strval($a)));
-            }
-
-            if (is_string($a)) {
-                static $jsonReplaces = array(array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
-
-                return '"' . utf8_to_html(str_replace($jsonReplaces[0], $jsonReplaces[1], $a)) . '"';
-            } else {
-                return $a;
-            }
-        }
-        $isList = true;
-        for ($i = 0, reset($a); $i < count($a); $i++, next($a)) {
-            if (key($a) !== $i) {
-                $isList = false;
-                break;
-            }
-        }
-        $result = array();
-        if ($isList) {
-            foreach ($a as $v) {
-                $result[] = json_encode($v);
-            }
-
-            return '[' . join(',', $result) . ']';
-        } else {
-            foreach ($a as $k => $v) {
-                $result[] = json_encode($k) . ':' . json_encode($v);
-            }
-
-            return '{' . join(',', $result) . '}';
-        }
-    }
-}
-
 // Parse params
 function parseParams($paramLine)
 {
@@ -2174,7 +2105,7 @@ function parseParams($paramLine)
 
     for ($sI = 0; $sI < mb_strlen($paramLine); $sI++) {
         // act according current state
-        $x = $paramLine{$sI};
+        $x = $paramLine[$sI];
 
         switch ($state) {
             case 0:
