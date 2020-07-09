@@ -41,15 +41,16 @@ function NGRun($f)
 // MODULE DEPs check + basic setup
 // ============================================================================
 NGRun(function () {
-    $depList = array(
-        'sql' => array('pdo' => '', 'pdo_mysql' => ''),
+    $depList = [
+        'sql' => ['pdo' => '', 'pdo_mysql' => ''],
         'zlib' => 'ob_gzhandler',
         'iconv' => 'iconv',
         'GD' => 'imagecreatefromjpeg',
         'mbstring' => 'mb_internal_encoding'
-    );
+    ];
+    NGCoreFunctions::checkPhpVersion('7.2.0');
     NGCoreFunctions::resolveDeps($depList);
-
+    
     $sx = NGEngine::getInstance();
     $sx->set('events', new NGEvents());
     $sx->set('errorHandler', new NGErrorHandler());
