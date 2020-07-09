@@ -9,6 +9,13 @@
 
 @header('content-type: text/html; charset=utf-8');
 
+// Check for minimum supported PHP version
+if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+    @header('content-type: text/html; charset=utf-8');
+    print "<html><head><title>NGCMS required PHP version 7.2+ / Необходима версия PHP 7.2 или выше</title></head><body><div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR / Фатальная ошибка</span><br/><br/><span style=\"font: 16px arial;\"> NGCMS requires PHP version <b>7.2+</b><br/>Please ask your hosting provider to upgrade your account</span><br/><hr/><span style=\"font: 16px arial;\"> Для работы NGCMS требуется PHP версии <b>7.2</b> или выше.<br/>Обратитесь к вашему хостинг провайдеру для обновления версии</span></div></body></html>";
+    exit;
+}
+
 @error_reporting(E_ALL ^ E_NOTICE);
 define('NGCMS', 1);
 
