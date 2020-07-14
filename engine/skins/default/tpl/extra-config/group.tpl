@@ -1,13 +1,19 @@
 <tr>
-	<td colspan=2>
+	<td colspan="2">
 		<fieldset class="admGroup">
-			<legend class="title">{title}[toggle]
-				[<a href="#" onclick="toggleAdminGroup(this.parentNode); return false;">{l_group.toggle}</a>][/toggle]
+			<legend class="title">
+				{title}
+				[toggle]
+					[<a href="#" data-toggle="admin-group">{l_group.toggle}</a>]
+				[/toggle]
 			</legend>
-			<table width="100%" border="0" class="content" [toggle] style="display:{toggle_mode};" [
-			/toggle]>
-			{entries}
-			</table>
+			<div class="admin-group-content" [toggle] style="display:{toggle_mode};" [/toggle]>
+				<table class="table table-sm">
+					<tbody>
+						{entries}
+					</tbody>
+				</table>
+			</div>
 		</fieldset>
 	</td>
 </tr>

@@ -1,9 +1,12 @@
-<table border="0" width="100%" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width=100% colspan="5" class="contentHead">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=perm">{{ lang['permissions'] }}</a></td>
-	</tr>
-</table>
+<div class="page-title">
+	<h2>{{ lang['permissions'] }}</h2>
+</div>
+
+<style>
+	.pChanged {
+		border-color: var(--warning);
+	}
+</style>
 
 <script type="text/javascript">
 	var permDefault = {{ DEFAULT_JSON }};
@@ -12,98 +15,77 @@
 		var f = document.getElementById('permSubmit');
 		var v = permDefault[name];
 
-		if (f[name].value != v) {
-			f[name].className = 'pChanged';
-		} else {
-			f[name].className = '';
-		}
-		//alert(f[name].value);
-	}
-
-	function onUpdateSubmit() {
-		return true;
-
-		var f = document.getElementById('permSubmit');
-		for (var i = 0; i < f.elements.length; i++) {
-			if (f.elements[i].value != permDefault[f.elements[i].name]) {
-				alert(f.elements[i].name + ': ' + permDefault[f.elements[i].name] + ' => ' + f.elements[i].value);
-			}
-			if (i > 10) {
-				break;
-			}
-		}
+		f[name].classList.toggle('pChanged', f[name].value != v);
 	}
 </script>
 
 <!-- Form header -->
-<form id="permSubmit" name="permSubmit" method="POST">
-	<input type="hidden" name="save" value="1"/>
-	<input type="hidden" name="token" value="{{ token }}"/>
+<form id="permSubmit" name="permSubmit" method="post">
+	<input type="hidden" name="token" value="{{ token }}" />
+	<input type="hidden" name="save" value="1" />
 	<!-- /Form header -->
-
 
 	<!-- Group menu header -->
 	<div id="userTabs">
-		<ul>
+		<ul class="nav nav-tabs mb-3" role="tablist">
 			{% for group in GRP %}
-				<li><a href="#userTabs-{{ group.id }}">{{ group.title }}</a></li>
+			<li class="nav-item"><a href="#userTabs-{{ group.id }}" class="nav-link {{ loop.first ? 'active' : '' }}" data-toggle="tab">{{ group.title }}</a></li>
 			{% endfor %}
 		</ul>
 
 		<!-- Group content header -->
-		{% for group in GRP %}
+		<div id="userTabs" class="tab-content">
+			{% for group in GRP %}
 			<!-- Content for group [{{ group.id }}] {{ group.title }} -->
-			<div id="userTabs-{{ group.id }}">
-				<div><i>{{ lang['permissions_for_user_group'] }}: <b>{{ group.title }}</b></i></div>
-				<br/>
+			<div id="userTabs-{{ group.id }}" class="tab-pane {{ loop.first ? 'show active' : '' }}">
+				<div class="alert alert-info">
+					{{ lang['permissions_for_user_group'] }}: <b>{{ group.title }}</b>
+				</div>
 
 				{% for block in CONFIG %}
-					<div class="pconf">
-						<h1>{{ block.title }}</h1>
-						{% if (block.description) %}   <i>{{ block.description }}</i><br/>{% endif %}
+				<div class="pconf">
+					<h3>{{ block.title }}</h3>
+					{% if (block.description) %}<div class="alert alert-info">{{ block.description }}</div>{% endif %}
 
-						{% for area in block.items %}
-							<h2>{{ area.title }}</h2>
-							{% if (area.description) %}   <i>{{ area.description }}</i><br/><br/>{% endif %}
+					{% for area in block.items %}
+					<h4>{{ area.title }}</h4>
+					{% if (area.description) %}<div class="alert alert-info">{{ area.description }}</div>{% endif %}
 
-							<table width="100%" class="content">
-								<thead>
-								<tr class="contHead">
-									<td><b>#ID</b></td>
-									<td><b>{{ lang['description'] }}</b></td>
-									<td width="90"><b>{{ lang['access'] }}</b></td>
-									</td>
-								</thead>
-								{% for entry in area.items %}
-									<tr class="contentEntry1">
-										<td><strong>{{ entry.id }}</strong></td>
-										<td>{{ entry.title }}</td>
-										<td>
-											<select name="{{ entry.name }}|{{ group.id }}" onchange="onUpdatePerm('{{ entry.name }}|{{ group.id }}');" value="{% if isSet(entry.perm[group.id]) %}{% if (entry.perm[group.id]) %}1{% else %}0{% endif %}{% else %}-1{% endif %}">
-												<option value="-1">--</option>
-												<option value="0"{% if (isSet(entry.perm[group.id]) and (not entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['noa'] }}</option>
-												<option value="1"{% if (isSet(entry.perm[group.id]) and (entry.perm[group.id])) %} selected="selected"{% endif %}>{{ lang['yesa'] }}</option>
-											</select>
-										</td>
-									</tr>
-								{% endfor %}
-							</table>
-							<br/>
-						{% endfor %}
-					</div>
+					<table class="table table-sm">
+						<thead>
+							<tr>
+								<th>#ID</th>
+								<th>{{ lang['description'] }}</th>
+								<th>{{ lang['access'] }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for entry in area.items %}
+							<tr class="contentEntry1">
+								<td width="220"><b>{{ entry.id }}</b></td>
+								<td>{{ entry.title }}</td>
+								<td width="110">
+									<select name="{{ entry.name }}|{{ group.id }}" onchange="onUpdatePerm('{{ entry.name }}|{{ group.id }}');" class="custom-select custom-select-sm">
+										<option value="-1">--</option>
+										<option value="0" {{ isSet(entry.perm[group.id]) and (not entry.perm[group.id]) ? 'selected' : '' }}>{{ lang['noa'] }}</option>
+										<option value="1" {{ isSet(entry.perm[group.id]) and (entry.perm[group.id]) ? 'selected' : '' }}>{{ lang['yesa'] }}</option>
+									</select>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<br />
+					{% endfor %}
+				</div>
 				{% endfor %}
-
 			</div>
 			<!-- /Content for group [{{ group.id }}] {{ group.title }} -->
-		{% endfor %}
+			{% endfor %}
+		</div>
 	</div>
 
-	<script type="text/javascript">
-		$(function () {
-			$("#userTabs").tabs();
-		});
-	</script>
-	<br/>
-
-	<input type="submit" value="{{ lang['save'] }}" onclick="return onUpdateSubmit();" class="button"/>
+	<div class="form-group my-3 text-center">
+		<button type="submit" class="btn btn-outline-success">{{ lang['save'] }}</button>
+	</div>
 </form>

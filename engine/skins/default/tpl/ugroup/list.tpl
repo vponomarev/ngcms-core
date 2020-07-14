@@ -1,44 +1,52 @@
-<table border="0" width="100%" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width=100% colspan="5" class="contentHead">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=ugroup">{{ lang['user_groups'] }}</a>
-		</td>
-	</tr>
-</table>
+<div class="page-title">
+	<h2>{{ lang['user_groups'] }}</h2>
+</div>
 
+<div class="card">
+	<div class="card-header">
+		<div class="row">
+			<div class="col text-right">
+				{% if (flags.canAdd) %}
+					<form method="get" action="">
+						<input type="hidden" name="mod" value="ugroup" />
+						<input type="hidden" name="action" value="addForm" />
 
-<table width="97%" class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-	<thead>
-	<tr align="left" class="contHead">
-		<td width="5%">#</td>
-		<td>{{ lang['identifier'] }}</td>
-		<td>{{ lang['name'] }}</td>
-		<td>{{ lang['users_in_group'] }}</td>
-		<td>{{ lang['action'] }}</td>
-	</tr>
-	</thead>
-	<tbody id="admCatList">
+						<button type="submit" class="btn btn-outline-success">{{ lang['add_group'] }}</button>
+					</form>
+				{% endif %}
+			</div>
+		</div>
+	</div>
 
-	{% for entry in entries %}
-		<tr align="center" class="contRow1">
-			<td>{{ entry.id }}</td>
-			<td>{{ entry.identity }}</td>
-			<td>{{ entry.name }}</td>
-			<td>{{ entry.count }}</td>
-			<td>{% if (entry.flags.canEdit) %}[
-					<a href="?mod=ugroup&action=editForm&id={{ entry.id }}">Edit</a> ]{% endif %}{% if (entry.flags.canDelete) %}[
-					<a href="?mod=ugroup&action=delete&id={{ entry.id }}&token={{ token }}">Delete</a> ]{% endif %}</td>
-		</tr>
-	{% endfor %}
-
-
-	</tbody>
-	<tfoot>
-	<tr>
-		<td colspan="8" class="contentEdit" align="left">&nbsp; {% if (flags.canAdd) %}
-				<form method="get" action="">
-				<input type="hidden" name="mod" value="ugroup"/><input type="hidden" name="action" value="addForm"/><input type="submit" value="{{ lang['add_group'] }}" class="button"/>
-				</form>{% endif %}</td>
-	</tr>
-	</tfoot>
-</table>
+	<table class="table table-sm mb-0">
+		<thead>
+			<tr>
+				<th width="5%">#</th>
+				<th>{{ lang['identifier'] }}</th>
+				<th>{{ lang['name'] }}</th>
+				<th>{{ lang['users_in_group'] }}</th>
+				<th>{{ lang['action'] }}</th>
+			</tr>
+		</thead>
+		<tbody id="admCatList">
+			{% for entry in entries %}
+			<tr>
+				<td>{{ entry.id }}</td>
+				<td>{{ entry.identity }}</td>
+				<td>{{ entry.name }}</td>
+				<td>{{ entry.count }}</td>
+				<td class="text-right">
+					<div class="btn-group btn-group-sm" role="group">
+						{% if (entry.flags.canEdit) %}
+						<a href="{{ php_self }}?mod=ugroup&action=editForm&id={{ entry.id }}" class="btn btn-outline-primary"><i class="fa fa-pencil"></i></a>
+						{% endif %}
+						{% if (entry.flags.canDelete) %}
+						<a href="{{ php_self }}?mod=ugroup&action=delete&id={{ entry.id }}&token={{ token }}" class="btn btn-outline-danger"><i class="fa fa-trash"></i></a>
+						{% endif %}
+					</div>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

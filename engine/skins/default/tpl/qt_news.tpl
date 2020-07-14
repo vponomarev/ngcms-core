@@ -1,41 +1,82 @@
 <span id="save_area" style="display: block;"></span>
-<div id="tags">
-	<a onclick="insertext('[b]','[/b]', {area})" title='{l_tags.bold}'><img src="{skins_url}/tags/bold.gif" height="16" width="16" alt="{l_tags.bold}"/></a>
-	<a onclick="insertext('[u]','[/u]', {area})" title='{l_tags.underline}'><img src="{skins_url}/tags/underline.gif" width="16" height="16" alt="{l_tags.underline}"/></a>
-	<a onclick="insertext('[i]','[/i]', {area})" title='{l_tags.italic}'><img src="{skins_url}/tags/italic.gif" width="16" height="16" alt="{l_tags.italic}"/></a>
-	<a onclick="insertext('[s]','[/s]', {area})" title='{l_tags.crossline}'><img src="{skins_url}/tags/crossline.gif" width="16" height="16" alt="{l_tags.crossline}"/></a>
-	<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt=""/>
 
-	<a onclick="insertext('[left]','[/left]', {area})" title='{l_tags.left}'><img src="{skins_url}/tags/left.gif" width="16" height="16" alt="{l_tags.left}"/></a>
-	<a onclick="insertext('[center]','[/center]', {area})" title='{l_tags.center}'><img src="{skins_url}/tags/center.gif" width="16" height="16" alt="{l_tags.center}"/></a>
-	<a onclick="insertext('[right]','[/right]', {area})" title='{l_tags.right}'><img src="{skins_url}/tags/right.gif" width="16" height="16" alt="{l_tags.right}"/></a>
-	<a onclick="insertext('[justify]','[/justify]', {area})" title='{l_tags.justify}'><img src="{skins_url}/tags/justify.gif" width="16" height="16" alt="{l_tags.justify}"/></a>
-	<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt=""/>
+<div id="tags" class="btn-toolbar mb-3" role="toolbar">
+	<div class="btn-group btn-group-sm mr-2">
+		<button type="button" class="btn btn-outline-dark" onclick="insertext('[p]','[/p]', {area})"><i class="fa fa-paragraph"></i></button>
+	</div>
 
-	<a onclick="insertext('[ul]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ul]','', {area})" title='{l_tags.bulllist}'><img src="{skins_url}/tags/bulllist.gif" width="16" height="16" alt="{l_tags.bulllist}"/></a>
-	<a onclick="insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ol]','', {area})" title='{l_tags.numlist}'><img src="{skins_url}/tags/numlist.gif" width="16" height="16" alt="{l_tags.numlist}"/></a>
-	<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt=""/>
+	<div class="btn-group btn-group-sm mr-2">
+		<button id="tags-font" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fa fa-font"></i>
+		</button>
+		<div class="dropdown-menu" aria-labelledby="tags-font">
+			<a href="#" class="dropdown-item" onclick="insertext('[b]','[/b]', {area})"><i class="fa fa-bold"></i> {l_tags.bold}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[i]','[/i]', {area})"><i class="fa fa-italic"></i> {l_tags.italic}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[u]','[/u]', {area})"><i class="fa fa-underline"></i> {l_tags.underline}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[s]','[/s]', {area})"><i class="fa fa-strikethrough"></i> {l_tags.crossline}</a>
+		</div>
+	</div>
 
-	<a onclick="insertext('[spoiler]','[/spoiler]', {area})" title='{l_tags.spoiler}'><img src="{skins_url}/tags/spoiler.gif" width="16" height="16" alt="{l_tags.spoiler}"/></a>
-	<a onclick="insertext('[p]','[/p]', {area})" title='{l_tags.paragraph}'><img src="{skins_url}/tags/paragraph.gif" width="16" height="16" alt="{l_tags.paragraph}"/></a>
-	<a onclick="insertext('[quote]','[/quote]', {area})" title='{l_tags.comment}'><img src="{skins_url}/tags/comment.gif" width="16" height="16" alt="{l_tags.comment}"/></a>
-	<a onclick="insertext('[acronym=]','[/acronym]', {area})" title='{l_tags.acronym}'><img src="{skins_url}/tags/acronym.gif" width="16" height="16" alt="{l_tags.acronym}"/></a>
-	<a onclick="insertext('[code]','[/code]', {area})" title='{l_tags.code}'><img src="{skins_url}/tags/code.gif" width="16" height="16" alt="{l_tags.code}"/></a>
-	<a onclick="insertext('[hide]','[/hide]', {area})" title='{l_tags.hide}'><img src="{skins_url}/tags/hide.gif" width="16" height="16" alt="{l_tags.hide}"/></a>
-	<a onclick="insertext('[email]','[/email]', {area})" title='{l_tags.email}'><img src="{skins_url}/tags/email.gif" width="16" height="16" alt="{l_tags.email}"/></a>
-	<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt=""/>
+	<div class="btn-group btn-group-sm mr-2">
+		<button id="tags-align" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fa fa-align-left"></i>
+		</button>
+		<div class="dropdown-menu" aria-labelledby="tags-align">
+			<a href="#" class="dropdown-item" onclick="insertext('[left]','[/left]', {area})"><i class="fa fa-align-left"></i> {l_tags.left}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[center]','[/center]', {area})"><i class="fa fa-align-center"></i> {l_tags.center}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[right]','[/right]', {area})"><i class="fa fa-align-right"></i> {l_tags.right}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[justify]','[/justify]', {area})"><i class="fa fa-align-justify"></i> {l_tags.justify}</a>
+		</div>
+	</div>
 
-	<a onclick="insertext('[url]','[/url]', {area})" title='{l_tags.link}'><img src="{skins_url}/tags/link.gif" width="16" height="16" alt="{l_tags.link}"/></a>
-	<a onclick="insertext('[img]','[/img]', {area})" title='{l_tags.imagelink}'><img src="{skins_url}/tags/imagelink.gif" width="16" height="16" alt="{l_tags.imagelink}"/></a>
-	<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt=""/>
+	<div class="btn-group btn-group-sm mr-2">
+		<button id="tags-block" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fa fa-quote-left"></i>
+		</button>
+		<div class="dropdown-menu" aria-labelledby="tags-block">
+			<a href="#" class="dropdown-item" onclick="insertext('[ul]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ul]','', {area})"><i class="fa fa-list-ul"></i> {l_tags.bulllist}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ol]','', {area})"><i class="fa fa-list-ol"></i> {l_tags.numlist}</a>
+			<div class="dropdown-divider"></div>
+			<a href="#" class="dropdown-item" onclick="insertext('[code]','[/code]', {area})"><i class="fa fa-code"></i> {l_tags.code}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[quote]','[/quote]', {area})"><i class="fa fa-quote-left"></i> {l_tags.comment}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[spoiler]','[/spoiler]', {area})"><i class="fa fa-list-alt"></i> {l_tags.spoiler}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[acronym=]','[/acronym]', {area})"><i class="fa fa-tags"></i> {l_tags.acronym}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[hide]','[/hide]', {area})"><i class="fa fa-shield"></i> {l_tags.hide}</a>
+		</div>
+	</div>
 
-	<a onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=files&amp;ifield='+{area}, '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" title='{l_tags.file}'><img src="{skins_url}/tags/file.gif" width="16" height="16" alt="{l_tags.file}"/></a>
-	<a onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=images&amp;ifield='+{area}, '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" title='{l_tags.image}'><img src="{skins_url}/tags/image.gif" width="16" height="16" alt="{l_tags.image}"/></a>
-	<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt=""/>
+	<div class="btn-group btn-group-sm mr-2">
+		<button id="tags-link" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fa fa-link"></i>
+		</button>
+		<div class="dropdown-menu" aria-labelledby="tags-link">
+			<a href="#" class="dropdown-item" onclick="insertext('[url]','[/url]', {area})"><i class="fa fa-link"></i> {l_tags.link}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[email]','[/email]', {area})"><i class="fa fa-envelope-o"></i> {l_tags.email}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[img]','[/img]', {area})"><i class="fa fa-file-image-o"></i> {l_tags.image}</a>
+		</div>
+	</div>
 
-	<a onclick="insertext('<!--nextpage-->','', {area})" title='{l_tags.nextpage}'><img src="{skins_url}/tags/nextpage.gif" width="16" height="16" alt="{l_tags.nextpage}"/></a>
-	<img src="{skins_url}/tags/sep.gif" width="1" height="16" alt=""/>
-	<span class="more">
-<a onclick="insertext('<!--more-->','', {area})" title='{l_tags.more}'><img src="{skins_url}/tags/more.gif" width="16" height="16" alt="{l_tags.more}"/></a>
-</span>
+	<div class="btn-group btn-group-sm mr-2">
+		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=files&amp;ifield='+{area}, '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" type="button" class="btn btn-outline-dark" title="{l_tags.file}">
+			<i class="fa fa-file-text-o"></i>
+		</button>
+
+		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=images&amp;ifield='+{area}, '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" type="button" class="btn btn-outline-dark" title="{l_tags.image}">
+			<i class="fa fa-file-image-o"></i>
+		</button>
+	</div>
+
+	<div class="btn-group btn-group-sm mr-2">
+		<button type="button" class="btn btn-outline-dark" title="{l_tags.nextpage}" onclick="insertext('<!--nextpage-->','', {area})">
+			<i class="fa fa-files-o"></i>
+		</button>
+
+		<button type="button" class="btn btn-outline-dark" title="{l_tags.more}" onclick="insertext('<!--more-->','', {area})">
+			<i class="fa fa-ellipsis-h"></i>
+		</button>
+
+		<button type="button" data-toggle="modal" data-target="#modal-smiles" class="btn btn-outline-dark">
+			<i class="fa fa-smile-o"></i>
+		</button>
+	</div>
 </div>

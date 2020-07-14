@@ -98,24 +98,17 @@
 										<option value="">-- {{ lang.editnews['action'] }} --</option>
 										<option value="mass_approve">{{ lang.editnews['approve'] }}</option>
 										<option value="mass_forbidden">{{ lang.editnews['forbidden'] }}</option>
-										<option value="" style="background-color: #E0E0E0;" disabled="disabled">
-											===================
-										</option>
+										<option value="" class="bg-light" disabled>===================</option>
 										<option value="mass_mainpage">{{ lang.editnews['massmainpage'] }}</option>
 										<option value="mass_unmainpage">{{ lang.editnews['massunmainpage'] }}</option>
-										<option value="" style="background-color: #E0E0E0;" disabled="disabled">
-											===================
-										</option>
+										<option value="" class="bg-light" disabled>===================</option>
 										<option value="mass_currdate">{{ lang.editnews['modify.mass.currdate'] }}</option>
-										<option value="" style="background-color: #E0E0E0;" disabled="disabled">
-											===================
-										</option>
+										<option value="" class="bg-light" disabled>===================</option>
 										{% if flags.comments %}
 											<option value="do_mass_com_approve">{{ lang.editnews['com_approve'] }}</option>
 											<option value="mass_com_forbidden">{{ lang.editnews['com_forbidden'] }}</option>
-											<option value="" style="background-color: #E0E0E0;" disabled="disabled">
-												===================
-											</option>{% endif %}
+											<option value="" class="bg-light" disabled>===================</option>
+										{% endif %}
 										<option value="mass_delete">{{ lang.editnews['delete'] }}</option>
 									</select>
 									<input type="submit" value="{{ lang.editnews['submit'] }}" class="button"/>

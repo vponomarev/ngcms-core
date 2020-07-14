@@ -1,28 +1,16 @@
-<form method="POST" action="{php_self}?mod=pm&action=reply&pmid={pmid}">
-	<input type="hidden" name="title" value="{title}">
-	<input type="hidden" name="from" value="{from}">
-	<table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-		<tr>
-			<td width="100%" style="padding-right:10px;" valign="top">
-				<table border="0" width="100%" cellpadding="0" cellspacing="0">
-					<tr>
-						<td width="100%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{title}
-						</td>
-					</tr>
-					<tr>
-						<td width="100%">
-							<blockquote>{content}</blockquote>
-						</td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-					</tr>
-					<tr align="center">
-						<td width="100%" class="contentEdit">
-							<input class="button" type="submit" value="{l_reply}">
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+<div class="page-title">
+	<h2>{l_pm}</h2>
+</div>
+
+<form method="post" action="{php_self}?mod=pm&action=reply&pmid={pmid}">
+	<input type="hidden" name="title" value="{title}" />
+	<input type="hidden" name="from" value="{from}" />
+
+	<div class="card">
+		<h5 class="card-header">{title}</h5>
+		<div class="card-body">{content}</div>
+		<div class="card-footer text-center">
+			<button type="submit" class="btn btn-outline-success">{l_reply}</button>
+		</div>
+	</div>
+</form>

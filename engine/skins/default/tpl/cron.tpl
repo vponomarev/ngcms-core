@@ -1,70 +1,82 @@
-<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tbody>
-	<tr>
-		<td colspan="5" class="contentHead" width="100%">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=cron" title="{{ lang.cron['title'] }}">{{ lang.cron['title'] }}</a>
-		</td>
-	</tr>
-	</tbody>
-</table>
+<div class="page-title">
+	<h2>{{ lang.cron.title }}</h2>
+</div>
 
-<form action="?mod=cron" method="post" name="commitForm" id="commitForm">
-	<input type="hidden" name="mod" value="cron">
-	<input type="hidden" name="action" value="commit">
-	<input type="hidden" name="token" value="{{ token }}">
+<div class="alert alert-info">
+	{{ lang.cron['title#desc'] }}
+</div>
 
-	<table width="100%">
-		<tr>
-			<td style="background-color: #EEEEEE; padding-bottom: 5px;" colspan="2">{{ lang.cron['title#desc'] }}</td>
-		</tr>
-		<tr>
-			<td valign="top" width="60%"><br/><br/>{{ lang.cron['legend'] }}</td>
-			<td valign="top">
-				<table width="550">
-					<tr align="left">
-						<td class="contentHead"><b>Plugin</b></td>
-						<td class="contentHead"><b>Handler</b></td>
-						<td class="contentHead"><b>Min</b></td>
-						<td class="contentHead"><b>Hour</b></td>
-						<td class="contentHead"><b>Day</b></td>
-						<td class="contentHead"><b>Month</b></td>
-						<td class="contentHead"><b>D.O.W.</b></td>
-					</tr>
+<form action="{{ php_self }}?mod=cron" method="post">
+	<input type="hidden" name="token" value="{{ token }}" />
+	<input type="hidden" name="mod" value="cron" />
+	<input type="hidden" name="action" value="commit" />
 
-					{% for entry in entries %}
-						<tr align="left">
-							<td>
-								<input name="data[{{ entry.id }}][plugin]" style="width: 85px;" value="{{ entry.plugin }}"/></b>
-							</td>
-							<td>
-								<input name="data[{{ entry.id }}][handler]" style="width: 90px;" value="{{ entry.handler }}"/>
-							</td>
-							<td><input name="data[{{ entry.id }}][min]" style="width: 70px" value="{{ entry.min }}"/>
-							</td>
-							<td><input name="data[{{ entry.id }}][hour]" style="width: 70px" value="{{ entry.hour }}"/>
-							</td>
-							<td><input name="data[{{ entry.id }}][day]" style="width: 70px" value="{{ entry.day }}"/>
-							</td>
-							<td>
-								<input name="data[{{ entry.id }}][month]" style="width: 70px" value="{{ entry.month }}"/></b>
-							</td>
-							<td>
-								<input name="data[{{ entry.id }}][dow]" style="width: 70px" value="{{ entry.dow }}"/></b>
-							</td>
-						</tr>
-					{% endfor %}
-				</table>
-			</td>
-		</tr>
-	</table>
+	<div class="card mb-3">
+		<div class="card-header">
+			<div class="row">
+				<div class="col text-right">
+					<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#legendModal">
+						<i class="fa fa-question"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<table class="table table-sm">
+			<thead>
+				<tr>
+					<th>Plugin</th>
+					<th>Handler</th>
+					<th>Min</th>
+					<th>Hour</th>
+					<th>Day</th>
+					<th>Month</th>
+					<th>D.O.W.</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for entry in entries %}
+				<tr>
+					<td>
+						<input name="data[{{ entry.id }}][plugin]" value="{{ entry.plugin }}" class="form-control" />
+					</td>
+					<td>
+						<input name="data[{{ entry.id }}][handler]" value="{{ entry.handler }}" class="form-control" />
+					</td>
+					<td>
+						<input name="data[{{ entry.id }}][min]" value="{{ entry.min }}" class="form-control" />
+					</td>
+					<td>
+						<input name="data[{{ entry.id }}][hour]" value="{{ entry.hour }}" class="form-control" />
+					</td>
+					<td>
+						<input name="data[{{ entry.id }}][day]" value="{{ entry.day }}" class="form-control" />
+					</td>
+					<td>
+						<input name="data[{{ entry.id }}][month]" value="{{ entry.month }}" class="form-control" />
+					</td>
+					<td>
+						<input name="data[{{ entry.id }}][dow]" value="{{ entry.dow }}" class="form-control" />
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 
-	<table width="100%">
-		<tr>&nbsp;</tr>
-		<tr align="center">
-			<td class="contentEdit" valign="top" width="100%">
-				<input value="{{ lang.cron['commit_change'] }}" class="button" type="submit" />
-			</td>
-		</tr>
-	</table>
-
+		<div class="card-footer text-center">
+			<button type="submit" class="btn btn-outline-success">{{ lang.cron['commit_change'] }}</button>
+		</div>
+	</div>
 </form>
+
+<div id="legendModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="legendModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				{{ lang.cron['legend'] }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,24 +1,474 @@
+<!-- Оставляем эти скрипты и формы так как ими могут пользоваться плагины -->
 <script type="text/javascript" src="{{ home }}/lib/ajax.js"></script>
 <script type="text/javascript" src="{{ home }}/lib/libsuggest.js"></script>
-<script language="javascript" type="text/javascript">
 
-	//
+<!-- Hidden SUGGEST div -->
+<!-- <div id="suggestWindow" class="suggestWindow">
+	<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
+	<a href="#" align="right" id="suggestClose">close</a>
+</div> -->
+
+<form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
+	<input type="hidden" name="area" value=""/>
+</form>
+
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
+		<li class="breadcrumb-item"><a href="{{ php_self }}?mod=news">{{ lang.editnews['news_title'] }}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+	</ol>
+</nav>
+
+{% if (flags['params.lost']) %}
+<div class="alert alert-warning">
+	<p>Обратите внимание – у вас недостаточно прав для полноценного редактирования новости.</p>
+	<hr>
+	<p>При сохранении будут произведены следующие изменения:</p>
+	<ul>
+		{% if flags['publish.lost'] %}<li>Новость будет снята с публикации</li>{% endif %}
+		{% if flags['html.lost'] %}<li>В новости будет запрещено использование HTML тегов и автоформатирование</li>{% endif %}
+		{% if flags['mainpage.lost'] %}<li>Новость будет убрана с главной страницы</li>{% endif %}
+		{% if flags['pinned.lost'] %}<li>С новости будет снято прикрепление на главной</li>{% endif %}
+		{% if flags['catpinned.lost'] %}<li>С новости будет снято прикрепление в категории</li>{% endif %}
+		{% if flags['favorite.lost'] %}<li>Новость будет удалена из закладок администратора</li>{% endif %}
+		{% if flags['multicat.lost'] %}<li>Из новости будут удалены все дополнительные категории</li>{% endif %}
+	</ul>
+</div>
+{% endif %}
+
+<!-- Main content form -->
+<form id="postForm" name="form" enctype="multipart/form-data" method="post" action="{{ php_self }}" target="_self">
+	<input type="hidden" name="token" value="{{ token }}" />
+	<input type="hidden" name="mod" value="news" />
+	<input type="hidden" name="action" value="edit" />
+	<input type="hidden" name="subaction" value="submit" />
+	<input type="hidden" name="id" value="{{ id }}" />
+
+	<div class="row">
+		<!-- Left edit column -->
+		<div class="col-lg-8">
+
+			<!-- MAIN CONTENT -->
+			<div id="maincontent" class="card mb-4">
+				<div class="card-header"><i class="fa fa-th-list mr-2"></i> {{ lang.editnews['bar.maincontent'] }}</div>
+				<div class="card-body">
+					<div class="form-row mb-3">
+						<label class="col-lg-3 col-form-label">{{ lang.editnews['title'] }}</label>
+						<div class="col-lg-9">
+							{% if (link) %}
+								<div class="input-group">
+									<input id="newsTitle" type="text" name="title" value="{{ title }}" class="form-control" />
+									<div class="input-group-append">
+										<span class="input-group-text"><a href="{{ link }}" target="_blank"><i class="fa fa-external-link"></i></a></span>
+									</div>
+								</div>
+							{% else %}
+								<input id="newsTitle" type="text" name="title" value="{{ title }}" class="form-control" />
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="form-row mb-3">
+						<label class="col-lg-3 col-form-label">{{ lang.editnews['alt_name'] }}</label>
+						<div class="col-lg-9">
+							<input type="text" name="alt_name" value="{{ alt_name }}" {% if flags['altname.disabled'] %}disabled="disabled" {% endif %} class="form-control" />
+						</div>
+					</div>
+
+					<div class="form-row mb-3">
+						<label class="col-lg-3 col-form-label">
+							{{ lang.editnews['category'] }}
+							{% if (flags.mondatory_cat) %}
+								<span style="font-size: 16px; color: red;"><b>*</b></span>
+							{% endif %}
+						</label>
+						<div class="col-lg-9">
+							<div class="list">
+								{{ mastercat }}
+							</div>
+						</div>
+					</div>
+
+					{% if (not isBBCode) %}
+						{{ quicktags }}
+						<!-- SMILES -->
+						<div id="modal-smiles" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="smiles-modal-label" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 id="smiles-modal-label" class="modal-title">Вставить смайл</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									</div>
+									<div class="modal-body">
+										{{ smilies }}
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
+					{% if (flags.edit_split) %}
+						<div class="mb-3">
+							<div id="container.content.short" class="contentActive">
+								<textarea id="ng_news_content_short" name="ng_news_content_short" onclick="changeActive('short');" onfocus="changeActive('short');" class="{{ isBBCode ? attributBB : 'form-control' }}" rows="10">{{ content.short }}</textarea>
+							</div>
+						</div>
+
+						{% if (flags.extended_more) %}
+							<div class="form-row mb-3">
+								<label class="col-lg-3 col-form-label">{{ lang.editnews['editor.divider'] }}</label>
+								<div class="col-lg-9">
+									<input type="text" name="content_delimiter" value="{{ content.delimiter }}" class="form-control" />
+								</div>
+							</div>
+						{% endif %}
+
+						<div class="mb-3">
+							<div id="container.content.full" class="contentInactive">
+								<textarea id="ng_news_content_full" name="ng_news_content_full" onclick="changeActive('full');" onfocus="changeActive('full');" class="{{ isBBCode ? attributBB : 'form-control' }}" rows="10">{{ content.full }}</textarea>
+							</div>
+						</div>
+					{% else %}
+						<div id="container.content" class="mb-3" class="contentActive">
+							<textarea id="ng_news_content" name="ng_news_content" class="{{ isBBCode ? attributBB : 'form-control' }}" rows="10">{{ content.short }}</textarea>
+						</div>
+					{% endif %}
+
+					{% if (flags.meta) %}
+						<div class="form-row mb-3">
+							<label class="col-lg-3 col-form-label">{{ lang.editnews['description'] }}</label>
+							<div class="col-lg-9">
+								<textarea name="description" cols="80" class="form-control">{{ description }}</textarea>
+							</div>
+						</div>
+
+						<div class="form-row mb-3">
+							<label class="col-lg-3 col-form-label">{{ lang.editnews['keywords'] }}</label>
+							<div class="col-lg-9">
+								<textarea name="keywords" cols="80" class="form-control">{{ keywords }}</textarea>
+							</div>
+						</div>
+					{% endif %}
+
+					{% if (pluginIsActive('xfields')) %}
+						<!-- XFields -->
+						{{ plugin.xfields[1] }}
+						<!-- /XFields -->
+					{% endif %}
+				</div>
+			</div>
+
+			<!-- ADDITIONAL -->
+			<div id="additional" class="accordion mb-4">
+				<div class="card">
+					<div class="card-header" id="headingOne">
+						<a href="#" class="btn-block collapsed" data-toggle="collapse" data-target="#collapseNewsAdditional" aria-expanded="false" aria-controls="collapseNewsAdditional">
+							{{ lang.editnews['bar.additional'] }}
+						</a>
+					</div>
+
+					<div id="collapseNewsAdditional" class="collapse" aria-labelledby="headingOne" data-parent="#additional">
+						<table class="table table-sm mb-0">
+							{% if (pluginIsActive('xfields')) %}
+								<!-- XFields -->
+								{{ plugin.xfields[0] }}
+								<!-- /XFields -->
+							{% endif %}
+							{% if (pluginIsActive('nsched')) %}{{ plugin.nsched }}{% endif %}
+							{% if (pluginIsActive('finance')) %}{{ plugin.finance }}{% endif %}
+							{% if (pluginIsActive('tags')) %}{{ plugin.tags }}{% endif %}
+							{% if (pluginIsActive('tracker')) %}{{ plugin.tracker }}{% endif %}
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<!-- ATTACHES -->
+			<div id="attaches" class="accordion mb-4">
+				<div class="card">
+					<div id="headingTwo" class="card-header">
+						<a href="#" class="btn-block collapsed" data-toggle="collapse" data-target="#collapseNewsAttaches" aria-expanded="false" aria-controls="collapseNewsAttaches">
+							{{ lang.editnews['bar.attaches'] }} ({{ attachCount }})
+						</a>
+					</div>
+
+					<div id="collapseNewsAttaches" class="collapse" aria-labelledby="headingTwo" data-parent="#attaches">
+						<!-- <span class="f15">{{ lang.editnews['attach.list'] }}</span> -->
+						<table id="attachFilelist" class="table table-sm mb-0">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th width="80">{{ lang.editnews['attach.date'] }}</th>
+									<th nowrap></th>
+									<th>{{ lang.editnews['attach.filename'] }}</th>
+									<th width="90">{{ lang.editnews['attach.size'] }}</th>
+									<th width="40">DEL</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for entry in attachEntries %}
+									<tr>
+										<td>{{ entry.id }}</td>
+										<td>{{ entry.date }}</td>
+										<td>
+											<a href="#" onclick="insertext('[attach#{{ entry.id }}]{{ entry.orig_name }}[/attach]','', currentInputAreaID)" title='{{ lang['tags.file'] }}'>
+												{{ lang['tags.file'] }}
+											</a>
+										</td>
+										<td><a href="{{ entry.url }}">{{ entry.orig_name }}</a></td>
+										<td>{{ entry.filesize }}</td>
+										<td><input type="checkbox" name="delfile_{{ entry.id }}" value="1"/></td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="6">{{ lang.editnews['attach.no_files_attached'] }}</td>
+									</tr>
+								{% endfor %}
+								<!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
+								<tr>
+									<td colspan="6" class="text-right">
+										<input type="button" value="{{ lang.editnews['attach.more_rows'] }}" class="btn btn-sm btn-outline-primary" onclick="attachAddRow();"/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Right edit column -->
+		<div id="rightBar" class="col col-lg-4">
+			<div class="card mb-4">
+				<div class="card-header">{{ lang['editor.comminfo'] }}</div>
+				<div class="card-body">
+					<ul class="list-unstyled mb-0">
+						<li>
+							{{ lang['editor.author'] }}: <a href="{{ php_self }}?mod=users&action=editForm&id={{ authorid }}"><b>{{ author }}</b></a>
+							{% if (pluginIsActive('uprofile')) %}
+								<a href="{{ author_page }}" target="_blank" title="{{ lang.editnews['site.viewuser'] }}">
+									<i class="fa fa-external-link"></i>
+								</a>
+							{% endif %}
+						</li>
+						<li>{{ lang['editor.dcreate'] }}: <b>{{ createdate }}</b></li>
+						<li>{{ lang['editor.dedit'] }}: <b>{{ editdate }}</b></li>
+						<li>{{ lang['news_status'] }}:
+							{% if (approve == -1) %}
+								<b class="text-danger">{{ lang['state.draft'] }}</b>
+							{% elseif (approve == 0) %}
+								<b class="text-warning">{{ lang['state.unpublished'] }}</b>
+							{% else %}
+								<b class="text-success">{{ lang['state.published'] }}</b>
+							{% endif %}
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="card mb-4">
+				<div class="card-header">{{ lang['editor.extcat'] }}</div>
+				<div class="card-body">
+					<div style="overflow: auto; height: 150px;">{{ extcat }}</div>
+				</div>
+			</div>
+
+			<div class="card mb-4">
+				<div class="card-header">{{ lang['editor.configuration'] }}</div>
+				<div class="card-body">
+					<label class="col-form-label d-block">
+						<input id="mainpage" type="checkbox" name="mainpage" value="1" {% if (flags.mainpage) %}checked {% endif %} {% if flags['mainpage.disabled'] %}disabled {% endif %} />
+						{{ lang.editnews['mainpage'] }}
+					</label>
+
+					<label class="col-form-label d-block">
+						<input id="pinned" type="checkbox" name="pinned" value="1" {% if (flags.pinned) %}checked {% endif %} {% if flags['pinned.disabled'] %}disabled {% endif %} />
+						{{ lang.editnews['add_pinned'] }}
+					</label>
+
+					<label class="col-form-label d-block">
+						<input id="catpinned" type="checkbox" name="catpinned" value="1" {% if (flags.catpinned) %}checked {% endif %} {% if flags['catpinned.disabled'] %}disabled {% endif %} />
+						{{ lang.editnews['add_catpinned'] }}
+					</label>
+
+					<label class="col-form-label d-block">
+						<input id="favorite" type="checkbox" name="favorite" value="1" {% if (flags.favorite) %}checked {% endif %} {% if flags['favorite.disabled'] %}disabled {% endif %} />
+						{{ lang.editnews['add_favorite'] }}
+					</label>
+
+					<label class="col-form-label d-block">
+						<input id="flag_HTML" type="checkbox" name="flag_HTML" value="1" {% if (flags['html']) %}checked {% endif %} {% if (flags['html.disabled']) %}disabled {% endif %} />
+						{{ lang.editnews['flag_html'] }}
+					</label>
+
+					<label class="col-form-label d-block">
+						<input id="flag_RAW" type="checkbox" name="flag_RAW" value="1" {% if (flags['raw']) %}checked {% endif %} {% if (flags['html.disabled']) %}disabled {% endif %} />
+						{{ lang.editnews['flag_raw'] }}
+						<div class="{{ flags['raw.disabled'] ? 'alert alert-warning mb-0' : 'd-none' }}">{{ lang.editnews['flags_lost'] }}</div>
+					</label>
+				</div>
+			</div>
+
+			<div class="card mb-4">
+				<div class="card-header">{{ lang.editnews['set_views'] }}</div>
+				<div class="card-body">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" name="setViews" class="" value="1" {% if (flags['setviews.disabled']) %}disabled{% endif %}>
+							</div>
+						</div>
+						<input type="number" name="views" value="{{ views }}" class="form-control" {% if (flags['setviews.disabled']) %}disabled{% endif %} autocomplete="off">
+					</div>
+				</div>
+			</div>
+
+			{% if not flags['customdate.disabled'] %}
+				<div class="card mb-4">
+					<div class="card-header">{{ lang.editnews['custom_date'] }}</div>
+					<div class="card-body">
+						<label class="col-form-label d-block">
+							<input id="setdate_current" type="checkbox" name="setdate_current" value="1" onclick="document.getElementById('setdate_custom').checked=false;"/>
+							{{ lang.editnews['date.setcurrent'] }}
+						</label>
+
+						<label class="col-form-label d-block">
+							<input id="setdate_custom" type="checkbox" name="setdate_custom" value="1"  onclick="document.getElementById('setdate_current').checked=false;">
+							{{ lang.editnews['date.setdate'] }}
+						</label>
+
+						<div class="form-group">
+							<input id="cdate" type="text" name="cdate" value="{{ cdate }}" class="form-control" pattern="[0-9]{2}\.[0-9]{2}\.[0-9]{4} [0-9]{2}:[0-9]{2}" placeholder="{{ "now" | date('d.m.Y H:i') }}" autocomplete="off">
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+			{% if (pluginIsActive('comments')) %}
+				<div class="card mb-4">
+					<div class="card-header">{{ lang['comments:mode.header'] }}</div>
+					<div class="card-body">
+						<select name="allow_com" class="custom-select">
+							<option value="0" {{ plugin.comments['acom:0'] }}>{{ lang['comments:mode.disallow'] }}</option>
+							<option value="1" {{ plugin.comments['acom:1'] }}>{{ lang['comments:mode.allow'] }}</option>
+							<option value="2" {{ plugin.comments['acom:2'] }}>{{ lang['comments:mode.default'] }}</option>
+						</select>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col col-lg-8">
+			<div class="row">
+				<div class="col-md-6 mb-4">
+					<button type="button" class="btn btn-outline-success" onclick="return preview();">
+						<span class="d-xl-none"><i class="fa fa-eye"></i></span>
+						<span class="d-none d-xl-block">{{ lang.addnews['preview'] }}</span>
+					</button>
+
+					{% if flags.deleteable %}
+						<button type="button" class="btn btn-outline-danger" onclick="confirmit('{{ php_self }}?mod=news&action=manage&subaction=mass_delete&selected_news[]={{ id }}&token={{ token }}', '{{ lang.editnews['sure_del'] }}')">
+							<span class="d-xl-none"><i class="fa fa-trash"></i></span>
+							<span class="d-none d-xl-block">{{ lang.editnews['delete'] }}</span>
+						</button>
+					{% endif %}
+				</div>
+
+				<div class="col-md-6 mb-4">
+					{% if flags.editable %}
+						<div class="input-group">
+							<select name="approve" class="custom-select">
+								{% if flags['can_publish'] %}<option value="1" {{ approve ? 'selected' : '' }}>{{ lang.addnews['publish'] }}</option>{% endif %}
+								{% if flags.can_unpublish %}<option value="0" {{ not(approve) ? 'selected' : '' }}>{{ lang.addnews['send_moderation'] }}</option>{% endif %}
+								{% if flags.can_draft %}<option value="-1" {{ approve == -1 ? 'selected' : '' }}>{{ lang.addnews['save_draft'] }}</option>{% endif %}
+							</select>
+							<div class="input-group-append">
+								<button type="submit" class="btn btn-outline-success">
+									<span class="d-xl-none"><i class="fa fa-floppy-o"></i></span>
+									<span class="d-none d-xl-block">{{ lang.editnews['do_editnews'] }}</span>
+								</button>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% if (pluginIsActive('xfields')) %}
+		<!-- XFields [GENERAL] -->
+		{{ plugin.xfields.general }}
+		<!-- /XFields [GENERAL] -->
+	{% endif %}
+</form>
+
+{% if (pluginIsActive('comments')) %}
+	<!-- COMMENTS -->
+	<div id="additional" class="accordion my-5">
+		<div class="card">
+			<div class="card-header" id="headingThree">
+				<a href="#" class="btn-block collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+					{{ lang.editnews['bar.comments'] }} ({{ plugin.comments.count }})
+				</a>
+			</div>
+
+			<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#additional">
+				<form id="commentsForm" name="commentsForm" action="{{ php_self }}?mod=news" method="post">
+					<input type="hidden" name="token" value="{{ token }}" />
+					<input type="hidden" name="mod" value="news" />
+					<input type="hidden" name="action" value="edit" />
+					<input type="hidden" name="subaction" value="mass_com_delete" />
+					<input type="hidden" name="id" value="{{ id }}" />
+
+					<!-- COMMENTS -->
+					<div id="comments">
+						<table class="table table-sm mb-0">
+							<thead>
+								<tr>
+									<th>{{ lang.editnews['author'] }}</th>
+									<th>{{ lang.editnews['date'] }}</th>
+									<th>{{ lang.editnews['comment'] }}</th>
+									<th>{{ lang.editnews['edit_comm'] }}</th>
+									<th nowrap>{{ lang.editnews['block_ip'] }}</th>
+									<th>
+										<input type="checkbox" name="master_box" value="all" onclick="javascript:check_uncheck_all(commentsForm)" class="check"/>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{ plugin.comments.list }}
+								<tr>
+									<td colspan="6" class="text-right">
+										<button type="submit" class="btn btn-outline-danger" onclick="if (!confirm('{{ lang.editnews['sure_del_com'] }}')) {return false;}">
+											{{ lang.editnews['comdelete'] }}
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endif %}
+
+<script type="text/javascript">
 	// Global variable: ID of current active input area
-		{% if (flags.edit_split) %}var currentInputAreaID = 'ng_news_content_short';
-		{% else %}var currentInputAreaID = 'ng_news_content';{% endif %}
+	var currentInputAreaID = 'ng_news_content{{ flags.edit_split ? '_short' : '' }}';
 
-	function ChangeOption(optn) {
-		document.getElementById('maincontent').style.display = (optn == 'maincontent') ? "block" : "none";
-		document.getElementById('additional').style.display = (optn == 'additional') ? "block" : "none";
-		document.getElementById('attaches').style.display = (optn == 'attaches') ? "block" : "none";
-		{% if (pluginIsActive('comments')) %}    document.getElementById('comments').style.display = (optn == 'comments') ? "block" : "none";
-		document.getElementById('showEditNews').style.display = (optn == 'comments') ? "none" : "block";
-		document.getElementById('rightBar').style.display = (optn == 'comments') ? "none" : "";{% endif %}
-	}
 	function preview() {
 		var form = document.getElementById("postForm");
-		if (form.ng_news_content{% if (flags.edit_split) %}_short{% endif %}.value == '' || form.title.value == '') {
-			alert('{{ lang.editnews['msge_preview'] }}');
+
+		if (form.querySelector('[name*=ng_news_content]').value == '' || form.title.value == '') {
+			alert('{{ lang.addnews['msge_preview'] }}');
+
 			return false;
 		}
 
@@ -28,6 +478,7 @@
 
 		form['mod'].value = "news";
 		form.target = "_self";
+
 		return true;
 	}
 
@@ -44,403 +495,7 @@
 	}
 </script>
 
-<!-- Hidden SUGGEST div -->
-<div id="suggestWindow" class="suggestWindow">
-	<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
-	<a href="#" align="right" id="suggestClose">close</a>
-</div>
-
-
-<form name="DATA_tmp_storage" action="" id="DATA_tmp_storage">
-	<input type="hidden" name="area" value=""/>
-</form>
-
-<table border="0" width="100%" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width=100% colspan="5" class="contentHead">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=news">{{ lang.editnews['news_title'] }}</a>
-			&#8594; {{ lang.editnews['editnews_title'] }} "<a href="?mod=news&action=edit&id={{ id }}">{{ title }}</a>"
-			({% if (approve == -1) %}{{ lang['state.draft'] }}{% elseif (approve == 0) %}{{ lang['state.unpublished'] }}{% else %}{{ lang['state.published'] }} &#8594;
-			<small><a href="{{ link }}" target="_blank">{{ link }}</a></small>{% endif %})
-		</td>
-	</tr>
-</table>
-
-<!-- Main content form -->
-<form id="postForm" name="form" ENCTYPE="multipart/form-data" method="post" action="{{ php_self }}" target="_self">
-	<input type="hidden" name="token" value="{{ token }}"/>
-	<input type="hidden" name="mod" value="news"/>
-	<input type="hidden" name="action" value="edit"/>
-	<input type="hidden" name="subaction" value="submit"/>
-
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-		<tr>
-			<td valign="top">
-				<!-- Left edit column -->
-
-				<table border="0" cellspacing="1" cellpadding="0" width="100%">
-					<tr>
-						<td class="contentNav" align="center">
-							<input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{{ lang.editnews['bar.maincontent'] }}" class="navbutton"/>
-							<input type="button" onmousedown="javascript:ChangeOption('additional')" value="{{ lang.editnews['bar.additional'] }}" class="navbutton"/>
-							<input type="button" onmousedown="javascript:ChangeOption('attaches')" value="{{ lang.editnews['bar.attaches'] }} ({% if (attachCount>0) %}{{ attachCount }}{% else %}{{ lang['noa'] }}{% endif %})" class="navbutton"/>
-							{% if (pluginIsActive('comments')) %}
-								<input type="button" onmousedown="javascript:ChangeOption('comments')" value="{{ lang.editnews['bar.comments'] }} ({{ plugin.comments.count }})" class="navbutton" />{% endif %}
-						</td>
-					</tr>
-					<tr>
-						<td>
-
-							<!-- MAIN CONTENT -->
-							<div id="maincontent" style="display: block;">
-								<table width="100%" cellspacing="1" cellpadding="0" border="0">
-									<tr>
-										<td width="10"><img src="{{ skins_url }}/images/nav.png" hspace="8" alt=""/>
-										</td>
-										<td width="100"><span class="f15">{{ lang.editnews['title'] }}</span></td>
-										<td>
-											<input type="text" class="important" size="79" id="newsTitle" name="title" value="{{ title }}" tabindex="1"/>
-										</td>
-									</tr>
-									<tr>
-										<td valign="top" colspan=3>{% if (not isBBCode) %}{{ quicktags }}
-												<br/> {{ smilies }}<br/>{% else %}<br/>{% endif %}
-											{% if (flags.edit_split) %}
-												<div id="container.content.short" class="contentActive">
-													<textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('short');" onfocus="changeActive('short');" name="ng_news_content_short" {% if (isBBCode) %}class="{{ attributBB }}" {% else %}id="ng_news_content_short"{% endif %} rows="10" tabindex="2">{{ content.short }}</textarea>
-												</div>
-												{% if (flags.extended_more) %}
-													<table cellspacing="2" cellpadding="0" width="100%">
-													<tr>
-														<td nowrap>{{ lang.addnews['editor.divider'] }}: &nbsp;</td>
-														<td style="width: 90%">
-															<input tabindex="2" type="text" name="content_delimiter" style="width: 99%;" value=""/>
-														</td>
-													</tr></table>{% endif %}
-												<div id="container.content.full" class="contentInactive">
-													<textarea style="width: 99%; padding: 1px; margin: 1px;" onclick="changeActive('full');" onfocus="changeActive('full');" name="ng_news_content_full" {% if (isBBCode) %}class="{{ attributBB }}" {% else %}id="ng_news_content_full"{% endif %} rows="10" tabindex="2">{{ content.full }}</textarea>
-												</div>
-											{% else %}
-												<div id="container.content" class="contentActive">
-													<textarea style="width: 99%; padding: 1px; margin: 1px;" name="ng_news_content" {% if (isBBCode) %}class="{{ attributBB }}" {% else %}id="ng_news_content"{% endif %} rows="10" tabindex="2">{{ content.short }}</textarea>
-												</div>
-											{% endif %}
-										</td>
-									</tr>
-									<tr>
-										<td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt=""/></td>
-										<td>{{ lang.editnews['alt_name'] }}:</td>
-										<td>
-											<input type="text" name="alt_name" value="{{ alt_name }}" {% if flags['altname.disabled'] %}disabled="disabled" {% endif %}size="60" tabindex="3"/>
-										</td>
-									</tr>
-									{% if (flags.meta) %}
-										<tr>
-											<td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt=""/></td>
-											<td>{{ lang.editnews['description'] }}:</td>
-											<td><textarea name="description" cols="80">{{ description }}</textarea></td>
-										</tr>
-										<tr>
-											<td><img src="{{ skins_url }}/images/nav.png" hspace="8" alt=""/></td>
-											<td>{{ lang.editnews['keywords'] }}:</td>
-											<td>
-												<textarea name="keywords" id="newsKeywords" cols="80">{{ keywords }}</textarea>
-											</td>
-										</tr>
-									{% endif %}
-									{% if (pluginIsActive('xfields')) %}
-										<!-- XFields -->
-										{{ plugin.xfields[1] }}
-										<!-- /XFields -->
-									{% endif %}
-								</table>
-						</td>
-					</tr>
-				</table>
-				</div>
-
-				<!-- ADDITIONAL -->
-				<div id="additional" style="display: none;">
-					<table border="0" cellspacing="1" cellpadding="0" width="98%">
-						{% if not flags['customdate.disabled'] %}
-							<tr>
-								<td class="contentHead">
-									<img src="{{ skins_url }}/images/nav.png" hspace="8" alt=""/>{{ lang.editnews['date.manage'] }}
-								</td>
-							</tr>
-							<tr>
-								<td class="contentEntry1">
-									<table cellspacing=1 cellpadding=1 style="font: 11px verdana, sans-serif;">
-										<tr>
-											<td>
-												<input type="checkbox" name="setdate_custom" id="setdate_custom" value="1" class="check" onclick="document.getElementById('setdate_current').checked=false;"/>
-											</td>
-											<td><label for="setdate_custom">{{ lang.editnews['date.setdate'] }}</label>
-											</td>
-											<td><input type="text" id="cdate" name="cdate" value="{{ cdate }}"/></td>
-										</tr>
-										<tr>
-											<td>
-												<input type="checkbox" name="setdate_current" id="setdate_current" value="1" class="check" onclick="document.getElementById('setdate_custom').checked=false;"/>
-											</td>
-											<td>
-												<label for="setdate_current">{{ lang.editnews['date.setcurrent'] }}</label>
-												&nbsp;</td>
-											<td>&nbsp;</td>
-									</table>
-								</td>
-							</tr>
-						{% endif %}
-						{% if (pluginIsActive('xfields')) %}
-							<!-- XFields -->
-							{{ plugin.xfields[0] }}
-							<!-- /XFields -->
-						{% endif %}
-						{% if (pluginIsActive('nsched')) %}{{ plugin.nsched }}{% endif %}
-						{% if (pluginIsActive('finance')) %}{{ plugin.finance }}{% endif %}
-						{% if (pluginIsActive('tags')) %}{{ plugin.tags }}{% endif %}
-						{% if (pluginIsActive('tracker')) %}{{ plugin.tracker }}{% endif %}
-					</table>
-				</div>
-				<script language="javascript" type="text/javascript">
-					$("#cdate").datetimepicker({
-						currentText: "{{ cdate }}",
-						dateFormat: "dd.mm.yy",
-						timeFormat: 'HH:mm'
-					});
-				</script>
-				<!-- ATTACHES -->
-				<div id="attaches" style="display: none;">
-					<br/>
-					<span class="f15">{{ lang.editnews['attach.list'] }}</span>
-					<table width="98%" cellspacing="1" cellpadding="2" border="0" id="attachFilelist">
-						<thead>
-						<tr class="contHead">
-							<td>ID</td>
-							<td width="80">{{ lang.editnews['attach.date'] }}</td>
-							<td width="10">&nbsp;</td>
-							<td>{{ lang.editnews['attach.filename'] }}</td>
-							<td width="90">{{ lang.editnews['attach.size'] }}</td>
-							<td width="40">DEL</td>
-						</tr>
-						</thead>
-						<tbody>
-						<!-- <tr><td colspan="5">No data</td></tr> -->
-						{% for entry in attachEntries %}
-							<tr>
-								<td>{{ entry.id }}</td>
-								<td>{{ entry.date }}</td>
-								<td>
-									<a style="cursor:pointer" onclick="ChangeOption('maincontent'); insertext('[attach#{{ entry.id }}]{{ entry.orig_name }}[/attach]','', currentInputAreaID)" title='{{ lang['tags.file'] }}'><img src="{{ skins_url }}/tags/attach.png" width="16" height="16" border="0"/></a>
-								</td>
-								<td><a href="{{ entry.url }}">{{ entry.orig_name }}</a></td>
-								<td>{{ entry.filesize }}</td>
-								<td><input type="checkbox" name="delfile_{{ entry.id }}" value="1"/></td>
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="6">{{ lang.editnews['attach.no_files_attached'] }}</td>
-							</tr>
-						{% endfor %}
-						<!-- <tr><td>*</td><td>New file</td><td colspan="2"><input type="file"/></td><td><input type="button" size="40" value="-"/></td></tr> -->
-						<tr>
-							<td colspan="3">&nbsp;</td>
-							<td colspan="2">
-								<input type="button" class="button" value="{{ lang.editnews['attach.more_rows'] }}" style="width: 100%;" onclick="attachAddRow();"/>
-							</td>
-						</tr>
-					</table>
-				</div>
-
-			</td>
-			<td id="rightBar" width="300" valign="top">
-				<!-- Right edit column -->
-				<table width="100%" cellspacing="0" cellpadding="0" border="0">
-					<tr>
-						<td></td>
-						<td><span class="f15">{{ lang['editor.comminfo'] }}</span></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<div class="list">
-								{{ lang['editor.author'] }}:
-								<a style="font-family: Tahoma, Sans-serif;" href="{{ php_self }}?mod=users&amp;action=editForm&amp;id={{ authorid }}"><b>{{ author }}</b></a> {% if (pluginIsActive('uprofile')) %}
-								<a href="{{ author_page }}" target="_blank" title="{{ lang.editnews['site.viewuser'] }}">
-									<img src="{{ skins_url }}/images/open_new.png" alt="{{ lang.editnews['newpage'] }}"/>
-								</a>{% endif %}<br/>
-								{{ lang['editor.dcreate'] }}: <b>{{ createdate }}</b><br/>
-								{{ lang['editor.dedit'] }}: <b>{{ editdate }}</b>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td width="20"></td>
-						<td><span class="f15">{{ lang.editnews['category'] }}</span></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<div class="list">{{ mastercat }} {% if (flags.mondatory_cat) %}&nbsp;
-									<span style="font-size: 16px; color: red;"><b>*</b></span>{% endif %}</div>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><span class="f15">{{ lang['editor.extcat'] }}</span></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<div style="overflow: auto; height: 150px;" class="list">{{ extcat }}</div>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><span class="f15">{{ lang['editor.configuration'] }}</span></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>
-							<div class="list">
-								<label><input type="checkbox" name="mainpage" value="1" {% if (flags.mainpage) %}checked="checked"{% endif %} class="check" id="mainpage" {% if (flags['mainpage.disabled']) %}disabled{% endif %} /> {{ lang.editnews['mainpage'] }}
-								</label><br/>
-								<label><input type="checkbox" name="pinned" value="1" {% if (flags.pinned) %}checked="checked"{% endif %} class="check" id="pinned" {% if (flags['pinned.disabled']) %}disabled{% endif %} /> {{ lang.editnews['add_pinned'] }}
-								</label><br/>
-								<label><input type="checkbox" name="catpinned" value="1" {% if (flags.catpinned) %}checked="checked"{% endif %} class="check" id="catpinned" {% if (flags['catpinned.disabled']) %}disabled{% endif %} /> {{ lang.editnews['add_catpinned'] }}
-								</label><br/>
-								<label><input type="checkbox" name="favorite" value="1" {% if (flags.favorite) %}checked="checked"{% endif %} class="check" id="favorite" {% if (flags['favorite.disabled']) %}disabled{% endif %} /> {{ lang.editnews['add_favorite'] }}
-								</label><br/>
-								<label><input type="checkbox" name="setViews" value="1" class="check" id="setViews" {% if (flags['setviews.disabled']) %}disabled{% endif %} /> {{ lang.editnews['set_views'] }}
-									:</label>
-								<input type="text" size="4" name="views" value="{{ views }}" {% if (flags['setviews.disabled']) %}disabled{% endif %}/><br/>
-								<label><input name="flag_HTML" type="checkbox" class="check" id="flag_HTML" value="1" {% if (flags.html) %}checked="checked"{% endif %} {% if (flags['html.disabled']) %}disabled{% endif %} /> {{ lang.editnews['flag_html'] }}
-								</label><br/>
-								<label><input type="checkbox" name="flag_RAW" value="1" {% if (flags.raw) %}checked="checked"{% endif %} class="check" id="flag_RAW" {% if (flags['html.disabled']) %}disabled{% endif %} /> {{ lang.editnews['flag_raw'] }}
-								</label> {% if (flags['raw.disabled']) %}[
-									<font color=red>{{ lang.editnews['flags_lost'] }}</font>]{% endif %}
-								{% if (pluginIsActive('comments')) %}
-							<hr/>{{ lang['comments:mode.header'] }}:
-								<select name="allow_com">
-									<option value="0"{{ plugin.comments['acom:0'] }}>{{ lang['comments:mode.disallow'] }}
-									<option value="1"{{ plugin.comments['acom:1'] }}>{{ lang['comments:mode.allow'] }}
-									<option value="2"{{ plugin.comments['acom:2'] }}>{{ lang['comments:mode.default'] }}
-								</select>
-								{% endif %}<br/>
-							</div>
-						</td>
-					</tr>
-
-				</table>
-
-			</td>
-		</tr>
-	</table>
-
-	<br/>
-
-	<div id="showEditNews" style="display: block;">
-		<table id="edit" width="100%" border="0" cellspacing="0" cellpadding="0">
-			{% if flags['params.lost'] %}
-				<tr>
-					<td colspan="3" class="contentEditErr">
-						Обратите снимание - у вас недостаточно прав для полноценного редактирования новости.<br/>
-						При сохранении будут произведены следующие изменения:<br/><br/>
-						{% if flags['publish.lost'] %}
-							<div class="errMessage">&#8594; Новость будет снята с публикации</div>{% endif %}
-						{% if flags['html.lost'] %}
-							<div class="errMessage">&#8594; В новости будет запрещено использование HTML тегов и
-								автоформатирование
-							</div>{% endif %}
-						{% if flags['mainpage.lost'] %}
-							<div class="errMessage">&#8594; Новость будет убрана с главной страницы</div>{% endif %}
-						{% if flags['pinned.lost'] %}
-							<div class="errMessage">&#8594; С новости будет снято прикрепление на главной
-							</div>{% endif %}
-						{% if flags['catpinned.lost'] %}
-							<div class="errMessage">&#8594; С новости будет снято прикрепление в категории
-							</div>{% endif %}
-						{% if flags['favorite.lost'] %}
-							<div class="errMessage">&#8594; Новость будет удалена из закладок администратора
-							</div>{% endif %}
-						{% if flags['multicat.lost'] %}
-							<div class="errMessage">&#8594; Из новости будут удалены все дополнительные категории
-							</div>{% endif %}
-					</td>
-				</tr>
-			{% endif %}
-			<tr>
-				<td width="150" class="contentEditW" align="left" valign="top">
-					<input type="button" value="{{ lang.editnews['preview'] }}" class="button" onClick="preview()"/>
-				</td>
-				<td class="contentEditW" align="center" valign="top">
-					<input type="hidden" name="id" value="{{ id }}"/>
-					{% if flags.editable %}
-						{{ lang['news_status'] }}:
-						<select size="1" disabled>
-							<option>{% if (approve == -1) %}{{ lang['state.draft'] }}{% elseif (approve == 0) %}{{ lang['state.unpublished'] }}{% else %}{{ lang['state.published'] }}{% endif %}</option>
-						</select> &#8594;
-						<select size="1" name="approve" id="approve">
-							{% if flags.can_draft %}
-								<option value="-1" {% if (approve == -1) %}selected="selected"{% endif %}>{{ lang['state.draft'] }}</option>{% endif %}
-							{% if flags.can_unpublish %}
-								<option value="0" {% if (approve == 0) %}selected="selected"{% endif %}>{{ lang['state.unpublished'] }}</option>{% endif %}
-							{% if flags.can_publish %}
-								<option value="1" {% if (approve == 1) %}selected="selected"{% endif %}>{{ lang['state.published'] }}</option>{% endif %}
-						</select>
-						<input type="submit" value="{{ lang.editnews['do_editnews'] }}" accesskey="s" class="button"/>&nbsp;{% endif %}
-				</td>
-				{% if flags.deleteable %}
-					<td class="contentEditW" align="right" valign="top" width="150">
-						<input type="button" value="{{ lang.editnews['delete'] }}" onClick="confirmit('{{ php_self }}?mod=news&amp;action=manage&amp;subaction=mass_delete&amp;selected_news[]={{ id }}&amp;token={{ token }}', '{{ lang.editnews['sure_del'] }}')" class="button"/>
-					</td>
-				{% endif %}
-			</tr>
-		</table>
-	</div>
-
-	{% if (pluginIsActive('xfields')) %}
-		<!-- XFields [GENERAL] -->
-		{{ plugin.xfields.general }}
-		<!-- /XFields [GENERAL] -->
-	{% endif %}
-</form>
-
-<form method="post" name="commentsForm" id="commentsForm" action="{{ php_self }}?mod=news">
-	<input type="hidden" name="token" value="{{ token }}"/>
-	<input type="hidden" name="mod" value="news"/>
-	<input type="hidden" name="action" value="edit"/>
-	<input type="hidden" name="subaction" value="mass_com_delete"/>
-	<input type="hidden" name="id" value="{{ id }}"/>
-	<!-- COMMENTS -->
-	<div id="comments" style="display: none;">
-		<table border="0" cellspacing="0" cellpadding="0" width="98%">
-			<tr align="center">
-				<td class="contentHead">{{ lang.editnews['author'] }}</td>
-				<td class="contentHead">{{ lang.editnews['date'] }}</td>
-				<td class="contentHead">{{ lang.editnews['comment'] }}</td>
-				<td class="contentHead">{{ lang.editnews['edit_comm'] }}</td>
-				<td class="contentHead">{{ lang.editnews['block_ip'] }}</td>
-				<td class="contentHead">
-					<input type="checkbox" name="master_box" value="all" onclick="javascript:check_uncheck_all(commentsForm)" class="check"/>
-				</td>
-			</tr>
-			{{ plugin.comments.list }}
-			<tr>
-				<td colspan="5">&nbsp;</td>
-			</tr>
-			<tr align="center">
-				<td width="100%" colspan="6" class="contentEdit" align="center" valign="top">
-					<input type="submit" value="{{ lang.editnews['comdelete'] }}" onClick="if (!confirm('{{ lang.editnews['sure_del_com'] }}')) {return false;}" class="button"/>
-				</td>
-			</tr>
-		</table>
-	</div>
-</form>
-
-
-<script language="javascript" type="text/javascript">
-	<!--
+<script type="text/javascript">
 	function attachAddRow() {
 		var tbl = document.getElementById('attachFilelist');
 		var lastRow = tbl.rows.length;
@@ -461,17 +516,17 @@
 		xCell.colSpan = 2;
 		xCell.appendChild(el);
 
-
 		el = document.createElement('input');
 		el.setAttribute('type', 'button');
 		el.setAttribute('onclick', 'document.getElementById("attachFilelist").deleteRow(this.parentNode.parentNode.rowIndex);');
 		el.setAttribute('value', '-');
+		el.setAttribute('class', 'btn btn-sm btn-outline-danger');
 		row.insertCell(-1).appendChild(el);
 	}
+
 	// Add first row
 	var attachAbsoluteRowID = 0;
 	attachAddRow();
-	-->
 </script>
 
 {{ includ_bb }}

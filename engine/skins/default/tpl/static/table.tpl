@@ -1,88 +1,110 @@
-<!-- Navigation bar -->
-<table border="0" width="100%" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width=100% colspan="5" class="contentHead">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=static">{{ lang['static_title'] }}</a>
-		</td>
-	</tr>
-</table>
+<div class="page-title">
+	<h2>{{ lang['static_title'] }}</h2>
+</div>
 
-<!-- Info content -->
-<table border="0" width="100%" cellspacing="0" cellpadding="0" align="center" class="contentNav">
-	<tr>
-		<td width="100%" align="right">{{ lang['per_page'] }}
-			<form action="{{ php_self }}" method="get" name="options_bar">
-				<input type="hidden" name="mod" value="static"/><input style="text-align: center" name="per_page" value="{{ per_page }}" type="text" size="3"/>
-				<input type="submit" value="{{ lang['do_show'] }}" class="button"/></form>
-			&nbsp;</td>
-	</tr>
-</table>
+<!-- Filter form: BEGIN -->
+<div id="collapseStaticFilter" class="collapse">
+	<div class="card mb-4">
+		<div class="card-body">
+			<form action="{{ php_self }}" method="get" name="options_bar" class="form-inline">
+				<input type="hidden" name="mod" value="static" />
 
+				<label class="my-1 mr-2">{{ lang['per_page'] }}</label>
+				<input type="number" name="per_page" value="{{ per_page }}" size="3" class="form-control  my-1 mr-sm-2" />
+
+				<button type="submit" class="btn btn-outline-primary my-1">{{ lang['do_show'] }}</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Mass actions form: BEGIN -->
 <form action="{{ php_self }}?mod=static" method="post" name="static">
-	<input type="hidden" name="token" value="{{ token }}"/>
-	<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-		<tr align="left" class="contHead">
-			<td width="20">{% if (perm.modify) %}
-					<input class="check" type="checkbox" name="master_box" title="{{ lang['select_all'] }}" onclick="javascript:check_uncheck_all(static)" />{% endif %}
-			</td>
-			<td width="50">{{ lang['state'] }}</td>
-			<td width="45%">{{ lang['title'] }}</td>
-			<td>{{ lang['list.altname'] }}</td>
-			<td>{{ lang['list.template'] }}</td>
-			<td width="100">{{ lang['list.date'] }}</td>
-		</tr>
-		{% for entry in entries %}
-			<tr align="left">
-				<td class="contentEntry1">{% if (perm.modify) %}
-						<input name="selected[]" value="{{ entry.id }}" class="check" type="checkbox" />{% endif %}</td>
-				<td class="contentEntry1">
-					<div style="margin-right: 5px;">{{ entry.status }}</div>
-				</td>
-				<td class="contentEntry1">
-					<div style="float: left; margin: 0px;">
-						{% if (perm.details) %}
-						<a title="ID: {{ entry.id }}" href="{{ php_self }}?mod=static&amp;action=editForm&amp;id={{ entry.id }}">{% endif %}{{ entry.title }}{% if (perm.details) %}</a>{% endif %}
-						<br/>
-						<small>{{ entry.url }}</small>
-						&nbsp;
-					</div>
-				</td>
-				<td class="contentEntry1">{{ entry.alt_name }}</td>
-				<td class="contentEntry1">{{ entry.template }}</td>
-				<td class="contentEntry1">{{ entry.date }}</td>
-			</tr>
-		{% else %}
-			<tr>
-				<td colspan="6"><p>- {{ lang['not_found'] }} -</p></td>
-			</tr>
-		{% endfor %}
-		<tr>
-			<td colspan="6">&nbsp;</td>
-		</tr>
-	</table>
-	<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-		<tr>
-			<td width="47%" align="left" class="contentEdit">
-				<div id="submit">
+	<input type="hidden" name="token" value="{{ token }}" />
+
+	<div class="card">
+		<div class="card-header">
+			<div class="row">
+				<div class="col text-right">
 					{% if (perm.modify) %}
-						<select name="action">
+						<button type="button" class="btn btn-outline-success" onclick="document.location='?mod=static&action=addForm'; return false;">{{ lang['addstatic'] }}</button>
+					{% endif %}
+					<button type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#collapseStaticFilter" aria-expanded="false" aria-controls="collapseStaticFilter">
+						<i class="fa fa-filter"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<table class="table table-sm mb-0">
+			<thead>
+				<tr>
+					<th width="100">{{ lang['list.date'] }}</th>
+					<th width="45%">{{ lang['title'] }}</th>
+					<th>{{ lang['list.altname'] }}</th>
+					<th>{{ lang['list.template'] }}</th>
+					<th width="50">{{ lang['state'] }}</th>
+					{% if (perm.modify) %}
+						<th width="20">
+							<input class="check" type="checkbox" name="master_box" title="{{ lang['select_all'] }}" onclick="javascript:check_uncheck_all(static)" />
+						</th>
+					{% endif %}
+				</tr>
+			</thead>
+			<tbody>
+				{% for entry in entries %}
+					<tr>
+						<td nowrap>{{ entry.date }}</td>
+						<td>
+							<div style="float: left; margin: 0px;">
+								{% if (perm.details) %}
+								<a title="ID: {{ entry.id }}" href="{{ php_self }}?mod=static&amp;action=editForm&amp;id={{ entry.id }}">{% endif %}{{ entry.title }}{% if (perm.details) %}</a>{% endif %}
+								<br/>
+								<small>{{ entry.url }}</small>
+								&nbsp;
+							</div>
+						</td>
+						<td>{{ entry.alt_name }}</td>
+						<td>{{ entry.template }}</td>
+						<td>
+							<div style="margin-right: 5px;">{{ entry.status }}</div>
+						</td>
+						{% if (perm.modify) %}
+							<td>
+								<input name="selected[]" value="{{ entry.id }}" class="check" type="checkbox" />
+							</td>
+						{% endif %}
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="6"><p>- {{ lang['not_found'] }} -</p></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<div class="card-footer">
+			<div class="row">
+				<div class="col-lg-6 mb-2 mb-lg-0">
+					{{ pagesss }}
+				</div>
+
+				<div class="col-lg-6">
+					{% if (perm.modify) %}
+					<div class="input-group">
+						<select name="action" class="custom-select">
 							<option value="">-- {{ lang['action'] }} --</option>
 							<option value="do_mass_delete">{{ lang['delete'] }}</option>
 							<option value="do_mass_approve">{{ lang['approve'] }}</option>
 							<option value="do_mass_forbidden">{{ lang['forbidden'] }}</option>
 						</select>
-						<input type="submit" value="OK" class="button"/>
+						<div class="input-group-append">
+							<button type="submit" class="btn btn-outline-warning">OK</button>
+						</div>
+					</div>
 					{% endif %}
 				</div>
-			</td>
-			<td width="50%" class="contentEdit" align="right">{% if (perm.modify) %}
-					<input type="button" value="{{ lang['addstatic'] }}" onclick="document.location='?mod=static&action=addForm'; return false;" class="button" />{% endif %}
-				&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="2">{{ pagesss }}</td>
-	</table>
+			</div>
+		</div>
+	</div>
 </form>
