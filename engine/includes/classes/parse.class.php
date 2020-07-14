@@ -497,7 +497,7 @@ class parse
             "/<code>(.*?)<\/code>/s",
             function ($match) {
 
-                return "phphighlight('" . $match[0] . "')";
+                return phphighlight($match[1]);
             },
             $content
         );
@@ -542,7 +542,7 @@ class parse
         $content = trim(strip_tags($content));
         $content = strtr($content, $utf2enS);
         $content = strtr($content, $utf2enB);
-            
+
         $content = str_replace(array(' - '), array('-'), $content);
         $content = preg_replace("/\s+/ms", "-", $content);
         $content = preg_replace("/[ ]+/", "-", $content);
@@ -552,7 +552,7 @@ class parse
 
         return $content;
     }
-    
+
     function color($arr)
     {
 
