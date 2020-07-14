@@ -148,6 +148,7 @@
 
 					<div id="collapseNewsAdditional" class="collapse" aria-labelledby="headingOne" data-parent="#additional">
 						<table class="table table-sm mb-0">
+							<tbody>
 							{% if (pluginIsActive('xfields')) %}
 								<!-- XFields -->
 								{{ plugin.xfields[0] }}
@@ -157,6 +158,7 @@
 							{% if (pluginIsActive('finance')) %}{{ plugin.finance }}{% endif %}
 							{% if (pluginIsActive('tags')) %}{{ plugin.tags }}{% endif %}
 							{% if (pluginIsActive('tracker')) %}{{ plugin.tracker }}{% endif %}
+							</tbody>
 						</table>
 					</div>
 				</div>
