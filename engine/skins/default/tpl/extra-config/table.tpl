@@ -8,10 +8,10 @@
 
 <form method="post" action="{php_self}?mod=extra-config" name="form">
 	<input type="hidden" name="token" value="{token}" />
-	<input type="hidden" name="plugin" value="{plugin}"/>
-	<input type="hidden" name="action" value="commit"/>
+	<input type="hidden" name="plugin" value="{plugin}" />
+	<input type="hidden" name="action" value="commit" />
 
-	<div class="card mb-5">
+	<div class="card">
 		<h5 class="card-header">{plugin}</h5>
 
 		<table class="table table-sm extra-config">

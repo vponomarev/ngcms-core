@@ -2,8 +2,8 @@
 	<td id="re.{id}.id">{id}</td>
 	<td id="re.{id}.pluginName">{pluginName}</td>
 	<td id="re.{id}.handlerName">{handlerName}</td>
-	<td id="re.{id}.description">{description}</td>
-	<td id="re.{id}.regex">{regex}</td>
+	<td id="re.{id}.description" nowrap>{description}</td>
+	<td id="re.{id}.regex" nowrap>{regex}</td>
 	<td id="re.{id}.flags" nowrap>{flags}</td>
 	<td class="text-right">
 		<div class="btn-group btn-group-sm" role="group">

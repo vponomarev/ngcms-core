@@ -60,8 +60,8 @@
 </div>
 {% endif %}
 
-<div class="row my-4">
-	<div class="col-6">
+<div class="row">
+	<div class="col-md-6 mb-3">
 		<div class="card">
 			<h5 class="card-header font-weight-light">{{ lang['server'] }}</h5>
 			<table class="table table-sm mb-0">
@@ -90,7 +90,8 @@
 			</table>
 		</div>
 	</div>
-	<div class="col-6">
+
+	<div class="col-md-6 mb-3">
 		<div class="card">
 			<h5 class="card-header font-weight-light">Next Generation CMS</h5>
 			<table class="table table-sm mb-0">
@@ -113,8 +114,8 @@
 	</div>
 </div>
 
-<div class="row mb-4">
-	<div class="col-6">
+<div class="row">
+	<div class="col-md-6 mb-3">
 		<div class="card">
 			<h5 class="card-header font-weight-light">{{ lang['size'] }}</h5>
 			<table class="table table-sm mb-0">
@@ -169,7 +170,8 @@
 			</table>
 		</div>
 	</div>
-	<div class="col-6">
+
+	<div class="col-md-6 mb-3">
 		<div class="card">
 			<h5 class="card-header font-weight-light">{{ lang['system'] }}</h5>
 			<table class="table table-sm mb-0">
@@ -217,7 +219,7 @@
 		<form method="post" action="{{ php_self }}?mod=statistics">
 			<input type="hidden" name="action" value="save" />
 
-			<textarea name="note" rows="6" cols="70" class="form-control mb-3" style="background-color: lightyellow;" {% if (not admin_note) %}placeholder="{{ lang['no_notes'] }}" {% endif %}>{{ admin_note }}</textarea>
+			<textarea name="note" rows="6" cols="70" class="form-control mb-3" style="background-color: lightyellow;" placeholder="{{ lang['no_notes'] }}">{{ admin_note }}</textarea>
 
 			<button type="submit" class="btn btn-outline-success">{{ lang['save_note'] }}</button>
 		</form>

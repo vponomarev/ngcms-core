@@ -11,7 +11,7 @@
 		<div class="col-lg-8">
 
 			<!-- MAIN CONTENT -->
-			<div id="maincontent" class="card mb-4">
+			<div id="maincontent" class="card">
 				<div class="card-body">
 					{quicktags}
 					<!-- SMILES -->

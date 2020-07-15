@@ -11,7 +11,7 @@
 		<div class="col-lg-8">
 
 			<!-- MAIN CONTENT -->
-			<div id="maincontent" class="card mb-4">
+			<div id="maincontent" class="card">
 				<div class="card-body">
 					<div class="form-row mb-3">
 						<label class="col-lg-5 col-form-label">{l_title}</label>

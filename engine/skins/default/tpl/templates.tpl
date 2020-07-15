@@ -25,7 +25,7 @@
 <form id="templates" action="" method="post">
 	<input type="hidden" name="token" value="{{ token }}" />
 
-	<div class="templates-explorer mb-5">
+	<div class="templates-explorer">
 		<div class="row mb-3">
 			<div class="col-sm-5 col-md-3 pr-lg-0">
 				<div class="p-2">

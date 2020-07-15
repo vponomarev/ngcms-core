@@ -11,7 +11,7 @@
 	<input type="hidden" name="stype" value="{stype}" />
 	<input type="hidden" name="action" value="commit" />
 
-	<div class="card mb-5">
+	<div class="card">
 		<h5 class="card-header">{plugin}</h5>
 
 		<div class="card-body">{install_text}</div>

@@ -65,7 +65,7 @@
 <form id="delform" name="imagedelete" action="{php_self}?mod=images" method="post">
 	<input type="hidden" name="area" value="{area}" />
 
-	<div class="card mb-5">
+	<div class="card">
 		<div class="card-header">
 			<div class="d-flex">
 				<div class="custom-control custom-switch py-2 mr-auto">
@@ -85,28 +85,30 @@
 			</div>
 		</div>
 
-		<table id="entries" class="table table-sm mb-0">
-			<thead>
-				<tr>
-					<th colspan="3" width="80">{l_header.insert}</th>
-					[preview]
-					<th>{l_show_preview}</th>
-					[/preview]
-					<th>{l_name}</th>
-					<th colspan="2">{l_header.view}</th>
-					<th colspan="2">{l_size}</th>
-					<th>{l_category}</th>
-					<th>{l_author}</th>
-					<th>{l_action}</th>
-					<th>
-						<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(imagedelete)" />
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				{entries}
-			</tbody>
-		</table>
+		<div class="table-responsive">
+			<table id="entries" class="table table-sm mb-0">
+				<thead>
+					<tr>
+						<th colspan="3" width="80">{l_header.insert}</th>
+						[preview]
+						<th>{l_show_preview}</th>
+						[/preview]
+						<th>{l_name}</th>
+						<th colspan="2">{l_header.view}</th>
+						<th colspan="2">{l_size}</th>
+						<th>{l_category}</th>
+						<th>{l_author}</th>
+						<th>{l_action}</th>
+						<th>
+							<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(imagedelete)" />
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{entries}
+				</tbody>
+			</table>
+		</div>
 
 		<div class="card-footer">
 			<div class="row">

@@ -8,62 +8,64 @@
 	<span id="temp.data" style="position: absolute; display: none;"></span>
 	<span id="DEBUG"></span>
 
-	<div class="card mb-5">
-		<table class="table table-sm">
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>{{ lang['hdr.plugin'] }}</th>
-					<th>{{ lang['hdr.action'] }}</th>
-					<th>{{ lang['hdr.description'] }}</th>
-					<th>URL</th>
-					<th>{{ lang['hdr.flags'] }}</th>
-					<th>&nbsp;</th>
-				</tr>
-			</thead>
-			<tbody id="cfg.body">
+	<div class="card">
+		<div class="table-responsive">
+			<table class="table table-sm">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>{{ lang['hdr.plugin'] }}</th>
+						<th>{{ lang['hdr.action'] }}</th>
+						<th>{{ lang['hdr.description'] }}</th>
+						<th>URL</th>
+						<th>{{ lang['hdr.flags'] }}</th>
+						<th>&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody id="cfg.body">
 
-			</tbody>
+				</tbody>
 
-			<!-- ROW FOR EDITING / ADDING -->
-			<tfoot>
-				<tr id="row.editRow">
-					<td id="row.id">*</td>
-					<td id="row.pluginName">*&nbsp;</td>
-					<td id="row.cmd">&nbsp;</td>
-					<td id="row.description">&nbsp;</td>
-					<td id="row.url">
-						<input id="ed.regex" type="text" class="form-control "/>
-						{{ lang['tbl.available_vars'] }}:<br/>
-						<span id="ed.varlist"></span>
-					</td>
-					<td id="row.flags">
-						<input id="ed.flagPrimary" type="checkbox"/>
-						<input id="ed.flagFailContinue" type="checkbox"/>
-						<input id="ed.flagDisabled" type="checkbox"/>
-					</td>
-					<td>
-						<div class="btn-group btn-group-sm" role="group">
-							<button id="ed.button" type="button" onclick="reSubmitEdit();" class="btn btn-outline-success">Add</button>
-							<button id="ed.bcancel" type="button" onclick="reCancelEdit();" class="btn btn-outline-dark">Cancel</button>
-						</div>
-					</td>
-				</tr>
+				<!-- ROW FOR EDITING / ADDING -->
+				<tfoot>
+					<tr id="row.editRow">
+						<td id="row.id">*</td>
+						<td id="row.pluginName">*&nbsp;</td>
+						<td id="row.cmd">&nbsp;</td>
+						<td id="row.description">&nbsp;</td>
+						<td id="row.url">
+							<input id="ed.regex" type="text" class="form-control "/>
+							{{ lang['tbl.available_vars'] }}:<br/>
+							<span id="ed.varlist"></span>
+						</td>
+						<td id="row.flags">
+							<input id="ed.flagPrimary" type="checkbox"/>
+							<input id="ed.flagFailContinue" type="checkbox"/>
+							<input id="ed.flagDisabled" type="checkbox"/>
+						</td>
+						<td>
+							<div class="btn-group btn-group-sm" role="group">
+								<button id="ed.button" type="button" onclick="reSubmitEdit();" class="btn btn-outline-success">Add</button>
+								<button id="ed.bcancel" type="button" onclick="reCancelEdit();" class="btn btn-outline-dark">Cancel</button>
+							</div>
+						</td>
+					</tr>
 
-				<tr id="row.editRow2">
-					<td colspan="4">&nbsp;</td>
-					<td colspan="2">
-						<!--
-						Переопределение значений переменных:
-						<table width="100%">
-						<tr><td>altname</td><td width="20"><input type="checkbox"></td><td><input type="text"/></td></tr>
-						</table>
-						-->
-					</td>
-					<td colspan="2">&nbsp;</td>
-				</tr>
-			</tfoot>
-		</table>
+					<tr id="row.editRow2">
+						<td colspan="4">&nbsp;</td>
+						<td colspan="2">
+							<!--
+							Переопределение значений переменных:
+							<table width="100%">
+							<tr><td>altname</td><td width="20"><input type="checkbox"></td><td><input type="text"/></td></tr>
+							</table>
+							-->
+						</td>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
 
 		<div class="card-footer">
 			<button type="button" onclick="reServerSubmit();" class="btn btn-outline-success">SAVE</button>

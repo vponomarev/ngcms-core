@@ -280,14 +280,14 @@
 	<div class="row">
 		<div class="col col-lg-8">
 			<div class="row">
-				<div class="col mb-4">
+				<div class="col mt-4">
 					<button type="button" class="btn btn-outline-success" onclick="return preview();">
 						<span class="d-xl-none"><i class="fa fa-eye"></i></span>
 						<span class="d-none d-xl-block">{{ lang.addnews['preview'] }}</span>
 					</button>
 				</div>
 
-				<div class="col mb-4">
+				<div class="col mt-4">
 					<div class="input-group">
 						<select name="approve" class="custom-select">
 							{% if flags['can_publish'] %}

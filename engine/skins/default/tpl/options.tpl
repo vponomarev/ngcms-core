@@ -3,7 +3,7 @@
 </div>
 
 <div class="row">
-	<div class="col-6">
+	<div class="col-md-6">
 		<h3 class="font-weight-light">{{ lang.options['news'] }}</h3>
 		<ul class="list-unstyled">
 			{% if (perm.static) %}
@@ -20,7 +20,8 @@
 			{% endif %}
 		</ul>
 	</div>
-	<div class="col-6">
+
+	<div class="col-md-6">
 		<h3 class="font-weight-light">{{ lang.options['system'] }}</h3>
 		<ul class="list-unstyled">
 			{% if (perm.configuration) %}
@@ -40,7 +41,7 @@
 </div>
 
 <div class="row">
-	<div class="col-6">
+	<div class="col-md-6">
 		<h3 class="font-weight-light">{{ lang.options['userman'] }}</h3>
 		<ul class="list-unstyled">
 			{% if (perm.users) %}
@@ -53,7 +54,7 @@
 			<li><a href="{{ php_self }}?mod=perm">{{ lang.options['uperm'] }}</a></li>
 		</ul>
 	</div>
-	<div class="col-6">
+	<div class="col-md-6">
 		<h3 class="font-weight-light">{{ lang.options['other'] }}</h3>
 		<ul class="list-unstyled">
 			<li><a href="{{ php_self }}?mod=extras">{{ lang.options['extras'] }}</a></li>

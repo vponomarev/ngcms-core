@@ -9,14 +9,16 @@
 <form action="{php_self}?mod=extras" method="get">
 	<input type=hidden name="mod" value="extras" />
 
-	<div class="card mb-5">
+	<div class="card">
 		<h5 class="card-header">{plugin}</h5>
 
-		<table class="table table-sm">
-			<tbody>
-				{entries}
-			</tbody>
-		</table>
+		<div class="table-responsive">
+			<table class="table table-sm">
+				<tbody>
+					{entries}
+				</tbody>
+			</table>
+		</div>
 
 		<div class="card-footer text-center">
 			<button type="submit" class="btn btn-outline-success">{msg}</button>

@@ -66,7 +66,7 @@
 <form id="delform" name="imagedelete" action="{php_self}?mod=files" method="post">
 	<input type="hidden" name="area" value="{area}" />
 
-	<div class="card mb-5">
+	<div class="card">
 		<div class="card-header">
 			<div class="row">
 				<div class="col text-right">
@@ -84,24 +84,26 @@
 			</div>
 		</div>
 
-		<table id="entries" class="table table-sm mb-0">
-			<thead>
-				<tr>
-					<th width="5%">#</th>
-					<th width="25%">{l_name}</th>
-					<th>{l_size}</th>
-					<th width="15%">{l_category}</th>
-					<th width="10%">{l_author}</th>
-					<th>{l_action}</th>
-					<th width="5%">
-						<input type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(delform)"/>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				{entries}
-			</tbody>
-		</table>
+		<div class="table-responsive">
+			<table id="entries" class="table table-sm mb-0">
+				<thead>
+					<tr>
+						<th width="5%">#</th>
+						<th width="25%">{l_name}</th>
+						<th>{l_size}</th>
+						<th width="15%">{l_category}</th>
+						<th width="10%">{l_author}</th>
+						<th>{l_action}</th>
+						<th width="5%">
+							<input type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(delform)"/>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					{entries}
+				</tbody>
+			</table>
+		</div>
 
 		<div class="card-footer">
 			<div class="row">

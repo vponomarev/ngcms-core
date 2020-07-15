@@ -24,7 +24,7 @@
 		<td>
 			<a href="?mod=news&category={{ entry.id }}">{% if (entry.news == 0) %}--{% else %}{{ entry.news }}{% endif %}</a>
 		</td>
-		<td class="text-right">
+		<td class="text-right" nowrap>
 			{% if (flags.canModify) %}
 				<div class="btn-group btn-group-sm" role="group">
 					<button type="button" onclick="categoryModifyRequest('up', {{ entry.id }});" class="btn btn-outline-primary"><i class="fa fa-arrow-up"></i></button>

@@ -18,35 +18,37 @@
 		</div>
 	</div>
 
-	<table class="table table-sm mb-0">
-		<thead>
-			<tr>
-				<th width="5%">#</th>
-				<th>{{ lang['identifier'] }}</th>
-				<th>{{ lang['name'] }}</th>
-				<th>{{ lang['users_in_group'] }}</th>
-				<th>{{ lang['action'] }}</th>
-			</tr>
-		</thead>
-		<tbody id="admCatList">
-			{% for entry in entries %}
-			<tr>
-				<td>{{ entry.id }}</td>
-				<td>{{ entry.identity }}</td>
-				<td>{{ entry.name }}</td>
-				<td>{{ entry.count }}</td>
-				<td class="text-right">
-					<div class="btn-group btn-group-sm" role="group">
-						{% if (entry.flags.canEdit) %}
-						<a href="{{ php_self }}?mod=ugroup&action=editForm&id={{ entry.id }}" class="btn btn-outline-primary"><i class="fa fa-pencil"></i></a>
-						{% endif %}
-						{% if (entry.flags.canDelete) %}
-						<a href="{{ php_self }}?mod=ugroup&action=delete&id={{ entry.id }}&token={{ token }}" class="btn btn-outline-danger"><i class="fa fa-trash"></i></a>
-						{% endif %}
-					</div>
-				</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<div class="table-responsive">
+		<table class="table table-sm mb-0">
+			<thead>
+				<tr >
+					<th>#</th>
+					<th>{{ lang['identifier'] }}</th>
+					<th>{{ lang['name'] }}</th>
+					<th nowrap>{{ lang['users_in_group'] }}</th>
+					<th>{{ lang['action'] }}</th>
+				</tr>
+			</thead>
+			<tbody id="admCatList">
+				{% for entry in entries %}
+				<tr>
+					<td>{{ entry.id }}</td>
+					<td>{{ entry.identity }}</td>
+					<td>{{ entry.name }}</td>
+					<td>{{ entry.count }}</td>
+					<td class="text-right">
+						<div class="btn-group btn-group-sm" role="group">
+							{% if (entry.flags.canEdit) %}
+							<a href="{{ php_self }}?mod=ugroup&action=editForm&id={{ entry.id }}" class="btn btn-outline-primary"><i class="fa fa-pencil"></i></a>
+							{% endif %}
+							{% if (entry.flags.canDelete) %}
+							<a href="{{ php_self }}?mod=ugroup&action=delete&id={{ entry.id }}&token={{ token }}" class="btn btn-outline-danger"><i class="fa fa-trash"></i></a>
+							{% endif %}
+						</div>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 </div>

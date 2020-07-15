@@ -368,7 +368,7 @@
 	<div class="row">
 		<div class="col col-lg-8">
 			<div class="row">
-				<div class="col-md-6 mb-4">
+				<div class="col-md-6 mt-4">
 					<button type="button" class="btn btn-outline-success" onclick="return preview();">
 						<span class="d-xl-none"><i class="fa fa-eye"></i></span>
 						<span class="d-none d-xl-block">{{ lang.addnews['preview'] }}</span>
@@ -382,7 +382,7 @@
 					{% endif %}
 				</div>
 
-				<div class="col-md-6 mb-4">
+				<div class="col-md-6 mt-4">
 					{% if flags.editable %}
 						<div class="input-group">
 							<select name="approve" class="custom-select">
@@ -412,7 +412,7 @@
 
 {% if (pluginIsActive('comments')) %}
 	<!-- COMMENTS -->
-	<div id="additional" class="accordion my-5">
+	<div id="additional" class="accordion mt-5">
 		<div class="card">
 			<div class="card-header" id="headingThree">
 				<a href="#" class="btn-block collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -429,7 +429,7 @@
 					<input type="hidden" name="id" value="{{ id }}" />
 
 					<!-- COMMENTS -->
-					<div id="comments">
+					<div id="comments" class="table-responsive">
 						<table class="table table-sm mb-0">
 							<thead>
 								<tr>

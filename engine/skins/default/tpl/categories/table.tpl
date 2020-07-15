@@ -19,24 +19,26 @@
 			</div>
 		{% endif %}
 
-		<table class="table table-sm mb-0">
-			<thead>
-				<tr>
-					<th></th>
-					<th>ID</th>
-					<th></th>
-					<th>{{ lang['title'] }}</th>
-					<th>{{ lang['alt_name'] }}</th>
-					<th>{{ lang['category.header.menushow'] }}</th>
-					<th>{{ lang['category.header.template'] }}</th>
-					<th>{{ lang['news'] }}</th>
-					<th>{{ lang['action'] }}</th>
-				</tr>
-			</thead>
-			<tbody id="admCatList">
-				{% include localPath(0)~"entries.tpl" %}
-			</tbody>
-		</table>
+		<div class="table-responsive">
+			<table class="table table-sm mb-0">
+				<thead>
+					<tr>
+						<th></th>
+						<th>ID</th>
+						<th></th>
+						<th>{{ lang['title'] }}</th>
+						<th nowrap>{{ lang['alt_name'] }}</th>
+						<th>{{ lang['category.header.menushow'] }}</th>
+						<th>{{ lang['category.header.template'] }}</th>
+						<th>{{ lang['news'] }}</th>
+						<th>{{ lang['action'] }}</th>
+					</tr>
+				</thead>
+				<tbody id="admCatList">
+					{% include localPath(0)~"entries.tpl" %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 </form>
 

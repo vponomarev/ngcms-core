@@ -76,14 +76,14 @@
 	<div class="row">
 		<div class="col col-lg-8">
 			<div class="row">
-				<div class="col-md-6 mb-4">
+				<div class="col-6 mb-4">
 					<button type="button" class="btn btn-outline-danger" onclick="confirmit('{php_self}?mod=editcomments&subaction=deletecomment&newsid={newsid}&comid={comid}&poster={author}', '{l_sure_del}')">
 						<span class="d-xl-none"><i class="fa fa-trash"></i></span>
 						<span class="d-none d-xl-block">{l_delete}</span>
 					</button>
 				</div>
 
-				<div class="col-md-6 mb-4 text-right">
+				<div class="col-6 mb-4 text-right">
 					<div class="form-group">
 						<button type="submit" class="btn btn-outline-success" accesskey="s">
 							<span class="d-xl-none"><i class="fa fa-floppy-o"></i></span>

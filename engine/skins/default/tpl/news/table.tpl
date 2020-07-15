@@ -108,76 +108,78 @@
 			</div>
 		</div>
 
-		<table class="table table-sm mb-0">
-			<thead>
-				<tr>
-					<th width="40" nowrap>{{ lang.editnews['postid_short'] }}</th>
-					<th width="60" nowrap>{{ lang.editnews['date'] }}</th>
-					<th width="48">&nbsp;</th>
-					<th width="45%">{{ lang.editnews['title'] }}</th>
-						{% if (pluginIsActive('comments')) %}
-							{% if flags.comments %}
-								<th width="50"><i class="fa fa-comments-o"></i></th>
-							{% endif %}
-						{% endif %}
-					<th width="50"><i class="fa fa-eye"></i></th>
-					<th width="25%">{{ lang.editnews['category'] }}</th>
-					<th width="10%">{{ lang.editnews['author'] }}</th>
-					<th width="16">{{ lang.editnews['status'] }}</th>
-					<th width="1%">
-						<input class="check" type="checkbox" name="master_box" title="{{ lang.editnews['select_all'] }}" onclick="javascript:check_uncheck_all(editnews)"/>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for entry in entries %}
+		<div class="table-responsive">
+			<table class="table table-sm mb-0">
+				<thead>
 					<tr>
-						<td width="30">{{ entry.newsid }}</td>
-						<td width="60">{{ entry.itemdate }}</td>
-						<td width="48" nowrap>
-							{% if entry.flags.mainpage %}<i class="fa fa-home" title="{{ lang['on_main'] }}"></i>{% endif %}
-							{% if (entry.attach_count > 0) %}<i class="fa fa-paperclip" title="{{ lang['attach.count'] }}: {{ entry.attach_count }}"></i>{% endif %}
-							{% if (entry.images_count > 0) %}<i class="fa fa-images" title="{{ lang['images.count'] }}: {{ entry.images_count }}"></i>{% endif %}
-						</td>
-						<td width="45%">
-							{% if entry.flags.editable %}<a href="{{ php_self }}?mod=news&action=edit&id={{ entry.newsid }}">{% endif %}
-								{{ entry.title }}
-							{% if entry.flags.editable %}</a>{% endif %}
-						</td>
-						{% if (pluginIsActive('comments')) %}
-							{% if entry.flags.comments %}
-								<td>{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
+						<th width="40" nowrap>{{ lang.editnews['postid_short'] }}</th>
+						<th width="60" nowrap>{{ lang.editnews['date'] }}</th>
+						<th width="48">&nbsp;</th>
+						<th width="45%">{{ lang.editnews['title'] }}</th>
+							{% if (pluginIsActive('comments')) %}
+								{% if flags.comments %}
+									<th width="50"><i class="fa fa-comments-o"></i></th>
+								{% endif %}
 							{% endif %}
-						{% endif %}
-						<td>
-							{% if entry.flags.isActive %}
-							<a href="{{ entry.link }}" target="_blank">{% endif %}{% if (entry.views > 0) %}{{ entry.views }}{% else %}-{% endif %}{% if entry.flags.isActive %}</a>
-							{% endif %}
-						</td>
-						<td>{{ entry.allcats }}</td>
-						<td>
-							<a href="{{ php_self }}?mod=users&action=editForm&id={{ entry.userid }}">{{ entry.username }}</a>
-						</td>
-						<td>
-							{% if (entry.state == 1) %}
-								<i class="fa fa-check text-success" title="{{ lang['state.published'] }}"></i>
-							{% elseif (entry.state == 0) %}
-								<i class="fa fa-ban text-warning" title="{{ lang['state.unpiblished'] }}"></i>
-							{% else %}
-								<i class="fa fa-times text-danger" title="{{ lang['state.draft'] }}"></i>
-							{% endif %}
-						</td>
-						<td>
-							<input type="checkbox" name="selected_news[]" value="{{ entry.newsid }}" />
-						</td>
+						<th width="50"><i class="fa fa-eye"></i></th>
+						<th width="25%">{{ lang.editnews['category'] }}</th>
+						<th width="10%">{{ lang.editnews['author'] }}</th>
+						<th width="16">{{ lang.editnews['status'] }}</th>
+						<th width="1%">
+							<input class="check" type="checkbox" name="master_box" title="{{ lang.editnews['select_all'] }}" onclick="javascript:check_uncheck_all(editnews)"/>
+						</th>
 					</tr>
-				{% else %}
-					<tr>
-						<td colspan="6"><p>- {{ lang.editnews['not_found'] }} -</p></td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{% for entry in entries %}
+						<tr>
+							<td width="30">{{ entry.newsid }}</td>
+							<td width="60">{{ entry.itemdate }}</td>
+							<td width="48" nowrap>
+								{% if entry.flags.mainpage %}<i class="fa fa-home" title="{{ lang['on_main'] }}"></i>{% endif %}
+								{% if (entry.attach_count > 0) %}<i class="fa fa-paperclip" title="{{ lang['attach.count'] }}: {{ entry.attach_count }}"></i>{% endif %}
+								{% if (entry.images_count > 0) %}<i class="fa fa-images" title="{{ lang['images.count'] }}: {{ entry.images_count }}"></i>{% endif %}
+							</td>
+							<td nowrap>
+								{% if entry.flags.editable %}<a href="{{ php_self }}?mod=news&action=edit&id={{ entry.newsid }}">{% endif %}
+									{{ entry.title }}
+								{% if entry.flags.editable %}</a>{% endif %}
+							</td>
+							{% if (pluginIsActive('comments')) %}
+								{% if entry.flags.comments %}
+									<td>{% if (entry.comments > 0) %}{{ entry.comments }}{% endif %}</td>
+								{% endif %}
+							{% endif %}
+							<td>
+								{% if entry.flags.isActive %}
+								<a href="{{ entry.link }}" target="_blank">{% endif %}{% if (entry.views > 0) %}{{ entry.views }}{% else %}-{% endif %}{% if entry.flags.isActive %}</a>
+								{% endif %}
+							</td>
+							<td nowrap>{{ entry.allcats }}</td>
+							<td>
+								<a href="{{ php_self }}?mod=users&action=editForm&id={{ entry.userid }}">{{ entry.username }}</a>
+							</td>
+							<td>
+								{% if (entry.state == 1) %}
+									<i class="fa fa-check text-success" title="{{ lang['state.published'] }}"></i>
+								{% elseif (entry.state == 0) %}
+									<i class="fa fa-ban text-warning" title="{{ lang['state.unpiblished'] }}"></i>
+								{% else %}
+									<i class="fa fa-times text-danger" title="{{ lang['state.draft'] }}"></i>
+								{% endif %}
+							</td>
+							<td>
+								<input type="checkbox" name="selected_news[]" value="{{ entry.newsid }}" />
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="6"><p>- {{ lang.editnews['not_found'] }} -</p></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 
 		<div class="card-footer">
 			<div class="row">

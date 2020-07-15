@@ -4,45 +4,48 @@
 
 <div class="card">
 	<div class="card-header">{{ lang.ipban['hdr.list'] }}</div>
-	<table class="table table-sm mb-0">
-		<thead>
-			<tr>
-				<th>{{ lang.ipban['hdr.ip'] }}</th>
-				<th>{{ lang.ipban['hdr.counter'] }}</th>
-				<th>{{ lang.ipban['hdr.type'] }}</th>
-				<th>{{ lang.ipban['hdr.reason'] }}</th>
-				<th>&nbsp;</th>
-			</tr>
-		</thead>
 
-		<tbody>
-		{% for entry in entries %}
-			<tr>
-				<td nowrap>
-					{{ entry.ip }} <a href="http://www.nic.ru/whois/?ip={{ entry.whoisip }}" target="_blank"><i class="fa fa-external-link"></i></a>
-				</td>
-				<td>{{ entry.hitcount }}</td>
-				<td>{{ entry.type }}</td>
-				<td>{{ entry.descr }}</td>
-				<td class="text-right">
-					{% if flags.permModify %}
-						<a href="{{ php_self }}?mod=ipban&action=del&id={{ entry.id }}&token={{ token }}" class="btn btn-sm btn-outline-danger" title="{{ lang.ipban['act.unblock'] }}">
-							<i class="fa fa-trash"></i>
-						</a>
-					{% endif %}
-				</td>
-			</tr>
-		{% else %}
-			<tr>
-				<td colspan="5" class="text-center">---</td>
-			</tr>
-		{% endfor %}
-		</tbody>
-	</table>
+	<div class="table-responsive">
+		<table class="table table-sm mb-0">
+			<thead>
+				<tr>
+					<th>{{ lang.ipban['hdr.ip'] }}</th>
+					<th>{{ lang.ipban['hdr.counter'] }}</th>
+					<th>{{ lang.ipban['hdr.type'] }}</th>
+					<th>{{ lang.ipban['hdr.reason'] }}</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+
+			<tbody>
+			{% for entry in entries %}
+				<tr>
+					<td nowrap>
+						{{ entry.ip }} <a href="http://www.nic.ru/whois/?ip={{ entry.whoisip }}" target="_blank"><i class="fa fa-external-link"></i></a>
+					</td>
+					<td>{{ entry.hitcount }}</td>
+					<td>{{ entry.type }}</td>
+					<td nowrap>{{ entry.descr }}</td>
+					<td class="text-right">
+						{% if flags.permModify %}
+							<a href="{{ php_self }}?mod=ipban&action=del&id={{ entry.id }}&token={{ token }}" class="btn btn-sm btn-outline-danger" title="{{ lang.ipban['act.unblock'] }}">
+								<i class="fa fa-trash"></i>
+							</a>
+						{% endif %}
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5" class="text-center">---</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
 </div>
 
 {% if flags.permModify %}
-<div class="card my-5">
+<div class="card mt-5">
 	<form name="form" method="post" action="{{ php_self }}?mod=ipban">
 		<input type="hidden" name="token" value="{{ token }}" />
 		<input type="hidden" name="action" value="add" />
