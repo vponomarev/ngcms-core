@@ -33,7 +33,7 @@
 		<tbody id="entryList">
 			{% for entry in entries %}
 			<tr class="{{ entry.style }} all" id="plugin_{{ entry.id }}">
-				<td>{{ entry.id }} {{ entry.new }}</td>
+				<td nowrap>{{ entry.id }} {{ entry.new }}</td>
 				<td>{{ entry.url }}</td>
 				<td>{{ entry.type }}</td>
 				<td>{{ entry.version }}</td>
