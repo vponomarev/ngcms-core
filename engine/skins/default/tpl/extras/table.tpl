@@ -40,7 +40,7 @@
 				<td nowrap>{{ entry.readme }} {{ entry.history }}</td>
 				<td>{{ entry.description }}</td>
 				<td>{{ entry.author_url }}</td>
-				<td nowrap="nowrap">{{ entry.link }} {{ entry.install }}</td>
+				<td nowrap>{{ entry.link }} {{ entry.install }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
