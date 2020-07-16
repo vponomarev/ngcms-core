@@ -72,10 +72,10 @@
 					<input id="preview" type="checkbox" class="custom-control-input" onclick="setCookie('img_preview',this.checked?1:0); document.location=document.location;" {box_preview} />
 					<label for="preview" class="custom-control-label">{l_show_preview}</label>
 				</div>
-				<button type="button" class="btn btn-outline-success ml-1" data-toggle="modal" data-target="#uploadnewModal">{l_upload_img}</button>
-				<button type="button" class="btn btn-outline-success ml-1" data-toggle="modal" data-target="#uploadNewByUrlModal">{l_upload_img_url}</button>
+				<button type="button" class="btn btn-outline-success ml-1" data-toggle="modal" data-target="#uploadnewModal" data-backdrop="static">{l_upload_img}</button>
+				<button type="button" class="btn btn-outline-success ml-1" data-toggle="modal" data-target="#uploadNewByUrlModal" data-backdrop="static">{l_upload_img_url}</button>
 				[status]
-				<button type="button" class="btn btn-outline-primary ml-1" data-toggle="modal" data-target="#categoriesModal" title="{l_categories}">
+				<button type="button" class="btn btn-outline-primary ml-1" data-toggle="modal" data-target="#categoriesModal" data-backdrop="static" title="{l_categories}">
 					<i class="fa fa-folder-open-o"></i>
 				</button>
 				[/status]
@@ -363,6 +363,10 @@
 
 		$('#uploadnew_form').on('submit', function(event) {
 			event.preventDefault();
+
+			$('#uploadnewModal').on('hidden.bs.modal', function (e) {
+				document.location = document.location;
+			});
 
 			// Prepare script data
 			$('#fileUploadInput').uploadifive('upload');

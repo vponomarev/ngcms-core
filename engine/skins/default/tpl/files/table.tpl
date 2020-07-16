@@ -70,10 +70,10 @@
 		<div class="card-header">
 			<div class="row">
 				<div class="col text-right">
-					<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#uploadnewModal">{l_upload_file}</button>
-					<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#uploadNewByUrlModal">{l_upload_file_url}</button>
+					<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#uploadnewModal" data-backdrop="static">{l_upload_file}</button>
+					<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#uploadNewByUrlModal" data-backdrop="static">{l_upload_file_url}</button>
 					[status]
-					<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#categoriesModal" title="{l_categories}">
+					<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#categoriesModal" data-backdrop="static" title="{l_categories}">
 						<i class="fa fa-folder-open-o"></i>
 					</button>
 					[/status]
@@ -355,6 +355,10 @@
 
 		$('#uploadnew_form').on('submit', function(event) {
 			event.preventDefault();
+
+			$('#uploadnewModal').on('hidden.bs.modal', function (e) {
+				document.location = document.location;
+			});
 
 			// Prepare script data
 			$('#fileUploadInput').uploadifive('upload');
