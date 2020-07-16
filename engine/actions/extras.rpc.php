@@ -45,7 +45,7 @@ function admExtrasGetConfig($params)
         return array('status' => 0, 'errorCode' => 5, 'errorText' => 'Wrong security code');
     }
 
-    plugins_load_config();
+    pluginsLoadConfig();
 
     //$confLine = arrayCharsetConvert(0, $PLUGINS['config']);
     $confLine = json_encode($PLUGINS['config']);

@@ -858,13 +858,6 @@ function pluginsLoadConfig()
     return false;
 }
 
-// OLD
-function plugins_load_config()
-{
-
-    return pluginsLoadConfig();
-}
-
 //
 // Load 'version' file from plugin directory
 //
@@ -872,7 +865,7 @@ function plugins_load_version_file($filename)
 {
 
     // config variables & function init
-    $config_params = array('id', 'name', 'version', 'acts', 'file', 'config', 'install', 'deinstall', 'management', 'type', 'description', 'author', 'author_uri', 'permanent', 'library', 'actions');
+    $config_params = array('id', 'name', 'version', 'acts', 'file', 'config', 'install', 'deinstall', 'management', 'type', 'description', 'author', 'author_uri', 'permanent', 'library', 'actions', 'minengineversion');
     $required_params = array('id', 'name', 'version', 'type');
     $list_params = array('library', 'actions');
     $ver = array();

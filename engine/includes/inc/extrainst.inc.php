@@ -129,7 +129,7 @@ function generate_config_page($module, $params, $values = array())
 function commit_plugin_config_changes($module, $params)
 {
     // Load cofig
-    plugins_load_config();
+    pluginsLoadConfig();
 
     $cfgUpdate = array();
 
@@ -211,7 +211,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
     global $lang, $tpl, $mysql, $main_admin, $PHP_SELF;
 
     // Load config
-    plugins_load_config();
+    pluginsLoadConfig();
 
     $publish = array();
     if ($mode == 'install') {

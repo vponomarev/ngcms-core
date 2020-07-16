@@ -167,7 +167,7 @@ if ($enable || $disable || $manage) {
 }
 
 if (isset($_REQUEST['manageConfig']) && $_REQUEST['manageConfig']) {
-    plugins_load_config();
+    pluginsLoadConfig();
 
     if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'commit')) {
         print "TRY COMMIT";
