@@ -2,6 +2,10 @@
 
 <div id="tags" class="btn-toolbar mb-3" role="toolbar">
 	<div class="btn-group btn-group-sm mr-2">
+		<button type="submit" class="btn btn-outline-dark"><i class="fa fa-floppy-o"></i></button>
+	</div>
+
+	<div class="btn-group btn-group-sm mr-2">
 		<button type="button" class="btn btn-outline-dark" onclick="insertext('[p]','[/p]', {area})"><i class="fa fa-paragraph"></i></button>
 	</div>
 
