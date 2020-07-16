@@ -168,11 +168,11 @@ function news_showone($newsID, $alt_name, $callingParams = array())
             $callingParams['linkedFiles']['ids']  [] = $v['id'];
             $callingParams['linkedFiles']['data'] [] = $v;
             $tvars['vars']['_files'] [] = array(
-                'plugin'      => $v['plugin'],
-                'pidentity'   => $v['pidentity'],
-                'url'         => ($v['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $v['folder'] . '/' . $v['name'],
-                'name'        => $v['name'],
-                'origName'    => secure_html($v['orig_name']),
+                'plugin' => $v['plugin'],
+                'pidentity' => $v['pidentity'],
+                'url' => ($v['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $v['folder'] . '/' . $v['name'],
+                'name' => $v['name'],
+                'origName' => secure_html($v['orig_name']),
                 'description' => secure_html($v['description']),
             );
         }
@@ -185,18 +185,18 @@ function news_showone($newsID, $alt_name, $callingParams = array())
             $callingParams['linkedImages']['ids']  [] = $k;
             $callingParams['linkedImages']['data'] [] = $v;
             $tvars['vars']['_images'] [] = array(
-                'plugin'      => $v['plugin'],
-                'pidentity'   => $v['pidentity'],
-                'url'         => ($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/' . $v['name'],
-                'purl'        => $v['preview'] ? (($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/thumb/' . $v['name']) : null,
-                'width'       => $v['width'],
-                'height'      => $v['height'],
-                'pwidth'      => $v['p_width'],
-                'pheight'     => $v['p_height'],
-                'name'        => $v['name'],
-                'origName'    => secure_html($v['orig_name']),
+                'plugin' => $v['plugin'],
+                'pidentity' => $v['pidentity'],
+                'url' => ($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/' . $v['name'],
+                'purl' => $v['preview'] ? (($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/thumb/' . $v['name']) : null,
+                'width' => $v['width'],
+                'height' => $v['height'],
+                'pwidth' => $v['p_width'],
+                'pheight' => $v['p_height'],
+                'name' => $v['name'],
+                'origName' => secure_html($v['orig_name']),
                 'description' => secure_html($v['description']),
-                'flags'       => array(
+                'flags' => array(
                     'hasPreview' => $v['preview'],
                 ),
             );
@@ -586,7 +586,7 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
         // $query['result'] = "SELECT * FROM " . prefix . "_news WHERE " . $query['filter'] . $query['orderby'];
 
         // Optimize query
-        $query['result'] = "SELECT * FROM " . prefix . "_news N JOIN (SELECT ID FROM ".prefix."_news WHERE " . $query['filter'] . $query['orderby'].") as NT on NT.id=N.id";
+        $query['result'] = "SELECT * FROM " . prefix . "_news N JOIN (SELECT ID FROM " . prefix . "_news WHERE " . $query['filter'] . $query['orderby'] . ") as NT on NT.id=N.id";
     }
 
     $selectResult = $mysql->select($query['result'], 1);
@@ -612,20 +612,20 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
     // = ids		- array with IDs of fetched news
 
     $callingParams['query'] = array(
-        'count'      => count($selectResult),
-        'result'     => $selectResult,
+        'count' => count($selectResult),
+        'result' => $selectResult,
         'totalCount' => $newsCount,
         'pagesCount' => $pages_count,
     );
 
     // Reference for LINKED images and files
     $callingParams['linkedImages'] = array(
-        'ids'  => array(),
+        'ids' => array(),
         'data' => array(),
     );
 
     $callingParams['linkedFiles'] = array(
-        'ids'  => array(),
+        'ids' => array(),
         'data' => array(),
     );
 
@@ -709,12 +709,12 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
                     $callingParams['linkedFiles']['ids']  [] = $v['id'];
                     $callingParams['linkedFiles']['data'] [] = $v;
                     $tvars['vars']['_files'] [] = array(
-                    'plugin'      => $v['plugin'],
-                    'pidentity'   => $v['pidentity'],
-                    'url'         => ($v['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $v['folder'] . '/' . $v['name'],
-                    'name'        => $v['name'],
-                    'origName'    => secure_html($v['orig_name']),
-                    'description' => secure_html($v['description']),
+                        'plugin' => $v['plugin'],
+                        'pidentity' => $v['pidentity'],
+                        'url' => ($v['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $v['folder'] . '/' . $v['name'],
+                        'name' => $v['name'],
+                        'origName' => secure_html($v['orig_name']),
+                        'description' => secure_html($v['description']),
                     );
                 }
             }
@@ -729,20 +729,20 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
                     $callingParams['linkedImages']['ids']  [] = $v['id'];
                     $callingParams['linkedImages']['data'] [] = $v;
                     $tvars['vars']['_images'] [] = array(
-                    'plugin'      => $v['plugin'],
-                    'pidentity'   => $v['pidentity'],
-                    'url'         => ($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/' . $v['name'],
-                    'purl'        => $v['preview'] ? (($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/thumb/' . $v['name']) : null,
-                    'width'       => $v['width'],
-                    'height'      => $v['height'],
-                    'pwidth'      => $v['p_width'],
-                    'pheight'     => $v['p_height'],
-                    'name'        => $v['name'],
-                    'origName'    => secure_html($v['orig_name']),
-                    'description' => secure_html($v['description']),
-                    'flags'       => array(
-                        'hasPreview' => $v['preview'],
-                    ),
+                        'plugin' => $v['plugin'],
+                        'pidentity' => $v['pidentity'],
+                        'url' => ($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/' . $v['name'],
+                        'purl' => $v['preview'] ? (($v['storage'] ? $config['attach_url'] : $config['images_url']) . '/' . $v['folder'] . '/thumb/' . $v['name']) : null,
+                        'width' => $v['width'],
+                        'height' => $v['height'],
+                        'pwidth' => $v['p_width'],
+                        'pheight' => $v['p_height'],
+                        'name' => $v['name'],
+                        'origName' => secure_html($v['orig_name']),
+                        'description' => secure_html($v['description']),
+                        'flags' => array(
+                            'hasPreview' => $v['preview'],
+                        ),
                     );
                 }
             }
@@ -933,11 +933,11 @@ function news_showlist($filterConditions = array(), $paginationParams = array(),
     if ((isset($callingParams['extendedReturn']) && $callingParams['extendedReturn'])) {
         $returnData = array(
             'count' => $newsCount,
-            'data'  => (isset($callingParams['extendedReturnData']) && $callingParams['extendedReturnData']) ? $outputList : $output,
+            'data' => (isset($callingParams['extendedReturnData']) && $callingParams['extendedReturnData']) ? $outputList : $output,
             'pages' => array(
                 'current' => $cstart,
-                'total'   => $pages_count,
-                'output'  => $paginationOutput,
+                'total' => $pages_count,
+                'output' => $paginationOutput,
             )
         );
 

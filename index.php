@@ -30,13 +30,13 @@ $SYSTEM_FLAGS['info']['title']['header'] = home_title;
 // Initialize main template array
 $template = array(
     'vars' => array(
-        'what'       => engineName,
-        'version'    => engineVersion,
-        'home'       => home,
-        'titles'     => home_title,
+        'what' => engineName,
+        'version' => engineVersion,
+        'home' => home,
+        'titles' => home_title,
         'home_title' => home_title,
-        'mainblock'  => '',
-        'htmlvars'   => '',
+        'mainblock' => '',
+        'htmlvars' => '',
     ),
 );
 

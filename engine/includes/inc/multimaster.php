@@ -9,7 +9,6 @@
 
 function multi_multisites()
 {
-
     global $config, $siteDomainName, $multiDomainName, $multiconfig, $multimaster;
 
     $siteDomainName = '';
@@ -76,7 +75,6 @@ function multi_multisites()
 
 function multi_multidomains()
 {
-
     global $config, $siteDomainName, $multiDomainName, $multimaster, $multiconfig, $multimaster, $SYSTEM_FLAGS;
 
     $newdomain = '';

@@ -69,14 +69,14 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
 //
 if (!is_array($userROW)) {
     $tVars = array(
-        'php_self'      => $PHP_SELF,
-        'redirect'      => $REQUEST_URI,
-        'year'          => date("Y"),
-        'home_title'    => home_title,
-        'error'             => ($SYSTEM_FLAGS['auth_fail']) ? $lang['msge_login'] : '',
-        'is_error'      => ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
+        'php_self' => $PHP_SELF,
+        'redirect' => $REQUEST_URI,
+        'year' => date("Y"),
+        'home_title' => home_title,
+        'error' => ($SYSTEM_FLAGS['auth_fail']) ? $lang['msge_login'] : '',
+        'is_error' => ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
     );
-    
+
     $xt = $twig->loadTemplate(tpl_actions . 'login.tpl');
     echo $xt->render($tVars);
     exit;
@@ -103,29 +103,29 @@ load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = array(
-    'perm'          => '1',
-    'ugroup'        => 1,
+    'perm' => '1',
+    'ugroup' => 1,
     'configuration' => 99,
-    'cron'          => 99,
-    'dbo'           => 99,
-    'extras'        => '1',
-    'extra-config'  => '1',
-    'statistics'    => '1',
-    'templates'     => 99,
-    'users'         => 99,
-    'rewrite'       => '1',
-    'static'        => '1',
+    'cron' => 99,
+    'dbo' => 99,
+    'extras' => '1',
+    'extra-config' => '1',
+    'statistics' => '1',
+    'templates' => 99,
+    'users' => 99,
+    'rewrite' => '1',
+    'static' => '1',
 
     'editcomments' => '2',
-    'ipban'        => 99,
-    'options'      => '2',
+    'ipban' => 99,
+    'options' => '2',
 
     'categories' => 99,
-    'news'       => 99,
+    'news' => 99,
 
-    'files'   => '3',
-    'images'  => '3',
-    'pm'      => '3',
+    'files' => '3',
+    'images' => '3',
+    'pm' => '3',
     'preview' => '3',
 );
 
@@ -173,21 +173,21 @@ $.timepicker.setDefaults($.timepicker.regional['" . $lang['langcode'] . "']);
 $datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : "";
 
 $tVars = array(
-    'php_self'              => $PHP_SELF,
-    'home_title'            => $config['home_title'],
-    'newpm'                     => $newpm,
-    'unapproved'            => $unapproved,
-    'main_admin'            => $main_admin,
-    'notify'                => $notify,
-    'datetimepicker_lang'   => $datetimepicker_lang,
-    'h_active_options'      => (in_array($mod, array('options', 'categories', 'static'))) ? ' class="active"' : '',
-    'h_active_extras'       => (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
-    'h_active_addnews'      => (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
-    'h_active_editnews'         => (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
-    'h_active_images'       => ($mod == 'images') ? ' class="active"' : '',
-    'h_active_files'        => ($mod == 'files') ? ' class="active"' : '',
-    'h_active_pm'           => ($mod == 'pm') ? ' class="active"' : '',
-    'year'                  => date("Y"),
+    'php_self' => $PHP_SELF,
+    'home_title' => $config['home_title'],
+    'newpm' => $newpm,
+    'unapproved' => $unapproved,
+    'main_admin' => $main_admin,
+    'notify' => $notify,
+    'datetimepicker_lang' => $datetimepicker_lang,
+    'h_active_options' => (in_array($mod, array('options', 'categories', 'static'))) ? ' class="active"' : '',
+    'h_active_extras' => (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
+    'h_active_addnews' => (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
+    'h_active_editnews' => (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
+    'h_active_images' => ($mod == 'images') ? ' class="active"' : '',
+    'h_active_files' => ($mod == 'files') ? ' class="active"' : '',
+    'h_active_pm' => ($mod == 'pm') ? ' class="active"' : '',
+    'year' => date("Y"),
 );
 
 if (!$mod || ($mod && $mod != "preview")) {

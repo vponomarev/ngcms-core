@@ -339,7 +339,7 @@ function dbBackup($fname, $gzmode, $tlist = '')
     if (!is_array($tlist)) {
         $tlist = array();
 
-        foreach ($db->query("show tables like :profile", array('profile' => prefix.'_%')) as $tn) {
+        foreach ($db->query("show tables like :profile", array('profile' => prefix . '_%')) as $tn) {
             $tlist [] = array_pop(array_values($tn));
         }
     }
@@ -368,11 +368,11 @@ function dbBackup($fname, $gzmode, $tlist = '')
             } else {
                 fwrite($fh, $out);
             }
-            
+
             $start = 0;
             $rowNo = 0;
             do {
-                $cursor = $db->createCursor("select * from `" . $tname . "` limit ".$start.", 10000");
+                $cursor = $db->createCursor("select * from `" . $tname . "` limit " . $start . ", 10000");
                 $qRowCount = 0;
                 $start += 10000;
 
@@ -393,7 +393,7 @@ function dbBackup($fname, $gzmode, $tlist = '')
                     }
                 }
             } while ($qRowCount > 0);
-            
+
             $out = "# Total records: $rowNo\n";
 
             if ($gzmode) {

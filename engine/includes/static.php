@@ -72,8 +72,8 @@ function showStaticPage($params)
 
     $template['vars']['titles'] .= " : " . $row['title'];
     $tvars['vars'] = array(
-        'title'    => $row['title'],
-        'content'  => $content,
+        'title' => $row['title'],
+        'content' => $content,
         'postdate' => ($row['postdate'] > 0) ? strftime('%d.%m.%Y %H:%M', $row['postdate']) : '',
     );
 

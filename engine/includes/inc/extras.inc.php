@@ -1398,9 +1398,9 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 
         // Report current handler config
         $CurrentHandler = array(
-            'pluginName'    => $pluginName,
-            'handlerName'   => $handlerName,
-            'params'        => $params,
+            'pluginName' => $pluginName,
+            'handlerName' => $handlerName,
+            'params' => $params,
             'handlerParams' => $handlerParams,
         );
         $req = call_user_func($pcall['func'], $params);
@@ -1536,6 +1536,21 @@ class cronManager
     }
 
     // Save updated config
+
+    function getConfig()
+    {
+
+        return $this->config;
+    }
+
+    function setConfig($config)
+    {
+
+        $this->config = $config;
+
+        return $this->saveConfig();
+    }
+
     function saveConfig()
     {
 
@@ -1555,6 +1570,33 @@ class cronManager
 
         return false;
     }
+
+    function registerTask($plugin, $handler, $min = '*', $hour = '*', $day = '*', $month = '*', $dow = '*')
+    {
+
+        // Проверяем параметры
+        if ((!$this->checkList($min, 0, 59)) || (!$this->checkList($hour, 0, 23)) ||
+            (!$this->checkList($day, 0, 31)) || (!$this->checkList($month, 0, 12)) ||
+            (!$this->checkList($dow, 0, 6)) || (!$plugin)
+        ) {
+            // Неверные значения параметров
+            return 0;
+        }
+
+        $this->config [] = array(
+            'min' => $min,
+            'hour' => $hour,
+            'day' => $day,
+            'month' => $month,
+            'dow' => $dow,
+            'plugin' => $plugin,
+            'handler' => $handler,
+        );
+
+        return $this->saveConfig();
+    }
+
+    // Register new CRON task
 
     function checkList($value, $min, $max)
     {
@@ -1576,47 +1618,8 @@ class cronManager
         return true;
     }
 
-    function getConfig()
-    {
-
-        return $this->config;
-    }
-
-    function setConfig($config)
-    {
-
-        $this->config = $config;
-
-        return $this->saveConfig();
-    }
-
-    // Register new CRON task
-    function registerTask($plugin, $handler, $min = '*', $hour = '*', $day = '*', $month = '*', $dow = '*')
-    {
-
-        // Проверяем параметры
-        if ((!$this->checkList($min, 0, 59)) || (!$this->checkList($hour, 0, 23)) ||
-            (!$this->checkList($day, 0, 31)) || (!$this->checkList($month, 0, 12)) ||
-            (!$this->checkList($dow, 0, 6)) || (!$plugin)
-        ) {
-            // Неверные значения параметров
-            return 0;
-        }
-
-        $this->config [] = array(
-            'min'     => $min,
-            'hour'    => $hour,
-            'day'     => $day,
-            'month'   => $month,
-            'dow'     => $dow,
-            'plugin'  => $plugin,
-            'handler' => $handler,
-        );
-
-        return $this->saveConfig();
-    }
-
     // Deregister CRON task(s)
+
     function unregisterTask($plugin, $handler = '', $min = '', $hour = '', $day = '', $month = '', $DOW = '')
     {
 

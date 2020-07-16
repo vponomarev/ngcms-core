@@ -223,7 +223,7 @@ function InsertSmilies($insert_location, $break_location = false, $area = false)
             $smile = trim($smile);
 
             $tvars['vars'] = array(
-                'area'  => $area ? $area : "''",
+                'area' => $area ? $area : "''",
                 'smile' => $smile
             );
 
@@ -260,7 +260,7 @@ function QuickTags($area = false, $template = false)
 
     $tvars['vars'] = array(
         'php_self' => $PHP_SELF,
-        'area'     => $area ? $area : "''"
+        'area' => $area ? $area : "''"
     );
 
     if (!in_array($template, array('pmmes', 'editcom', 'news', 'static'))) {
@@ -283,7 +283,7 @@ function BBCodes($area = false)
     if ($config['use_bbcodes'] == "1") {
         $tvars['vars'] = array(
             'php_self' => $PHP_SELF,
-            'area'     => $area
+            'area' => $area
         );
 
         $tpl->template('bbcodes', tpl_site);
@@ -580,7 +580,7 @@ function msgSticker($msg, $type = '', $disp = -1)
         $lines [] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, "UTF-8");
     }
 
-    $notify .= $twig->render(tpl_actions.'sticker.tpl', [
+    $notify .= $twig->render(tpl_actions . 'sticker.tpl', [
         'message' => join("<br/>", $lines),
         'type' => $type,
 
@@ -920,17 +920,17 @@ function ListDirs($folder, $category = false, $alllink = true, $elementID = '')
     if (($dir = @opendir($wdir)) === false) {
         msg(
             array(
-            'type' => 'error',
-            'text' => str_replace(
-                '{dirname}',
-                $wdir,
-                $lang['error.nodir']
-            ),
-            'info' => str_replace(
-                '{dirname}',
-                $wdir,
-                $lang['error.nodir#desc']
-            )
+                'type' => 'error',
+                'text' => str_replace(
+                    '{dirname}',
+                    $wdir,
+                    $lang['error.nodir']
+                ),
+                'info' => str_replace(
+                    '{dirname}',
+                    $wdir,
+                    $lang['error.nodir#desc']
+                )
             ),
             1
         );
@@ -1261,6 +1261,7 @@ function utf2cp1251($text)
 
     return convert($text);
 }
+
 //
 
 function GetCategories($catid, $plain = false, $firstOnly = false)
@@ -1297,28 +1298,28 @@ function makeCategoryInfo($ctext)
             $row = $catz[$catmap[$v]];
             $url = generateLink('news', 'by.category', array('category' => $row['alt'], 'catid' => $row['id']));
             $record = array(
-                'id'    => $row['id'],
+                'id' => $row['id'],
                 'level' => $row['poslevel'],
-                'alt'   => $row['alt'],
-                'name'  => $row['name'],
-                'info'  => $row['info'],
-                'url'   => $url,
-                'text'  => '<a href="' . $url . '">' . $row['name'] . '</a>',
+                'alt' => $row['alt'],
+                'name' => $row['name'],
+                'info' => $row['info'],
+                'url' => $url,
+                'text' => '<a href="' . $url . '">' . $row['name'] . '</a>',
             );
             if ($row['icon_id'] && $row['icon_folder']) {
                 $record['icon'] = array(
-                    'url'        => $config['attach_url'] . '/' . $row['icon_folder'] . '/' . $row['icon_name'],
-                    'purl'       => $row['icon_preview'] ? ($config['attach_url'] . '/' . $row['icon_folder'] . '/thumb/' . $row['icon_name']) : '',
-                    'width'      => $row['icon_width'],
-                    'height'     => $row['icon_height'],
-                    'pwidth'     => $row['icon_pwidth'],
-                    'pheight'    => $row['icon_pheight'],
+                    'url' => $config['attach_url'] . '/' . $row['icon_folder'] . '/' . $row['icon_name'],
+                    'purl' => $row['icon_preview'] ? ($config['attach_url'] . '/' . $row['icon_folder'] . '/thumb/' . $row['icon_name']) : '',
+                    'width' => $row['icon_width'],
+                    'height' => $row['icon_height'],
+                    'pwidth' => $row['icon_pwidth'],
+                    'pheight' => $row['icon_pheight'],
                     'isExtended' => true,
                     'hasPreview' => $row['icon_preview'] ? true : false,
                 );
             } elseif ($row['icon']) {
                 $record['icon'] = array(
-                    'url'        => $row['icon'],
+                    'url' => $row['icon'],
                     'isExtended' => false,
                     'hasPreview' => false,
                 );
@@ -1363,11 +1364,11 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array())
         $tIDs = array();
 
         $treeSelector = array(
-            'defined'     => false,
-            'id'          => 0,
+            'defined' => false,
+            'id' => 0,
             'skipDefined' => false,
-            'started'     => false,
-            'level'       => 0,
+            'started' => false,
+            'level' => 0,
         );
 
         if (!is_null($treeMasterCategory) && preg_match('#^(\:){0,1}(\d+)$#', $treeMasterCategory, $m)) {
@@ -1402,17 +1403,17 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array())
             }
 
             $tEntry = array(
-                'id'      => $v['id'],
-                'cat'     => $v['name'],
-                'link'    => ($v['alt_url'] == '') ? generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])) : $v['alt_url'],
-                'mark'    => isset($markers['mark.level.' . $v['poslevel']]) ? $markers['mark.level.' . $v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
-                'level'   => $v['poslevel'],
-                'info'    => $v['info'],
+                'id' => $v['id'],
+                'cat' => $v['name'],
+                'link' => ($v['alt_url'] == '') ? generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])) : $v['alt_url'],
+                'mark' => isset($markers['mark.level.' . $v['poslevel']]) ? $markers['mark.level.' . $v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
+                'level' => $v['poslevel'],
+                'info' => $v['info'],
                 'counter' => $v['posts'],
-                'icon'    => $v['icon'],
+                'icon' => $v['icon'],
 
                 'flags' => array(
-                    'active'  => (isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id'])) ? true : false,
+                    'active' => (isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id'])) ? true : false,
                     'counter' => ($config['category_counters'] && $v['posts']) ? true : false,
                 )
             );
@@ -1450,13 +1451,13 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array())
 
         // Prepare conversion maps
         $conversionConfig = array(
-            '[entries]'        => '{% for entry in entries %}',
-            '[/entries]'       => '{% endfor %}',
-            '[flags.active]'   => '{% if (entry.flags.active) %}',
-            '[/flags.active]'  => '{% endif %}',
-            '[!flags.active]'  => '{% if (not entry.flags.active) %}',
+            '[entries]' => '{% for entry in entries %}',
+            '[/entries]' => '{% endfor %}',
+            '[flags.active]' => '{% if (entry.flags.active) %}',
+            '[/flags.active]' => '{% endif %}',
+            '[!flags.active]' => '{% if (not entry.flags.active) %}',
             '[/!flags.active]' => '{% endif %}',
-            '[flags.counter]'  => '{% if (entry.flags.counter) %}',
+            '[flags.counter]' => '{% if (entry.flags.counter) %}',
             '[/flags.counter]' => '{% endif %}',
         );
 
@@ -1491,12 +1492,12 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = array())
 
         $tvars['vars'] = array(
             'if_active' => (isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id'])) ? $markers['class.active'] : $markers['class.inactive'],
-            'link'      => ($v['alt_url'] == '') ? generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])) : $v['alt_url'],
-            'mark'      => isset($markers['mark.level.' . $v['poslevel']]) ? $markers['mark.level.' . $v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
-            'level'     => $v['poslevel'],
-            'cat'       => $v['name'],
-            'counter'   => ($config['category_counters'] && $v['posts']) ? ('[' . $v['posts'] . ']') : '',
-            'icon'      => $v['icon'],
+            'link' => ($v['alt_url'] == '') ? generateLink('news', 'by.category', array('category' => $v['alt'], 'catid' => $v['id'])) : $v['alt_url'],
+            'mark' => isset($markers['mark.level.' . $v['poslevel']]) ? $markers['mark.level.' . $v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
+            'level' => $v['poslevel'],
+            'cat' => $v['name'],
+            'counter' => ($config['category_counters'] && $v['posts']) ? ('[' . $v['posts'] . ']') : '',
+            'icon' => $v['icon'],
         );
         $tvars['regx']['[\[icon\](.*)\[/icon\]]'] = trim($v['icon']) ? '$1' : '';
         switch (intval(mb_substr($v['flags'], 1, 1))) {
@@ -1620,8 +1621,8 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
     global $config, $parse, $lang, $catz, $catmap, $CurrentHandler, $currentCategory, $TemplateCache, $mysql, $PHP_SELF;
 
     $tvars = array(
-        'vars'  => array(
-            'news'       => array('id' => $row['id']),
+        'vars' => array(
+            'news' => array('id' => $row['id']),
             'pagination' => '',
 
         ),
@@ -1851,7 +1852,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 
     // [TWIG] news.url
     $tvars['vars']['news']['url'] = array(
-        'full'  => $nlink,
+        'full' => $nlink,
         'print' => newsGenerateLink($row, true, $page),
     );
 
@@ -2538,18 +2539,18 @@ function ngSYSLOG($identity, $action, $user, $status)
     }
 
     $sVars = array(
-        'dt'       => 'now()',
-        'ip'       => db_squote($ip),
-        'plugin'   => db_squote($identity['plugin']),
-        'item'     => db_squote($identity['item']),
-        'ds'       => intval($identity['ds']),
-        'ds_id'    => intval($identity['ds_id']),
-        'action'   => db_squote($action['action']),
-        'alist'    => db_squote(serialize($action['list'])),
-        'userid'   => is_array($user) ? intval($user['id']) : (($user === null) ? intval($userROW['id']) : 0),
+        'dt' => 'now()',
+        'ip' => db_squote($ip),
+        'plugin' => db_squote($identity['plugin']),
+        'item' => db_squote($identity['item']),
+        'ds' => intval($identity['ds']),
+        'ds_id' => intval($identity['ds_id']),
+        'action' => db_squote($action['action']),
+        'alist' => db_squote(serialize($action['list'])),
+        'userid' => is_array($user) ? intval($user['id']) : (($user === null) ? intval($userROW['id']) : 0),
         'username' => is_array($user) ? db_squote($user['name']) : (($user === null) ? db_squote($userROW['name']) : db_squote($user)),
-        'status'   => intval($status[0]),
-        'stext'    => db_squote($status[1]),
+        'status' => intval($status[0]),
+        'stext' => db_squote($status[1]),
     );
     //print "<pre>".var_export($sVars, true)."</pre>";
     $mysql->query("insert into " . prefix . "_syslog (" . join(",", array_keys($sVars)) . ") values (" . join(",", array_values($sVars)) . ")");
@@ -2563,41 +2564,41 @@ function ngExceptionHandler($exception)
 {
 
     ?>
-	<html>
-	<head>
-		<title>NGCMS Runtime exception: <?php echo get_class($exception); ?></title>
-		<style>
-			body {
-				font: 1em Georgia, "Times New Roman", serif;
-			}
+    <html>
+    <head>
+        <title>NGCMS Runtime exception: <?php echo get_class($exception); ?></title>
+        <style>
+            body {
+                font: 1em Georgia, "Times New Roman", serif;
+            }
 
-			.dmsg {
-				border: 1px #EEEEEE solid;
-				padding: 10px;
-				background-color: yellow;
-			}
+            .dmsg {
+                border: 1px #EEEEEE solid;
+                padding: 10px;
+                background-color: yellow;
+            }
 
-			.dtrace TBODY TD {
-				padding: 3px;
-				/*border: 1px #EEEEEE solid;*/
-				background-color: #EEEEEE;
-			}
+            .dtrace TBODY TD {
+                padding: 3px;
+                /*border: 1px #EEEEEE solid;*/
+                background-color: #EEEEEE;
+            }
 
-			.dtrace THEAD TD {
-				padding: 3px;
-				background-color: #EEEEEE;
-				font-weight: bold;
-			}
+            .dtrace THEAD TD {
+                padding: 3px;
+                background-color: #EEEEEE;
+                font-weight: bold;
+            }
 
-		</style>
-	</head>
-	<body>
-	<?php
+        </style>
+    </head>
+    <body>
+    <?php
     print "<h1>NGCMS Runtime exception: " . get_class($exception) . "</h1>\n";
     print "<div class='dmsg'>" . $exception->getMessage() . "</div><br/>";
     print "<h2>Stack trace</h2>";
     print "<table class='dtrace'><thead><tr><td>#</td><td>Line #</td><td><i>Class</i>/Function</td><td>File name</td></tr></thead><tbody>";
-    print "<tr><td>X</td><td>".$exception->getLine()."</td><td>".$exception->getCode()."</td><td>".$exception->getFile()."</td></tr>";
+    print "<tr><td>X</td><td>" . $exception->getLine() . "</td><td>" . $exception->getCode() . "</td><td>" . $exception->getFile() . "</td></tr>";
     foreach ($exception->getTrace() as $k => $v) {
         print "<tr><td>" . $k . "</td><td>" . $v['line'] . "</td><td>" . (isset($v['class']) ? ('<i>' . $v['class'] . '</i>') : $v['function']) . "</td><td>" . $v['file'] . "</td></tr>\n";
     }
@@ -2648,33 +2649,33 @@ function ngShutdownHandler()
     }
     ?>
 <html>
-	<head>
-		<title>NGCMS Runtime error: <?php echo $lastError['message']; ?></title>
-		<style type="text/css">
-			body {
-				font: 1em Georgia, "Times New Roman", serif;
-			}
+    <head>
+        <title>NGCMS Runtime error: <?php echo $lastError['message']; ?></title>
+        <style type="text/css">
+            body {
+                font: 1em Georgia, "Times New Roman", serif;
+            }
 
-			.dmsg {
-				border: 1px #EEEEEE solid;
-				padding: 10px;
-				background-color: yellow;
-			}
+            .dmsg {
+                border: 1px #EEEEEE solid;
+                padding: 10px;
+                background-color: yellow;
+            }
 
-			.dtrace TBODY TD {
-				padding: 3px;
-				/*border: 1px #EEEEEE solid;*/
-				background-color: #EEEEEE;
-			}
+            .dtrace TBODY TD {
+                padding: 3px;
+                /*border: 1px #EEEEEE solid;*/
+                background-color: #EEEEEE;
+            }
 
-			.dtrace THEAD TD {
-				padding: 3px;
-				background-color: #EEEEEE;
-				font-weight: bold;
-			}
+            .dtrace THEAD TD {
+                padding: 3px;
+                background-color: #EEEEEE;
+                font-weight: bold;
+            }
 
-		</style>
-	</head>
+        </style>
+    </head>
 <body>
 <?php
 print "<div id=\"ngErrorInformer\">";
@@ -2685,35 +2686,35 @@ print "<table class='dtrace'><thead><td>Line #</td><td>File name</td></tr></thea
 print "<tr><td>" . $lastError['line'] . "</td><td>" . $lastError['file'] . "</td></tr></tbody></table>";
 print "</div>";
 ?>
-	<div id="hdrSpanItem"></div>
-	<script language="Javascript">
-		{
-			var xc = document.getElementById('ngErrorInformer').innerHTML;
-			var i = 0;
-			var cnt = 0;
-			while (i < document.body.childNodes.length) {
-				var node = document.body.childNodes[i];
-				if (node.tagName == 'DIV') {
-					document.body.removeChild(document.body.childNodes[i]);
-					break;
-				}
-				if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE') || (node.tagName == '')) {
-					i++;
-				} else {
-					document.body.removeChild(document.body.childNodes[i]);
-				}
-			}
-			document.body.innerHTML = xc;
-		}
-	</script>
-	<?php
+    <div id="hdrSpanItem"></div>
+    <script language="Javascript">
+        {
+            var xc = document.getElementById('ngErrorInformer').innerHTML;
+            var i = 0;
+            var cnt = 0;
+            while (i < document.body.childNodes.length) {
+                var node = document.body.childNodes[i];
+                if (node.tagName == 'DIV') {
+                    document.body.removeChild(document.body.childNodes[i]);
+                    break;
+                }
+                if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE') || (node.tagName == '')) {
+                    i++;
+                } else {
+                    document.body.removeChild(document.body.childNodes[i]);
+                }
+            }
+            document.body.innerHTML = xc;
+        }
+    </script>
+    <?php
     return false;
 }
 
 
 function twigLocalPath($templateName)
 {
-    return dirname($templateName).DIRECTORY_SEPARATOR;
+    return dirname($templateName) . DIRECTORY_SEPARATOR;
 }
 
 //
@@ -2722,55 +2723,55 @@ function ngFatalError($title, $description = '')
 {
 
     ?>
-	<html>
-	<head>
-		<title>NGCMS Runtime error: <?php echo $title; ?></title>
-		<style type="text/css">
-			body {
-				font: 1em Georgia, "Times New Roman", serif;
-			}
+    <html>
+    <head>
+        <title>NGCMS Runtime error: <?php echo $title; ?></title>
+        <style type="text/css">
+            body {
+                font: 1em Georgia, "Times New Roman", serif;
+            }
 
-			.dmsg {
-				border: 1px #EEEEEE solid;
-				padding: 10px;
-				background-color: yellow;
-			}
+            .dmsg {
+                border: 1px #EEEEEE solid;
+                padding: 10px;
+                background-color: yellow;
+            }
 
-			.dtrace TBODY TD {
-				padding: 3px;
-				/*border: 1px #EEEEEE solid;*/
-				background-color: #EEEEEE;
-			}
+            .dtrace TBODY TD {
+                padding: 3px;
+                /*border: 1px #EEEEEE solid;*/
+                background-color: #EEEEEE;
+            }
 
-			.dtrace THEAD TD {
-				padding: 3px;
-				background-color: #EEEEEE;
-				font-weight: bold;
-			}
+            .dtrace THEAD TD {
+                padding: 3px;
+                background-color: #EEEEEE;
+                font-weight: bold;
+            }
 
-		</style>
-	</head>
-	<body>
-	<div id="hdrSpanItem"></div>
-	<script language="Javascript">
-		{
-			var i = 0;
-			var cnt = 0;
-			while (i < document.body.childNodes.length) {
-				var node = document.body.childNodes[i];
-				if (node.tagName == 'DIV') {
-					document.body.removeChild(document.body.childNodes[i]);
-					break;
-				}
-				if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE')) {
-					i++;
-				} else {
-					document.body.removeChild(document.body.childNodes[i]);
-				}
-			}
-		}
-	</script>
-	<?php
+        </style>
+    </head>
+    <body>
+    <div id="hdrSpanItem"></div>
+    <script language="Javascript">
+        {
+            var i = 0;
+            var cnt = 0;
+            while (i < document.body.childNodes.length) {
+                var node = document.body.childNodes[i];
+                if (node.tagName == 'DIV') {
+                    document.body.removeChild(document.body.childNodes[i]);
+                    break;
+                }
+                if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE')) {
+                    i++;
+                } else {
+                    document.body.removeChild(document.body.childNodes[i]);
+                }
+            }
+        }
+    </script>
+    <?php
     print "<h1>NGCMS Software generated fatal error: " . $title . "</h1>\n";
     print "<div class='dmsg'>[ Software error ]: " . $title . "</div><br/>";
     if ($description) {
@@ -3046,7 +3047,7 @@ function coreNormalTerminate($mode = 0)
     if ($config['load_profiler'] > time()) {
         $trace = array(
             'queries' => $mysql->query_list,
-            'events'  => $timer->printEvents(1),
+            'events' => $timer->printEvents(1),
         );
         $mysql->query("insert into " . prefix . "_profiler (dt, userid, exectime, memusage, url, tracedata) values (now(), " . ((isset($userROW) && is_array($userROW)) ? $userROW['id'] : 0) . ", " . $exectime . ", " . sprintf("%7.3f", (memory_get_peak_usage() / 1024 / 1024)) . ", " . db_squote($systemAccessURL) . ", " . db_squote(serialize($trace)) . ")");
     }
@@ -3148,28 +3149,28 @@ function coreUserMenu()
 
     // Prepare REGEX conversion table
     $conversionConfigRegex = array(
-        "#\[login\](.*?)\[/login\]#si"               => '{% if (not flags.isLogged) %}$1{% endif %}',
-        "#\[isnt-logged\](.*?)\[/isnt-logged\]#si"   => '{% if (not flags.isLogged) %}$1{% endif %}',
-        "#\[is-logged\](.*?)\[/is-logged\]#si"       => '{% if (flags.isLogged) %}$1{% endif %}',
-        "#\[login-err\](.*?)\[/login-err\]#si"       => '{% if (flags.loginError) %}$1{% endif %}',
+        "#\[login\](.*?)\[/login\]#si" => '{% if (not flags.isLogged) %}$1{% endif %}',
+        "#\[isnt-logged\](.*?)\[/isnt-logged\]#si" => '{% if (not flags.isLogged) %}$1{% endif %}',
+        "#\[is-logged\](.*?)\[/is-logged\]#si" => '{% if (flags.isLogged) %}$1{% endif %}',
+        "#\[login-err\](.*?)\[/login-err\]#si" => '{% if (flags.loginError) %}$1{% endif %}',
         "#\[if-have-perm\](.*?)\[/if-have-perm\]#si" => "{% if (global.flags.isLogged and (global.user['status'] <= 3)) %}$1{% endif %}",
         //		"#\{l_([0-9a-zA-Z\-\_\.\#]+)}#"					=> "{{ lang['$1'] }}",
     );
 
     // Prepare conversion table
     $conversionConfig = array(
-        '{avatar_url}'   => '{{ avatar_url }}',
+        '{avatar_url}' => '{{ avatar_url }}',
         '{profile_link}' => '{{ profile_link }}',
         '{addnews_link}' => '{{ addnews_link }}',
-        '{logout_link}'  => '{{ logout_link }}',
-        '{phtumb_url}'   => '{{ phtumb_url }}',
-        '{name}'         => '{{ name }}',
-        '{result}'       => '{{ result }}',
-        '{home_url}'     => '{{ home_url }}',
-        '{redirect}'     => '{{ redirect }}',
-        '{reg_link}'     => '{{ reg_link }}',
-        '{lost_link}'    => '{{ lost_link }}',
-        '{form_action}'  => '{{ form_action }}',
+        '{logout_link}' => '{{ logout_link }}',
+        '{phtumb_url}' => '{{ phtumb_url }}',
+        '{name}' => '{{ name }}',
+        '{result}' => '{{ result }}',
+        '{home_url}' => '{{ home_url }}',
+        '{redirect}' => '{{ redirect }}',
+        '{reg_link}' => '{{ reg_link }}',
+        '{lost_link}' => '{{ lost_link }}',
+        '{form_action}' => '{{ form_action }}',
     );
 
     // If not logged in

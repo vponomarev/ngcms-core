@@ -8,33 +8,19 @@
 class http_get
 {
 
-    function getVersion()
+    function get($url, $timeout = 3, $referer = 0)
     {
+        $resp = $this->request('GET', $url, '', $timeout, $referer);
+        if (!is_array($resp) || !$resp[0]) {
+            return false;
+        }
 
-        return "20141213";
+        return $resp[2];
     }
 
     // Split URL into host, port and path
-    function parse_url($url)
-    {
-
-        $host = $path = '';
-        $port = 80;
-        if (preg_match('/^http\:\/\/(.+?)\/(.*)$/', $url, $match)) {
-            $host = $match[1];
-            $path = $match[2];
-            if (preg_match('/^(.+?)\:(\d+)$/', $host, $match)) {
-                $host = $match[1];
-                $port = $match[2];
-            }
-        }
-
-        return array($host, $port, $path);
-    }
-
     function request($proto, $url, $params = '', $timeout = 5, $referer = 0)
     {
-
         // Open TCP connection
         if ((mb_strtolower($proto) != 'get') && (mb_strtolower($proto) != 'post')) {
             return false;
@@ -146,14 +132,23 @@ class http_get
         return array(($status == 200) ? 1 : 0, $hdr, $data);
     }
 
-    function get($url, $timeout = 3, $referer = 0)
+    function parse_url($url)
     {
-
-        $resp = $this->request('GET', $url, '', $timeout, $referer);
-        if (!is_array($resp) || !$resp[0]) {
-            return false;
+        $host = $path = '';
+        $port = 80;
+        if (preg_match('/^http\:\/\/(.+?)\/(.*)$/', $url, $match)) {
+            $host = $match[1];
+            $path = $match[2];
+            if (preg_match('/^(.+?)\:(\d+)$/', $host, $match)) {
+                $host = $match[1];
+                $port = $match[2];
+            }
         }
+        return array($host, $port, $path);
+    }
 
-        return $resp[2];
+    function getVersion()
+    {
+        return "20141213";
     }
 }

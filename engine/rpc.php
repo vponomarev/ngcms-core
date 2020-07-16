@@ -193,7 +193,7 @@ function rpcAdminUsersSearch($params)
     // Scan incoming params
     $output = array();
     foreach ($mysql->select($SQL) as $row) {
-        $output[] = array($row['name'], $row['news'] . ' ' .$lang['news']);
+        $output[] = array($row['name'], $row['news'] . ' ' . $lang['news']);
     }
 
     return array('status' => 1, 'errorCode' => 0, 'data' => array($params, $output));

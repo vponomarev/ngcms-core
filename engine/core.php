@@ -20,13 +20,13 @@ define('NGClassDir', NGCoreDir . 'classes/');      // Location of AutoLoaded cla
 define('NGVendorDir', NGRootDir . 'vendor/');      // Location of Vendor classes
 $loader = require NGVendorDir . 'autoload.php';
 
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
 
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function ($className) {
-    if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+    if (file_exists($fName = NGClassDir . $className . '.class.php')) {
         require_once $fName;
     }
 });
@@ -54,7 +54,6 @@ NGRun(function () {
     $sx->set('events', new NGEvents());
     $sx->set('errorHandler', new NGErrorHandler());
 });
-
 
 
 // ============================================================================
@@ -95,8 +94,8 @@ $TemplateCache = array();
 $lang = array();
 $SYSTEM_FLAGS = array(
     'actions.disabled' => array(),
-    'http.headers'     => array(
-        'content-type'  => 'text/html; charset=utf-8',
+    'http.headers' => array(
+        'content-type' => 'text/html; charset=utf-8',
         'cache-control' => 'private',
     )
 );
@@ -109,21 +108,21 @@ $twigGlobal = array(
 
 // List of DataSources
 $DSlist = array(
-    'news'           => 1,
-    'categories'     => 2,
-    'comments'       => 3,
-    'users'          => 4,
-    'files'          => 10,
-    'images'         => 11,
+    'news' => 1,
+    'categories' => 2,
+    'comments' => 3,
+    'users' => 4,
+    'files' => 10,
+    'images' => 11,
     '#xfields:tdata' => 51,
 );
 
 $PLUGINS = array(
-    'active'        => array(),
+    'active' => array(),
     'active:loaded' => 0,
-    'loaded'        => array(),
-    'loaded:files'  => array(),
-    'config'        => array(),
+    'loaded' => array(),
+    'loaded:files' => array(),
+    'config' => array(),
     'config:loaded' => 0,
 );
 
@@ -154,12 +153,12 @@ $confArray = array(
     // Pre-defined init values
     'predefined' => array(
         'HTTP_REFERER' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-        'PHP_SELF'     => isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '',
-        'REQUEST_URI'  => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
-        'config'       => array(),
-        'catz'         => array(),
-        'catmap'       => array(),
-        'is_logged'    => false,
+        'PHP_SELF' => isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '',
+        'REQUEST_URI' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
+        'config' => array(),
+        'catz' => array(),
+        'catmap' => array(),
+        'is_logged' => false,
     )
 );
 
@@ -258,10 +257,10 @@ $twigLoader = new NGTwigLoader(root);
 
 // - Configure environment and general parameters
 $twig = new NGTwigEnvironment($twigLoader, array(
-    'cache'               => root . 'cache/twig/',
-    'auto_reload'         => true,
-    'autoescape'          => false,
-    'charset'             => 'UTF-8',
+    'cache' => root . 'cache/twig/',
+    'auto_reload' => true,
+    'autoescape' => false,
+    'charset' => 'UTF-8',
 ));
 
 // [[MARKER]] TWIG template engine is loaded
@@ -288,7 +287,7 @@ NGRun(function () {
     global $config, $mysql;
 
     $sx = NGEngine::getInstance();
-    
+
     switch ($config['dbtype']) {
         case 'mysqli':
             $sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
@@ -306,7 +305,7 @@ NGRun(function () {
     $mysql = $sx->getLegacyDB();
 
     // Sync PHP <=> MySQL timezones
-    $mysql->query('SET @@session.time_zone = "'.date('P').'"');
+    $mysql->query('SET @@session.time_zone = "' . date('P') . '"');
 
 });
 

@@ -48,7 +48,7 @@ function generate_config_page($module, $params, $values = array())
         }
 
         $tvars['vars'] = array(
-            'name'  => $param['name'],
+            'name' => $param['name'],
             'title' => $param['title'],
             'descr' => $param['descr'],
             'error' => '',
@@ -197,7 +197,7 @@ function get_mysql_field_type($table, $field)
 {
     global $mysql;
 
-    foreach ($mysql->select("describe ".$table) as $l) {
+    foreach ($mysql->select("describe " . $table) as $l) {
         if ($l['Field'] == $field) {
             return $l['Type'];
         }
@@ -427,11 +427,11 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 
     $tpl->template('install-process', tpl_actions . 'extra-config');
     $tvars['vars'] = array(
-        'entries'   => $entries,
-        'plugin'    => $module,
-        'php_self'  => $PHP_SELF,
+        'entries' => $entries,
+        'plugin' => $module,
+        'php_self' => $PHP_SELF,
         'mode_text' => ($mode == 'install') ? $lang['install_text'] : $lang['deinstall_text'],
-        'msg'       => ($mode == 'install' ? ($publish_error ? $lang['ibdc_ifail'] : $lang['idbc_iok']) : ($publish_error ? $lang['dbdc_ifail'] : $lang['ddbc_iok']))
+        'msg' => ($mode == 'install' ? ($publish_error ? $lang['ibdc_ifail'] : $lang['idbc_iok']) : ($publish_error ? $lang['dbdc_ifail'] : $lang['ddbc_iok']))
     );
     $tpl->vars('install-process', $tvars);
     if (!$silent) {
@@ -448,12 +448,12 @@ function generate_install_page($plugin, $text, $stype = 'install')
 
     $tpl->template('install', tpl_actions . 'extra-config');
     $tvars['vars'] = array(
-        'plugin'       => $plugin,
-        'stype'        => $stype,
+        'plugin' => $plugin,
+        'stype' => $stype,
         'install_text' => $text,
-        'mode_text'    => ($stype == 'install') ? $lang['install_text'] : $lang['deinstall_text'],
-        'mode_commit'  => ($stype == 'install') ? $lang['commit_install'] : $lang['commit_deinstall'],
-        'php_self'     => $PHP_SELF
+        'mode_text' => ($stype == 'install') ? $lang['install_text'] : $lang['deinstall_text'],
+        'mode_commit' => ($stype == 'install') ? $lang['commit_install'] : $lang['commit_deinstall'],
+        'php_self' => $PHP_SELF
     );
     $tpl->vars('install', $tvars);
     $main_admin = $tpl->show('install');

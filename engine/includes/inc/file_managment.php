@@ -169,11 +169,11 @@ function manage_upload($type)
                     if ($shadowThumb || $stampThumb) {
                         $stamp = $imanager->image_transform(
                             array(
-                                'image'              => $dir . $subdirectory . '/thumb/' . $up[1],
-                                'stamp'              => $stampThumb,
+                                'image' => $dir . $subdirectory . '/thumb/' . $up[1],
+                                'stamp' => $stampThumb,
                                 'stamp_transparency' => $config['wm_image_transition'],
-                                'shadow'             => $shadowThumb,
-                                'stampfile'          => $stampFileName
+                                'shadow' => $shadowThumb,
+                                'stampfile' => $stampFileName
                             )
                         );
                     }
@@ -186,11 +186,11 @@ function manage_upload($type)
             if ($shadowOrig || $stampOrig) {
                 $stamp = $imanager->image_transform(
                     array(
-                        'image'              => $dir . $subdirectory . '/' . $up[1],
-                        'stamp'              => $stampOrig,
+                        'image' => $dir . $subdirectory . '/' . $up[1],
+                        'stamp' => $stampOrig,
                         'stamp_transparency' => $config['wm_image_transition'],
-                        'shadow'             => $shadowOrig,
-                        'stampfile'          => $stampFileName
+                        'shadow' => $shadowOrig,
+                        'stampfile' => $stampFileName
                     )
                 );
             }
@@ -303,21 +303,21 @@ function manage_showlist($type)
 
         $tpl->template('entries', tpl_actions . $mod);
         $tvars['vars'] = array(
-            'php_self'     => $PHP_SELF,
-            'rename'       => $rename,
-            'view_thumb'   => $row['preview'] ? $row['view_thumb'] : '',
-            'file_link'    => $file_link,
-            'file_name'    => $row['orig_name'],
-            'id'           => $row['id'],
-            'width'        => $row['width'],
-            'height'       => $row['height'],
+            'php_self' => $PHP_SELF,
+            'rename' => $rename,
+            'view_thumb' => $row['preview'] ? $row['view_thumb'] : '',
+            'file_link' => $file_link,
+            'file_name' => $row['orig_name'],
+            'id' => $row['id'],
+            'width' => $row['width'],
+            'height' => $row['height'],
             'preview_size' => (($type == 'image') && $row['p_width'] && $row['p_height']) ? $row['p_width'] . ' x ' . $row['p_height'] : '',
-            'preview_img'  => (($type == 'image') && $row['preview']) ? '<img src="' . $thumburl . '"/><br/>' : '',
-            'p_width'      => $row['p_width'],
-            'p_height'     => $row['p_height'],
-            'size'         => $fsize,
-            'folder'       => $row['folder'],
-            'user'         => $row['user'],
+            'preview_img' => (($type == 'image') && $row['preview']) ? '<img src="' . $thumburl . '"/><br/>' : '',
+            'p_width' => $row['p_width'],
+            'p_height' => $row['p_height'],
+            'size' => $fsize,
+            'folder' => $row['folder'],
+            'user' => $row['user'],
         );
 
         if ($type == 'image') {
@@ -388,17 +388,17 @@ function manage_showlist($type)
     if (!is_dir($dName) || !is_readable($dName)) {
         msg(
             array(
-            'type' => 'error',
-            'text' => str_replace(
-                '{dirname}',
-                $dName,
-                $lang['error.dir.' . $type . 's']
-            ),
-            'info' => str_replace(
-                '{dirname}',
-                $dName,
-                $lang['error.dir.' . $type . 's#desc']
-            )
+                'type' => 'error',
+                'text' => str_replace(
+                    '{dirname}',
+                    $dName,
+                    $lang['error.dir.' . $type . 's']
+                ),
+                'info' => str_replace(
+                    '{dirname}',
+                    $dName,
+                    $lang['error.dir.' . $type . 's#desc']
+                )
             ),
             1
         );
@@ -419,26 +419,26 @@ function manage_showlist($type)
 
     $tpl->template('table', tpl_actions . $mod);
     $tvars['vars'] = array(
-        'php_self'       => $PHP_SELF,
-        'dateslist'      => $dateslist,
-        'dirlist'        => $dirlist,
-        'dirlistS'       => $dirlistS,
-        'authorlist'     => $authorlist,
-        'npp'            => $npp,
-        'entries'        => $entries,
-        'pagesss'        => $pagesss,
-        'dirlistcat'     => $dirlistcat,
-        'listExt'        => $listExt,
-        'descExt'        => $lang['uploadify_' . ($type == 'image' ? 'images' : 'files')],
-        'maxSize'        => intval($config[($type == 'image' ? 'images' : 'files') . '_max_size'] * 1024),
-        'area'           => (isset($area) && $area) ? $area : '',
-        'shadow_mode'    => $config['shadow_mode'] ? 'disabled' : '',
-        'stamp_mode'     => $config['stamp_mode'] ? 'disabled' : '',
-        'thumb_mode'     => $config['thumb_mode'] ? 'disabled' : '',
+        'php_self' => $PHP_SELF,
+        'dateslist' => $dateslist,
+        'dirlist' => $dirlist,
+        'dirlistS' => $dirlistS,
+        'authorlist' => $authorlist,
+        'npp' => $npp,
+        'entries' => $entries,
+        'pagesss' => $pagesss,
+        'dirlistcat' => $dirlistcat,
+        'listExt' => $listExt,
+        'descExt' => $lang['uploadify_' . ($type == 'image' ? 'images' : 'files')],
+        'maxSize' => intval($config[($type == 'image' ? 'images' : 'files') . '_max_size'] * 1024),
+        'area' => (isset($area) && $area) ? $area : '',
+        'shadow_mode' => $config['shadow_mode'] ? 'disabled' : '',
+        'stamp_mode' => $config['stamp_mode'] ? 'disabled' : '',
+        'thumb_mode' => $config['thumb_mode'] ? 'disabled' : '',
         'shadow_checked' => ($config['shadow_mode'] == 2) ? ' checked' : '',
-        'stamp_checked'  => ($config['stamp_mode'] == 2) ? ' checked' : '',
-        'thumb_checked'  => ($config['thumb_mode'] == 2) ? ' checked' : '',
-        'box_preview'    => (isset($_COOKIE['img_preview']) && $_COOKIE['img_preview'] ? ' checked="checked"' : ''),
+        'stamp_checked' => ($config['stamp_mode'] == 2) ? ' checked' : '',
+        'thumb_checked' => ($config['thumb_mode'] == 2) ? ' checked' : '',
+        'box_preview' => (isset($_COOKIE['img_preview']) && $_COOKIE['img_preview'] ? ' checked="checked"' : ''),
     );
 
     $tvars['regx']['#\[preview\](.+?)\[/preview\]#is'] = (isset($_COOKIE['img_preview']) && $_COOKIE['img_preview']) ? '$1' : '';
@@ -483,30 +483,30 @@ function manage_editForm($type, $id)
                 $thumbsize = is_readable($thumbname) ? FormatSize(@filesize($thumbname)) : '-';
 
                 $tvars['vars'] = array(
-                    'php_self'       => $PHP_SELF,
-                    'id'             => $irow['id'],
-                    'name'           => $irow['name'],
-                    'orig_name'      => $irow['orig_name'],
-                    'date'           => strftime('%d.%m.%Y %H:%M', $irow['date']),
-                    'author'         => $irow['user'],
-                    'width'          => $irow['width'],
-                    'height'         => $irow['height'],
-                    'size'           => $fsize,
-                    'description'    => $irow['description'],
-                    'category'       => $irow['folder'],
-                    'fileurl'        => $fileurl,
-                    'thumburl'       => $thumburl,
-                    'preview_width'  => $irow['p_width'],
+                    'php_self' => $PHP_SELF,
+                    'id' => $irow['id'],
+                    'name' => $irow['name'],
+                    'orig_name' => $irow['orig_name'],
+                    'date' => strftime('%d.%m.%Y %H:%M', $irow['date']),
+                    'author' => $irow['user'],
+                    'width' => $irow['width'],
+                    'height' => $irow['height'],
+                    'size' => $fsize,
+                    'description' => $irow['description'],
+                    'category' => $irow['folder'],
+                    'fileurl' => $fileurl,
+                    'thumburl' => $thumburl,
+                    'preview_width' => $irow['p_width'],
                     'preview_height' => $irow['p_height'],
-                    'preview_size'   => $thumbsize,
-                    'thumb_quality'  => $config['thumb_quality'],
-                    'thumb_size_x'   => $config['thumb_size'],
-                    'thumb_size_y'   => $config['thumb_size'],
-                    'r_author'       => $_REQUEST['author'],
-                    'r_category'     => $_REQUEST['category'],
-                    'r_postdate'     => $_REQUEST['postdate'],
-                    'r_page'         => $_REQUEST['page'],
-                    'r_npp'          => $_REQUEST['npp'],
+                    'preview_size' => $thumbsize,
+                    'thumb_quality' => $config['thumb_quality'],
+                    'thumb_size_x' => $config['thumb_size'],
+                    'thumb_size_y' => $config['thumb_size'],
+                    'r_author' => $_REQUEST['author'],
+                    'r_category' => $_REQUEST['category'],
+                    'r_postdate' => $_REQUEST['postdate'],
+                    'r_page' => $_REQUEST['page'],
+                    'r_npp' => $_REQUEST['npp'],
 
                     'link_back' => '?mod=images&action=list' .
                         ($_REQUEST['author'] ? '&author=' . $_REQUEST['author'] : '') .
@@ -570,10 +570,10 @@ function manage_editApply($type, $id)
 
         if ($stamp = $imanager->image_transform(
             array(
-                'image'              => $config['images_dir'] . $irow['folder'] . '/' . $irow['name'],
-                'stamp'              => 1,
+                'image' => $config['images_dir'] . $irow['folder'] . '/' . $irow['name'],
+                'stamp' => 1,
                 'stamp_transparency' => $config['wm_image_transition'],
-                'stampfile'          => $stampFileName
+                'stampfile' => $stampFileName
             )
         )
         ) {
@@ -625,11 +625,11 @@ function manage_editApply($type, $id)
 
                 if ($stamp = $imanager->image_transform(
                     array(
-                        'image'              => $config['images_dir'] . $irow['folder'] . '/thumb/' . $irow['name'],
-                        'stamp'              => $stampThumb,
+                        'image' => $config['images_dir'] . $irow['folder'] . '/thumb/' . $irow['name'],
+                        'stamp' => $stampThumb,
                         'stamp_transparency' => $config['wm_image_transition'],
-                        'shadow'             => $shadowThumb,
-                        'stampfile'          => $stampFileName
+                        'shadow' => $shadowThumb,
+                        'stampfile' => $stampFileName
                     )
                 )
                 ) {

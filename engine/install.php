@@ -29,11 +29,11 @@ define('NGCMS', 1);
 // ============================================================================
 define('NGCoreDir', dirname(__FILE__) . '/');               // Location of Core directory
 define('NGRootDir', dirname(dirname(__FILE__)) . '/');      // Location of SiteRoot
-define('NGClassDir', NGCoreDir.'classes/');                     // Location of AutoLoaded classes
+define('NGClassDir', NGCoreDir . 'classes/');                     // Location of AutoLoaded classes
 
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function ($className) {
-    if (file_exists($fName = NGClassDir.$className.'.class.php')) {
+    if (file_exists($fName = NGClassDir . $className . '.class.php')) {
         require_once $fName;
     }
 });
@@ -372,7 +372,7 @@ function doConfig_db($check)
              ) as $k) {
         if ($k == 'reg_dbtype') {
             foreach (array('mysql', 'mysqli', 'pdo') as $s) {
-                $tvars['vars'][$k.'_'.$s] = $_POST[$k] == $s ? ' selected' : '';
+                $tvars['vars'][$k . '_' . $s] = $_POST[$k] == $s ? ' selected' : '';
             }
         } else {
             $tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8');
@@ -388,9 +388,9 @@ function doConfig_db($check)
     $tvars['vars']['menu_db'] = ' class="hover"';
     printHeader();
 
-    $tvars['regx']["'\[mysql\](.*?)\[/mysql\]'si"] = (extension_loaded("mysql"))?'$1':'';
-    $tvars['regx']["'\[mysqli\](.*?)\[/mysqli\]'si"] = (extension_loaded("mysqli"))?'$1':'';
-    $tvars['regx']["'\[pdo\](.*?)\[/pdo\]'si"] = (extension_loaded("pdo") || extension_loaded("pdo_mysql"))?'$1':'';
+    $tvars['regx']["'\[mysql\](.*?)\[/mysql\]'si"] = (extension_loaded("mysql")) ? '$1' : '';
+    $tvars['regx']["'\[mysqli\](.*?)\[/mysqli\]'si"] = (extension_loaded("mysqli")) ? '$1' : '';
+    $tvars['regx']["'\[pdo\](.*?)\[/pdo\]'si"] = (extension_loaded("pdo") || extension_loaded("pdo_mysql")) ? '$1' : '';
 
     // Выводим форму проверки
     $tpl->template('config_db', $templateDir);
@@ -564,10 +564,10 @@ function doConfig_plugins()
     $tpl->template('config_prow', $templateDir);
     foreach ($pluglist as $plugin) {
         $tv = array(
-            'id'          => $plugin['id'],
-            'title'       => $plugin['title'],
+            'id' => $plugin['id'],
+            'title' => $plugin['title'],
             'information' => $plugin['information'],
-            'enable'      => (in_array(strtolower($plugin['preinstall']), array('yes', 'no'))) ? ' disabled="disabled"' : '',
+            'enable' => (in_array(strtolower($plugin['preinstall']), array('yes', 'no'))) ? ' disabled="disabled"' : '',
         );
         // Add hidden field for DISABLED plugins
         if (strtolower($plugin['preinstall']) == 'yes') {
@@ -783,8 +783,8 @@ function doInstall()
                 array_push($LOG, 'Подключение к серверу БД "' . $_POST['reg_dbhost'] . '" используя административный логин "' . $_POST['reg_dbadminuser'] . '" ... OK');
 
                 // 1. Создание БД
-                if (count($mysql->select("show databases like '".$_POST['reg_dbname']."'")) < 1) {
-                // if ($mysql->select_db($_POST['reg_dbname']) === null) {
+                if (count($mysql->select("show databases like '" . $_POST['reg_dbname'] . "'")) < 1) {
+                    // if ($mysql->select_db($_POST['reg_dbname']) === null) {
                     // БД нет. Пытаемся создать
                     if (!$mysql->query('CREATE DATABASE ' . $_POST['reg_dbname'])) {
                         // Не удалось создать. Фатально.
@@ -799,7 +799,7 @@ function doInstall()
                 }
 
                 // FIX: Starting with mysql 8 we cannot create a user with `grant privileges` command
-                if (!$mysql->query("create user '".$_POST['reg_dbuser'] . "'@'%' identified by '" . $_POST['reg_dbpass'] . "'")) {
+                if (!$mysql->query("create user '" . $_POST['reg_dbuser'] . "'@'%' identified by '" . $_POST['reg_dbpass'] . "'")) {
                     array_push($ERROR, 'Невозможно создать пользователя  "' . $_POST['reg_dbuser'] . '" в БД используя административные права');
                     $error = 1;
                     break;
@@ -976,83 +976,83 @@ function doInstall()
 
         // 1.7. Формируем конфигурационный файл
         $newconf = array(
-            'dbtype'              => $_POST['reg_dbtype'],
-            'dbhost'              => $_POST['reg_dbhost'],
-            'dbname'              => $_POST['reg_dbname'],
-            'dbuser'              => $_POST['reg_dbuser'],
-            'dbpasswd'            => $_POST['reg_dbpass'],
-            'prefix'              => $_POST['reg_dbprefix'],
-            'home_url'            => $_POST['home_url'],
-            'admin_url'           => $_POST['home_url'] . '/' . $adminDirName,
-            'images_dir'          => $installDir . '/uploads/images/',
-            'files_dir'           => $installDir . '/uploads/files/',
-            'attach_dir'          => $installDir . '/uploads/dsn/',
-            'avatars_dir'         => $installDir . '/uploads/avatars/',
-            'photos_dir'          => $installDir . '/uploads/photos/',
-            'images_url'          => $_POST['home_url'] . '/uploads/images',
-            'files_url'           => $_POST['home_url'] . '/uploads/files',
-            'attach_url'          => $_POST['home_url'] . '/uploads/dsn',
-            'avatars_url'         => $_POST['home_url'] . '/uploads/avatars',
-            'photos_url'          => $_POST['home_url'] . '/uploads/photos',
-            'home_title'          => $_POST['home_title'],
-            'admin_mail'          => $_POST['admin_email'],
-            'lock'                => '0',
-            'lock_reason'         => 'Сайт на реконструкции!',
-            'meta'                => '1',
-            'description'         => 'Здесь описание вашего сайта',
-            'keywords'            => 'Здесь ключевые слова, через запятую (,)',
-            'skin'                => 'default',
-            'theme'               => $_POST['template'],
-            'default_lang'        => $currentLanguage,
-            'auto_backup'         => '0',
-            'auto_backup_time'    => '48',
-            'use_gzip'            => '0',
-            'use_captcha'         => '1',
-            'captcha_font'        => 'verdana',
-            'use_cookies'         => '0',
-            'use_sessions'        => '1',
-            'number'              => '5',
-            'category_link'       => '1',
-            'add_onsite'          => '1',
-            'add_onsite_guests'   => '0',
-            'date_adjust'         => '0',
-            'timestamp_active'    => 'j Q Y',
-            'timestamp_updated'   => 'j.m.Y - H:i',
-            'smilies'             => 'smile, biggrin, tongue, wink, cool, angry, sad, cry, upset, tired, blush, surprise, thinking, shhh, kiss, crazy, undecide, confused, down, up',
-            'blocks_for_reg'      => '1',
-            'use_smilies'         => '1',
-            'use_bbcodes'         => '1',
-            'use_htmlformatter'   => '1',
-            'forbid_comments'     => '0',
-            'reverse_comments'    => '0',
-            'auto_wrap'           => '50',
-            'flood_time'          => '20',
-            'timestamp_comment'   => 'j.m.Y - H:i',
-            'users_selfregister'  => '1',
-            'register_type'       => '4',
-            'use_avatars'         => '1',
-            'avatar_wh'           => '65',
-            'avatar_max_size'     => '16',
-            'use_photos'          => '1',
-            'photos_max_size'     => '256',
+            'dbtype' => $_POST['reg_dbtype'],
+            'dbhost' => $_POST['reg_dbhost'],
+            'dbname' => $_POST['reg_dbname'],
+            'dbuser' => $_POST['reg_dbuser'],
+            'dbpasswd' => $_POST['reg_dbpass'],
+            'prefix' => $_POST['reg_dbprefix'],
+            'home_url' => $_POST['home_url'],
+            'admin_url' => $_POST['home_url'] . '/' . $adminDirName,
+            'images_dir' => $installDir . '/uploads/images/',
+            'files_dir' => $installDir . '/uploads/files/',
+            'attach_dir' => $installDir . '/uploads/dsn/',
+            'avatars_dir' => $installDir . '/uploads/avatars/',
+            'photos_dir' => $installDir . '/uploads/photos/',
+            'images_url' => $_POST['home_url'] . '/uploads/images',
+            'files_url' => $_POST['home_url'] . '/uploads/files',
+            'attach_url' => $_POST['home_url'] . '/uploads/dsn',
+            'avatars_url' => $_POST['home_url'] . '/uploads/avatars',
+            'photos_url' => $_POST['home_url'] . '/uploads/photos',
+            'home_title' => $_POST['home_title'],
+            'admin_mail' => $_POST['admin_email'],
+            'lock' => '0',
+            'lock_reason' => 'Сайт на реконструкции!',
+            'meta' => '1',
+            'description' => 'Здесь описание вашего сайта',
+            'keywords' => 'Здесь ключевые слова, через запятую (,)',
+            'skin' => 'default',
+            'theme' => $_POST['template'],
+            'default_lang' => $currentLanguage,
+            'auto_backup' => '0',
+            'auto_backup_time' => '48',
+            'use_gzip' => '0',
+            'use_captcha' => '1',
+            'captcha_font' => 'verdana',
+            'use_cookies' => '0',
+            'use_sessions' => '1',
+            'number' => '5',
+            'category_link' => '1',
+            'add_onsite' => '1',
+            'add_onsite_guests' => '0',
+            'date_adjust' => '0',
+            'timestamp_active' => 'j Q Y',
+            'timestamp_updated' => 'j.m.Y - H:i',
+            'smilies' => 'smile, biggrin, tongue, wink, cool, angry, sad, cry, upset, tired, blush, surprise, thinking, shhh, kiss, crazy, undecide, confused, down, up',
+            'blocks_for_reg' => '1',
+            'use_smilies' => '1',
+            'use_bbcodes' => '1',
+            'use_htmlformatter' => '1',
+            'forbid_comments' => '0',
+            'reverse_comments' => '0',
+            'auto_wrap' => '50',
+            'flood_time' => '20',
+            'timestamp_comment' => 'j.m.Y - H:i',
+            'users_selfregister' => '1',
+            'register_type' => '4',
+            'use_avatars' => '1',
+            'avatar_wh' => '65',
+            'avatar_max_size' => '16',
+            'use_photos' => '1',
+            'photos_max_size' => '256',
             'photos_thumb_size_x' => '80',
             'photos_thumb_size_y' => '80',
-            'images_ext'          => 'gif, jpg, jpeg, png',
-            'images_max_size'     => '512',
-            'thumb_size_x'        => '150',
-            'thumb_size_y'        => '150',
-            'thumb_quality'       => '80',
-            'wm_image'            => 'stamp',
+            'images_ext' => 'gif, jpg, jpeg, png',
+            'images_max_size' => '512',
+            'thumb_size_x' => '150',
+            'thumb_size_y' => '150',
+            'thumb_quality' => '80',
+            'wm_image' => 'stamp',
             'wm_image_transition' => '50',
-            'files_ext'           => 'zip, rar, gz, tgz, bz2',
-            'files_max_size'      => '128',
-            'auth_module'         => 'basic',
-            'auth_db'             => 'basic',
-            'crypto_salt'         => substr(md5(uniqid(rand(), 1)), 0, 8),
-            '404_mode'            => 0,
-            'debug'               => 1,
-            'news_multicat_url'   => '1',
-            'UUID'                => md5(mt_rand() . mt_rand()) . md5(mt_rand() . mt_rand()),
+            'files_ext' => 'zip, rar, gz, tgz, bz2',
+            'files_max_size' => '128',
+            'auth_module' => 'basic',
+            'auth_db' => 'basic',
+            'crypto_salt' => substr(md5(uniqid(rand(), 1)), 0, 8),
+            '404_mode' => 0,
+            'debug' => 1,
+            'news_multicat_url' => '1',
+            'UUID' => md5(mt_rand() . mt_rand()) . md5(mt_rand() . mt_rand()),
         );
 
         array_push($LOG, "Подготовка параметров конфигурационного файла ... OK");
@@ -1068,7 +1068,7 @@ function doInstall()
 
         // Активируем плагин auth_basic
         $plugConf = array(
-            'active'  => array(
+            'active' => array(
                 'auth_basic' => 'auth_basic'
             ),
             'actions' => array(
