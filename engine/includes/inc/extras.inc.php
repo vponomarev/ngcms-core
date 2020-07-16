@@ -19,86 +19,73 @@ if (!defined('NGCMS')) {
 // CLASS DEFINITION: news filter
 class NewsFilter
 {
-
     // ### Add news interceptor ###
     // Form generator
-    function addNewsForm(&$tvars)
+    public function addNewsForm(&$tvars)
     {
-
         return 1;
     }
 
     // Adding executor [done BEFORE actual add and CAN block adding ]
-    function addNews(&$tvars, &$SQL)
+    public function addNews(&$tvars, &$SQL)
     {
-
         return 1;
     }
 
     // Adding notificator [ after successful adding ]
-    function addNewsNotify(&$tvars, $SQL, $newsid)
+    public function addNewsNotify(&$tvars, $SQL, $newsid)
     {
-
         return 1;
     }
 
     // ### Edit news interceptor ###
     // Form generator
-    function editNewsForm($newsID, $SQLnews, &$tvars)
+    public function editNewsForm($newsID, $SQLnews, &$tvars)
     {
-
         return 1;
     }
 
     // Edit executor  [done BEFORE actual edit and CAN block editing ]
-    function editNews($newsID, $SQLnews, &$SQLnew, &$tvars)
+    public function editNews($newsID, $SQLnews, &$SQLnew, &$tvars)
     {
-
         return 1;
     }
 
     // Edit Notifier [ adfter successful editing ]
-    function editNewsNotify($newsID, $SQLnews, &$SQLnew, &$tvars)
+    public function editNewsNotify($newsID, $SQLnews, &$SQLnew, &$tvars)
     {
-
         return 1;
     }
 
     // List news form generator [ in admin panel ]
-    function listNewsForm($newsID, $SQLnews, &$tvars)
+    public function listNewsForm($newsID, $SQLnews, &$tvars)
     {
-
         return 1;
     }
 
-
     // ### Delete news interceptor ###
     // Delete news call
-    function deleteNews($newsID, $SQLnews)
+    public function deleteNews($newsID, $SQLnews)
     {
-
         return 1;
     }
 
     // Delete news notifier [ after news is deleted ]
-    function deleteNewsNotify($newsID, $SQLnews)
+    public function deleteNewsNotify($newsID, $SQLnews)
     {
-
         return 1;
     }
 
     // ### Mass modify news interceptor ###
     // Mass modify news call
-    function massModifyNews($idList, $setValue, $currentData)
+    public function massModifyNews($idList, $setValue, $currentData)
     {
-
         return 1;
     }
 
     // Mass modify news call [ after news are modified ]
-    function massModifyNewsNotify($idList, $setValue, $currentData)
+    public function massModifyNewsNotify($idList, $setValue, $currentData)
     {
-
         return 1;
     }
 
@@ -112,16 +99,14 @@ class NewsFilter
     // 'plugin'  => if is called from plugin - ID of plugin
     // 'emulate' => flag if emulation mode is used [ for example, for preview ]
     // 'nCount'  => news if order (1,2,...) for SHORT news
-    function showNewsPre($newsID, &$SQLnews, $mode = array())
+    public function showNewsPre($newsID, &$SQLnews, $mode = [])
     {
-
         return 1;
     }
 
     // Show news call :: processor (call after all processing is finished and before show) for each record
-    function showNews($newsID, $SQLnews, &$tvars, $mode = array())
+    public function showNews($newsID, $SQLnews, &$tvars, $mode = [])
     {
-
         return 1;
     }
 
@@ -132,15 +117,13 @@ class NewsFilter
     //  style	- working mode ( 'short' / 'full' / 'export' )
     //  num		- number in order (for short list)
     //  limit	- show limit in order (for short list)
-    function onBeforeNewsShow($newsID, $SQLnews, $mode = array())
+    public function onBeforeNewsShow($newsID, $SQLnews, $mode = [])
     {
-
         return 1;
     }
 
-    function onAfterNewsShow($newsID, $SQLnews, $mode = array())
+    public function onAfterNewsShow($newsID, $SQLnews, $mode = [])
     {
-
         return 1;
     }
 
@@ -154,69 +137,57 @@ class NewsFilter
     //			* count		- number of fetched news
     //			* ids		- array with IDs of fetched news
     //			* results	- output from SELECT query
-    function onBeforeShowlist($mode)
+    public function onBeforeShowlist($mode)
     {
-
         return 1;
     }
-
 
     // Behaviour before/after showing news template
     // $mode	- calling mode (may be 'short' or 'full')
-    function onBeforeShow($mode)
+    public function onBeforeShow($mode)
     {
-
         return 1;
     }
 
-    function onAfterShow($mode)
+    public function onAfterShow($mode)
     {
-
         return 1;
     }
 }
 
-;
-
 // CLASS DEFINITION: static filter
 class StaticFilter
 {
-
     // ### Add static interceptor ###
     // Form generator
-    function addStaticForm(&$tvars)
+    public function addStaticForm(&$tvars)
     {
-
         return 1;
     }
 
     // Adding executor
-    function addStatic(&$tvars, &$SQL)
+    public function addStatic(&$tvars, &$SQL)
     {
-
         return 1;
     }
 
     // ### Edit static interceptor ###
     // Form generator
-    function editStaticForm($staticID, $SQLnews, &$tvars)
+    public function editStaticForm($staticID, $SQLnews, &$tvars)
     {
-
         return 1;
     }
 
     // Edit executor
-    function editStatic($staticID, $SQLstatic, &$SQLnew, &$tvars)
+    public function editStatic($staticID, $SQLstatic, &$SQLnew, &$tvars)
     {
-
         return 1;
     }
 
     // ### Delete static page interceptor ###
     // Delete static call
-    function deleteStatic($staticID, $SQLstatic)
+    public function deleteStatic($staticID, $SQLstatic)
     {
-
         return 1;
     }
 
@@ -225,16 +196,14 @@ class StaticFilter
     // Mode - news show mode [ array ]
     // 'plugin'  => if is called from plugin - ID of plugin
     // 'emulateMode' =>  flag if emulation mode is used [ for example, for preview ]
-    function showStaticPre($staticID, &$SQLstatic, $mode)
+    public function showStaticPre($staticID, &$SQLstatic, $mode)
     {
-
         return 1;
     }
 
     // Show static call :: processor (call after all processing is finished and before show)
-    function showStatic($staticID, $SQLstatic, &$tvars, $mode)
+    public function showStatic($staticID, $SQLstatic, &$tvars, $mode)
     {
-
         return 1;
     }
 }
@@ -242,32 +211,27 @@ class StaticFilter
 // CLASS DEFINITION: core actions filter
 class CoreFilter
 {
-
     // Register new user: FORM handler
-    function registerUserForm(&$tvars)
+    public function registerUserForm(&$tvars)
     {
-
         return 1;
     }
 
     // Register new user: BEFORE actual registration
-    function registerUser($params, &$msg)
+    public function registerUser($params, &$msg)
     {
-
         return 1;
     }
 
     // Register new user: Notifier [ after successful adding ]
-    function registerUserNotify($userID, $userRec)
+    public function registerUserNotify($userID, $userRec)
     {
-
         return 1;
     }
 
     // Show usermenu
-    function showUserMenu(&$tVars)
+    public function showUserMenu(&$tVars)
     {
-
         return 1;
     }
 }
@@ -275,60 +239,49 @@ class CoreFilter
 // CLASS DEFINITION: registration plugin
 class CoreAuthPlugin
 {
-
     //
-    function login($auto_scan = 1, $username = '', $password = '')
+    public function login($auto_scan = 1, $username = '', $password = '')
     {
-
         return 'ERR:METHOD.NOT.IMPLEMENTED';
-
     }
 
-    function save_auth($dbrow)
+    public function save_auth($dbrow)
     {
-
         return false;
     }
 
-    function check_auth()
+    public function check_auth()
     {
-
         return false;
     }
 
-    function drop_auth()
+    public function drop_auth()
     {
-
         return false;
     }
 
-    function get_reg_params()
+    public function get_reg_params()
     {
-
         return false;
     }
 
-    function register(&$params, $values, &$msg)
+    public function register(&$params, $values, &$msg)
     {
-
         return 0;
     }
 
-    function get_restorepw_params()
+    public function get_restorepw_params()
     {
-
         return false;
     }
 
-    function restorepw(&$params, $values, &$msg)
+    public function restorepw(&$params, $values, &$msg)
     {
-
         return false;
     }
 
-    function confirm_restorepw(&$msg, $reqid = null, $reqsecret = null)
+    public function confirm_restorepw(&$msg, $reqid = null, $reqsecret = null)
     {
-
         return false;
     }
 
@@ -343,10 +296,9 @@ class CoreAuthPlugin
     // 2	- Incorrect length
     // 3	- Incorrect format
     // 100	- Available for registration
-    function onlineCheckRegistration($params)
+    public function onlineCheckRegistration($params)
     {
-
-        return array();
+        return [];
     }
 }
 
@@ -356,49 +308,41 @@ class CoreAuthPlugin
 
 class FilterAdminCategories
 {
-
     // ### Add category interceptor ###
     // Form generator
-    function addCategoryForm(&$tvars)
+    public function addCategoryForm(&$tvars)
     {
-
         return 1;
     }
 
     // Adding executor [done BEFORE actual add and CAN block adding ]
-    function addCategory(&$tvars, &$SQL)
+    public function addCategory(&$tvars, &$SQL)
     {
-
         return 1;
     }
 
     // Adding notificator [ after successful adding ]
-    function addCategoryNotify(&$tvars, $SQL, $newsid)
+    public function addCategoryNotify(&$tvars, $SQL, $newsid)
     {
-
         return 1;
     }
 
-
     // ### Edit category interceptor ###
     // Form generator
-    function editCategoryForm($categoryID, $SQL, &$tvars)
+    public function editCategoryForm($categoryID, $SQL, &$tvars)
     {
-
         return 1;
     }
 
     // Edit executor  [done BEFORE actual edit and CAN block editing ]
-    function editCategory($categoryID, $SQL, &$SQLnew, &$tvars)
+    public function editCategory($categoryID, $SQL, &$SQLnew, &$tvars)
     {
-
         return 1;
     }
 
     // Edit Notifier [ adfter successful editing ]
-    function editCategoryNotify($categoryID, $SQL, &$SQLnew, &$tvars)
+    public function editCategoryNotify($categoryID, $SQL, &$SQLnew, &$tvars)
     {
-
         return 1;
     }
 }
@@ -406,7 +350,6 @@ class FilterAdminCategories
 // Register admin filter
 function register_admin_filter($group, $name, $instance)
 {
-
     global $AFILTERS;
     $AFILTERS[$group][$name] = $instance;
 }
@@ -416,7 +359,6 @@ function register_admin_filter($group, $name, $instance)
 //
 function getPluginsActiveList()
 {
-
     global $PLUGINS;
 
     if ($PLUGINS['active:loaded']) {
@@ -438,7 +380,6 @@ function getPluginsActiveList()
 //
 function getPluginStatusActive($pluginID)
 {
-
     $array = getPluginsActiveList();
     if (isset($array['active'][$pluginID]) && $array['active'][$pluginID]) {
         return true;
@@ -452,7 +393,6 @@ function getPluginStatusActive($pluginID)
 //
 function getPluginStatusInstalled($pluginID)
 {
-
     $array = getPluginsActiveList();
     if (isset($array['installed'][$pluginID]) && $array['installed'][$pluginID]) {
         return true;
@@ -469,7 +409,6 @@ function getPluginStatusInstalled($pluginID)
 //
 function load_extras($action, $plugin = '')
 {
-
     global $PLUGINS, $timer;
 
     $loadedCount = 0;
@@ -486,14 +425,14 @@ function load_extras($action, $plugin = '')
             // Do only if this file is was not loaded earlier
             if (!isset($PLUGINS['loaded:files'][$value])) {
                 // Try to load file. First check if it exists
-                if (is_file(extras_dir . '/' . $value)) {
+                if (is_file(extras_dir.'/'.$value)) {
                     $tX = $timer->stop(4);
-                    include_once extras_dir . '/' . $value;
-                    $timer->registerEvent('loadActionHandlers(' . $action . '): preloaded file "' . $value . '" for ' . round($timer->stop(4) - $tX, 4) . " sec");
+                    include_once extras_dir.'/'.$value;
+                    $timer->registerEvent('loadActionHandlers('.$action.'): preloaded file "'.$value.'" for '.round($timer->stop(4) - $tX, 4).' sec');
                     $PLUGINS['loaded:files'][$value] = 1;
                     $loadedCount++;
                 } else {
-                    $timer->registerEvent('loadActionHandlers(' . $action . '): CAN\'t preload file that doesn\'t exists: "' . $value . '"');
+                    $timer->registerEvent('loadActionHandlers('.$action.'): CAN\'t preload file that doesn\'t exists: "'.$value.'"');
                 }
                 $PLUGINS['loaded'][$key] = 1;
             }
@@ -507,7 +446,6 @@ function load_extras($action, $plugin = '')
 // * New Style function name for `load_extras`
 function loadActionHandlers($action, $plugin = '')
 {
-
     return load_extras($action, $plugin);
 }
 
@@ -516,7 +454,6 @@ function loadActionHandlers($action, $plugin = '')
 //
 function loadPlugin($pluginName, $actionList = '*')
 {
-
     global $PLUGINS, $timer;
 
     $plugList = getPluginsActiveList();
@@ -538,14 +475,14 @@ function loadPlugin($pluginName, $actionList = '*')
 
             if (!isset($PLUGINS['loaded:files'][$pluginFileName])) {
                 // Try to load file. First check if it exists
-                if (is_file(extras_dir . '/' . $pluginFileName)) {
+                if (is_file(extras_dir.'/'.$pluginFileName)) {
                     $tX = $timer->stop(4);
-                    include_once extras_dir . '/' . $pluginFileName;
-                    $timer->registerEvent('func loadPlugin (' . $pluginName . '): preloaded file "' . $pluginFileName . '" for ' . ($timer->stop(4) - $tX) . " sec");
+                    include_once extras_dir.'/'.$pluginFileName;
+                    $timer->registerEvent('func loadPlugin ('.$pluginName.'): preloaded file "'.$pluginFileName.'" for '.($timer->stop(4) - $tX).' sec');
                     $PLUGINS['loaded:files'][$pluginFileName] = 1;
                     $loadCount++;
                 } else {
-                    $timer->registerEvent('func loadPlugin (' . $pluginName . '): CAN\'t preload file that doesn\'t exists: "' . $pluginFileName . '"');
+                    $timer->registerEvent('func loadPlugin ('.$pluginName.'): CAN\'t preload file that doesn\'t exists: "'.$pluginFileName.'"');
                 }
             }
         }
@@ -561,7 +498,6 @@ function loadPlugin($pluginName, $actionList = '*')
 //
 function loadPluginLibrary($plugin, $libname = '')
 {
-
     global $timer;
 
     $list = getPluginsActiveList();
@@ -575,16 +511,16 @@ function loadPluginLibrary($plugin, $libname = '')
     if (!$libname) {
         foreach ($list['libs'][$plugin] as $id => $file) {
             $tX = $timer->stop(4);
-            include_once extras_dir . '/' . $list['active'][$plugin] . '/' . $file;
-            $timer->registerEvent('loadPluginLibrary: ' . $plugin . '.' . $id . ' [' . $file . '] for ' . round($timer->stop(4) - $tX, 4) . " sec");
+            include_once extras_dir.'/'.$list['active'][$plugin].'/'.$file;
+            $timer->registerEvent('loadPluginLibrary: '.$plugin.'.'.$id.' ['.$file.'] for '.round($timer->stop(4) - $tX, 4).' sec');
         }
 
         return true;
     } else {
         if (isset($list['libs'][$plugin][$libname])) {
             $tX = $timer->stop(4);
-            include_once extras_dir . '/' . $list['active'][$plugin] . '/' . $list['libs'][$plugin][$libname];
-            $timer->registerEvent('loadPluginLibrary: ' . $plugin . ' [' . $libname . '] for ' . round($timer->stop(4) - $tX, 4) . " sec");
+            include_once extras_dir.'/'.$list['active'][$plugin].'/'.$list['libs'][$plugin][$libname];
+            $timer->registerEvent('loadPluginLibrary: '.$plugin.' ['.$libname.'] for '.round($timer->stop(4) - $tX, 4).' sec');
 
             return true;
         }
@@ -595,7 +531,6 @@ function loadPluginLibrary($plugin, $libname = '')
 
 function add_act($item, $function, $arguments = 0, $priority = 5)
 {
-
     global $acts;
 
     // Check if function is already loaded for this action
@@ -611,32 +546,29 @@ function add_act($item, $function, $arguments = 0, $priority = 5)
     $acts[$item][$priority][] = $function;
 
     return true;
-
 }
 
 // * New Style function name for `add_act`
 function registerActionHandler($action, $function, $priority = 5)
 {
-
     return add_act($action, $function, 0, $priority);
 }
 
 // * New Style function name for 'exec_acts'
 function executeActionHandler($action)
 {
-
     global $acts, $timer, $SYSTEM_FLAGS;
 
     $output = '';
 
     // Do not run action if it's disabled
     if (isset($SYSTEM_FLAGS['actions.disabled'][$action]) && $SYSTEM_FLAGS['actions.disabled'][$action]) {
-        $timer->registerEvent('disabled EXEC_ACTS (' . $action . ')');
+        $timer->registerEvent('disabled EXEC_ACTS ('.$action.')');
 
         return;
     }
 
-    $timer->registerEvent('executeActionHandler (' . $action . ')');
+    $timer->registerEvent('executeActionHandler ('.$action.')');
 
     // Preload plugins (if needed)
     loadActionHandlers($action);
@@ -653,7 +585,7 @@ function executeActionHandler($action)
         foreach ($functions as $func) {
             $tX = $timer->stop(4);
             $output .= call_user_func($func);
-            $timer->registerEvent('executeActionHandler (' . $action . '): call function "' . $func . '" for ' . round($timer->stop(4) - $tX, 4) . " sec");
+            $timer->registerEvent('executeActionHandler ('.$action.'): call function "'.$func.'" for '.round($timer->stop(4) - $tX, 4).' sec');
         }
     }
 
@@ -662,37 +594,35 @@ function executeActionHandler($action)
 
 function exec_acts($item, $sth = '', $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null)
 {
-
     global $acts, $timer, $SYSTEM_FLAGS;
 
     return executeActionHandler($item);
 
     // Do not run action if it's disabled
     if (isset($SYSTEM_FLAGS['actions.disabled'][$item]) && $SYSTEM_FLAGS['actions.disabled'][$item]) {
-        $timer->registerEvent('disabled EXEC_ACTS (' . $item . ')');
+        $timer->registerEvent('disabled EXEC_ACTS ('.$item.')');
 
         return;
     }
 
-    $timer->registerEvent('executeActionHandler (' . $item . ')');
+    $timer->registerEvent('executeActionHandler ('.$item.')');
 
     // Make module preload if needed
     load_extras($item);
 
     // process params
     $args = array_slice(func_get_args(), 2);
-    $all_arguments = array_merge(array($sth), $args);
+    $all_arguments = array_merge([$sth], $args);
 
     if (!isset($acts[$item]) || !$acts[$item]) {
         return $sth;
     } else {
-        uksort($acts[$item], "strnatcasecmp");
+        uksort($acts[$item], 'strnatcasecmp');
     }
 
     foreach ($acts[$item] as $priority => $functions) {
         if (!is_null($functions)) {
             foreach ($functions as $func) {
-
                 $tX = $timer->stop(4);
 
                 if ($func['arguments'] == 0) {
@@ -713,7 +643,7 @@ function exec_acts($item, $sth = '', $arg1 = null, $arg2 = null, $arg3 = null, $
                 if ($func['arguments'] == 5) {
                     $sth .= call_user_func($func['function'], $sth, $arg1, $arg2, $arg3, $arg4);
                 }
-                $timer->registerEvent('executeActionHandler (' . $item . '): call function "' . $func['function'] . '" [' . $func['arguments'] . ' params] for ' . ($timer->stop(4) - $tX) . " sec");
+                $timer->registerEvent('executeActionHandler ('.$item.'): call function "'.$func['function'].'" ['.$func['arguments'].' params] for '.($timer->stop(4) - $tX).' sec');
             }
         }
     }
@@ -724,11 +654,8 @@ function exec_acts($item, $sth = '', $arg1 = null, $arg2 = null, $arg3 = null, $
 // Disable desired action from plugin
 function actionDisable($action)
 {
-
     global $SYSTEM_FLAGS;
     $SYSTEM_FLAGS['actions.disabled'][$action] = 1;
-
-    return;
 }
 
 // =========================================================
@@ -740,7 +667,6 @@ function actionDisable($action)
 //
 function pluginGetVariable($pluginID, $var)
 {
-
     global $PLUGINS;
 
     if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig()) {
@@ -760,7 +686,6 @@ function pluginGetVariable($pluginID, $var)
 // OLD
 function extra_get_param($module, $var)
 {
-
     return pluginGetVariable($module, $var);
 }
 
@@ -769,7 +694,6 @@ function extra_get_param($module, $var)
 //
 function pluginSetVariable($pluginID, $var, $value)
 {
-
     global $PLUGINS;
 
     if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig()) {
@@ -784,7 +708,6 @@ function pluginSetVariable($pluginID, $var, $value)
 // OLD
 function extra_set_param($module, $var, $value)
 {
-
     return pluginSetVariable($module, $var, $value);
 }
 
@@ -793,12 +716,11 @@ function extra_set_param($module, $var, $value)
 //
 function pluginsSaveConfig($suppressNotify = false)
 {
-
     global $PLUGINS, $lang;
 
     if (!$PLUGINS['config:loaded'] && !pluginsLoadConfig()) {
         if (!$suppressNotify) {
-            msg(array("type" => "error", "text" => str_replace('{name}', conf_pconfig, $lang['error.config.read']), "info" => $lang['error.config.read#desc']));
+            msg(['type' => 'error', 'text' => str_replace('{name}', conf_pconfig, $lang['error.config.read']), 'info' => $lang['error.config.read#desc']]);
         }
 
         return false;
@@ -807,7 +729,7 @@ function pluginsSaveConfig($suppressNotify = false)
     //
     if (!($fconfig = @fopen(conf_pconfig, 'w'))) {
         if (!$suppressNotify) {
-            msg(array("type" => "error", "text" => str_replace('{name}', conf_pconfig, $lang['error.config.write']), "info" => $lang['error.config.write#desc']));
+            msg(['type' => 'error', 'text' => str_replace('{name}', conf_pconfig, $lang['error.config.write']), 'info' => $lang['error.config.write#desc']]);
         }
 
         return false;
@@ -822,7 +744,6 @@ function pluginsSaveConfig($suppressNotify = false)
 // OLD
 function extra_commit_changes()
 {
-
     pluginsSaveConfig();
 }
 
@@ -831,7 +752,6 @@ function extra_commit_changes()
 //
 function pluginsLoadConfig()
 {
-
     global $PLUGINS;
 
     if ($PLUGINS['config:loaded']) {
@@ -842,7 +762,7 @@ function pluginsLoadConfig()
         if (filesize(conf_pconfig)) {
             $content = fread($fconfig, filesize(conf_pconfig));
         } else {
-            $content = serialize(array());
+            $content = serialize([]);
         }
         $PLUGINS['config'] = unserialize($content);
         $PLUGINS['config:loaded'] = 1;
@@ -851,7 +771,7 @@ function pluginsLoadConfig()
         return true;
     } else {
         // File doesn't exists. Mark as `loaded`
-        $PLUGINS['config'] = array();
+        $PLUGINS['config'] = [];
         $PLUGINS['config:loaded'] = 1;
     }
 
@@ -865,13 +785,13 @@ function plugins_load_version_file($filename)
 {
 
     // config variables & function init
-    $config_params = array('id', 'name', 'version', 'acts', 'file', 'config', 'install', 'deinstall', 'management', 'type', 'description', 'author', 'author_uri', 'permanent', 'library', 'actions', 'minengineversion');
-    $required_params = array('id', 'name', 'version', 'type');
-    $list_params = array('library', 'actions');
-    $ver = array();
+    $config_params = ['id', 'name', 'version', 'acts', 'file', 'config', 'install', 'deinstall', 'management', 'type', 'description', 'author', 'author_uri', 'permanent', 'library', 'actions', 'minengineversion'];
+    $required_params = ['id', 'name', 'version', 'type'];
+    $list_params = ['library', 'actions'];
+    $ver = [];
 
     foreach ($list_params as $id) {
-        $ver[$id] = array();
+        $ver[$id] = [];
     }
 
     // open file
@@ -911,15 +831,15 @@ function plugins_load_version_file($filename)
     }
 
     // check for library/actions filling
-    foreach (array('library', 'actions') as $key) {
+    foreach (['library', 'actions'] as $key) {
         $list = $ver[$key];
-        $ver[$key] = array();
+        $ver[$key] = [];
 
         foreach ($list as $rec) {
             if (!$rec) {
                 continue;
             }
-            list ($ids, $fname) = explode(';', $rec);
+            list($ids, $fname) = explode(';', $rec);
 
             $ids = trim($ids);
             $fname = trim($fname);
@@ -944,34 +864,32 @@ function plugins_load_version_file($filename)
 //
 function pluginsGetList()
 {
-
     return get_extras_list();
 }
 
 function get_extras_list()
 {
-
     global $timer;
 
     $timer->registerEvent('@ get_extras_list() called');
     // open directory
     $handle = @opendir(extras_dir);
-    $extras = array();
+    $extras = [];
     // load list of extras
     while (false != ($dir = @readdir($handle))) {
-        $edir = extras_dir . '/' . $dir;
+        $edir = extras_dir.'/'.$dir;
         // Skip special dirs ',' and '..'
         if (($dir == '.') || ($dir == '..') || (!is_dir($edir))) {
             continue;
         }
 
         // Check 'version' file
-        if (!is_file($edir . '/version')) {
+        if (!is_file($edir.'/version')) {
             continue;
         }
 
         // Load version file
-        $ver = plugins_load_version_file($edir . '/version');
+        $ver = plugins_load_version_file($edir.'/version');
         if (!is_array($ver)) {
             continue;
         }
@@ -992,13 +910,12 @@ function get_extras_list()
 //
 function register_plugin_page($pname, $mode, $func_name, $show_template = 1)
 {
-
     global $PPAGES;
 
     if (!isset($PPAGES[$pname]) || !is_array($PPAGES[$pname])) {
-        $PPAGES[$pname] = array();
+        $PPAGES[$pname] = [];
     }
-    $PPAGES[$pname][$mode] = array('func' => $func_name, 'mode' => $mode);
+    $PPAGES[$pname][$mode] = ['func' => $func_name, 'mode' => $mode];
 }
 
 //
@@ -1006,12 +923,11 @@ function register_plugin_page($pname, $mode, $func_name, $show_template = 1)
 //
 function register_htmlvar($type, $data)
 {
-
     global $EXTRA_HTML_VARS;
 
     // Check for duplicate
 
-    $EXTRA_HTML_VARS[] = array('type' => $type, 'data' => $data);
+    $EXTRA_HTML_VARS[] = ['type' => $type, 'data' => $data];
 }
 
 //
@@ -1019,7 +935,6 @@ function register_htmlvar($type, $data)
 //
 function register_stylesheet($url)
 {
-
     global $EXTRA_CSS;
     register_htmlvar('css', $url);
 }
@@ -1029,18 +944,17 @@ function register_stylesheet($url)
 //
 function get_plugcfg_dir($plugin)
 {
-
-    $dir = confroot . 'extras';
+    $dir = confroot.'extras';
     if ((!is_dir($dir)) && (!mkdir($dir))) {
-        print "Can't create config directory for plugins. Please, check permissions for engine/conf/ dir<br/>\n";
+        echo "Can't create config directory for plugins. Please, check permissions for engine/conf/ dir<br/>\n";
 
         return '';
     }
 
-    $dir .= '/' . $plugin;
+    $dir .= '/'.$plugin;
     if (!is_dir($dir)) {
         if (!mkdir($dir)) {
-            print "Can't create config directory for plugin '$plugin'. Please, check permissions for engine/conf/plugins/ dir<br>\n";
+            echo "Can't create config directory for plugin '$plugin'. Please, check permissions for engine/conf/plugins/ dir<br>\n";
 
             return '';
         }
@@ -1054,22 +968,21 @@ function get_plugcfg_dir($plugin)
 //
 function get_plugcache_dir($plugin)
 {
-
     global $multiDomainName, $multimaster;
 
-    $dir = root . 'cache/';
+    $dir = root.'cache/';
     if ($multiDomainName && $multimaster && ($multiDomainName != $multimaster)) {
         $dir .= 'multi/';
         if ((!is_dir($dir)) && (!mkdir($dir))) {
-            print "Can't create multi cache dir!<br>\n";
+            echo "Can't create multi cache dir!<br>\n";
 
             return '';
         }
     }
     if ($plugin) {
-        $dir .= $plugin . '/';
+        $dir .= $plugin.'/';
         if ((!is_dir($dir)) && (!mkdir($dir))) {
-            print "Can't create cache for plugin '$plugin'<br>\n";
+            echo "Can't create cache for plugin '$plugin'<br>\n";
 
             return '';
         }
@@ -1104,7 +1017,7 @@ function cacheStoreFile($fname, $data, $plugin = '', $hugeMode = 0)
     //}
 
     // Try to create file
-    if (($fn = @fopen($dir . $fname, 'w')) == false) {
+    if (($fn = @fopen($dir.$fname, 'w')) == false) {
         return false;
     }
 
@@ -1144,7 +1057,7 @@ function cacheRetrieveFile($fname, $expire, $plugin = '')
     }
 
     // Try to open file with data
-    if (($fn = @fopen($dir . $fname, 'r')) == false) {
+    if (($fn = @fopen($dir.$fname, 'r')) == false) {
         return false;
     }
 
@@ -1181,18 +1094,17 @@ function cacheRetrieveFile($fname, $expire, $plugin = '')
 
 function create_access_htaccess()
 {
-
-    $htaccess_array = array(
-        array('dir' => 'cache', 'data' => "# Lock access\nOrder Deny,Allow\nDeny from all"),
-        array('dir' => 'backups', 'data' => "# Lock access\n\t<FilesMatch .*>\n\tDeny from all\n</FilesMatch>"),
-        array('dir' => 'conf', 'data' => "<files *>\n\tOrder Deny,Allow\n\tDeny from All\n</files>"),
-    );
+    $htaccess_array = [
+        ['dir' => 'cache', 'data' => "# Lock access\nOrder Deny,Allow\nDeny from all"],
+        ['dir' => 'backups', 'data' => "# Lock access\n\t<FilesMatch .*>\n\tDeny from all\n</FilesMatch>"],
+        ['dir' => 'conf', 'data' => "<files *>\n\tOrder Deny,Allow\n\tDeny from All\n</files>"],
+    ];
 
     //print '<pre>'.var_export($htaccess_array, true).'</pre>';
 
     if (is_array($htaccess_array)) {
         foreach ($htaccess_array as $result) {
-            $htaccessFile = root . $result['dir'] . '/.htaccess';
+            $htaccessFile = root.$result['dir'].'/.htaccess';
 
             // Try to create file
             if (file_exists($htaccessFile)) {
@@ -1207,7 +1119,6 @@ function create_access_htaccess()
             if (@flock($fn, LOCK_EX) == false) {
                 fclose($fn);
                 continue;
-
             }
             // Write into file
             if (@fwrite($fn, $result['data']) == -1) {
@@ -1235,35 +1146,34 @@ function create_access_htaccess()
 
 function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '', $block = '')
 {
-
     global $config;
 
     // Check if $tname is correct
     if (!is_array($tname)) {
         if ($tname == '') {
-            return array();
+            return [];
         }
-        $tname = array($tname);
+        $tname = [$tname];
     }
 
     // Text SKIN+BLOCK
-    $tsb = ((($skin != '') || ($block != '')) ? '/' : '') .
-        ($skin ? 'skins/' . $skin : '') .
-        ((($skin != '') && ($block != '')) ? '/' : '') .
+    $tsb = ((($skin != '') || ($block != '')) ? '/' : '').
+        ($skin ? 'skins/'.$skin : '').
+        ((($skin != '') && ($block != '')) ? '/' : '').
         ($block ? $block : '');
 
-    $tpath = array();
+    $tpath = [];
     foreach ($tname as $fn) {
-        $fnc = (mb_substr($fn, 0, 1) == ':') ? mb_substr($fn, 1) : ($fn . '.tpl');
-        if (!$localsource && is_readable(tpl_site . 'plugins/' . $plugin . $tsb . '/' . $fnc)) {
-            $tpath[$fn] = tpl_site . 'plugins/' . $plugin . $tsb . '/';
-            $tpath['url:' . $fn] = tpl_url . '/plugins/' . $plugin . $tsb;
-        } elseif (!$localsource && is_readable(tpl_site . 'plugins/' . $plugin . ($block ? ('/' . $block) : '') . '/' . $fnc)) {
-            $tpath[$fn] = tpl_site . 'plugins/' . $plugin . ($block ? ('/' . $block) : '') . '/';
-            $tpath['url:' . $fn] = tpl_url . '/plugins/' . $plugin . ($block ? ('/' . $block) : '');
-        } elseif (is_readable(extras_dir . '/' . $plugin . '/tpl' . $tsb . '/' . $fnc)) {
-            $tpath[$fn] = extras_dir . '/' . $plugin . '/tpl' . $tsb . '/';
-            $tpath['url:' . $fn] = admin_url . '/plugins/' . $plugin . '/tpl' . $tsb;
+        $fnc = (mb_substr($fn, 0, 1) == ':') ? mb_substr($fn, 1) : ($fn.'.tpl');
+        if (!$localsource && is_readable(tpl_site.'plugins/'.$plugin.$tsb.'/'.$fnc)) {
+            $tpath[$fn] = tpl_site.'plugins/'.$plugin.$tsb.'/';
+            $tpath['url:'.$fn] = tpl_url.'/plugins/'.$plugin.$tsb;
+        } elseif (!$localsource && is_readable(tpl_site.'plugins/'.$plugin.($block ? ('/'.$block) : '').'/'.$fnc)) {
+            $tpath[$fn] = tpl_site.'plugins/'.$plugin.($block ? ('/'.$block) : '').'/';
+            $tpath['url:'.$fn] = tpl_url.'/plugins/'.$plugin.($block ? ('/'.$block) : '');
+        } elseif (is_readable(extras_dir.'/'.$plugin.'/tpl'.$tsb.'/'.$fnc)) {
+            $tpath[$fn] = extras_dir.'/'.$plugin.'/tpl'.$tsb.'/';
+            $tpath['url:'.$fn] = admin_url.'/plugins/'.$plugin.'/tpl'.$tsb;
         }
     }
 
@@ -1273,7 +1183,6 @@ function locatePluginTemplates($tname, $plugin, $localsource = 0, $skin = '', $b
 // Register system filter
 function register_filter($group, $name, $instance)
 {
-
     global $PFILTERS;
     $PFILTERS[$group][$name] = $instance;
 }
@@ -1281,14 +1190,12 @@ function register_filter($group, $name, $instance)
 // NEW style for `register_filter`
 function pluginRegisterFilter($group, $name, $instance)
 {
-
     return register_filter($group, $name, $instance);
 }
 
 // Register RPC function
 function rpcRegisterFunction($name, $instance, $permanent = false)
 {
-
     global $RPCFUNC;
     $RPCFUNC[$name] = $instance;
 }
@@ -1296,9 +1203,8 @@ function rpcRegisterFunction($name, $instance, $permanent = false)
 // Register TWIG function call
 function twigRegisterFunction($pluginName, $funcName, $instance)
 {
-
     global $TWIGFUNC;
-    $TWIGFUNC[$pluginName . '.' . $funcName] = $instance;
+    $TWIGFUNC[$pluginName.'.'.$funcName] = $instance;
 }
 
 //
@@ -1306,7 +1212,6 @@ function twigRegisterFunction($pluginName, $funcName, $instance)
 //
 function checkLinkAvailable($pluginName, $handlerName)
 {
-
     global $UHANDLER;
 
     return isset($UHANDLER->hPrimary[$pluginName][$handlerName]);
@@ -1321,9 +1226,8 @@ function checkLinkAvailable($pluginName, $handlerName)
 // $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
 // $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
 // $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
-function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false)
+function generateLink($pluginName, $handlerName, $params = [], $xparams = [], $intLink = false, $absoluteLink = false)
 {
-
     global $UHANDLER;
 
     return $UHANDLER->generateLink($pluginName, $handlerName, $params, $xparams, $intLink, $absoluteLink);
@@ -1338,12 +1242,11 @@ function generateLink($pluginName, $handlerName, $params = array(), $xparams = a
 // $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
 // $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
 // $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
-function generatePluginLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false)
+function generatePluginLink($pluginName, $handlerName, $params = [], $xparams = [], $intLink = false, $absoluteLink = false)
 {
-
     return checkLinkAvailable($pluginName, $handlerName) ?
         generateLink($pluginName, $handlerName, $params, $xparams, $intLink, $absoluteLink) :
-        generateLink('core', 'plugin', array('plugin' => $pluginName, 'handler' => $handlerName), array_merge($params, $xparams), $intLink, $absoluteLink);
+        generateLink('core', 'plugin', ['plugin' => $pluginName, 'handler' => $handlerName], array_merge($params, $xparams), $intLink, $absoluteLink);
 }
 
 //
@@ -1374,14 +1277,13 @@ function generatePageLink($paginationParams, $page, $intlink = false)
 //
 function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handlerParams)
 {
-
     global $PPAGES, $lang, $SYSTEM_FLAGS, $CurrentHandler;
     // Preload requested plugin
     loadPlugin($pluginName, 'ppages');
 
     // Make chain-load for all plugins, that want to activate during this plugin activation
-    loadActionHandlers('action.ppages.' . $pluginName);
-    loadActionHandlers('plugin.' . $pluginName);
+    loadActionHandlers('action.ppages.'.$pluginName);
+    loadActionHandlers('plugin.'.$pluginName);
 
     $pcall = $PPAGES[$pluginName][$handlerName];
 
@@ -1390,18 +1292,18 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
         $SYSTEM_FLAGS['info']['title']['group'] = $lang['loc_plugin'];
 
         // Report current handler config
-        $CurrentHandler = array(
-            'pluginName' => $pluginName,
-            'handlerName' => $handlerName,
-            'params' => $params,
+        $CurrentHandler = [
+            'pluginName'    => $pluginName,
+            'handlerName'   => $handlerName,
+            'params'        => $params,
             'handlerParams' => $handlerParams,
-        );
+        ];
         $req = call_user_func($pcall['func'], $params);
         if (!is_null($req) && $skip['FFC'] && !$req) {
             $skip['fail'] = 1;
         }
     } else {
-        msg(array('type' => 'error', 'text' => str_replace(array('{handler}', '{plugin}'), array(secure_html($handlerName), secure_html($pluginName)), $lang['plugins.nohadler'])));
+        msg(['type' => 'error', 'text' => str_replace(['{handler}', '{plugin}'], [secure_html($handlerName), secure_html($pluginName)], $lang['plugins.nohadler'])]);
 
         return false;
     }
@@ -1411,30 +1313,29 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 
 function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, $skip, $handlerParams)
 {
-
     global $PPAGES, $lang, $CurrentHandler, $timer;
 
     //print "## PLUGIN CALL: <b> (".$pluginName.", ".$handlerName.")</b><br/>\n";
     //print "<pre>".var_export($params, true)."</pre><br/>\n";
-    $timer->registerEvent("URL Processor for [" . $pluginName . "][" . $handlerName . "]");
+    $timer->registerEvent('URL Processor for ['.$pluginName.']['.$handlerName.']');
 
     // Check for predefined plugins call
     switch ($pluginName) {
         case 'news':
-            $CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams);
+            $CurrentHandler = ['pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams];
             switch ($handlerName) {
                 default:
-                    include_once root . 'includes/news.php';
+                    include_once root.'includes/news.php';
                     showNews($handlerName, $params);
             }
             break;
 
         case 'static':
-            $CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'FFC' => $SKIP['FFC'], 'handlerParams' => $handlerParams);
+            $CurrentHandler = ['pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'FFC' => $skip['FFC'], 'handlerParams' => $handlerParams];
             switch ($handlerName) {
                 default:
-                    include_once root . 'includes/static.php';
-                    $cResult = showStaticPage(array('id' => intval($params['id']), 'altname' => $params['altname'], 'FFC' => $skip['FFC'], 'print' => (($handlerName == 'print') ? true : false)));
+                    include_once root.'includes/static.php';
+                    $cResult = showStaticPage(['id' => intval($params['id']), 'altname' => $params['altname'], 'FFC' => $skip['FFC'], 'print' => (($handlerName == 'print') ? true : false)]);
                     if (!$cResult && $skip['FFC']) {
                         $skip['fail'] = 1;
                     }
@@ -1442,16 +1343,16 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, $skip, $handl
             break;
 
         case 'search':
-            $CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams);
+            $CurrentHandler = ['pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams];
             switch ($handlerName) {
                 default:
-                    include_once root . 'includes/search.php';
+                    include_once root.'includes/search.php';
                     search_news();
             }
             break;
 
         case 'core':
-            $CurrentHandler = array('pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams);
+            $CurrentHandler = ['pluginName' => $pluginName, 'handlerName' => $handlerName, 'params' => $params, 'handlerParams' => $handlerParams];
             switch ($handlerName) {
                 case 'plugin':
                     // Set our own params $pluginName and $handlerName and pass it to default handler
@@ -1459,27 +1360,27 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, $skip, $handl
                     break;
 
                 case 'registration':
-                    include_once root . 'cmodules.php';
+                    include_once root.'cmodules.php';
                     coreRegisterUser();
                     break;
 
                 case 'activation':
-                    include_once root . 'cmodules.php';
+                    include_once root.'cmodules.php';
                     coreActivateUser();
                     break;
 
                 case 'lostpassword':
-                    include_once root . 'cmodules.php';
+                    include_once root.'cmodules.php';
                     coreRestorePassword();
                     break;
 
                 case 'login':
-                    include_once root . 'cmodules.php';
+                    include_once root.'cmodules.php';
                     coreLogin();
                     break;
 
                 case 'logout':
-                    include_once root . 'cmodules.php';
+                    include_once root.'cmodules.php';
                     coreLogout();
                     break;
 
@@ -1492,10 +1393,8 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, $skip, $handl
 
     // Return according to SKIP value
     if (isset($skip['fail']) && $skip['fail']) {
-        return array('fail' => $skip['fail']);
+        return ['fail' => $skip['fail']];
     }
-
-    return;
 }
 
 // ======================================================================== //
@@ -1503,54 +1402,50 @@ function _MASTER_URL_PROCESSOR($pluginName, $handlerName, $params, $skip, $handl
 // ======================================================================== //
 class cronManager
 {
-
     // Configuration parameters
-    var $config;
+    public $config;
 
     // Constructor
-    function __construct()
+    public function __construct()
     {
 
         // Try to load configuration
-        $configFileName = root . 'conf/cron.php';
+        $configFileName = root.'conf/cron.php';
 
         // Check if config file exists
         if (!is_file($configFileName)) {
-            $this->config = array();
+            $this->config = [];
 
             return;
         }
 
         // Load config file
-        $this->config = @include root . 'conf/cron.php';
+        $this->config = @include root.'conf/cron.php';
         if (!is_array($this->config)) {
-            $this->config = array();
+            $this->config = [];
         }
     }
 
     // Save updated config
 
-    function getConfig()
+    public function getConfig()
     {
-
         return $this->config;
     }
 
-    function setConfig($config)
+    public function setConfig($config)
     {
-
         $this->config = $config;
 
         return $this->saveConfig();
     }
 
-    function saveConfig()
+    public function saveConfig()
     {
-
-        $configFileName = root . 'conf/cron.php';
+        $configFileName = root.'conf/cron.php';
 
         // Prepare resulting config content
-        $fcData = "<?php\n" . 'return ' . var_export($this->config, true) . ";";
+        $fcData = "<?php\n".'return '.var_export($this->config, true).';';
 
         // Try to save config
         $fcHandler = @fopen($configFileName, 'w');
@@ -1564,7 +1459,7 @@ class cronManager
         return false;
     }
 
-    function registerTask($plugin, $handler, $min = '*', $hour = '*', $day = '*', $month = '*', $dow = '*')
+    public function registerTask($plugin, $handler, $min = '*', $hour = '*', $day = '*', $month = '*', $dow = '*')
     {
 
         // Проверяем параметры
@@ -1576,29 +1471,28 @@ class cronManager
             return 0;
         }
 
-        $this->config [] = array(
-            'min' => $min,
-            'hour' => $hour,
-            'day' => $day,
-            'month' => $month,
-            'dow' => $dow,
-            'plugin' => $plugin,
+        $this->config[] = [
+            'min'     => $min,
+            'hour'    => $hour,
+            'day'     => $day,
+            'month'   => $month,
+            'dow'     => $dow,
+            'plugin'  => $plugin,
             'handler' => $handler,
-        );
+        ];
 
         return $this->saveConfig();
     }
 
     // Register new CRON task
 
-    function checkList($value, $min, $max)
+    public function checkList($value, $min, $max)
     {
-
         if ($value == '*') {
             return true;
         }
 
-        foreach (explode(",", $value) as $v) {
+        foreach (explode(',', $value) as $v) {
             if (!preg_match("#^(\d+)$#", $v, $m)) {
                 return false;
             }
@@ -1613,9 +1507,8 @@ class cronManager
 
     // Deregister CRON task(s)
 
-    function unregisterTask($plugin, $handler = '', $min = '', $hour = '', $day = '', $month = '', $DOW = '')
+    public function unregisterTask($plugin, $handler = '', $min = '', $hour = '', $day = '', $month = '', $DOW = '')
     {
-
         $ok = 0;
         foreach ($this->config as $k => $v) {
             if (((!$min) && ($v['plugin'] == $plugin) && ((!$handler) || ($v['handler'] == $handler))) ||
@@ -1634,13 +1527,12 @@ class cronManager
     }
 
     // Cron core - run tasks
-    function run($isSysCron = false)
+    public function run($isSysCron = false)
     {
-
         global $timer;
 
         // Check if there're any CRON tasks, return if no tasks
-        if (sizeof($this->config) == 0) {
+        if (count($this->config) == 0) {
             return 0;
         }
 
@@ -1654,7 +1546,7 @@ class cronManager
         //$period = 10;
 
         if (!is_dir($cacheDir) && !mkdir($cacheDir)) {
-            print "Can't create temp directory for plugin 'core'<br />\n";
+            echo "Can't create temp directory for plugin 'core'<br />\n";
 
             return;
         }
@@ -1668,7 +1560,7 @@ class cronManager
             return -1;
         }
         while (false !== ($file = readdir($dir))) {
-            if ((false !== ($fsize = filesize($cacheDir . '/' . $file))) && (preg_match('#^cron_(\d+)$#', $file, $m))) {
+            if ((false !== ($fsize = filesize($cacheDir.'/'.$file))) && (preg_match('#^cron_(\d+)$#', $file, $m))) {
                 if ($fsize && (intval($m[1]) > $lastRunTime)) {
                     $lastRunTime = intval($m[1]);
                 } elseif (intval($m[1]) > $fn_progress) {
@@ -1691,10 +1583,10 @@ class cronManager
 
         // Create flag
         $myFlagTime = $nowTime;
-        $myFlagFile = 'cron_' . $myFlagTime;
+        $myFlagFile = 'cron_'.$myFlagTime;
 
         // Try to rename
-        if (!rename($temp, $cacheDir . '/' . $myFlagFile)) {
+        if (!rename($temp, $cacheDir.'/'.$myFlagFile)) {
             // Unsuccessfull, delete temp file, terminate (someone was before us)
             unlink($temp);
 
@@ -1715,7 +1607,7 @@ class cronManager
 
         if ($fn_max > $myFlagFile) {
             // Someone was faster, terminate
-            unlink($cacheDir . '/' . $myFlagFile);
+            unlink($cacheDir.'/'.$myFlagFile);
 
             return 0;
         }
@@ -1725,18 +1617,18 @@ class cronManager
         //===========================================================================================
 
         // Prepare a list of tasks that we should run after previous call
-        $runList = array();
+        $runList = [];
 
         //print ">> Last run: ".date("Y-m-d H:i:s", $lastRunTime)." ($lastRunTime)<br />\n";
         //print ">> Now: ".date("Y-m-d H:i:s", $nowTime)." ($nowTime)<br />\n";
         foreach ($this->config as $cronLine) {
             // Expand lines that uses lists
-            $execList = array();
-            foreach (explode(",", $cronLine['month']) as $xm) {
-                foreach (explode(",", $cronLine['day']) as $xd) {
-                    foreach (explode(",", $cronLine['hour']) as $xh) {
-                        foreach (explode(",", $cronLine['min']) as $xmin) {
-                            $execList [] = array('month' => $xm, 'day' => $xd, 'hour' => $xh, 'min' => $xmin);
+            $execList = [];
+            foreach (explode(',', $cronLine['month']) as $xm) {
+                foreach (explode(',', $cronLine['day']) as $xd) {
+                    foreach (explode(',', $cronLine['hour']) as $xh) {
+                        foreach (explode(',', $cronLine['min']) as $xmin) {
+                            $execList[] = ['month' => $xm, 'day' => $xd, 'hour' => $xh, 'min' => $xmin];
                         }
                     }
                 }
@@ -1788,12 +1680,12 @@ class cronManager
 
             if ($flagRun) {
                 // Mark plugin as 'need to run'
-                $runList[$cronLine['plugin'] . '_' . $cronLine['handler']] = array($cronLine['plugin'], $cronLine['handler']);
+                $runList[$cronLine['plugin'].'_'.$cronLine['handler']] = [$cronLine['plugin'], $cronLine['handler']];
             }
         }
 
         // Check if now we have anything to run
-        if (sizeof($runList)) {
+        if (count($runList)) {
 
             // Call handlers
             $trace = '';
@@ -1806,7 +1698,7 @@ class cronManager
                 } else {
                     // COMMON plugins - load plugin for handler "CRON"
                     loadPlugin($run[0], 'cron');
-                    $funcName = 'plugin_' . $run[0] . '_cron';
+                    $funcName = 'plugin_'.$run[0].'_cron';
                 }
                 // Try to call function and to pass parameter (handler)
                 if (function_exists($funcName)) {
@@ -1814,11 +1706,11 @@ class cronManager
                     call_user_func($funcName, $isSysCron, $run[1]);
                     $t1 = $timer->stop(4);
 
-                    ngSYSLOG(array('plugin' => 'core', 'item' => 'cronExecute'), array('action' => $run[0], 'list' => $run), null, array(1, 'Execute cron job for ' . sprintf("%7.4f", $t1 - $t0) . ' sec'));
+                    ngSYSLOG(['plugin' => 'core', 'item' => 'cronExecute'], ['action' => $run[0], 'list' => $run], null, [1, 'Execute cron job for '.sprintf('%7.4f', $t1 - $t0).' sec']);
                 } else {
-                    ngSYSLOG(array('plugin' => 'core', 'item' => 'cronExecute'), array('action' => $run[0], 'list' => $run), null, array(0, 'Function does not exists!'));
+                    ngSYSLOG(['plugin' => 'core', 'item' => 'cronExecute'], ['action' => $run[0], 'list' => $run], null, [0, 'Function does not exists!']);
                 }
-                $trace .= 'Execute cron job [' . $run[0] . '] action [' . $run[1] . "]\n";
+                $trace .= 'Execute cron job ['.$run[0].'] action ['.$run[1]."]\n";
             }
         }
 
@@ -1827,7 +1719,7 @@ class cronManager
         // ====================================
 
         // Mark flag as 'complete'
-        if (false !== ($f = fopen($cacheDir . '/' . $myFlagFile, 'w'))) {
+        if (false !== ($f = fopen($cacheDir.'/'.$myFlagFile, 'w'))) {
             fwrite($f, $trace);
             fwrite($f, 'OK');
             fclose($f);
@@ -1844,7 +1736,7 @@ class cronManager
         }
         while (false !== ($file = readdir($dir))) {
             if (preg_match("#^cron_(\d+)$#", $file, $m) && (intval($m[1]) < $myFlagTime)) {
-                unlink($cacheDir . '/' . $file);
+                unlink($cacheDir.'/'.$file);
             }
         }
         closedir($dir);
