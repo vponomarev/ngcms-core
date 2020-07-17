@@ -102,7 +102,7 @@ class NGMYSQLi extends NGDB
             $query = mysqli_query($this->db, $sql);
             
             $r = array();
-            while ($item = mysqli_fetch_array($query)) {
+            while ($item = mysqli_fetch_array($query, MYSQLI_ASSOC)) {
                 $r[] = $item;
             }
             
