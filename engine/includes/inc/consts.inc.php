@@ -17,14 +17,14 @@
 @define('NGCMS', true);
 
 @define('engineName', 'NGCMS');
-@define('engineVersion', '0.9.6 RC2');
+@define('engineVersion', '0.9.7 RC0');
 @define('engineVersionType', 'GIT');
-@define('engineVersionBuild', '20190613');
+@define('engineVersionBuild', '20200717');
 
 @define('prefix', $config['prefix']);
 @define('uprefix', $config['uprefix']);
 @define('home', $config['home_url']);
-@define('scriptLibrary', $config['home_url'] . '/lib');
+@define('scriptLibrary', $config['home_url'].'/lib');
 @define('localPrefix', (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $tempMatch)) ? $tempMatch[2] : '');
 
 @define('home_title', $config['home_title']);
@@ -41,11 +41,11 @@
 @define('timestamp', $config['timestamp_active']);
 @define('date_adjust', $config['date_adjust']);
 
-@define('skins_url', admin_url . '/skins/default');
-@define('tpl_actions', root . 'skins/default/tpl/');
-@define('tpl_dir', site_root . 'templates/');
+@define('skins_url', admin_url.'/skins/default');
+@define('tpl_actions', root.'skins/default/tpl/');
+@define('tpl_dir', site_root.'templates/');
 
-@define('extras_dir', root . 'plugins', true);
+@define('extras_dir', root.'plugins', true);
 
-@define('conf_pactive', confroot . 'plugins.php', true);
-@define('conf_pconfig', confroot . 'plugdata.php', true);
+@define('conf_pactive', confroot.'plugins.php', true);
+@define('conf_pconfig', confroot.'plugdata.php', true);
