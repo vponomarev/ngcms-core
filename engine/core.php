@@ -362,6 +362,10 @@ if ((is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD
     $xrow = $auth_db->check_auth();
     $CURRENT_USER = $xrow;
 
+    if (is_array($xrow)) {
+        NGEngine::getInstance()->set('currentUser', new NGUser($xrow));
+    }
+
     if (isset($xrow['name']) && $xrow['name']) {
         $is_logged_cookie = true;
         $is_logged = true;

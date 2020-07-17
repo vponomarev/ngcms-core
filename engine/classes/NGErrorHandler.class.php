@@ -14,7 +14,6 @@ class NGErrorHandler
             $mode = NGEngine::getInstance()->getConfigParam('sql_error_show', 0);
             $currentUser = NGEngine::getInstance()->getCurrentUser();
 
-
             if (($mode == 2) ||
                 (($mode == 1) && (is_object($currentUser))) ||
                 (($mode == 0) && (is_object($currentUser)) && ($currentUser->isAdmin()))
