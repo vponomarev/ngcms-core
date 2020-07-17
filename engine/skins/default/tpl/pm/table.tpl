@@ -1,38 +1,34 @@
-<form name="form" method="POST" action="{php_self}?mod=pm&action=delete">
-	<table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-		<tr>
-			<td width="100%" style="padding-right:10px;" valign="top">
-				<table border="0" width="100%" cellpadding="0" cellspacing="0">
+<div class="page-title">
+	<h2>{l_pm}</h2>
+</div>
+
+<form action="{php_self}?mod=pm&action=delete" method="post" name="form">
+	<div class="card">
+		<div class="card-header text-right">
+			<a href="{php_self}?mod=pm&action=write" class="btn btn-outline-success">{l_write}</a>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table table-sm mb-0">
+				<thead>
 					<tr>
-						<td width=100% colspan="5" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=pm">{l_pm}</a>
-						</td>
+						<th width="15%">{l_pmdate}</th>
+						<th width="40%">{l_title}</th>
+						<th nowrap>{l_from}</th>
+						<th width="15%">{l_status}</th>
+						<th width="5%">
+							<input type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form)">
+						</th>
 					</tr>
-					<tr>
-						<td width=100% colspan="5">&nbsp;</td>
-					</tr>
-					<tr align="center" class="contHead">
-						<td width="15%" class="contentHead">{l_pmdate}</td>
-						<td width="40%" class="contentHead">{l_title}</td>
-						<td width="25%" class="contentHead">{l_from}</td>
-						<td width="15%" class="contentHead">{l_status}</td>
-						<td width="5%" class="contentHead">
-							<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(form)">
-						</td>
-					</tr>
+				</thead>
+				<tbody>
 					{entries}
-					<tr>
-						<td width=100% colspan="5">&nbsp;</td>
-					</tr>
-					<tr align="center">
-						<td width="100%" colspan="5" class="contentEdit">
-							<input class="button" type="submit" value="{l_delete}">
+				</tbody>
+			</table>
+		</div>
+
+		<div class="card-footer text-right">
+			<button type="submit" class="btn btn-outline-danger">{l_delete}</button>
+		</div>
+	</div>
 </form>
-<form name="pm" method="POST" action="{php_self}?mod=pm&action=write">
-	<input class="button" type="submit" value="{l_write}">
-</form>
-</td>
-</tr>
-</table>
-</td>
-</tr>
-</table>

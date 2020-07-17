@@ -1,0 +1,123 @@
+@import "variables";
+@import url($web-font-path);
+@import "~font-awesome/scss/font-awesome";
+@import "~bootstrap/scss/bootstrap";
+
+html {
+    background-color: #ccc;
+    background: linear-gradient(45deg, #EECFBA, #C5DDE8);
+}
+
+body {
+    padding: 40px 0 170px;
+    background: none;
+}
+
+.card {
+    @extend .shadow-lg;
+    background: var(--white);
+}
+
+.block {
+    border: 1px solid #293a48;
+}
+
+.head {
+    display: block;
+    width: 100%;
+    color: var(--white);
+    background-color: #293a48;
+    padding: 5px 8px;
+    border-bottom: 2px solid #293a48;
+    line-height: 1.42857143;
+    margin: 0;
+}
+
+.block .data thead {
+    background-color: var(--white);
+    color: #3c9c08;
+}
+
+.errorDiv {
+    @extend .alert;
+    @extend .alert-danger;
+}
+
+.warningDiv {
+    @extend .alert;
+    @extend .alert-warning;
+}
+
+.steps {
+    overflow: hidden;
+    position: relative;
+    margin: 0.75rem -1.25rem -.75rem;
+    text-align: center;
+    line-height: 30px;
+}
+
+.progress {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #ddd;
+}
+
+.progress-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1px;
+    background: var(--warning);
+}
+
+.step {
+    position: relative;
+    float: left;
+    width: 14.28%;
+    padding: 0 5px;
+}
+
+.step-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-top: 4px;
+    background: #ddd;
+    font-size: 16px;
+    color: var(--white);
+    line-height: 40px;
+    border-radius: 50%;
+}
+
+.step.activated .step-icon {
+    background: var(--white);
+    border: 1px solid var(--warning);
+    color: var(--warning);
+    line-height: 38px;
+}
+
+.step.active .step-icon {
+    width: 48px;
+    height: 48px;
+    margin-top: 0;
+    background: var(--warning);
+    font-size: 22px;
+    line-height: 48px;
+}
+
+.step p {
+    color: #ccc;
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.step.activated p {
+    color: var(--warning);
+}
+
+.step.active p {
+    color: var(--warning);
+}

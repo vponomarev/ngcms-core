@@ -1,0 +1,268 @@
+// Variables
+@import "variables";
+
+// Fonts
+@import url($web-font-path);
+
+// fontawesome
+// npm i font-awesome@4.7.0 --save-dev
+@import "~font-awesome/scss/font-awesome";
+
+// Bootstrap framework
+@import "~bootstrap/scss/bootstrap";
+
+@import "~jquery-datetimepicker/jquery.datetimepicker.css";
+
+@import "../vendor/uploadifive/uploadifive.css";
+
+body {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 100;
+}
+
+body {
+    font-size: 0.875rem;
+}
+
+#loading-layer {
+    display: none;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    position: fixed;
+    left: 45%;
+    top: 45%;
+    z-index: 99999!important;
+}
+
+#loading-layer[style="visibility: visible;"] {
+    display: block!important;
+}
+
+#catmenu {
+    @extend .custom-select;
+    width: 100%!important;
+}
+
+#ng-stickers {
+    transition: all 0.5s ease-in-out 0s;
+    z-index: 1031;
+    top: 20px!important;
+    right: 20px!important;
+}
+
+// .ngStickerClass {
+//     @extend .alert, .alert-dismissible;
+// }
+
+.ngStickerClassClassic {
+    @extend .alert-info;
+}
+
+.ngStickerClassError {
+    @extend .alert-danger;
+}
+
+.ngStickerClassExitBTN {
+    @extend .close;
+    cursor: pointer;
+}
+
+.ngStickerClassExitBTN::after {
+    content: '×';
+}
+
+.accordion>.card {
+    overflow: visible;
+}
+
+.suggestWindow {
+    background: var(--light);
+    border: 1px solid var(--gray);
+    color: var(--gray);
+    width: 100%;
+    display: block;
+    visibility: hidden;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    z-index: 1020;
+}
+
+.suggestBlock {
+    @extend .table, .table-sm;
+    margin-bottom: 0;
+}
+
+.suggestBlock td {
+    padding-left: 2px;
+}
+
+.suggestBlock tr {
+    padding: 3px 3px 3px 8px;
+    background: var(--white);
+}
+
+.suggestBlock .suggestRowHighlight {
+    background-color: var(--success);
+    color: var(--white);
+    cursor: pointer;
+}
+
+.suggestBlock b {
+    color: var(--dark);
+    font-weight: 900;
+}
+
+.suggestBlock .cleft {
+    padding-left: 5px;
+}
+
+.suggestBlock .cright {
+    text-align: right;
+    padding-right: 5px;
+}
+
+.suggestClose {
+    display: block;
+    text-align: right;
+    padding: 3px;
+    cursor: pointer;
+}
+
+label > input[type="radio"],
+label > input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+table.extra-config {
+
+}
+
+table.extra-config > tbody > tr:first-child td {
+    // width: 100%;
+}
+
+table.extra-config > tbody > tr:first-child td small {
+    font-size: inherit;
+}
+
+input:not([type]):not([class]),
+input[type="text"]:not([class]),
+textarea:not([class]) {
+    @extend .form-control;
+}
+
+select:not([class]) {
+    @extend .custom-select;
+}
+
+// button:not([class]),
+// .button {
+//     @extend .btn, .btn-outline-primary;
+// }
+//
+// table.content {
+//     @extend .table, .table-sm;
+// }
+/*
+ * Sidebar
+ */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    /* Behind the navbar */
+    padding: 48px 0 0;
+    /* Height of navbar */
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+@media (max-width: 767.98px) {
+    .sidebar {
+        top: 5rem;
+    }
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Scrollable contents if viewport is shorter than content. */
+}
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+    .sidebar-sticky {
+        position: -webkit-sticky;
+        position: sticky;
+    }
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #333;
+}
+
+.sidebar .nav-link .feather {
+    margin-right: 4px;
+    color: #999;
+}
+
+.sidebar .nav-link.active {
+    color: #007bff;
+}
+
+.sidebar .nav-link.active .feather,
+.sidebar .nav-link:hover .feather {
+    color: inherit;
+}
+
+.sidebar-heading {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+/*
+ * Navbar
+ */
+.navbar-brand {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    font-size: 1rem;
+    background-color: rgba(0, 0, 0, .25);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.navbar .navbar-toggler {
+    top: 0.25rem;
+    right: 1rem;
+}
+
+.navbar .form-control {
+    padding: 0.75rem 1rem;
+    border-width: 0;
+    border-radius: 0;
+}
+
+.form-control-dark {
+    color: #fff;
+    background-color: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .1);
+}
+
+.form-control-dark:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+.breadcrumb-item .fa,
+.dropdown-item .fa,
+.nav-link .fa {
+    margin-right: 8px;
+}
+
+.page-title {
+    @extend .pt-3, .pb-2, .mb-4, .border-bottom;
+}

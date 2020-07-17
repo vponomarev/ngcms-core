@@ -1,36 +1,55 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ lang['langcode'] }}" lang="{{ lang['langcode'] }}" dir="ltr">
+<!DOCTYPE html>
+<html lang="{{ lang['langcode'] }}">
+
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset={{ lang['encoding'] }}"/>
-	<title>{{ home_title }} - {{ lang['adminpanel'] }}</title>
-	<link href="{{ skins_url }}/login_style.css" rel="stylesheet" type="text/css" media="screen"/>
+	<meta charset="{{ lang['encoding'] }}">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<title>{{ home_title }} - {{ lang['admin_panel'] }}</title>
 
+	<link href="{{ skins_url }}/public/css/login.css" rel="stylesheet">
+
+	<script src="{{ skins_url }}/public/js/manifest.js"></script>
+	<script src="{{ skins_url }}/public/js/vendor.js"></script>
+	<script src="{{ skins_url }}/public/js/login.js"></script>
 </head>
+
 <body>
+	<div class="container">
+		<div class="row">
+			<div class="col-12 col-md-6 col-lg-4 mx-auto mt-5">
+				<div class="card">
+					<form name="login" method="post" action="{{ php_self }}">
+						<input type="hidden" name="redirect" value="{{ redirect }}">
+						<input type="hidden" name="action" value="login">
 
-<!--Login block-->
+						<h5 class="card-header text-center">
+							{{ lang['admin_panel'] }}
+						</h5>
 
-<div id="login_wrap">
-	<div class="l_block">
+						<div class="card-body">
+							<div class="form-group">
+								<label for="username" class="control-label">{{ lang['name'] }}</label>
+								<input id="username" name="username" type="text" class="form-control" required>
+							</div>
 
-		<div class="in">
+							<div class="form-group mb-5">
+								<label for="password" class="control-label">{{ lang['password'] }}</label>
+								<input id="password" name="password" type="password" class="form-control" required>
+							</div>
 
-			<img src="{{ skins_url }}/images/login/logo.png" width="283" height="129"/>
-			<form name="login" method="post" action="{{ php_self }}">
-				<label>{{ lang['name'] }}</label>
-				<input tabindex="1" type="text" name="username" value="" maxlength="60"/>
-				<label>{{ lang['password'] }}</label>
-				<input class="password" tabindex="2" type="password" name="password" maxlength="20"/>
-				<br/>
-				<input type="submit" class="filterbutton" value="{{ lang['login'] }}"/>
-				<input type="hidden" name="redirect" value="{{ redirect }}"/>
-				<input type="hidden" name="action" value="login"/>
-			</form>
+							<div class="form-group">
+								<button type="submit" class="btn btn-success btn-block">{{ lang['login'] }}</button>
+							</div>
+						</div>
+
+						<div class="card-footer">
+							<div class="text-center text-muted">2008-{{ year }} © <a href="http://ngcms.ru" target="_blank">Next Generation CMS</a></div>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
-	<p class="log_copyright">2008-{{ year }} © <a href="http://ngcms.ru" target="_blank">Next Generation CMS</a></p>
-</div>
-<!--/Login block-->
-
 </body>
+
 </html>

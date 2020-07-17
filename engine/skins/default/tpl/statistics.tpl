@@ -1,3 +1,236 @@
+<div class="page-title">
+	<h2>{{ lang['admin_panel'] }}</h2>
+</div>
+
+<!-- Configuration errors -->
+{% if (flags.confError) %}
+<div class="alert alert-danger" role="alert">
+	<h4 class="alert-heading mb-0">{{ lang['pconfig.error'] }}</h4>
+</div>
+
+<table class="table table-danger table-bordered">
+	<thead>
+		<tr>
+			<th>{{ lang['perror.parameter'] }}</th>
+			<th>{{ lang['perror.shouldbe'] }}</th>
+			<th>{{ lang['perror.set'] }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Register Globals</td>
+			<td>{{ lang['perror.off'] }}</td>
+			<td>{{ flags.register_globals }}</td>
+		</tr>
+		<tr>
+			<td>Magic Quotes GPC</td>
+			<td>{{ lang['perror.off'] }}</td>
+			<td>{{ flags.magic_quotes_gpc }}</td>
+		</tr>
+		<tr>
+			<td>Magic Quotes Runtime</td>
+			<td>{{ lang['perror.off'] }}</td>
+			<td>{{ flags.magic_quotes_runtime }}</td>
+		</tr>
+		<tr>
+			<td>Magic Quotes Sybase</td>
+			<td>{{ lang['perror.off'] }}</td>
+			<td>{{ flags.magic_quotes_sybase }}</td>
+		</tr>
+	</tbody>
+</table>
+
+<button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#perror_resolve">{{ lang['perror.howto'] }}</button>
+
+<div id="perror_resolve" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="perrorModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="perrorModalLabel" class="modal-title">{{ lang['perror.howto'] }}</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			</div>
+
+			<div class="modal-body">{{ lang['perror.descr'] }}</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}
+
+<div class="row">
+	<div class="col-md-6 mb-3">
+		<div class="card">
+			<h5 class="card-header font-weight-light">{{ lang['server'] }}</h5>
+			<table class="table table-sm mb-0">
+				<tbody>
+					<tr>
+						<td>{{ lang['os'] }}</td>
+						<td>{{ php_os }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['php_version'] }}</td>
+						<td>{{ php_version }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['mysql_version'] }}</td>
+						<td>{{ mysql_version }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['pdo_support'] }}</td>
+						<td>{{ pdo_support }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['gd_version'] }}</td>
+						<td>{{ gd_version }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="col-md-6 mb-3">
+		<div class="card">
+			<h5 class="card-header font-weight-light">Next Generation CMS</h5>
+			<table class="table table-sm mb-0">
+				<tbody>
+					<tr>
+						<td>{{ lang['current_version'] }}</td>
+						<td>{{ currentVersion }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['last_version'] }}</td>
+						<td><span id="syncLastVersion">loading..</span></td>
+					</tr>
+					<tr>
+						<td>{{ lang['git_version'] }}</td>
+						<td><span id="syncSVNVersion">loading..</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6 mb-3">
+		<div class="card">
+			<h5 class="card-header font-weight-light">{{ lang['size'] }}</h5>
+			<table class="table table-sm mb-0">
+				<thead>
+					<tr>
+						<th>{{ lang['group'] }}</th>
+						<th>{{ lang['amount'] }}</th>
+						<th>{{ lang['volume'] }}</th>
+						<th>{{ lang['permissions'] }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{ lang['group_images'] }}</td>
+						<td>{{ image_amount }}</td>
+						<td>{{ image_size }}</td>
+						<td>{{ image_perm }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['group_files'] }}</td>
+						<td>{{ file_amount }}</td>
+						<td>{{ file_size }}</td>
+						<td>{{ file_perm }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['group_photos'] }}</td>
+						<td>{{ photo_amount }}</td>
+						<td>{{ photo_size }}</td>
+						<td>{{ photo_perm }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['group_avatars'] }}</td>
+						<td>{{ avatar_amount }}</td>
+						<td>{{ avatar_size }}</td>
+						<td>{{ avatar_perm }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['group_backup'] }}</td>
+						<td>{{ backup_amount }}</td>
+						<td>{{ backup_size }}</td>
+						<td>{{ backup_perm }}</td>
+					</tr>
+					<tr>
+						<td colspan="2">{{ lang['allowed_size'] }}</td>
+						<td colspan="2">{{ allowed_size }}</td>
+					</tr>
+					<tr>
+						<td colspan="2">{{ lang['mysql_size'] }}</td>
+						<td colspan="2">{{ mysql_size }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="col-md-6 mb-3">
+		<div class="card">
+			<h5 class="card-header font-weight-light">{{ lang['system'] }}</h5>
+			<table class="table table-sm mb-0">
+				<tbody>
+					<tr>
+						<td>{{ lang['all_cats'] }}</td>
+						<td>{{ categories }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['all_news'] }}</td>
+						<td>
+							<a href="{{ php_self }}?mod=news&status=1">{{ news_draft }}</a> / <a href="{{ php_self }}?mod=news&status=2">{{ news_unapp }}</a> / <a href="{{ php_self }}?mod=news&status=3">{{ news }}</a>
+						</td>
+					</tr>
+					<tr>
+						<td>{{ lang['all_comments'] }}</td>
+						<td>{{ comments }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['all_users'] }}</td>
+						<td>{{ users }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['all_users_unact'] }}</td>
+						<td>{{ users_unact }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['all_images'] }}</td>
+						<td>{{ images }}</td>
+					</tr>
+					<tr>
+						<td>{{ lang['all_files'] }}</td>
+						<td>{{ files }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="card">
+	<h5 class="card-header font-weight-light">{{ lang['note'] }}</h5>
+
+	<div class="card-body">
+		<form method="post" action="{{ php_self }}?mod=statistics">
+			<input type="hidden" name="action" value="save" />
+
+			<textarea name="note" rows="6" cols="70" class="form-control mb-3" style="background-color: lightyellow;" placeholder="{{ lang['no_notes'] }}">{{ admin_note }}</textarea>
+
+			<button type="submit" class="btn btn-outline-success">{{ lang['save_note'] }}</button>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	{{ versionNotify }}
+</script>
+
+<!-- Не понятно, что это и откуда. -->
 <style>
 	#modalmsgDialog {
 		position: absolute;
@@ -29,254 +262,23 @@
 		padding: 5px;
 	}
 </style>
-<script>
+
+<script type="text/javascript">
 	function showModal(text) {
 		document.getElementById('modalmsgDialog').style.display = 'block';
 		document.getElementById('modalmsgWindowText').innerHTML = text;
 	}
+
 	function _modal_close() {
 		document.getElementById('modalmsgDialog').style.display = 'none';
 	}
 </script>
-<div id="modalmsgDialog" onclick="_modal_close();"><span id="modalmsgWindow"><div id="modalmsgWindowText"></div><div id="modalmsgWindowButton"><input type="button" value="OK"/></div></span>
+
+<div id="modalmsgDialog" onclick="_modal_close();">
+	<span id="modalmsgWindow">
+		<div id="modalmsgWindowText"></div>
+		<div id="modalmsgWindowButton">
+			<input type="button" value="OK" />
+		</div>
+	</span>
 </div>
-
-<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-	<tr>
-		<td width="50%" style="padding-right:10px;" valign="top">
-			<table border="0" width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['server'] }}</td>
-				</tr>
-				<tr>
-					<td width="50%" class="contentEntry1">{{ lang['os'] }}</td>
-					<td width="50%" class="contentEntry2">{{ php_os }}</td>
-				</tr>
-				<tr>
-					<td width="50%" class="contentEntry1">{{ lang['php_version'] }} / {{ lang['mysql_version'] }}</td>
-					<td width="50%" class="contentEntry2">{{ php_version }} / {{ mysql_version }}</td>
-				</tr>
-				<tr>
-					<td width="50%" class="contentEntry1">{{ lang['gd_version'] }}</td>
-					<td width="50%" class="contentEntry2">{{ gd_version }}</td>
-				</tr>
-				<tr>
-					<td width="50%" class="contentEntry1">{{ lang['pdo_support'] }}</td>
-					<td width="50%" class="contentEntry2">{{ pdo_support }}</td>
-				</tr>
-			</table>
-		</td>
-		<td width="50%" style="padding-left:10px;" valign="top">
-			<table border="0" width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>Next
-						Generation CMS
-					</td>
-				</tr>
-				<tr>
-					<td width="45%" class="contentEntry1">{{ lang['current_version'] }}</td>
-					<td width="55%" class="contentEntry2">
-						<span style="font-weight: bold; color: #6cb7ef;">{{ currentVersion }}</span></td>
-				</tr>
-				<tr>
-					<td width="45%" class="contentEntry1">{{ lang['last_version'] }}</td>
-					<td width="55%" class="contentEntry2"><span id="syncLastVersion">loading..</span></td>
-				</tr>
-				<tr>
-					<td width="45%" class="contentEntry1">{{ lang['git_version'] }}</td>
-					<td width="55%" class="contentEntry2"><span id="syncSVNVersion">loading..</span></td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">&nbsp;</td>
-	</tr>
-	<tr>
-		<td width="50%" style="padding-right:10px;" valign="top">
-			<table border="0" width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td colspan="4" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['size'] }}</td>
-				</tr>
-				<tr>
-					<td class="contentEntry1">{{ lang['group'] }}</td>
-					<td class="contentEntry1" align="right">{{ lang['amount'] }}</td>
-					<td class="contentEntry1" align="right">{{ lang['volume'] }}</td>
-					<td class="contentEntry1" align="right"> &nbsp; {{ lang['permissions'] }}</td>
-				</tr>
-				<tr>
-					<td class="contentEntry1">{{ lang['group_images'] }}</td>
-					<td class="contentEntry1" align="right">{{ image_amount }}</td>
-					<td class="contentEntry1" align="right">{{ image_size }}</td>
-					<td class="contentEntry1" align="right"> &nbsp; {{ image_perm }}</td>
-				</tr>
-				<tr>
-					<td class="contentEntry1">{{ lang['group_files'] }}</td>
-					<td class="contentEntry1" align="right">{{ file_amount }}</td>
-					<td class="contentEntry1" align="right">{{ file_size }}</td>
-					<td class="contentEntry1" align="right"> &nbsp; {{ file_perm }}</td>
-				</tr>
-				<tr>
-					<td class="contentEntry1">{{ lang['group_photos'] }}</td>
-					<td class="contentEntry1" align="right">{{ photo_amount }}</td>
-					<td class="contentEntry1" align="right">{{ photo_size }}</td>
-					<td class="contentEntry1" align="right">&nbsp; {{ photo_perm }}</td>
-				</tr>
-				<tr>
-					<td class="contentEntry1">{{ lang['group_avatars'] }}</td>
-					<td class="contentEntry1" align="right">{{ avatar_amount }}</td>
-					<td class="contentEntry1" align="right">{{ avatar_size }}</td>
-					<td class="contentEntry1" align="right"> &nbsp; {{ avatar_perm }}</td>
-				</tr>
-				<tr>
-					<td class="contentEntry1">{{ lang['group_backup'] }}</td>
-					<td class="contentEntry1" align="right">{{ backup_amount }}</td>
-					<td class="contentEntry1" align="right">{{ backup_size }}</td>
-					<td class="contentEntry1" align="right"> &nbsp; {{ backup_perm }}</td>
-				</tr>
-			</table>
-
-			<script type="text/javascript" language="JavaScript">
-				{{ versionNotify }}
-			</script>
-
-			<br/><br/>
-
-			<table border="0" width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['size'] }}</td>
-				</tr>
-				<tr>
-					<td width="50%" class="contentEntry1">{{ lang['allowed_size'] }}</td>
-					<td width="50%" class="contentEntry2">{{ allowed_size }}</td>
-				</tr>
-				<tr>
-					<td width="50%" class="contentEntry1">{{ lang['mysql_size'] }}</td>
-					<td width="50%" class="contentEntry2">{{ mysql_size }}</td>
-				</tr>
-			</table>
-		</td>
-
-		<td width="50%" style="padding-left:10px;" valign="top">
-			<table border="0" width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['system'] }}</td>
-				</tr>
-				<tr>
-					<td width="70%" class="contentEntry1">{{ lang['all_cats'] }}</td>
-					<td width="30%" class="contentEntry2">{{ categories }}</td>
-				</tr>
-				<tr>
-					<td width="70%" class="contentEntry1">{{ lang['all_news'] }}</td>
-					<td width="30%" class="contentEntry2"><a href="?mod=news&status=1">{{ news_draft }}</a> /
-						<a href="?mod=news&status=2">{{ news_unapp }}</a> / <a href="?mod=news&status=3">{{ news }}</a>
-					</td>
-				</tr>
-				<tr>
-					<td width="70%" class="contentEntry1">{{ lang['all_comments'] }}</td>
-					<td width="30%" class="contentEntry2">{{ comments }}</td>
-				</tr>
-				<tr>
-					<td width="70%" class="contentEntry1">{{ lang['all_users'] }}</td>
-					<td width="30%" class="contentEntry2">{{ users }}</td>
-				</tr>
-				<tr>
-					<td width="70%" class="contentEntry1">{{ lang['all_users_unact'] }}</td>
-					<td width="30%" class="contentEntry2">{{ users_unact }}</td>
-				</tr>
-				<tr>
-					<td width="70%" class="contentEntry1">{{ lang['all_images'] }}</td>
-					<td width="30%" class="contentEntry2">{{ images }}</td>
-				</tr>
-				<tr>
-					<td width="70%" class="contentEntry1">{{ lang['all_files'] }}</td>
-					<td width="30%" class="contentEntry2">{{ files }}</td>
-				</tr>
-			</table>
-			<!--
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-<tr>
-<td colspan="2" class="contentHead"><img src="{{ skins_url }}/images/nav.gif" hspace="8" alt="" />{{ lang['system'] }}</td>
-</tr>
-<tr>
-</table>
--->
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td width="50%" style="padding-right:10px;" valign="top">
-			<table border="0" width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td colspan="2" class="contentHead">
-						<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/>{{ lang['note'] }}</td>
-				</tr>
-				<tr>
-					<td width="50%" colspan="2" class="contentEntry1">
-						<form method="post" action="{{ php_self }}?mod=statistics">
-							<input type="hidden" name="action" value="save"/>
-							<textarea name="note" rows="6" cols="70" style="border: 1px solid #ccc; background-color: lightyellow; width: 100%; margin-bottom: 5px;" {% if (not admin_note) %}placeholder="{{ lang['no_notes'] }}"{% endif %}>{{ admin_note }}</textarea><br/>
-							<input type="submit" class="button" value="{{ lang['save_note'] }}"/>
-						</form>
-					</td>
-				</tr>
-			</table>
-		</td>
-		<td width="50%" style="padding-left:10px;" valign="top">
-			{% if (flags.confError) %}
-				<!-- Configuration errors -->
-				<table border="0" width="100%" cellspacing="0" cellpadding="0">
-					<tr>
-						<td colspan="2" class="contentHead">
-							<img src="{{ skins_url }}/images/nav.gif" hspace="8" alt=""/><font color="red">{{ lang['pconfig.error'] }}</font>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<table width="100%">
-								<thead>
-								<tr>
-									<td>{{ lang['perror.parameter'] }}</td>
-									<td>{{ lang['perror.shouldbe'] }}</td>
-									<td>{{ lang['perror.set'] }}</td>
-								</thead>
-								<tr>
-									<td>Register Globals</td>
-									<td>Отключено</td>
-									<td>{{ flags.register_globals }}</td>
-								</tr>
-								<tr>
-									<td>Magic Quotes GPC</td>
-									<td>Отключено</td>
-									<td>{{ flags.magic_quotes_gpc }}</td>
-								</tr>
-								<tr>
-									<td>Magic Quotes Runtime</td>
-									<td>Отключено</td>
-									<td>{{ flags.magic_quotes_runtime }}</td>
-								</tr>
-								<tr>
-									<td>Magic Quotes Sybase</td>
-									<td>Отключено</td>
-									<td>{{ flags.magic_quotes_sybase }}</td>
-								</tr>
-							</table>
-							<br/>
-							&nbsp;<a style="cursor: pointer; color: red;" onclick="document.getElementById('perror_resolve').style.display='block';">{{ lang['perror.howto'] }}</a><br/>
-							<div id="perror_resolve" style="display: none;">
-								{{ lang['perror.descr'] }}
-							</div>
-						</td>
-					</tr>
-				</table>
-			{% endif %}
-		</td>
-	</tr>
-</table>

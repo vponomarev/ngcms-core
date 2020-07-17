@@ -1,24 +1,27 @@
-<form method="get" action="{php_self}?mod=extras">
-	<table class="content" border="0" cellspacing="0" cellpadding="0" align="center">
-		<tr>
-			<td width="100%" colspan="2" class="contentHead">
-				<img src="{skins_url}/images/nav.gif" hspace="8" alt=""/><a href="admin.php?mod=extras">{l_extras}</a>
-			</td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt=""/>{mode_text}:
-				{plugin}
-			</td>
-		</tr>
-		{entries}
-		<tr align="center">
-			<td width="100%" colspan="2" class="contentEdit" valign="top">
-				<input type=hidden name=mod value=extras>
-				<input type="submit" value="{msg}" class="button"/>
-			</td>
-		</tr>
-	</table>
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="{php_self}"><i class="fa fa-home"></i></a></li>
+		<li class="breadcrumb-item"><a href="{php_self}?mod=extras">{l_extras}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{mode_text}: {plugin}</li>
+	</ol>
+</nav>
+
+<form action="{php_self}?mod=extras" method="get">
+	<input type=hidden name="mod" value="extras" />
+
+	<div class="card">
+		<h5 class="card-header">{plugin}</h5>
+
+		<div class="table-responsive">
+			<table class="table table-sm">
+				<tbody>
+					{entries}
+				</tbody>
+			</table>
+		</div>
+
+		<div class="card-footer text-center">
+			<button type="submit" class="btn btn-outline-success">{msg}</button>
+		</div>
+	</div>
 </form>
