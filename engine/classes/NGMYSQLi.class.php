@@ -125,7 +125,7 @@ class NGMYSQLi extends NGDB
         try {
             $query = mysqli_query($this->db, $sql);
             
-            $r = mysqli_fetch_array($query, MYSQLI_BOTH);
+            $r = mysqli_fetch_array($query, MYSQLI_ASSOC);
         } catch (mysqli_sql_exception $e) {
             $this->errorReport('record', $sql, $e);
             $r = null;
@@ -181,7 +181,7 @@ class NGMYSQLi extends NGDB
         try {
             $query = mysqli_query($this->db, $sql);
             //$r = $this->mysqli_result($query, 0);
-            $r = mysqli_fetch_array($query, MYSQLI_BOTH);
+            $r = mysqli_fetch_array($query, MYSQLI_ASSOC);
         } catch (mysqli_sql_exception $e) {
             $this->errorReport('result', $sql, $e);
             $r = null;
