@@ -1,7 +1,7 @@
 <?php
 
 //
-// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru/)
+// Copyright (C) 2006-2020 Next Generation CMS (http://ngcms.ru/)
 // Name: configuration.rpc.php
 // Description: RPC library for CONFIGURATION module
 // Author: Vitaly Ponomarev
@@ -101,7 +101,7 @@ function admConfigurationTestMemcached($params)
     $cacheTest->connect($params['ip'], $params['port']);
 
     // Try to set some value
-    $testValue = uniq(time());
+    $testValue = uniqid(time());
     $cacheTest->set('#core', 'connTester', $testValue);
 
     // Check result code
