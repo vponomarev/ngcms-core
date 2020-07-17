@@ -2,29 +2,29 @@
 
 class NGEvents
 {
-    protected $eventList = array();
+    protected $eventList = [];
     protected $startTime;
 
-    function __construct()
+    public function __construct()
     {
         // Init event processing
         $this->startTime = microtime(true);
     }
 
     // Register event
-    function registerEvent($group, $plugin = null, $info = null, $duration = null)
+    public function registerEvent($group, $plugin = null, $info = null, $duration = null)
     {
         $timeStamp = round(microtime(true) - $this->startTime, 2);
         if (is_array($group)) {
             $group['timestamp'] = $timeStamp;
-            $this->eventList []= $group;
+            $this->eventList[] = $group;
         } else {
-            $this->eventList []= array(
+            $this->eventList[] = [
                 'timestamp'     => $timeStamp,
                 'plugin'        => $plugin,
                 'info'          => $info,
                 'duration'      => $duration,
-            );
+            ];
         }
     }
 

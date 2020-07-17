@@ -9,20 +9,20 @@
  * file that was distributed with this source code.
  */
 
+use Twig\Error\LoaderError;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
-use Twig\Error\LoaderError;
 
 /**
- * NGCMS Twig Loader
+ * NGCMS Twig Loader.
  *
- * @package    twig
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  */
 class NGTwigLoader implements LoaderInterface
 {
     protected $paths;
     protected $cache;
+
     /**
      * Constructor.
      *
@@ -31,11 +31,12 @@ class NGTwigLoader implements LoaderInterface
     public function __construct($paths)
     {
         $this->setPaths($paths);
-        $this->templateConversion = array();
-        $this->templateConversionRegex = array();
-        $this->templateOptions = array();
-        $this->defaultContent = array();
+        $this->templateConversion = [];
+        $this->templateConversionRegex = [];
+        $this->templateOptions = [];
+        $this->defaultContent = [];
     }
+
     /**
      * Returns the paths to the templates.
      *
@@ -45,14 +46,16 @@ class NGTwigLoader implements LoaderInterface
     {
         return $this->paths;
     }
+
     public function setDefaultContent($name, $content)
     {
-        if ((substr($name, 0, 1) == '/')||preg_match('#^[a-z]\:\/#', $name)) {
+        if ((substr($name, 0, 1) == '/') || preg_match('#^[a-z]\:\/#', $name)) {
             $this->defaultContent[$name] = $content;
         } else {
             $this->defaultContent[$this->paths[0].'/'.$name] = $content;
         }
     }
+
     /**
      * Sets the paths where templates are stored.
      *
@@ -61,11 +64,11 @@ class NGTwigLoader implements LoaderInterface
     public function setPaths($paths)
     {
         // invalidate the cache
-        $this->cache = array();
+        $this->cache = [];
         if (!is_array($paths)) {
-            $paths = array($paths);
+            $paths = [$paths];
         }
-        $this->paths = array();
+        $this->paths = [];
         foreach ($paths as $path) {
             // Delete last '/' if provided
             if ((strlen($path) > 1) && (substr($path, -1) == '/')) {
@@ -94,6 +97,7 @@ class NGTwigLoader implements LoaderInterface
         if (empty($path)) {
             throw new LoaderError(sprintf('Template "%s" is not defined.', $name));
         }
+
         return new Source($source, $name);
     }
 
@@ -109,13 +113,14 @@ class NGTwigLoader implements LoaderInterface
         if ($this->findTemplate($name)) {
             return true;
         }
+
         return false;
     }
 
     /**
      * Gets the source code of a template, given its name.
      *
-     * @param  string $name The name of the template to load
+     * @param string $name The name of the template to load
      *
      * @return string The template source code
      */
@@ -133,27 +138,27 @@ class NGTwigLoader implements LoaderInterface
             // Enabled
             // - static conversion
             $content = preg_replace(
-                array(
+                [
                     "#\{l_([0-9a-zA-Z\-\_\.\#]+)}#",
-                ),
-                array(
+                ],
+                [
                     "{{ lang['$1'] }}",
-                ),
+                ],
                 $content
             );
             // - dynamic conversion
             // -- [isplugin] + [isnplugin]
-                $content = preg_replace_callback(
-                    "#\[is(n){0,1}plugin (.+?)\](.+?)\[\/isplugin\]#is",
-                    array($this, 'isPluginHandlerCallback'),
-                    $content
-                );
+            $content = preg_replace_callback(
+                "#\[is(n){0,1}plugin (.+?)\](.+?)\[\/isplugin\]#is",
+                [$this, 'isPluginHandlerCallback'],
+                $content
+            );
             // -- [ifhander:<Plugin>] + [ifhandler:<Plugin>:<Handler>] + [ifnhander:<Plugin>] + [ifnhandler:<Plugin>:<Handler>]
-                $content = preg_replace_callback(
-                    "#\[if(n){0,1}handler (.+?)\](.+?)\[\/if(n){0,1}handler\]#is",
-                    array($this, 'isHandlerCallback'),
-                    $content
-                );
+            $content = preg_replace_callback(
+                "#\[if(n){0,1}handler (.+?)\](.+?)\[\/if(n){0,1}handler\]#is",
+                [$this, 'isHandlerCallback'],
+                $content
+            );
         }
         // Process REGEX conversion
         if (isset($this->templateConversionRegex[$name]) && is_array($this->templateConversionRegex[$name])) {
@@ -165,24 +170,26 @@ class NGTwigLoader implements LoaderInterface
             $tconv = $this->templateConversion[$name];
             $content = str_replace(array_keys($tconv), array_values($tconv), $content);
         }
+
         return $content;
     }
 
     public function isPluginHandlerCallback($m)
     {
-        return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";
+        return '{% if ('.(($m[1] == 'n') ? 'not ' : '')."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3].'{% endif %}';
     }
 
     public function isHandlerCallback($m)
     {
-        return "{% if (".(($m[1] == "n")?"not ":"")."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3]."{% endif %}";
+        return '{% if ('.(($m[1] == 'n') ? 'not ' : '')."pluginIsActive(\'".htmlspecialchars($m[2])."\')) %}".$m[3].'{% endif %}';
     }
 
-    public function setConversion($name, $variables, $regexp = array(), $options = array())
+    public function setConversion($name, $variables, $regexp = [], $options = [])
     {
-        $this->templateConversion[$name]        = $variables;
-        $this->templateConversionRegex[$name]   = $regexp;
-        $this->templateOptions[$name]           = $options;
+        $this->templateConversion[$name] = $variables;
+        $this->templateConversionRegex[$name] = $regexp;
+        $this->templateOptions[$name] = $options;
+
         return true;
     }
 
@@ -199,8 +206,8 @@ class NGTwigLoader implements LoaderInterface
     /**
      * Returns true if the template is still fresh.
      *
-     * @param string    $name The template name
-     * @param int $time The last modification time of the cached template
+     * @param string $name The template name
+     * @param int    $time The last modification time of the cached template
      */
     public function isFresh(string $name, int $time): bool
     {
@@ -221,11 +228,11 @@ class NGTwigLoader implements LoaderInterface
         }
         // Check if we try to load template by absolute path, in this case we need to be sure,
         // that specified path is within $this->paths
-        if ((substr($name, 0, 1) == '/')||preg_match('#^[a-z]\:\/#', $name)) {
+        if ((substr($name, 0, 1) == '/') || preg_match('#^[a-z]\:\/#', $name)) {
             foreach ($this->paths as $path) {
-                if (substr($name, 0, strlen($path)+1) == ($path.'/')) {
+                if (substr($name, 0, strlen($path) + 1) == ($path.'/')) {
                     // Path found. Check for file
-                    $xname = substr($name, strlen($path)+1);
+                    $xname = substr($name, strlen($path) + 1);
                     $this->validateName($xname);
                     if (is_file($path.'/'.$xname)) {
                         $this->cache[$name] = $path.'/'.$xname;
@@ -238,9 +245,11 @@ class NGTwigLoader implements LoaderInterface
 
                         return $this->cache[$name];
                     }
+
                     throw new LoaderError(sprintf('Unable to find template [ABSOLUTE PATH] "%s" (looked into: %s).', $name, $path));
                 }
             }
+
             throw new LoaderError(sprintf('Unable to find template [ABSOLUTE PATH] "%s" (looked into: %s).', $name, implode(', ', $this->paths)));
         }
 
@@ -267,9 +276,9 @@ class NGTwigLoader implements LoaderInterface
         $level = 0;
         foreach ($parts as $part) {
             if ('..' === $part) {
-                --$level;
+                $level--;
             } elseif ('.' !== $part) {
-                ++$level;
+                $level++;
             }
             if ($level < 0) {
                 throw new LoaderError(sprintf('Looks like you try to load a template outside configured directories (%s).', $name));

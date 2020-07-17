@@ -2,14 +2,12 @@
 
 // namespace NG\Twig;
 
+use Twig\Compiler;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
-
+use Twig\Node\Expression\FunctionExpression;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-
-use Twig\Compiler;
-use Twig\Node\Expression\FunctionExpression;
 
 class NGTwigLocalPathFunctionExpression extends FunctionExpression
 {
@@ -24,7 +22,7 @@ class NGTwigLocalPathFunctionExpression extends FunctionExpression
 }
 
 class NGTwigExtension extends AbstractExtension implements GlobalsInterface
-{    
+{
     public function getFilters()
     {
         return [
@@ -44,8 +42,8 @@ class NGTwigExtension extends AbstractExtension implements GlobalsInterface
             new TwigFunction('isNews', 'twigIsNews'),
             new TwigFunction('isPerm', 'twigIsPerm'),
             new TwigFunction('callPlugin', 'twigCallPlugin'),
-            new TwigFunction('isSet', 'twigIsSet', array('needs_context' => true)),
-            new TwigFunction('debugContext', 'twigDebugContext', array('needs_context' => true)),
+            new TwigFunction('isSet', 'twigIsSet', ['needs_context' => true]),
+            new TwigFunction('debugContext', 'twigDebugContext', ['needs_context' => true]),
             new TwigFunction('debugValue', 'twigDebugValue'),
             new TwigFunction('getCategoryTree', 'twigGetCategoryTree'),
             new TwigFunction('engineMSG', 'twigEngineMSG'),
@@ -57,14 +55,14 @@ class NGTwigExtension extends AbstractExtension implements GlobalsInterface
         global $lang, $CurrentHandler, $twigGlobal, $SYSTEM_FLAGS, $systemAccessURL;
 
         return [
-            'lang' => &$lang,
-            'handler' => &$CurrentHandler,
-            'global' => &$twigGlobal,
+            'lang'         => &$lang,
+            'handler'      => &$CurrentHandler,
+            'global'       => &$twigGlobal,
             'system_flags' => &$SYSTEM_FLAGS,
-            'skins_url' => skins_url,
-            'admin_url' => admin_url,
-            'home' => home,
-            'currentURL' => $systemAccessURL,
+            'skins_url'    => skins_url,
+            'admin_url'    => admin_url,
+            'home'         => home,
+            'currentURL'   => $systemAccessURL,
         ];
     }
 }

@@ -3,34 +3,37 @@
 abstract class NGDB
 {
     // Implement connection to DB
-    abstract function __construct($params);
+    abstract public function __construct($params);
 
     // Generate select request to DB [ ROWS are returned ]
-    abstract function query($query, $params = array());
+    abstract public function query($query, $params = []);
 
     // Generate SQL request and return SINGLE line [ ROWS are returned ]
-    abstract function record($query, $params = array());
+    abstract public function record($query, $params = []);
 
     // Generate SQL request and return SINGLE line
-    abstract function exec($query, $params = array());
+    abstract public function exec($query, $params = []);
 
     // Generate SQL request and return FIRST variable from SINGLE line
-    abstract function result($query, $params = array());
+    abstract public function result($query, $params = []);
 
     // Quote string
-    abstract function quote($string);
+    abstract public function quote($string);
 
     // Return engine type
-    abstract function getEngineType();
+    abstract public function getEngineType();
 
     // Return raw class of DB engine driver
-    abstract function getDriver();
+    abstract public function getDriver();
 
     // Return version
-    abstract function getVersion();
-    
-    abstract function createCursor($query, array $params = array());
-    abstract function fetchCursor($cursor);
-    abstract function closeCursor($cursor);
-    abstract function tableExists($name);
+    abstract public function getVersion();
+
+    abstract public function createCursor($query, array $params = []);
+
+    abstract public function fetchCursor($cursor);
+
+    abstract public function closeCursor($cursor);
+
+    abstract public function tableExists($name);
 }

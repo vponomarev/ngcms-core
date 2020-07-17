@@ -3,22 +3,21 @@
 // namespace NG\Twig;
 
 use Twig\Environment;
-use Twig\Loader\LoaderInterface;
-
 use Twig\Extension\StringLoaderExtension;
+use Twig\Loader\LoaderInterface;
 
 class NGTwigEnvironment
 {
     /**
-     * Twig env
-     * 
+     * Twig env.
+     *
      * @var Environment;
      */
     public $env;
 
     /**
-     * @param LoaderInterface $loader Twig loader
-     * @param array $options Env options
+     * @param LoaderInterface $loader  Twig loader
+     * @param array           $options Env options
      */
     public function __construct(LoaderInterface $loader, $options = [])
     {

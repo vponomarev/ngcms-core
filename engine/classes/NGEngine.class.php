@@ -1,47 +1,49 @@
 <?php
 
-
 // NGCMS :: Global ENGINE core container
 class NGEngine
 {
     protected static $instance = false;
-    protected static $items = array();
+    protected static $items = [];
 
     /**
      * @return NGEngine Return instance of NGEngine singleton
      */
-    static function getInstance()
+    public static function getInstance()
     {
         if (static::$instance === false) {
             static::$instance = new static();
         }
+
         return static::$instance;
     }
 
     // Set item
-    function set($e, $v)
+    public function set($e, $v)
     {
         static::$items[$e] = $v;
     }
 
     // Get item
-    function get($e)
+    public function get($e)
     {
         return static::$items[$e];
     }
 
     // Check if item is set
-    function has($e)
+    public function has($e)
     {
         return isset(static::$items[$e]);
     }
 
     // Get DB connection
+
     /**
-     * @return NGDB Current DB connection instance
      * @throws Exception
+     *
+     * @return NGDB Current DB connection instance
      */
-    function getDB()
+    public function getDB()
     {
         if (!isset(static::$items['db'])) {
             throw new Exception('NGEngine: getDB(): DB class is not initalized.');
@@ -51,7 +53,7 @@ class NGEngine
     }
 
     // Get Legacy DB connection
-    function getLegacyDB()
+    public function getLegacyDB()
     {
         if (!isset(static::$items['legacyDB'])) {
             throw new Exception('NGEngine: getLegacyDB(): DB class is not initalized.');
@@ -61,11 +63,13 @@ class NGEngine
     }
 
     // Get event handler
+
     /**
-     * @return NGEvents Return instance of NGEvents
      * @throws Exception Init error
+     *
+     * @return NGEvents Return instance of NGEvents
      */
-    function getEvents()
+    public function getEvents()
     {
         if (!isset(static::$items['events'])) {
             throw new Exception('NGEngine: getEvents(): Event handler is not loaded.');
@@ -75,11 +79,13 @@ class NGEngine
     }
 
     // Get error handler
+
     /**
-     * @return NGErrorHandler Return instance of NGErrorHandler
      * @throws Exception Init error
+     *
+     * @return NGErrorHandler Return instance of NGErrorHandler
      */
-    function getErrorHandler()
+    public function getErrorHandler()
     {
         if (!isset(static::$items['errorHandler'])) {
             throw new Exception('NGEngine: getErrorHandler(): Error handler is not loaded.');
@@ -89,7 +95,7 @@ class NGEngine
     }
 
     // Get configuration parameter
-    function getConfigParam($param = null, $defaultValue = null)
+    public function getConfigParam($param = null, $defaultValue = null)
     {
         if (isset(static::$items['config'])) {
             if (is_null($param)) {
@@ -100,27 +106,28 @@ class NGEngine
                 return static::$items['config'][$param];
             }
         }
+
         return $defaultValue;
     }
 
-    function hasCurrentUser()
+    public function hasCurrentUser()
     {
-        return isset(static::$items['currentUser'])?true:false;
+        return isset(static::$items['currentUser']) ? true : false;
     }
 
     /**
      * @return NGUser Return instance of NGUser for current user
      */
-    function getCurrentUser()
+    public function getCurrentUser()
     {
-        return isset(static::$items['currentUser'])?static::$items['currentUser']:null;
+        return isset(static::$items['currentUser']) ? static::$items['currentUser'] : null;
     }
-
 
     // protect against creating new instance of class or creating a clone
     private function __construct()
     {
     }
+
     private function __clone()
     {
     }
