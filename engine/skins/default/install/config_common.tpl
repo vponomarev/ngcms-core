@@ -1,67 +1,104 @@
-<div class="body">
-	<form action="" method="post" name="db" id="db">
-		<input type="hidden" name="action" value="install" id="action"/>
-		<input type="hidden" name="stage" value="3" id="stage"/>
-		{hinput}
-		<p>
-			{l_common.textblock}
-		</p>
-		<fieldset>
-			<legend><b>{l_common.params}</b></legend>
-			<table>
-				<tr>
-					<td>{l_common.parameters.addr}:</td>
-					<td><input type="text" name="home_url" value="{home_url}" size="60"/></td>
-				</tr>
-				<tr>
-					<td>{l_common.parameters.title}:</td>
-					<td><input type="text" name="home_title" value="{home_title}" size="60"/></td>
-				</tr>
-			</table>
-		</fieldset>
-		<br/>
-		<fieldset>
-			<legend><b>{l_common.admin}</b></legend>
-			<table>
-				<tr>
-					<td>{l_common.admin.login}:</td>
-					<td><input type="text" name="admin_login" value="{admin_login}"/></td>
-				</tr>
-				<tr>
-					<td>{l_common.admin.pass}:</td>
-					<td><input type="text" name="admin_password" value="{admin_password}"/></td>
-				</tr>
-				<tr>
-					<td>{l_common.admin.email}:</td>
-					<td><input type="text" name="admin_email" value="{admin_email}"/></td>
-				</tr>
-			</table>
-		</fieldset>
-		<br/>
-		<fieldset>
-			<legend><b>{l_common.auto}</b></legend>
-			<table>
-				<tr>
-					<td>{l_common.auto.turn}:</td>
-					<td><input type="checkbox" value="1" disabled="disabled" name="autodata" {autodata_checked}/></td>
-				</tr>
-			</table>
-			<small>{l_common.auto.desc}</small>
-		</fieldset>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-10 offset-sm-1 mt-5">
+			<form id="form" action="" method="post" class="form-horizontal">
+				<input id="action" type="hidden" name="action" value="install">
+				<input id="stage" type="hidden" name="stage" value="1">
+				{hinput}
 
-		<div style="float: left; width: 99%;">
-			<br/>
-			<table width="100%">
-				<tr>
-					<td width="33%">
-						<input type="button" value="&laquo;&laquo; {l_button.back}" onclick="document.getElementById('stage').value='3';document.getElementById('action').value='config'; form.submit();" class="filterbutton"/>
-					</td>
-					<td></td>
-					<td width="33%" style="text-align: right;">
-						<input style="font-weight: bold;" type="submit" value="{l_button.startinstall}" class="filterbutton"/>
-					</td>
-				</tr>
-			</table>
+				<div class="card">
+					<div class="card-header">
+						<div class="steps">
+							<div class="progress">
+								<div class="progress-line" data-now-value="85.71" data-number-of-steps="7" style="width: 85.71%;"></div>
+							</div>
+							<div class="step activated">
+								<div class="step-icon"><i class="fa fa-play-circle"></i></div>
+								<p>{l_header.menu.begin}</p>
+							</div>
+							<div class="step activated">
+								<div class="step-icon"><i class="fa fa-database"></i></div>
+								<p>{l_header.menu.db}</p>
+							</div>
+							<div class="step activated">
+								<div class="step-icon"><i class="fa fa-server"></i></div>
+								<p>{l_header.menu.perm}</p>
+							</div>
+							<div class="step activated">
+								<div class="step-icon"><i class="fa fa-puzzle-piece"></i></div>
+								<p>{l_header.menu.plugins}</p>
+							</div>
+							<div class="step activated">
+								<div class="step-icon"><i class="fa fa-paint-brush"></i></div>
+								<p>{l_header.menu.template}</p>
+							</div>
+							<div class="step active">
+								<div class="step-icon"><i class="fa fa-cogs"></i></div>
+								<p>{l_header.menu.common}</p>
+							</div>
+							<div class="step">
+								<div class="step-icon"><i class="fa fa-check"></i></div>
+								<p>{l_header.menu.install}</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="card-body">
+						<p>{l_common.textblock}</p>
+						<fieldset>
+							<legend>{l_common.params}</legend>
+							<div class="form-row mb-3">
+								<label class="col-sm-3 col-form-label">{l_common.parameters.addr}</label>
+								<div class="col-sm-9">
+									<input type="text" name="home_url" value="{home_url}" class="form-control">
+								</div>
+							</div>
+							<div class="form-row mb-3">
+								<label class="col-sm-3 col-form-label">{l_common.parameters.title}</label>
+								<div class="col-sm-9">
+									<input type="text" name="home_title" value="{home_title}" class="form-control">
+								</div>
+							</div>
+						</fieldset>
+						<fieldset>
+							<legend>{l_common.admin}</legend>
+							<div class="form-row mb-3">
+								<label class="col-sm-3 col-form-label">{l_common.admin.login}</label>
+								<div class="col-sm-9">
+									<input type="text" name="admin_login" value="{admin_login}" class="form-control">
+								</div>
+							</div>
+							<div class="form-row mb-3">
+								<label class="col-sm-3 col-form-label">{l_common.admin.pass}</label>
+								<div class="col-sm-9">
+									<input type="password" name="admin_password" value="{admin_password}" class="form-control">
+								</div>
+							</div>
+							<div class="form-row mb-3">
+								<label class="col-sm-3 col-form-label">{l_common.admin.email}</label>
+								<div class="col-sm-9">
+									<input type="text" name="admin_email" value="{admin_email}" class="form-control">
+								</div>
+							</div>
+						</fieldset>
+						<fieldset>
+							<legend>{l_common.auto}</legend>
+							<div class="form-row mb-3">
+								<label class="col-sm-3 col-form-label"></label>
+								<div class="col-sm-9">
+									<label><input type="checkbox" value="1" disabled="disabled" name="autodata" {autodata_checked} /> {l_common.auto.turn}</label>
+									<span class="help-block">{l_common.auto.desc}</span>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+					<div class="card-footer text-right">
+						<button type="button" class="btn btn-outline-dark" onclick="action.value='config'; stage.value='3'; form.submit();">&laquo; {l_button.back}</button>
+						<button type="submit" class="btn btn-outline-warning">{l_button.next} &raquo;</button>
+					</div>
+				</div>
+			</form>
 		</div>
-	</form>
+	</div>
 </div>

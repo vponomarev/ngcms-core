@@ -1,11 +1,18 @@
-<div class="body">
-	<form action="" method="post" name="db" id="db">
-		<input type="hidden" name="action" value="config" id="action"/>
-		<input type="hidden" name="stage" value="4" id="stage"/>
-		{hinput}
-		<p style="width: 99%;">
-			<b><u>Список выполненных действий:</u></b>
-		</p>
-		{actions}
-	</form>
-</div>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-10 offset-sm-1 mt-5">
+			<form id="form" action="" method="post" class="form-horizontal">
+				<input id="action" type="hidden" name="action" value="config">
+				<input id="stage" type="hidden" name="stage" value="4">
+				{hinput}
+
+				<div class="card">
+					<div class="card-body">
+						<p>Cписок выполненных действий:</p>
+						{actions}
+					<!-- </div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div> -->

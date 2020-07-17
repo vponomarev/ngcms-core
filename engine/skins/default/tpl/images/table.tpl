@@ -1,381 +1,416 @@
-<!-- Preload uploadify engine -->
-<link rel="stylesheet" href="{scriptLibrary}/jq/plugins/uploadifive/uploadifive.css" type="text/css" />
-<script type="text/javascript" src="{scriptLibrary}/jq/plugins/uploadifive/jquery.uploadifive.js"></script>
+<div class="page-title">
+	<h2>{l_images_title}</h2>
+</div>
 
-<!-- Main scripts -->
-<script type="text/javascript">
-	var flagRequireReload = 0;
-	function ChangeOption(selectedOption) {
-		document.getElementById('list').style.display = "none";
-		[status]
-		document.getElementById('categories').style.display = "none";
-		[/status]
-		document.getElementById('uploadnew').style.display = "none";
+<!-- Filter form: BEGIN -->
+<div id="collapseImagesFilter" class="collapse">
+	<div class="card mb-4">
+		<div class="card-body">
+			<form action="{php_self}" method="get" name="options_bar">
+				<input type="hidden" name="mod" value="images" />
+				<input type="hidden" name="action" value="list" />
+				<input type="hidden" name="area" value="{area}" />
 
-		if (selectedOption == 'list') {
-			if (flagRequireReload) {
-				document.location.href = document.location.href;
-			}
-
-			document.getElementById('list').style.display = "";
-			document.getElementById('entries').style.display = "";
-		}
-		[status]
-		if (selectedOption == 'categories') {
-			document.getElementById('categories').style.display = "";
-			document.getElementById('entries').style.display = "none";
-		}
-		[/status]
-
-		if (selectedOption == 'uploadnew') {
-			document.getElementById('uploadnew').style.display = "";
-			document.getElementById('entries').style.display = "none";
-		}
-	}
-
-	function setStatus(mode) {
-		var st = document.getElementById('delform');
-		st.subaction.value = mode;
-	}
-
-</script>
-<table border="0" width="100%" cellpadding="0" cellspacing="0">
-	<tr>
-		<td width=100% colspan="5" class="contentHead">
-			<img src="{skins_url}/images/nav.gif" hspace="8"><a href="?mod=images">{l_images_title}</a></td>
-	</tr>
-</table>
-<form action="{php_self}" method="get" name="options_bar">
-	<input type="hidden" name="mod" value="images"/>
-	<input type="hidden" name="action" value="list"/>
-	<input type="hidden" name="area" value="{area}"/>
-	<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr align="center">
-			<td width="100%" class="contentNav" align="center" valign="top">
-				<input type="button" onmousedown="javascript:ChangeOption('list')" value="{l_list}" class="navbutton"/>
-				[status]<input type="button" onmousedown="javascript:ChangeOption('categories')" value="{l_categories}" class="navbutton"/>[/status]
-				<input type="button" onmousedown="javascript:ChangeOption('uploadnew')" value="{l_uploadnew}" class="navbutton"/>
-			</td>
-		</tr>
-	</table>
-	<br/>
-	<table id="list" width="1000" border="0" cellspacing="0" cellpadding="0" class="imagesfilter">
-		<tr>
-			<td>
-				<table border="0" cellspacing="0" cellpadding="0" class="filterblock3">
-					<tr>
-						<td>
-							<label><input type="checkbox" onclick="setCookie('img_preview',this.checked?1:0); document.location=document.location;" {box_preview}/>
-								{l_show_preview}</label></td>
-						<td><label>{l_month}</label> <select name="postdate">
+				<div class="row">
+					<!--Block 1-->
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label>{l_month}</label>
+							<select name="postdate" class="custom-select">
 								<option selected value="">- {l_all} -</option>
-								{dateslist}</select></td>
-						<td><label>{l_category}</label> {dirlistcat}</td>
-						<td>[status]<label>{l_author}</label> <select name="author">
+								{dateslist}
+							</select>
+						</div>
+					</div>
+
+					<!--Block 2-->
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label>{l_category}</label>
+							{dirlistcat}
+						</div>
+					</div>
+
+					<!--Block 3-->
+					<div class="col-lg-3">
+						<div class="form-group">
+							[status]
+							<label>{l_author}</label>
+							<select name="author" class="custom-select">
 								<option value="">- {l_all} -</option>
-								{authorlist}</select>[/status]
-						</td>
-						<td class="right"><label>{l_per_page}</label>
-							<input style="text-align: center" name="npp" value="{npp}" type=text size=3/>
-							<input type=submit value="{l_show}" class="images_filterbutton"/></td>
+								{authorlist}
+							</select>
+							[/status]
+						</div>
+					</div>
+
+					<!--Block 4-->
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label>{l_per_page}</label>
+							<input type="text" name="npp" value="{npp}" class="form-control" />
+						</div>
+
+						<div class="form-group mb-0 text-right">
+							<button type="submit" class="btn btn-outline-primary">{l_show}</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Mass actions form: BEGIN -->
+<form id="delform" name="imagedelete" action="{php_self}?mod=images" method="post">
+	<input type="hidden" name="area" value="{area}" />
+
+	<div class="card">
+		<div class="card-header">
+			<div class="d-flex">
+				<div class="custom-control custom-switch py-2 mr-auto">
+					<input id="preview" type="checkbox" class="custom-control-input" onclick="setCookie('img_preview',this.checked?1:0); document.location=document.location;" {box_preview} />
+					<label for="preview" class="custom-control-label">{l_show_preview}</label>
+				</div>
+				<button type="button" class="btn btn-outline-success ml-1" data-toggle="modal" data-target="#uploadnewModal" data-backdrop="static">{l_upload_img}</button>
+				<button type="button" class="btn btn-outline-success ml-1" data-toggle="modal" data-target="#uploadNewByUrlModal" data-backdrop="static">{l_upload_img_url}</button>
+				[status]
+				<button type="button" class="btn btn-outline-primary ml-1" data-toggle="modal" data-target="#categoriesModal" data-backdrop="static" title="{l_categories}">
+					<i class="fa fa-folder-open-o"></i>
+				</button>
+				[/status]
+				<button type="button" class="btn btn-outline-primary ml-1" data-toggle="collapse" data-target="#collapseImagesFilter">
+					<i class="fa fa-filter"></i>
+				</button>
+			</div>
+		</div>
+
+		<div class="table-responsive">
+			<table id="entries" class="table table-sm mb-0">
+				<thead>
+					<tr>
+						<th colspan="3" width="80">{l_header.insert}</th>
+						[preview]
+						<th>{l_show_preview}</th>
+						[/preview]
+						<th>{l_name}</th>
+						<th colspan="2">{l_header.view}</th>
+						<th colspan="2">{l_size}</th>
+						<th>{l_category}</th>
+						<th>{l_author}</th>
+						<th>{l_action}</th>
+						<th>
+							<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(imagedelete)" />
+						</th>
 					</tr>
-				</table>
+				</thead>
+				<tbody>
+					{entries}
+				</tbody>
+			</table>
+		</div>
 
-			</td>
-		</tr>
-	</table>
+		<div class="card-footer">
+			<div class="row">
+				<div class="col-lg-6 mb-2 mb-lg-0">{pagesss}</div>
+
+				<div class="col-lg-6">
+					[status]
+					<div class="input-group">
+						<select name="subaction" class="custom-select">
+							<option value="">-- {l_action} --</option>
+							<option value="delete">{l_delete}</option>
+							<option value="move">{l_move}</option>
+						</select>
+
+						{dirlist}
+
+						<div class="input-group-append">
+							<button type="submit" class="btn btn-outline-warning">OK</button>
+						</div>
+					</div>
+					[/status]
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
-<br/>
-<form action="{php_self}?mod=images" method="post" name="imagedelete" id="delform">
-	<input type="hidden" name="subaction" value=""/>
-	<input type="hidden" name="area" value="{area}"/>
-	<table id="entries" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-		<tr class="contHead">
-			<td colspan="3" width="80">{l_header.insert}</td>
-			[preview]
-			<td>{l_show_preview}</td>
-			[/preview]
-			<td>{l_name}</td>
-			<td colspan="2">{l_header.view}</td>
-			<!-- <td>{l_action}</td> -->
-			<td colspan="2">{l_size}</td>
-			<td>{l_category}</td>
-			<td>{l_author}</td>
-			<td>{l_action}</td>
-			<td>
-				<input class="check" type="checkbox" name="master_box" title="{l_select_all}" onclick="javascript:check_uncheck_all(imagedelete)"/>
-			</td>
-		</tr>
-		{entries}
 
-		<tr>
+<div id="uploadnewModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="uploadnewModalLabel" class="modal-title">{l_uploadnew}</h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
 
-			<td colspan="5" class="contentEdit">{pagesss}</td>
-			<td colspan="5" class="contentEdit">[status]
-				<div><input type=submit class="button" onclick="setStatus('delete');" value="{l_delete}"/></div>
-				[/status]
-			</td>
-			<td colspan="5" class="contentEdit">[status]
-				<div>{l_move}: {dirlist} <input type=submit class=button onclick="setStatus('move');" value="OK"/></div>
-				[/status]
-			</td>
-		</tr>
-		<tr>
-			<td colspan="7">&nbsp;</td>
-		</tr>
+			<form id="uploadnew_form" action="{php_self}?mod=images" method="post" enctype="multipart/form-data" name="sn">
+				<input type="hidden" name="subaction" value="upload" />
+				<input type="hidden" name="area" value="{area}" />
 
-	</table>
+				<div class="modal-body">
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">{l_category}</label>
+						<div class="col-sm-8">{dirlistS}</div>
+					</div>
 
-</form>
+					<div class="form-group row">
+						<div class="col-sm-8 offset-4">
+							<label class="col-form-label d-block"><input id="flagReplace" type="checkbox" name="replace" value="1" /> {l_do_replace}</label>
+							<label class="col-form-label d-block"><input id="flagRand" type="checkbox" name="rand" value="1" /> {l_do_rand}</label>
+							<label class="col-form-label d-block"><input id="flagThumb" type="checkbox" name="thumb" value="1" {thumb_mode}{thumb_checked} /> {l_do_preview}</label>
+							<label class="col-form-label d-block"><input id="flagShadow" type="checkbox" name="shadow" value="1" {shadow_mode}{shadow_checked} /> {l_do_shadow}</label>
+							<label class="col-form-label d-block"><input id="flagStamp" type="checkbox" name="stamp" value="1" {stamp_mode}{stamp_checked} /> {l_do_wmimage}</label>
+						</div>
+					</div>
+
+					<div class="table-responsive">
+						<table id="imageup" class="table table-sm">
+							<tbody>
+								<tr id="row">
+									<td width="10">1:</td>
+									<td><input id="fileUploadInput" type="file" name="userfile[0]" /></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="showRemoveAddButtoms" class="form-group text-right">
+						<div class="btn-group btn-group-sm" role="group">
+							<button type="button" onclick="AddImages();return false;" class="btn btn-outline-success">{l_onemore}</button>
+							<button type="button" onclick="RemoveImages();return false;" class="btn btn-outline-danger">{l_delone}</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer text-right">
+					<button type="submit" class="btn btn-outline-success">{l_upload}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div id="uploadNewByUrlModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="uploadnewModalLabel" class="modal-title">{l_upload_img_url}</h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
+
+			<form action="{php_self}?mod=images" method="post" name="snup">
+				<input type="hidden" name="subaction" value="uploadurl" />
+				<input type="hidden" name="area" value="{area}" />
+
+				<div class="modal-body">
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">{l_category}</label>
+						<div class="col-sm-8">
+							{dirlistS}
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-8 offset-sm-4">
+							<label class="col-form-label d-block"><input id="replace2" type="checkbox" name="replace" value="1" /> {l_do_replace}</label>
+							<label class="col-form-label d-block"><input id="rand2" type="checkbox" name="rand" value="1" /> {l_do_rand}</label>
+							<label class="col-form-label d-block"><input id="thumb2" type="checkbox" name="thumb" value="1" {thumb_mode}{thumb_checked} /> {l_do_preview}</label>
+							<label class="col-form-label d-block"><input id="shadow2" type="checkbox" name="shadow" value="1" {shadow_mode}{shadow_checked} /> {l_do_shadow}</label>
+							<label class="col-form-label d-block"><input id="stamp2" type="checkbox" name="stamp" value="1" {stamp_mode}{stamp_checked} /> {l_do_wmimage}</label>
+						</div>
+					</div>
+
+					<div class="table-responsive">
+						<table id="imageup2" class="table table-sm">
+							<tbody>
+								<tr id="row">
+									<td width="10">1:</td>
+									<td><input type="text" name="userurl[0]" class="form-control" /></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="form-group text-right">
+						<div class="btn-group btn-group-sm" role="group">
+							<button type="button" onclick="AddImages2();return false;" class="btn btn-outline-success">{l_onemore}</button>
+							<button type="button" onclick="RemoveImages2();return false;" class="btn btn-outline-danger">{l_delone}</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer text-right">
+					<button type="submit" class="btn btn-outline-success">{l_upload}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 [status]
-<table id="categories" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-	<tr>
-		<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt=""/>{l_addnewcat}</td>
-		<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt=""/>{l_delcat}</td>
-	</tr>
-	<tr>
-		<td width="50%" class="contentEntry1">
-			<form action="{php_self}?mod=images" method="post" name="newcat">
-				<input type="hidden" name="subaction" value="newcat"/>
-				<input type="hidden" name="area" value="{area}"/>
-				<input type="text" name="newfolder" size="30"/>&nbsp; <input type="submit" value="OK" class="button"/>
-			</form>
-		</td>
-		<td width="50%" class="contentEntry1">
-			<form action='{php_self}?mod=images' method='post' name='delcat'>
-				<input type="hidden" name="subaction" value="delcat"/>
-				<input type="hidden" name="area" value="{area}"/>
-				{dirlist}&nbsp; <input type="submit" value="OK" class="button"/>
-			</form>
-		</td>
-	</tr>
-</table>
+<div id="categoriesModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 id="categoriesModalLabel" class="modal-title">{l_categories}</h5>
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			</div>
+
+			<div class="modal-body">
+				<form action="{php_self}?mod=images" method="post" name="newcat">
+					<input type="hidden" name="subaction" value="newcat" />
+					<input type="hidden" name="area" value="{area}" />
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">{l_addnewcat}</label>
+						<div class="col-sm-8">
+							<div class="input-group mb-3">
+								<input type="text" name="newfolder" class="form-control" />
+								<div class="input-group-append">
+									<button type="submit" class="btn btn-outline-success">OK</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+
+				<form action="{php_self}?mod=images" method="post" name="delcat">
+					<input type="hidden" name="subaction" value="delcat" />
+					<input type="hidden" name="area" value="{area}" />
+
+					<div class="form-group row">
+						<label class="col-sm-4 col-form-label">{l_delcat}</label>
+						<div class="col-sm-8">
+							<div class="input-group mb-3">
+								{dirlist}
+								<div class="input-group-append">
+									<button type="submit" class="btn btn-outline-danger">OK</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 [/status]
 
-<table id="uploadnew" style="margin-top: -20px; display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-	<tr>
-		<td width="50%" valign="top" class="contentEntry1">
-			<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-				<tr>
-					<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt=""/>{l_upload_img}</td>
-				</tr>
-				<tr>
-					<td>
-						<form action="{php_self}?mod=images" method="post" enctype="multipart/form-data" name="sn">
-							<input type="hidden" name="subaction" value="upload"/>
-							<input type="hidden" name="area" value="{area}"/>
-							<br/>{dirlistS}&nbsp;
-							<span id="showRemoveAddButtoms">
-<input type="button" class="button" value='{l_delone}' onClick="RemoveImages();return false;"/>&nbsp;
-<input type="button" class="button" value='{l_onemore}' onClick="AddImages();return false;"/><br/><br/>
-</span>
-							<script language="javascript" type="text/javascript">
-								function AddImages() {
-									var tbl = document.getElementById('imageup');
-									var lastRow = tbl.rows.length;
-									var iteration = lastRow + 1;
-									var row = tbl.insertRow(lastRow);
-									var cellRight = row.insertCell(0);
-									cellRight.innerHTML = '<span>' + iteration + ': <' + '/' + 'span>';
-									cellRight = row.insertCell(1);
+<script type="text/javascript">
+	function AddImages() {
+		var tbl = document.getElementById('imageup');
+		var lastRow = tbl.rows.length;
+		var iteration = lastRow + 1;
+		var row = tbl.insertRow(lastRow);
+		var cellRight = row.insertCell(0);
+		cellRight.innerHTML = '<span>' + iteration + ': <' + '/' + 'span>';
+		cellRight = row.insertCell(1);
 
-									var el = document.createElement('input');
-									el.setAttribute('type', 'file');
-									el.setAttribute('name', 'userfile[' + iteration + ']');
-									el.setAttribute('size', '60');
-									el.setAttribute('value', iteration);
-									cellRight.appendChild(el);
-								}
-								function RemoveImages() {
-									var tbl = document.getElementById('imageup');
-									var lastRow = tbl.rows.length;
-									if (lastRow > 1) {
-										tbl.deleteRow(lastRow - 1);
-									}
-								}
-							</script>
-							<table id="imageup" class="upload">
-								<tr id="row">
-									<td>1:</td>
-									<td><input type="file" size="60" id="fileUploadInput" name="userfile[0]"/></td>
-								</tr>
-							</table>
+		var el = document.createElement('input');
+		el.setAttribute('type', 'file');
+		el.setAttribute('name', 'userfile[' + iteration + ']');
+		el.setAttribute('size', '60');
+		el.setAttribute('value', iteration);
+		cellRight.appendChild(el);
+	}
 
-							<div class="list">
-								<input type="checkbox" name="replace" value="1" id="flagReplace" class='check'/>
-								<label for="flagReplace">{l_do_replace}</label><br/>
-								<input type="checkbox" name="rand" value="1" id="flagRand" class='check'/>
-								<label for="flagRand">{l_do_rand}</label><br/>
-								<input type="checkbox" name="thumb" value="1" id="flagThumb" class='check' {thumb_mode}{thumb_checked}/>
-								<label for="flagThumb">{l_do_preview}</label><br/>
-								<input type="checkbox" name="shadow" value="1" id="flagShadow" class='check' {shadow_mode}{shadow_checked}/>
-								<label for="flagShadow">{l_do_shadow}</label><br/>
-								<input type="checkbox" name="stamp" value="1" id="flagStamp" class='check' {stamp_mode}{stamp_checked}/>
-								<label for="flagStamp">{l_do_wmimage}</label>
-							</div>
-					</td>
-				</tr>
-				<tr align="center">
-					<td width="100%" class="contentEdit" align="center" valign="top">
-						<input type="submit" value='{l_upload}' class="button" onclick="uploadifyDoUpload(); return false;"/>
-					</td>
-				</tr>
-			</table>
-			</form>
+	function RemoveImages() {
+		var tbl = document.getElementById('imageup');
+		var lastRow = tbl.rows.length;
+		if (lastRow > 1) {
+			tbl.deleteRow(lastRow - 1);
+		}
+	}
 
-			<!-- BEGIN: Init UPLOADIFY engine -->
+	function AddImages2() {
+		var tbl = document.getElementById('imageup2');
+		var lastRow = tbl.rows.length;
+		var iteration = lastRow + 1;
+		var row = tbl.insertRow(lastRow);
 
-            <script type="text/javascript">
-                $(document).ready(function () {
+		var cellRight = row.insertCell(0);
+		cellRight.innerHTML = '<span">' + iteration + ': <' + '/' + 'span>';
 
-                    var uploader = $('#fileUploadInput').uploadifive({
-                        'auto'             : false,
-                        'uploadScript'     : '{admin_url}/rpc.php?methodName=admin.files.upload',
-                        'cancelImg': '{skins_url}/images/up_cancel.png',
-                        'folder': '',
-                        'fileExt': '{listExt}',
-                        'fileDesc': '{descExt}',
-                        'sizeLimit': {maxSize},
-                        'auto': false,
-                        'multi': true,
-                        'buttonText': 'Select files ...',
-                        'width': 200,
-                        'removeCompleted': true,
-                        'onInit': function () {
-                            document.getElementById('showRemoveAddButtoms').style.display = 'none';
-                        },
-                        'onUploadComplete': function (fileObj, data) {
-                            // Response should be in JSON format
-                            var resData;
-                            var resStatus = 0;
-                            try {
-                                resData = eval('(' + data + ')');
-                                if (typeof(resData['status']))
-                                    resStatus = 1;
-                            } catch (err) {
-                                alert('Error parsing JSON output. Result: ' + res);
-                            }
+		cellRight = row.insertCell(1);
 
-                            if (!resStatus) {
-                                alert('Upload resp: ' + res);
-                                return false;
-                            }
+		var el = document.createElement('input');
+		el.setAttribute('type', 'text');
+		el.setAttribute('name', 'userurl[' + iteration + ']');
+		el.setAttribute('size', '60');
+		el.setAttribute('class', 'form-control');
+		cellRight.appendChild(el);
+	}
 
-                            flagRequireReload = 1;
+	function RemoveImages2() {
+		var tbl = document.getElementById('imageup2');
+		var lastRow = tbl.rows.length;
+		if (lastRow > 1) {
+			tbl.deleteRow(lastRow - 1);
+		}
+	}
+</script>
 
-                            // If upload fails
-                            /**/
+<!-- BEGIN: Init UPLOADIFY engine -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#delform').on('input', function(event) {
+			$(this.elements.category).toggle(
+				'move' === $(this.elements.subaction).val()
+			);
+		})
+		.trigger('input');
 
-                            var id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-                            if (resData['status'] < 1) {
-                                $('.uploadifive-queue').append('<div id=' + id + '></div>');
-                                $('#'+id).append('<div class="msg">(' + resData['errorCode'] + ') ' + resData['errorText'] + '</div>');
-                                if (typeof(resData['errorDescription']) !== 'undefined') {
-                                    $('#'+id).append('<div class="msgInfo">' + resData['errorDescription'] + '</div>');
-                                }
-                                $('#'+id).css('border', '2px solid red');
-                                $('#'+id).fadeOut(5000);
-                                return false;
-                            } else {
-                                $('.uploadifive-queue').append('<div id=' + id + '></div>');
-                                $('#'+id).append('<div>' + resData['errorText'] + '</div>');
-                                $('#'+id).fadeOut(5000);
-                            }
+		$('#uploadnew_form').on('submit', function(event) {
+			event.preventDefault();
 
-                            return true;
-                        },
-                        'onUpload': function(filesToUpload, settings) {
+			$('#uploadnewModal').on('hidden.bs.modal', function (e) {
+				document.location = document.location;
+			});
 
-                            var scriptData = new Array();
-                            scriptData['ngAuthCookie'] = '{authcookie}';
-                            scriptData['uploadType'] = 'image';
-                            scriptData['category'] = document.getElementById('categorySelect').value;
-                            scriptData['rand'] = document.getElementById('flagRand').checked ? 1 : 0;
-                            scriptData['replace'] = document.getElementById('flagReplace').checked ? 1 : 0;
-                            scriptData['thumb'] = document.getElementById('flagThumb').checked ? 1 : 0;
-                            scriptData['stamp'] = document.getElementById('flagStamp').checked ? 1 : 0;
-                            scriptData['shadow'] = document.getElementById('flagShadow').checked ? 1 : 0;
+			// Prepare script data
+			$('#fileUploadInput').uploadifive('upload');
+		});
 
-                            settings.formData = scriptData;
-                        }
-                    });
-                });
+		var uploader = $('#fileUploadInput').uploadifive({
+			auto: false,
+			uploadScript: '{admin_url}/rpc.php?methodName=admin.files.upload',
+			cancelImg: '{skins_url}/images/up_cancel.png',
+			folder: '',
+			fileExt: '{listExt}',
+			fileDesc: '{descExt}',
+			sizeLimit: '{maxSize}',
+			multi: true,
+			buttonText: 'Select files ...',
+			width: 200,
+			// removeCompleted: true,
+			onInit: function() {
+				$('#showRemoveAddButtoms').hide();
+			},
+			onUpload: function(filesToUpload) {
+				uploader.data('uploadifive').settings.formData = {
+					ngAuthCookie: '{authcookie}',
+					uploadType: 'image',
+					category: $('#categorySelect').val(),
+					rand: $('#flagRand').is(':checked') ? 1 : 0,
+					replace: $('#flagReplace').is(':checked') ? 1 : 0,
+					thumb: $('#flagThumb').is(':checked') ? 1 : 0,
+					stamp: $('#flagStamp').is(':checked') ? 1 : 0,
+					shadow: $('#flagShadow').is(':checked') ? 1 : 0
+				};
+			},
+			onUploadComplete: function(fileObj, data) {
+				// Response should be in JSON format
+				var response = JSON.parse(data);
 
-                function uploadifyDoUpload() {
-                    // Prepare script data
-                    $('#fileUploadInput').uploadifive('upload');
-                }
-            </script>
-			<!-- END: Init UPLOADIFY engine -->
-		</td>
-
-		<td width="50%" class="contentEntry1" valign="top">
-			<form action="{php_self}?mod=images" method="post" name="snup">
-				<table border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-					<tr>
-						<td class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8" alt=""/>{l_upload_img_url}
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<input type="hidden" name="subaction" value="uploadurl"/>
-							<input type="hidden" name="area" value="{area}"/>
-							<br/>{dirlist}&nbsp;
-							<input type="button" class="button" value='{l_delone}' onClick="RemoveImages2();return false;"/>&nbsp;
-							<input type="button" class="button" value='{l_onemore}' onClick="AddImages2();return false;"/><br/><br/>
-							<script language="javascript" type="text/javascript">
-								function AddImages2() {
-									var tbl = document.getElementById('imageup2');
-									var lastRow = tbl.rows.length;
-									var iteration = lastRow + 1;
-									var row = tbl.insertRow(lastRow);
-
-									var cellRight = row.insertCell(0);
-									cellRight.innerHTML = '<span">' + iteration + ': <' + '/' + 'span>';
-
-									cellRight = row.insertCell(1);
-
-									var el = document.createElement('input');
-									el.setAttribute('type', 'text');
-									el.setAttribute('name', 'userurl[' + iteration + ']');
-									el.setAttribute('size', '60');
-									cellRight.appendChild(el);
-								}
-								function RemoveImages2() {
-									var tbl = document.getElementById('imageup2');
-									var lastRow = tbl.rows.length;
-									if (lastRow > 1) {
-										tbl.deleteRow(lastRow - 1);
-									}
-								}
-							</script>
-							<table id="imageup2" class="upload">
-								<tr id="row">
-									<td>1:</td>
-									<td><input type="text" size="60" name="userurl[0]"/></td>
-								</tr>
-							</table>
-
-							<div class="list">
-								<input type="checkbox" name="replace" value='replace' id=replace2 class='check'/>
-								<label for=replace2>{l_do_replace}</label><br/>
-								<input type="checkbox" name="rand" value='rand' id=rand2 class='check'/>
-								<label for=rand2>{l_do_rand}</label><br/>
-								<input type="checkbox" name="thumb" value='thumb' id=thumb2 class='check' {thumb_mode}{thumb_checked}/>
-								<label for=thumb2>{l_do_preview}</label><br/>
-								<input type="checkbox" name="shadow" value='shadow' id=shadow2 class='check' {shadow_mode}{shadow_checked}/><label for=shadow2>{l_do_shadow}</label><br/>
-								<input type="checkbox" name="stamp" value='stamp' id=stamp2 class='check' {stamp_mode}{stamp_checked}/><label for=stamp2>{l_do_wmimage}</label>
-							</div>
-						</td>
-					</tr>
-					<tr align="center">
-						<td width="100%" class="contentEdit" align="center" valign="top">
-							<input type="submit" value='{l_upload}' class="button"/>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</td>
-	</tr>
-</table>
+				fileObj.queueItem.find('.fileinfo')
+					.replaceWith(
+						response.status
+						? '<div class="text-info">' + response.errorText + '</div>'
+						: '<div class="text-danger">(' + response.errorCode + ') ' + response.errorText + ' ' + response.errorDescription +'</div>'
+					);
+			}
+		});
+	});
+</script>
+<!-- END: Init UPLOADIFY engine -->

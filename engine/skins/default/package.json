@@ -1,0 +1,23 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "prod": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "devDependencies": {
+        "@emmetio/codemirror-plugin": "^1.1.3",
+        "bootstrap": "^4.5.0",
+        "codemirror": "^5.55.0",
+        "cross-env": "^7.0.2",
+        "font-awesome": "^4.7.0",
+        "jquery": "^3.5.1",
+        "jquery-datetimepicker": "^2.5.21",
+        "laravel-mix": "^5.0.4",
+        "node-sass": "^4.14.1",
+        "popper.js": "^1.16.1",
+        "sass-loader": "^8.0.2",
+        "vue-template-compiler": "^2.6.11"
+    },
+    "dependencies": {}
+}

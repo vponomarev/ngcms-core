@@ -1,0 +1,10 @@
+// Variables
+@import "variables";
+
+// npm i codemirror --save-dev
+// npm i emmet-codemirror --save-dev
+@import "~codemirror/lib/codemirror.css";
+@import "~codemirror/addon/display/fullscreen.css";
+@import "~codemirror/addon/dialog/dialog.css";
+
+@import "../vendor/ngFileTree/ngFileTree.scss";

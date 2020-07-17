@@ -1,82 +1,104 @@
-<script language="JavaScript">
-	function ChangeOption(selectedOption) {
-		document.getElementById('maincontent').style.display = "none";
-		document.getElementById('additional').style.display = "none";
-
-		if (selectedOption == 'maincontent') {
-			document.getElementById('maincontent').style.display = "";
-		}
-		if (selectedOption == 'additional') {
-			document.getElementById('additional').style.display = "";
-		}
-	}
-</script>
+<!-- <div class="page-title">
+	<h2>{{ lang['editcomments'] }}</h2>
+</div> -->
 
 <form name="form" method="post" action="{php_self}?mod=editcomments">
-	<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr align="center">
-			<td width="100%" class="contentNav" align="center" valign="top">
-				<input type="button" onmousedown="javascript:ChangeOption('maincontent')" value="{l_maincontent}" class="navbutton"/>
-				<input type="button" onmousedown="javascript:ChangeOption('additional')" value="{l_additional}" class="navbutton"/>
-			</td>
-		</tr>
-	</table>
-	<br/>
-	<table id="maincontent" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-		<tr>
-			<td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"/>{l_answer}
-			</td>
-		</tr>
-		<tr>
-			<td width="50%" valign="top" class="contentEntry1">
-				<textarea id="content" name="content" rows="10" cols="70">{answer}</textarea></td>
-			<td width="50%" valign="top" class="contentEntry1">{quicktags}<br/>{smilies}</td>
-		</tr>
-		<tr>
-			<td width="100%" colspan="2" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8"/>{l_comment}
-			</td>
-		</tr>
-		<tr>
-			<td width="50%" class="contentEntry1" valign="top">
-				<textarea name="comment" rows="10" cols="70">{text}</textarea></td>
-			<td width="50%" class="contentEntry1" valign="top">
-				<input type="checkbox" id="send" name="send_notice" value="send_notice" class="check"/>
-				&nbsp;<label for="send">{l_send_notice}</label></td>
-		</tr>
-	</table>
+	<input type="hidden" name="mod" value="editcomments" />
+	<input type="hidden" name="newsid" value="{newsid}" />
+	<input type="hidden" name="comid" value="{comid}" />
+	<input type="hidden" name="poster" value="{author}" />
+	<input type="hidden" name="subaction" value="doeditcomment" />
 
-	<table id="additional" style="display: none;" border="0" cellspacing="0" cellpadding="0" class="content" align="center">
-		<tr>
-			<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_date}</td>
-			<td width="47%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_ip}</td>
-		</tr>
-		<tr>
-			<td width="50%" class="contentEntry1">{comdate}</td>
-			<td width="47%" class="contentEntry1"><a href="http://www.nic.ru/whois/?ip={ip}" target="_blank">{ip}</a>
-			</td>
-		</tr>
-		<tr>
-			<td width="50%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_name}</td>
-			<td width="47%" class="contentHead"><img src="{skins_url}/images/nav.gif" hspace="8">{l_email}</td>
-		</tr>
-		<tr>
-			<td width="50%" class="contentEntry1">{author}</td>
-			<td width="47%" class="contentEntry1"><input type="text" name="mail" value="{mail}"/></td>
-		</tr>
-	</table>
-	<br/>
-	<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr align="center">
-			<td width="100%" class="contentEdit">
-				<input type=submit value="{l_save}" accesskey="s" class="button" tabindex="5">
-				<input type=button value="{l_delete}" onClick="confirmit('{php_self}?mod=editcomments&subaction=deletecomment&newsid={newsid}&comid={comid}&poster={author}', '{l_sure_del}')" class="button" tabindex="6">
-				<input type="button" value="{l_block_ip}" onClick="document.location='{php_self}?mod=ipban&iplock={ip}'" class="button"/>
-				<input type=hidden name=mod value="editcomments">
-				<input type=hidden name=newsid value="{newsid}">
-				<input type=hidden name=comid value="{comid}">
-				<input type=hidden name=poster value="{author}">
-				<input type=hidden name=subaction value="doeditcomment">
-			</td>
-		</tr>
-	</table>
+	<div class="row">
+		<!-- Left edit column -->
+		<div class="col-lg-8">
+
+			<!-- MAIN CONTENT -->
+			<div id="maincontent" class="card mb-4">
+				<div class="card-header">{l_maincontent}</div>
+				<div class="card-body">
+					<div class="form-group">
+						<label class="">{l_comment}</label>
+						<textarea name="comment" class="form-control" rows="10" cols="70">{text}</textarea>
+					</div>
+
+					{quicktags}
+					<!-- SMILES -->
+					<div id="modal-smiles" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="smiles-modal-label" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 id="smiles-modal-label" class="modal-title">Вставить смайл</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								</div>
+								<div class="modal-body">
+									{smilies}
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="">{l_answer}</label>
+						<textarea id="content" name="content" class="form-control" rows="10" cols="70">{answer}</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Additional edit column -->
+		<div id="additional" class="col col-lg-4">
+			<div class="card mb-4">
+				<div class="card-header">{l_additional}</div>
+				<div class="card-body">
+					<ul class="list-unstyled">
+						<li>{l_date}: <b>{comdate}</b></li>
+						<li>{l_ip}: <b><a href="http://www.nic.ru/whois/?ip={ip}" target="_blank">{ip}</a></b></li>
+						<li>{l_name}: <b>{author}</b></li>
+					</ul>
+
+					<div class="form-group">
+						<label>{l_email}:</label>
+						<input type="text" name="mail" value="{mail}" class="form-control" />
+					</div>
+
+					<div class="form-group mb-0">
+						<button type="button" onclick="document.location='{php_self}?mod=ipban&iplock={ip}'" class="btn btn-outline-danger">{l_block_ip}</>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col col-lg-8">
+			<div class="row">
+				<div class="col-6 mb-4">
+					<button type="button" class="btn btn-outline-danger" onclick="confirmit('{php_self}?mod=editcomments&subaction=deletecomment&newsid={newsid}&comid={comid}&poster={author}', '{l_sure_del}')">
+						<span class="d-xl-none"><i class="fa fa-trash"></i></span>
+						<span class="d-none d-xl-block">{l_delete}</span>
+					</button>
+				</div>
+
+				<div class="col-6 mb-4 text-right">
+					<div class="form-group">
+						<button type="submit" class="btn btn-outline-success" accesskey="s">
+							<span class="d-xl-none"><i class="fa fa-floppy-o"></i></span>
+							<span class="d-none d-xl-block">{l_save}</span>
+						</button>
+					</div>
+
+					<div class="form-group">
+						<label class="d-block">
+							<input type="checkbox" name="send_notice" value="send_notice" />
+							{l_send_notice}
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
