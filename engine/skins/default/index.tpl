@@ -79,7 +79,7 @@
 
 					<ul class="nav flex-column mb-2">
 						<li class="nav-item">
-							<a href="http://ngcms.ru/forum/" target="_blank" class="nav-link">
+							<a href="https://ngcms.ru/forum/" target="_blank" class="nav-link">
 								<i class="fa fa-leanpub"></i>{{ lang['forum'] }}
 							</a>
 						</li>
