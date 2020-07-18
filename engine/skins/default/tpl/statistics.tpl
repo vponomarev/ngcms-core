@@ -166,6 +166,12 @@
 						<td colspan="2">{{ lang['mysql_size'] }}</td>
 						<td colspan="2">{{ mysql_size }}</td>
 					</tr>
+					<tr>
+						<td>Размер кэша:</td>
+						<td id="cacheFileCount">-</td>
+						<td id="cacheSize">-</td>
+						<td align="right"><input type="button" value="{{ lang['cache.calculate'] }}" onclick="return getCacheSize();"/><input type="button" value="{{ lang['cache.clean']}}" onclick="return clearCache();"/></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -282,3 +288,28 @@
 		</div>
 	</span>
 </div>
+
+<script type="text/javascript">
+	function getCacheSize() {
+		$("#cacheFileCount").html('-');
+		$("#cacheSize").html('-');
+		post('admin.statistics.getCacheSize', {'token':'{{ token }}'}, false)
+				.then(function(response) {
+					if (response.numFiles) {
+						$("#cacheFileCount").html(response.numFiles);
+						$("#cacheSize").html(response.size);
+					}
+				});
+		return false;
+	}
+
+	function clearCache() {
+		$("#cacheFileCount").html('-');
+		$("#cacheSize").html('-');
+		post('admin.statistics.cleanCache', {'token':'{{ token }}'}, false)
+				.then(function(response) {
+					getCacheSize();
+				});
+		return false;
+	}
+</script>

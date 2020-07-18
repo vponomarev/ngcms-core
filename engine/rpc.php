@@ -1,10 +1,10 @@
 <?php
 
 //
-// Copyright (C) 2006-2014 Next Generation CMS (http://ngcms.ru)
+// Copyright (C) 2006-2020 Next Generation CMS (http://ngcms.ru)
 // Name: rpc.php
 // Description: Service functions controller
-// Author: Vitaly Ponomarev
+// Author: NGCMS Development Team
 //
 
 @include_once 'core.php';
@@ -22,7 +22,7 @@ loadActionHandlers('rpc:' . (is_array($userROW) ? 'active' : 'inactive'));
 function loadAdminRPC($mod)
 {
 
-    if (in_array($mod, array('categories', 'extras', 'files', 'templates', 'configuration'))) {
+    if (in_array($mod, array('categories', 'extras', 'files', 'templates', 'configuration', 'statistics'))) {
         @include_once('./actions/' . $mod . '.rpc.php');
 
         return true;

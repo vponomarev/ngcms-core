@@ -12,6 +12,9 @@ if (!defined('NGCMS')) {
     die('HAL');
 }
 
+// Load library
+@include_once root.'actions/statistics.rpc.php';
+
 // ==============================================================
 //  Module functions
 // ==============================================================
@@ -181,6 +184,7 @@ $tVars = array(
     'categories'       => $mysql->result("SELECT count(id) FROM " . prefix . "_category"),
     'admin_note'       => $note,
     'pdo_support'      => (extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) ? $lang['yesa'] : ('<font color="red">' . $lang['noa'] . '</font>'),
+    'token'            => genUToken('admin.statistics'),
 );
 
 $tVars = $tVars + $STATS;
