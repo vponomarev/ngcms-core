@@ -8,7 +8,7 @@
 //
 
 // Administrative panel filters
-$AFILTERS = array();
+$AFILTERS = [];
 
 // Load core
 @header('content-type: text/html; charset=utf-8');
@@ -19,9 +19,9 @@ if (!defined('NGCMS')) {
     die('HAL');
 }
 
-@header("Cache-Control: no-store, no-cache, must-revalidate");
-@header("Cache-Control: post-check=0, pre-check=0", false);
-@header("Pragma: no-cache");
+@header('Cache-Control: no-store, no-cache, must-revalidate');
+@header('Cache-Control: post-check=0, pre-check=0', false);
+@header('Pragma: no-cache');
 
 // Pre-configure required global variables
 global $action, $subaction, $mod;
@@ -35,15 +35,15 @@ ob_start();
 //define('DEBUG', 1);
 
 if (defined('DEBUG')) {
-    print "HTTP CALL PARAMS: <pre>";
-    var_dump(array('GET' => $_GET, 'POST' => $_POST, 'COOKIE' => $_COOKIE));
-    print "</pre><br>\n";
-    print "SERVER PARAMS: <pre>";
+    echo 'HTTP CALL PARAMS: <pre>';
+    var_dump(['GET' => $_GET, 'POST' => $_POST, 'COOKIE' => $_COOKIE]);
+    echo "</pre><br>\n";
+    echo 'SERVER PARAMS: <pre>';
     var_dump($_SERVER);
-    print "</pre><br>\n";
+    echo "</pre><br>\n";
 }
 
-$PHP_SELF = "admin.php";
+$PHP_SELF = 'admin.php';
 
 // We have only one admin panel skin
 //@require_once("./skins/default/index.php");
@@ -52,7 +52,7 @@ $PHP_SELF = "admin.php";
 // Handle LOGIN
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
-    include_once root . 'cmodules.php';
+    include_once root.'cmodules.php';
     coreLogin();
 }
 
@@ -60,7 +60,7 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
 // Handle LOGOUT
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
-    include_once root . 'cmodules.php';
+    include_once root.'cmodules.php';
     coreLogout();
 }
 
@@ -68,24 +68,24 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
 // Show LOGIN screen if user is not logged in
 //
 if (!is_array($userROW)) {
-    $tVars = array(
-        'php_self' => $PHP_SELF,
-        'redirect' => $REQUEST_URI,
-        'year' => date("Y"),
+    $tVars = [
+        'php_self'   => $PHP_SELF,
+        'redirect'   => $REQUEST_URI,
+        'year'       => date('Y'),
         'home_title' => home_title,
-        'error' => ($SYSTEM_FLAGS['auth_fail']) ? $lang['msge_login'] : '',
-        'is_error' => ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
-    );
+        'error'      => ($SYSTEM_FLAGS['auth_fail']) ? $lang['msge_login'] : '',
+        'is_error'   => ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
+    ];
 
-    $xt = $twig->loadTemplate(tpl_actions . 'login.tpl');
+    $xt = $twig->loadTemplate(tpl_actions.'login.tpl');
     echo $xt->render($tVars);
     exit;
 }
 
 // Check if visitor has permissions to view admin panel
-if (!checkPermission(array('plugin' => '#admin', 'item' => 'system'), null, 'admpanel.view')) {
-    ngSYSLOG(array('plugin' => '#admin', 'item' => 'system'), array('action' => 'admpanel.view'), null, array(0, 'SECURITY.PERM'));
-    @header("Location: " . home);
+if (!checkPermission(['plugin' => '#admin', 'item' => 'system'], null, 'admpanel.view')) {
+    ngSYSLOG(['plugin' => '#admin', 'item' => 'system'], ['action' => 'admpanel.view'], null, [0, 'SECURITY.PERM']);
+    @header('Location: '.home);
     exit;
 }
 
@@ -96,11 +96,12 @@ if (!checkPermission(array('plugin' => '#admin', 'item' => 'system'), null, 'adm
 define('ADMIN', 1);
 
 // Load library
-require_once('./includes/inc/lib_admin.php');
+require_once './includes/inc/lib_admin.php';
 
 // Check if DB upgrade is required
 if (dbCheckUpgradeRequired()) {
-    print "<html><body><div>Error: DB Upgrade is required! Please upgrade DB before proceed.<br/><a href='upgrade.php'>Upgrade now!</a></div></body></html>";
+    echo "<html><body><div>Error: DB Upgrade is required! Please upgrade DB before proceed.<br/><a href='upgrade.php'>Upgrade now!</a></div></body></html>";
+
     return;
 }
 
@@ -108,34 +109,34 @@ if (dbCheckUpgradeRequired()) {
 load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
-$permissions = array(
-    'perm' => '1',
-    'ugroup' => 1,
+$permissions = [
+    'perm'          => '1',
+    'ugroup'        => 1,
     'configuration' => 99,
-    'cron' => 99,
-    'dbo' => 99,
-    'extras' => '1',
-    'extra-config' => '1',
-    'statistics' => '1',
-    'templates' => 99,
-    'users' => 99,
-    'rewrite' => '1',
-    'static' => '1',
+    'cron'          => 99,
+    'dbo'           => 99,
+    'extras'        => '1',
+    'extra-config'  => '1',
+    'statistics'    => '1',
+    'templates'     => 99,
+    'users'         => 99,
+    'rewrite'       => '1',
+    'static'        => '1',
 
     'editcomments' => '2',
-    'ipban' => 99,
-    'options' => '2',
+    'ipban'        => 99,
+    'options'      => '2',
 
     'categories' => 99,
-    'news' => 99,
+    'news'       => 99,
 
-    'files' => '3',
-    'images' => '3',
-    'pm' => '3',
+    'files'   => '3',
+    'images'  => '3',
+    'pm'      => '3',
     'preview' => '3',
-);
+];
 
-exec_acts("admin_header");
+exec_acts('admin_header');
 
 // Default action
 if (!$mod) {
@@ -149,59 +150,59 @@ if (isset($permissions[$mod]) && ($permissions[$mod])) {
     // If user's status fits - call module. Else - show an error
     if ($userROW['status'] <= $level) {
         // Load plugins, that need to make any changes in this mod
-        load_extras('admin:mod:' . $mod);
-        require("./actions/" . $mod . ".php");
+        load_extras('admin:mod:'.$mod);
+        require './actions/'.$mod.'.php';
     } else {
-        $notify = msg(array("type" => "error", "text" => $lang['msge_mod']));
+        $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
     }
 } else {
-    $notify = msg(array("type" => "error", "text" => $lang['msge_mod']));
+    $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
 }
 
 $lang = LoadLang('index', 'admin');
 if (is_array($userROW)) {
-    $newpm = $mysql->result("SELECT count(pmid) FROM " . prefix . "_users_pm WHERE to_id = " . db_squote($userROW['id']) . " AND viewed = '0'");
-    $newpm = ($newpm != "0") ? '<b>' . $newpm . '</b>' : '0';
+    $newpm = $mysql->result('SELECT count(pmid) FROM '.prefix.'_users_pm WHERE to_id = '.db_squote($userROW['id'])." AND viewed = '0'");
+    $newpm = ($newpm != '0') ? '<b>'.$newpm.'</b>' : '0';
     // Calculate number of un-approved news
     $unapproved = '';
     if ($userROW['status'] == 1 || $userROW['status'] == 2) {
-        $unapp = $mysql->result("SELECT count(id) FROM " . prefix . "_news WHERE approve = '0'");
+        $unapp = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '0'");
         if ($unapp) {
-            $unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>' . $unapp . '</b></font></a> ] ';
+            $unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
         }
     }
 }
 
 $datetimepicker_lang_default = "
-$.datepicker.setDefaults($.datepicker.regional['" . $lang['langcode'] . "']);
-$.timepicker.setDefaults($.timepicker.regional['" . $lang['langcode'] . "']);
+$.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
+$.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
 ";
-$datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : "";
+$datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : '';
 
-$tVars = array(
-    'php_self' => $PHP_SELF,
-    'home_title' => $config['home_title'],
-    'newpm' => $newpm,
-    'unapproved' => $unapproved,
-    'main_admin' => $main_admin,
-    'notify' => $notify,
+$tVars = [
+    'php_self'            => $PHP_SELF,
+    'home_title'          => $config['home_title'],
+    'newpm'               => $newpm,
+    'unapproved'          => $unapproved,
+    'main_admin'          => $main_admin,
+    'notify'              => $notify,
     'datetimepicker_lang' => $datetimepicker_lang,
-    'h_active_options' => (in_array($mod, array('options', 'categories', 'static'))) ? ' class="active"' : '',
-    'h_active_extras' => (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
-    'h_active_addnews' => (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
-    'h_active_editnews' => (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
-    'h_active_images' => ($mod == 'images') ? ' class="active"' : '',
-    'h_active_files' => ($mod == 'files') ? ' class="active"' : '',
-    'h_active_pm' => ($mod == 'pm') ? ' class="active"' : '',
-    'year' => date("Y"),
-);
+    'h_active_options'    => (in_array($mod, ['options', 'categories', 'static'])) ? ' class="active"' : '',
+    'h_active_extras'     => (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
+    'h_active_addnews'    => (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
+    'h_active_editnews'   => (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
+    'h_active_images'     => ($mod == 'images') ? ' class="active"' : '',
+    'h_active_files'      => ($mod == 'files') ? ' class="active"' : '',
+    'h_active_pm'         => ($mod == 'pm') ? ' class="active"' : '',
+    'year'                => date('Y'),
+];
 
-if (!$mod || ($mod && $mod != "preview")) {
-    $xt = $twig->loadTemplate(dirname(tpl_actions) . '/index.tpl');
+if (!$mod || ($mod && $mod != 'preview')) {
+    $xt = $twig->loadTemplate(dirname(tpl_actions).'/index.tpl');
     echo $xt->render($tVars);
 }
 if (defined('DEBUG')) {
-    echo "SQL queries:<br />\n-------<br />\n " . implode("<br />\n", $mysql->query_list);
+    echo "SQL queries:<br />\n-------<br />\n ".implode("<br />\n", $mysql->query_list);
 }
 
-exec_acts("admin_footer");
+exec_acts('admin_footer');

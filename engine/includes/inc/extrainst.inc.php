@@ -17,25 +17,25 @@ if (!defined('NGCMS')) {
 /*
 params:
  array of arrays with variables:
-	name = parameter name
-	title = parameter title (showed in html)
-	descr = description (small symbols show)
-	type  = input / select / text
-	value = default filled value
-	values = array of possible values (for select)
-	html_flags = additional html flags for parameter
-	validate = array with validation parameters, several lines may be applied
-		: type = int
-			: min, max = define minimum and maximum values
-		: type = regex
-			: match = define regex that shoud be matched
+    name = parameter name
+    title = parameter title (showed in html)
+    descr = description (small symbols show)
+    type  = input / select / text
+    value = default filled value
+    values = array of possible values (for select)
+    html_flags = additional html flags for parameter
+    validate = array with validation parameters, several lines may be applied
+        : type = int
+            : min, max = define minimum and maximum values
+        : type = regex
+            : match = define regex that shoud be matched
 
-		: type = integer
-		:
+        : type = integer
+        :
 
 */
 
-function generate_config_page($module, $params, $values = array())
+function generate_config_page($module, $params, $values = [])
 {
     global $tpl, $lang, $main_admin, $PHP_SELF;
 
@@ -47,19 +47,19 @@ function generate_config_page($module, $params, $values = array())
             return $param['input'];
         }
 
-        $tvars['vars'] = array(
-            'name' => $param['name'],
+        $tvars['vars'] = [
+            'name'  => $param['name'],
             'title' => $param['title'],
             'descr' => $param['descr'],
             'error' => '',
-            'input' => ''
-        );
+            'input' => '',
+        ];
 
         if ($param['descr']) {
-            $tvars['vars']['[descr]'] = "";
-            $tvars['vars']['[/descr]'] = "";
+            $tvars['vars']['[descr]'] = '';
+            $tvars['vars']['[/descr]'] = '';
         } else {
-            $tvars['regx']["'\\[descr\\].*?\\[/descr\\]'si"] = "";
+            $tvars['regx']["'\\[descr\\].*?\\[/descr\\]'si"] = '';
         }
 
         if ($param['error']) {
@@ -70,17 +70,17 @@ function generate_config_page($module, $params, $values = array())
         }
 
         if ($param['type'] == 'text') {
-            $tvars['vars']['input'] = '<textarea name="' . $param['name'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . '>' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</textarea>';
+            $tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8').'</textarea>';
         } elseif ($param['type'] == 'input') {
-            $tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="text" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '" />';
+            $tvars['vars']['input'] = '<input name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8').'" />';
         } elseif ($param['type'] == 'checkbox') {
-            $tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="checkbox" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="1"' . ($param['value'] ? ' checked' : '') . ' />';
+            $tvars['vars']['input'] = '<input name="'.$param['name'].'" type="checkbox" title="'.$param['title'].'" '.$param['html_flags'].' value="1"'.($param['value'] ? ' checked' : '').' />';
         } elseif ($param['type'] == 'hidden') {
-            $tvars['vars']['input'] = '<input name="' . $param['name'] . '" type=hidden value="' . htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '" />';
+            $tvars['vars']['input'] = '<input name="'.$param['name'].'" type=hidden value="'.htmlspecialchars($param['value'], ENT_COMPAT | ENT_HTML401, 'UTF-8').'" />';
         } elseif ($param['type'] == 'select') {
-            $tvars['vars']['input'] = '<select name="' . $param['name'] . '" ' . $param['html_flags'] . '>';
+            $tvars['vars']['input'] = '<select name="'.$param['name'].'" '.$param['html_flags'].'>';
             foreach ($param['values'] as $oid => $oval) {
-                $tvars['vars']['input'] .= '<option value="' . htmlspecialchars($oid, ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"' . ($param['value'] == $oid ? ' selected' : '') . '>' . $oval . '</option>';
+                $tvars['vars']['input'] .= '<option value="'.htmlspecialchars($oid, ENT_COMPAT | ENT_HTML401, 'UTF-8').'"'.($param['value'] == $oid ? ' selected' : '').'>'.$oval.'</option>';
             }
             $tvars['vars']['input'] .= '</select>';
         } elseif ($param['type'] == 'manual') {
@@ -93,8 +93,8 @@ function generate_config_page($module, $params, $values = array())
     }
 
     // Prepare
-    $tpl->template('group', tpl_actions . 'extra-config');
-    $tpl->template('entries', tpl_actions . 'extra-config');
+    $tpl->template('group', tpl_actions.'extra-config');
+    $tpl->template('entries', tpl_actions.'extra-config');
 
     // For each param do
     foreach ($params as $param) {
@@ -104,7 +104,7 @@ function generate_config_page($module, $params, $values = array())
             foreach ($param['entries'] as $entry) {
                 $line .= mkParamLine($entry);
             }
-            $tvars['vars'] = array('title' => $param['title'], 'entries' => $line);
+            $tvars['vars'] = ['title' => $param['title'], 'entries' => $line];
             if (isset($param['toggle']) && $param['toggle']) {
                 $tvars['regx']['#\[toggle\](.+?)\[\/toggle\]#is'] = '$1';
                 $tvars['vars']['toggle_mode'] = (isset($param['toggle.mode']) && ($param['toggle.mode'] == 'hide')) ? 'none' : '';
@@ -113,14 +113,14 @@ function generate_config_page($module, $params, $values = array())
             }
             $tpl->vars('group', $tvars);
             $entries .= $tpl->show('group', $tvars);
-            //$entries .= $line;
+        //$entries .= $line;
         } else {
             $entries .= mkParamLine($param);
         }
     }
 
-    $tpl->template('table', tpl_actions . 'extra-config');
-    $tvars['vars'] = array('entries' => $entries, 'plugin' => $module, 'php_self' => $PHP_SELF, 'token' => genUToken('admin.extra-config'));
+    $tpl->template('table', tpl_actions.'extra-config');
+    $tvars['vars'] = ['entries' => $entries, 'plugin' => $module, 'php_self' => $PHP_SELF, 'token' => genUToken('admin.extra-config')];
     $tpl->vars('table', $tvars);
     $main_admin = $tpl->show('table');
 }
@@ -131,7 +131,7 @@ function commit_plugin_config_changes($module, $params)
     // Load cofig
     pluginsLoadConfig();
 
-    $cfgUpdate = array();
+    $cfgUpdate = [];
 
     // For each param do save data
     foreach ($params as $param) {
@@ -140,13 +140,13 @@ function commit_plugin_config_changes($module, $params)
             if (is_array($param['entries'])) {
                 foreach ($param['entries'] as $gparam) {
                     if ($gparam['name'] && (!$gparam['nosave'])) {
-                        pluginSetVariable($module, $gparam['name'], $_POST[$gparam['name']] . '');
-                        $cfgUpdate[$gparam['name']] = $_POST[$gparam['name']] . '';
+                        pluginSetVariable($module, $gparam['name'], $_POST[$gparam['name']].'');
+                        $cfgUpdate[$gparam['name']] = $_POST[$gparam['name']].'';
                     }
                 }
             }
         } elseif ($param['name'] && (!$param['nosave'])) {
-            pluginSetVariable($module, $param['name'], $_POST[$param['name']] . '');
+            pluginSetVariable($module, $param['name'], $_POST[$param['name']].'');
         }
     }
 
@@ -154,7 +154,7 @@ function commit_plugin_config_changes($module, $params)
     pluginsSaveConfig();
 
     // Generate log
-    ngSYSLOG(array('plugin' => '#admin', 'item' => 'config#' . $module), array('action' => 'update', 'list' => $cfgUpdate), null, array(1));
+    ngSYSLOG(['plugin' => '#admin', 'item' => 'config#'.$module], ['action' => 'update', 'list' => $cfgUpdate], null, [1]);
 }
 
 // Load params sent by POST request in plugin configuration
@@ -174,8 +174,8 @@ function print_commit_complete($plugin)
 {
     global $tpl, $PHP_SELF, $main_admin;
 
-    $tpl->template('done', tpl_actions . 'extra-config');
-    $tvars['vars'] = array('plugin' => $plugin, 'php_self' => $PHP_SELF);
+    $tpl->template('done', tpl_actions.'extra-config');
+    $tvars['vars'] = ['plugin' => $plugin, 'php_self' => $PHP_SELF];
     $tpl->vars('done', $tvars);
     $main_admin = $tpl->show('done');
 }
@@ -185,7 +185,7 @@ function mysql_table_exists($table)
 {
     global $config, $mysql;
 
-    if (is_array($mysql->record("show tables like " . db_squote($table)))) {
+    if (is_array($mysql->record('show tables like '.db_squote($table)))) {
         return 1;
     }
 
@@ -197,11 +197,12 @@ function get_mysql_field_type($table, $field)
 {
     global $mysql;
 
-    foreach ($mysql->select("describe " . $table) as $l) {
+    foreach ($mysql->select('describe '.$table) as $l) {
         if ($l['Field'] == $field) {
             return $l['Type'];
         }
     }
+
     return false;
 }
 
@@ -213,11 +214,11 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
     // Load config
     pluginsLoadConfig();
 
-    $publish = array();
+    $publish = [];
     if ($mode == 'install') {
-        array_push($publish, array('title' => '<b>' . $lang['idbc_process'] . '</b>', 'descr' => '', 'result' => ''));
+        array_push($publish, ['title' => '<b>'.$lang['idbc_process'].'</b>', 'descr' => '', 'result' => '']);
     } else {
-        array_push($publish, array('title' => '<b>' . $lang['ddbc_process'] . '</b>', 'descr' => '', 'result' => ''));
+        array_push($publish, ['title' => '<b>'.$lang['ddbc_process'].'</b>', 'descr' => '', 'result' => '']);
     }
     // For each params do update DB
     foreach ($params as $table) {
@@ -235,7 +236,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
             break;
         }
 
-        $chgTableName = (($table['table'] == 'users') ? uprefix : prefix) . "_" . $table['table'];
+        $chgTableName = (($table['table'] == 'users') ? uprefix : prefix).'_'.$table['table'];
 
         if (($table['action'] != 'create') &&
             ($table['action'] != 'cmodify') &&
@@ -243,7 +244,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
             ($table['action'] != 'drop')
         ) {
             $publish_title = 'Table operations';
-            $publish_result = 'Unknown action type specified [' . $table['action'] . ']';
+            $publish_result = 'Unknown action type specified ['.$table['action'].']';
             $publish_error = 1;
             break;
         }
@@ -258,10 +259,10 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
                 break;
             }
 
-            $query = "drop table " . $chgTableName;
+            $query = 'drop table '.$chgTableName;
             $mysql->query($query);
 
-            array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))));
+            array_push($publish, ['title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))]);
             continue;
         }
 
@@ -304,7 +305,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 
         // Now we can perform field creation
         if ($create_mode) {
-            $fieldlist = array();
+            $fieldlist = [];
             foreach ($table['fields'] as $field) {
                 if (!$field['name']) {
                     $publish_result = 'Field name should be specified';
@@ -317,7 +318,7 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
                         $publish_error = 1;
                         break;
                     }
-                    array_push($fieldlist, $field['name'] . " " . $field['type'] . " " . $field['params']);
+                    array_push($fieldlist, $field['name'].' '.$field['type'].' '.$field['params']);
                 } elseif ($field['action'] != 'drop') {
                     $publish_result = 'Unknown action';
                     $publish_error = 1;
@@ -326,11 +327,11 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
             }
 
             // Check if different character set are supported [ version >= 4.1.1 ]
-            $charset = is_array($mysql->record("show variables like 'character_set_client'")) ? (' DEFAULT CHARSET=' . ($table['charset'] ? $table['charset'] : 'utf8')) : '';
+            $charset = is_array($mysql->record("show variables like 'character_set_client'")) ? (' DEFAULT CHARSET='.($table['charset'] ? $table['charset'] : 'utf8')) : '';
 
-            $query = "create table " . $chgTableName . " (" . implode(', ', $fieldlist) . ($table['key'] ? ', ' . $table['key'] : '') . ")" . $charset . ($table['engine'] ? ' engine=' . $table['engine'] : '');
+            $query = 'create table '.$chgTableName.' ('.implode(', ', $fieldlist).($table['key'] ? ', '.$table['key'] : '').')'.$charset.($table['engine'] ? ' engine='.$table['engine'] : '');
             $mysql->query($query);
-            array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))));
+            array_push($publish, ['title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))]);
         } else {
             foreach ($table['fields'] as $field) {
                 if (!$field['name']) {
@@ -361,9 +362,9 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
                         $publish_error = 1;
                         break;
                     }
-                    $query = "alter table " . $chgTableName . " drop column `" . $field['name'] . "`";
+                    $query = 'alter table '.$chgTableName.' drop column `'.$field['name'].'`';
                     $mysql->query($query);
-                    array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))));
+                    array_push($publish, ['title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))]);
                 }
                 if ($field['action'] == 'create') {
                     $publish_title = $lang['idbc_amfield'];
@@ -375,45 +376,41 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
                         $publish_error = 1;
                         break;
                     }
-                    $query = "alter table " . $chgTableName . " add column `" . $field['name'] . "` " . $field['type'] . " " . $field['params'];
+                    $query = 'alter table '.$chgTableName.' add column `'.$field['name'].'` '.$field['type'].' '.$field['params'];
                     $mysql->query($query);
-                    array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))));
+                    array_push($publish, ['title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))]);
                     continue;
                 }
                 if ($field['action'] == 'cmodify') {
                     if (!$ft) {
-                        $query = "alter table " . $chgTableName . " add column `" . $field['name'] . "` " . $field['type'] . " " . $field['params'];
+                        $query = 'alter table '.$chgTableName.' add column `'.$field['name'].'` '.$field['type'].' '.$field['params'];
                     } else {
-                        $query = "alter table " . $chgTableName . " change column `" . $field['name'] . "` `" . $field['name'] . "` " . $field['type'] . " " . $field['params'];
+                        $query = 'alter table '.$chgTableName.' change column `'.$field['name'].'` `'.$field['name'].'` '.$field['type'].' '.$field['params'];
                     }
                     $mysql->query($query);
-                    array_push($publish, array('title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))));
+                    array_push($publish, ['title' => $publish_title, 'descr' => "SQL: [$query]", 'result' => ($publish_result ? $publish_result : ($error ? $lang['idbc_fail'] : $lang['idbc_ok']))]);
                     continue;
-
                 }
-
             }
             if ($publish_error) {
                 break;
             }
             $publish_title = '';
-
         }
-
     }
 
     // Scan for messages
     if ($publish_title && $publish_error) {
-        array_push($publish, array('title' => $publish_title, 'descr' => $publish_descr, 'error' => $publish_error, 'result' => ($publish_result ? $publish_result : ($publish_error ? $lang['idbc_fail'] : $lang['idbc_ok']))));
+        array_push($publish, ['title' => $publish_title, 'descr' => $publish_descr, 'error' => $publish_error, 'result' => ($publish_result ? $publish_result : ($publish_error ? $lang['idbc_fail'] : $lang['idbc_ok']))]);
     }
 
-    $tpl->template('install-entries', tpl_actions . 'extra-config');
+    $tpl->template('install-entries', tpl_actions.'extra-config');
 
     // Write an info
     foreach ($publish as $v) {
         $tvars['vars'] = $v;
         if ($tvars['vars']['error']) {
-            $tvars['vars']['result'] = '<font color="red">' . $tvars['vars']['result'] . '</font>';
+            $tvars['vars']['result'] = '<font color="red">'.$tvars['vars']['result'].'</font>';
         }
         $tpl->vars('install-entries', $tvars);
         $entries .= $tpl->show('install-entries');
@@ -425,14 +422,14 @@ function fixdb_plugin_install($module, $params, $mode = 'install', $silent = fal
 
     $is_error = 1;
 
-    $tpl->template('install-process', tpl_actions . 'extra-config');
-    $tvars['vars'] = array(
-        'entries' => $entries,
-        'plugin' => $module,
-        'php_self' => $PHP_SELF,
+    $tpl->template('install-process', tpl_actions.'extra-config');
+    $tvars['vars'] = [
+        'entries'   => $entries,
+        'plugin'    => $module,
+        'php_self'  => $PHP_SELF,
         'mode_text' => ($mode == 'install') ? $lang['install_text'] : $lang['deinstall_text'],
-        'msg' => ($mode == 'install' ? ($publish_error ? $lang['ibdc_ifail'] : $lang['idbc_iok']) : ($publish_error ? $lang['dbdc_ifail'] : $lang['ddbc_iok']))
-    );
+        'msg'       => ($mode == 'install' ? ($publish_error ? $lang['ibdc_ifail'] : $lang['idbc_iok']) : ($publish_error ? $lang['dbdc_ifail'] : $lang['ddbc_iok'])),
+    ];
     $tpl->vars('install-process', $tvars);
     if (!$silent) {
         $main_admin = $tpl->show('install-process');
@@ -446,31 +443,30 @@ function generate_install_page($plugin, $text, $stype = 'install')
 {
     global $tpl, $lang, $main_admin, $PHP_SELF;
 
-    $tpl->template('install', tpl_actions . 'extra-config');
-    $tvars['vars'] = array(
-        'plugin' => $plugin,
-        'stype' => $stype,
+    $tpl->template('install', tpl_actions.'extra-config');
+    $tvars['vars'] = [
+        'plugin'       => $plugin,
+        'stype'        => $stype,
         'install_text' => $text,
-        'mode_text' => ($stype == 'install') ? $lang['install_text'] : $lang['deinstall_text'],
-        'mode_commit' => ($stype == 'install') ? $lang['commit_install'] : $lang['commit_deinstall'],
-        'php_self' => $PHP_SELF
-    );
+        'mode_text'    => ($stype == 'install') ? $lang['install_text'] : $lang['deinstall_text'],
+        'mode_commit'  => ($stype == 'install') ? $lang['commit_install'] : $lang['commit_deinstall'],
+        'php_self'     => $PHP_SELF,
+    ];
     $tpl->vars('install', $tvars);
     $main_admin = $tpl->show('install');
-
 }
 
 //
 class permissionRuleManager
 {
     private $isLoaded = false;
-    private $rules = array();
+    private $rules = [];
 
     public function load()
     {
-        if (is_file(confroot . 'perm.rules.php')) {
+        if (is_file(confroot.'perm.rules.php')) {
             // Try to load it
-            include confroot . 'perm.rules.php';
+            include confroot.'perm.rules.php';
 
             // Update GLOBAL variable $PERM
             if (isset($permRules)) {
@@ -490,10 +486,10 @@ class permissionRuleManager
             return false;
         }
 
-        $prData = "<?php\n" . '$permRules = ' . var_export($this->$rules, true) . "\n;?>";
+        $prData = "<?php\n".'$permRules = '.var_export($this->$rules, true)."\n;?>";
 
         // Try to save config
-        $fcHandler = @fopen(confroot . 'perm.rules.php', 'w');
+        $fcHandler = @fopen(confroot.'perm.rules.php', 'w');
         if ($fcHandler) {
             fwrite($fcHandler, $prData);
             fclose($fcHandler);
@@ -542,10 +538,10 @@ class permissionRuleManager
             return false;
         }
 
-        $x = array();
+        $x = [];
         foreach ($this->rules as $k => $v) {
             if ($k != '#admin') {
-                $x [] = $k;
+                $x[] = $k;
             }
         }
 

@@ -13,7 +13,7 @@
 // Check for minimum supported PHP version
 if (version_compare(PHP_VERSION, '7.2.0') < 0) {
     @header('content-type: text/html; charset=utf-8');
-    print "<html><head><title>NGCMS required PHP version 7.2+ / Необходима версия PHP 7.2 или выше</title></head><body><div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR / Фатальная ошибка</span><br/><br/><span style=\"font: 16px arial;\"> NGCMS requires PHP version <b>7.2+</b><br/>Please ask your hosting provider to upgrade your account</span><br/><hr/><span style=\"font: 16px arial;\"> Для работы NGCMS требуется PHP версии <b>7.2</b> или выше.<br/>Обратитесь к вашему хостинг провайдеру для обновления версии</span></div></body></html>";
+    echo "<html><head><title>NGCMS required PHP version 7.2+ / Необходима версия PHP 7.2 или выше</title></head><body><div style='font: 24px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>FATAL ERROR / Фатальная ошибка</span><br/><br/><span style=\"font: 16px arial;\"> NGCMS requires PHP version <b>7.2+</b><br/>Please ask your hosting provider to upgrade your account</span><br/><hr/><span style=\"font: 16px arial;\"> Для работы NGCMS требуется PHP версии <b>7.2</b> или выше.<br/>Обратитесь к вашему хостинг провайдеру для обновления версии</span></div></body></html>";
     exit;
 }
 
@@ -24,32 +24,32 @@ if (version_compare(PHP_VERSION, '7.2.0') < 0) {
 initGZipHandler();
 
 // Define default TITLE
-$SYSTEM_FLAGS['info']['title'] = array();
+$SYSTEM_FLAGS['info']['title'] = [];
 $SYSTEM_FLAGS['info']['title']['header'] = home_title;
 
 // Initialize main template array
-$template = array(
-    'vars' => array(
-        'what' => engineName,
-        'version' => engineVersion,
-        'home' => home,
-        'titles' => home_title,
+$template = [
+    'vars' => [
+        'what'       => engineName,
+        'version'    => engineVersion,
+        'home'       => home,
+        'titles'     => home_title,
         'home_title' => home_title,
-        'mainblock' => '',
-        'htmlvars' => '',
-    ),
-);
+        'mainblock'  => '',
+        'htmlvars'   => '',
+    ],
+];
 
 // ===================================================================
 // Check if site access is locked [ for everyone except admins ]
 // ===================================================================
-if ($config['lock'] && (!is_array($userROW) || (!checkPermission(array('plugin' => '#admin', 'item' => 'system'), null, 'lockedsite.view')))) {
+if ($config['lock'] && (!is_array($userROW) || (!checkPermission(['plugin' => '#admin', 'item' => 'system'], null, 'lockedsite.view')))) {
     $tvars = $template;
     $tvars['vars']['lock_reason'] = $config['lock_reason'];
 
     // If template 'sitelock.tpl' exists - show only this template
     // ELSE: show template 'lock.tpl' within template 'main.tpl'
-    if (file_exists(tpl_site . 'sitelock.tpl')) {
+    if (file_exists(tpl_site.'sitelock.tpl')) {
         $tpl->template('sitelock', tpl_site);
         $tpl->vars('sitelock', $tvars);
         echo $tpl->show('sitelock');
@@ -79,24 +79,24 @@ if ($config['lock'] && (!is_array($userROW) || (!checkPermission(array('plugin' 
 executeActionHandler('index_pre');
 
 // Deactivate block [sitelock] ... [/sitelock]
-$template['vars']["[sitelock]"] = "";
-$template['vars']["[/sitelock]"] = "";
+$template['vars']['[sitelock]'] = '';
+$template['vars']['[/sitelock]'] = '';
 
 // /////////////////////////////////////////////////////////// //
 // You may modify variable $systemAccessURL here (for hacks)   //
 // /////////////////////////////////////////////////////////// //
 
 // /////////////////////////////////////////////////////////// //
-$timer->registerEvent('Search route for URL "' . $systemAccessURL . '"');
+$timer->registerEvent('Search route for URL "'.$systemAccessURL.'"');
 
 // Give domainName to URL handler engine for generating absolute links
-$UHANDLER->setOptions(array('domainPrefix' => $config['home_url']));
+$UHANDLER->setOptions(['domainPrefix' => $config['home_url']]);
 
 // Check if engine is installed in subdirectory
 if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match)) {
-    $UHANDLER->setOptions(array('localPrefix' => $match[2]));
+    $UHANDLER->setOptions(['localPrefix' => $match[2]]);
 }
-$runResult = $UHANDLER->run($systemAccessURL, array('debug' => false));
+$runResult = $UHANDLER->run($systemAccessURL, ['debug' => false]);
 
 // [[MARKER]] URL handler execution is finished
 $timer->registerEvent('URL handler execution is finished');
@@ -119,7 +119,7 @@ $template['vars']['categories'] = generateCategoryMenu();
 $timer->registerEvent('Category menu created');
 
 // Generate page title
-$template['vars']['titles'] = join(" : ", array_values($SYSTEM_FLAGS['info']['title']));
+$template['vars']['titles'] = implode(' : ', array_values($SYSTEM_FLAGS['info']['title']));
 
 // Generate user menu
 coreUserMenu();
@@ -144,15 +144,15 @@ $template['vars']['extracss'] = '';
 
 // Fill extra CSS links
 foreach ($EXTRA_CSS as $css => $null) {
-    $EXTRA_HTML_VARS[] = array('type' => 'css', 'data' => $css);
+    $EXTRA_HTML_VARS[] = ['type' => 'css', 'data' => $css];
 }
 
 // Generate metatags
-$EXTRA_HTML_VARS[] = array('type' => 'plain', 'data' => GetMetatags());
+$EXTRA_HTML_VARS[] = ['type' => 'plain', 'data' => GetMetatags()];
 
 // Fill additional HTML vars
-$htmlrow = array();
-$dupCheck = array();
+$htmlrow = [];
+$dupCheck = [];
 foreach ($EXTRA_HTML_VARS as $htmlvar) {
     // Skip empty
     if (!$htmlvar['data']) {
@@ -167,13 +167,13 @@ foreach ($EXTRA_HTML_VARS as $htmlvar) {
 
     switch ($htmlvar['type']) {
         case 'css':
-            $htmlrow[] = "<link href=\"" . $htmlvar['data'] . "\" rel=\"stylesheet\" type=\"text/css\" />";
+            $htmlrow[] = '<link href="'.$htmlvar['data'].'" rel="stylesheet" type="text/css" />';
             break;
         case 'js':
-            $htmlrow[] = "<script type=\"text/javascript\" src=\"" . $htmlvar['data'] . "\"></script>";
+            $htmlrow[] = '<script type="text/javascript" src="'.$htmlvar['data'].'"></script>';
             break;
         case 'rss':
-            $htmlrow[] = "<link href=\"" . $htmlvar['data'] . "\" rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" />";
+            $htmlrow[] = '<link href="'.$htmlvar['data'].'" rel="alternate" type="application/rss+xml" title="RSS" />';
             break;
         case 'plain':
             $htmlrow[] = $htmlvar['data'];
@@ -181,7 +181,7 @@ foreach ($EXTRA_HTML_VARS as $htmlvar) {
     }
 }
 if (count($htmlrow)) {
-    $template['vars']['htmlvars'] .= join("\n", $htmlrow);
+    $template['vars']['htmlvars'] .= implode("\n", $htmlrow);
 }
 
 // Add support of blocks [is-logged] .. [/isnt-logged] in main template
@@ -195,11 +195,11 @@ $template['vars']['exectime'] = $timer->stop();
 
 // Fill debug information (if it is requested)
 if ($config['debug']) {
-    $timer->registerEvent('Templates generation time: ' . $tpl->execTime . ' (' . $tpl->execCount . ' times called)');
+    $timer->registerEvent('Templates generation time: '.$tpl->execTime.' ('.$tpl->execCount.' times called)');
     $timer->registerEvent('Generate DEBUG output');
     if (is_array($userROW) && ($userROW['status'] == 1)) {
-        $template['vars']['debug_queries'] = ($config['debug_queries']) ? ('<b><u>SQL queries:</u></b><br>' . implode("<br />\n", $mysql->query_list) . "<br />") : '';
-        $template['vars']['debug_profiler'] = ($config['debug_profiler']) ? ('<b><u>Time profiler:</u></b>' . $timer->printEvents(1) . "<br />") : '';
+        $template['vars']['debug_queries'] = ($config['debug_queries']) ? ('<b><u>SQL queries:</u></b><br>'.implode("<br />\n", $mysql->query_list).'<br />') : '';
+        $template['vars']['debug_profiler'] = ($config['debug_profiler']) ? ('<b><u>Time profiler:</u></b>'.$timer->printEvents(1).'<br />') : '';
         $template['vars']['[debug]'] = '';
         $template['vars']['[/debug]'] = '';
     } else {
@@ -211,7 +211,7 @@ if ($config['debug']) {
 // Generate template for main page
 // ===================================================================
 // 0. Calculate memory PEAK usage
-$template['vars']['memPeakUsage'] = sprintf("%7.3f", (memory_get_peak_usage() / 1024 / 1024));
+$template['vars']['memPeakUsage'] = sprintf('%7.3f', (memory_get_peak_usage() / 1024 / 1024));
 
 // 1. Determine template name & path
 $mainTemplateName = isset($SYSTEM_FLAGS['template.main.name']) ? $SYSTEM_FLAGS['template.main.name'] : 'main';

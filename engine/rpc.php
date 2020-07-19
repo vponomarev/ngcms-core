@@ -16,14 +16,13 @@ if (!defined('NGCMS')) {
 
 // Load additional handlers [ common ]
 loadActionHandlers('rpc');
-loadActionHandlers('rpc:' . (is_array($userROW) ? 'active' : 'inactive'));
+loadActionHandlers('rpc:'.(is_array($userROW) ? 'active' : 'inactive'));
 
 // Function to preload ADMIN rpc funcs
 function loadAdminRPC($mod)
 {
-
-    if (in_array($mod, array('categories', 'extras', 'files', 'templates', 'configuration', 'statistics'))) {
-        @include_once('./actions/' . $mod . '.rpc.php');
+    if (in_array($mod, ['categories', 'extras', 'files', 'templates', 'configuration', 'statistics'])) {
+        @include_once './actions/'.$mod.'.rpc.php';
 
         return true;
     }
@@ -34,7 +33,6 @@ function loadAdminRPC($mod)
 // Register RPC ADMIN function
 function rpcRegisterAdminFunction($name, $instance, $permanent = false)
 {
-
     global $RPCADMFUNC;
     $RPCADMFUNC[$name] = $instance;
 }
@@ -46,7 +44,7 @@ function rpcRegisterAdminFunction($name, $instance, $permanent = false)
 if (isset($_REQUEST['json']) || isset($_GET['methodName'])) {
     processJSON();
 } else {
-    print "200: Method is not supported.";
+    echo '200: Method is not supported.';
 }
 
 //
@@ -54,7 +52,6 @@ if (isset($_REQUEST['json']) || isset($_GET['methodName'])) {
 //
 function processJSON()
 {
-
     global $RPCFUNC, $RPCADMFUNC;
 
     // Set correct content/type
@@ -90,16 +87,15 @@ function processJSON()
     }
     //print "<pre>JSON OUTPUT: ".json_encode($out)."</pre>";
     // Print output
-    print json_encode($out);
+    echo json_encode($out);
 }
 
 //
 //
 //
-function rpcDefault($methodName = '', $params = array())
+function rpcDefault($methodName = '', $params = [])
 {
-
-    return array('status' => 0, 'errorCode' => 1, 'errorText' => 'rpcDefault: method [' . $methodName . '] is unknown');
+    return ['status' => 0, 'errorCode' => 1, 'errorText' => 'rpcDefault: method ['.$methodName.'] is unknown'];
 }
 
 //
@@ -107,21 +103,20 @@ function rpcDefault($methodName = '', $params = array())
 // Description : Submit changes into REWRITE library
 function rpcRewriteSubmit($params)
 {
-
     global $userROW;
 
     // Check for permissions
-    if (!checkPermission(array('plugin' => '#admin', 'item' => 'rewrite'), null, 'modify')) {
-        ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.PERM'));
+    if (!checkPermission(['plugin' => '#admin', 'item' => 'rewrite'], null, 'modify')) {
+        ngSYSLOG(['plugin' => '#admin', 'item' => 'rewrite'], ['action' => 'modify'], null, [0, 'SECURITY.PERM']);
 
-        return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied (perm)');
+        return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied (perm)'];
     }
 
     // Check for security token
     if ((!isset($_REQUEST['token'])) || ($_REQUEST['token'] != genUToken('admin.rewrite'))) {
-        ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify'), null, array(0, 'SECURITY.TOKEN'));
+        ngSYSLOG(['plugin' => '#admin', 'item' => 'rewrite'], ['action' => 'modify'], null, [0, 'SECURITY.TOKEN']);
 
-        return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied (token)');
+        return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied (token)'];
     }
 
     @include_once 'includes/classes/uhandler.class.php';
@@ -133,10 +128,10 @@ function rpcRewriteSubmit($params)
 
     // Scan incoming params
     if (!is_array($params)) {
-        return array('status' => 0, 'errorCode' => 999, 'errorText' => 'Wrong params type');
+        return ['status' => 0, 'errorCode' => 999, 'errorText' => 'Wrong params type'];
     }
 
-    $hList = array();
+    $hList = [];
 
     // Scan all params
     foreach ($params as $pID => $pData) {
@@ -148,35 +143,34 @@ function rpcRewriteSubmit($params)
         $rcall = $UHANDLER->populateHandler($ULIB, $pData);
         if ($rcall[0][0]) {
             // Error
-            return array('status' => 0, 'errorCode' => 4, 'errorText' => 'Parser error: ' . $rcall[0][1], 'recID' => $pID);
+            return ['status' => 0, 'errorCode' => 4, 'errorText' => 'Parser error: '.$rcall[0][1], 'recID' => $pID];
         }
         $hList[] = $rcall[1];
     }
 
     // Now let's overwrite current config
-    $UHANDLER->hList = array();
+    $UHANDLER->hList = [];
     foreach ($hList as $handler) {
         $UHANDLER->registerHandler(-1, $handler);
     }
     if (!$UHANDLER->saveConfig()) {
-        return array('status' => 0, 'errorCode' => 5, 'errorText' => 'Error writing to disk');
+        return ['status' => 0, 'errorCode' => 5, 'errorText' => 'Error writing to disk'];
     }
 
-    ngSYSLOG(array('plugin' => '#admin', 'item' => 'rewrite'), array('action' => 'modify', 'list' => $params), null, array(1, ''));
+    ngSYSLOG(['plugin' => '#admin', 'item' => 'rewrite'], ['action' => 'modify', 'list' => $params], null, [1, '']);
 
-    return array('status' => 1, 'errorCode' => 0, 'errorText' => var_export($rcall[1], true));
+    return ['status' => 1, 'errorCode' => 0, 'errorText' => var_export($rcall[1], true)];
 }
 
 // Admin panel: search for users
 function rpcAdminUsersSearch($params)
 {
-
     global $userROW, $mysql, $lang;
 
     // Check for permissions
     if (!is_array($userROW) || ($userROW['status'] > 3)) {
         // ACCESS DENIED
-        return array('status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied');
+        return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
     }
 
     $searchName = $params;
@@ -184,30 +178,29 @@ function rpcAdminUsersSearch($params)
     // Check search mode
     // ! - show TOP users by posts
     if ($searchName == '!') {
-        $SQL = 'select name, news from ' . uprefix . '_users where news > 0 order by news desc limit 20';
+        $SQL = 'select name, news from '.uprefix.'_users where news > 0 order by news desc limit 20';
     } else {
         // Return a list of users
-        $SQL = 'select name, news from ' . uprefix . '_users where name like ' . db_squote('%' . $searchName . '%') . ' and news > 0 order by news desc limit 20';
+        $SQL = 'select name, news from '.uprefix.'_users where name like '.db_squote('%'.$searchName.'%').' and news > 0 order by news desc limit 20';
     }
 
     // Scan incoming params
-    $output = array();
+    $output = [];
     foreach ($mysql->select($SQL) as $row) {
-        $output[] = array($row['name'], $row['news'] . ' ' . $lang['news']);
+        $output[] = [$row['name'], $row['news'].' '.$lang['news']];
     }
 
-    return array('status' => 1, 'errorCode' => 0, 'data' => array($params, $output));
+    return ['status' => 1, 'errorCode' => 0, 'data' => [$params, $output]];
 }
 
 // Online check if registration params are correct (login, email,...)
 function coreCheckRegParams($params)
 {
-
     global $config, $AUTH_METHOD;
 
     // Scan incoming params
     if (!is_array($params)) {
-        return array('status' => 0, 'errorCode' => 999, 'errorText' => 'Wrong params type');
+        return ['status' => 0, 'errorCode' => 999, 'errorText' => 'Wrong params type'];
     }
 
     $auth = $AUTH_METHOD[$config['auth_module']];
@@ -215,5 +208,5 @@ function coreCheckRegParams($params)
         $output = $auth->onlineCheckRegistration($params);
     }
 
-    return array('status' => 1, 'errorCode' => 0, 'data' => $output);
+    return ['status' => 1, 'errorCode' => 0, 'data' => $output];
 }

@@ -7,34 +7,34 @@
 // Author: Vitaly Ponomarev
 //
 
-include_once "../core.php";
+include_once '../core.php';
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
     die('HAL');
 }
 
-header("Content-Type: text/html; charset=utf-8");
+header('Content-Type: text/html; charset=utf-8');
 
 if ($_REQUEST['mode'] == 'plugin') {
     $extras = get_extras_list();
-    $plugin = str_replace(array('/', '\\', '..'), '', $_REQUEST['plugin']);
+    $plugin = str_replace(['/', '\\', '..'], '', $_REQUEST['plugin']);
     if (!is_array($extras[$plugin])) {
         return;
     }
 
     if ($_REQUEST['item'] == 'readme') {
-        if (file_exists(root . 'plugins/' . $plugin . '/readme')) {
-            print "<pre>";
-            print file_get_contents(root . 'plugins/' . $plugin . '/readme');
-            print "</pre>";
+        if (file_exists(root.'plugins/'.$plugin.'/readme')) {
+            echo '<pre>';
+            echo file_get_contents(root.'plugins/'.$plugin.'/readme');
+            echo '</pre>';
         }
     }
     if ($_REQUEST['item'] == 'history') {
-        if (file_exists(root . 'plugins/' . $plugin . '/history')) {
-            print "<pre>";
-            print file_get_contents(root . 'plugins/' . $plugin . '/history');
-            print "</pre>";
+        if (file_exists(root.'plugins/'.$plugin.'/history')) {
+            echo '<pre>';
+            echo file_get_contents(root.'plugins/'.$plugin.'/history');
+            echo '</pre>';
         }
     }
 }

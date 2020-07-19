@@ -15,10 +15,10 @@ function multi_multisites()
     $multiDomainName = '';
 
     // Анализируем мультидоменную конфигурацию
-    if (!is_file(root . 'conf/multiconfig.php')) {
+    if (!is_file(root.'conf/multiconfig.php')) {
         return;
     }
-    @include root . 'conf/multiconfig.php';
+    @include root.'conf/multiconfig.php';
     if (!is_array($multiconfig)) {
         return;
     }
@@ -70,7 +70,6 @@ function multi_multisites()
     }
 
     $siteDomainName = trim($siteDomainName);
-
 }
 
 function multi_multidomains()
@@ -78,7 +77,7 @@ function multi_multidomains()
     global $config, $siteDomainName, $multiDomainName, $multimaster, $multiconfig, $multimaster, $SYSTEM_FLAGS;
 
     $newdomain = '';
-    $SYSTEM_FLAGS['mydomains'] = array();
+    $SYSTEM_FLAGS['mydomains'] = [];
 
     // Анализируем параметр конфига mydomains
     $domlist = null;
@@ -106,11 +105,11 @@ function multi_multidomains()
         } else {
             if ($siteDomainName) {
                 $newdomain = $siteDomainName;
-                $SYSTEM_FLAGS['mydomains'] = array($newdomain);
+                $SYSTEM_FLAGS['mydomains'] = [$newdomain];
             } else {
                 // Если имя хоста так и не нашли, то берём данные с сервера
                 $newdomain = $_SERVER['HTTP_HOST'];
-                $SYSTEM_FLAGS['mydomains'] = array($newdomain);
+                $SYSTEM_FLAGS['mydomains'] = [$newdomain];
             }
         }
     }
@@ -121,7 +120,7 @@ function multi_multidomains()
     $newdomain = trim($newdomain);
     $newdomainid = trim($multiDomainName);
     if ($newdomain) {
-        foreach (array('home_url', 'admin_url', 'avatars_url', 'photos_url', 'images_url', 'files_url', 'avatars_dir', 'photos_dir', 'images_dir', 'files_dir', 'attach_url', 'attach_dir') as $vn) {
+        foreach (['home_url', 'admin_url', 'avatars_url', 'photos_url', 'images_url', 'files_url', 'avatars_dir', 'photos_dir', 'images_dir', 'files_dir', 'attach_url', 'attach_dir'] as $vn) {
             $config[$vn] = str_replace('{domain}', $newdomain, $config[$vn]);
             $config[$vn] = str_replace('{domainid}', $newdomainid, $config[$vn]);
         }

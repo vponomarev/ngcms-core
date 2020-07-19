@@ -15,7 +15,7 @@ if (!defined('NGCMS')) {
 $lang = LoadLang('news', 'site');
 
 // Load shared library
-include_once root . 'includes/inc/libnews.php';
+include_once root.'includes/inc/libnews.php';
 
 // ================================================================= //
 // Module code                                                       //
@@ -24,15 +24,14 @@ include_once root . 'includes/inc/libnews.php';
 // Default "show news" function
 function showNews($handlerName, $params)
 {
-
     global $catz, $catmap, $template, $config, $userROW, $PFILTERS, $lang, $SYSTEM_FLAGS, $SUPRESS_TEMPLATE_SHOW, $tpl, $parse, $currentCategory, $twig, $twigLoader, $timer, $TemplateCache;
     // preload plugins
     loadActionHandlers('news');
-    $timer->registerEvent("All [news] plugins are preloaded");
+    $timer->registerEvent('All [news] plugins are preloaded');
 
     // Init array with configuration parameters
-    $callingParams = array('customCategoryTemplate' => 1, 'setCurrentCategory' => 1, 'setCurrentNews' => 1);
-    $callingCommentsParams = array();
+    $callingParams = ['customCategoryTemplate' => 1, 'setCurrentCategory' => 1, 'setCurrentNews' => 1];
+    $callingCommentsParams = [];
 
     // Preload template configuration variables
     templateLoadVariables();
@@ -43,7 +42,7 @@ function showNews($handlerName, $params)
     }
 
     // Set default template path
-    $templatePath = tpl_dir . $config['theme'];
+    $templatePath = tpl_dir.$config['theme'];
 
     // Check for FULL NEWS mode
     if (($handlerName == 'news') || ($handlerName == 'print')) {
@@ -62,7 +61,7 @@ function showNews($handlerName, $params)
         }
 
         // Determine passed params
-        $vars = array('id' => 0, 'altname' => '');
+        $vars = ['id' => 0, 'altname' => ''];
         if (isset($params['id'])) {
             $vars['id'] = $params['id'];
         } elseif (isset($params['zid'])) {
@@ -91,7 +90,7 @@ function showNews($handlerName, $params)
             // Execute filters [ onAfterShow ] ** ONLY IN 'news' mode. In print mode we don't use it
             if (!$flagPrint && is_array($PFILTERS['news'])) {
                 foreach ($PFILTERS['news'] as $k => $v) {
-                    $v->onAfterNewsShow($row['id'], $row, array('style' => 'full'));
+                    $v->onAfterNewsShow($row['id'], $row, ['style' => 'full']);
                 }
             }
         }
@@ -106,7 +105,7 @@ function showNews($handlerName, $params)
             }
         }
 
-        $tableVars = array();
+        $tableVars = [];
 
         $ntTemplateName = 'news.table.tpl';
 
@@ -118,28 +117,28 @@ function showNews($handlerName, $params)
             case 'main':
                 $SYSTEM_FLAGS['info']['title']['group'] = $lang['mainpage'];
                 $paginationParams = checkLinkAvailable('news', 'main') ?
-                    array('pluginName' => 'news', 'pluginHandler' => 'main', 'params' => array(), 'xparams' => array(), 'paginator' => array('page', 0, false)) :
-                    array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'main'), 'xparams' => array(), 'paginator' => array('page', 1, false));
+                    ['pluginName' => 'news', 'pluginHandler' => 'main', 'params' => [], 'xparams' => [], 'paginator' => ['page', 0, false]] :
+                    ['pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => ['plugin' => 'news', 'handler' => 'main'], 'xparams' => [], 'paginator' => ['page', 1, false]];
 
                 if ($config['default_newsorder'] != '') {
                     $callingParams['newsOrder'] = $config['default_newsorder'];
                 }
 
-                $tableVars = news_showlist(array('DATA', 'mainpage', '=', '1'), $paginationParams, $callingParams);
+                $tableVars = news_showlist(['DATA', 'mainpage', '=', '1'], $paginationParams, $callingParams);
 
                 break;
 
             case 'all':
                 $SYSTEM_FLAGS['info']['title']['group'] = $lang['allnews'];
                 $paginationParams = checkLinkAvailable('news', 'all') ?
-                    array('pluginName' => 'news', 'pluginHandler' => 'all', 'params' => array(), 'xparams' => array(), 'paginator' => array('page', 0, false)) :
-                    array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'all'), 'xparams' => array(), 'paginator' => array('page', 1, false));
+                    ['pluginName' => 'news', 'pluginHandler' => 'all', 'params' => [], 'xparams' => [], 'paginator' => ['page', 0, false]] :
+                    ['pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => ['plugin' => 'news', 'handler' => 'all'], 'xparams' => [], 'paginator' => ['page', 1, false]];
 
                 if ($config['default_newsorder'] != '') {
                     $callingParams['newsOrder'] = $config['default_newsorder'];
                 }
 
-                $tableVars = news_showlist(array(), $paginationParams, $callingParams);
+                $tableVars = news_showlist([], $paginationParams, $callingParams);
 
                 break;
 
@@ -203,8 +202,8 @@ function showNews($handlerName, $params)
                 }
 
                 $paginationParams = checkLinkAvailable('news', 'by.category') ?
-                    array('pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => array('category' => $catmap[$category]), 'xparams' => array(), 'paginator' => array('page', 0, false)) :
-                    array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.category'), 'xparams' => array('category' => $catmap[$category]), 'paginator' => array('page', 1, false));
+                    ['pluginName' => 'news', 'pluginHandler' => 'by.category', 'params' => ['category' => $catmap[$category]], 'xparams' => [], 'paginator' => ['page', 0, false]] :
+                    ['pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => ['plugin' => 'news', 'handler' => 'by.category'], 'xparams' => ['category' => $catmap[$category]], 'paginator' => ['page', 1, false]];
 
                 // Sort news for `category` mode
                 $callingParams['pin'] = 1;
@@ -213,14 +212,14 @@ function showNews($handlerName, $params)
                 $callingParams['paginationCategoryID'] = $currentCategory['id'];
 
                 // Generate news content
-                $tableVars = news_showlist(array('DATA', 'category', '=', $category), $paginationParams, $callingParams);
+                $tableVars = news_showlist(['DATA', 'category', '=', $category], $paginationParams, $callingParams);
 
                 // TABLE - prepare information about category
                 $tableVars['category'] = array_shift(makeCategoryInfo($currentCategory['id']));
 
                 // Check if template 'news.table.tpl' exists [first check custom category template (if set), after that - common template for the whole site
-                if ($currentCategory['tpl'] && file_exists(tpl_dir . $config['theme'] . '/ncustom/' . $currentCategory['tpl'] . '/news.table.tpl')) {
-                    $ntTemplateName = 'ncustom/' . $currentCategory['tpl'] . '/' . $ntTemplateName;
+                if ($currentCategory['tpl'] && file_exists(tpl_dir.$config['theme'].'/ncustom/'.$currentCategory['tpl'].'/news.table.tpl')) {
+                    $ntTemplateName = 'ncustom/'.$currentCategory['tpl'].'/'.$ntTemplateName;
                 }
 
                 break;
@@ -237,16 +236,16 @@ function showNews($handlerName, $params)
                 $tableVars['year'] = $year;
                 $tableVars['month'] = $month;
                 $tableVars['day'] = $day;
-                $tableVars['dateStamp'] = mktime("0", "0", "0", $month, $day, $year);
+                $tableVars['dateStamp'] = mktime('0', '0', '0', $month, $day, $year);
 
-                $SYSTEM_FLAGS['info']['title']['group'] = LangDate("j Q Y", mktime("0", "0", "0", $month, $day, $year));
+                $SYSTEM_FLAGS['info']['title']['group'] = LangDate('j Q Y', mktime('0', '0', '0', $month, $day, $year));
                 $paginationParams = checkLinkAvailable('news', 'by.day') ?
-                    array('pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => array('day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)) :
-                    array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.day'), 'xparams' => array('day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year), 'paginator' => array('page', 1, false));
+                    ['pluginName' => 'news', 'pluginHandler' => 'by.day', 'params' => ['day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year], 'xparams' => [], 'paginator' => ['page', 0, false]] :
+                    ['pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => ['plugin' => 'news', 'handler' => 'by.day'], 'xparams' => ['day' => sprintf('%02u', $day), 'month' => sprintf('%02u', $month), 'year' => $year], 'paginator' => ['page', 1, false]];
 
                 // Use extended return mode
                 $callingParams['extendedReturn'] = true;
-                $tableVars = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0, 0, 0, $month, $day, $year), mktime(23, 59, 59, $month, $day, $year))), $paginationParams, $callingParams);
+                $tableVars = news_showlist(['DATA', 'postdate', 'BETWEEN', [mktime(0, 0, 0, $month, $day, $year), mktime(23, 59, 59, $month, $day, $year)]], $paginationParams, $callingParams);
 
                 // Check if there're output data
                 if ($tableVars['count'] <= 0) {
@@ -269,16 +268,16 @@ function showNews($handlerName, $params)
 
                 $tableVars['year'] = $year;
                 $tableVars['month'] = $month;
-                $tableVars['dateStamp'] = mktime("0", "0", "0", $month, 1, $year);
+                $tableVars['dateStamp'] = mktime('0', '0', '0', $month, 1, $year);
 
-                $SYSTEM_FLAGS['info']['title']['group'] = LangDate("F Y", mktime(0, 0, 0, $month, 1, $year));
+                $SYSTEM_FLAGS['info']['title']['group'] = LangDate('F Y', mktime(0, 0, 0, $month, 1, $year));
                 $paginationParams = checkLinkAvailable('news', 'by.month') ?
-                    array('pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => array('month' => sprintf('%02u', $month), 'year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)) :
-                    array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.month'), 'xparams' => array('month' => sprintf('%02u', $month), 'year' => $year), 'paginator' => array('page', 1, false));
+                    ['pluginName' => 'news', 'pluginHandler' => 'by.month', 'params' => ['month' => sprintf('%02u', $month), 'year' => $year], 'xparams' => [], 'paginator' => ['page', 0, false]] :
+                    ['pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => ['plugin' => 'news', 'handler' => 'by.month'], 'xparams' => ['month' => sprintf('%02u', $month), 'year' => $year], 'paginator' => ['page', 1, false]];
 
                 // Use extended return mode
                 $callingParams['extendedReturn'] = true;
-                $tableVars = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0, 0, 0, $month, 1, $year), mktime(23, 59, 59, $month, date("t", mktime(0, 0, 0, $month, 1, $year)), $year))), $paginationParams, $callingParams);
+                $tableVars = news_showlist(['DATA', 'postdate', 'BETWEEN', [mktime(0, 0, 0, $month, 1, $year), mktime(23, 59, 59, $month, date('t', mktime(0, 0, 0, $month, 1, $year)), $year)]], $paginationParams, $callingParams);
 
                 // Check if there're output data
                 if ($tableVars['count'] <= 0) {
@@ -299,16 +298,16 @@ function showNews($handlerName, $params)
                 }
 
                 $tableVars['year'] = $year;
-                $tableVars['dateStamp'] = mktime("0", "0", "0", 1, 1, $year);
+                $tableVars['dateStamp'] = mktime('0', '0', '0', 1, 1, $year);
 
-                $SYSTEM_FLAGS['info']['title']['group'] = LangDate("Y", mktime(0, 0, 0, 1, 1, $year));
+                $SYSTEM_FLAGS['info']['title']['group'] = LangDate('Y', mktime(0, 0, 0, 1, 1, $year));
                 $paginationParams = checkLinkAvailable('news', 'by.year') ?
-                    array('pluginName' => 'news', 'pluginHandler' => 'by.year', 'params' => array('year' => $year), 'xparams' => array(), 'paginator' => array('page', 0, false)) :
-                    array('pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => array('plugin' => 'news', 'handler' => 'by.year'), 'xparams' => array('year' => $year), 'paginator' => array('page', 1, false));
+                    ['pluginName' => 'news', 'pluginHandler' => 'by.year', 'params' => ['year' => $year], 'xparams' => [], 'paginator' => ['page', 0, false]] :
+                    ['pluginName' => 'core', 'pluginHandler' => 'plugin', 'params' => ['plugin' => 'news', 'handler' => 'by.year'], 'xparams' => ['year' => $year], 'paginator' => ['page', 1, false]];
 
                 // Use extended return mode
                 $callingParams['extendedReturn'] = true;
-                $tableVars = news_showlist(array('DATA', 'postdate', 'BETWEEN', array(mktime(0, 0, 0, 1, 1, $year), mktime(23, 59, 59, 12, 31, $year))), $paginationParams, $callingParams);
+                $tableVars = news_showlist(['DATA', 'postdate', 'BETWEEN', [mktime(0, 0, 0, 1, 1, $year), mktime(23, 59, 59, 12, 31, $year)]], $paginationParams, $callingParams);
 
                 // Check if there're output data
                 if ($tableVars['count'] <= 0) {

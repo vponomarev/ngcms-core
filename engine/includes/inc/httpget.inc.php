@@ -7,8 +7,7 @@
 
 class http_get
 {
-
-    function get($url, $timeout = 3, $referer = 0)
+    public function get($url, $timeout = 3, $referer = 0)
     {
         $resp = $this->request('GET', $url, '', $timeout, $referer);
         if (!is_array($resp) || !$resp[0]) {
@@ -19,13 +18,13 @@ class http_get
     }
 
     // Split URL into host, port and path
-    function request($proto, $url, $params = '', $timeout = 5, $referer = 0)
+    public function request($proto, $url, $params = '', $timeout = 5, $referer = 0)
     {
         // Open TCP connection
         if ((mb_strtolower($proto) != 'get') && (mb_strtolower($proto) != 'post')) {
             return false;
         }
-        list ($host, $port, $path) = http_get::parse_url($url);
+        list($host, $port, $path) = self::parse_url($url);
         if (!$host) {
             return '';
         }
@@ -40,36 +39,36 @@ class http_get
 
         // Manage params
         $ext = '';
-        $elist = array();
+        $elist = [];
         if (is_array($params)) {
             foreach ($params as $k => $v) {
-                array_push($elist, $k . '=' . $v);
+                array_push($elist, $k.'='.$v);
             }
-            $ext = join("&", $elist);
+            $ext = implode('&', $elist);
         } else {
             $ext = $params;
         }
 
         // Send header
         if (mb_strtolower($proto) == 'get') {
-            fputs(
+            fwrite(
                 $fp,
-                "GET /$path" . (!empty($ext) ? ('?' . $ext) : '') . " HTTP/1.1\r\n" .
-                "Host: $host\r\nConnection: close\r\n" .
-                ($referer ? ('Referer: http://' . $_SERVER['HTTP_HOST'] . "/\r\n") : '') .
-                "User-Agent: PHPfetcher class " . $this->getVersion() . "(designed for: http://ngcms.ru/)\r\n" .
+                "GET /$path".(!empty($ext) ? ('?'.$ext) : '')." HTTP/1.1\r\n".
+                "Host: $host\r\nConnection: close\r\n".
+                ($referer ? ('Referer: http://'.$_SERVER['HTTP_HOST']."/\r\n") : '').
+                'User-Agent: PHPfetcher class '.$this->getVersion()."(designed for: http://ngcms.ru/)\r\n".
                 "\r\n"
             );
         } elseif (mb_strtolower($proto) == 'post') {
-            fputs(
+            fwrite(
                 $fp,
-                "POST /$path HTTP/1.1\r\n" .
-                "Host: $host\r\nConnection: close\r\n" .
-                "Content-length: " . mb_strlen($ext) . "\r\n" .
-                "Content-Type: application/x-www-form-urlencoded\r\n" .
-                ($referer ? ('Referer: http://' . $_SERVER['HTTP_HOST'] . "/\r\n") : '') .
-                "User-Agent: PHPfetcher class " . $this->getVersion() . " (designed for: http://ngcms.ru/)\r\n" .
-                "\r\n" .
+                "POST /$path HTTP/1.1\r\n".
+                "Host: $host\r\nConnection: close\r\n".
+                'Content-length: '.mb_strlen($ext)."\r\n".
+                "Content-Type: application/x-www-form-urlencoded\r\n".
+                ($referer ? ('Referer: http://'.$_SERVER['HTTP_HOST']."/\r\n") : '').
+                'User-Agent: PHPfetcher class '.$this->getVersion()." (designed for: http://ngcms.ru/)\r\n".
+                "\r\n".
                 $ext
             );
         }
@@ -129,10 +128,10 @@ class http_get
         // <status> - 1 - ok, 0 - error
         // <header> - array with HTTP headers
         // <body>   - answer body
-        return array(($status == 200) ? 1 : 0, $hdr, $data);
+        return [($status == 200) ? 1 : 0, $hdr, $data];
     }
 
-    function parse_url($url)
+    public function parse_url($url)
     {
         $host = $path = '';
         $port = 80;
@@ -144,11 +143,12 @@ class http_get
                 $port = $match[2];
             }
         }
-        return array($host, $port, $path);
+
+        return [$host, $port, $path];
     }
 
-    function getVersion()
+    public function getVersion()
     {
-        return "20141213";
+        return '20141213';
     }
 }

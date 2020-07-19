@@ -14,7 +14,6 @@ if (!defined('NGCMS')) {
 
 function coreActivateUser()
 {
-
     global $lang, $config, $SYSTEM_FLAGS, $mysql, $CurrentHandler;
 
     $lang = LoadLang('activation', 'site');
@@ -31,23 +30,23 @@ function coreActivateUser()
     }
 
     // Check if user exists with ID = $userid
-    if (is_array($uRow = $mysql->record("select * from " . prefix . "_users where id=" . db_squote($userid)))) {
+    if (is_array($uRow = $mysql->record('select * from '.prefix.'_users where id='.db_squote($userid)))) {
         // User found. Check activation.
         if ($uRow['activation']) {
             if ($uRow['activation'] == $code) {
                 // Yeah, activate user!
-                $mysql->query("update `" . uprefix . "_users` set activation = '' where id = " . db_squote($userid));
+                $mysql->query('update `'.uprefix."_users` set activation = '' where id = ".db_squote($userid));
 
-                msg(array("text" => $lang['msgo_activated'], "info" => sprintf($lang['msgi_activated'], admin_url)));
-                $SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'] . '/';
+                msg(['text' => $lang['msgo_activated'], 'info' => sprintf($lang['msgi_activated'], admin_url)]);
+                $SYSTEM_FLAGS['module.usermenu']['redirect'] = $config['home_url'].'/';
             } else {
                 // Incorrect activation code
-                msg(array("text" => $lang['msge_activate'], "info" => sprintf($lang['msgi_activate'], admin_url)));
+                msg(['text' => $lang['msge_activate'], 'info' => sprintf($lang['msgi_activate'], admin_url)]);
             }
         } else {
             // Already activated
-            print "ALREADY";
-            msg(array("text" => $lang['msge_activation'], "info" => sprintf($lang['msgi_activation'], admin_url)));
+            echo 'ALREADY';
+            msg(['text' => $lang['msge_activation'], 'info' => sprintf($lang['msgi_activation'], admin_url)]);
         }
     } else {
         // User not found
@@ -57,7 +56,6 @@ function coreActivateUser()
 
 function coreRegisterUser()
 {
-
     global $ip, $lang, $config, $AUTH_METHOD, $SYSTEM_FLAGS, $userROW, $PFILTERS, $mysql;
 
     $lang = LoadLang('registration', 'site');
@@ -65,14 +63,14 @@ function coreRegisterUser()
 
     // If logged in user comes to us - REDIRECT him to main page
     if (is_array($userROW)) {
-        @header('Location: ' . $config['home_url']);
+        @header('Location: '.$config['home_url']);
 
         return;
     }
 
     // Check for ban
     if ($ban_mode = checkBanned($ip, 'users', 'register', $userROW, $userROW['name'])) {
-        msg(array("type" => "error", "text" => ($ban_mode == 1) ? $lang['register.banned'] : $lang['msge_regforbid']));
+        msg(['type' => 'error', 'text' => ($ban_mode == 1) ? $lang['register.banned'] : $lang['msge_regforbid']]);
 
         return;
     }
@@ -82,11 +80,11 @@ function coreRegisterUser()
         $auth = $AUTH_METHOD[$config['auth_module']];
         $params = $auth->get_reg_params();
         generate_reg_page($params);
-    } elseif ($_REQUEST['type'] == "doregister" && $config['users_selfregister']) {
+    } elseif ($_REQUEST['type'] == 'doregister' && $config['users_selfregister']) {
         // Receiving parameter list during registration
         $auth = $AUTH_METHOD[$config['auth_module']];
         $params = $auth->get_reg_params();
-        $values = array();
+        $values = [];
 
         foreach ($params as $param) {
             $values[$param['name']] = $_POST[$param['name']];
@@ -117,10 +115,10 @@ function coreRegisterUser()
             // OK, fetch user record
             if ($uid > 1) {
                 // ** COMPAT: exec action only if $uid > 1
-                $urec = $mysql->record("select * from " . uprefix . "_users where id = " . intval($uid));
+                $urec = $mysql->record('select * from '.uprefix.'_users where id = '.intval($uid));
 
                 // LOG: Successully registered
-                ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), $urec, array(1, ''));
+                ngSYSLOG(['plugin' => 'core', 'item' => 'register'], ['action' => 'register'], $urec, [1, '']);
 
                 // Execute filters - add additional variables
                 if (is_array($urec) && is_array($PFILTERS['core.registerUser'])) {
@@ -131,46 +129,45 @@ function coreRegisterUser()
             }
         } else {
             // LOG: Registration failed
-            ngSYSLOG(array('plugin' => 'core', 'item' => 'register'), array('action' => 'register'), 0, array(0, 'Registration failed'));
+            ngSYSLOG(['plugin' => 'core', 'item' => 'register'], ['action' => 'register'], 0, [0, 'Registration failed']);
 
             // Fail
             generate_reg_page($params, $values, $msg);
         }
     } else {
-        msg(array("type" => "error", "text" => $lang['msge_regforbid']));
+        msg(['type' => 'error', 'text' => $lang['msge_regforbid']]);
     }
 }
 
 // Registration page generation
-function generate_reg_page($params, $values = array(), $msg = '')
+function generate_reg_page($params, $values = [], $msg = '')
 {
-
     global $tpl, $template, $PHP_SELF, $config, $PFILTERS, $twig, $twigLoader, $lang;
 
-    $tVars = array(
-        'entries' => array(),
-        'flags' => array(),
-    );
+    $tVars = [
+        'entries' => [],
+        'flags'   => [],
+    ];
 
     if ($msg) {
-        msg(array("text" => $msg));
+        msg(['text' => $msg]);
     }
 
     // prepare variable list
     foreach ($params as $param) {
-        $tRow = array(
-            'name' => $param['name'],
-            'title' => $param['title'],
-            'descr' => $param['descr'],
-            'error' => '',
-            'input' => '',
-            'flags' => array(),
-            'type' => $param['type'],
+        $tRow = [
+            'name'       => $param['name'],
+            'title'      => $param['title'],
+            'descr'      => $param['descr'],
+            'error'      => '',
+            'input'      => '',
+            'flags'      => [],
+            'type'       => $param['type'],
             'html_flags' => $param['html_flags'],
-            'value' => $param['value'],
-            'values' => $param['values'],
-            'manual' => $param['manual'],
-        );
+            'value'      => $param['value'],
+            'values'     => $param['values'],
+            'manual'     => $param['manual'],
+        ];
 
         if (isset($param['id']) && $param['id']) {
             $tRow['id'] = $param['id'];
@@ -198,15 +195,15 @@ function generate_reg_page($params, $values = array(), $msg = '')
     foreach ($tVars['entries'] as $k => $param) {
         $tInput = '';
         if ($param['type'] == 'text') {
-            $tInput = '<textarea ' . ((isset($param['id']) && $param['id']) ? 'id="' . $param['id'] . '" ' : '') . 'name="' . $param['name'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . '>' . secure_html($param['value']) . '</textarea>';
+            $tInput = '<textarea '.((isset($param['id']) && $param['id']) ? 'id="'.$param['id'].'" ' : '').'name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
         } elseif ($param['type'] == 'input') {
-            $tInput = '<input ' . ((isset($param['id']) && $param['id']) ? 'id="' . $param['id'] . '" ' : '') . 'name="' . $param['name'] . '" type="text" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="' . secure_html($param['value']) . '"/>';
+            $tInput = '<input '.((isset($param['id']) && $param['id']) ? 'id="'.$param['id'].'" ' : '').'name="'.$param['name'].'" type="text" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
         } elseif (($param['type'] == 'password') || ($param['type'] == 'hidden')) {
-            $tInput = '<input ' . ((isset($param['id']) && $param['id']) ? 'id="' . $param['id'] . '" ' : '') . 'name="' . $param['name'] . '" type="' . $param['type'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . ' value="' . secure_html($param['value']) . '"/>';
+            $tInput = '<input '.((isset($param['id']) && $param['id']) ? 'id="'.$param['id'].'" ' : '').'name="'.$param['name'].'" type="'.$param['type'].'" title="'.$param['title'].'" '.$param['html_flags'].' value="'.secure_html($param['value']).'"/>';
         } elseif ($param['type'] == 'select') {
-            $tInput = '<select ' . ((isset($param['id']) && $param['id']) ? 'id="' . $param['id'] . '" ' : '') . 'name="' . $param['name'] . '" title="' . $param['title'] . '" ' . $param['html_flags'] . '>';
+            $tInput = '<select '.((isset($param['id']) && $param['id']) ? 'id="'.$param['id'].'" ' : '').'name="'.$param['name'].'" title="'.$param['title'].'" '.$param['html_flags'].'>';
             foreach ($param['values'] as $oid => $oval) {
-                $tInput .= '<option value="' . $oid . '"' . ($param['value'] == $oid ? ' selected' : '') . '>' . $oval . '</option>';
+                $tInput .= '<option value="'.$oid.'"'.($param['value'] == $oid ? ' selected' : '').'>'.$oval.'</option>';
             }
             $tInput .= '</select>';
         } elseif ($param['type'] = 'manual') {
@@ -224,44 +221,42 @@ function generate_reg_page($params, $values = array(), $msg = '')
     }
 
     $tVars['form_action'] = checkLinkAvailable('core', 'registration') ?
-        generateLink('core', 'registration', array()) :
-        generateLink('core', 'plugin', array('plugin' => 'core', 'handler' => 'registration'));
+        generateLink('core', 'registration', []) :
+        generateLink('core', 'plugin', ['plugin' => 'core', 'handler' => 'registration']);
 
     // Prepare REGEX conversion table
-    $conversionConfigRegex = array(
+    $conversionConfigRegex = [
         "#\[captcha\](.*?)\[/captcha\]#si" => '{% if (flags.hasCaptcha) %}$1{% endif %}',
-        "#{entries}#si" => '{% for entry in entries %}{% include "registration.entries.tpl" %}{% endfor %}',
-    );
+        '#{entries}#si'                    => '{% for entry in entries %}{% include "registration.entries.tpl" %}{% endfor %}',
+    ];
 
-    $conversionConfig = array(
+    $conversionConfig = [
         '{form_action}' => '{{ form_action }}',
-    );
+    ];
 
-    $conversionConfigEntries = array(
-        '{name}' => '{{ entry.name }}',
+    $conversionConfigEntries = [
+        '{name}'  => '{{ entry.name }}',
         '{title}' => '{{ entry.title }}',
         '{descr}' => '{{ entry.descr }}',
         '{error}' => '{{ entry.error }}',
         '{input}' => '{{ entry.input }}',
-    );
+    ];
 
     $twigLoader->setConversion('registration.tpl', $conversionConfig, $conversionConfigRegex);
     $twigLoader->setConversion('registration.entries.tpl', $conversionConfigEntries);
     $xt = $twig->loadTemplate('registration.tpl');
     $template['vars']['mainblock'] .= $xt->render($tVars);
-
 }
 
 function coreRestorePassword()
 {
-
     global $lang, $userROW, $config, $AUTH_METHOD, $SYSTEM_FLAGS, $mysql, $CurrentHandler;
 
     $lang = LoadLang('lostpassword', 'site');
     $SYSTEM_FLAGS['info']['title']['group'] = $lang['loc_lostpass'];
 
     if (is_array($userROW)) {
-        @header('Location: ' . $config['home_url']);
+        @header('Location: '.$config['home_url']);
 
         return;
     }
@@ -283,10 +278,10 @@ function coreRestorePassword()
 
         if ($auth->confirm_restorepw($msg, $userid, $code)) {
             // OK
-            msg(array("text" => $msg));
+            msg(['text' => $msg]);
         } else {
             // Fail
-            msg(array("type" => "error", "text" => $msg));
+            msg(['type' => 'error', 'text' => $msg]);
         }
     } elseif ($_REQUEST['type'] == 'send') {
         // PROCESSING REQUEST
@@ -294,7 +289,7 @@ function coreRestorePassword()
         // Receiving parameter list during password recovery
         $auth = $AUTH_METHOD[$config['auth_module']];
         $params = $auth->get_restorepw_params();
-        $values = array();
+        $values = [];
 
         foreach ($params as $param) {
             $values[$param['name']] = $_POST[$param['name']];
@@ -326,36 +321,34 @@ function coreRestorePassword()
         $auth = $AUTH_METHOD[$config['auth_module']];
         $params = $auth->get_restorepw_params();
         if (!is_array($params)) {
-            msg(array("type" => "error", "text" => $lang['msge_lpforbid']));
+            msg(['type' => 'error', 'text' => $lang['msge_lpforbid']]);
 
             return;
         }
         generate_restorepw_page($params);
-
     }
 }
 
 // Registration page generation
-function generate_restorepw_page($params, $values = array(), $msg = '')
+function generate_restorepw_page($params, $values = [], $msg = '')
 {
-
     global $tpl, $template, $PHP_SELF, $config, $lang;
     $tpl->template('lostpassword.entries', tpl_site);
     $tpl->template('lostpassword.entry-full', tpl_site);
 
     if ($msg) {
-        msg(array("text" => $msg));
+        msg(['text' => $msg]);
     }
 
     foreach ($params as $param) {
-        $tvars['vars'] = array(
-            'name' => $param['name'],
+        $tvars['vars'] = [
+            'name'  => $param['name'],
             'title' => $param['title'],
             'descr' => $param['descr'],
             'error' => '',
             'input' => '',
-            'text' => $param['text']
-        );
+            'text'  => $param['text'],
+        ];
 
         if ($param['error']) {
             $tvars['vars']['error'] = str_replace('%error%', $param['error'], $lang['param_error']);
@@ -365,13 +358,13 @@ function generate_restorepw_page($params, $values = array(), $msg = '')
         }
 
         if ($param['type'] == 'text') {
-            $tvars['vars']['input'] = '<textarea name="' . $param['name'] . '" title="' . secure_html($param['title']) . '" ' . $param['html_flags'] . '>' . secure_html($param['value']) . '</textarea>';
+            $tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
         } elseif (($param['type'] == 'input') || ($param['type'] == 'password') || ($param['type'] == 'hidden')) {
-            $tvars['vars']['input'] = '<input name="' . $param['name'] . '" type="' . (($param['type'] == 'input') ? 'text' : $param['type']) . '" title="' . secure_html($param['title']) . '" ' . $param['html_flags'] . ' value="' . secure_html($param['value']) . '" />';
+            $tvars['vars']['input'] = '<input name="'.$param['name'].'" type="'.(($param['type'] == 'input') ? 'text' : $param['type']).'" title="'.secure_html($param['title']).'" '.$param['html_flags'].' value="'.secure_html($param['value']).'" />';
         } elseif ($param['type'] == 'select') {
-            $tvars['vars']['input'] = '<select name="' . $param['name'] . '" title="' . secure_html($param['title']) . '" ' . $param['html_flags'] . '>';
+            $tvars['vars']['input'] = '<select name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>';
             foreach ($param['values'] as $oid => $oval) {
-                $tvars['vars']['input'] .= '<option value="' . secure_html($oid) . '"' . ($param['value'] == $oid ? ' selected' : '') . '>' . secure_html($oval) . '</option>';
+                $tvars['vars']['input'] .= '<option value="'.secure_html($oid).'"'.($param['value'] == $oid ? ' selected' : '').'>'.secure_html($oval).'</option>';
             }
             $tvars['vars']['input'] .= '</select>';
         } elseif ($param['type'] == 'manual') {
@@ -396,8 +389,8 @@ function generate_restorepw_page($params, $values = array(), $msg = '')
     }
 
     $tvars['vars']['form_action'] = checkLinkAvailable('core', 'lostpassword') ?
-        generateLink('core', 'lostpassword', array()) :
-        generateLink('core', 'plugin', array('plugin' => 'core', 'handler' => 'lostpassword'));
+        generateLink('core', 'lostpassword', []) :
+        generateLink('core', 'plugin', ['plugin' => 'core', 'handler' => 'lostpassword']);
     $tvars['vars']['entries'] = $entries;
     $tpl->template('lostpassword', tpl_site);
     $tpl->vars('lostpassword', $tvars);
@@ -410,7 +403,6 @@ function generate_restorepw_page($params, $values = array(), $msg = '')
 // Parameter: user's record [row]
 function coreLoginAction($row = null, $redirect = null)
 {
-
     global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
     global $tpl, $template, $config, $lang, $ip;
 
@@ -419,7 +411,6 @@ function coreLoginAction($row = null, $redirect = null)
 
     // Try to auth && check for bans
     if (is_array($row) && (!($ban_mode = checkBanned($ip, 'users', 'auth', $row, $row['name'])))) {
-
         $auth_db->save_auth($row);
         $username = $row['name'];
         $userROW = $row;
@@ -427,20 +418,20 @@ function coreLoginAction($row = null, $redirect = null)
         $is_logged = true;
 
         // LOG: Successully logged in
-        ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('login' => $username)), null, array(1, ''));
+        ngSYSLOG(['plugin' => 'core', 'item' => 'login'], ['action' => 'login', 'list' => ['login' => $username]], null, [1, '']);
 
         // Redirect back
-        @header('Location: ' . ($redirect ? $redirect : home));
+        @header('Location: '.($redirect ? $redirect : home));
     } else {
         // LOG: Login error
-        ngSYSLOG(array('plugin' => 'core', 'item' => 'login'), array('action' => 'login', 'list' => array('errorInfo' => $row)), null, array(0, 'Login failed.'));
+        ngSYSLOG(['plugin' => 'core', 'item' => 'login'], ['action' => 'login', 'list' => ['errorInfo' => $row]], null, [0, 'Login failed.']);
 
         $SYSTEM_FLAGS['auth_fail'] = 1;
         $result = true;
         $is_logged_cookie = false;
 
         // Show login template
-        $tvars = array();
+        $tvars = [];
         $tvars['vars']['form_action'] = generateLink('core', 'login');
         $tvars['vars']['redirect'] = isset($_POST['redirect']) ? $_POST['redirect'] : $HTTP_REFERER;
 
@@ -466,13 +457,12 @@ function coreLoginAction($row = null, $redirect = null)
 
 function coreLogin()
 {
-
     global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
     global $tpl, $template, $config, $lang, $ip;
 
     // If user ALREADY logged in - redirect to main page
     if (is_array($userROW)) {
-        @header('Location: ' . $config['home_url']);
+        @header('Location: '.$config['home_url']);
 
         return;
     }
@@ -504,11 +494,10 @@ function coreLogin()
 
 function coreLogout()
 {
-
     global $auth_db, $userROW, $username, $is_logged, $HTTP_REFERER, $config;
 
     $auth_db->drop_auth();
-    @header("Location: " . (preg_match('#^http\:\/\/#', $HTTP_REFERER, $tmp) ? $HTTP_REFERER : $config['home_url']));
+    @header('Location: '.(preg_match('#^http\:\/\/#', $HTTP_REFERER, $tmp) ? $HTTP_REFERER : $config['home_url']));
 
     unset($userROW);
     unset($username);

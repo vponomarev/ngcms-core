@@ -296,7 +296,7 @@ class NGMYSQLi extends NGDB
     }
 
     /**
-     * // Report an SQL error
+     * // Report an SQL error.
      *
      * @param $type string Query type
      * @param $query string Query content

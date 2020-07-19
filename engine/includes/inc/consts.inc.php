@@ -8,11 +8,10 @@
 //
 
 // Determine current admin working directory
-{
+
     $tempVariable = preg_split('/(\\\|\/)/', root, -1, PREG_SPLIT_NO_EMPTY);
     define('adminDirName', array_pop($tempVariable));
     unset($tempVariable);
-}
 
 @define('NGCMS', true);
 

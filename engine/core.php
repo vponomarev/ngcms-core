@@ -14,19 +14,17 @@
 // Define global directory constants
 // ============================================================================
 
-define('NGCoreDir', __DIR__ . '/');                // Location of Core directory
-define('NGRootDir', dirname(__DIR__) . '/');       // Location of SiteRoot
-define('NGClassDir', NGCoreDir . 'classes/');      // Location of AutoLoaded classes
-define('NGVendorDir', NGRootDir . 'vendor/');      // Location of Vendor classes
-$loader = require NGVendorDir . 'autoload.php';
+define('NGCoreDir', __DIR__.'/');                // Location of Core directory
+define('NGRootDir', dirname(__DIR__).'/');       // Location of SiteRoot
+define('NGClassDir', NGCoreDir.'classes/');      // Location of AutoLoaded classes
+define('NGVendorDir', NGRootDir.'vendor/');      // Location of Vendor classes
+$loader = require NGVendorDir.'autoload.php';
 
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function ($className) {
-    if (file_exists($fName = NGClassDir . $className . '.class.php')) {
+    if (file_exists($fName = NGClassDir.$className.'.class.php')) {
         require_once $fName;
     }
 });
@@ -41,20 +39,19 @@ function NGRun($f)
 // MODULE DEPs check + basic setup
 // ============================================================================
 NGRun(function () {
-    $depList = array(
-        'sql' => array('pdo' => '', 'pdo_mysql' => ''),
-        'zlib' => 'ob_gzhandler',
-        'iconv' => 'iconv',
-        'GD' => 'imagecreatefromjpeg',
-        'mbstring' => 'mb_internal_encoding'
-    );
+    $depList = [
+        'sql'      => ['pdo' => '', 'pdo_mysql' => ''],
+        'zlib'     => 'ob_gzhandler',
+        'iconv'    => 'iconv',
+        'GD'       => 'imagecreatefromjpeg',
+        'mbstring' => 'mb_internal_encoding',
+    ];
     NGCoreFunctions::resolveDeps($depList);
 
     $sx = NGEngine::getInstance();
     $sx->set('events', new NGEvents());
     $sx->set('errorHandler', new NGErrorHandler());
 });
-
 
 // ============================================================================
 // Global variables definition
@@ -71,67 +68,67 @@ global $twigGlobal, $twig, $twigLoader, $twigStringLoader;
 // ============================================================================
 // Initialize global variables
 // ============================================================================
-$EXTRA_HTML_VARS = array();        // a list of added HTML vars in <head> block
-$EXTRA_CSS = array();
+$EXTRA_HTML_VARS = [];        // a list of added HTML vars in <head> block
+$EXTRA_CSS = [];
 
-$AUTH_METHOD = array();
-$AUTH_CAPABILITIES = array();
+$AUTH_METHOD = [];
+$AUTH_CAPABILITIES = [];
 
-$PPAGES = array();        // plugin's pages
-$PFILTERS = array();        // filtering plugins
-$RPCFUNC = array();        // RPC functions
-$TWIGFUNC = array();        // TWIG defined functions
-$RPCADMFUNC = array();        // RPC admin functions
+$PPAGES = [];        // plugin's pages
+$PFILTERS = [];        // filtering plugins
+$RPCFUNC = [];        // RPC functions
+$TWIGFUNC = [];        // TWIG defined functions
+$RPCADMFUNC = [];        // RPC admin functions
 
-$PERM = array();        // PERMISSIONS
-$UGROUP = array();        // USER GROUPS
+$PERM = [];        // PERMISSIONS
+$UGROUP = [];        // USER GROUPS
 
 $SUPRESS_TEMPLATE_SHOW = 0;
 $SUPRESS_MAINBLOCK_SHOW = 0;
 
-$CurrentHandler = array();
-$TemplateCache = array();
-$lang = array();
-$SYSTEM_FLAGS = array(
-    'actions.disabled' => array(),
-    'http.headers' => array(
-        'content-type' => 'text/html; charset=utf-8',
+$CurrentHandler = [];
+$TemplateCache = [];
+$lang = [];
+$SYSTEM_FLAGS = [
+    'actions.disabled' => [],
+    'http.headers'     => [
+        'content-type'  => 'text/html; charset=utf-8',
         'cache-control' => 'private',
-    )
-);
+    ],
+];
 
-$twigGlobal = array(
-    'flags' => array(
+$twigGlobal = [
+    'flags' => [
         'isLogged' => 0,
-    ),
-);
+    ],
+];
 
 // List of DataSources
-$DSlist = array(
-    'news' => 1,
-    'categories' => 2,
-    'comments' => 3,
-    'users' => 4,
-    'files' => 10,
-    'images' => 11,
+$DSlist = [
+    'news'           => 1,
+    'categories'     => 2,
+    'comments'       => 3,
+    'users'          => 4,
+    'files'          => 10,
+    'images'         => 11,
     '#xfields:tdata' => 51,
-);
+];
 
-$PLUGINS = array(
-    'active' => array(),
+$PLUGINS = [
+    'active'        => [],
     'active:loaded' => 0,
-    'loaded' => array(),
-    'loaded:files' => array(),
-    'config' => array(),
+    'loaded'        => [],
+    'loaded:files'  => [],
+    'config'        => [],
     'config:loaded' => 0,
-);
+];
 
 mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 // Define global constants "root", "site_root"
-define('root', dirname(__FILE__) . '/');
-define('site_root', dirname(dirname(__FILE__)) . '/');
+define('root', dirname(__FILE__).'/');
+define('site_root', dirname(dirname(__FILE__)).'/');
 
 // Define domain name for cookies
 $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $mHost[1] : $_SERVER['HTTP_HOST'];
@@ -149,18 +146,18 @@ if (!isset($_COOKIE['ngTrackID'])) {
 }
 
 // Initialize last variables
-$confArray = array(
+$confArray = [
     // Pre-defined init values
-    'predefined' => array(
+    'predefined' => [
         'HTTP_REFERER' => isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '',
-        'PHP_SELF' => isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '',
-        'REQUEST_URI' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
-        'config' => array(),
-        'catz' => array(),
-        'catmap' => array(),
-        'is_logged' => false,
-    )
-);
+        'PHP_SELF'     => isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '',
+        'REQUEST_URI'  => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '',
+        'config'       => [],
+        'catz'         => [],
+        'catmap'       => [],
+        'is_logged'    => false,
+    ],
+];
 
 // Load pre-defined variables
 foreach ($confArray['predefined'] as $key => $value) {
@@ -178,18 +175,18 @@ if (($tmp_pos = strpos($systemAccessURL, '?')) !== false) {
 // Initialize system libraries
 // ============================================================================
 // ** Time measurement functions
-include_once root . 'includes/classes/timer.class.php';
-$timer = new microTimer;
+include_once root.'includes/classes/timer.class.php';
+$timer = new microTimer();
 $timer->start();
 
 // ** Multisite engine
-@include_once root . 'includes/inc/multimaster.php';
+@include_once root.'includes/inc/multimaster.php';
 
 multi_multisites();
-@define('confroot', root . 'conf/' . ($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/' . $multiDomainName . '/' : ''));
+@define('confroot', root.'conf/'.($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/'.$multiDomainName.'/' : ''));
 
 // ** Load system config
-@include_once confroot . 'config.php';
+@include_once confroot.'config.php';
 // [[FIX config variables]]
 if (!isset($config['uprefix'])) {
     $config['uprefix'] = $config['prefix'];
@@ -211,9 +208,9 @@ multi_multidomains();
 @session_start();
 
 // ** Load system libraries
-@include_once root . 'includes/inc/consts.inc.php';
-@include_once root . 'includes/inc/functions.inc.php';
-@include_once root . 'includes/inc/extras.inc.php';
+@include_once root.'includes/inc/consts.inc.php';
+@include_once root.'includes/inc/functions.inc.php';
+@include_once root.'includes/inc/extras.inc.php';
 
 @include_once 'includes/classes/templates.class.php';
 @include_once 'includes/classes/parse.class.php';
@@ -228,18 +225,18 @@ $UHANDLER = new urlHandler();
 $UHANDLER->loadConfig();
 
 // ** Other libraries
-$parse = new parse;
-$tpl = new tpl;
+$parse = new parse();
+$tpl = new tpl();
 $ip = checkIP();
 
 // ** Load configuration file
-if ((!file_exists(confroot . 'config.php')) || (filesize(confroot . 'config.php') < 10)) {
+if ((!file_exists(confroot.'config.php')) || (filesize(confroot.'config.php') < 10)) {
     if (preg_match("#^(.*?)(\/index\.php|\/engine\/admin\.php)$#", $_SERVER['PHP_SELF'], $ms)) {
-        @header("Location: " . $ms[1] . "/engine/install.php");
+        @header('Location: '.$ms[1].'/engine/install.php');
     } else {
-        @header("Location: " . adminDirName . "/install.php");
+        @header('Location: '.adminDirName.'/install.php');
     }
-    echo "NGCMS: Engine is not installed yet. Please run installer from /engine/install.php";
+    echo 'NGCMS: Engine is not installed yet. Please run installer from /engine/install.php';
     exit;
 }
 
@@ -256,27 +253,27 @@ register_shutdown_function('ngShutdownHandler');
 $twigLoader = new NGTwigLoader(root);
 
 // - Configure environment and general parameters
-$twig = new NGTwigEnvironment($twigLoader, array(
-    'cache' => root . 'cache/twig/',
+$twig = new NGTwigEnvironment($twigLoader, [
+    'cache'       => root.'cache/twig/',
     'auto_reload' => true,
-    'autoescape' => false,
-    'charset' => 'UTF-8',
-));
+    'autoescape'  => false,
+    'charset'     => 'UTF-8',
+]);
 
 // [[MARKER]] TWIG template engine is loaded
 $timer->registerEvent('Template engine is activated');
 
 // Give domainName to URL handler engine for generating absolute links
-$UHANDLER->setOptions(array('domainPrefix' => $config['home_url']));
+$UHANDLER->setOptions(['domainPrefix' => $config['home_url']]);
 
 // Check if engine is installed in subdirectory
 if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match)) {
-    $UHANDLER->setOptions(array('localPrefix' => $match[2]));
+    $UHANDLER->setOptions(['localPrefix' => $match[2]]);
 }
 
 // ** Load cache engine
-@include_once root . 'includes/classes/cache.class.php';
-@include_once root . 'includes/inc/DBLoad.php';
+@include_once root.'includes/classes/cache.class.php';
+@include_once root.'includes/inc/DBLoad.php';
 
 // OLD :: MySQLi driver
 // $mysql = DBLoad();
@@ -290,13 +287,13 @@ NGRun(function () {
 
     switch ($config['dbtype']) {
         case 'mysqli':
-            $sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+            $sx->set('db', new NGMYSQLi(['host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8']));
             break;
         case 'pdo':
-            $sx->set('db', new NGPDO(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+            $sx->set('db', new NGPDO(['host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8']));
             break;
         default:
-            $sx->set('db', new NGMYSQLi(array('host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8')));
+            $sx->set('db', new NGMYSQLi(['host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8']));
     }
 
     $sx->set('config', $config);
@@ -305,10 +302,8 @@ NGRun(function () {
     $mysql = $sx->getLegacyDB();
 
     // Sync PHP <=> MySQL timezones
-    $mysql->query('SET @@session.time_zone = "' . date('P') . '"');
-
+    $mysql->query('SET @@session.time_zone = "'.date('P').'"');
 });
-
 
 // [[MARKER]] MySQL connection is established
 $timer->registerEvent('DB connection established');
@@ -321,7 +316,7 @@ $timer->registerEvent('DB category list is loaded');
 
 // ** Load compatibility engine [ rewrite old links ]
 if ($config['libcompat']) {
-    include_once root . 'includes/inc/libcompat.php';
+    include_once root.'includes/inc/libcompat.php';
     compatRedirector();
 }
 
@@ -372,8 +367,8 @@ if ((is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD
         $username = $xrow['name'];
         $userROW = $xrow;
         if ($config['x_ng_headers']) {
-            header("X-NG-UserID: " . intval($userROW['id']));
-            header("X-NG-Login: " . htmlentities($username));
+            header('X-NG-UserID: '.intval($userROW['id']));
+            header('X-NG-Login: '.htmlentities($username));
         }
 
         // - Now every TWIG template will know if user is logged in
@@ -404,11 +399,11 @@ executeActionHandler('core');
 $timer->registerEvent('ALL core-related plugins are executed');
 
 // Define last consts
-@define('tpl_site', site_root . 'templates/' . $config['theme'] . '/');
-@define('tpl_url', home . '/templates/' . $config['theme']);
+@define('tpl_site', site_root.'templates/'.$config['theme'].'/');
+@define('tpl_url', home.'/templates/'.$config['theme']);
 
 // - TWIG: Reconfigure allowed template paths - site template is also available
-$twigLoader->setPaths(array(tpl_site, root));
+$twigLoader->setPaths([tpl_site, root]);
 
 // - TWIG: Added global variable `tpl_url`, `scriptLibrary`
 $twig->addGlobal('tpl_url', tpl_url);
@@ -418,7 +413,7 @@ $twig->addGlobal('scriptLibrary', scriptLibrary);
 $lang = LoadLang('common');
 $lang = LoadLangTheme();
 
-$langShortMonths = explode(",", $lang['short_months']);
-$langMonths = explode(",", $lang['months']);
+$langShortMonths = explode(',', $lang['short_months']);
+$langMonths = explode(',', $lang['months']);
 
 $timer->registerEvent('* CORE.PHP is complete');

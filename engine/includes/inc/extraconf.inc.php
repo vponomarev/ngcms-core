@@ -17,7 +17,6 @@ if (!defined('NGCMS')) {
 //
 function pluginSwitch($pluginID, $mode = 'on')
 {
-
     global $PLUGINS;
 
     // Load list of active plugins
@@ -42,12 +41,12 @@ function pluginSwitch($pluginID, $mode = 'on')
             // Mark module to be activated in all listed actions
             if (isset($extras[$pluginID]['acts']) && isset($extras[$pluginID]['file'])) {
                 foreach (explode(',', $extras[$pluginID]['acts']) as $act) {
-                    $activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'] . '/' . $extras[$pluginID]['file'];
+                    $activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'].'/'.$extras[$pluginID]['file'];
                 }
             }
 
             foreach ($extras[$pluginID]['actions'] as $act => $file) {
-                $activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'] . '/' . $file;
+                $activated['actions'][$act][$pluginID] = $extras[$pluginID]['dir'].'/'.$file;
             }
 
             if (count($extras[$pluginID]['library'])) {
@@ -84,18 +83,17 @@ function pluginSwitch($pluginID, $mode = 'on')
 
 function savePluginsActiveList()
 {
-
     global $PLUGINS;
 
     if (!is_file(conf_pactive)) {
         return false;
     }
 
-    if (!($file = fopen(conf_pactive, "w"))) {
+    if (!($file = fopen(conf_pactive, 'w'))) {
         return false;
     }
 
-    $content = '<?php $array = ' . var_export($PLUGINS['active'], true) . '; ?>';
+    $content = '<?php $array = '.var_export($PLUGINS['active'], true).'; ?>';
     fwrite($file, $content);
     fclose($file);
 
@@ -107,7 +105,6 @@ function savePluginsActiveList()
 //
 function plugin_mark_installed($plugin)
 {
-
     global $PLUGINS;
 
     // Load activated list
@@ -129,7 +126,6 @@ function plugin_mark_installed($plugin)
 //
 function plugin_mark_deinstalled($plugin)
 {
-
     global $PLUGINS;
 
     // Load activated list
