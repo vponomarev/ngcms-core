@@ -9,53 +9,44 @@
 
 class cacheClassAbstract
 {
-
     public function get($plugin, $key, $expire = -1)
     {
-
         return false;
     }
 
     public function set($plugin, $key, $value, $expire = -1)
     {
-
         return false;
     }
 
     public function del($plugin, $key)
     {
-
         return false;
     }
 
     public function getMulti($plugin, $keyList, $expire = -1)
     {
-
         return false;
     }
 
     public function setMulti($plugin, $dataList, $expire = -1)
     {
-
         return false;
     }
 
     public function increment($plugin, $key, $offset = 1)
     {
-
         return false;
     }
 
     public function decrement($plugin, $key, $offset = 1)
     {
-
         return false;
     }
 }
 
 class cacheClassFile extends cacheClassAbstract
 {
-
     public function get($plugin, $key, $expire = -1)
     {
 
@@ -70,7 +61,7 @@ class cacheClassFile extends cacheClassAbstract
         }
 
         // Try to open file with data
-        if (($fn = @fopen($dir . $fname, 'r')) == false) {
+        if (($fn = @fopen($dir.$fname, 'r')) == false) {
             return false;
         }
 
@@ -107,8 +98,7 @@ class cacheClassFile extends cacheClassAbstract
 
     public function getMulti($plugin, $keyList, $expire = -1)
     {
-
-        $res = array();
+        $res = [];
         foreach ($keyList as $key) {
             $res[$key] = $this->get($plugin, $key, $expire);
         }
@@ -130,7 +120,7 @@ class cacheClassFile extends cacheClassAbstract
         }
 
         // Try to create file
-        if (($fn = @fopen($dir . $fname, 'w')) == false) {
+        if (($fn = @fopen($dir.$fname, 'w')) == false) {
             return false;
         }
 
@@ -158,8 +148,7 @@ class cacheClassFile extends cacheClassAbstract
 
     public function setMulti($plugin, $keyList, $expire = -1)
     {
-
-        $res = array();
+        $res = [];
         foreach ($keyList as $key) {
             $res[$key] = $this->set($plugin, $key, $expire);
         }
@@ -170,17 +159,15 @@ class cacheClassFile extends cacheClassAbstract
 
 class cacheClassMemcached extends cacheClassAbstract
 {
-
     public $cache;
     public $params;
 
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
-
         $this->cache = new Memcached();
 
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
         if (!isset($params['prefix'])) {
@@ -196,26 +183,23 @@ class cacheClassMemcached extends cacheClassAbstract
 
     public function connect($host, $port)
     {
-
         return $this->cache->addServer($host, $port);
     }
 
     public function get($plugin, $key, $expire = -1)
     {
-
-        return $this->cache->get($this->params['prefix'] . ':' . $plugin . ':' . $key);
+        return $this->cache->get($this->params['prefix'].':'.$plugin.':'.$key);
     }
 
     public function getMulti($plugin, $keyList, $expire = -1)
     {
-
-        $keyResult = array();
+        $keyResult = [];
         if (!is_array($keyList)) {
             return false;
         }
 
         foreach ($keyList as $k) {
-            $keyResult[] = $this->params['prefix'] . ':' . $plugin . ':' . $k;
+            $keyResult[] = $this->params['prefix'].':'.$plugin.':'.$k;
         }
 
         return $this->cache->getMulti($keyResult);
@@ -223,20 +207,18 @@ class cacheClassMemcached extends cacheClassAbstract
 
     public function set($plugin, $key, $value, $expiration = -1)
     {
-
-        return $this->cache->set($this->params['prefix'] . ':' . $plugin . ':' . $key, $value, ($expiration >= 0) ? $expiration : $this->params['expiration']);
+        return $this->cache->set($this->params['prefix'].':'.$plugin.':'.$key, $value, ($expiration >= 0) ? $expiration : $this->params['expiration']);
     }
 
     public function setMulti($plugin, $keyList, $expiration = 0)
     {
-
-        $keyResult = array();
+        $keyResult = [];
         if (!is_array($keyList)) {
             return false;
         }
 
         foreach ($keyList as $k => $v) {
-            $keyResult[$this->params['prefix'] . ':' . $plugin . ':' . $k] = $v;
+            $keyResult[$this->params['prefix'].':'.$plugin.':'.$k] = $v;
         }
 
         return $this->cache->setMulti($keyResult, ($expiration >= 0) ? $expiration : $this->params['expiration']);
@@ -244,43 +226,36 @@ class cacheClassMemcached extends cacheClassAbstract
 
     public function getResultCode()
     {
-
         return $this->cache->getResultCode();
     }
 
     public function getResultMessage()
     {
-
         return $this->cache->getResultMessage();
     }
 
     public function getResult()
     {
-
-        return array($this->cache->getResultCode(), $this->cache->getResultMessage());
+        return [$this->cache->getResultCode(), $this->cache->getResultMessage()];
     }
 
     public function touch($plugin, $key, $expiration)
     {
-
-        return $this->cache->touch($this->params['prefix'] . ':' . $plugin . ':' . $key, $value, $expiration);
+        return $this->cache->touch($this->params['prefix'].':'.$plugin.':'.$key, $value, $expiration);
     }
 
     public function increment($plugin, $key, $offset = 1)
     {
-
-        return $this->cache->increment($this->params['prefix'] . ':' . $plugin . ':' . $key, $offset);
+        return $this->cache->increment($this->params['prefix'].':'.$plugin.':'.$key, $offset);
     }
 
     public function decrement($plugin, $key, $offset = 1)
     {
-
-        return $this->cache->decrement($this->params['prefix'] . ':' . $plugin . ':' . $key, $offset);
+        return $this->cache->decrement($this->params['prefix'].':'.$plugin.':'.$key, $offset);
     }
 
     public function del($plugin, $key)
     {
-
-        return $this->cache->del($this->params['prefix'] . ':' . $plugin . ':' . $key);
+        return $this->cache->del($this->params['prefix'].':'.$plugin.':'.$key);
     }
 }

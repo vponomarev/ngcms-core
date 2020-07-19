@@ -15,31 +15,29 @@
 
 
  params = array with supported params
-		'vars'			=> array ( <VARIABLES> )
-			'<NAME>'	=> array ( <PARAMS> )
-				'matchRegex'	= matching REGEX
-				'descr'			= description
-		'descr'			= description
+        'vars'			=> array ( <VARIABLES> )
+            '<NAME>'	=> array ( <PARAMS> )
+                'matchRegex'	= matching REGEX
+                'descr'			= description
+        'descr'			= description
 
 */
 
 class urlLibrary
 {
-
     // Constructor
-    function urlLibrary()
+    public function urlLibrary()
     {
-
         global $config;
 
-        $this->CMD = array();
+        $this->CMD = [];
         $this->configLoaded = false;
         $this->fatalError = false;
-        $this->configFileName = confroot . 'urlconf.php';
+        $this->configFileName = confroot.'urlconf.php';
     }
 
     // Load config from DISK
-    function loadConfig()
+    public function loadConfig()
     {
 
         // Check if config already loaded
@@ -64,7 +62,7 @@ class urlLibrary
     }
 
     // Save config to DISK
-    function saveConfig()
+    public function saveConfig()
     {
 
         // No save if config file is not loaded
@@ -80,16 +78,15 @@ class urlLibrary
             return false;
         }
 
-        fwrite($f, '<?php' . "\n" . '$urlLibrary = ' . var_export($this->CMD, true) . ';');
+        fwrite($f, '<?php'."\n".'$urlLibrary = '.var_export($this->CMD, true).';');
         fclose($f);
 
         return true;
     }
 
     // Register supported commands
-    function registerCommand($plugin, $cmd, $params)
+    public function registerCommand($plugin, $cmd, $params)
     {
-
         if (!$this->loadConfig()) {
             return false;
         }
@@ -100,9 +97,8 @@ class urlLibrary
     }
 
     // Remove recently registered command
-    function removeCommand($plugin, $cmd)
+    public function removeCommand($plugin, $cmd)
     {
-
         if (!$this->loadConfig()) {
             return false;
         }
@@ -121,16 +117,14 @@ class urlLibrary
     }
 
     // Fetch command data
-    function fetchCommand($plugin, $cmd)
+    public function fetchCommand($plugin, $cmd)
     {
-
         return isset($this->CMD[$plugin][$cmd]) ? $this->CMD[$plugin][$cmd] : false;
     }
 
     // Extract line with most matching language
-    function extractLangRec($data, $pl = '')
+    public function extractLangRec($data, $pl = '')
     {
-
         global $config;
 
         if (!is_array($data)) {
@@ -156,15 +150,15 @@ class urlLibrary
 
  Supported function:
   * registerHandler() - register new handler in internal library
-	pluginName			- name of the plugin
-	pluginHandler		- name of the handler
-	flagPrimary			- FLAG: primary record for this type of handlerName/pluginName. Will be used
-                	  	for generation
-	flagFailContinue	- FLAG: continue scanning if called function returned 'NOT FOUND'/'FAIL'.
- 						May be used for merging static & news - try to show static, if no page
-						is found - try to show news.
-	callbackFunc		- function to call in case of successfull CATCH (it's return value is checked if
- 						variable flagFailContinue is set
+    pluginName			- name of the plugin
+    pluginHandler		- name of the handler
+    flagPrimary			- FLAG: primary record for this type of handlerName/pluginName. Will be used
+                          for generation
+    flagFailContinue	- FLAG: continue scanning if called function returned 'NOT FOUND'/'FAIL'.
+                        May be used for merging static & news - try to show static, if no page
+                        is found - try to show news.
+    callbackFunc		- function to call in case of successfull CATCH (it's return value is checked if
+                        variable flagFailContinue is set
 
 
 
@@ -173,12 +167,12 @@ class urlLibrary
  pluginName			- name of plugin
  handlerName		- name of handler in plugin
  flagPrimary		- FLAG: primary record for this type of handlerName/pluginName. Will be used
-                	  for generation
+                      for generation
  flagFailContinue	- FLAG: continue scanning if called function returned 'NOT FOUND'/'FAIL'.
- 					  May be used for merging static & news - try to show static, if no page
-					  is found - try to show news.
+                      May be used for merging static & news - try to show static, if no page
+                      is found - try to show news.
  callbackFunc		- function to call in case of successfull CATCH (it's return value is checked if
- 					  variable flagFailContinue is set
+                      variable flagFailContinue is set
  rstyle				- variables to REWRITE STYLE URL's [ Regex STYLE ]
   regex				- REGEX to catch URL
   regexMap			- MAPPING for converting URL with REGEX to variables
@@ -203,7 +197,7 @@ class urlLibrary
    example:
 *   reqCheck => array (
      'mode' => 'sync'
-	)
+    )
 
 ## setVars - array:
     varName => array( TYPE, VALUE )
@@ -213,31 +207,31 @@ class urlLibrary
    example:
 *  setVars => array (
     'action' => array ( 0, 'plugin' ),
-	'plugin' => array ( 0, 'sync' ),
-	'pcmd'   => array ( 1, 'name' ),
+    'plugin' => array ( 0, 'sync' ),
+    'pcmd'   => array ( 1, 'name' ),
    )
 
 ## genrMAP - array of concatinated values:
-	row: array ( TYPE, VALUE )
-	 TYPE = 0, VALUE = static text
-	 TYPE = 1, VALUE = name of variable
+    row: array ( TYPE, VALUE )
+     TYPE = 0, VALUE = static text
+     TYPE = 1, VALUE = name of variable
 
    example:
 *  genrMAP => array (
     array ( 0, 'sync/' ),
-	array ( 1, 'name'  )
+    array ( 1, 'name'  )
    )
    // will generate URL like 'sync/HERE_IS_A_NAME'
 
 ## genoMAP - array of params to set
     varName => array ( TYPE, VALUE )
-	 TYPE = 0, VALUE = static text
-	 TYPE = 1, VALUE = name of variable
+     TYPE = 0, VALUE = static text
+     TYPE = 1, VALUE = name of variable
 
    example:
 *  genrMAP => array (
     'action' => array ( 0, 'sync' ),
-	'name' => array ( 1, 'name'  )
+    'name' => array ( 1, 'name'  )
    )
    // will generate URL like '?action=sync&name=HERE_IS_A_NAME'
 
@@ -251,28 +245,26 @@ class urlLibrary
 
 class urlHandler
 {
-
     // constructor
-    function urlHandler($options = array())
+    public function urlHandler($options = [])
     {
-
         global $config;
 
-        $this->hList = array();
+        $this->hList = [];
         $this->configLoaded = false;
-        $this->configFileName = confroot . 'rewrite.php';
+        $this->configFileName = confroot.'rewrite.php';
 
         $this->options = $options;
     }
 
     // Populate handler record from HTTP submit interface
-    function populateHandler($ULIB, $data)
+    public function populateHandler($ULIB, $data)
     {
 
         //
         // First - find references from URL library
         if (!isset($data['pluginName']) || !isset($data['handlerName']) || !isset($ULIB->CMD[$data['pluginName']][$data['handlerName']])) {
-            return array(array(1, 'No match with URL library' . var_export($data, true)), false);
+            return [[1, 'No match with URL library'.var_export($data, true)], false];
         }
 
         // Command catched
@@ -294,7 +286,7 @@ class urlHandler
         $variative = 0;
         $closeit = false;
 
-        $genmap = array();
+        $genmap = [];
 
         while ($pos < $len) {
             switch ($state) {
@@ -319,7 +311,7 @@ class urlHandler
 
                         if ($pos > $dataStartPos) {
                             $text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-                            $genmap[] = array(0, $text, $variative);
+                            $genmap[] = [0, $text, $variative];
                         }
                         $variative = $newVariative;
                         $dataStartPos = $pos + 1;
@@ -330,7 +322,7 @@ class urlHandler
                     if ($rcmd[$pos] == '}') {
                         // End of the variable
                         $text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-                        $genmap[] = array(getIsSet($cmd['vars'][$text]['isSecure']) ? 2 : 1, $text, $variative);
+                        $genmap[] = [getIsSet($cmd['vars'][$text]['isSecure']) ? 2 : 1, $text, $variative];
                         $dataStartPos = $pos + 1;
                         $state = 0;
                         break;
@@ -343,14 +335,14 @@ class urlHandler
         // Check for last block
         if ($state) {
             // ERROR - not finished variable !!
-            return array(array(2, 'Variable is not closed'), false);
+            return [[2, 'Variable is not closed'], false];
         } elseif ($variative) {
             // ERROR - not closed variative block !!
-            return array(array(3, 'Variative block is not closed'), false);
+            return [[3, 'Variative block is not closed'], false];
         } else {
             if ($dataStartPos < $pos) {
                 $text = mb_substr($rcmd, $dataStartPos, $pos - $dataStartPos);
-                $genmap[] = array(0, $text, 0);
+                $genmap[] = [0, $text, 0];
             }
         }
 
@@ -360,7 +352,7 @@ class urlHandler
 
         // Now we can generate processing REGEX
         $regex = '#^';
-        $regexMAP = array();
+        $regexMAP = [];
         $paramNum = 1;
         $vmatch = 0;
         foreach ($genmap as $rec) {
@@ -378,9 +370,9 @@ class urlHandler
             }
             if ($rec[0]) {
                 if (!isset($cmd['vars'][$rec[1]])) {
-                    return array(array(4, 'Variable "' . $rec[1] . '" is unknown'), false);
+                    return [[4, 'Variable "'.$rec[1].'" is unknown'], false];
                 }
-                $regex .= '(' . $cmd['vars'][$rec[1]]['matchRegex'] . ')';
+                $regex .= '('.$cmd['vars'][$rec[1]]['matchRegex'].')';
                 $regexMAP[$paramNum++] = $rec[1];
             } else {
                 $regex .= $rec[1];
@@ -400,33 +392,32 @@ class urlHandler
         //print "</pre>";
 
         // Prepare outgoing structure
-        $dcfg = array(
+        $dcfg = [
             'pluginName'       => $data['pluginName'],
             'handlerName'      => $data['handlerName'],
             'flagPrimary'      => $data['flagPrimary'] ? true : false,
             'flagFailContinue' => $data['flagFailContinue'] ? true : false,
             'flagDisabled'     => $data['flagDisabled'] ? true : false,
-            'rstyle'           => array(
+            'rstyle'           => [
                 'rcmd'     => $rcmd,
                 'regex'    => $regex,
                 'regexMap' => $regexMAP,
-                'reqCheck' => array(),
-                'setVars'  => array(),
+                'reqCheck' => [],
+                'setVars'  => [],
                 'genrMAP'  => $genmap,
-            ),
-        );
+            ],
+        ];
 
         //print "<b><u>Output data struct:</u></b> <br/><pre>\n";
         //print var_export($dcfg, true);
         //print "</pre>";
 
-        return array(array(0, 0), $dcfg);
+        return [[0, 0], $dcfg];
     }
 
     // register handler
-    function registerHandler($position, $handler)
+    public function registerHandler($position, $handler)
     {
-
         if (!$this->configLoaded) {
             return false;
         }
@@ -436,7 +427,7 @@ class urlHandler
         } elseif ($position == -1) {
             array_push($this->hList, $handler);
         } else {
-            $tdata = array_slice($this->hList, 0, $position) + array($handler) + array_slice($this->hList, $position + 1);
+            $tdata = array_slice($this->hList, 0, $position) + [$handler] + array_slice($this->hList, $position + 1);
             $this->hList = $tdata;
         }
 
@@ -448,9 +439,8 @@ class urlHandler
     // $position - position of handler in current list of handlers
     // $pluginName - 'pluginName' value for deleted handler
     // $handlerName - 'handlerName' value for deleted handler
-    function removeHandler($position, $pluginName, $handlerName)
+    public function removeHandler($position, $pluginName, $handlerName)
     {
-
         if (!$this->configLoaded) {
             return false;
         }
@@ -473,9 +463,8 @@ class urlHandler
     // Remove handlers for specific plugin
     // $pluginName - name of plugin
     // $handlerName - name of specific handler or '*' if you need to delete all handlers of this plugin
-    function removePluginHandlers($pluginName, $handlerName = '*')
+    public function removePluginHandlers($pluginName, $handlerName = '*')
     {
-
         if (!$this->configLoaded) {
             return false;
         }
@@ -493,9 +482,8 @@ class urlHandler
     }
 
     // Return current list of handlers
-    function listHandlers()
+    public function listHandlers()
     {
-
         if (!$this->configLoaded) {
             return false;
         }
@@ -504,7 +492,7 @@ class urlHandler
     }
 
     // Load config from DISK
-    function loadConfig()
+    public function loadConfig()
     {
 
         // Try to read config file
@@ -525,7 +513,7 @@ class urlHandler
     }
 
     // Save config to DISK
-    function saveConfig()
+    public function saveConfig()
     {
 
         // No save if config file is not loaded
@@ -542,7 +530,7 @@ class urlHandler
         }
 
         // Generate helper $handlerPrimary table
-        $hPrimary = array();
+        $hPrimary = [];
         foreach ($this->hList as $hId => $hData) {
             // Skip disabled records
             if ($hData['flagDisabled']) {
@@ -550,30 +538,29 @@ class urlHandler
             }
             if (isset($hPrimary[$hData['pluginName']][$hData['handlerName']])) {
                 if (!$hPrimary[$hData['pluginName']][$hData['handlerName']][1] && ($hData['flagPrimary'])) {
-                    $hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
+                    $hPrimary[$hData['pluginName']][$hData['handlerName']] = [$hId, $hData['flagPrimary']];
                 }
             } else {
-                $hPrimary[$hData['pluginName']][$hData['handlerName']] = array($hId, $hData['flagPrimary']);
+                $hPrimary[$hData['pluginName']][$hData['handlerName']] = [$hId, $hData['flagPrimary']];
             }
         }
 
-        fwrite($f, '<?php' . "\n" . '$handlerList = ' . var_export($this->hList, true) . ";\n" . '$handlerPrimary = ' . var_export($hPrimary, true) . ';');
+        fwrite($f, '<?php'."\n".'$handlerList = '.var_export($this->hList, true).";\n".'$handlerPrimary = '.var_export($hPrimary, true).';');
         fclose($f);
 
         return true;
     }
 
     // Set configuration options
-    function setOptions($options = array())
+    public function setOptions($options = [])
     {
-
         foreach ($options as $k => $v) {
             $this->options[$k] = $v;
         }
     }
 
     // RUN callback functions
-    function run($url = null, $flags = array())
+    public function run($url = null, $flags = [])
     {
 
         // Init URL if it's not passed in params
@@ -592,7 +579,7 @@ class urlHandler
         }
 
         if ($flags['debug']) {
-            print "urlHandler :: RUN(" . $url . ")<br>\n";
+            echo 'urlHandler :: RUN('.$url.")<br>\n";
         }
 
         // Modity calling URL if localPrefix is defined
@@ -601,12 +588,12 @@ class urlHandler
                 // Catched prefix
                 $url = mb_substr($url, mb_strlen($flags['localPrefix']));
                 if ($flags['debug']) {
-                    print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] (" . $url . ")<br/>\n";
+                    echo "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `".$flags['localPrefix'].'`] ('.$url.")<br/>\n";
                 }
             } else {
                 // URL doesn't correspond to LOCAL PREFIX
                 if ($flags['debug']) {
-                    print "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `" . $flags['localPrefix'] . "`] - <i><b>ERROR: URL DOES NOT CORRESPOND TO PREFIX</b></i><br/>\n";
+                    echo "urlHandler :: RUN [<font color='red'><b>LOCAL PREFIX</b></font>: `".$flags['localPrefix']."`] - <i><b>ERROR: URL DOES NOT CORRESPOND TO PREFIX</b></i><br/>\n";
                 }
 
                 return 0;
@@ -617,7 +604,7 @@ class urlHandler
 
         foreach ($this->hList as $hNum => $h) {
             if ($flags['debug']) {
-                print "&raquo; " . ($h['flagDisabled'] ? '<b><font color="red">DISABLED</font></b> ' : '') . "Scan (" . $hNum . ")[" . $h['pluginName'] . "][" . $h['handlerName'] . "] ReGEX check [ <b><font color=blue>" . $h['rstyle']['regex'] . " </font></b>]<br>\n";
+                echo '&raquo; '.($h['flagDisabled'] ? '<b><font color="red">DISABLED</font></b> ' : '').'Scan ('.$hNum.')['.$h['pluginName'].']['.$h['handlerName'].'] ReGEX check [ <b><font color=blue>'.$h['rstyle']['regex']." </font></b>]<br>\n";
             }
 
             // Skip disabled records
@@ -626,8 +613,8 @@ class urlHandler
             }
 
             if (preg_match($h['rstyle']['regex'], $url, $scan)) {
-                $result = array('0' => $scan[0]);
-                $handlerParams = array('num' => $hNum, 'value' => $h);
+                $result = ['0' => $scan[0]];
+                $handlerParams = ['num' => $hNum, 'value' => $h];
 
                 foreach ($scan as $k => $v) {
                     if (isset($h['rstyle']['regexMap'][$k])) {
@@ -636,7 +623,7 @@ class urlHandler
                 }
 
                 if ($flags['debug']) {
-                    print "Find match [plugin: <b>" . $h['pluginName'] . "</b>, handler: <b>" . $h['handlerName'] . "</b>] with REGex <b><font color=blue>" . $h['rstyle']['regex'] . "</font></b>, params: <pre>" . var_export($result, true) . "</pre><br>\n";
+                    echo 'Find match [plugin: <b>'.$h['pluginName'].'</b>, handler: <b>'.$h['handlerName'].'</b>] with REGex <b><font color=blue>'.$h['rstyle']['regex'].'</font></b>, params: <pre>'.var_export($result, true)."</pre><br>\n";
                 }
 
                 if (!isset($h['callback'])) {
@@ -656,7 +643,7 @@ class urlHandler
                     }
                 }
 
-                $skip = array('FFC' => $h['flagFailContinue'] ? true : false);
+                $skip = ['FFC' => $h['flagFailContinue'] ? true : false];
                 $res = call_user_func($h['callback'], $h['pluginName'], $h['handlerName'], $result, $skip, $handlerParams);
                 if (is_array($res) && isset($res['fail']) && $res['fail']) {
                     continue;
@@ -664,7 +651,6 @@ class urlHandler
 
                 return ++$catchCount;
             }
-
         }
 
         return $catchCount;
@@ -679,9 +665,8 @@ class urlHandler
     // $xparams	- External params to pass as "?param1=value1&...&paramX=valueX"
     // $intLink	- Flag if links should be treated as `internal` (i.e. all '&' should be displayed as '&amp;'
     // $absoluteLink - Flag if absolute link (including http:// ... ) should be generated
-    function generateLink($pluginName, $handlerName, $params = array(), $xparams = array(), $intLink = false, $absoluteLink = false)
+    public function generateLink($pluginName, $handlerName, $params = [], $xparams = [], $intLink = false, $absoluteLink = false)
     {
-
         $flagCommon = false;
 
         // Check if we have handler for requested plugin
@@ -706,7 +691,7 @@ class urlHandler
         }
 
         // First: find block dependency
-        $depMAP = array();
+        $depMAP = [];
         foreach ($hRec['rstyle']['genrMAP'] as $rec) {
             // If dependent block & this is variable & no rec in $depMAP - save
             if ($rec[2] && $rec[0] && !isset($depMAP[$rec[2]])) {
@@ -715,7 +700,7 @@ class urlHandler
         }
 
         // Now we can generate URL
-        $url = array();
+        $url = [];
         foreach ($hRec['rstyle']['genrMAP'] as $rec) {
             if (!$rec[2] || ($rec[2] && isset($params[$depMAP[$rec[2]]]))) {
                 switch ($rec[0]) {
@@ -733,7 +718,7 @@ class urlHandler
         }
 
         // Add params in case of common mode
-        $uparams = array();
+        $uparams = [];
         if ($flagCommon) {
             unset($params['plugin']);
             unset($params['handler']);
@@ -742,7 +727,7 @@ class urlHandler
 
         foreach ($xparams as $k => $v) {
             if (($k != 'plugin') && ($k != 'handler')) {
-                $uparams[] = $k . '=' . urlencode($v);
+                $uparams[] = $k.'='.urlencode($v);
             }
         }
 
@@ -750,8 +735,8 @@ class urlHandler
             $this->options['domainPrefix'] :
             ((isset($this->options['localPrefix']) && ($this->options['localPrefix'] != '')) ? $this->options['localPrefix'] : '');
 
-        return $linkPrefix .
-            join('', $url) .
-            (count($uparams) ? '?' . join('&' . ($intLink ? 'amp;' : ''), $uparams) : '');
+        return $linkPrefix.
+            implode('', $url).
+            (count($uparams) ? '?'.implode('&'.($intLink ? 'amp;' : ''), $uparams) : '');
     }
 }

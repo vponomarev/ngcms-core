@@ -2,13 +2,12 @@
 
 class tpl
 {
-
-    var $data = array();
-    var $root = '.';
-    var $ext = '.tpl';
-    var $da_vr = array();
-    var $execTime = 0;
-    var $execCount = 0;
+    public $data = [];
+    public $root = '.';
+    public $ext = '.tpl';
+    public $da_vr = [];
+    public $execTime = 0;
+    public $execCount = 0;
 
     // $name   - name of template
     // $dir    - directory where to search template
@@ -17,14 +16,13 @@ class tpl
     //	includeAllowed        - flag: if includes are allowed
     //	includeDisableChroot  - flag: to allow to include files beyond $dir
     //	includeAllowRecursive - flag: to allow recursive includes
-    function template($name, $dir, $file = '', $params = array())
+    public function template($name, $dir, $file = '', $params = [])
     {
-
         global $lang;
 
         // Prepare to calculate exec time
         list($usec, $sec) = explode(' ', microtime());
-        $timeStart = (float)$sec + (float)$usec;
+        $timeStart = (float) $sec + (float) $usec;
 
         if (is_dir($dir)) {
             $this->root = $dir;
@@ -34,10 +32,10 @@ class tpl
 
         $nn = $name;
 
-        $fname = $dir . ($file ? $file : ((mb_substr($dir, -1) != '/' ? '/' : '') . $name . $this->ext));
+        $fname = $dir.($file ? $file : ((mb_substr($dir, -1) != '/' ? '/' : '').$name.$this->ext));
 
         if (!is_file($fname)) {
-            $this->data[$nn] = '[<b>TEMPLATE NOT FOUND</b> (' . $fname . ')]';
+            $this->data[$nn] = '[<b>TEMPLATE NOT FOUND</b> ('.$fname.')]';
 
             return;
             ngFatalError(sprintf(str_replace('{fname}', $fname, $lang['fatal.tpl.lost'], $fname)));
@@ -55,12 +53,12 @@ class tpl
                 while (preg_match('#\[:include (.+?)\]#isu', $data, $iM)) {
                     $incName = $iM[1];
                     if (!(isset($params['includeDisableChroot']) && $params['includeDisableChroot'])) {
-                        $incName = str_replace(array('/../', '/./'), '', $incName);
+                        $incName = str_replace(['/../', '/./'], '', $incName);
                         if (preg_match('#^\.\.\/(.+)$#isu', $incName, $mt)) {
                             $incName = $mt[1];
                         }
                     }
-                    $incFile = $dir . $incName;
+                    $incFile = $dir.$incName;
                     if (is_file($incFile) && is_readable($incFile)) {
                         $fI = fopen($incFile, 'r');
                         $incData = filesize($incFile) ? fread($fI, filesize($incFile)) : '';
@@ -70,18 +68,18 @@ class tpl
             } else {
                 // Recursive mode: OFF
                 if (preg_match_all('#\[:include (.+?)\]#isu', $data, $iMList, PREG_SET_ORDER)) {
-                    $pMatchString = array();
-                    $pMatchData = array();
+                    $pMatchString = [];
+                    $pMatchData = [];
 
                     foreach ($iMList as $iMNo => $iM) {
                         $incName = $iM[1];
                         if (!(isset($params['includeDisableChroot']) && $params['includeDisableChroot'])) {
-                            $incName = str_replace(array('/../', '/./'), '', $incName);
+                            $incName = str_replace(['/../', '/./'], '', $incName);
                             if (preg_match('#^\.\.\/(.+)$#isu', $incName, $mt)) {
                                 $incName = $mt[1];
                             }
                         }
-                        $incFile = $dir . $incName;
+                        $incFile = $dir.$incName;
                         if (is_file($incFile) && is_readable($incFile)) {
                             $fI = fopen($incFile, 'r');
                             $incData = filesize($incFile) ? fread($fI, filesize($incFile)) : '';
@@ -98,7 +96,7 @@ class tpl
 
         // Save calculate exec time
         list($usec, $sec) = explode(' ', microtime());
-        $timeStop = (float)$sec + (float)$usec;
+        $timeStop = (float) $sec + (float) $usec;
 
         $this->execTime += ($timeStop - $timeStart);
     }
@@ -106,25 +104,24 @@ class tpl
     // Params [array]:
     // codeExec	- flag to execute ( php eval() ) code
     // inline	- flag: inline data. If set $nn is treated as data, not a template file name
-    function vars($nn, $vars = array(), $params = array())
+    public function vars($nn, $vars = [], $params = [])
     {
-
         global $lang, $userROW, $CurrentHandler, $config, $PHP_SELF, $twig;
 
         // Prepare to calculate exec time
         list($usec, $sec) = explode(' ', microtime());
-        $timeStart = (float)$sec + (float)$usec;
+        $timeStart = (float) $sec + (float) $usec;
 
         $data = (isset($params['inline']) && $params['inline']) ? $nn : $this->data[$nn];
         if (isset($params['codeExec']) && $params['codeExec']) {
-            $data = (eval(' ?>' . $this->data[$nn] . '<?php '));
+            $data = (eval(' ?>'.$this->data[$nn].'<?php '));
         }
 
         if (preg_match_all('/(?<=\{)l_(.*?)(?=\})/iu', $data, $larr)) {
             // Show language variables
             foreach ($larr[0] as $k => $v) {
                 $name_larr = mb_substr($v, 2);
-                $data = str_replace('{' . $v . '}', isset($lang[$name_larr]) ? $lang[$name_larr] : '[LANG_LOST:' . $name_larr . ']', $data);
+                $data = str_replace('{'.$v.'}', isset($lang[$name_larr]) ? $lang[$name_larr] : '[LANG_LOST:'.$name_larr.']', $data);
             }
         }
 
@@ -132,12 +129,12 @@ class tpl
         if (preg_match_all('/\[TWIG\](.+?)\[\/TWIG\]/isu', $data, $parr)) {
             foreach ($parr[0] as $k => $v) {
                 $scode = $parr[1][$k];
-                $cacheFileName = md5($scode) . '.txt';
+                $cacheFileName = md5($scode).'.txt';
                 $cacheFile = cacheRetrieveFile($cacheFileName, 3600, '_templates');
                 if ($cacheFile === false) {
                     cacheStoreFile($cacheFileName, $scode, '_templates');
                 }
-                $tx = $twig->loadTemplate(get_plugcache_dir('_templates') . $cacheFileName);
+                $tx = $twig->loadTemplate(get_plugcache_dir('_templates').$cacheFileName);
                 $result = $tx->render($vars['vars']);
                 $data = str_replace($v, $result, $data);
             }
@@ -167,7 +164,7 @@ class tpl
                 }
 
                 if (!getPluginStatusActive($name_parr)) {
-                    $data = str_replace('{' . $v . '}', '', $data);
+                    $data = str_replace('{'.$v.'}', '', $data);
                 }
             }
         }
@@ -220,12 +217,12 @@ class tpl
             }
         }
 
-        if ($PHP_SELF && $PHP_SELF == "admin.php") {
+        if ($PHP_SELF && $PHP_SELF == 'admin.php') {
             preg_match_all('/(?<=\{)c_(.*?)(?=\})/iu', $data, $carr);
 
             foreach ($carr[0] as $k => $v) {
                 $name_carr = mb_substr($v, 2);
-                $data = str_replace('{' . $v . '}', $config[$name_carr], $data);
+                $data = str_replace('{'.$v.'}', $config[$name_carr], $data);
             }
         }
 
@@ -236,7 +233,7 @@ class tpl
                     $data = str_replace($id, $var, $data);
                 } else {
                     if (!is_array($var)) {
-                        $data = str_replace('{' . $id . '}', $var, $data);
+                        $data = str_replace('{'.$id.'}', $var, $data);
                     }
                 }
             }
@@ -248,19 +245,19 @@ class tpl
                 $data = preg_replace($id, $var, $data);
             }
         }
-        
+
         if (defined('skins_url')) {
             $data = str_replace('{skins_url}', skins_url, $data);
         }
-        
+
         if (defined('tpl_url')) {
             $data = str_replace('{tpl_url}', tpl_url, $data);
         }
-    
+
         if (defined('admin_url')) {
             $data = str_replace('{admin_url}', admin_url, $data);
         }
-        
+
         if (defined('scriptLibrary')) {
             $data = str_replace('{scriptLibrary}', scriptLibrary, $data);
         }
@@ -273,15 +270,14 @@ class tpl
 
         // Save calculate exec time
         list($usec, $sec) = explode(' ', microtime());
-        $timeStop = (float)$sec + (float)$usec;
+        $timeStop = (float) $sec + (float) $usec;
 
         $this->execTime += ($timeStop - $timeStart);
         $this->execCount++;
     }
 
-    function show($name)
+    public function show($name)
     {
-
         $ret = $this->da_vr[$name];
         $this->da_vr[$name] = $this->data[$name];
 

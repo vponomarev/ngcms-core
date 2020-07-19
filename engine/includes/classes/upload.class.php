@@ -9,16 +9,15 @@
 
 function get_item_dir($type)
 {
-
     global $config;
     switch ($type) {
-        case "image":
+        case 'image':
             return $config['images_dir'];
-        case "file":
+        case 'file':
             return $config['files_dir'];
-        case "avatar":
+        case 'avatar':
             return $config['avatars_dir'];
-        case "photo":
+        case 'photo':
             return $config['photos_dir'];
         default:
             return false;
@@ -27,56 +26,52 @@ function get_item_dir($type)
 
 class file_managment
 {
-
     // CONSTRUCTOR
-    function file_managment()
+    public function file_managment()
     {
 
         // Load additional LANG file
         $lang = loadLang('files');
-
-        return;
     }
 
     // Get limits
-    function get_limits($type)
+    public function get_limits($type)
     {
-
         global $config;
 
         $this->filetype = $type;
         switch ($type) {
-            case "image":
-                $this->required_type = explode(",", str_replace(' ', '', $config['images_ext']));
+            case 'image':
+                $this->required_type = explode(',', str_replace(' ', '', $config['images_ext']));
                 $this->max_size = $config['images_max_size'] * 1024;
                 $this->max_x = intval($config['images_max_x']);
                 $this->max_y = intval($config['images_max_y']);
                 $this->dim_act = intval($config['images_dim_action']);
-                $this->tname = "images";
+                $this->tname = 'images';
                 $this->dname = $config['images_dir'];
                 $this->uname = $config['images_url'];
                 $this->tcat = 0;
                 break;
-            case "file":
-                $this->required_type = explode(",", str_replace(' ', '', $config['files_ext']));
+            case 'file':
+                $this->required_type = explode(',', str_replace(' ', '', $config['files_ext']));
                 $this->max_size = $config['files_max_size'] * 1024;
-                $this->tname = "files";
+                $this->tname = 'files';
                 $this->dname = $config['files_dir'];
                 $this->uname = $config['files_url'];
                 $this->tcat = 0;
                 break;
-            case "avatar":
-                $this->required_type = explode(",", str_replace(' ', '', $config['images_ext']));
+            case 'avatar':
+                $this->required_type = explode(',', str_replace(' ', '', $config['images_ext']));
                 $this->max_size = $config['avatar_max_size'] * 1024;
-                $this->tname = "images";
+                $this->tname = 'images';
                 $this->dname = $config['avatars_dir'];
                 $this->uname = $config['avatars_url'];
                 $this->tcat = 1;
                 break;
-            case "photo":
-                $this->required_type = explode(",", str_replace(' ', '', $config['images_ext']));
+            case 'photo':
+                $this->required_type = explode(',', str_replace(' ', '', $config['images_ext']));
                 $this->max_size = $config['photos_max_size'] * 1024;
-                $this->tname = "images";
+                $this->tname = 'images';
                 $this->dname = $config['photos_dir'];
                 $this->uname = $config['photos_url'];
                 $this->tcat = 2;
@@ -89,13 +84,12 @@ class file_managment
     }
 
     // fetch selected URL into temp directory
-    function file_fetch_url($url)
+    public function file_fetch_url($url)
     {
-
         global $lang;
 
         if ((!($tmpn = tempnam(ini_get('upload_tmp_dir'), 'upload_'))) || (!($f = fopen($tmpn, 'w')))) {
-            msg(array("type" => "error", "text" => $lang['upload.error.tempcreate']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.tempcreate']]);
 
             return;
         }
@@ -104,9 +98,9 @@ class file_managment
             // Data were read
             fwrite($f, $data);
             fclose($f);
-            $filename = end(explode("/", $url));
+            $filename = end(explode('/', $url));
 
-            return array($tmpn, $filename, mb_strlen($data));
+            return [$tmpn, $filename, mb_strlen($data)];
         } else {
             // Unable to fetch content (URL)
         }
@@ -134,15 +128,14 @@ class file_managment
     // * pidentity	- ID of plugin's identity that owns this file
     // * description- description for image
     // * rpc		- flag: if set, returning result is made in RPC style [ default - not set ]
-    function file_upload($param)
+    public function file_upload($param)
     {
-
         global $config, $lang, $mysql, $userROW;
 
         $lang = loadLang('files');
 
         // Normalize category (to make it possible to have empty category)
-        $wCategory = ($param['category'] != '') ? ($param['category'] . '/') : '';
+        $wCategory = ($param['category'] != '') ? ($param['category'].'/') : '';
 
         //print "CALL file_upload -> upload(".$param['http_var']."//".$param['http_varnum'].")<br>\n<pre>"; var_dump($param); print "</pre><br>\n";
 
@@ -182,9 +175,9 @@ class file_managment
         // Check limits
         if (!$this->get_limits($param['type'])) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 301, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.type']));
+                return ['status' => 0, 'errorCode' => 301, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.type'])];
             } else {
-                msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.type'])));
+                msg(['type' => 'error', 'text' => str_replace('{fname}', $fname, $lang['upload.error.type'])]);
 
                 return 0;
             }
@@ -196,9 +189,9 @@ class file_managment
         // * File size
         if ($fsize > $this->max_size) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 302, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.size']), 'errorDescription' => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info']));
+                return ['status' => 0, 'errorCode' => 302, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.size']), 'errorDescription' => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])];
             } else {
-                msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.size']), "info" => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])));
+                msg(['type' => 'error', 'text' => str_replace('{fname}', $fname, $lang['upload.error.size']), 'info' => str_replace('{size}', Formatsize($this->max_size), $lang['upload.error.size#info'])]);
 
                 return 0;
             }
@@ -207,9 +200,9 @@ class file_managment
         // Check for existance of temp file
         if (!$ftmp || !file_exists($ftmp)) {
             if (getIsSet($param['rpc'])) {
-                return array('status' => 0, 'errorCode' => 303, 'errorText' => var_export($_FILES, true) . str_replace('{fname}', $fname, $lang['upload.error.losttemp']));
+                return ['status' => 0, 'errorCode' => 303, 'errorText' => var_export($_FILES, true).str_replace('{fname}', $fname, $lang['upload.error.losttemp'])];
             } else {
-                msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.losttemp'])));
+                msg(['type' => 'error', 'text' => str_replace('{fname}', $fname, $lang['upload.error.losttemp'])]);
 
                 return 0;
             }
@@ -221,9 +214,9 @@ class file_managment
             $s = $im->get_size($ftmp);
             if (!is_array($s)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 301, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.type']));
+                    return ['status' => 0, 'errorCode' => 301, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.type'])];
                 } else {
-                    msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.type'])));
+                    msg(['type' => 'error', 'text' => str_replace('{fname}', $fname, $lang['upload.error.type'])]);
 
                     return 0;
                 }
@@ -235,15 +228,15 @@ class file_managment
                 if (!$this->dim_act) {
                     // REJECT
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 317, 'errorText' => str_replace(array('{fname}', '{maxx}', '{maxy}'), array($fname, $this->max_x, $this->max_y), $lang['upload.error.imgsize']));
+                        return ['status' => 0, 'errorCode' => 317, 'errorText' => str_replace(['{fname}', '{maxx}', '{maxy}'], [$fname, $this->max_x, $this->max_y], $lang['upload.error.imgsize'])];
                     } else {
-                        msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.imgsize'])));
+                        msg(['type' => 'error', 'text' => str_replace('{fname}', $fname, $lang['upload.error.imgsize'])]);
 
                         return 0;
                     }
                 }
                 // Try to resize
-                $resizeResult = $im->image_transform(array('rpc' => $param['rpc'], 'image' => $ftmp, 'resize' => array('x' => $this->max_x, 'y' => $this->max_y)));
+                $resizeResult = $im->image_transform(['rpc' => $param['rpc'], 'image' => $ftmp, 'resize' => ['x' => $this->max_x, 'y' => $this->max_y]]);
                 //return array('status' => 0, 'errorCode' => 999, 'errorText' => "X/MAXX::".$s[1]."/".$this->max_x.", Y/MAXY:".$s[2]."/".$this->max_y." NX/NY:".$resizeResult['data']['x']."/".$resizeResult['data']['y']);
 
                 // Check results
@@ -253,22 +246,22 @@ class file_managment
                 }
                 // ** Normal call
                 if (!is_array($resizeResult)) {
-                    msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.imgsize'])));
+                    msg(['type' => 'error', 'text' => str_replace('{fname}', $fname, $lang['upload.error.imgsize'])]);
 
                     return;
                 }
             }
         }
 
-        $fil = explode(".", mb_strtolower($fname));
+        $fil = explode('.', mb_strtolower($fname));
         $ext = count($fil) ? array_pop($fil) : '';
 
         // * File type [ don't allow to upload PHP files in any case ]
-        if ((array_search(mb_strtolower($ext), $this->required_type) === false) || (array_search(mb_strtolower($ext), array('php', 'pht', 'phtml', 'php3', 'php4', 'php5')) !== false)) {
+        if ((array_search(mb_strtolower($ext), $this->required_type) === false) || (array_search(mb_strtolower($ext), ['php', 'pht', 'phtml', 'php3', 'php4', 'php5']) !== false)) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 304, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.ext']), 'errorDescription' => str_replace('{ext}', join(", ", $this->required_type), $lang['upload.error.ext#info']));
+                return ['status' => 0, 'errorCode' => 304, 'errorText' => str_replace('{fname}', $fname, $lang['upload.error.ext']), 'errorDescription' => str_replace('{ext}', implode(', ', $this->required_type), $lang['upload.error.ext#info'])];
             } else {
-                msg(array("type" => "error", "text" => str_replace('{fname}', $fname, $lang['upload.error.ext']), "info" => str_replace('{ext}', join(",", $this->required_type), $lang['upload.error.ext#info'])));
+                msg(['type' => 'error', 'text' => str_replace('{fname}', $fname, $lang['upload.error.ext']), 'info' => str_replace('{ext}', implode(',', $this->required_type), $lang['upload.error.ext#info'])]);
 
                 return 0;
             }
@@ -276,15 +269,15 @@ class file_managment
 
         // Manage multiple extensions
         if (!$config['allow_multiext']) {
-            $fil = array(join("_", $fil));
+            $fil = [implode('_', $fil)];
         }
 
         $parse = new parse();
 
-        $fil = trim(str_replace(array(' ', '\\', '/', chr(0)), array('_', ''), join(".", $fil)));
+        $fil = trim(str_replace([' ', '\\', '/', chr(0)], ['_', ''], implode('.', $fil)));
         $fil = $parse->translit($fil);
 
-        $fname = $fil . ($ext ? '.' . $ext : '');
+        $fname = $fil.($ext ? '.'.$ext : '');
 
         // Save original file name
         $origFname = $fname;
@@ -296,9 +289,9 @@ class file_managment
 
             if (!is_dir($wDir)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 305, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dsn']));
+                    return ['status' => 0, 'errorCode' => 305, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dsn'])];
                 } else {
-                    msg(array("type" => "error", "text" => "No access to DSN directory `" . $wDir . "`"));
+                    msg(['type' => 'error', 'text' => 'No access to DSN directory `'.$wDir.'`']);
 
                     return 0;
                 }
@@ -309,23 +302,23 @@ class file_managment
             $dir1 = mb_substr($fn_md5, 0, 2);
             $dir2 = mb_substr($fn_md5, 2, 2);
 
-            $wDir .= '/' . $dir1;
+            $wDir .= '/'.$dir1;
             if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 306, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dircreate']));
+                    return ['status' => 0, 'errorCode' => 306, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])];
                 } else {
-                    msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])));
+                    msg(['type' => 'error', 'text' => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])]);
 
                     return 0;
                 }
             }
 
-            $wDir .= '/' . $dir2;
+            $wDir .= '/'.$dir2;
             if (!is_dir($wDir) && !@mkdir($wDir, 0777)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 307, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dircreate']));
+                    return ['status' => 0, 'errorCode' => 307, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])];
                 } else {
-                    msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])));
+                    msg(['type' => 'error', 'text' => str_replace('{dir}', $wDir, $lang['upload.error.dircreate'])]);
 
                     return 0;
                 }
@@ -336,23 +329,23 @@ class file_managment
             $xDir = '';
             while ($i < 999) {
                 $i++;
-                $xDir = sprintf("%03u", $i);
-                if (is_dir($wDir . '/' . $xDir)) {
+                $xDir = sprintf('%03u', $i);
+                if (is_dir($wDir.'/'.$xDir)) {
                     $xDir = '';
                     continue;
                 }
 
                 // Fine. Create this dir ... but check for simultaneous run
-                if (!@mkdir($wDir . '/' . $xDir, 0777)) {
-                    if (is_dir($wDir . '/' . $xDir)) {
+                if (!@mkdir($wDir.'/'.$xDir, 0777)) {
+                    if (is_dir($wDir.'/'.$xDir)) {
                         continue;
                     }
 
                     // Unable to create dir
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 308, 'errorText' => str_replace('{dir}', $wDir . '/' . $xDir, $lang['upload.error.dircreate']));
+                        return ['status' => 0, 'errorCode' => 308, 'errorText' => str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.dircreate'])];
                     } else {
-                        msg(array("type" => "error", "text" => str_replace('{dir}', $wDir . '/' . $xDir, $lang['upload.error.dircreate'])));
+                        msg(['type' => 'error', 'text' => str_replace('{dir}', $wDir.'/'.$xDir, $lang['upload.error.dircreate'])]);
 
                         return 0;
                     }
@@ -362,19 +355,19 @@ class file_managment
             }
             if (!$xDir) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 309, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots']));
+                    return ['status' => 0, 'errorCode' => 309, 'errorText' => str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots'])];
                 } else {
-                    msg(array("type" => "error", "text" => str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots'])));
+                    msg(['type' => 'error', 'text' => str_replace('{dir}', $wDir, $lang['upload.error.dsn_no_slots'])]);
 
                     return 0;
                 }
             }
 
-            $wDir .= '/' . $xDir;
+            $wDir .= '/'.$xDir;
 
             // Now let's upload file
             if ($param['manual']) {
-                if (!copy($ftmp, $wDir . '/' . $fname)) {
+                if (!copy($ftmp, $wDir.'/'.$fname)) {
                     // Remove empty dir
                     rmdir($wDir);
 
@@ -382,22 +375,22 @@ class file_managment
                     unlink($ftmp);
 
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 310, 'errorText' => $lang['upload.error.move']);
+                        return ['status' => 0, 'errorCode' => 310, 'errorText' => $lang['upload.error.move']];
                     } else {
-                        msg(array("type" => "error", "text" => $lang['upload.error.move']));
+                        msg(['type' => 'error', 'text' => $lang['upload.error.move']]);
 
                         return 0;
                     }
                 }
             } else {
-                if (!move_uploaded_file($ftmp, $wDir . '/' . $fname)) {
+                if (!move_uploaded_file($ftmp, $wDir.'/'.$fname)) {
                     // Remove empty dir
                     rmdir($wDir);
 
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 311, 'errorText' => $lang['upload.error.move'] . "(" . $ftmp . " => " . $this->dname . $wCategory . $fname . ")");
+                        return ['status' => 0, 'errorCode' => 311, 'errorText' => $lang['upload.error.move'].'('.$ftmp.' => '.$this->dname.$wCategory.$fname.')'];
                     } else {
-                        msg(array("type" => "error", "text" => $lang['upload.error.move'] . "(" . $ftmp . " => " . $this->dname . $wCategory . $fname . ")"));
+                        msg(['type' => 'error', 'text' => $lang['upload.error.move'].'('.$ftmp.' => '.$this->dname.$wCategory.$fname.')']);
 
                         return 0;
                     }
@@ -405,28 +398,28 @@ class file_managment
             }
 
             // Set correct permissions
-            chmod($wDir . '/' . $fname, 0644);
+            chmod($wDir.'/'.$fname, 0644);
 
             // Create record in SQL DB (or replace old)
-            $mysql->query("insert into " . prefix . "_" . $this->tname . " " .
-                "(name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id, plugin, pidentity, description) " .
-                "values (" . db_squote($fname) . ", 1," . db_squote($origFname) . "," . db_squote($dir1 . '/' . $dir2 . '/' . $xDir) . ", unix_timestamp(now()), " . db_squote($userROW['name']) . "," . db_squote($userROW['id']) . ", " . $this->tcat . ", " . db_squote($param['linked_ds']) . ", " . db_squote($param['linked_id']) . ", " . db_squote($param['plugin']) . ", " . db_squote($param['pidentity']) . ", " . db_squote($param['description']) . ")");
-            $rowID = $mysql->record("select LAST_INSERT_ID() as id");
+            $mysql->query('insert into '.prefix.'_'.$this->tname.' '.
+                '(name, storage, orig_name, folder, date, user, owner_id, category, linked_ds, linked_id, plugin, pidentity, description) '.
+                'values ('.db_squote($fname).', 1,'.db_squote($origFname).','.db_squote($dir1.'/'.$dir2.'/'.$xDir).', unix_timestamp(now()), '.db_squote($userROW['name']).','.db_squote($userROW['id']).', '.$this->tcat.', '.db_squote($param['linked_ds']).', '.db_squote($param['linked_id']).', '.db_squote($param['plugin']).', '.db_squote($param['pidentity']).', '.db_squote($param['description']).')');
+            $rowID = $mysql->record('select LAST_INSERT_ID() as id');
 
             // SQL error
             if (!is_array($rowID)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 312, 'errorText' => $lang['upload.error.sql']);
+                    return ['status' => 0, 'errorCode' => 312, 'errorText' => $lang['upload.error.sql']];
                 } else {
-                    msg(array("type" => "error", "text" => $lang['upload.error.sql']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.sql']]);
 
                     return 0;
                 }
             }
             if ($param['rpc']) {
-                return array('status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => array('id' => $rowID['id'], 'name' => $fname, 'location' => $dir1 . '/' . $dir2 . '/' . $xDir));
+                return ['status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => ['id' => $rowID['id'], 'name' => $fname, 'location' => $dir1.'/'.$dir2.'/'.$xDir]];
             } else {
-                return array($rowID['id'], $fname, $dir1 . '/' . $dir2 . '/' . $xDir);
+                return [$rowID['id'], $fname, $dir1.'/'.$dir2.'/'.$xDir];
             }
         }
 
@@ -435,43 +428,43 @@ class file_managment
         if ($param['randprefix']) {
             $try = 0;
             do {
-                $prefix = sprintf("%04u", rand(1, 9999));
+                $prefix = sprintf('%04u', rand(1, 9999));
                 $try++;
-            } while (($try < 100) && (file_exists($this->dname . $wCategory . $prefix . '_' . $fname) || (is_array($row = $mysql->record("select * from " . prefix . "_" . $this->tname . " where name = " . db_squote($prefix . '_' . $fname) . " and folder= " . db_squote($param['category']))))));
+            } while (($try < 100) && (file_exists($this->dname.$wCategory.$prefix.'_'.$fname) || (is_array($row = $mysql->record('select * from '.prefix.'_'.$this->tname.' where name = '.db_squote($prefix.'_'.$fname).' and folder= '.db_squote($param['category']))))));
 
             if ($try == 100) {
                 // Can't create RAND name - all values are occupied
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 313, 'errorText' => $lang['upload.error.rand']);
+                    return ['status' => 0, 'errorCode' => 313, 'errorText' => $lang['upload.error.rand']];
                 } else {
-                    msg(array("type" => "error", "text" => $lang['upload.error.rand']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.rand']]);
 
                     return 0;
                 }
             }
-            $fname = $prefix . '_' . $fname;
+            $fname = $prefix.'_'.$fname;
         }
 
         $replace_id = 0;
         $row = '';
         // Now we have correct filename. Let's check for dups
-        if (is_array($row = $mysql->record("select * from " . prefix . "_" . $this->tname . " where name = " . db_squote($fname) . " and folder= " . db_squote($param['category']))) || file_exists($this->dname . $wCategory . $fname)) {
+        if (is_array($row = $mysql->record('select * from '.prefix.'_'.$this->tname.' where name = '.db_squote($fname).' and folder= '.db_squote($param['category']))) || file_exists($this->dname.$wCategory.$fname)) {
             // Found file. Check if 'replace' flag is present and user have enough privilleges
             if ($param['replace']) {
                 if (!(($row['user'] == $userROW['name']) || ($userROW['status'] == 1) || ($userROW['status'] == 2))) {
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 314, 'errorText' => $lang['upload.error.perm.replace']);
+                        return ['status' => 0, 'errorCode' => 314, 'errorText' => $lang['upload.error.perm.replace']];
                     } else {
-                        msg(array("type" => "error", "text" => $lang['upload.error.perm.replace']));
+                        msg(['type' => 'error', 'text' => $lang['upload.error.perm.replace']]);
 
                         return 0;
                     }
                 }
             } else {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 315, 'errorText' => $lang['upload.error.exists'], 'errorDescription' => $lang['upload.error.exists#info']);
+                    return ['status' => 0, 'errorCode' => 315, 'errorText' => $lang['upload.error.exists'], 'errorDescription' => $lang['upload.error.exists#info']];
                 } else {
-                    msg(array("type" => "error", "text" => $lang['upload.error.exists'], "info" => $lang['upload.error.exists#info']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.exists'], 'info' => $lang['upload.error.exists#info']]);
 
                     return 0;
                 }
@@ -482,20 +475,19 @@ class file_managment
         }
 
         // We're ready to move file into target directory
-        if (!is_dir($this->dname . $param['category'])) {
+        if (!is_dir($this->dname.$param['category'])) {
             // SPECIAL processing for "default" category
             if ($param['category'] == 'default') {
-                @mkdir($this->dname . $param['category'], 0777);
+                @mkdir($this->dname.$param['category'], 0777);
                 if ($param['type'] == 'image') {
-                    @mkdir($this->dname . $subdirectory . '/thumb', 0777);
+                    @mkdir($this->dname.$subdirectory.'/thumb', 0777);
                 }
-
             } else {
                 // Category dir doesn't exists
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 316, 'errorText' => str_replace('{category}', $param['category'], $lang['upload.error.catnexists']));
+                    return ['status' => 0, 'errorCode' => 316, 'errorText' => str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])];
                 } else {
-                    msg(array("type" => "error", "text" => str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])));
+                    msg(['type' => 'error', 'text' => str_replace('{category}', $param['category'], $lang['upload.error.catnexists'])]);
 
                     return 0;
                 }
@@ -504,23 +496,23 @@ class file_managment
 
         // Now let's upload file
         if ($param['manual']) {
-            if (!copy($ftmp, $this->dname . $wCategory . $fname)) {
+            if (!copy($ftmp, $this->dname.$wCategory.$fname)) {
                 unlink($ftmp);
 
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 310, 'errorText' => $lang['upload.error.move']);
+                    return ['status' => 0, 'errorCode' => 310, 'errorText' => $lang['upload.error.move']];
                 } else {
-                    msg(array("type" => "error", "text" => $lang['upload.error.move']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.move']]);
 
                     return 0;
                 }
             }
         } else {
-            if (!move_uploaded_file($ftmp, $this->dname . $wCategory . $fname)) {
+            if (!move_uploaded_file($ftmp, $this->dname.$wCategory.$fname)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 310, 'errorText' => $lang['upload.error.move'] . "(" . $ftmp . " => " . $this->dname . $wCategory . $fname . ")");
+                    return ['status' => 0, 'errorCode' => 310, 'errorText' => $lang['upload.error.move'].'('.$ftmp.' => '.$this->dname.$wCategory.$fname.')'];
                 } else {
-                    msg(array("type" => "error", "text" => $lang['upload.error.move'] . "(" . $ftmp . " => " . $this->dname . $wCategory . $fname . ")"));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.move'].'('.$ftmp.' => '.$this->dname.$wCategory.$fname.')']);
 
                     return 0;
                 }
@@ -528,46 +520,46 @@ class file_managment
         }
 
         // Set correct permissions
-        chmod($this->dname . $wCategory . $fname, 0644);
+        chmod($this->dname.$wCategory.$fname, 0644);
 
         // Create record in SQL DB (or replace old)
         if ($replace_id) {
             // Delete old THUMB (if exists)
-            if ($row['preview'] && ($param['type'] == 'image') && is_file($this->dname . $param['category'] . '/thumb/' . $row['name'])) {
-                @unlink($this->dname . $param['category'] . '/thumb/' . $row['name']);
+            if ($row['preview'] && ($param['type'] == 'image') && is_file($this->dname.$param['category'].'/thumb/'.$row['name'])) {
+                @unlink($this->dname.$param['category'].'/thumb/'.$row['name']);
             }
 
-            $mysql->query("update " . prefix . "_" . $this->tname . " set " .
-                "name= " . db_squote($fname) . ", " .
-                "folder=" . db_squote($param['category']) . ", " .
-                "date=unix_timestamp(now()), " .
-                "user=" . db_squote($userROW['name']) . ", " .
-                "owner_id=" . db_squote($userROW['id']) .
-                (($param['type'] == 'image') ? ', preview = 0, p_width = 0, p_height = 0' : '') .
-                " where id = " . $replace_id);
+            $mysql->query('update '.prefix.'_'.$this->tname.' set '.
+                'name= '.db_squote($fname).', '.
+                'folder='.db_squote($param['category']).', '.
+                'date=unix_timestamp(now()), '.
+                'user='.db_squote($userROW['name']).', '.
+                'owner_id='.db_squote($userROW['id']).
+                (($param['type'] == 'image') ? ', preview = 0, p_width = 0, p_height = 0' : '').
+                ' where id = '.$replace_id);
             if ($param['rpc']) {
-                return array('status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => array('id' => $replace_id, 'name' => $fname, 'category' => $wCategory));
+                return ['status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => ['id' => $replace_id, 'name' => $fname, 'category' => $wCategory]];
             } else {
-                return array($replace_id, $fname, $wCategory);
+                return [$replace_id, $fname, $wCategory];
             }
         } else {
-            $mysql->query("insert into " . prefix . "_" . $this->tname . " (name, orig_name, folder, date, user, owner_id, category) values (" . db_squote($fname) . "," . db_squote($origFname) . "," . db_squote($param['category']) . ", unix_timestamp(now()), " . db_squote($userROW['name']) . "," . db_squote($userROW['id']) . ", " . $this->tcat . ")");
-            $rowID = $mysql->record("select LAST_INSERT_ID() as id");
+            $mysql->query('insert into '.prefix.'_'.$this->tname.' (name, orig_name, folder, date, user, owner_id, category) values ('.db_squote($fname).','.db_squote($origFname).','.db_squote($param['category']).', unix_timestamp(now()), '.db_squote($userROW['name']).','.db_squote($userROW['id']).', '.$this->tcat.')');
+            $rowID = $mysql->record('select LAST_INSERT_ID() as id');
 
             // SQL error
             if (!is_array($rowID)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 312, 'errorText' => $lang['upload.error.sql']);
+                    return ['status' => 0, 'errorCode' => 312, 'errorText' => $lang['upload.error.sql']];
                 } else {
-                    msg(array("type" => "error", "text" => $lang['upload.error.sql']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.sql']]);
 
                     return 0;
                 }
             }
             if ($param['rpc']) {
-                return array('status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => array('id' => $rowID['id'], 'name' => $fname, 'category' => $wCategory));
+                return ['status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => ['id' => $rowID['id'], 'name' => $fname, 'category' => $wCategory]];
             } else {
-                return array($rowID['id'], $fname, $wCategory);
+                return [$rowID['id'], $fname, $wCategory];
             }
         }
     }
@@ -577,49 +569,48 @@ class file_managment
     // * category		- category from that file should be deleted
     // * id			- ID of file to delete
     // * name		- filename to delete [if no ID specified]
-    function file_delete($param)
+    public function file_delete($param)
     {
-
         global $mysql, $lang, $userROW, $config;
 
         // Check limits
         if (!$this->get_limits($param['type'])) {
-            msg(array("type" => "error", "text" => $lang['upload.error.type']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.type']]);
 
             return 0;
         }
 
         // Find file
         if ($param['id']) {
-            $limit = "id = " . db_squote($param['id']);
+            $limit = 'id = '.db_squote($param['id']);
         } else {
             if (!$param['category']) {
                 $param['category'] = 'default';
             }
-            $limit = "name = " . db_squote($param['name']) . " and folder =" . db_squote($param['category']);
+            $limit = 'name = '.db_squote($param['name']).' and folder ='.db_squote($param['category']);
         }
 
-        if (is_array($row = $mysql->record("select * from " . prefix . "_" . $this->tname . " where " . $limit))) {
+        if (is_array($row = $mysql->record('select * from '.prefix.'_'.$this->tname.' where '.$limit))) {
             // Check permissions
             if (!(($row['owner_id'] == $userROW['id']) || ($userROW['status'] == 1) || ($userROW['status'] == 2))) {
-                msg(array("type" => "error", "text" => $lang['upload.error.perm.delete']));
+                msg(['type' => 'error', 'text' => $lang['upload.error.perm.delete']]);
 
                 return 0;
             }
 
-            $storageDir = ($row['storage'] ? $config['attach_dir'] : $this->dname) . $row['folder'];
+            $storageDir = ($row['storage'] ? $config['attach_dir'] : $this->dname).$row['folder'];
 
             // Check if thumb file exists & delete it
-            if ($row['preview'] && file_exists($storageDir . '/thumb/' . $row['name'])) {
-                if (!@unlink($storageDir . '/thumb/' . $row['name'])) {
-                    msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'] . '/thumb/' . $row['name'], $lang['upload.error.delete'])));
+            if ($row['preview'] && file_exists($storageDir.'/thumb/'.$row['name'])) {
+                if (!@unlink($storageDir.'/thumb/'.$row['name'])) {
+                    msg(['type' => 'error', 'text' => str_replace('{file}', $row['folder'].'/thumb/'.$row['name'], $lang['upload.error.delete'])]);
                 }
             }
 
             // Check if file file exists & delete it
-            if (file_exists($storageDir . '/' . $row['name'])) {
-                if (!@unlink($storageDir . '/' . $row['name'])) {
-                    msg(array("type" => "error", "text" => str_replace('{file}', $row['folder'] . '/' . $row['name'], $lang['upload.error.delete'])));
+            if (file_exists($storageDir.'/'.$row['name'])) {
+                if (!@unlink($storageDir.'/'.$row['name'])) {
+                    msg(['type' => 'error', 'text' => str_replace('{file}', $row['folder'].'/'.$row['name'], $lang['upload.error.delete'])]);
 
                     return 0;
                 }
@@ -629,16 +620,15 @@ class file_managment
                 }
             }
 
-            $mysql->query("delete from " . prefix . "_" . $this->tname . " where id = " . db_squote($row['id']));
+            $mysql->query('delete from '.prefix.'_'.$this->tname.' where id = '.db_squote($row['id']));
 
             return 1;
         } else {
-            msg(array("type" => "error", "text" => $lang['upload.error.nofile'] . ", id=" . $param['id']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.nofile'].', id='.$param['id']]);
 
             return 0;
         }
     }
-
 
     // Rename a file within one category
     // * type			- file type (image / file / avatar / photo)
@@ -648,20 +638,19 @@ class file_managment
     // * id				- ID of file to delete
     // * name			- filename to rename [if no ID specified]
     // * newname		- new filename
-    function file_rename($param)
+    public function file_rename($param)
     {
-
         global $mysql, $lang, $config, $parse;
 
         if (defined('DEBUG')) {
-            print "CALL file_rename(): <pre>";
+            echo 'CALL file_rename(): <pre>';
             var_dump($param);
-            print "</pre><br>\n";
+            echo "</pre><br>\n";
         }
 
         // Check limits
         if (!$this->get_limits($param['type'])) {
-            msg(array("type" => "error", "text" => $lang['upload.error.type']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.type']]);
 
             return 0;
         }
@@ -677,16 +666,15 @@ class file_managment
         }
 
         if ($param['id']) {
-            $limit = "id = " . db_squote($param['id']);
+            $limit = 'id = '.db_squote($param['id']);
         } else {
-            $limit = "name = " . db_squote($param['name']) . " and folder=" . db_squote($param['category']);
+            $limit = 'name = '.db_squote($param['name']).' and folder='.db_squote($param['category']);
         }
 
-        if (is_array($row = $mysql->record("select * from " . prefix . "_" . $this->tname . " where " . $limit))) {
-
+        if (is_array($row = $mysql->record('select * from '.prefix.'_'.$this->tname.' where '.$limit))) {
             if ($param['move']) {
                 if ($param['newcategory']) {
-                    $param['newcategory'] = trim(str_replace(array(' ', '\\', '/', chr(0)), array('_', ''), $param['newcategory']));
+                    $param['newcategory'] = trim(str_replace([' ', '\\', '/', chr(0)], ['_', ''], $param['newcategory']));
                 } else {
                     $param['newcategory'] = 'default';
                 }
@@ -695,142 +683,137 @@ class file_managment
                 }
             }
 
-            $newname = trim(str_replace(array(' ', '\\', '/', chr(0)), array('-', ''), $param['newname']));
+            $newname = trim(str_replace([' ', '\\', '/', chr(0)], ['-', ''], $param['newname']));
             $nnames = explode('.', $newname);
             $ext = array_pop($nnames);
             if (array_search($ext, $this->required_type) === false) {
-                msg(array("type" => "error", "text" => $lang['upload.error.ext'], "info" => str_replace('{ext}', join(",", $this->required_type), $lang['upload.error.ext#info'])));
+                msg(['type' => 'error', 'text' => $lang['upload.error.ext'], 'info' => str_replace('{ext}', implode(',', $this->required_type), $lang['upload.error.ext#info'])]);
 
                 return 0;
             }
 
-            $newname = $parse->translit(implode(".", $nnames)) . "." . $ext;
+            $newname = $parse->translit(implode('.', $nnames)).'.'.$ext;
 
             // Check for DUP
-            if (is_array($mysql->record("select * from " . prefix . "_" . $this->tname . " where folder=" . db_squote($param['move'] ? $param['newcategory'] : $row['folder']) . " and name=" . db_squote($newname)))) {
-                msg(array("type" => "error", "text" => $lang['upload.error.renexists']));
+            if (is_array($mysql->record('select * from '.prefix.'_'.$this->tname.' where folder='.db_squote($param['move'] ? $param['newcategory'] : $row['folder']).' and name='.db_squote($newname)))) {
+                msg(['type' => 'error', 'text' => $lang['upload.error.renexists']]);
 
                 return 0;
             }
 
             // Check if we have enough access and all required directories are created
-            if (!is_writable($this->dname . $row['folder'] . '/' . $row['name'])) {
-                msg(array("type" => "error", "text" => $lang['upload.error.sysperm.access']));
+            if (!is_writable($this->dname.$row['folder'].'/'.$row['name'])) {
+                msg(['type' => 'error', 'text' => $lang['upload.error.sysperm.access']]);
 
                 return 0;
             }
 
-            if ($param['move'] && !is_dir($this->dname . $param['newcategory'])) {
-                msg(array("type" => "error", "text" => str_replace('{category}', $param['newcategory'], $lang['upload.error.catnexists'])));
+            if ($param['move'] && !is_dir($this->dname.$param['newcategory'])) {
+                msg(['type' => 'error', 'text' => str_replace('{category}', $param['newcategory'], $lang['upload.error.catnexists'])]);
 
                 return 0;
             }
 
             if ($param['move']) {
                 // MOVE action
-                if (copy($this->dname . $row['folder'] . '/' . $row['name'], $this->dname . $param['newcategory'] . '/' . $newname)) {
-                    unlink($this->dname . $row['folder'] . '/' . $row['name']);
-                    $mysql->query("update " . prefix . "_" . $this->tname . " set name=" . db_squote($newname) . ", orig_name=" . db_squote($newname) . ", folder=" . db_squote($param['newcategory']) . " where id = " . $row['id']);
-                    if (file_exists($this->dname . $row['folder'] . '/thumb/' . $row['name'])) {
-                        copy($this->dname . $row['folder'] . '/thumb/' . $row['name'], $this->dname . $param['newcategory'] . '/thumb/' . $newname);
-                        unlink($this->dname . $row['folder'] . '/thumb/' . $row['name']);
+                if (copy($this->dname.$row['folder'].'/'.$row['name'], $this->dname.$param['newcategory'].'/'.$newname)) {
+                    unlink($this->dname.$row['folder'].'/'.$row['name']);
+                    $mysql->query('update '.prefix.'_'.$this->tname.' set name='.db_squote($newname).', orig_name='.db_squote($newname).', folder='.db_squote($param['newcategory']).' where id = '.$row['id']);
+                    if (file_exists($this->dname.$row['folder'].'/thumb/'.$row['name'])) {
+                        copy($this->dname.$row['folder'].'/thumb/'.$row['name'], $this->dname.$param['newcategory'].'/thumb/'.$newname);
+                        unlink($this->dname.$row['folder'].'/thumb/'.$row['name']);
                     }
 
                     return 1;
                 } else {
-                    msg(array("type" => "error", "text" => $lang['upload.error.copy']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.copy']]);
 
                     return 0;
                 }
             } else {
                 // RENAME action
-                if (rename($this->dname . $row['folder'] . '/' . $row['name'], $this->dname . $row['folder'] . '/' . $newname)) {
-                    msg(array("text" => $lang['upload.renamed']));
-                    $mysql->query("update " . prefix . "_" . $this->tname . " set name=" . db_squote($newname) . ", orig_name=" . db_squote($newname) . " where id = " . $row['id']);
-                    if (file_exists($this->dname . $row['folder'] . '/thumb/' . $row['name'])) {
-                        rename($this->dname . $row['folder'] . '/thumb/' . $row['name'], $this->dname . $row['folder'] . '/thumb/' . $newname);
+                if (rename($this->dname.$row['folder'].'/'.$row['name'], $this->dname.$row['folder'].'/'.$newname)) {
+                    msg(['text' => $lang['upload.renamed']]);
+                    $mysql->query('update '.prefix.'_'.$this->tname.' set name='.db_squote($newname).', orig_name='.db_squote($newname).' where id = '.$row['id']);
+                    if (file_exists($this->dname.$row['folder'].'/thumb/'.$row['name'])) {
+                        rename($this->dname.$row['folder'].'/thumb/'.$row['name'], $this->dname.$row['folder'].'/thumb/'.$newname);
                     }
 
                     return 1;
                 }
             }
-
         }
-        msg(array("type" => "error", "text" => $lang['upload.error.rename']));
+        msg(['type' => 'error', 'text' => $lang['upload.error.rename']]);
 
         return 0;
     }
 
-
     // Create new directory/category
     // * type		- file type (image / file / avatar / photo)
     // * category	- category where to put file
-    function category_create($type, $category)
+    public function category_create($type, $category)
     {
-
         global $lang, $parse;
 
         if (($dir = get_item_dir($type)) === false) {
-            print "No";
+            echo 'No';
 
             return;
         }
 
-        $category = $parse->translit(trim(str_replace(array(' ', '\\', '/', chr(0)), array('-', ''), $category)));
-        if (is_dir($dir . $category)) {
-            msg(array("type" => "error", "text" => $lang['upload.error.catexists'], "info" => $lang['upload.error.catexists#info']));
+        $category = $parse->translit(trim(str_replace([' ', '\\', '/', chr(0)], ['-', ''], $category)));
+        if (is_dir($dir.$category)) {
+            msg(['type' => 'error', 'text' => $lang['upload.error.catexists'], 'info' => $lang['upload.error.catexists#info']]);
 
             return;
         }
 
-        if (@mkdir($dir . $category, 0777) && (($type != "image") || @mkdir($dir . $category . '/thumb', 0777))) {
-            msg(array("text" => $lang['upload.catcreated']));
+        if (@mkdir($dir.$category, 0777) && (($type != 'image') || @mkdir($dir.$category.'/thumb', 0777))) {
+            msg(['text' => $lang['upload.catcreated']]);
         } else {
-            msg(array("type" => "error", "text" => $lang['upload.error.catcreate']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.catcreate']]);
         }
     }
 
     // Delete a category
     // * type		- file type (image / file / avatar / photo)
     // * category	- category where to put file
-    function category_delete($type, $category)
+    public function category_delete($type, $category)
     {
-
         global $mysql, $lang;
 
         if (($dir = get_item_dir($type)) === false) {
             return;
         }
-        $category = trim(str_replace(array(' ', '\\', '/', chr(0)), array('_', ''), $category));
+        $category = trim(str_replace([' ', '\\', '/', chr(0)], ['_', ''], $category));
 
-        if ($category && is_dir($dir . $category)) {
-            if ($this->count_dir($dir . $category)) {
-                msg(array("type" => "error", "text" => $lang['upload.error.catnotempty']));
+        if ($category && is_dir($dir.$category)) {
+            if ($this->count_dir($dir.$category)) {
+                msg(['type' => 'error', 'text' => $lang['upload.error.catnotempty']]);
 
                 return;
             }
-            if (is_dir($dir . $category . '/thumb')) {
-                @rmdir($dir . $category . '/thumb');
+            if (is_dir($dir.$category.'/thumb')) {
+                @rmdir($dir.$category.'/thumb');
             }
 
-            if (@rmdir($dir . $category)) {
-                msg(array("text" => $lang['upload.catdeleted']));
+            if (@rmdir($dir.$category)) {
+                msg(['text' => $lang['upload.catdeleted']]);
             } else {
-                msg(array("type" => "error", "text" => str_replace('{dir}', $dir . $category, $lang['upload.error.delcat'])));
+                msg(['type' => 'error', 'text' => str_replace('{dir}', $dir.$category, $lang['upload.error.delcat'])]);
             }
 
             return;
         }
-        msg(array("text" => $lang['upload.catdeleted']));
+        msg(['text' => $lang['upload.catdeleted']]);
     }
 
-    function count_dir($dir)
+    public function count_dir($dir)
     {
-
         if ($d = @opendir($dir)) {
             $cnt = 0;
             while (($file = readdir($d)) !== false) {
-                if ($file != '.' && $file != '..' && is_file($dir . '/' . $file)) {
+                if ($file != '.' && $file != '..' && is_file($dir.'/'.$file)) {
                     $cnt++;
                 }
             }
@@ -848,22 +831,18 @@ class file_managment
 // ======================================================================= //
 class image_managment
 {
-
-    function image_managment()
+    public function image_managment()
     {
-
-        return;
     }
 
     // Get image size. Return an array with params:
     // index 0 - image type (same as in getimagesize())
     // index 1 - image width
     // index 2 - image height
-    function get_size($fname)
+    public function get_size($fname)
     {
-
         if (is_array($info = @getimagesize($fname))) {
-            return array($info[2], $info[0], $info[1]);
+            return [$info[2], $info[0], $info[1]];
         }
 
         return null;
@@ -871,21 +850,20 @@ class image_managment
 
     // Params:
     //	rpc			- flag if we're called via RPC call
-    function create_thumb($dir, $file, $sizeX, $sizeY, $quality = 0, $param = [])
+    public function create_thumb($dir, $file, $sizeX, $sizeY, $quality = 0, $param = [])
     {
-
         global $lang;
-        $fname = $dir . '/' . $file;
+        $fname = $dir.'/'.$file;
 
         //print "CALL create_thumb($dir, $file, $sizeX, $sizeY)<br>\n";
 
         // Check if we have a directory for thumb
-        if (!is_dir($dir . '/thumb')) {
-            if (!@mkdir($dir . '/thumb', 0777)) {
+        if (!is_dir($dir.'/thumb')) {
+            if (!@mkdir($dir.'/thumb', 0777)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 351, 'errorText' => $lang['upload.error.sysperm.thumbdir']);
+                    return ['status' => 0, 'errorCode' => 351, 'errorText' => $lang['upload.error.sysperm.thumbdir']];
                 }
-                msg(array("type" => "error", "text" => $lang['upload.error.sysperm.thumbdir']));
+                msg(['type' => 'error', 'text' => $lang['upload.error.sysperm.thumbdir']]);
 
                 return false;
             }
@@ -894,9 +872,9 @@ class image_managment
         // Check if file exists and we can get it's image size
         if (!file_exists($fname) || !is_array($sz = @getimagesize($fname))) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 352, 'errorText' => $lang['upload.error.open'] . $fname);
+                return ['status' => 0, 'errorCode' => 352, 'errorText' => $lang['upload.error.open'].$fname];
             }
-            msg(array("type" => "error", "text" => $lang['upload.error.open']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.open']]);
 
             return false;
         }
@@ -906,7 +884,7 @@ class image_managment
 
         if (!(($sizeX > 0) && ($sizeY > 0) && ($origX > 0) && ($origY > 0))) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 353, 'errorText' => $lang['upload.error.imgdetermine'] . $fname);
+                return ['status' => 0, 'errorCode' => 353, 'errorText' => $lang['upload.error.imgdetermine'].$fname];
             }
 
             return false;
@@ -939,9 +917,9 @@ class image_managment
 
         if (!$cmd || !function_exists($cmd)) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 354, 'errorText' => str_replace('{func}', $cmd, $lang['upload.error.libformat']));
+                return ['status' => 0, 'errorCode' => 354, 'errorText' => str_replace('{func}', $cmd, $lang['upload.error.libformat'])];
             }
-            msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
+            msg(['type' => 'error', 'text' => str_replace('{func}', $cmd, $lang['upload.error.libformat'])]);
 
             return;
         }
@@ -963,9 +941,9 @@ class image_managment
 
         if (!$img) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 355, 'errorText' => $lang['upload.error.open']);
+                return ['status' => 0, 'errorCode' => 355, 'errorText' => $lang['upload.error.open']];
             }
-            msg(array("type" => "error", "text" => $lang['upload.error.open']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.open']]);
 
             return false;
         }
@@ -999,37 +977,36 @@ class image_managment
         // Try to write resized image
         switch ($origType) {
             case 1:
-                $res = @imagegif($newimg, $dir . '/thumb/' . $file);
+                $res = @imagegif($newimg, $dir.'/thumb/'.$file);
                 break;
             case 2:
-                $res = @imagejpeg($newimg, $dir . '/thumb/' . $file, ($quality >= 10 && $quality <= 100) ? $quality : 80);
+                $res = @imagejpeg($newimg, $dir.'/thumb/'.$file, ($quality >= 10 && $quality <= 100) ? $quality : 80);
                 break;
             case 3:
-                $res = @imagepng($newimg, $dir . '/thumb/' . $file);
+                $res = @imagepng($newimg, $dir.'/thumb/'.$file);
                 break;
             case 6:
-                $res = @imagebmp($newimg, $dir . '/thumb/' . $file);
+                $res = @imagebmp($newimg, $dir.'/thumb/'.$file);
                 break;
         }
 
         // Set correct permissions to file
-        @chmod($dir . '/thumb/' . $file, 0644);
+        @chmod($dir.'/thumb/'.$file, 0644);
 
         if (!$res) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 356, 'errorText' => $lang['upload.error.thumbcreate']);
+                return ['status' => 0, 'errorCode' => 356, 'errorText' => $lang['upload.error.thumbcreate']];
             }
-            msg(array("type" => "error", "text" => $lang['upload.error.thumbcreate']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.thumbcreate']]);
 
             return false;
         }
         if ($param['rpc']) {
-            return array('status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => array('x' => $newX, 'y' => $newY));
+            return ['status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => ['x' => $newX, 'y' => $newY]];
         }
 
-        return array($newX, $newY);
+        return [$newX, $newY];
     }
-
 
     // Transformate original image
     // * image			- filename of original image
@@ -1044,7 +1021,7 @@ class image_managment
     // * outquality		- with what quality we should write resulting file (for JPEG) [ default: 80 ]
     // * outfile		- filename to write a result [ default: original file ]
     // * rpc			- flag shows if call is made via RPC call
-    function image_transform($param)
+    public function image_transform($param)
     {
 
         //function add_stamp($image, $stamp, $transparency = 40, $quality = 80){
@@ -1054,9 +1031,9 @@ class image_managment
         // Check if file exists and we can get it's image size
         if (!file_exists($param['image']) || !is_array($sz = @getimagesize($param['image']))) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 401, 'errorText' => $lang['upload.error.open'] . ' ' . $param['image']);
+                return ['status' => 0, 'errorCode' => 401, 'errorText' => $lang['upload.error.open'].' '.$param['image']];
             }
-            msg(array("type" => "error", "text" => $lang['upload.error.open']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.open']]);
 
             return 0;
         }
@@ -1084,9 +1061,9 @@ class image_managment
 
         if (!$cmd || !function_exists($cmd)) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 402, 'errorText' => str_replace('{func}', $cmd, $lang['upload.error.libformat']));
+                return ['status' => 0, 'errorCode' => 402, 'errorText' => str_replace('{func}', $cmd, $lang['upload.error.libformat'])];
             }
-            msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
+            msg(['type' => 'error', 'text' => str_replace('{func}', $cmd, $lang['upload.error.libformat'])]);
 
             return;
         }
@@ -1108,9 +1085,9 @@ class image_managment
 
         if (!$img) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 403, 'errorText' => $lang['upload.error.open']);
+                return ['status' => 0, 'errorCode' => 403, 'errorText' => $lang['upload.error.open']];
             }
-            msg(array("type" => "error", "text" => $lang['upload.error.open']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.open']]);
 
             return;
         }
@@ -1146,9 +1123,9 @@ class image_managment
             if (!file_exists($param['stampfile']) || !is_array($sz = @getimagesize($param['stampfile']))) {
                 if (!$param['stamp_noerror']) {
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 404, 'errorText' => $lang['upload.error.openstamp']);
+                        return ['status' => 0, 'errorCode' => 404, 'errorText' => $lang['upload.error.openstamp']];
                     }
-                    msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.openstamp']]);
                 }
 
                 return 0;
@@ -1177,9 +1154,9 @@ class image_managment
 
             if (!$cmd || !function_exists($cmd)) {
                 if ($param['rpc']) {
-                    return array('status' => 0, 'errorCode' => 402, 'errorText' => str_replace('{func}', $cmd, $lang['upload.error.libformat']));
+                    return ['status' => 0, 'errorCode' => 402, 'errorText' => str_replace('{func}', $cmd, $lang['upload.error.libformat'])];
                 }
-                msg(array("type" => "error", "text" => str_replace('{func}', $cmd, $lang['upload.error.libformat'])));
+                msg(['type' => 'error', 'text' => str_replace('{func}', $cmd, $lang['upload.error.libformat'])]);
 
                 return;
             }
@@ -1202,9 +1179,9 @@ class image_managment
             if (!$stamp) {
                 if (!$param['stamp_noerror']) {
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 405, 'errorText' => $lang['upload.error.openstamp']);
+                        return ['status' => 0, 'errorCode' => 405, 'errorText' => $lang['upload.error.openstamp']];
                     }
-                    msg(array("type" => "error", "text" => $lang['upload.error.openstamp']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.openstamp']]);
                 }
 
                 return;
@@ -1216,9 +1193,9 @@ class image_managment
             if (($destX < 0) || ($destY < 0)) {
                 if (!$param['stamp_noerror']) {
                     if ($param['rpc']) {
-                        return array('status' => 0, 'errorCode' => 406, 'errorText' => $lang['upload.error.stampsize']);
+                        return ['status' => 0, 'errorCode' => 406, 'errorText' => $lang['upload.error.stampsize']];
                     }
-                    msg(array("type" => "error", "text" => $lang['upload.error.stampsize']));
+                    msg(['type' => 'error', 'text' => $lang['upload.error.stampsize']]);
                 }
 
                 return;
@@ -1231,7 +1208,7 @@ class image_managment
             if ($stampType == 3) {
                 $this->imagecopymerge_alpha($img, $stamp, $destX, $destY, 0, 0, $stampX, $stampY, $param['stamp_transparency']);
             } else {
-                imageCopyMerge($img, $stamp, $destX, $destY, 0, 0, $stampX, $stampY, $param['stamp_transparency']);
+                imagecopymerge($img, $stamp, $destX, $destY, 0, 0, $stampX, $stampY, $param['stamp_transparency']);
             }
         }
 
@@ -1242,15 +1219,15 @@ class image_managment
             $newY = $origY + 5;
             $newimg = imagecreatetruecolor($newX, $newY);
 
-            $background = array("r" => 255, "g" => 255, "b" => 255);
-            $step_offset = array("r" => ($background["r"] / 10), "g" => ($background["g"] / 10), "b" => ($background["b"] / 10));
+            $background = ['r' => 255, 'g' => 255, 'b' => 255];
+            $step_offset = ['r' => ($background['r'] / 10), 'g' => ($background['g'] / 10), 'b' => ($background['b'] / 10)];
             $current_color = $background;
 
             for ($i = 0; $i <= 5; $i++) {
-                $colors[$i] = @imagecolorallocate($newimg, round($current_color["r"]), round($current_color["g"]), round($current_color["b"]));
-                $current_color["r"] -= $step_offset["r"];
-                $current_color["g"] -= $step_offset["g"];
-                $current_color["b"] -= $step_offset["b"];
+                $colors[$i] = @imagecolorallocate($newimg, round($current_color['r']), round($current_color['g']), round($current_color['b']));
+                $current_color['r'] -= $step_offset['r'];
+                $current_color['g'] -= $step_offset['g'];
+                $current_color['b'] -= $step_offset['b'];
             }
 
             imagefilledrectangle($newimg, 0, 0, $newX, $newY, $colors[0]);
@@ -1287,23 +1264,22 @@ class image_managment
         }
         if (!$res) {
             if ($param['rpc']) {
-                return array('status' => 0, 'errorCode' => 407, 'errorText' => $lang['upload.error.addstamp']);
+                return ['status' => 0, 'errorCode' => 407, 'errorText' => $lang['upload.error.addstamp']];
             }
-            msg(array("type" => "error", "text" => $lang['upload.error.addstamp']));
+            msg(['type' => 'error', 'text' => $lang['upload.error.addstamp']]);
 
             return;
         }
 
         if ($param['rpc']) {
-            return array('status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => array('x' => $newX, 'y' => $newY));
+            return ['status' => 1, 'errorCode' => 0, 'errorText' => $lang['upload.complete'], 'data' => ['x' => $newX, 'y' => $newY]];
         }
 
-        return array($newX, $newY);
+        return [$newX, $newY];
     }
 
-    function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct)
+    public function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct)
     {
-
         if (!isset($pct)) {
             return false;
         }
