@@ -19,21 +19,19 @@ $lang = LoadLang('templates', 'admin', 'templates');
 //
 function loadTemplateVersions()
 {
-
-    $tDir = root . '../templates';
-    $tlist = array();
+    $tDir = root.'../templates';
+    $tlist = [];
     if ($dRec = opendir($tDir)) {
         while (($dName = readdir($dRec)) !== false) {
             if (($dName == '.') || ($dName == '..')) {
                 continue;
             }
-            if (is_dir($tDir . '/' . $dName) && file_exists($vfn = $tDir . '/' . $dName . '/version') && (filesize($vfn)) && ($vf = @fopen($vfn, 'r'))) {
-
-                $tRec = array('name' => $dName);
+            if (is_dir($tDir.'/'.$dName) && file_exists($vfn = $tDir.'/'.$dName.'/version') && (filesize($vfn)) && ($vf = @fopen($vfn, 'r'))) {
+                $tRec = ['name' => $dName];
                 while (!feof($vf)) {
                     $line = fgets($vf);
                     if (preg_match("/^(.+?) *\: *(.+?) *$/i", trim($line), $m)) {
-                        if (in_array(strtolower($m[1]), array('id', 'title', 'author', 'version', 'reldate', 'plugins', 'image', 'imagepreview'))) {
+                        if (in_array(strtolower($m[1]), ['id', 'title', 'author', 'version', 'reldate', 'plugins', 'image', 'imagepreview'])) {
                             $tRec[strtolower($m[1])] = $m[2];
                         }
                     }
@@ -56,16 +54,16 @@ function loadTemplateVersions()
 // ================================================================== //
 //
 
-$tVars = array(
+$tVars = [
     'home_url' => home,
     'token'    => genUToken('admin.templates'),
-);
+];
 
-$tVars['siteTemplates'] = array();
+$tVars['siteTemplates'] = [];
 
 $tlist = loadTemplateVersions();
 foreach ($tlist as $tver) {
-    $tVars['siteTemplates'] [] = $tver;
+    $tVars['siteTemplates'][] = $tver;
 }
 
 $xt = $twig->loadTemplate('skins/default/tpl/templates.tpl');

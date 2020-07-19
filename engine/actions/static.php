@@ -19,13 +19,12 @@ $lang = LoadLang('static', 'admin');
 //
 function listStatic()
 {
-
     global $mysql, $mod, $userROW, $lang, $config, $twig, $PHP_SELF;
 
     // Check for permissions
-    $perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('view', 'modify', 'details', 'publish', 'unpublish'));
+    $perm = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, ['view', 'modify', 'details', 'publish', 'unpublish']);
     if (!$perm['view']) {
-        msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+        msg(['type' => 'error', 'text' => $lang['perm.denied']], 1, 1);
 
         return;
     }
@@ -34,8 +33,8 @@ function listStatic()
     $admCookie = admcookie_get();
 
     // Determine user's permissions
-    $permModify = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify');
-    $permDetails = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'details');
+    $permModify = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'modify');
+    $permDetails = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'details');
 
     $per_page = isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : intval($admCookie['static']['pp']);
     if (($per_page < 2) || ($per_page > 500)) {
@@ -51,58 +50,59 @@ function listStatic()
         $pageNo = 1;
     }
 
-    $query = array();
-    $query['sql'] = "select * from " . prefix . "_static order by title limit " . (($pageNo - 1) * $per_page) . ", " . $per_page;
-    $query['count'] = "select count(*) as cnt from " . prefix . "_static ";
+    $query = [];
+    $query['sql'] = 'select * from '.prefix.'_static order by title limit '.(($pageNo - 1) * $per_page).', '.$per_page;
+    $query['count'] = 'select count(*) as cnt from '.prefix.'_static ';
 
     $nCount = 0;
-    $tEntries = array();
+    $tEntries = [];
     foreach ($mysql->select($query['sql']) as $row) {
         $nCount++;
 
-        $tEntry = array(
+        $tEntry = [
             'home'     => home,
             'id'       => $row['id'],
             'alt_name' => $row['alt_name'],
             'template' => ($row['template'] == '') ? '--' : $row['template'],
             'date'     => ($row['postdate'] > 0) ? strftime('%d.%m.%Y %H:%M', $row['postdate']) : '',
-        );
+        ];
 
         if (strlen($row['title']) > 70) {
-            $row['title'] = substr($row['title'], 0, 70) . " ...";
+            $row['title'] = substr($row['title'], 0, 70).' ...';
         }
 
         $link = checkLinkAvailable('static', '') ?
-            generateLink('static', '', array('altname' => $row['alt_name'], 'id' => $row['id']), array(), false, true) :
-            generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $row['alt_name'], 'id' => $row['id']), false, true);
+            generateLink('static', '', ['altname' => $row['alt_name'], 'id' => $row['id']], [], false, true) :
+            generateLink('core', 'plugin', ['plugin' => 'static'], ['altname' => $row['alt_name'], 'id' => $row['id']], false, true);
 
-        $tEntry['url'] = $row['approve'] ? ('<a href="' . $link . '" target="_blank">' . $link . '</a>') : '';
-        $tEntry['title'] = str_replace(array("'", "\""), array("&#039;", "&quot;"), $row['title']);
-        $tEntry['status'] = ($row['approve']) ? '<img src="' . skins_url . '/images/yes.png" alt="' . $lang['approved'] . '" />' : '<img src="' . skins_url . '/images/no.png" alt="' . $lang['unapproved'] . '" />';
+        $tEntry['url'] = $row['approve'] ? ('<a href="'.$link.'" target="_blank">'.$link.'</a>') : '';
+        $tEntry['title'] = str_replace(["'", '"'], ['&#039;', '&quot;'], $row['title']);
+        $tEntry['status'] = ($row['approve']) ? '<img src="'.skins_url.'/images/yes.png" alt="'.$lang['approved'].'" />' : '<img src="'.skins_url.'/images/no.png" alt="'.$lang['unapproved'].'" />';
 
-        $tEntries [] = $tEntry;
+        $tEntries[] = $tEntry;
     }
 
-    $tVars = array(
+    $tVars = [
         'php_self' => $PHP_SELF,
         'per_page' => $per_page,
         'entries'  => $tEntries,
         'token'    => genUToken('admin.static'),
-        'perm'     => array(
+        'perm'     => [
             'details' => $permDetails,
             'modify'  => $permModify,
-        )
-    );
+        ],
+    ];
 
     $cnt = $mysql->record($query['count']);
     $all_count_rec = $cnt['cnt'];
 
     $countPages = ceil($all_count_rec / $per_page);
-    $tVars['pagesss'] = generateAdminPagelist(array('current' => $pageNo, 'count' => $countPages, 'url' => admin_url . '/admin.php?mod=static&action=list' . (getIsSet($_REQUEST['per_page']) ? '&per_page=' . $per_page : '') . '&page=%page%'));
+    $tVars['pagesss'] = generateAdminPagelist(['current' => $pageNo, 'count' => $countPages, 'url' => admin_url.'/admin.php?mod=static&action=list'.(getIsSet($_REQUEST['per_page']) ? '&per_page='.$per_page : '').'&page=%page%']);
 
     exec_acts('static_list');
 
     $xt = $twig->loadTemplate('skins/default/tpl/static/table.tpl');
+
     return $xt->render($tVars);
 }
 
@@ -114,19 +114,18 @@ function listStatic()
 //
 function massStaticModify($setValue, $langParam, $tag = '')
 {
-
     global $mysql, $lang;
 
     // Check for permissions
-    if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
-        msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+    if (!checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'modify')) {
+        msg(['type' => 'error', 'text' => $lang['perm.denied']], 1, 1);
 
         return;
     }
 
     // Check for security token
     if ((!isset($_REQUEST['token'])) || ($_REQUEST['token'] != genUToken('admin.static'))) {
-        msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+        msg(['type' => 'error', 'text' => $lang['error.security.token'], 'info' => $lang['error.security.token#desc']]);
 
         return;
     }
@@ -134,15 +133,15 @@ function massStaticModify($setValue, $langParam, $tag = '')
     $selected = getIsSet($_REQUEST['selected']);
 
     if (!$selected) {
-        msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
+        msg(['type' => 'error', 'text' => $lang['msge_selectnews'], 'info' => $lang['msgi_selectnews']]);
 
         return;
     }
 
     foreach ($selected as $id) {
-        $mysql->query("UPDATE " . prefix . "_static SET $setValue WHERE id=" . db_squote($id));
+        $mysql->query('UPDATE '.prefix."_static SET $setValue WHERE id=".db_squote($id));
     }
-    msg(array("text" => $lang[$langParam]));
+    msg(['text' => $lang[$langParam]]);
 }
 
 //
@@ -150,19 +149,18 @@ function massStaticModify($setValue, $langParam, $tag = '')
 //
 function massStaticDelete()
 {
-
     global $mysql, $lang, $PFILTERS;
 
     // Check for permissions
-    if (!checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify')) {
-        msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+    if (!checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'modify')) {
+        msg(['type' => 'error', 'text' => $lang['perm.denied']], 1, 1);
 
         return;
     }
 
     // Check for security token
     if ((!isset($_REQUEST['token'])) || ($_REQUEST['token'] != genUToken('admin.static'))) {
-        msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+        msg(['type' => 'error', 'text' => $lang['error.security.token'], 'info' => $lang['error.security.token#desc']]);
 
         return;
     }
@@ -170,37 +168,35 @@ function massStaticDelete()
     $selected = getIsSet($_REQUEST['selected']);
 
     if (!$selected) {
-        msg(array("type" => "error", "text" => $lang['msge_selectnews'], "info" => $lang['msgi_selectnews']));
+        msg(['type' => 'error', 'text' => $lang['msge_selectnews'], 'info' => $lang['msgi_selectnews']]);
 
         return;
     }
 
     foreach ($selected as $id) {
-        if ($srow = $mysql->record("select * from " . prefix . "_static where id = " . db_squote($id))) {
+        if ($srow = $mysql->record('select * from '.prefix.'_static where id = '.db_squote($id))) {
             if (is_array($PFILTERS['static'])) {
                 foreach ($PFILTERS['static'] as $k => $v) {
                     $v->deleteStatic($srow['id'], $srow);
                 }
             }
-            $mysql->query("delete from " . prefix . "_static where id=" . db_squote($id));
+            $mysql->query('delete from '.prefix.'_static where id='.db_squote($id));
         }
-
     }
-    msg(array("text" => $lang['msgo_deleted']));
+    msg(['text' => $lang['msgo_deleted']]);
 }
 
 // Return list of available templates
 function staticTemplateList()
 {
-
     global $config;
 
-    $result = array('');
-    foreach (ListFiles(tpl_dir . $config['theme'] . '/static', 'tpl') as $k) {
+    $result = [''];
+    foreach (ListFiles(tpl_dir.$config['theme'].'/static', 'tpl') as $k) {
         if (preg_match('#\.(print|main)$#', $k)) {
             continue;
         }
-        $result [] = $k;
+        $result[] = $k;
     }
 
     return $result;
@@ -218,31 +214,30 @@ function staticTemplateList()
 //  x - exact static ID
 function addEditStaticForm($operationMode = 1, $sID = 0)
 {
-
     global $lang, $parse, $mysql, $config, $twig, $mod, $PFILTERS, $tvars, $userROW, $PHP_SELF;
     global $title, $contentshort, $contentfull, $alt_name, $id, $c_day, $c_month, $c_year, $c_hour, $c_minute;
 
-    $perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('add', 'modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
+    $perm = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, ['add', 'modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish']);
 
-    $permModify = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'modify');
-    $permDetails = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, 'details');
+    $permModify = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'modify');
+    $permDetails = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'details');
 
     if (!$perm['modify'] && !$perm['details']) {
-        msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+        msg(['type' => 'error', 'text' => $lang['perm.denied']], 1, 1);
 
         return 0;
     }
 
     // Init `$editMode` variable
     $editMode = 0;
-    $row = array();
-    $origRow = array();
+    $row = [];
+    $origRow = [];
 
     $requestID = ($sID > 0) ? $sID : ((isset($_REQUEST['id']) && $_REQUEST['id']) ? $_REQUEST['id'] : 0);
 
     // EDIT
     if (($operationMode == 3) || ($operationMode == 4)) {
-        if (!$requestID || !is_array($row = $mysql->record("select * from " . prefix . "_static where id = " . db_squote($requestID)))) {
+        if (!$requestID || !is_array($row = $mysql->record('select * from '.prefix.'_static where id = '.db_squote($requestID)))) {
             msgSticker($lang['msge_not_found'], 'error');
 
             return 0;
@@ -259,7 +254,7 @@ function addEditStaticForm($operationMode = 1, $sID = 0)
 
     // Populate `repeat previous attempt` data
     if (($operationMode == 2) || ($operationMode == 4)) {
-        foreach (array('title', 'content', 'alt_name', 'template', 'description', 'keywords') as $k) {
+        foreach (['title', 'content', 'alt_name', 'template', 'description', 'keywords'] as $k) {
             if (isset($_REQUEST[$k])) {
                 $row[$k] = $_REQUEST[$k];
             }
@@ -269,13 +264,13 @@ function addEditStaticForm($operationMode = 1, $sID = 0)
     }
 
     // Fill basic variables
-    $tVars = array(
+    $tVars = [
         'php_self'     => $PHP_SELF,
         'quicktags'    => QuickTags('currentInputAreaID', 'static'),
         'token'        => genUToken('admin.static'),
         'smilies'      => $config['use_smilies'] ? InsertSmilies('content', 20) : '',
         'templateList' => staticTemplateList(),
-        'flags'        => array(
+        'flags'        => [
             'editMode'        => $editMode,
             'canAdd'          => $perm['add'],
             'canModify'       => $perm['modify'],
@@ -287,10 +282,10 @@ function addEditStaticForm($operationMode = 1, $sID = 0)
             'meta'            => $config['meta'],
             'html'            => $perm['html'],
             'isPublished'     => ($editMode && ($origRow['approve'])) ? 1 : 0,
-        )
-    );
+        ],
+    ];
     // Fill data entry
-    $tVars['data'] = array(
+    $tVars['data'] = [
         'id'                 => $row['id'],
         'title'              => secure_html(getIsSet($row['title'])),
         'content'            => secure_html(getIsSet($row['content'])),
@@ -298,17 +293,17 @@ function addEditStaticForm($operationMode = 1, $sID = 0)
         'template'           => getIsSet($row['template']),
         'description'        => getIsSet($row['description']),
         'keywords'           => getIsSet($row['keywords']),
-        'cdate'              => !empty($row['postdate']) ? date('d.m.Y H:i', $row['postdate']) : "",
+        'cdate'              => !empty($row['postdate']) ? date('d.m.Y H:i', $row['postdate']) : '',
         'flag_published'     => getIsSet($row['approve']),
         'flag_raw'           => (getIsSet($row['flags']) % 2) ? 1 : 0,
         'flag_html'          => ((getIsSet($row['flags']) / 2) % 2) ? 1 : 0,
         'flag_template_main' => ((getIsSet($row['flags']) / 4) % 2) ? 1 : 0,
-    );
+    ];
 
     if ($editMode && ($origRow['approve'])) {
         $tVars['data']['url'] = (checkLinkAvailable('static', '') ?
-            generateLink('static', '', array('altname' => $origRow['alt_name'], 'id' => $origRow['id']), array(), false, true) :
-            generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $origRow['alt_name'], 'id' => $origRow['id']), false, true));
+            generateLink('static', '', ['altname' => $origRow['alt_name'], 'id' => $origRow['id']], [], false, true) :
+            generateLink('core', 'plugin', ['plugin' => 'static'], ['altname' => $origRow['alt_name'], 'id' => $origRow['id']], false, true));
     }
 
     exec_acts('addstatic');
@@ -325,6 +320,7 @@ function addEditStaticForm($operationMode = 1, $sID = 0)
     }
 
     $xt = $twig->loadTemplate('skins/default/tpl/static/edit.tpl');
+
     return $xt->render($tVars);
 
     return 1;
@@ -335,14 +331,13 @@ function addEditStaticForm($operationMode = 1, $sID = 0)
 //
 function addStatic()
 {
-
     global $mysql, $parse, $PFILTERS, $lang, $config, $userROW, $PHP_SELF, $tvars;
 
-    $perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
+    $perm = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, ['modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish']);
 
     // Check for modify permissions
     if (!$perm['modify']) {
-        msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+        msg(['type' => 'error', 'text' => $lang['perm.denied']], 1, 1);
 
         return 0;
     }
@@ -350,7 +345,7 @@ function addStatic()
     // Check for publish request if it's set
     if (isset($_REQUEST['flag_published']) && isset($_REQUEST['flag_published'])) {
         if (!$perm['publish']) {
-            msgSticker(array(array($lang['perm.denied'], 'title', 1), array($lang['perm.publish'], '', 1)), 'error', 1);
+            msgSticker([[$lang['perm.denied'], 'title', 1], [$lang['perm.publish'], '', 1]], 'error', 1);
 
             return 0;
         }
@@ -358,7 +353,7 @@ function addStatic()
 
     // Check for security token
     if ((!isset($_REQUEST['token'])) || ($_REQUEST['token'] != genUToken('admin.static'))) {
-        msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+        msg(['type' => 'error', 'text' => $lang['error.security.token'], 'info' => $lang['error.security.token#desc']]);
 
         return 0;
     }
@@ -370,7 +365,7 @@ function addStatic()
     $alt_name = strtolower($parse->translit(trim($_REQUEST['alt_name']), 1, 1));
 
     if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
-        msgSticker(array(array($lang['msge_fields'], 'title', 1), array($lang['msgi_fields'], '', 1)), 'error', 1);
+        msgSticker([[$lang['msge_fields'], 'title', 1], [$lang['msgi_fields'], '', 1]], 'error', 1);
 
         return 0;
     }
@@ -379,8 +374,8 @@ function addStatic()
 
     // Check for dup if alt_name is specified
     if ($alt_name) {
-        if (is_array($mysql->record("select id from " . prefix . "_static where alt_name = " . db_squote($alt_name) . " limit 1"))) {
-            msg(array("type" => "error", "text" => $lang['msge_alt_name'], "info" => $lang['msgi_alt_name']));
+        if (is_array($mysql->record('select id from '.prefix.'_static where alt_name = '.db_squote($alt_name).' limit 1'))) {
+            msg(['type' => 'error', 'text' => $lang['msge_alt_name'], 'info' => $lang['msgi_alt_name']]);
 
             return 0;
         }
@@ -389,10 +384,10 @@ function addStatic()
         // Generate uniq alt_name if no alt_name specified
         $alt_name = strtolower($parse->translit(trim($title), 1));
         $i = '';
-        while (is_array($mysql->record("select id from " . prefix . "_static where alt_name = " . db_squote($alt_name . $i) . " limit 1"))) {
+        while (is_array($mysql->record('select id from '.prefix.'_static where alt_name = '.db_squote($alt_name.$i).' limit 1'))) {
             $i++;
         }
-        $SQL['alt_name'] = $alt_name . $i;
+        $SQL['alt_name'] = $alt_name.$i;
     }
 
     if ($config['meta']) {
@@ -417,24 +412,24 @@ function addStatic()
         }
     }
 
-    $vnames = array();
-    $vparams = array();
+    $vnames = [];
+    $vparams = [];
     foreach ($SQL as $k => $v) {
         $vnames[] = $k;
         $vparams[] = db_squote($v);
     }
 
-    $mysql->query("insert into " . prefix . "_static (postdate, " . implode(",", $vnames) . ") values (unix_timestamp(now()), " . implode(",", $vparams) . ")");
-    $id = $mysql->result("SELECT LAST_INSERT_ID() as id");
+    $mysql->query('insert into '.prefix.'_static (postdate, '.implode(',', $vnames).') values (unix_timestamp(now()), '.implode(',', $vparams).')');
+    $id = $mysql->result('SELECT LAST_INSERT_ID() as id');
 
     $link = (checkLinkAvailable('static', '') ?
-        generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id), array(), false, true) :
-        generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id), false, true));
+        generateLink('static', '', ['altname' => $SQL['alt_name'], 'id' => $id], [], false, true) :
+        generateLink('core', 'plugin', ['plugin' => 'static'], ['altname' => $SQL['alt_name'], 'id' => $id], false, true));
 
-    msg(array(
-        "text" => str_replace('{url}', $link, $lang['msg.added']),
-        "info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF . '?mod=static&action=editForm&id=' . $id, $PHP_SELF . '?mod=static'), $lang['msg.added#descr'])
-    ));
+    msg([
+        'text' => str_replace('{url}', $link, $lang['msg.added']),
+        'info' => str_replace(['{url}', '{url_edit}', '{url_list}'], [$link, $PHP_SELF.'?mod=static&action=editForm&id='.$id, $PHP_SELF.'?mod=static'], $lang['msg.added#descr']),
+    ]);
 
     return $id;
 }
@@ -444,21 +439,20 @@ function addStatic()
 //
 function editStatic()
 {
-
     global $mysql, $parse, $PFILTERS, $lang, $config, $userROW;
 
-    $perm = checkPermission(array('plugin' => '#admin', 'item' => 'static'), null, array('modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish'));
+    $perm = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, ['modify', 'view', 'template', 'template.main', 'html', 'publish', 'unpublish']);
 
     // Check for permissions
     if (!$perm['modify']) {
-        msg(array("type" => "error", "text" => $lang['perm.denied']), 1, 1);
+        msg(['type' => 'error', 'text' => $lang['perm.denied']], 1, 1);
 
         return -1;
     }
 
     // Check for security token
     if ((!isset($_REQUEST['token'])) || ($_REQUEST['token'] != genUToken('admin.static'))) {
-        msg(array("type" => "error", "text" => $lang['error.security.token'], "info" => $lang['error.security.token#desc']));
+        msg(['type' => 'error', 'text' => $lang['error.security.token'], 'info' => $lang['error.security.token#desc']]);
 
         return -1;
     }
@@ -469,14 +463,14 @@ function editStatic()
     $alt_name = $parse->translit(trim($_REQUEST['alt_name']), 1, 1);
 
     // Try to find news that we're trying to edit
-    if (!is_array($row = $mysql->record("select * from " . prefix . "_static where id=" . db_squote($id)))) {
-        msg(array("type" => "error", "text" => $lang['msge_not_found']));
+    if (!is_array($row = $mysql->record('select * from '.prefix.'_static where id='.db_squote($id)))) {
+        msg(['type' => 'error', 'text' => $lang['msge_not_found']]);
 
         return -1;
     }
 
     if ((!strlen(trim($title))) || (!strlen(trim($content)))) {
-        msgSticker(array(array($lang['msge_fields'], 'title', 1), array($lang['msgi_fields'], '', 1)), 'error', 1);
+        msgSticker([[$lang['msge_fields'], 'title', 1], [$lang['msgi_fields'], '', 1]], 'error', 1);
 
         return 0;
     }
@@ -484,8 +478,8 @@ function editStatic()
     $SQL['title'] = $title;
 
     // Check for dup if alt_name is specified
-    if (is_array($mysql->record("select id from " . prefix . "_static where alt_name = " . db_squote($alt_name) . " and id <> " . $row['id'] . " limit 1"))) {
-        msgSticker(array(array($lang['msge_alt_name'], 'title', 1), array($lang['msgi_alt_name'], '', 1)), 'error', 1);
+    if (is_array($mysql->record('select id from '.prefix.'_static where alt_name = '.db_squote($alt_name).' and id <> '.$row['id'].' limit 1'))) {
+        msgSticker([[$lang['msge_alt_name'], 'title', 1], [$lang['msgi_alt_name'], '', 1]], 'error', 1);
 
         //msg(array("type" => "error", "text" => $lang['msge_alt_name'], "info" => $lang['msgi_alt_name']));
         return 0;
@@ -515,23 +509,23 @@ function editStatic()
         }
     }
 
-    $SQLparams = array();
+    $SQLparams = [];
     foreach ($SQL as $k => $v) {
-        $SQLparams[] = $k . ' = ' . db_squote($v);
+        $SQLparams[] = $k.' = '.db_squote($v);
     }
 
-    $mysql->query("update " . prefix . "_static set " . implode(", ", $SQLparams) . " where id = " . db_squote($id));
+    $mysql->query('update '.prefix.'_static set '.implode(', ', $SQLparams).' where id = '.db_squote($id));
 
     $link = (checkLinkAvailable('static', '') ?
-        generateLink('static', '', array('altname' => $SQL['alt_name'], 'id' => $id), array(), false, true) :
-        generateLink('core', 'plugin', array('plugin' => 'static'), array('altname' => $SQL['alt_name'], 'id' => $id), false, true));
+        generateLink('static', '', ['altname' => $SQL['alt_name'], 'id' => $id], [], false, true) :
+        generateLink('core', 'plugin', ['plugin' => 'static'], ['altname' => $SQL['alt_name'], 'id' => $id], false, true));
 
     msgSticker($lang['msg.edited']);
     /*
-		msg(array(
-			"text" => str_replace('{url}',$link , $lang['msg.edited']),
-			"info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.edited#descr'])));
-	*/
+        msg(array(
+            "text" => str_replace('{url}',$link , $lang['msg.edited']),
+            "info" => str_replace(array('{url}', '{url_edit}', '{url_list}'), array($link, $PHP_SELF.'?mod=static&action=edit&id='.$id, $PHP_SELF.'?mod=static'), $lang['msg.edited#descr'])));
+    */
 
     // Return ID
     return $id;
@@ -570,7 +564,7 @@ switch ($action) {
         $main_admin = addEditStaticForm(3);
         break;
 
-    default: {
+    default:
         switch ($action) {
             case 'do_mass_approve':
                 $main_admin = massStaticModify('approve = 1', 'msgo_approved', 'approve');
@@ -583,5 +577,5 @@ switch ($action) {
                 break;
         }
         $main_admin = listStatic();
-    }
+
     }

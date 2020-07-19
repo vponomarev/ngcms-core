@@ -13,8 +13,8 @@ if (!defined('NGCMS')) {
 }
 
 $lang = LoadLang('images', 'admin');
-@include_once root . 'includes/classes/upload.class.php';
-@include_once root . 'includes/inc/file_managment.php';
+@include_once root.'includes/classes/upload.class.php';
+@include_once root.'includes/inc/file_managment.php';
 
 // =======================================
 // BODY
@@ -23,34 +23,34 @@ $lang = LoadLang('images', 'admin');
 // Init file managment class
 $fmanager = new file_managment();
 
-if ($userROW['status'] > "3" || ($userROW['status'] != "1" && ($action == "imagedelete" || $action == "move")) || ($userROW['status'] > "3" && $action == "rename")) {
-    msg(array("type" => "error", "text" => $lang['msge_mod']));
+if ($userROW['status'] > '3' || ($userROW['status'] != '1' && ($action == 'imagedelete' || $action == 'move')) || ($userROW['status'] > '3' && $action == 'rename')) {
+    msg(['type' => 'error', 'text' => $lang['msge_mod']]);
 }
 
 switch ($subaction) {
-    case "newcat":
-        $main_admin = $fmanager->category_create("image", $_REQUEST['newfolder']);
+    case 'newcat':
+        $main_admin = $fmanager->category_create('image', $_REQUEST['newfolder']);
         break;
-    case "delcat":
-        $main_admin = $fmanager->category_delete("image", $_REQUEST['category']);
+    case 'delcat':
+        $main_admin = $fmanager->category_delete('image', $_REQUEST['category']);
         break;
-    case "delete":
+    case 'delete':
         $main_admin = manage_delete('image');
         break;
-    case "rename":
-        $main_admin = $fmanager->file_rename(array('type' => 'image', 'id' => $_REQUEST['id'], 'newname' => $_REQUEST['rf']));
+    case 'rename':
+        $main_admin = $fmanager->file_rename(['type' => 'image', 'id' => $_REQUEST['id'], 'newname' => $_REQUEST['rf']]);
         break;
-    case "move":
+    case 'move':
         $main_admin = manage_move('image');
         break;
-    case "upload":
-    case "uploadurl":
+    case 'upload':
+    case 'uploadurl':
         $main_admin = manage_upload('image');
         break;
-    case "editForm":
+    case 'editForm':
         $main_admin = manage_editForm('image', $_REQUEST['id']);
         break;
-    case "editApply":
+    case 'editApply':
         $main_admin = manage_editApply('image', $_POST['id']);
         break;
 }
