@@ -22,12 +22,12 @@ function pm_send()
     $title = secure_html($_REQUEST['title']);
     $content = $_REQUEST['content'];
 
-    if (!$title || strlen($title) > '50') {
+    if (!$title || mb_strlen($title) > '50') {
         msg(['type' => 'error', 'text' => $lang['msge_title'], 'info' => $lang['msgi_title']]);
 
         return;
     }
-    if (!$content || strlen($content) > '3000') {
+    if (!$content || mb_strlen($content) > '3000') {
         msg(['type' => 'error', 'text' => $lang['msge_content'], 'info' => $lang['msgi_content']]);
 
         return;
