@@ -98,6 +98,12 @@ define('ADMIN', 1);
 // Load library
 require_once('./includes/inc/lib_admin.php');
 
+// Check if DB upgrade is required
+if (dbCheckUpgradeRequired()) {
+    print "<html><body><div>Error: DB Upgrade is required! Please upgrade DB before proceed.<br/><a href='upgrade.php'>Upgrade now!</a></div></body></html>";
+    return;
+}
+
 // Load plugins, that need to make any changes during user in admin panel
 load_extras('admin:init');
 

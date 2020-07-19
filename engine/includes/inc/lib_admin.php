@@ -1227,3 +1227,23 @@ function showPreview()
     $tpl->vars('preview', $tvx);
     echo $tpl->show('preview');
 }
+
+// Check if DB needs to be upgraded
+function dbCheckUpgradeRequired():bool
+{
+    global $twig;
+
+    $db = NGEngine::getInstance()->getDB();
+    $dbv = $db->record("select * from ".prefix."_config where name = 'database.engine.revision'");
+
+    if (!is_array($dbv)) {
+        // DB was created before starting version-tracking
+        return true;
+    }
+    if ($dbv['value'] < minDBVersion) {
+        // DB version is old, we need an upgrade
+        return true;
+    }
+    return false;
+}
+
