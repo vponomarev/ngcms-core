@@ -1,0 +1,7 @@
+finder:
+  exclude:
+    - "modules"
+    - "node_modules"
+    - "storage"
+    - "vendor"
+    - "jqueryui"
