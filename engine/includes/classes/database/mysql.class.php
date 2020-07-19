@@ -2,15 +2,13 @@
 
 class mysql
 {
-
-    function connect($host, $user, $pass, $db = '', $noerror = 0)
+    public function connect($host, $user, $pass, $db = '', $noerror = 0)
     {
-
         global $lang, $timer;
 
         $this->queries = 0;
-        $this->query_list = array();
-        $this->table_list = array();
+        $this->query_list = [];
+        $this->table_list = [];
         $this->error = 0;
         $this->conn_db = $db;
         $this->queryTimer = (isset($timer) && (method_exists($timer, 'stop')));
@@ -27,7 +25,7 @@ class mysql
         @mysql_query("/*!40101 SET NAMES 'utf8' */", $this->connect);
         if (!empty($db) && !@mysql_select_db($db)) {
             if (!$noerror) {
-                die('<h1>An Error Occurred</h1><hr />Unable to find the database <i>' . $db . '</i>!');
+                die('<h1>An Error Occurred</h1><hr />Unable to find the database <i>'.$db.'</i>!');
             }
             $this->error = 2;
 
@@ -37,33 +35,30 @@ class mysql
         return true;
     }
 
-    function select_db($db)
+    public function select_db($db)
     {
-
         return @mysql_select_db($db);
     }
 
     // Report an SQL error
     // $type	- query type
     // $query	- text of the query
-    function errorReport($type, $query)
+    public function errorReport($type, $query)
     {
-
         global $userROW, $lang, $config;
 
         if (($config['sql_error_show'] == 2) ||
             (($config['sql_error_show'] == 1) && (is_array($userROW))) ||
             (($config['sql_error_show'] == 0) && (is_array($userROW)) && ($userROW['status'] == 1))
         ) {
-            print "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [" . $type . "]: " . $query . "</span><br/><span style=\"font: 9px arial;\">(" . mysql_errno($this->connect) . '): ' . mysql_error($this->connect) . '</span></div>';
+            echo "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [".$type.']: '.$query.'</span><br/><span style="font: 9px arial;">('.mysql_errno($this->connect).'): '.mysql_error($this->connect).'</span></div>';
         } else {
-            print "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [" . $type . "]: *** (you don't have a permission to see this error) ***</span></span></div>";
+            echo "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [".$type."]: *** (you don't have a permission to see this error) ***</span></span></div>";
         }
     }
 
-    function select($sql, $assocMode = 1)
+    public function select($sql, $assocMode = 1)
     {
-
         global $timer;
         if ($this->queryTimer) {
             $tX = $timer->stop(4);
@@ -73,10 +68,10 @@ class mysql
         if (!($query = @mysql_query($sql, $this->connect))) {
             $this->errorReport('select', $sql);
 
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
 
         switch ($assocMode) {
             case -1:
@@ -95,18 +90,17 @@ class mysql
         }
 
         if ($this->queryTimer) {
-            $tX = '[ ' . round($timer->stop(4) - $tX, 4) . ' ] ';
+            $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         return $result;
     }
 
-    function record($sql, $assocMode = 1)
+    public function record($sql, $assocMode = 1)
     {
-
         global $timer;
         if ($this->queryTimer) {
             $tX = $timer->stop(4);
@@ -116,7 +110,7 @@ class mysql
         if (!($query = @mysql_query($sql, $this->connect))) {
             $this->errorReport('record', $sql);
 
-            return array();
+            return [];
         }
         switch ($assocMode) {
             case -1:
@@ -133,18 +127,17 @@ class mysql
         $item = mysql_fetch_array($query, $am);
 
         if ($this->queryTimer) {
-            $tX = '[ ' . round($timer->stop(4) - $tX, 4) . ' ] ';
+            $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         return $item;
     }
 
-    function query($sql)
+    public function query($sql)
     {
-
         global $timer;
 
         if ($this->queryTimer) {
@@ -154,22 +147,21 @@ class mysql
         if (!($query = @mysql_query($sql, $this->connect))) {
             $this->errorReport('query', $sql);
 
-            return array();
+            return [];
         }
 
         if ($this->queryTimer) {
-            $tX = '[ ' . round($timer->stop(4) - $tX, 4) . ' ] ';
+            $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         return $query;
     }
 
-    function result($sql)
+    public function result($sql)
     {
-
         global $timer;
         if ($this->queryTimer) {
             $tX = $timer->stop(4);
@@ -183,20 +175,19 @@ class mysql
         }
 
         if ($this->queryTimer) {
-            $tX = '[ ' . ($timer->stop(4) - $tX) . ' ] ';
+            $tX = '[ '.($timer->stop(4) - $tX).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         if ($query) {
             return @mysql_result($query, 0);
         }
     }
 
-    function num_fields($query)
+    public function num_fields($query)
     {
-
         if (!$query) {
             return false;
         }
@@ -206,9 +197,8 @@ class mysql
         return $result;
     }
 
-    function field_name($query, $field_offset)
+    public function field_name($query, $field_offset)
     {
-
         if (!$query) {
             return false;
         }
@@ -218,9 +208,8 @@ class mysql
         return $result;
     }
 
-    function field_type($query, $field_offset)
+    public function field_type($query, $field_offset)
     {
-
         if (!$query) {
             return false;
         }
@@ -230,9 +219,8 @@ class mysql
         return $result;
     }
 
-    function field_len($query, $field_offset)
+    public function field_len($query, $field_offset)
     {
-
         if (!$query) {
             return false;
         }
@@ -242,9 +230,8 @@ class mysql
         return $result;
     }
 
-    function num_rows($query)
+    public function num_rows($query)
     {
-
         if (!$query) {
             return false;
         }
@@ -254,25 +241,23 @@ class mysql
         return $result;
     }
 
-    function fetch_row($query)
+    public function fetch_row($query)
     {
-
         if (!$query) {
-            return array();
+            return [];
         }
 
         $result = mysql_fetch_row($query);
 
         return $result;
     }
-    
-    function fetch_array($query, $assocMode = 1)
+
+    public function fetch_array($query, $assocMode = 1)
     {
-        
         if (!$query) {
-            return array();
+            return [];
         }
-        
+
         switch ($assocMode) {
             case -1:
                 $am = MYSQL_NUM;
@@ -284,14 +269,14 @@ class mysql
             default:
                 $am = MYSQL_BOTH;
         }
-        
+
         $result = mysql_fetch_array($query, $am);
-        
+
         return $result;
     }
-    
+
     // check if table exists
-    function table_exists($table, $forceReload = 0)
+    public function table_exists($table, $forceReload = 0)
     {
 
         // Check if data are already saved
@@ -299,8 +284,8 @@ class mysql
             return $this->table_list[$table] ? 1 : 0;
         }
 
-        if (!($query = @mysql_query("show tables", $this->connect))) {
-            $this->errorReport('select', "show tables");
+        if (!($query = @mysql_query('show tables', $this->connect))) {
+            $this->errorReport('select', 'show tables');
 
             return false;
         }
@@ -312,57 +297,49 @@ class mysql
         return $this->table_list[$table] ? 1 : 0;
     }
 
-    function affected_rows()
+    public function affected_rows()
     {
-
         return mysql_affected_rows($this->connect);
     }
 
-    function qcnt()
+    public function qcnt()
     {
-
         return $this->queries;
     }
 
-    function db_errno()
+    public function db_errno()
     {
-
         return mysql_errno($this->connect);
     }
 
-    function db_error()
+    public function db_error()
     {
-
         return mysql_error($this->connect);
     }
 
-    function db_quote($string)
+    public function db_quote($string)
     {
-
         return mysql_real_escape_string($string);
     }
 
-    function mysql_version()
+    public function mysql_version()
     {
-
         return mysql_get_server_info();
     }
 
-    function lastid($table = '')
+    public function lastid($table = '')
     {
-
         if ($table != '') {
-            $row = $this->record("SHOW TABLE STATUS LIKE '" . prefix . "_" . $table . "'");
+            $row = $this->record("SHOW TABLE STATUS LIKE '".prefix.'_'.$table."'");
 
-            return ($row['Auto_increment'] - 1);
+            return $row['Auto_increment'] - 1;
         } else {
             return mysql_insert_id($this->connect);
         }
     }
 
-    function close()
+    public function close()
     {
-
         @mysql_close($this->connect);
     }
 }

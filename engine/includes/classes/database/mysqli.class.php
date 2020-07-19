@@ -2,15 +2,13 @@
 
 class _mysqli
 {
-
-    function connect($host, $user, $pass, $db = '', $noerror = 0)
+    public function connect($host, $user, $pass, $db = '', $noerror = 0)
     {
-
         global $lang, $timer;
 
         $this->queries = 0;
-        $this->query_list = array();
-        $this->table_list = array();
+        $this->query_list = [];
+        $this->table_list = [];
         $this->error = 0;
         $this->conn_db = $db;
         $this->queryTimer = (isset($timer) && (method_exists($timer, 'stop')));
@@ -18,7 +16,7 @@ class _mysqli
         $this->connect = @mysqli_connect($host, $user, $pass, $db);
         if (!$this->connect) {
             if (!$noerror) {
-                die('<h1>An Error Occurred</h1><hr />' . mysqli_connect_error() . '!');
+                die('<h1>An Error Occurred</h1><hr />'.mysqli_connect_error().'!');
             }
             $this->error = 1;
 
@@ -29,33 +27,30 @@ class _mysqli
         return true;
     }
 
-    function select_db($db)
+    public function select_db($db)
     {
-
         return @mysqli_select_db($this->connect, $db);
     }
 
     // Report an SQL error
     // $type	- query type
     // $query	- text of the query
-    function errorReport($type, $query)
+    public function errorReport($type, $query)
     {
-
         global $userROW, $lang, $config;
 
         if (($config['sql_error_show'] == 2) ||
             (($config['sql_error_show'] == 1) && (is_array($userROW))) ||
             (($config['sql_error_show'] == 0) && (is_array($userROW)) && ($userROW['status'] == 1))
         ) {
-            print "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [" . $type . "]: " . $query . "</span><br/><span style=\"font: 9px arial;\">(" . mysqli_errno($this->connect) . '): ' . mysqli_error($this->connect) . '</span></div>';
+            echo "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [".$type.']: '.$query.'</span><br/><span style="font: 9px arial;">('.mysqli_errno($this->connect).'): '.mysqli_error($this->connect).'</span></div>';
         } else {
-            print "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [" . $type . "]: *** (you don't have a permission to see this error) ***</span></span></div>";
+            echo "<div style='font: 12px verdana; background-color: #EEEEEE; border: #ABCDEF 1px solid; margin: 1px; padding: 3px;'><span style='color: red;'>MySQL ERROR [".$type."]: *** (you don't have a permission to see this error) ***</span></span></div>";
         }
     }
 
-    function select($sql, $assocMode = 1)
+    public function select($sql, $assocMode = 1)
     {
-
         global $timer;
         if ($this->queryTimer) {
             $tX = $timer->stop(4);
@@ -65,10 +60,10 @@ class _mysqli
         if (!($query = @mysqli_query($this->connect, $sql))) {
             $this->errorReport('select', $sql);
 
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
 
         switch ($assocMode) {
             case -1:
@@ -87,18 +82,17 @@ class _mysqli
         }
 
         if ($this->queryTimer) {
-            $tX = '[ ' . round($timer->stop(4) - $tX, 4) . ' ] ';
+            $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         return $result;
     }
 
-    function record($sql, $assocMode = 1)
+    public function record($sql, $assocMode = 1)
     {
-
         global $timer;
         if ($this->queryTimer) {
             $tX = $timer->stop(4);
@@ -108,7 +102,7 @@ class _mysqli
         if (!($query = @mysqli_query($this->connect, $sql))) {
             $this->errorReport('record', $sql);
 
-            return array();
+            return [];
         }
 
         switch ($assocMode) {
@@ -126,18 +120,17 @@ class _mysqli
         $item = mysqli_fetch_array($query, $am);
 
         if ($this->queryTimer) {
-            $tX = '[ ' . round($timer->stop(4) - $tX, 4) . ' ] ';
+            $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         return $item;
     }
 
-    function query($sql)
+    public function query($sql)
     {
-
         global $timer;
 
         if ($this->queryTimer) {
@@ -147,22 +140,21 @@ class _mysqli
         if (!($query = @mysqli_query($this->connect, $sql))) {
             $this->errorReport('query', $sql);
 
-            return array();
+            return [];
         }
 
         if ($this->queryTimer) {
-            $tX = '[ ' . round($timer->stop(4) - $tX, 4) . ' ] ';
+            $tX = '[ '.round($timer->stop(4) - $tX, 4).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         return $query;
     }
 
-    function result($sql)
+    public function result($sql)
     {
-
         global $timer;
         if ($this->queryTimer) {
             $tX = $timer->stop(4);
@@ -176,20 +168,19 @@ class _mysqli
         }
 
         if ($this->queryTimer) {
-            $tX = '[ ' . ($timer->stop(4) - $tX) . ' ] ';
+            $tX = '[ '.($timer->stop(4) - $tX).' ] ';
         } else {
             $tX = '';
         }
-        array_push($this->query_list, $tX . $sql);
+        array_push($this->query_list, $tX.$sql);
 
         if ($query) {
             return @$this->mysqli_result($query, 0);
         }
     }
 
-    function num_fields($query)
+    public function num_fields($query)
     {
-
         if (!$query) {
             return false;
         }
@@ -199,9 +190,8 @@ class _mysqli
         return $result;
     }
 
-    function field_name($query, $field_offset)
+    public function field_name($query, $field_offset)
     {
-
         if (!$query) {
             return false;
         }
@@ -211,9 +201,8 @@ class _mysqli
         return is_object($result) ? $result->name : false;
     }
 
-    function field_type($query, $field_offset)
+    public function field_type($query, $field_offset)
     {
-
         static $types;
 
         if (!$query) {
@@ -223,7 +212,7 @@ class _mysqli
         $type = mysqli_fetch_field_direct($query, $field_offset)->type;
 
         if (!isset($types)) {
-            $types = array();
+            $types = [];
             $constants = get_defined_constants(true);
             foreach ($constants['mysqli'] as $c => $n) {
                 if (preg_match('/^MYSQLI_TYPE_(.*)/', $c, $m)) {
@@ -235,9 +224,8 @@ class _mysqli
         return array_key_exists($type, $types) ? $types[$type] : false;
     }
 
-    function field_len($query, $field_offset)
+    public function field_len($query, $field_offset)
     {
-
         if (!$query) {
             return false;
         }
@@ -247,9 +235,8 @@ class _mysqli
         return is_object($result) ? $result->length : false;
     }
 
-    function num_rows($query)
+    public function num_rows($query)
     {
-
         if (!$query) {
             return false;
         }
@@ -259,25 +246,23 @@ class _mysqli
         return $result;
     }
 
-    function fetch_row($query)
+    public function fetch_row($query)
     {
-
         if (!$query) {
-            return array();
+            return [];
         }
 
         $result = mysqli_fetch_row($query);
 
         return $result;
     }
-    
-    function fetch_array($query, $assocMode = 1)
+
+    public function fetch_array($query, $assocMode = 1)
     {
-        
         if (!$query) {
-            return array();
+            return [];
         }
-        
+
         switch ($assocMode) {
             case -1:
                 $am = MYSQLI_NUM;
@@ -289,14 +274,14 @@ class _mysqli
             default:
                 $am = MYSQLI_BOTH;
         }
-        
+
         $result = mysqli_fetch_array($query, $am);
-        
+
         return $result;
     }
-    
+
     // check if table exists
-    function table_exists($table, $forceReload = 0)
+    public function table_exists($table, $forceReload = 0)
     {
 
         // Check if data are already saved
@@ -304,8 +289,8 @@ class _mysqli
             return $this->table_list[$table] ? 1 : 0;
         }
 
-        if (!($query = @mysqli_query($this->connect, "show tables"))) {
-            $this->errorReport('select', "show tables");
+        if (!($query = @mysqli_query($this->connect, 'show tables'))) {
+            $this->errorReport('select', 'show tables');
 
             return false;
         }
@@ -317,66 +302,57 @@ class _mysqli
         return $this->table_list[$table] ? 1 : 0;
     }
 
-    function affected_rows()
+    public function affected_rows()
     {
-
         return mysqli_affected_rows($this->connect);
     }
 
-    function qcnt()
+    public function qcnt()
     {
-
         return $this->queries;
     }
 
-    function lastid($table = '')
+    public function lastid($table = '')
     {
-
         if ($table != '') {
-            $row = $this->record("SHOW TABLE STATUS LIKE '" . prefix . "_" . $table . "'");
+            $row = $this->record("SHOW TABLE STATUS LIKE '".prefix.'_'.$table."'");
 
-            return ($row['Auto_increment'] - 1);
+            return $row['Auto_increment'] - 1;
         } else {
             return mysqli_insert_id($this->connect);
         }
     }
 
-    function db_errno()
+    public function db_errno()
     {
-
         return mysqli_errno($this->connect);
     }
 
-    function db_error()
+    public function db_error()
     {
-
         return mysqli_error($this->connect);
     }
 
-    function db_quote($string)
+    public function db_quote($string)
     {
-
         return mysqli_real_escape_string($this->connect, $string);
     }
 
-    function mysql_version()
+    public function mysql_version()
     {
-
         return mysqli_get_server_info($this->connect);
     }
 
-    function mysqli_result($result, $row, $field = 0)
+    public function mysqli_result($result, $row, $field = 0)
     {
-
         $result->data_seek($row);
         $datarow = $result->fetch_array();
 
         return $datarow[$field];
     }
 
-    function close()
+    public function close()
     {
-
         @mysqli_close($this->connect);
     }
 }
