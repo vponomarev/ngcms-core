@@ -382,7 +382,7 @@ if ((is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD
         //$twig->addGlobalRef('user',	$userROW);
     }
 } else {
-    echo "Fatal error: No auth module is found.<br />To fix problem please run <i>upgrade.php</i> script<br /><br />\n";
+    echo "Fatal error: No auth module is found.<br />Configuration is damaged, please restore from backup or perform manual fix.<br />\n";
 }
 
 // [[MARKER]] Authentification process is complete

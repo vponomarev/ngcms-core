@@ -2,8 +2,8 @@
 
 //
 // Copyright (C) 2006-2010 Next Generation CMS (http://ngcms.ru/)
-// Name: upgrade.php
-// Description: Upgrade NGCMS 0.9.0 => 0.9.1
+// Name: upgrade_090-092.php
+// Description: Upgrade NGCMS 0.9.0 => 0.9.2
 // Author: Vitaly Ponomarev
 //
 
