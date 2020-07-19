@@ -128,13 +128,17 @@
 							</div>
 						</div>
 					{% endif %}
-
-					{% if (pluginIsActive('xfields')) %}
-						<!-- XFields -->
-						{{ plugin.xfields[1] }}
-						<!-- /XFields -->
-					{% endif %}
 				</div>
+
+				{% if (pluginIsActive('xfields')) %}
+				<table class="table table-sm mb-0">
+					<tbody>
+					<!-- XFields -->
+					{{ plugin.xfields[1] }}
+					<!-- /XFields -->
+					</tbody>
+				</table>
+				{% endif %}
 			</div>
 
 			<!-- ADDITIONAL -->
