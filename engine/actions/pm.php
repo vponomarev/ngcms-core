@@ -22,12 +22,12 @@ function pm_send()
     $title = secure_html($_REQUEST['title']);
     $content = $_REQUEST['content'];
 
-    if (!$title || mb_strlen($title) > '50') {
+    if (!$title || mb_strlen($title) > 50) {
         msg(['type' => 'error', 'text' => $lang['msge_title'], 'info' => $lang['msgi_title']]);
 
         return;
     }
-    if (!$content || mb_strlen($content) > '3000') {
+    if (!$content || mb_strlen($content) > 3000) {
         msg(['type' => 'error', 'text' => $lang['msge_content'], 'info' => $lang['msgi_content']]);
 
         return;
@@ -163,9 +163,13 @@ function pm_reply()
             return;
         }
 
+        $reTitle = 'Re:'.$row['title'];
+        if (mb_strlen($reTitle) > 50) {
+            $reTitle = mb_substr($reTitle, 0, 50);
+        }
         $tVars = [
             'id'        => $row['pmid'],
-            'title'     => 'Re:'.$row['title'],
+            'title'     => $reTitle,
             'token'     => genUToken('pm.token'),
             'quicktags' => QuickTags(false, 'pmmes'),
             'smilies'   => ($config['use_smilies'] == '1') ? InsertSmilies('content', 10) : '',

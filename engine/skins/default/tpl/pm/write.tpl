@@ -13,19 +13,18 @@
 			<div id="maincontent" class="card">
 				<div class="card-body">
 					<div class="form-row mb-3">
-						<label class="col-lg-4 col-form-label">{{ lang.title }}</label>
-						<div class="col-lg-8">
-							<input type="text" name="title" value="" class="form-control" maxlength="50" required />
-						</div>
-					</div>
-
-					<div class="form-row mb-3">
 						<label class="col-lg-4 col-form-label">
 							{{ lang.receiver }}
 						</label>
 						<div class="col-lg-8">
 							<input type="text" name="sendto" value="" class="form-control" maxlength="70" required />
 							<small class="form-text text-muted">{{ lang.receiver_desc }}</small>
+						</div>
+					</div>
+					<div class="form-row mb-3">
+						<label class="col-lg-4 col-form-label">{{ lang.title }}</label>
+						<div class="col-lg-8">
+							<input type="text" name="title" value="" class="form-control" maxlength="50" required />
 						</div>
 					</div>
 

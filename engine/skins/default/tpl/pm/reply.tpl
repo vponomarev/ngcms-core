@@ -3,7 +3,6 @@
 </div>
 
 <form name="form" action="?mod=pm&action=send" method="post">
-	<input type="hidden" name="title" value="{{ title }}" />
 	<input type="hidden" name="sendto" value="{{ toID }}" />
 	<input type="hidden" name="token" value="{{ token }}" />
 
@@ -15,12 +14,13 @@
 			<div id="maincontent" class="card">
 				<div class="card-body">
 					<div class="form-row mb-3">
-						<label class="col-lg-4 col-form-label">{{ lang.title }}</label>
+						<label class="col-lg-4 col-form-label">
+							{{ lang.from }}
+						</label>
 						<div class="col-lg-8">
-							<input type="text" value="{{ title }}" class="form-control" readonly />
+							<input type="text" value="{{ fromID }} ({{ fromName }})" class="form-control" readonly />
 						</div>
 					</div>
-
 					<div class="form-row mb-3">
 						<label class="col-lg-4 col-form-label">
 							{{ lang.receiver }}
@@ -29,16 +29,12 @@
 							<input type="text" value="{{ toID }} ({{ toName }})" class="form-control" readonly />
 						</div>
 					</div>
-
 					<div class="form-row mb-3">
-						<label class="col-lg-4 col-form-label">
-							{{ lang.from }}
-						</label>
+						<label class="col-lg-4 col-form-label">{{ lang.title }}</label>
 						<div class="col-lg-8">
-							<input type="text" value="{{ fromID }} ({{ fromName }})" class="form-control" readonly />
+							<input type="text" name="title" value="{{ title }}" class="form-control" maxlength="50"/>
 						</div>
 					</div>
-
 					{{ quicktags }}
 					<!-- SMILES -->
 					<div id="modal-smiles" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="smiles-modal-label" aria-hidden="true">
