@@ -2,9 +2,6 @@
 	<h2>{{ lang.pm }}</h2>
 </div>
 
-{{ lang.from }}: {{ fromID }} ({{ fromName }})<br/>
-{{ lang.receiver }}: {{ toID }} ({{ toName }})<br/>
-{{ lang.title }}: {{ title }}<br/>
 <form name="form" action="?mod=pm&action=send" method="post">
 	<input type="hidden" name="title" value="{{ title }}" />
 	<input type="hidden" name="sendto" value="{{ toID }}" />
@@ -17,6 +14,31 @@
 			<!-- MAIN CONTENT -->
 			<div id="maincontent" class="card">
 				<div class="card-body">
+					<div class="form-row mb-3">
+						<label class="col-lg-4 col-form-label">{{ lang.title }}</label>
+						<div class="col-lg-8">
+							<input type="text" value="{{ title }}" class="form-control" readonly />
+						</div>
+					</div>
+
+					<div class="form-row mb-3">
+						<label class="col-lg-4 col-form-label">
+							{{ lang.receiver }}
+						</label>
+						<div class="col-lg-8">
+							<input type="text" value="{{ toID }} ({{ toName }})" class="form-control" readonly />
+						</div>
+					</div>
+
+					<div class="form-row mb-3">
+						<label class="col-lg-4 col-form-label">
+							{{ lang.from }}
+						</label>
+						<div class="col-lg-8">
+							<input type="text" value="{{ fromID }} ({{ fromName }})" class="form-control" readonly />
+						</div>
+					</div>
+
 					{{ quicktags }}
 					<!-- SMILES -->
 					<div id="modal-smiles" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="smiles-modal-label" aria-hidden="true">
