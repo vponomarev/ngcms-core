@@ -38,7 +38,7 @@
 
 					<div class="mb-3">
 						<!-- {{ lang.content }} -->
-						<textarea id="content" name="content" rows="10" cols="60" maxlength="3000"/></textarea>
+						<textarea id="content" name="content" rows="10" cols="60" maxlength="3000" class="form-control" required></textarea>
 					</div>
 				</div>
 
