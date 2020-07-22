@@ -31,4 +31,4 @@
 ![](images/screenshots/templates_1.png)
 рис 14.1
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS

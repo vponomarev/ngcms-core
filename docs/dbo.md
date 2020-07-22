@@ -50,4 +50,4 @@
 
 Все резервные копии БД храняться в директории /engine/backups/
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS

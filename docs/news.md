@@ -152,4 +152,4 @@ BB-коды, доступные в движке
 ![](images/screenshots/news_10.png)
 рис 3.12
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS

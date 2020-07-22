@@ -44,4 +44,4 @@
 ![Главная страница системы управления](images/screenshots/login_2.png "docImg_1.1.2")
 рис 1.2
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS

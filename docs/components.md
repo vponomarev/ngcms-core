@@ -40,4 +40,4 @@
 ![Главная страница системы управления](images/screenshots/main_2.png)
 рис 1.4
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS

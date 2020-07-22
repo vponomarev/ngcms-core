@@ -52,4 +52,4 @@ Next Generation CMS позволяет выполнять различные о�
 ![](images/screenshots/files_3.png)
 рис 13.3
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS

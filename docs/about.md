@@ -40,4 +40,4 @@
  GIT репозиторий проекта: [https://github.com/vponomarev/ngcms-core](https://github.com/vponomarev/ngcms-core)
  GIT репозиторий плагинов: [https://github.com/vponomarev/ngcms-plugins/](https://github.com/vponomarev/ngcms-plugins/)
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS

@@ -98,4 +98,4 @@
 ![](images/screenshots/install_7.png)
 рис 2.7
 
-© 2008-2012 Next Generation CMS
+© 2008-2020 Next Generation CMS
