@@ -99,10 +99,13 @@
 	</div>
 
 	<script type="text/javascript">
+		{# Устанавливаем временную переменную, чтобы отловить ошибки JSON-декодирования. #}
+		{% set encode_lang = lang | json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE')) %}
+
 		window.NGCMS = {
 			admin_url: '{{ admin_url }}',
 			home: '{{ home }}',
-			lang: {{ lang | json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE')) }},
+			lang: {{ encode_lang ?: '{}' }},
 			langcode: '{{ lang['langcode'] }}',
 			php_self: '{{ php_self }}',
 			skins_url: '{{ skins_url }}'
