@@ -1,5 +1,5 @@
 <div class="page-title">
-	<h2>{l_editcomments}</h2>
+	<h2>{l_page-title}</h2>
 </div>
 
 <form name="form" method="post" action="{php_self}?mod=editcomments">
