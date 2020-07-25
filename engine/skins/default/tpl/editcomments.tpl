@@ -1,6 +1,6 @@
-<!-- <div class="page-title">
-	<h2>{{ lang['editcomments'] }}</h2>
-</div> -->
+<div class="page-title">
+	<h2>{l_page-title}</h2>
+</div>
 
 <form name="form" method="post" action="{php_self}?mod=editcomments">
 	<input type="hidden" name="mod" value="editcomments" />
