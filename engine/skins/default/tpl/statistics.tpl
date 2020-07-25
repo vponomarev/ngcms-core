@@ -167,10 +167,15 @@
 						<td colspan="2">{{ mysql_size }}</td>
 					</tr>
 					<tr>
-						<td>Размер кэша:</td>
+						<td>{{ lang['cache.size'] }}</td>
 						<td id="cacheFileCount">-</td>
 						<td id="cacheSize">-</td>
-						<td align="right"><input type="button" value="{{ lang['cache.calculate'] }}" onclick="return getCacheSize();"/><input type="button" value="{{ lang['cache.clean']}}" onclick="return clearCache();"/></td>
+						<td class="text-right">
+							<div class="btn-group btn-group-sm" role="group">
+								<button type="button" onclick="return getCacheSize();" class="btn btn-outline-primary">{{ lang['cache.calculate'] }}</button>
+								<button type="button" onclick="return clearCache();" class="btn btn-outline-primary">{{ lang['cache.clean']}}</button>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>
