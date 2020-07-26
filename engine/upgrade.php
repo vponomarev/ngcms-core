@@ -23,7 +23,7 @@ $upgradeMatrix = [
     3 => [
         'alter table '.prefix.'_news drop column content_delta, drop column content_source',
         'update '.prefix."_config set value=3 where name='database.engine.revision'",
-    ]
+    ],
 ];
 
 $cv = getCurrentDBVersion();
