@@ -18,8 +18,8 @@
 @define('engineName', 'NGCMS');
 @define('engineVersion', '0.9.7 RC0');
 @define('engineVersionType', 'GIT');
-@define('engineVersionBuild', '20200719');
-@define('minDBVersion', 2);
+@define('engineVersionBuild', '20200726');
+@define('minDBVersion', 3);
 
 @define('prefix', $config['prefix']);
 @define('uprefix', $config['uprefix']);
