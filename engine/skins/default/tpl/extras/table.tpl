@@ -10,10 +10,10 @@
 </div>
 
 <ul class="nav nav-pills mb-3 d-md-flex d-block">
-	<li class="nav-item"><a href="#" class="nav-link active" data-filter="all">{{ lang['list.all'] }} <span class="badge badge-light">{{ cntAll }}</span></a></li>
 	<li class="nav-item"><a href="#" class="nav-link" data-filter="pluginEntryActive">{{ lang['list.active'] }} <span class="badge badge-light">{{ cntActive }}</span></a></li>
 	<li class="nav-item"><a href="#" class="nav-link" data-filter="pluginEntryInactive">{{ lang['list.inactive'] }} <span class="badge badge-light">{{ cntInactive }}</span></a></li>
 	<li class="nav-item"><a href="#" class="nav-link" data-filter="pluginEntryUninstalled">{{ lang['list.needinstall'] }} <span class="badge badge-light">{{ cntUninstalled }}</span></a></li>
+	<li class="nav-item"><a href="#" class="nav-link active" data-filter="all">{{ lang['list.all'] }} <span class="badge badge-light">{{ cntAll }}</span></a></li>
 </ul>
 
 <div class="table-responsive">
