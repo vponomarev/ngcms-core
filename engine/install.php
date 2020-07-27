@@ -324,17 +324,7 @@ function doConfig_db($check)
             $sx->set('events', new NGEvents());
             $sx->set('errorHandler', new NGErrorHandler());
 
-            switch ($_POST['reg_dbtype']) {
-                case 'mysql':
-                    $sx->set('db', new NGMYSQL(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db'.($ac ? 'admin' : '').'user'], 'pass' => $_POST['reg_db'.($ac ? 'admin' : '').'pass']]));
-                    break;
-                case 'mysqli':
-                    $sx->set('db', new NGMYSQLi(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db'.($ac ? 'admin' : '').'user'], 'pass' => $_POST['reg_db'.($ac ? 'admin' : '').'pass']]));
-                    break;
-                case 'pdo':
-                    $sx->set('db', new NGPDO(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db'.($ac ? 'admin' : '').'user'], 'pass' => $_POST['reg_db'.($ac ? 'admin' : '').'pass']]));
-                    break;
-            }
+            $sx->set('db', new NGPDO(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_db'.($ac ? 'admin' : '').'user'], 'pass' => $_POST['reg_db'.($ac ? 'admin' : '').'pass']]));
 
             $sx->set('legacyDB', new NGLegacyDB(false));
             $sx->getLegacyDB()->connect('', '', '');

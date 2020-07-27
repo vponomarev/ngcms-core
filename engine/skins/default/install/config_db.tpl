@@ -53,7 +53,6 @@
 								<div class="col-sm-9">
 									<select name="reg_dbtype" class="custom-select">
 										[pdo]<option value="pdo" {reg_dbtype_PDO}>PDO</option>[/pdo]
-										[mysqli]<option value="mysqli" {reg_dbtype_MySQLi}>MySQLi</option>[/mysqli]
 										[mysql]<option value="mysql" {reg_dbtype_MySQL}>MySQL</option>[/mysql]
 									</select>
 									<div class="form-text text-muted">{l_db.type#desc}</div>

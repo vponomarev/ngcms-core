@@ -40,15 +40,7 @@ function admConfigurationTestDB($params)
     // Check if DB connection params are correct
     try {
         $sx = NGEngine::getInstance();
-
-        switch ($params['dbtype']) {
-            case 'mysqli':
-                $sx->set('db', new NGMYSQLi(['host' => $params['dbhost'], 'user' => $params['dbuser'], 'pass' => $params['dbpasswd'], 'db' => $params['dbname']]));
-                break;
-            case 'pdo':
-                $sx->set('db', new NGPDO(['host' => $params['dbhost'], 'user' => $params['dbuser'], 'pass' => $params['dbpasswd'], 'db' => $params['dbname']]));
-                break;
-        }
+        $sx->set('db', new NGPDO(['host' => $params['dbhost'], 'user' => $params['dbuser'], 'pass' => $params['dbpasswd'], 'db' => $params['dbname']]));
 
         $sx->set('legacyDB', new NGLegacyDB(false));
         $sx->getLegacyDB()->connect('', '', '');

@@ -31,7 +31,7 @@
 				<tr>
 					<td width="50%">{{ lang['dbtype'] }} <small class="form-text text-muted">{{ lang['example'] }} pdo</small></td>
 					<td width="50%">
-						{{ mkSelect({'name' : 'save_con[dbtype]', 'value' : config['dbtype'], 'id' : 'db_dbtype', 'values' : { 'mysqli' : lang['mysqli'], 'pdo' : lang['pdo'] } }) }}
+						{{ mkSelect({'name' : 'save_con[dbtype]', 'value' : config['dbtype'], 'id' : 'db_dbtype', 'values' : { 'pdo' : lang['pdo'] } }) }}
 					</td>
 				</tr>
 				<tr>

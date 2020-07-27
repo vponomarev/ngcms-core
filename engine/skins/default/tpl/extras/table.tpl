@@ -100,17 +100,13 @@
 				ngNotifyWindow('{{ lang['rpc_jsonError '] }} ' + data, '{{ lang['notifyWindowError '] }}');
 			}
 			if (!resTX['status']) {
-				ngNotifyWindow('Error [' + resTX['errorCode'] + ']: ' + resTX['errorText'], '{{ lang['
-					notifyWindowInfo '] }}');
+				ngNotifyWindow('Error [' + resTX['errorCode'] + ']: ' + resTX['errorText'], '{{ lang['notifyWindowInfo '] }}');
 			} else {
-				ngNotifyWindow(resTX['errorText'], '{{ lang['
-					notifyWindowInfo '] }}');
+				ngNotifyWindow(resTX['errorText'], '{{ lang['notifyWindowInfo '] }}');
 			}
 		}, "text").error(function() {
 			ngHideLoading();
-			ngNotifyWindow('{{ lang['
-				rpc_httpError '] }}', '{{ lang['
-				notifyWindowError '] }}');
+			ngNotifyWindow('{{ lang['rpc_httpError '] }}', '{{ lang['notifyWindowError '] }}');
 		});
 	}
 </script>

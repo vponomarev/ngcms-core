@@ -76,15 +76,7 @@ function systemConfigSave()
     // Check if DB connection params are correct
     try {
         $sx = NGEngine::getInstance();
-
-        switch ($save_con['dbtype']) {
-            case 'mysqli':
-                $sx->set('db', new NGMYSQLi(['host' => $save_con['dbhost'], 'user' => $save_con['dbuser'], 'pass' => $save_con['dbpasswd'], 'db' => $save_con['dbname']]));
-                break;
-            case 'pdo':
-                $sx->set('db', new NGPDO(['host' => $save_con['dbhost'], 'user' => $save_con['dbuser'], 'pass' => $save_con['dbpasswd'], 'db' => $save_con['dbname']]));
-                break;
-        }
+        $sx->set('db', new NGPDO(['host' => $save_con['dbhost'], 'user' => $save_con['dbuser'], 'pass' => $save_con['dbpasswd'], 'db' => $save_con['dbname']]));
 
         $sx->set('legacyDB', new NGLegacyDB(false));
         $sx->getLegacyDB()->connect('', '', '');

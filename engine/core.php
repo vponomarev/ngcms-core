@@ -284,17 +284,7 @@ NGRun(function () {
     global $config, $mysql;
 
     $sx = NGEngine::getInstance();
-
-    switch ($config['dbtype']) {
-        case 'mysqli':
-            $sx->set('db', new NGMYSQLi(['host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8']));
-            break;
-        case 'pdo':
-            $sx->set('db', new NGPDO(['host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8']));
-            break;
-        default:
-            $sx->set('db', new NGMYSQLi(['host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8']));
-    }
+    $sx->set('db', new NGPDO(['host' => $config['dbhost'], 'user' => $config['dbuser'], 'pass' => $config['dbpasswd'], 'db' => $config['dbname'], 'charset' => 'utf8']));
 
     $sx->set('config', $config);
     $sx->set('legacyDB', new NGLegacyDB(false));
