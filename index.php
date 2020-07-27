@@ -44,27 +44,15 @@ $template = [
 // Check if site access is locked [ for everyone except admins ]
 // ===================================================================
 if ($config['lock'] && (!is_array($userROW) || (!checkPermission(['plugin' => '#admin', 'item' => 'system'], null, 'lockedsite.view')))) {
-    $tvars = $template;
-    $tvars['vars']['lock_reason'] = $config['lock_reason'];
-
-    // If template 'sitelock.tpl' exists - show only this template
-    // ELSE: show template 'lock.tpl' within template 'main.tpl'
-    if (file_exists(tpl_site.'sitelock.tpl')) {
-        $tpl->template('sitelock', tpl_site);
-        $tpl->vars('sitelock', $tvars);
-        echo $tpl->show('sitelock');
+    // Generate sitelock.tpl instead of content page
+    if (!file_exists(tpl_site.'sitelock.tpl')) {
+        echo 'Site is disabled with reason: '.$config['lock_reason'];
     } else {
-        $tpl->template('lock', tpl_site);
-        $tpl->vars('lock', $tvars);
-        $template['regx']["'\[sitelock\].*?\[/sitelock\]'si"] = $tpl->show('lock');
-        $template['regx']["'\[debug\].*?\[/debug\]'si"] = '';
-        $template['vars']['metatags'] = '';
-        $template['vars']['extracss'] = '';
-        $template['vars']['htmlvars'] = '';
+        $tVars = $template['vars'];
+        $tVars['lock_reason'] = $config['lock_reason'];
 
-        $tpl->template('main', tpl_site);
-        $tpl->vars('main', $template);
-        echo $tpl->show('main');
+        $xt = $twig->loadTemplate('sitelock.tpl');
+        echo $xt->render($tVars);
     }
 
     // STOP SCRIPT EXECUTION

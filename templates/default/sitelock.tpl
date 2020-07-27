@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset={l_encoding}"/>
-	<meta http-equiv="content-language" content="{l_langcode}"/>
-	<meta name="generator" content="{what} {version}"/>
+	<meta http-equiv="content-type" content="text/html; charset={{ lang.encoding }}"/>
+	<meta http-equiv="content-language" content="{{ lang.langcode }}"/>
+	<meta name="generator" content="{{ what }} {{ version }}"/>
 	<meta name="document-state" content="dynamic"/>
 	<style type="text/css">
 		body {
@@ -25,11 +25,11 @@
 			margin: 0 0 15px 0;
 		}
 	</style>
-	<title>{l_site_temporarily_disabled}</title>
+	<title>{{ lang.site_temporarily_disabled }}</title>
 </head>
 <body>
 <div align="center" class="errorwrap">
-	<p>{lock_reason}</p>
+	<p>{{ lock_reason }}</p>
 </div>
 </body>
 </html>
