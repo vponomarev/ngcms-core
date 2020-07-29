@@ -24,7 +24,7 @@ git fetch origin pull/${PULL_REQUEST}/head
 git checkout -b pullrequest FETCH_HEAD
 cd ..
 
-git clone -b transfer_utf8 https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
+git clone https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
 rm build.tgz
 cd build
 tar czf ../build.tgz .
