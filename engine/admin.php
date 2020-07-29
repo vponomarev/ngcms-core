@@ -16,7 +16,7 @@ $AFILTERS = [];
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 @header('Cache-Control: no-store, no-cache, must-revalidate');

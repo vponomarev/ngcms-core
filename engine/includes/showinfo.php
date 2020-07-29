@@ -11,7 +11,7 @@ include_once '../core.php';
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 header('Content-Type: text/html; charset=utf-8');

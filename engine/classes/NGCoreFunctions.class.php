@@ -29,7 +29,7 @@ class NGCoreFunctions
                         "<span style='color: red;'>FATAL ERROR</span><br/>".
                         '<span style="font: 16px arial;"> Cannot load file CORE libraries of <a href="http://ngcms.ru/">NGCMS</a> (<b>engine/core.php</b>), PHP extension ['.$kModule.'] with function ['.$vFunction.'] is not loaded!</span>'.
                         "</div>\n</body>\n</html>\n";
-                die();
+                exit();
             }
         }
     }
