@@ -16,7 +16,7 @@ class mysql
         $this->connect = @mysql_connect($host, $user, $pass, true);
         if (!$this->connect) {
             if (!$noerror) {
-                die('<h1>An Error Occurred</h1><hr />Unable to connect to the database!');
+                exit('<h1>An Error Occurred</h1><hr />Unable to connect to the database!');
             }
             $this->error = 1;
 
@@ -25,7 +25,7 @@ class mysql
         @mysql_query("/*!40101 SET NAMES 'utf8' */", $this->connect);
         if (!empty($db) && !@mysql_select_db($db)) {
             if (!$noerror) {
-                die('<h1>An Error Occurred</h1><hr />Unable to find the database <i>'.$db.'</i>!');
+                exit('<h1>An Error Occurred</h1><hr />Unable to find the database <i>'.$db.'</i>!');
             }
             $this->error = 2;
 

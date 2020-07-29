@@ -4,7 +4,7 @@
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 include_once '../includes/classes/uhandler.class.php';

@@ -16,7 +16,7 @@ class _mysqli
         $this->connect = @mysqli_connect($host, $user, $pass, $db);
         if (!$this->connect) {
             if (!$noerror) {
-                die('<h1>An Error Occurred</h1><hr />'.mysqli_connect_error().'!');
+                exit('<h1>An Error Occurred</h1><hr />'.mysqli_connect_error().'!');
             }
             $this->error = 1;
 

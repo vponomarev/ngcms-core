@@ -9,7 +9,7 @@
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 class parse
@@ -607,7 +607,7 @@ class parse
                     if ($char == '<') {
                         $state = 1;
                         $tagNameStartPos = $position + 1;
-                        continue;
+                        break;
                     }
                     $textLen++;
 
@@ -617,18 +617,18 @@ class parse
                     if (($char == ' ') || ($char == "\t")) {
                         $tagNameLen = $position - $tagNameStartPos;
                         $state = 2;
-                        continue;
+                        break;
                     }
 
                     // Activity on tag close flag
                     if ($char == '/') {
                         if ($tagNameStartPos == $position) {
-                            continue;
+                            break;
                         }
 
                         $tagNameLen = $position - $tagNameStartPos + 1;
                         $state = 4;
-                        continue;
+                        break;
                     }
 
                     // Action on tag closing
@@ -650,20 +650,20 @@ class parse
                             }
                         }
                         $state = 0;
-                        continue;
+                        break;
                     }
 
                     // Tag name may contain only english letters
                     if (!((($char >= 'A') && ($char <= 'Z')) || (($char >= 'a') && ($char <= 'z')))) {
                         $state = 0;
-                        continue;
+                        break;
                     }
                     break;
                 case 2:
                     // Activity on tag close flag
                     if ($char == '/') {
                         $state = 4;
-                        continue;
+                        break;
                     }
 
                     // Action on tag closing
@@ -684,27 +684,27 @@ class parse
                             }
                         }
                         $state = 0;
-                        continue;
+                        break;
                     }
 
                     // Action on quote
                     if (($char == '"') || ($char == "'")) {
                         $quoteType = ($char == '"') ? 2 : 1;
                         $state = 3;
-                        continue;
+                        break;
                     }
                     break;
                 case 3:
                     // Act only on quote
                     if ((($char == '"') && ($quoteType == 2)) || (($char == "'") && ($quoteType == 1))) {
                         $state = 2;
-                        continue;
+                        break;
                     }
                     break;
                 case 4:
                     // Only spaces or tag close mark is accepted
                     if (($char == ' ') || ($char == "\t")) {
-                        continue;
+                        break;
                     }
 
                     if ($char == '>') {
@@ -724,7 +724,7 @@ class parse
                             }
                         }
                         $state = 0;
-                        continue;
+                        break;
                     }
 
                     // Wrong symbol [ this is wholy text ]

@@ -9,7 +9,7 @@
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 @include_once root.'includes/classes/upload.class.php';

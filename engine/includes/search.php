@@ -9,7 +9,7 @@
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 $lang = LoadLang('search', 'site');

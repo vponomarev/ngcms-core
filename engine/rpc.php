@@ -11,7 +11,7 @@
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 // Load additional handlers [ common ]

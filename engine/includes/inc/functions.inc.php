@@ -9,7 +9,7 @@
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {
-    die('HAL');
+    exit('HAL');
 }
 
 //
@@ -463,7 +463,7 @@ function templateLoadVariables($die = false, $loadMode = 0)
     $filename = ($loadMode ? tpl_actions : tpl_site).'variables.ini';
     if (!is_file($filename)) {
         if ($die) {
-            die('Internal error: cannot locate Template Variables file');
+            exit('Internal error: cannot locate Template Variables file');
         }
 
         return false;
@@ -494,7 +494,7 @@ function msg($params, $mode = 0, $disp = -1)
     }
 
     if (!templateLoadVariables(false, $mode)) {
-        die('Internal system error: '.var_export($params, true));
+        exit('Internal system error: '.var_export($params, true));
     }
 
     // Choose working mode
