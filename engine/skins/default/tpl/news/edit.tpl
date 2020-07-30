@@ -2,6 +2,10 @@
 <script type="text/javascript" src="{{ home }}/lib/ajax.js"></script>
 <script type="text/javascript" src="{{ home }}/lib/libsuggest.js"></script>
 
+<!-- Preload JS/CSS for plugins -->
+{{ preloadRAW }}
+<!-- /end preload -->
+
 <!-- Hidden SUGGEST div -->
 <!-- <div id="suggestWindow" class="suggestWindow">
 	<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
@@ -90,7 +94,7 @@
 						</div>
 					</div>
 
-					{% if (not isBBCode) %}
+					{% if (not flags.disableTagsSmilies) %}
 						{{ quicktags }}
 						<!-- SMILES -->
 						<div id="modal-smiles" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="smiles-modal-label" aria-hidden="true">
@@ -114,7 +118,7 @@
 					{% if (flags.edit_split) %}
 						<div class="mb-3">
 							<div id="container.content.short" class="contentActive">
-								<textarea id="ng_news_content_short" name="ng_news_content_short" onclick="changeActive('short');" onfocus="changeActive('short');" class="{{ isBBCode ? attributBB : 'form-control' }}" rows="10">{{ content.short }}</textarea>
+								<textarea id="ng_news_content_short" name="ng_news_content_short" onclick="changeActive('short');" onfocus="changeActive('short');" class="{{ editorClassName ? editorClassName : 'form-control' }}" rows="10">{{ content.short }}</textarea>
 							</div>
 						</div>
 
@@ -129,12 +133,12 @@
 
 						<div class="mb-3">
 							<div id="container.content.full" class="contentInactive">
-								<textarea id="ng_news_content_full" name="ng_news_content_full" onclick="changeActive('full');" onfocus="changeActive('full');" class="{{ isBBCode ? attributBB : 'form-control' }}" rows="10">{{ content.full }}</textarea>
+								<textarea id="ng_news_content_full" name="ng_news_content_full" onclick="changeActive('full');" onfocus="changeActive('full');" class="{{ editorClassName ? editorClassName : 'form-control' }}" rows="10">{{ content.full }}</textarea>
 							</div>
 						</div>
 					{% else %}
 						<div id="container.content" class="mb-3" class="contentActive">
-							<textarea id="ng_news_content" name="ng_news_content" class="{{ isBBCode ? attributBB : 'form-control' }}" rows="10">{{ content.short }}</textarea>
+							<textarea id="ng_news_content" name="ng_news_content" class="{{ editorClassName ? editorClassName : 'form-control' }}" rows="10">{{ content.short }}</textarea>
 						</div>
 					{% endif %}
 
@@ -535,4 +539,3 @@
 	attachAddRow();
 </script>
 
-{{ includ_bb }}

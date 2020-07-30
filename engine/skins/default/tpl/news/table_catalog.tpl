@@ -3,6 +3,10 @@
 <script type="text/javascript" src="{{ scriptLibrary }}/libsuggest.js"></script>
 <!-- DEBUG WINDOW <div id="debugWin" style="overflow: auto; position: absolute; top: 160px; left: 230px; width: 400px; height: 400px; background: white; 4px double black; padding: 2px; margin: 2px;">DEBUG WINDOW</div> -->
 
+<!-- Preload JS/CSS for plugins -->
+{{ preloadRAW }}
+<!-- /end preload -->
+
 <form action="{{ php_self }}?mod=news" method="post" name="options_bar">
 	<table width="1000" border="0" cellspacing="0" cellpadding="0" class="editfilter">
 		<tr>

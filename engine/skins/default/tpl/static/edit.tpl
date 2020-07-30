@@ -1,3 +1,7 @@
+<!-- Preload JS/CSS for plugins -->
+{{ preloadRAW }}
+<!-- /end preload -->
+
 <nav aria-label="breadcrumb">
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
@@ -64,7 +68,7 @@
 						</div>
 					{% endif %}
 
-					{% if not(isBBCode) %}
+					{% if not(flags.disableTagsSmilies) %}
 						{{ quicktags }}
 						<!-- SMILES -->
 						<div id="modal-smiles" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="smiles-modal-label" aria-hidden="true">
@@ -86,7 +90,7 @@
 					{% endif %}
 
 					<div class="mb-3">
-						<textarea id="content" name="content" class="{{ isBBCode ? attributBB : 'form-control' }}" rows="10">{{ data.content }}</textarea>
+						<textarea id="content" name="content" class="{{ editorClassName ? editorClassName : 'form-control' }}" rows="10">{{ data.content }}</textarea>
 					</div>
 
 					{% if (flags.meta) %}
@@ -209,4 +213,3 @@
 	var currentInputAreaID = 'content';
 </script>
 
-{{ includ_bb }}
