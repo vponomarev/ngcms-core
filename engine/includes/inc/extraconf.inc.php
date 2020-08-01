@@ -27,7 +27,7 @@ function pluginSwitch($pluginID, $mode = 'on')
         // TURN _ON_
         case 'on':
             // Load plugins list
-            $extras = get_extras_list();
+            $extras = pluginsGetList();
             if (!is_array($extras)) {
                 return false;
             }

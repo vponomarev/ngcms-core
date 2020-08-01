@@ -89,7 +89,7 @@ foreach ($mysql->select($q) as $row) {
 }
 
 // Load plugin list
-$extras = get_extras_list();
+$extras = pluginsGetList();
 // Load lang files
 $lang = LoadLang('extra-config', 'admin');
 

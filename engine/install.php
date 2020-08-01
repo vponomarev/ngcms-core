@@ -156,7 +156,7 @@ if ($flagPendingChanges) {
 
     // Now let's install plugins
     // First: Load informational `version` files
-    $list = get_extras_list();
+    $list = pluginsGetList();
     foreach ($pluginInstallList as $pName) {
         if ($list[$pName]['install']) {
             include_once root.'plugins/'.$pName.'/'.$list[$pName]['install'];
@@ -1083,7 +1083,7 @@ function doInstall()
 
         // Now let's install plugins
         // First: Load informational `version` files
-        $list = get_extras_list();
+        $list = pluginsGetList();
         // Подготавливаем список плагинов для установки
         $pluginInstallList = [];
         foreach ($_POST as $k => $v) {

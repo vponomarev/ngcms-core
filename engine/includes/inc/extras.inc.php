@@ -785,7 +785,7 @@ function plugins_load_version_file($filename)
 {
 
     // config variables & function init
-    $config_params = ['id', 'name', 'version', 'acts', 'file', 'config', 'install', 'deinstall', 'management', 'type', 'description', 'author', 'author_uri', 'permanent', 'library', 'actions', 'minengineversion'];
+    $config_params = ['id', 'name', 'version', 'acts', 'file', 'config', 'install', 'deinstall', 'management', 'type', 'description', 'author', 'author_uri', 'permanent', 'library', 'actions', 'minenginebuild'];
     $required_params = ['id', 'name', 'version', 'type'];
     $list_params = ['library', 'actions'];
     $ver = [];
@@ -864,14 +864,9 @@ function plugins_load_version_file($filename)
 //
 function pluginsGetList()
 {
-    return get_extras_list();
-}
-
-function get_extras_list()
-{
     global $timer;
 
-    $timer->registerEvent('@ get_extras_list() called');
+    $timer->registerEvent('@ pluginsGetList() called');
     // open directory
     $handle = @opendir(extras_dir);
     $extras = [];
@@ -896,6 +891,13 @@ function get_extras_list()
 
         // fill fully file path (within 'plugins' directory)
         $ver['dir'] = $dir;
+
+        // Check if version is compatible
+        if (!isset($ver['minenginebuild']) || ($ver['minenginebuild'] < engineVersionBuild)) {
+            $ver['isCompatible'] = false;
+        } else {
+            $ver['isCompatible'] = true;
+        }
 
         // Good, version file is successfully loaded, add data into array
         $extras[$ver['id']] = $ver;

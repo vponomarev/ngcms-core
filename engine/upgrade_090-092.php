@@ -83,7 +83,7 @@ $query_list_092rc1_092 = [
 ];
 
 // Load plugin list
-$extras = get_extras_list();
+$extras = pluginsGetList();
 // Load lang files
 $lang = LoadLang('extra-config', 'admin');
 

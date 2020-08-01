@@ -980,7 +980,7 @@ function GetPluginDir($name)
 {
     global $EXTRA_CONFIG;
 
-    $extras = get_extras_list();
+    $extras = pluginsGetList();
     if (!$extras[$name]) {
         return 0;
     }
@@ -1019,7 +1019,7 @@ function LoadPluginLang($plugin, $file, $group = '', $prefix = '', $delimiter = 
 
     if (!$active['active'][$plugin]) {
         // No, plugin is not active. Let's load plugin list
-        $extras = get_extras_list();
+        $extras = pluginsGetList();
 
         // Exit if no data about this plugin is found
         if (!$extras[$plugin]) {

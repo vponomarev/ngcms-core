@@ -51,6 +51,9 @@ function admGeneratePluginList()
             'style'       => getPluginStatusActive($id) ? 'pluginEntryActive' : 'pluginEntryInactive',
             'readme'      => file_exists(extras_dir.'/'.$id.'/readme') && filesize(extras_dir.'/'.$id.'/readme') ? ('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&amp;item=readme&amp;plugin='.$id.'" target="_blank" title="'.$lang['entry.readme'].'"><img src="'.skins_url.'/images/readme.png" width=16 height=16/></a>') : '',
             'history'     => file_exists(extras_dir.'/'.$id.'/history') && filesize(extras_dir.'/'.$id.'/history') ? ('<a href="'.admin_url.'/includes/showinfo.php?mode=plugin&amp;item=history&amp;plugin='.$id.'" target="_blank" title="'.$lang['entry.history'].'"><img src="'.skins_url.'/images/history.png" width=16 height=16/></a>') : '',
+            'flags'       => [
+                'isCompatible'  => $extra['isCompatible'],
+            ]
         ];
 
         if (isset($repoPluginInfo[$extra['id']]) && ($repoPluginInfo[$extra['id']][1] > $extra['version'])) {

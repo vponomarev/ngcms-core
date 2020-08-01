@@ -17,7 +17,7 @@ if (!defined('NGCMS')) {
 header('Content-Type: text/html; charset=utf-8');
 
 if ($_REQUEST['mode'] == 'plugin') {
-    $extras = get_extras_list();
+    $extras = pluginsGetList();
     $plugin = str_replace(['/', '\\', '..'], '', $_REQUEST['plugin']);
     if (!is_array($extras[$plugin])) {
         return;
