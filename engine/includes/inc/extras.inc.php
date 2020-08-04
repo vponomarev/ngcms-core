@@ -893,7 +893,7 @@ function pluginsGetList()
         $ver['dir'] = $dir;
 
         // Check if version is compatible
-        if (!isset($ver['minenginebuild']) || ($ver['minenginebuild'] < engineVersionBuild)) {
+        if (!isset($ver['minenginebuild']) || ($ver['minenginebuild'] > engineVersionBuild)) {
             $ver['isCompatible'] = false;
         } else {
             $ver['isCompatible'] = true;

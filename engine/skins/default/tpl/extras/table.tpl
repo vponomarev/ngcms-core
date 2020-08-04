@@ -20,6 +20,7 @@
 	<table class="table table-sm">
 		<thead>
 			<tr>
+				<th> </th>
 				<th>{{ lang['id'] }}</th>
 				<th>{{ lang['title'] }}</th>
 				<th>{{ lang['type'] }}</th>
@@ -33,6 +34,7 @@
 		<tbody id="entryList">
 			{% for entry in entries %}
 			<tr class="{{ entry.style }} all" id="plugin_{{ entry.id }}">
+				<td>{% if entry.flags.isCompatible %}<img src="{{ skins_url }}/images/msg.gif">{% else %} {% endif %}</td>
 				<td nowrap>{{ entry.id }} {{ entry.new }}</td>
 				<td>{{ entry.url }}</td>
 				<td>{{ entry.type }}</td>
