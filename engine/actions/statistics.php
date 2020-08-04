@@ -169,7 +169,7 @@ $tVars = [
     'php_os'           => PHP_OS,
     'php_version'      => phpversion(),
     'mysql_version'    => $mysql->mysql_version(),
-    'gd_version'       => isset($gd_version)?$gd_info:'<font color="red"><b>NOT INSTALLED</b></font>',
+    'gd_version'       => isset($gd_version) ? $gd_info : '<font color="red"><b>NOT INSTALLED</b></font>',
     'currentVersion'   => $displayEngineVersion,
     'versionNotify'    => coreVersionSync(),
     'mysql_size'       => $mysql_size,
