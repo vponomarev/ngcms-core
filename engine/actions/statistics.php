@@ -92,6 +92,14 @@ foreach (['backup' => root.'backups', 'avatar' => avatars_dir, 'photo' => photos
 
 if (function_exists('gd_info')) {
     $gd_version = gd_info();
+    $gd_info = $gd_version['GD Version'];
+    foreach (['JPEG', 'PNG'] as $v) {
+        if ($gd_version[$v.' Support']) {
+            $gd_info .= ' +'.$v;
+        } else {
+            $gd_info .= ' <span style="color: red; font-weight: bold;">No '.$v.'</span>';
+        }
+    }
 }
 
 $mysql_size = 0;
@@ -161,7 +169,7 @@ $tVars = [
     'php_os'           => PHP_OS,
     'php_version'      => phpversion(),
     'mysql_version'    => $mysql->mysql_version(),
-    'gd_version'       => (isset($gd_version) && is_array($gd_version)) ? $gd_version['GD Version'] : '<font color="red"><b>NOT INSTALLED</b></font>',
+    'gd_version'       => isset($gd_version)?$gd_info:'<font color="red"><b>NOT INSTALLED</b></font>',
     'currentVersion'   => $displayEngineVersion,
     'versionNotify'    => coreVersionSync(),
     'mysql_size'       => $mysql_size,
