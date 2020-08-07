@@ -227,7 +227,7 @@ function news_showone($newsID, $alt_name, $callingParams = [])
 
     $canModifyPersonalNews = $canViewAdminPanel
                                 && $userROW['id'] == $row['author_id']
-                                && $newsPersonalPerms['personal.view'] 
+                                && $newsPersonalPerms['personal.view']
                                 && $newsPersonalPerms['personal.modify']
                                 && $newsPersonalPerms['personal.modify.published'];
 
@@ -238,7 +238,7 @@ function news_showone($newsID, $alt_name, $callingParams = [])
     ]);
 
     $canModifyOtherNews = $canViewAdminPanel
-                            && $newsOtherPerms['other.view'] 
+                            && $newsOtherPerms['other.view']
                             && $newsOtherPerms['other.modify']
                             && $newsOtherPerms['other.modify.published'];
 
@@ -712,7 +712,7 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
         'personal.modify.published',
     ]);
 
-    $canModifyPersonalNews = $newsPersonalPerms['personal.view'] 
+    $canModifyPersonalNews = $newsPersonalPerms['personal.view']
                                 && $newsPersonalPerms['personal.modify']
                                 && $newsPersonalPerms['personal.modify.published'];
 
@@ -722,7 +722,7 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
         'other.modify.published',
     ]);
 
-    $canModifyOtherNews = $newsOtherPerms['other.view'] 
+    $canModifyOtherNews = $newsOtherPerms['other.view']
                                 && $newsOtherPerms['other.modify']
                                 && $newsOtherPerms['other.modify.published'];
 
