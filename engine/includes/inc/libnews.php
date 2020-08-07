@@ -215,8 +215,36 @@ function news_showone($newsID, $alt_name, $callingParams = [])
         $tvars['regx']["'\[icon\].*?\[/icon\]'si"] = '';
     }
 
-    // Show edit/detele news buttons
-    if (is_array($userROW) && ($row['author_id'] == $userROW['id'] || $userROW['status'] == '1' || $userROW['status'] == '2')) {
+    // Check perms and show modify buttons
+    $adminpanelPerms = checkPermission(['plugin' => '#admin', 'item' => 'system'], $userROW, 'admpanel.view');
+    $canViewAdminPanel = is_array($userROW) && $adminpanelPerms;
+
+    $newsPersonalPerms = checkPermission(['plugin' => '#admin', 'item' => 'news'], null, [
+        'personal.view',
+        'personal.modify',
+        'personal.modify.published',
+    ]);
+
+    $canModifyPersonalNews = $canViewAdminPanel
+                                && $userROW['id'] == $row['author_id']
+                                && $newsPersonalPerms['personal.view'] 
+                                && $newsPersonalPerms['personal.modify']
+                                && $newsPersonalPerms['personal.modify.published'];
+
+    $newsOtherPerms = checkPermission(['plugin' => '#admin', 'item' => 'news'], null, [
+        'other.view',
+        'other.modify',
+        'other.modify.published',
+    ]);
+
+    $canModifyOtherNews = $canViewAdminPanel
+                            && $newsOtherPerms['other.view'] 
+                            && $newsOtherPerms['other.modify']
+                            && $newsOtherPerms['other.modify.published'];
+
+    $showModifyButtons = $canModifyPersonalNews || $canModifyOtherNews;
+
+    if ($showModifyButtons) {
         $tvars['vars']['news']['flags']['canEdit'] = true;
         $tvars['vars']['news']['flags']['canDelete'] = true;
         $tvars['vars']['news']['url']['edit'] = admin_url.'/admin.php?mod=news&amp;action=edit&amp;id='.$row['id'];
@@ -675,6 +703,29 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
         }
     }
 
+    // Check perms
+    $canViewAdminPanel = checkPermission(['plugin' => '#admin', 'item' => 'system'], null, 'admpanel.view');
+
+    $newsPersonalPerms = checkPermission(['plugin' => '#admin', 'item' => 'news'], null, [
+        'personal.view',
+        'personal.modify',
+        'personal.modify.published',
+    ]);
+
+    $canModifyPersonalNews = $newsPersonalPerms['personal.view'] 
+                                && $newsPersonalPerms['personal.modify']
+                                && $newsPersonalPerms['personal.modify.published'];
+
+    $newsOtherPerms = checkPermission(['plugin' => '#admin', 'item' => 'news'], null, [
+        'other.view',
+        'other.modify',
+        'other.modify.published',
+    ]);
+
+    $canModifyOtherNews = $newsOtherPerms['other.view'] 
+                                && $newsOtherPerms['other.modify']
+                                && $newsOtherPerms['other.modify.published'];
+
     // Main processing cycle
     foreach ($selectResult as $row) {
         $i++;
@@ -781,7 +832,16 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
             $tvars['regx']["'\\[icon\\].*?\\[/icon\\]'si"] = '';
         }
 
-        if (is_array($userROW) && ($userROW['id'] == $row['author_id'] || ($userROW['status'] == 1 || $userROW['status'] == 2))) {
+        // Check perms and show modify buttons
+        $showModifyButtons = false;
+
+        if (is_array($userROW) && $canViewAdminPanel) {
+            if (($userROW['id'] == $row['author_id'] && $canModifyPersonalNews) || $canModifyOtherNews) {
+                $showModifyButtons = true;
+            }
+        }
+
+        if ($showModifyButtons) {
             // [TWIG] news.flags.canEdit, news.flags.canDelete, news.url.edit, news.url.delete
             $tvars['vars']['news']['flags']['canEdit'] = true;
             $tvars['vars']['news']['flags']['canDelete'] = true;
