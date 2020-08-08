@@ -76,7 +76,20 @@ function showStaticPage($params)
         'postdate' => ($row['postdate'] > 0) ? strftime('%d.%m.%Y %H:%M', $row['postdate']) : '',
     ];
 
-    if (is_array($userROW) && ($userROW['status'] == 1 || $userROW['status'] == 2)) {
+    // Check perms and show modify buttons
+    $adminpanelPerms = checkPermission(['plugin' => '#admin', 'item' => 'system'], $userROW, 'admpanel.view');
+    $canViewAdminPanel = is_array($userROW) && $adminpanelPerms;
+
+    $staticPerms = checkPermission(['plugin' => '#admin', 'item' => 'static'], null, [
+        'view',
+        'modify',
+    ]);
+
+    $showModifyButtons = $canViewAdminPanel
+                            && $staticPerms['view']
+                            && $staticPerms['modify'];
+
+    if ($showModifyButtons) {
         $tvars['vars']['[edit-static]'] = '<a href="'.admin_url.'/admin.php?mod=static&action=edit&id='.$row['id'].'" target="_blank">';
         $tvars['vars']['[/edit-static]'] = '</a>';
         $tvars['vars']['[del-static]'] = "<a onclick=\"confirmit('".admin_url.'/admin.php?mod=static&subaction=do_mass_delete&selected[]='.$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
