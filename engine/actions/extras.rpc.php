@@ -60,7 +60,6 @@ function admExtrasOnOff($params)
         return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
     }
 
-
     // Check for security token
     if ($params['token'] != genUToken('admin.extras')) {
         return ['status' => 0, 'errorCode' => 5, 'errorText' => 'Wrong security code'];

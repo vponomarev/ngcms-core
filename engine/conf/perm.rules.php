@@ -183,7 +183,7 @@ $permRules = [
                 ],
             ],
             'statistics' => [
-                'title' => 'Статистика',
+                'title'     => 'Статистика',
                 'items'     => [
                     'details'                       => ['title'     => 'Просмотр раздела'],
                     'modify'                        => ['title'     => 'Редактирование'],
