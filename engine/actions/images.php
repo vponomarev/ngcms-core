@@ -23,7 +23,13 @@ $lang = LoadLang('images', 'admin');
 // Init file managment class
 $fmanager = new file_managment();
 
-if ($userROW['status'] > '3' || ($userROW['status'] != '1' && ($action == 'imagedelete' || $action == 'move')) || ($userROW['status'] > '3' && $action == 'rename')) {
+// Check perms
+$perms = checkPermission(['plugin' => '#admin', 'item' => 'images'], null, [
+    'modify',
+    'details',
+]);
+
+if (!$perms['modify'] && !$perms['details']) {
     msg(['type' => 'error', 'text' => $lang['msge_mod']]);
 }
 
