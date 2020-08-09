@@ -168,7 +168,7 @@ function rpcAdminUsersSearch($params)
     global $userROW, $mysql, $lang;
 
     // Check for permissions
-    if (!is_array($userROW) || ($userROW['status'] > 3)) {
+    if (!checkPermission(['plugin' => '#admin', 'item' => 'users'], $userROW, 'view')) {
         // ACCESS DENIED
         return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
     }

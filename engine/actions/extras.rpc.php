@@ -33,12 +33,6 @@ function admExtrasGetConfig($params)
         return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
     }
 
-    // Check for permissions
-    if (!is_array($userROW) || ($userROW['status'] != 1)) {
-        // ACCESS DENIED
-        return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
-    }
-
     // Check for security token
     if ($params['token'] != genUToken('admin.extras')) {
         return ['status' => 0, 'errorCode' => 5, 'errorText' => 'Wrong security code'];
@@ -62,12 +56,6 @@ function admExtrasOnOff($params)
 
     // Check for permissions
     if (!checkPermission(['plugin' => '#admin', 'item' => 'extras'], null, 'modify')) {
-        // ACCESS DENIED
-        return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
-    }
-
-    // Check for permissions
-    if (!is_array($userROW) || ($userROW['status'] != 1)) {
         // ACCESS DENIED
         return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
     }

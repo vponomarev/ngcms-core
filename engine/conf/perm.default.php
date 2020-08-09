@@ -24,6 +24,7 @@ $confPerm = [
             'system'        => [
                 'admpanel.view'         => true,
                 'lockedsite.view'       => true,
+                'debug.view'            => true,
                 '*'                     => true,
             ],
             'configuration'     => [
@@ -112,6 +113,66 @@ $confPerm = [
                 'modify'            => true,
                 '*'                 => true,
             ],
+            'perm'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'ugroup'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'dbo'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'extras'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'extra-config'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'statistics'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'editcomments'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'options'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'files'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'images'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'pm'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
+            'preview'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
             '*'             => [
                 '*'             => true,
             ],
@@ -187,6 +248,22 @@ $confPerm = [
                 'view'                      => true,
                 'modify'                    => true,
             ],
+            'files'     => [
+                'view'                      => true,
+                'modify'                    => true,
+            ],
+            'images'     => [
+                'view'                      => true,
+                'modify'                    => true,
+            ],
+            'pm'     => [
+                'view'                      => true,
+                'modify'                    => true,
+            ],
+            'preview'     => [
+                'view'                      => true,
+                'modify'                    => true,
+            ],
         ],
     ],
 
@@ -230,6 +307,22 @@ $confPerm = [
             'ipban'     => [
                 'view'                      => false,
                 'modify'                    => false,
+            ],
+            'files'     => [
+                'view'                      => true,
+                'modify'                    => true,
+            ],
+            'images'     => [
+                'view'                      => true,
+                'modify'                    => true,
+            ],
+            'pm'     => [
+                'view'                      => true,
+                'modify'                    => true,
+            ],
+            'preview'     => [
+                'view'                      => true,
+                'modify'                    => true,
             ],
         ],
     ],

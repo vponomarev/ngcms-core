@@ -32,7 +32,7 @@ function showList($grp)
     global $PERM, $pManager, $twig, $userROW, $lang, $catz;
 
     // ACCESS ONLY FOR ADMIN
-    if ($userROW['status'] > 1) {
+    if (!checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'details')) {
         msg(['type' => 'error', 'text' => $lang['perm.denied']]);
 
         return;
@@ -167,7 +167,7 @@ function updateConfig()
     global $userROW, $lang, $PERM, $confPerm, $confPermUser, $pManager, $twig, $grp;
     //print "Incoming POST: <pre>".var_export($_POST, true)."</pre>";
     // ACCESS ONLY FOR ADMIN
-    if (($userROW['status'] > 1)) {
+    if (checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'modify')) {
         msg(['type' => 'error', 'text' => $lang['perm.denied']]);
 
         return;

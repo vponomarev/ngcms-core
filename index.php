@@ -185,7 +185,7 @@ $template['vars']['exectime'] = $timer->stop();
 if ($config['debug']) {
     $timer->registerEvent('Templates generation time: '.$tpl->execTime.' ('.$tpl->execCount.' times called)');
     $timer->registerEvent('Generate DEBUG output');
-    if (is_array($userROW) && ($userROW['status'] == 1)) {
+    if (checkPermission(['plugin' => '#admin', 'item' => 'system'], $userROW, 'debug.view')) {
         $template['vars']['debug_queries'] = ($config['debug_queries']) ? ('<b><u>SQL queries:</u></b><br>'.implode("<br />\n", $mysql->query_list).'<br />') : '';
         $template['vars']['debug_profiler'] = ($config['debug_profiler']) ? ('<b><u>Time profiler:</u></b>'.$timer->printEvents(1).'<br />') : '';
         $template['vars']['[debug]'] = '';
