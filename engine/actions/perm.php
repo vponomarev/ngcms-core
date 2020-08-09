@@ -32,7 +32,7 @@ function showList($grp)
     global $PERM, $pManager, $twig, $userROW, $lang, $catz;
 
     // ACCESS ONLY FOR ADMIN
-    if (checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'details')) {
+    if (!checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'details')) {
         msg(['type' => 'error', 'text' => $lang['perm.denied']]);
 
         return;
