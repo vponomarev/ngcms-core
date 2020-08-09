@@ -24,6 +24,7 @@ $confPerm = [
             'system'        => [
                 'admpanel.view'         => true,
                 'lockedsite.view'       => true,
+                'debug.view'            => true,
                 '*'                     => true,
             ],
             'configuration'     => [
