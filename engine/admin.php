@@ -110,51 +110,41 @@ load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = [
-    'perm'          => '1',
-    'ugroup'        => 1,
-    'configuration' => 99,
-    'cron'          => 99,
-    'dbo'           => 99,
-    'extras'        => '1',
-    'extra-config'  => '1',
-    'statistics'    => '1',
-    'templates'     => 99,
-    'users'         => 99,
-    'rewrite'       => '1',
-    'static'        => '1',
-
-    'editcomments' => '2',
-    'ipban'        => 99,
-    'options'      => '2',
-
-    'categories' => 99,
-    'news'       => 99,
-
-    'files'   => '3',
-    'images'  => '3',
-    'pm'      => '3',
-    'preview' => '3',
+    'perm'          => checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'details'),
+    'ugroup'        => checkPermission(['plugin' => '#admin', 'item' => 'ugroup'], null, 'details'),
+    'configuration' => checkPermission(['plugin' => '#admin', 'item' => 'configuration'], null, 'details'),
+    'cron'          => checkPermission(['plugin' => '#admin', 'item' => 'cron'], null, 'details'),
+    'dbo'           => checkPermission(['plugin' => '#admin', 'item' => 'dbo'], null, 'details'),
+    'extras'        => checkPermission(['plugin' => '#admin', 'item' => 'extras'], null, 'details'),
+    'extra-config'  => checkPermission(['plugin' => '#admin', 'item' => 'extras-config'], null, 'details'),
+    'statistics'    => checkPermission(['plugin' => '#admin', 'item' => 'statistics'], null, 'details'),
+    'templates'     => checkPermission(['plugin' => '#admin', 'item' => 'templates'], null, 'details'),
+    'users'         => checkPermission(['plugin' => '#admin', 'item' => 'users'], null, 'view'),
+    'rewrite'       => checkPermission(['plugin' => '#admin', 'item' => 'rewrite'], null, 'details'),
+    'static'        => checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'details'),
+    'editcomments'  => checkPermission(['plugin' => '#admin', 'item' => 'editcomments'], null, 'details'),
+    'ipban'         => checkPermission(['plugin' => '#admin', 'item' => 'ipban'], null, 'view'),
+    'options'       => checkPermission(['plugin' => '#admin', 'item' => 'options'], null, 'details'),
+    'categories'    => checkPermission(['plugin' => '#admin', 'item' => 'categories'], null, 'view'),
+    'news'          => checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'view'),
+    'files'         => checkPermission(['plugin' => '#admin', 'item' => 'files'], null, 'details'),
+    'images'        => checkPermission(['plugin' => '#admin', 'item' => 'images'], null, 'details'),
+    'pm'            => checkPermission(['plugin' => '#admin', 'item' => 'pm'], null, 'details'),
+    'preview'       => checkPermission(['plugin' => '#admin', 'item' => 'preview'], null, 'details'),
 ];
 
 exec_acts('admin_header');
 
 // Default action
 if (!$mod) {
-    $mod = ($userROW['status'] == 1) ? 'statistics' : 'news';
+    $mod = $permissions['statistics'] ? 'statistics' : 'news';
 }
 
 // Check requested module exists
-if (isset($permissions[$mod]) && ($permissions[$mod])) {
-    $level = $permissions[$mod];
-
-    // If user's status fits - call module. Else - show an error
-    if ($userROW['status'] <= $level) {
-        // Load plugins, that need to make any changes in this mod
-        load_extras('admin:mod:'.$mod);
-        require './actions/'.$mod.'.php';
-    } else {
-        $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
-    }
+if (isset($permissions[$mod]) && $permissions[$mod]) {
+    // Load plugins, that need to make any changes in this mod
+    load_extras('admin:mod:'.$mod);
+    require './actions/'.$mod.'.php';
 } else {
     $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
 }
