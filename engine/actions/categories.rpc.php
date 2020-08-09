@@ -225,12 +225,6 @@ function admCategoriesRPCmodify($params)
         return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
     }
 
-    // Check for permissions
-    if (!is_array($userROW) || ($userROW['status'] != 1)) {
-        // ACCESS DENIED
-        return ['status' => 0, 'errorCode' => 3, 'errorText' => 'Access denied'];
-    }
-
     // Scan incoming params
     if (!is_array($params) || !isset($params['mode']) || !isset($params['id']) || !isset($params['token'])) {
         return ['status' => 0, 'errorCode' => 4, 'errorText' => 'Wrong params type'];
