@@ -155,7 +155,7 @@ if (is_array($userROW)) {
     $newpm = ($newpm != '0') ? '<b>'.$newpm.'</b>' : '0';
     // Calculate number of un-approved news
     $unapproved = '';
-    if ($userROW['status'] == 1 || $userROW['status'] == 2) {
+    if (checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'unapproved')) {
         $unapp = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '0'");
         if ($unapp) {
             $unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
