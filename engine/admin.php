@@ -52,7 +52,7 @@ $PHP_SELF = 'admin.php';
 // Handle LOGIN
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
-    include_once root.'cmodules.php';
+    include_once root . 'cmodules.php';
     coreLogin();
 }
 
@@ -60,7 +60,7 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
 // Handle LOGOUT
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
-    include_once root.'cmodules.php';
+    include_once root . 'cmodules.php';
     coreLogout();
 }
 
@@ -77,7 +77,7 @@ if (!is_array($userROW)) {
         'is_error'   => ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
     ];
 
-    $xt = $twig->loadTemplate(tpl_actions.'login.tpl');
+    $xt = $twig->loadTemplate(tpl_actions . 'login.tpl');
     echo $xt->render($tVars);
     exit;
 }
@@ -85,7 +85,7 @@ if (!is_array($userROW)) {
 // Check if visitor has permissions to view admin panel
 if (!checkPermission(['plugin' => '#admin', 'item' => 'system'], null, 'admpanel.view')) {
     ngSYSLOG(['plugin' => '#admin', 'item' => 'system'], ['action' => 'admpanel.view'], null, [0, 'SECURITY.PERM']);
-    @header('Location: '.home);
+    @header('Location: ' . home);
     exit;
 }
 
@@ -110,62 +110,72 @@ load_extras('admin:init');
 
 // Configure user's permissions (access to modules, depends on user's status)
 $permissions = [
-    'perm'          => checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'details'),
-    'ugroup'        => checkPermission(['plugin' => '#admin', 'item' => 'ugroup'], null, 'details'),
-    'configuration' => checkPermission(['plugin' => '#admin', 'item' => 'configuration'], null, 'details'),
-    'cron'          => checkPermission(['plugin' => '#admin', 'item' => 'cron'], null, 'details'),
-    'dbo'           => checkPermission(['plugin' => '#admin', 'item' => 'dbo'], null, 'details'),
-    'extras'        => checkPermission(['plugin' => '#admin', 'item' => 'extras'], null, 'details'),
-    'extra-config'  => checkPermission(['plugin' => '#admin', 'item' => 'extras-config'], null, 'details'),
-    'statistics'    => checkPermission(['plugin' => '#admin', 'item' => 'statistics'], null, 'details'),
-    'templates'     => checkPermission(['plugin' => '#admin', 'item' => 'templates'], null, 'details'),
-    'users'         => checkPermission(['plugin' => '#admin', 'item' => 'users'], null, 'view'),
-    'rewrite'       => checkPermission(['plugin' => '#admin', 'item' => 'rewrite'], null, 'details'),
-    'static'        => checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'details'),
-    'editcomments'  => checkPermission(['plugin' => '#admin', 'item' => 'editcomments'], null, 'details'),
-    'ipban'         => checkPermission(['plugin' => '#admin', 'item' => 'ipban'], null, 'view'),
-    'options'       => checkPermission(['plugin' => '#admin', 'item' => 'options'], null, 'details'),
-    'categories'    => checkPermission(['plugin' => '#admin', 'item' => 'categories'], null, 'view'),
-    'news'          => checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'view'),
-    'files'         => checkPermission(['plugin' => '#admin', 'item' => 'files'], null, 'details'),
-    'images'        => checkPermission(['plugin' => '#admin', 'item' => 'images'], null, 'details'),
-    'pm'            => checkPermission(['plugin' => '#admin', 'item' => 'pm'], null, 'details'),
-    'preview'       => checkPermission(['plugin' => '#admin', 'item' => 'preview'], null, 'details'),
+    'perm'          => '1',
+    'ugroup'        => 1,
+    'configuration' => 99,
+    'cron'          => 99,
+    'dbo'           => 99,
+    'extras'        => '1',
+    'extra-config'  => '1',
+    'statistics'    => '1',
+    'templates'     => 99,
+    'users'         => 99,
+    'rewrite'       => '1',
+    'static'        => '1',
+
+    'editcomments' => '2',
+    'ipban'        => 99,
+    'options'      => '2',
+
+    'categories' => 99,
+    'news'       => 99,
+
+    'files'   => '3',
+    'images'  => '3',
+    'pm'      => '3',
+    'preview' => '3',
 ];
 
 exec_acts('admin_header');
 
 // Default action
 if (!$mod) {
-    $mod = $permissions['statistics'] ? 'statistics' : 'news';
+    $mod = ($userROW['status'] == 1) ? 'statistics' : 'news';
 }
 
 // Check requested module exists
-if (isset($permissions[$mod]) && $permissions[$mod]) {
-    // Load plugins, that need to make any changes in this mod
-    load_extras('admin:mod:'.$mod);
-    require './actions/'.$mod.'.php';
+if (isset($permissions[$mod]) && ($permissions[$mod])) {
+    $level = $permissions[$mod];
+
+    // If user's status fits - call module. Else - show an error
+    if ($userROW['status'] <= $level) {
+        // Load plugins, that need to make any changes in this mod
+        load_extras('admin:mod:' . $mod);
+        require './actions/' . $mod . '.php';
+    } else {
+        $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
+    }
 } else {
     $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
 }
 
 $lang = LoadLang('index', 'admin');
 if (is_array($userROW)) {
-    $newpm = $mysql->result('SELECT count(pmid) FROM '.prefix.'_users_pm WHERE to_id = '.db_squote($userROW['id'])." AND viewed = '0'");
-    $newpm = ($newpm != '0') ? '<b>'.$newpm.'</b>' : '0';
+    $newpm = $mysql->result('SELECT count(pmid) FROM ' . prefix . '_users_pm WHERE to_id = ' . db_squote($userROW['id']) . " AND viewed = '0'");
+    $newpm = ($newpm != '0') ? '<b>' . $newpm . '</b>' : '0';
     // Calculate number of un-approved news
     $unapproved = '';
-    if (checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'unapproved')) {
-        $unapp = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '0'");
+    if ($userROW['status'] == 1 || $userROW['status'] == 2) {
+        $unapp = $mysql->result('SELECT count(id) FROM ' . prefix . "_news WHERE approve = '0'");
         if ($unapp) {
-            $unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
+            $unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>' . $unapp . '</b></font></a> ] ';
         }
     }
 }
 
 $datetimepicker_lang_default = "
-$.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
-$.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
+$.datepicker.setDefaults($.datepicker.regional['" . $lang['langcode'] . "']);
+$.timepicker.setDefaults($.timepicker.regional['" . $lang['langcode'] . "']);
 ";
 $datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : '';
 
@@ -177,22 +187,34 @@ $tVars = [
     'main_admin'          => $main_admin,
     'notify'              => $notify,
     'datetimepicker_lang' => $datetimepicker_lang,
-    'h_active_options'    => (in_array($mod, ['options', 'categories', 'static'])) ? ' class="active"' : '',
-    'h_active_extras'     => (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
-    'h_active_addnews'    => (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
-    'h_active_editnews'   => (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
-    'h_active_images'     => ($mod == 'images') ? ' class="active"' : '',
-    'h_active_files'      => ($mod == 'files') ? ' class="active"' : '',
+    'h_active_options'    => (in_array($mod, ['options', 'categories', 'static', 'news', 'images', 'files'])) ? ' class="active"' : '',
+    'h_active_system'     => (in_array($mod, ['configuration', 'dbo', 'rewrite', 'cron', 'statistics'])) ? ' class="active"' : '',
+    'h_active_userman'    => (in_array($mod, ['users', 'ipban', 'ugroup', 'perm'])) ? ' class="active"' : '',
+    'h_active_templates'  => (in_array($mod, ['templates'])) ? ' class="active"' : '',
+    'h_active_extras'     => (in_array($mod, ['extras'])) ? ' class="active"' : '',
     'h_active_pm'         => ($mod == 'pm') ? ' class="active"' : '',
     'year'                => date('Y'),
+    'perm'     => [
+        'static'        => checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'view'),
+        'categories'    => checkPermission(['plugin' => '#admin', 'item' => 'categories'], null, 'view'),
+        'addnews'       => checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'add'),
+        'editnews'      => (checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'personal.list') || checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'other.list')),
+        'configuration' => checkPermission(['plugin' => '#admin', 'item' => 'configuration'], null, 'details'),
+        'dbo'           => checkPermission(['plugin' => '#admin', 'item' => 'dbo'], null, 'details'),
+        'cron'          => checkPermission(['plugin' => '#admin', 'item' => 'cron'], null, 'details'),
+        'rewrite'       => checkPermission(['plugin' => '#admin', 'item' => 'rewrite'], null, 'details'),
+        'templates'     => checkPermission(['plugin' => '#admin', 'item' => 'templates'], null, 'details'),
+        'ipban'         => checkPermission(['plugin' => '#admin', 'item' => 'ipban'], null, 'view'),
+        'users'         => checkPermission(['plugin' => '#admin', 'item' => 'users'], null, 'view'),
+    ],
 ];
 
 if (!$mod || ($mod && $mod != 'preview')) {
-    $xt = $twig->loadTemplate(dirname(tpl_actions).'/index.tpl');
+    $xt = $twig->loadTemplate(dirname(tpl_actions) . '/index.tpl');
     echo $xt->render($tVars);
 }
 if (defined('DEBUG')) {
-    echo "SQL queries:<br />\n-------<br />\n ".implode("<br />\n", $mysql->query_list);
+    echo "SQL queries:<br />\n-------<br />\n " . implode("<br />\n", $mysql->query_list);
 }
 
 exec_acts('admin_footer');

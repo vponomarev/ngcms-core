@@ -1,7 +1,7 @@
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
 	<tr>
 		<td width=100% colspan="5" class="contentHead">
-			<img src="{{ skins_url }}/images/nav.gif" hspace="8"><a href="?mod=configuration">{{ lang['extras'] }}</a>
+			<img src="{{ skins_url }}/images/nav.png" hspace="8"><a href="?mod=configuration">{{ lang['extras'] }}</a>
 			&#8594; {{ lang['manage_vars'] }}</td>
 	</tr>
 </table>

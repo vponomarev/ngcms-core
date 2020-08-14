@@ -107,3 +107,4 @@
 		</div>
 	</div>
 </form>
+{{ debugValue(lang['dbo']) }}

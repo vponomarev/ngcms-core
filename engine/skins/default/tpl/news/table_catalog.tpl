@@ -33,7 +33,7 @@
 					<tbody>
 					<tr>
 						<td {% if (cat_active < 1) %}style="background-color: #EEEEEE;"{% endif %}>
-							<img alt="+" height="18" width="18" src="{{ skins_url }}/images/catmenu/plus.gif"/>
+							<img alt="+" height="18" width="18" src="{{ skins_url }}/images/catmenu/plus.png"/>
 							<a href="?mod=news">Все категории</a></td>
 					</tr>
 					{% for cat in catmenu %}

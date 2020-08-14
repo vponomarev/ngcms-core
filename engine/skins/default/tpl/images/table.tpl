@@ -381,7 +381,7 @@
 			fileDesc: '{descExt}',
 			sizeLimit: '{maxSize}',
 			multi: true,
-			buttonText: 'Select files ...',
+			buttonText: 'Выбрать изображение ...',
 			width: 200,
 			// removeCompleted: true,
 			onInit: function() {
