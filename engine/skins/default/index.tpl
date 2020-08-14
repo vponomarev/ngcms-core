@@ -93,7 +93,7 @@
 							<li class="{{ h_active_extras ? 'active' : '' }} "><a href="{{ php_self }}?mod=extras"><i
 										class="fa fa-puzzle-piece"></i>{{ lang['extras'] }}</a></li>
 							{% if (perm.templates) %}<li class="{{ h_active_templates ? 'active' : '' }} "><a href="{{ php_self }}?mod=templates"><i
-										class="fa fa-th-large"></i>{{ lang['templates'] }}</a></li>{% endif %}
+										class="fa fa-th-large"></i>{{ lang['templates_m'] }}</a></li>{% endif %}
 							<li class="{{ h_active_pm ? 'active' : '' }} "><a href="{{ php_self }}?mod=pm"
 									title="{{ lang['pm_t'] }}">
 									<i class="fa fa-envelope"></i> {{ lang['pm'] }} <span

@@ -12,7 +12,7 @@ if (!defined('NGCMS')) {
     exit('HAL');
 }
 
-$lang = LoadLang('templates', 'admin', 'templates');
+LoadLang('templates', 'admin', 'templates');
 
 //
 // Preload templates version files
