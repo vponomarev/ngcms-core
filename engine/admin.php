@@ -52,7 +52,7 @@ $PHP_SELF = 'admin.php';
 // Handle LOGIN
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
-    include_once root . 'cmodules.php';
+    include_once root.'cmodules.php';
     coreLogin();
 }
 
@@ -60,7 +60,7 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
 // Handle LOGOUT
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
-    include_once root . 'cmodules.php';
+    include_once root.'cmodules.php';
     coreLogout();
 }
 
@@ -77,7 +77,7 @@ if (!is_array($userROW)) {
         'is_error'   => ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
     ];
 
-    $xt = $twig->loadTemplate(tpl_actions . 'login.tpl');
+    $xt = $twig->loadTemplate(tpl_actions.'login.tpl');
     echo $xt->render($tVars);
     exit;
 }
@@ -85,7 +85,7 @@ if (!is_array($userROW)) {
 // Check if visitor has permissions to view admin panel
 if (!checkPermission(['plugin' => '#admin', 'item' => 'system'], null, 'admpanel.view')) {
     ngSYSLOG(['plugin' => '#admin', 'item' => 'system'], ['action' => 'admpanel.view'], null, [0, 'SECURITY.PERM']);
-    @header('Location: ' . home);
+    @header('Location: '.home);
     exit;
 }
 
@@ -150,8 +150,8 @@ if (isset($permissions[$mod]) && ($permissions[$mod])) {
     // If user's status fits - call module. Else - show an error
     if ($userROW['status'] <= $level) {
         // Load plugins, that need to make any changes in this mod
-        load_extras('admin:mod:' . $mod);
-        require './actions/' . $mod . '.php';
+        load_extras('admin:mod:'.$mod);
+        require './actions/'.$mod.'.php';
     } else {
         $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
     }
@@ -161,21 +161,21 @@ if (isset($permissions[$mod]) && ($permissions[$mod])) {
 
 $lang = LoadLang('index', 'admin');
 if (is_array($userROW)) {
-    $newpm = $mysql->result('SELECT count(pmid) FROM ' . prefix . '_users_pm WHERE to_id = ' . db_squote($userROW['id']) . " AND viewed = '0'");
-    $newpm = ($newpm != '0') ? '<b>' . $newpm . '</b>' : '0';
+    $newpm = $mysql->result('SELECT count(pmid) FROM '.prefix.'_users_pm WHERE to_id = '.db_squote($userROW['id'])." AND viewed = '0'");
+    $newpm = ($newpm != '0') ? '<b>'.$newpm.'</b>' : '0';
     // Calculate number of un-approved news
     $unapproved = '';
     if ($userROW['status'] == 1 || $userROW['status'] == 2) {
-        $unapp = $mysql->result('SELECT count(id) FROM ' . prefix . "_news WHERE approve = '0'");
+        $unapp = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '0'");
         if ($unapp) {
-            $unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>' . $unapp . '</b></font></a> ] ';
+            $unapproved = ' [ <a href="?mod=news&amp;status=2"><font color="red"><b>'.$unapp.'</b></font></a> ] ';
         }
     }
 }
 
 $datetimepicker_lang_default = "
-$.datepicker.setDefaults($.datepicker.regional['" . $lang['langcode'] . "']);
-$.timepicker.setDefaults($.timepicker.regional['" . $lang['langcode'] . "']);
+$.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
+$.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
 ";
 $datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : '';
 
@@ -210,11 +210,11 @@ $tVars = [
 ];
 
 if (!$mod || ($mod && $mod != 'preview')) {
-    $xt = $twig->loadTemplate(dirname(tpl_actions) . '/index.tpl');
+    $xt = $twig->loadTemplate(dirname(tpl_actions).'/index.tpl');
     echo $xt->render($tVars);
 }
 if (defined('DEBUG')) {
-    echo "SQL queries:<br />\n-------<br />\n " . implode("<br />\n", $mysql->query_list);
+    echo "SQL queries:<br />\n-------<br />\n ".implode("<br />\n", $mysql->query_list);
 }
 
 exec_acts('admin_footer');
