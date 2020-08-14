@@ -3,11 +3,9 @@
     // height: auto !important;
     font-size: 1rem;
 }
-
 .CodeMirror-fullscreen {
     z-index: 1040;
 }
-
 ul.jqueryFileTree {
     font-family: Verdana, sans-serif;
     font-size: 11px;
@@ -15,275 +13,209 @@ ul.jqueryFileTree {
     padding: 0;
     margin: 0;
 }
-
 ul.jqueryFileTree li {
     list-style: none;
     padding: 0 0 0 20px;
     margin: 0;
     white-space: nowrap;
 }
-
 ul.jqueryFileTree a {
     color: #333;
     text-decoration: none;
     display: block;
     padding: 0 2px;
 }
-
 ul.jqueryFileTree a:hover {
     background: #BDF;
 }
-
 /* Core Styles */
 .jqueryFileTree li.directory {
     background: url("../images/ngFileTree/directory.png") left top no-repeat;
 }
-
 .jqueryFileTree li.expanded {
     background: url("../images/ngFileTree/folder_open.png") left top no-repeat;
 }
-
 .jqueryFileTree li.file {
     background: url("../images/ngFileTree/file.png") left top no-repeat;
 }
-
 .jqueryFileTree li.wait {
-    background: url("../images/ngFileTree/spinner.png") left top no-repeat;
+    background: url("../images/ngFileTree/spinner.gif") left top no-repeat;
 }
 /* File Extensions*/
-
 .jqueryFileTree li.ext_tpl {
     background: url("../images/ngFileTree/txt.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_3gp {
     background: url("../images/ngFileTree/film.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_afp {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_afpa {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_asp {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_aspx {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_avi {
     background: url("../images/ngFileTree/film.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_bat {
     background: url("../images/ngFileTree/application.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_bmp {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_c {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_cfm {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_cgi {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_com {
     background: url("../images/ngFileTree/application.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_cpp {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_css {
     background: url("../images/ngFileTree/css.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_doc {
     background: url("../images/ngFileTree/doc.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_exe {
     background: url("../images/ngFileTree/application.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_gif {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_fla {
     background: url("../images/ngFileTree/flash.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_h {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_htm {
     background: url("../images/ngFileTree/html.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_html {
     background: url("../images/ngFileTree/html.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_jar {
     background: url("../images/ngFileTree/java.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_jpg {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_jpeg {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_js {
     background: url("../images/ngFileTree/script.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_lasso {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_log {
     background: url("../images/ngFileTree/txt.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_m4p {
     background: url("../images/ngFileTree/music.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_mov {
     background: url("../images/ngFileTree/film.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_mp3 {
     background: url("../images/ngFileTree/music.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_mp4 {
     background: url("../images/ngFileTree/film.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_mpg {
     background: url("../images/ngFileTree/film.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_mpeg {
     background: url("../images/ngFileTree/film.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_ogg {
     background: url("../images/ngFileTree/music.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_pcx {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_pdf {
     background: url("../images/ngFileTree/pdf.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_php {
     background: url("../images/ngFileTree/php.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_png {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_ppt {
     background: url("../images/ngFileTree/ppt.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_psd {
     background: url("../images/ngFileTree/psd.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_pl {
     background: url("../images/ngFileTree/script.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_py {
     background: url("../images/ngFileTree/script.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_rb {
     background: url("../images/ngFileTree/ruby.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_rbx {
     background: url("../images/ngFileTree/ruby.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_rhtml {
     background: url("../images/ngFileTree/ruby.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_rpm {
     background: url("../images/ngFileTree/linux.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_ruby {
     background: url("../images/ngFileTree/ruby.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_sql {
     background: url("../images/ngFileTree/db.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_swf {
     background: url("../images/ngFileTree/flash.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_tif {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_tiff {
     background: url("../images/ngFileTree/picture.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_txt {
     background: url("../images/ngFileTree/txt.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_vb {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_wav {
     background: url("../images/ngFileTree/music.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_wmv {
     background: url("../images/ngFileTree/film.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_xls {
     background: url("../images/ngFileTree/xls.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_xml {
     background: url("../images/ngFileTree/code.png") left top no-repeat;
 }
-
 .jqueryFileTree li.ext_zip {
     background: url("../images/ngFileTree/zip.png") left top no-repeat;
 }
