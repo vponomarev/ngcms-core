@@ -194,7 +194,7 @@ $tVars = [
     'h_active_extras'     => (in_array($mod, ['extras'])) ? ' class="active"' : '',
     'h_active_pm'         => ($mod == 'pm') ? ' class="active"' : '',
     'year'                => date('Y'),
-    'perm'     => [
+    'perm'                => [
         'static'        => checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'view'),
         'categories'    => checkPermission(['plugin' => '#admin', 'item' => 'categories'], null, 'view'),
         'addnews'       => checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'add'),
