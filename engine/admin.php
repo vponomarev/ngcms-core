@@ -176,7 +176,7 @@ $tVars = [
     'main_admin'          => $main_admin,
     'notify'              => $notify,
     'datetimepicker_lang' => $datetimepicker_lang,
-     'h_active_options'    => (in_array($mod, ['options', 'categories', 'static', 'news', 'images', 'files'])) ? ' class="active"' : '',
+    'h_active_options'    => (in_array($mod, ['options', 'categories', 'static', 'news', 'images', 'files'])) ? ' class="active"' : '',
     'h_active_system'     => (in_array($mod, ['configuration', 'dbo', 'rewrite', 'cron', 'statistics'])) ? ' class="active"' : '',
     'h_active_userman'    => (in_array($mod, ['users', 'ipban', 'ugroup', 'perm'])) ? ' class="active"' : '',
     'h_active_templates'  => (in_array($mod, ['templates'])) ? ' class="active"' : '',
