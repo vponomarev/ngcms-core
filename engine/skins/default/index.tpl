@@ -37,13 +37,20 @@
 							<li><a href="{{ home }}" target="_blank"><i class="fa fa-external-link"></i>
 									{{ lang['mainpage'] }}</a></li>
 
+							{% 
+								set showContent = global.mod == 'news'
+									or global.mod == 'categories'
+									or global.mod == 'static'
+									or global.mod == 'images'
+									or global.mod == 'files'
+							%}
 
-							<li data-toggle="collapse" data-target="#products"
+							<li data-toggle="collapse" data-target="#content"
 								class="collapsed {{ h_active_options ? 'active' : '' }} ">
 								<a href="#"><i class="fa fa-newspaper-o"></i>{{ lang['news_a'] }} <span
 										class="arrow"></span></a>
 							</li>
-							<ul class="sub-menu collapse" id="products">
+							<ul class="sub-menu collapse {{ showContent ? 'show' : ''}}" id="content">
 								{% if (perm.editnews) %}<li><a
 										href="{{ php_self }}?mod=news">{{ lang['news.edit'] }}</a></li>{% endif %}
 								{% if (perm.categories) %}<li><a
@@ -57,12 +64,20 @@
 								<li><a href="{{ php_self }}?mod=images">{{ lang['images'] }}</a></li>
 								<li><a href="{{ php_self }}?mod=files">{{ lang['files'] }}</a></li>
 							</ul>
-							<li data-toggle="collapse" data-target="#new"
+
+							{% 
+								set showUsers = global.mod == 'users'
+									or global.mod == 'ipban'
+									or global.mod == 'ugroup'
+									or global.mod == 'perm'
+							%}
+
+							<li data-toggle="collapse" data-target="#users"
 								class="collapsed {{ h_active_userman ? 'active' : '' }}">
 								<a href="#"><i class="fa fa-users"></i> {{ lang['userman'] }} <span
 										class="arrow"></span></a>
 							</li>
-							<ul class="sub-menu collapse" id="new">
+							<ul class="sub-menu collapse {{ showUsers ? 'show' : '' }}" id="users">
 								{% if (perm.users) %}<li><a href="{{ php_self }}?mod=users">{{ lang['users'] }}</a></li>
 								{% endif %}
 								{% if (perm.ipban) %}<li><a href="{{ php_self }}?mod=ipban">{{ lang['ipban_m'] }}</a></li>
@@ -71,12 +86,20 @@
 								<li><a href="{{ php_self }}?mod=perm">{{ lang['uperm'] }}</a></li>
 							</ul>
 
+							{% 
+								set showService = global.mod == 'configuration'
+									or global.mod == 'dbo'
+									or global.mod == 'rewrite'
+									or global.mod == 'cron'
+									or global.mod == 'statistics'
+							%}
+
 							<li data-toggle="collapse" data-target="#service"
 								class="collapsed {{ h_active_system ? 'active' : '' }}">
 								<a href="#"><i class="fa fa-cog"></i> {{ lang['system'] }} <span
 										class="arrow"></span></a>
 							</li>
-							<ul class="sub-menu collapse" id="service">
+							<ul class="sub-menu collapse {{ showService ? 'show' : '' }}" id="service">
 								{% if (perm.configuration) %}<li><a
 										href="{{ php_self }}?mod=configuration">{{ lang['configuration'] }}</a></li>
 								{% endif %}
@@ -131,3 +154,4 @@
 		};
 		</script>
 	</body>
+</html>

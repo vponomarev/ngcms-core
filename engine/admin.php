@@ -198,6 +198,11 @@ $tVars = [
     ],
 ];
 
+// Register global vars
+$twigGlobal['action'] = $action;
+$twigGlobal['subaction'] = $subaction;
+$twigGlobal['mod'] = $mod;
+
 if (!$mod || ($mod && $mod != 'preview')) {
     $xt = $twig->loadTemplate(dirname(tpl_actions).'/index.tpl');
     echo $xt->render($tVars);
