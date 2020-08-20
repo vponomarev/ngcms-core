@@ -9,7 +9,10 @@ const COLLAPSE_STATE = JSON.parse(localStorage.getItem(COLLAPSE_STATE_NAME)) || 
 const COLLAPSE_STATE_EXCLUDING = [
     '#sidebarMenu',
     '#collapseEditPreview',
-
+    '#menu-content',
+    '#content',
+    "#users",
+    "#service",
 ];
 
 $(document).ready(function() {
