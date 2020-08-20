@@ -124,7 +124,6 @@ $permissions = [
     'static'        => checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'details'),
     'editcomments'  => checkPermission(['plugin' => '#admin', 'item' => 'editcomments'], null, 'details'),
     'ipban'         => checkPermission(['plugin' => '#admin', 'item' => 'ipban'], null, 'view'),
-    'options'       => checkPermission(['plugin' => '#admin', 'item' => 'options'], null, 'details'),
     'categories'    => checkPermission(['plugin' => '#admin', 'item' => 'categories'], null, 'view'),
     'news'          => checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'view'),
     'files'         => checkPermission(['plugin' => '#admin', 'item' => 'files'], null, 'details'),
@@ -177,15 +176,32 @@ $tVars = [
     'main_admin'          => $main_admin,
     'notify'              => $notify,
     'datetimepicker_lang' => $datetimepicker_lang,
-    'h_active_options'    => (in_array($mod, ['options', 'categories', 'static'])) ? ' class="active"' : '',
-    'h_active_extras'     => (($mod == 'extra-config') || ($mod == 'extras')) ? ' class="active"' : '',
-    'h_active_addnews'    => (($mod == 'news') && ($action == 'add')) ? ' class="active"' : '',
-    'h_active_editnews'   => (($mod == 'news') && ($action != 'add')) ? ' class="active"' : '',
-    'h_active_images'     => ($mod == 'images') ? ' class="active"' : '',
-    'h_active_files'      => ($mod == 'files') ? ' class="active"' : '',
+    'h_active_options'    => (in_array($mod, ['options', 'categories', 'static', 'news', 'images', 'files'])) ? ' class="active"' : '',
+    'h_active_system'     => (in_array($mod, ['configuration', 'dbo', 'rewrite', 'cron', 'statistics'])) ? ' class="active"' : '',
+    'h_active_userman'    => (in_array($mod, ['users', 'ipban', 'ugroup', 'perm'])) ? ' class="active"' : '',
+    'h_active_templates'  => (in_array($mod, ['templates'])) ? ' class="active"' : '',
+    'h_active_extras'     => (in_array($mod, ['extras'])) ? ' class="active"' : '',
     'h_active_pm'         => ($mod == 'pm') ? ' class="active"' : '',
     'year'                => date('Y'),
+    'perm'                => [
+        'static'        => checkPermission(['plugin' => '#admin', 'item' => 'static'], null, 'view'),
+        'categories'    => checkPermission(['plugin' => '#admin', 'item' => 'categories'], null, 'view'),
+        'addnews'       => checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'add'),
+        'editnews'      => (checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'personal.list') || checkPermission(['plugin' => '#admin', 'item' => 'news'], null, 'other.list')),
+        'configuration' => checkPermission(['plugin' => '#admin', 'item' => 'configuration'], null, 'details'),
+        'dbo'           => checkPermission(['plugin' => '#admin', 'item' => 'dbo'], null, 'details'),
+        'cron'          => checkPermission(['plugin' => '#admin', 'item' => 'cron'], null, 'details'),
+        'rewrite'       => checkPermission(['plugin' => '#admin', 'item' => 'rewrite'], null, 'details'),
+        'templates'     => checkPermission(['plugin' => '#admin', 'item' => 'templates'], null, 'details'),
+        'ipban'         => checkPermission(['plugin' => '#admin', 'item' => 'ipban'], null, 'view'),
+        'users'         => checkPermission(['plugin' => '#admin', 'item' => 'users'], null, 'view'),
+    ],
 ];
+
+// Register global vars
+$twigGlobal['action'] = $action;
+$twigGlobal['subaction'] = $subaction;
+$twigGlobal['mod'] = $mod;
 
 if (!$mod || ($mod && $mod != 'preview')) {
     $xt = $twig->loadTemplate(dirname(tpl_actions).'/index.tpl');
