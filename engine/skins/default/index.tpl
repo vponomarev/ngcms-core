@@ -37,7 +37,7 @@
 							<li><a href="{{ home }}" target="_blank"><i class="fa fa-external-link"></i>
 									{{ lang['mainpage'] }}</a></li>
 
-							{% 
+							{%
 								set showContent = global.mod == 'news'
 									or global.mod == 'categories'
 									or global.mod == 'static'
@@ -65,7 +65,7 @@
 								<li><a href="{{ php_self }}?mod=files">{{ lang['files'] }}</a></li>
 							</ul>
 
-							{% 
+							{%
 								set showUsers = global.mod == 'users'
 									or global.mod == 'ipban'
 									or global.mod == 'ugroup'
@@ -86,7 +86,7 @@
 								<li><a href="{{ php_self }}?mod=perm">{{ lang['uperm'] }}</a></li>
 							</ul>
 
-							{% 
+							{%
 								set showService = global.mod == 'configuration'
 									or global.mod == 'dbo'
 									or global.mod == 'rewrite'
@@ -128,7 +128,8 @@
 							<li><a href="https://ngcms.ru/" target="_blank"><i class="fa fa-globe fa-lg"></i>
 									Официальный сайт</a></li>
 							<li><a href="https://github.com/vponomarev/ngcms-core" target="_blank"><i
-										class="fa fa-github"></i> Github</a></li </ul>
+										class="fa fa-github"></i> Github</a></li>
+							</ul>
 					</div>
 				</div>
 				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
