@@ -123,6 +123,8 @@
 										class="badge badge-dark">{{ newpm }}</span></a>
 							</li>
 							<hr>
+							<li><a href="{{ php_self }}?mod=docs"><i class="fa fa-book"
+										aria-hidden="true"></i> Документация</a></li>
 							<li><a href="https://ngcms.ru/forum/" target="_blank"><i class="fa fa-comments-o"
 										aria-hidden="true"></i> Форум поддержки</a></li>
 							<li><a href="https://ngcms.ru/" target="_blank"><i class="fa fa-globe fa-lg"></i>

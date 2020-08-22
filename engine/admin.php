@@ -117,6 +117,7 @@ $permissions = [
     'dbo'           => checkPermission(['plugin' => '#admin', 'item' => 'dbo'], null, 'details'),
     'extras'        => checkPermission(['plugin' => '#admin', 'item' => 'extras'], null, 'details'),
     'extra-config'  => checkPermission(['plugin' => '#admin', 'item' => 'extras-config'], null, 'details'),
+    'docs'          => checkPermission(['plugin' => '#admin', 'item' => 'docs'], null, 'details'),
     'statistics'    => checkPermission(['plugin' => '#admin', 'item' => 'statistics'], null, 'details'),
     'templates'     => checkPermission(['plugin' => '#admin', 'item' => 'templates'], null, 'details'),
     'users'         => checkPermission(['plugin' => '#admin', 'item' => 'users'], null, 'view'),
