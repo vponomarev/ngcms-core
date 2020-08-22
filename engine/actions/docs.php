@@ -11,16 +11,17 @@ if (!defined('NGCMS')) {
     exit('HAL');
 }
 
-use Michelf\MarkdownInterface;
 use Michelf\MarkdownExtra;
 
 /**
  * Determine if a given string ends with a given substring.
  *
  * @see https://github.com/laravel/framework/blob/7.x/src/Illuminate/Support/Str.php
- * @param mixed $haystack 
- * @param mixed $needles 
- * @return bool 
+ *
+ * @param mixed $haystack
+ * @param mixed $needles
+ *
+ * @return bool
  */
 function endsWith($haystack, $needles)
 {
@@ -37,9 +38,11 @@ function endsWith($haystack, $needles)
  * Determine if a given string starts with a given substring.
  *
  * @see https://github.com/laravel/framework/blob/7.x/src/Illuminate/Support/Str.php
- * @param mixed $haystack 
- * @param mixed $needles 
- * @return bool 
+ *
+ * @param mixed $haystack
+ * @param mixed $needles
+ *
+ * @return bool
  */
 function startsWith($haystack, $needles)
 {
@@ -53,7 +56,7 @@ function startsWith($haystack, $needles)
 }
 
 /**
- * Get markdown parser
+ * Get markdown parser.
  *
  * @return Michelf\MarkdownInterface
  */
@@ -65,15 +68,16 @@ function getMarkdownParser()
     $parser->hard_wrap = true;
 
     /**
-     * Url filter
+     * Url filter.
      *
      * @param string $url
+     *
      * @return string
      */
     $parser->url_filter_func = function ($url) {
         global $config;
 
-        $docUrl = $config['admin_url'] . '/admin.php?mod=docs';
+        $docUrl = $config['admin_url'].'/admin.php?mod=docs';
 
         if ($url === '') {
             return $docUrl;
@@ -84,9 +88,9 @@ function getMarkdownParser()
         }
 
         if (endsWith($url, ['.md'])) {
-            return $docUrl . '&file='. $url;
+            return $docUrl.'&file='.$url;
         } else {
-            return $config['home_url'] . '/docs/' . $url;
+            return $config['home_url'].'/docs/'.$url;
         }
     };
 
@@ -94,10 +98,11 @@ function getMarkdownParser()
 }
 
 /**
- * Render markdown
+ * Render markdown.
  *
  * @param string $file
- * @return string|bool 
+ *
+ * @return string|bool
  */
 function renderMarkdown($file)
 {
@@ -108,12 +113,12 @@ function renderMarkdown($file)
     if (mb_strlen($file) > 0 && !startsWith($file, '/') && endsWith($file, '.md')) {
         $paths = [
             root,
-            site_root. 'docs/',
+            site_root.'docs/',
         ];
 
         foreach ($paths as $path) {
-            if (file_exists($path . $file)) {
-                $content = file_get_contents($path . $file);
+            if (file_exists($path.$file)) {
+                $content = file_get_contents($path.$file);
             }
         }
 
@@ -147,4 +152,3 @@ function renderDocs()
 }
 
 renderDocs();
-
