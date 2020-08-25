@@ -1,10 +1,17 @@
-<nav aria-label="breadcrumb">
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
+<div class="container-fluid">
+	<div class="row mb-2">
+	  <div class="col-sm-6">
+		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{{ name }}</h1>
+	  </div><!-- /.col -->
+	  <div class="col-sm-6">
+		<ol class="breadcrumb float-sm-right">
+			<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
 		<li class="breadcrumb-item"><a href="{{ php_self }}?mod=categories">{{ lang['categories_title'] }}</a></li>
 		<li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
-	</ol>
-</nav>
+		</ol>
+	  </div><!-- /.col -->
+	</div><!-- /.row -->
+  </div><!-- /.container-fluid -->
 
 <form method="post" action="{{ php_self }}?mod=categories" enctype="multipart/form-data">
 	<input type="hidden" name="token" value="{{ token }}" />

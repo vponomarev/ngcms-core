@@ -1,8 +1,18 @@
 <link href="{{ skins_url }}/public/css/code-editor.css" rel="stylesheet">
 
-<div class="page-title">
-	<h2>{{ lang.templates['title'] }}</h2>
-</div>
+<div class="container-fluid">
+	<div class="row mb-2">
+	  <div class="col-sm-6">
+		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{{ lang.templates['title'] }}</h1>
+	  </div><!-- /.col -->
+	  <div class="col-sm-6">
+		<ol class="breadcrumb float-sm-right">
+			<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
+			<li class="breadcrumb-item active" aria-current="page">{{ lang.templates['title'] }}</li>
+		</ol>
+	  </div><!-- /.col -->
+	</div><!-- /.row -->
+  </div><!-- /.container-fluid -->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 	<ul class="navbar-nav">
