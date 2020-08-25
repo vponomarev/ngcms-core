@@ -153,6 +153,9 @@
 				php_self: '{{ php_self }}',
 					skins_url: '{{ skins_url }}'
 		};
+		$('#menu-content .sub-menu').on('show.bs.collapse', function () {
+                    $('#menu-content .sub-menu.show').not(this).removeClass('show');
+                });
 		</script>
 	</body>
 </html>
