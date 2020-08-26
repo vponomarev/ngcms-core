@@ -1,6 +1,15 @@
-<nav aria-label="breadcrumb">
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
+<div class="container-fluid">
+	<div class="row mb-2">
+	  <div class="col-sm-6">
+		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{% if (flags.editMode) %}
+			{{ entry.identity }}
+			{% else %}
+			{{ lang['add_group'] }}
+			{% endif %}</h1>
+	  </div><!-- /.col -->
+	  <div class="col-sm-6">
+		<ol class="breadcrumb float-sm-right">
+			<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
 		<li class="breadcrumb-item"><a href="{{ php_self }}?mod=ugroup">{{ lang['user_groups'] }}</a></li>
 		<li class="breadcrumb-item active" aria-current="page">
 			{% if (flags.editMode) %}
@@ -9,8 +18,10 @@
 			{{ lang['add_group'] }}
 			{% endif %}
 		</li>
-	</ol>
-</nav>
+		</ol>
+	  </div><!-- /.col -->
+	</div><!-- /.row -->
+  </div><!-- /.container-fluid -->
 
 <form action="{{ php_self }}?mod=ugroup" method="post">
 	<input type="hidden" name="token" value="{{ token }}" />

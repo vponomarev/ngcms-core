@@ -1,12 +1,20 @@
-<nav aria-label="breadcrumb">
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
+<div class="container-fluid">
+	<div class="row mb-2">
+	  <div class="col-sm-6">
+		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{{ lang['profile_of'] }} [{{ name }}]</h1>
+	  </div><!-- /.col -->
+	  <div class="col-sm-6">
+		<ol class="breadcrumb float-sm-right">
+			<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
 		<li class="breadcrumb-item"><a href="{{ php_self }}?mod=users">{{ lang['users_title'] }}</a></li>
 		<li class="breadcrumb-item active" aria-current="page">
 			{{ lang['profile_of'] }} [{{ name }}]
 		</li>
-	</ol>
-</nav>
+		</ol>
+	  </div><!-- /.col -->
+	</div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+
 
 <form action="{{ php_self }}?mod=users" method="post">
 	<input type="hidden" name="token" value="{{ token }}" />

@@ -1,10 +1,18 @@
 <!-- Preload JS/CSS for plugins -->
 {{ preloadRAW }}
 <!-- /end preload -->
-
-<nav aria-label="breadcrumb">
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
+<div class="container-fluid">
+	<div class="row mb-2">
+	  <div class="col-sm-6">
+		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{% if (flags.editMode) %}
+			{{ data.title }}
+		{% else %}
+			{{ lang['static_title_add'] }}
+		{% endif %}</h1>
+	  </div><!-- /.col -->
+	  <div class="col-sm-6">
+		<ol class="breadcrumb float-sm-right">
+			<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
 		<li class="breadcrumb-item"><a href="{{ php_self }}?mod=static">{{ lang['static_title'] }}</a></li>
 		<li class="breadcrumb-item active" aria-current="page">
 			{% if (flags.editMode) %}
@@ -13,8 +21,10 @@
 				{{ lang['static_title_add'] }}
 			{% endif %}
 		</li>
-	</ol>
-</nav>
+		</ol>
+	  </div><!-- /.col -->
+	</div><!-- /.row -->
+  </div><!-- /.container-fluid -->
 
 <form name="form" id="postForm" method="post" action="{{ php_self }}?mod=static" target="_self">
 	<input type="hidden" name="token" value="{{ token }}" />
@@ -212,4 +222,3 @@
 <script type="text/javascript">
 	var currentInputAreaID = 'content';
 </script>
-
