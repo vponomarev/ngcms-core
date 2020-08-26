@@ -65,13 +65,15 @@
 							<div class="form-row mb-3">
 								<label class="col-sm-3 col-form-label">{l_common.admin.login}</label>
 								<div class="col-sm-9">
-									<input type="text" name="admin_login" value="{admin_login}" class="form-control">
+									<input type="text" name="admin_login" id="admin_login" value="{admin_login}" class="form-control">
+									<div id="loginErrorInfo" style="display: none;">{l_common.admin.login.required}</div>
 								</div>
 							</div>
 							<div class="form-row mb-3">
 								<label class="col-sm-3 col-form-label">{l_common.admin.pass}</label>
 								<div class="col-sm-9">
-									<input type="password" name="admin_password" value="{admin_password}" class="form-control">
+									<input type="password" name="admin_password" id="admin_password" value="{admin_password}" class="form-control">
+									<div id="passwordErrorInfo" style="display: none;">{l_common.admin.pass.required}</div>
 								</div>
 							</div>
 							<div class="form-row mb-3">
@@ -95,10 +97,26 @@
 
 					<div class="card-footer text-right">
 						<button type="button" class="btn btn-outline-dark" onclick="action.value='config'; stage.value='3'; form.submit();">&laquo; {l_button.back}</button>
-						<button type="submit" class="btn btn-outline-warning">{l_button.next} &raquo;</button>
+						<button type="submit" class="btn btn-outline-warning" onclick="return validateAdminInfo();">{l_button.next} &raquo;</button>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	function validateAdminInfo() {
+		if ($("#admin_login").val() == "") {
+			$("#admin_login").focus();
+			$("#loginErrorInfo").show();
+			return false;
+		}
+		if ($("#admin_password").val() == "") {
+			$("#admin_password").focus();
+			$("#passwordErrorInfo").show();
+			return false;
+		}
+		return true;
+	}
+</script>
