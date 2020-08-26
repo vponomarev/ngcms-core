@@ -173,6 +173,11 @@ $confPerm = [
                 'modify'            => true,
                 '*'                 => true,
             ],
+            'docs'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
             '*'             => [
                 '*'             => true,
             ],
@@ -264,6 +269,11 @@ $confPerm = [
                 'view'                      => true,
                 'modify'                    => true,
             ],
+            'docs'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
+            ],
         ],
     ],
 
@@ -323,6 +333,11 @@ $confPerm = [
             'preview'     => [
                 'view'                      => true,
                 'modify'                    => true,
+            ],
+            'docs'          => [
+                'details'           => true,
+                'modify'            => true,
+                '*'                 => true,
             ],
         ],
     ],
