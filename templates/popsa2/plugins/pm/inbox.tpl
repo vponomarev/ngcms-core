@@ -25,8 +25,8 @@
 							<a href="{{ php_self }}?action=read&pmid={{ entry.pmid }}&location=inbox">{{ entry.subject }}</a>
 						</td>
 						<td>{{ entry.link }}</td>
-						<td>{% if (entry.viewed == 1) %}<img src="/engine/plugins/pm/img/viewed.yes.png"/>{% else %}
-								<img src="/engine/plugins/pm/img/viewed.no.png"/>{% endif %}</td>
+						<td>{% if (entry.viewed == 1) %}<img src="/engine/plugins/pm/img/viewed.yes.gif"/>{% else %}
+								<img src="/engine/plugins/pm/img/viewed.no.gif"/>{% endif %}</td>
 						<td><input name="selected_pm[]" value="{{ entry.pmid }}" type="checkbox"/></td>
 					</tr>
 				{% endfor %}

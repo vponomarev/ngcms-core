@@ -1,6 +1,6 @@
 @charset "windows-1251";
 /* css для шаблонов Next Generation CMS от RocketBoy ( www.rocketvip.ru) */
-/* часть выдрана из Easy front-end framework
+/* часть выдрана из Easy front-end framework 
 Copyright (c) 2011 Alen Grakalic
 * http://easyframework.com/license.php  */
 
@@ -660,7 +660,7 @@ textarea, .area {
 }
 
 .spoiler .sp-head b {
-	background: url(../images/spoiler-plus.png) no-repeat;
+	background: url(../images/spoiler-plus.gif) no-repeat;
 	float: left;
 	width: 9px;
 	height: 13px;
@@ -668,7 +668,7 @@ textarea, .area {
 }
 
 .spoiler .sp-head b.expanded {
-	background: url(../images/spoiler-minus.png) no-repeat;
+	background: url(../images/spoiler-minus.gif) no-repeat;
 	float: left;
 	width: 9px;
 	height: 13px;

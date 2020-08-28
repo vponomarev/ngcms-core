@@ -32,7 +32,7 @@
 </head>
 <body>
 {% block body %}
-<div id="loading-layer"><img src="{{ tpl_url }}/img/loading.png" alt=""/></div>
+<div id="loading-layer"><img src="{{ tpl_url }}/img/loading.gif" alt=""/></div>
 <div id="wrapper">
 	<header id="header">
 		<div id="logo">
