@@ -50,11 +50,11 @@ function secure_html($string)
 function Formatsize($file_size)
 {
     if ($file_size >= 1073741824) {
-        $file_size = round($file_size / 1073741824 * 100) / 100.' Gb';
+        $file_size = round($file_size / 1073741824 * 100) / 100 .' Gb';
     } elseif ($file_size >= 1048576) {
-        $file_size = round($file_size / 1048576 * 100) / 100.' Mb';
+        $file_size = round($file_size / 1048576 * 100) / 100 .' Mb';
     } elseif ($file_size >= 1024) {
-        $file_size = round($file_size / 1024 * 100) / 100.' Kb';
+        $file_size = round($file_size / 1024 * 100) / 100 .' Kb';
     } else {
         $file_size = $file_size.' b';
     }
@@ -708,9 +708,9 @@ function makeCategoryList($params = [])
     $out = '';
     if (!isset($params['checkarea']) || !$params['checkarea']) {
         if (empty($params['noHeader'])) {
-            $out = "<select name=\"$name\" id=\"catmenu\"" .
-                ((isset($params['style']) && ($params['style'] != '')) ? ' style="'.$params['style'].'"' : '') .
-                ((isset($params['class']) && ($params['class'] != '')) ? ' class="'.$params['class'].'"' : '') .
+            $out = "<select name=\"$name\" id=\"catmenu\"".
+                ((isset($params['style']) && ($params['style'] != '')) ? ' style="'.$params['style'].'"' : '').
+                ((isset($params['class']) && ($params['class'] != '')) ? ' class="'.$params['class'].'"' : '').
                 ">\n";
         }
         if (isset($params['doempty']) && $params['doempty']) {
@@ -742,16 +742,16 @@ function makeCategoryList($params = [])
             continue;
         }
         if (isset($params['checkarea']) && $params['checkarea']) {
-            $out .= str_repeat('&#8212; ', $v['poslevel']) .
-                '<label><input type="checkbox" name="' .
-                $name .
-                '_' .
-                $v['id'] .
-                '" value="1"' .
-                ((isset($params['selected']) && is_array($params['selected']) && in_array($v['id'], $params['selected'])) ? ' checked="checked"' : '') .
-                (((($v['alt_url'] != '') || (isset($params['disabledarea']) && $params['disabledarea']))) ? ' disabled="disabled"' : '') .
-                '/> ' .
-                $v['name'] .
+            $out .= str_repeat('&#8212; ', $v['poslevel']).
+                '<label><input type="checkbox" name="'.
+                $name.
+                '_'.
+                $v['id'].
+                '" value="1"'.
+                ((isset($params['selected']) && is_array($params['selected']) && in_array($v['id'], $params['selected'])) ? ' checked="checked"' : '').
+                (((($v['alt_url'] != '') || (isset($params['disabledarea']) && $params['disabledarea']))) ? ' disabled="disabled"' : '').
+                '/> '.
+                $v['name'].
                 "</label><br/>\n";
         } else {
             $out .= '<option value="'.((isset($params['nameval']) && $params['nameval']) ? $v['name'] : $v['id']).'"'.((isset($params['selected']) && ($v['id'] == $params['selected'])) ? ' selected="selected"' : '').($v['alt_url'] != '' ? ' disabled="disabled" style="background: #c41e3a;"' : '').'>'.str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
@@ -2152,18 +2152,18 @@ function error404()
 
     @header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
     switch ($config['404_mode']) {
-            // HTTP error 404
+        // HTTP error 404
         case 2:
             exit;
 
-            // External error template
+        // External error template
         case 1:
             $tpl->template('404.external', tpl_site);
             $tpl->vars('404.external', []);
             echo $tpl->show('404.external');
             exit;
 
-            // Internal error template
+        // Internal error template
         case 0:
         default:
             $tpl->template('404.internal', tpl_site);
@@ -2486,9 +2486,8 @@ function ngSYSLOG($identity, $action, $user, $status)
 // HANDLER: Exceptions
 function ngExceptionHandler($exception)
 {
-?>
+    ?>
     <html>
-
     <head>
         <title>NGCMS Runtime exception: <?php echo get_class($exception); ?></title>
         <style>
@@ -2513,753 +2512,751 @@ function ngExceptionHandler($exception)
                 background-color: #EEEEEE;
                 font-weight: bold;
             }
+
         </style>
     </head>
-
     <body>
-        <?php
-        echo '<h1>NGCMS Runtime exception: '.get_class($exception)."</h1>\n";
-        echo "<div class='dmsg'>".$exception->getMessage().'</div><br/>';
-        echo '<h2>Stack trace</h2>';
-        echo "<table class='dtrace'><thead><tr><td>#</td><td>Line #</td><td><i>Class</i>/Function</td><td>File name</td></tr></thead><tbody>";
-        echo '<tr><td>X</td><td>'.$exception->getLine().'</td><td>'.$exception->getCode().'</td><td>'.$exception->getFile().'</td></tr>';
-        foreach ($exception->getTrace() as $k => $v) {
-            echo '<tr><td>'.$k.'</td><td>'.$v['line'].'</td><td>'.(isset($v['class']) ? ('<i>'.$v['class'].'</i>') : $v['function']).'</td><td>'.$v['file']."</td></tr>\n";
-        }
-        echo '</tbody></table>';
+    <?php
+    echo '<h1>NGCMS Runtime exception: '.get_class($exception)."</h1>\n";
+    echo "<div class='dmsg'>".$exception->getMessage().'</div><br/>';
+    echo '<h2>Stack trace</h2>';
+    echo "<table class='dtrace'><thead><tr><td>#</td><td>Line #</td><td><i>Class</i>/Function</td><td>File name</td></tr></thead><tbody>";
+    echo '<tr><td>X</td><td>'.$exception->getLine().'</td><td>'.$exception->getCode().'</td><td>'.$exception->getFile().'</td></tr>';
+    foreach ($exception->getTrace() as $k => $v) {
+        echo '<tr><td>'.$k.'</td><td>'.$v['line'].'</td><td>'.(isset($v['class']) ? ('<i>'.$v['class'].'</i>') : $v['function']).'</td><td>'.$v['file']."</td></tr>\n";
+    }
+    echo '</tbody></table>';
+}
+
+//Проверяем переменную
+function getIsSet(&$result)
+{
+    if (isset($result)) {
+        return $result;
     }
 
-    //Проверяем переменную
-    function getIsSet(&$result)
-    {
-        if (isset($result)) {
-            return $result;
-        }
+    return null;
+}
 
-        return null;
-    }
-
-    //
-    // HANDLER: Errors
-    function ngErrorHandler($code, $message, $file, $line)
-    {
-        /* if (0 == error_reporting())
+//
+// HANDLER: Errors
+function ngErrorHandler($code, $message, $file, $line)
+{
+    /* if (0 == error_reporting())
     {
         return;
     }
     print "ERROR: [$code]($message)[$line]($file)<br/>\n"; */
+}
+
+//
+// HANDLER: Shutdown
+function ngShutdownHandler()
+{
+    $lastError = error_get_last();
+
+    // Activate only for fatal errors
+    $flagFatal = 0;
+
+    switch ($lastError['type']) {
+        case E_ERROR:
+        case E_PARSE:
+        case E_CORE_ERROR:
+        case E_COMPILE_ERROR:
+            $flagFatal = 1;
+            break;
+    }
+    if (!$flagFatal) {
+        return true;
+    } ?>
+<html>
+    <head>
+        <title>NGCMS Runtime error: <?php echo $lastError['message']; ?></title>
+        <style type="text/css">
+            body {
+                font: 1em Georgia, "Times New Roman", serif;
+            }
+
+            .dmsg {
+                border: 1px #EEEEEE solid;
+                padding: 10px;
+                background-color: yellow;
+            }
+
+            .dtrace TBODY TD {
+                padding: 3px;
+                /*border: 1px #EEEEEE solid;*/
+                background-color: #EEEEEE;
+            }
+
+            .dtrace THEAD TD {
+                padding: 3px;
+                background-color: #EEEEEE;
+                font-weight: bold;
+            }
+
+        </style>
+    </head>
+<body>
+<?php
+echo '<div id="ngErrorInformer">';
+    echo '<h1>NGCMS Runtime error: '.$lastError['message']."</h1>\n";
+    echo "<div class='dmsg'>[ ".$lastError['type'].']: '.$lastError['message'].'</div><br/>';
+    echo '<h2>Stack trace</h2>';
+    echo "<table class='dtrace'><thead><td>Line #</td><td>File name</td></tr></thead><tbody>";
+    echo '<tr><td>'.$lastError['line'].'</td><td>'.$lastError['file'].'</td></tr></tbody></table>';
+    echo '</div>'; ?>
+    <div id="hdrSpanItem"></div>
+    <script language="Javascript">
+        {
+            var xc = document.getElementById('ngErrorInformer').innerHTML;
+            var i = 0;
+            var cnt = 0;
+            while (i < document.body.childNodes.length) {
+                var node = document.body.childNodes[i];
+                if (node.tagName == 'DIV') {
+                    document.body.removeChild(document.body.childNodes[i]);
+                    break;
+                }
+                if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE') || (node.tagName == '')) {
+                    i++;
+                } else {
+                    document.body.removeChild(document.body.childNodes[i]);
+                }
+            }
+            document.body.innerHTML = xc;
+        }
+    </script>
+    <?php
+    return false;
+}
+
+function twigLocalPath($templateName)
+{
+    return dirname($templateName).DIRECTORY_SEPARATOR;
+}
+
+//
+// Software generated fatal error
+function ngFatalError($title, $description = '')
+{
+    ?>
+    <html>
+    <head>
+        <title>NGCMS Runtime error: <?php echo $title; ?></title>
+        <style type="text/css">
+            body {
+                font: 1em Georgia, "Times New Roman", serif;
+            }
+
+            .dmsg {
+                border: 1px #EEEEEE solid;
+                padding: 10px;
+                background-color: yellow;
+            }
+
+            .dtrace TBODY TD {
+                padding: 3px;
+                /*border: 1px #EEEEEE solid;*/
+                background-color: #EEEEEE;
+            }
+
+            .dtrace THEAD TD {
+                padding: 3px;
+                background-color: #EEEEEE;
+                font-weight: bold;
+            }
+
+        </style>
+    </head>
+    <body>
+    <div id="hdrSpanItem"></div>
+    <script language="Javascript">
+        {
+            var i = 0;
+            var cnt = 0;
+            while (i < document.body.childNodes.length) {
+                var node = document.body.childNodes[i];
+                if (node.tagName == 'DIV') {
+                    document.body.removeChild(document.body.childNodes[i]);
+                    break;
+                }
+                if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE')) {
+                    i++;
+                } else {
+                    document.body.removeChild(document.body.childNodes[i]);
+                }
+            }
+        }
+    </script>
+    <?php
+    echo '<h1>NGCMS Software generated fatal error: '.$title."</h1>\n";
+    echo "<div class='dmsg'>[ Software error ]: ".$title.'</div><br/>';
+    if ($description) {
+        echo '<p><i>'.$description.'</i></p>';
+    }
+    echo '<h2>Stack trace</h2>';
+    echo "<table class='dtrace'><thead><td>Line #</td><td>Function</td><td>File name</td></tr></thead><tbody>";
+
+    $trace = debug_backtrace();
+    $num = 0;
+    foreach ($trace as $k => $v) {
+        $num++;
+        echo '<tr><td>'.$v['line'].'</td><td>'.$v['function'].'<td>'.$v['file'].'</td></tr>';
+        if ($num > 3) {
+            echo "<tr><td colspan='3'>...</td></tr>";
+            break;
+        }
+    }
+    echo '</tbody></table></body></html>';
+    exit;
+}
+
+function twigIsLang($lang)
+{
+    global $config;
+
+    return $config['default_lang'] == $lang;
+}
+
+function twigGetLang()
+{
+    global $config;
+
+    return $config['default_lang'];
+}
+
+// Allow to have specific template configuration for different locations ($CurrentHandler global array)
+// RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
+// ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
+function twigIsHandler($rules)
+{
+    global $config, $CurrentHandler;
+
+    $ruleCatched = false;
+    foreach (preg_split("#\|#", $rules) as $rule) {
+        if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
+            // Specified: Plugin + Handler
+            if (($pt[1] == $CurrentHandler['pluginName']) && ($pt[2] == $CurrentHandler['handlerName'])) {
+                $ruleCatched = true;
+                break;
+            }
+        } elseif ($rule == $CurrentHandler['pluginName']) {
+            $ruleCatched = true;
+            break;
+        }
     }
 
-    //
-    // HANDLER: Shutdown
-    function ngShutdownHandler()
-    {
-        $lastError = error_get_last();
+    return $ruleCatched;
+}
 
-        // Activate only for fatal errors
-        $flagFatal = 0;
+function twigIsCategory($list)
+{
+    global $currentCategory, $catz, $catmap, $config, $CurrentHandler;
+    //print "twigCall isCategory($list):<pre>".var_export($currentCategory, true)."</pre>";
 
-        switch ($lastError['type']) {
-            case E_ERROR:
-            case E_PARSE:
-            case E_CORE_ERROR:
-            case E_COMPILE_ERROR:
-                $flagFatal = 1;
-                break;
-        }
-        if (!$flagFatal) {
-            return true;
-        } ?>
-        <html>
-
-        <head>
-            <title>NGCMS Runtime error: <?php echo $lastError['message']; ?></title>
-            <style type="text/css">
-                body {
-                    font: 1em Georgia, "Times New Roman", serif;
-                }
-
-                .dmsg {
-                    border: 1px #EEEEEE solid;
-                    padding: 10px;
-                    background-color: yellow;
-                }
-
-                .dtrace TBODY TD {
-                    padding: 3px;
-                    /*border: 1px #EEEEEE solid;*/
-                    background-color: #EEEEEE;
-                }
-
-                .dtrace THEAD TD {
-                    padding: 3px;
-                    background-color: #EEEEEE;
-                    font-weight: bold;
-                }
-            </style>
-        </head>
-
-        <body>
-            <?php
-            echo '<div id="ngErrorInformer">';
-            echo '<h1>NGCMS Runtime error: '.$lastError['message']."</h1>\n";
-            echo "<div class='dmsg'>[ ".$lastError['type'].']: '.$lastError['message'].'</div><br/>';
-            echo '<h2>Stack trace</h2>';
-            echo "<table class='dtrace'><thead><td>Line #</td><td>File name</td></tr></thead><tbody>";
-            echo '<tr><td>'.$lastError['line'].'</td><td>'.$lastError['file'].'</td></tr></tbody></table>';
-            echo '</div>'; ?>
-            <div id="hdrSpanItem"></div>
-            <script language="Javascript">
-                {
-                    var xc = document.getElementById('ngErrorInformer').innerHTML;
-                    var i = 0;
-                    var cnt = 0;
-                    while (i < document.body.childNodes.length) {
-                        var node = document.body.childNodes[i];
-                        if (node.tagName == 'DIV') {
-                            document.body.removeChild(document.body.childNodes[i]);
-                            break;
-                        }
-                        if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE') || (node.tagName == '')) {
-                            i++;
-                        } else {
-                            document.body.removeChild(document.body.childNodes[i]);
-                        }
-                    }
-                    document.body.innerHTML = xc;
-                }
-            </script>
-        <?php
+    // Return if user is not reading any news
+    if ($CurrentHandler['pluginName'] != 'news') {
+        return false;
+    }
+    if (($CurrentHandler['handlerName'] == 'news') || ($CurrentHandler['handlerName'] == 'print')) {
         return false;
     }
 
-    function twigLocalPath($templateName)
-    {
-        return dirname($templateName).DIRECTORY_SEPARATOR;
+    // Return false if we're not in category now
+    if (!isset($currentCategory)) {
+        return false;
     }
 
-    //
-    // Software generated fatal error
-    function ngFatalError($title, $description = '')
-    {
-        ?>
-            <html>
+    // ****** Process modifiers ******
+    if ($list == '') {
+        return true;
+    }
+    if ($list == ':id') {
+        return $currentCategory['id'];
+    }
+    if ($list == ':alt') {
+        return secure_html($currentCategory['alt']);
+    }
+    if ($list == ':name') {
+        return secure_html($currentCategory['name']);
+    }
+    if ($list == ':icon') {
+        return ($currentCategory['image_id'] && $currentCategory['icon_id']) ? 1 : 0;
+    }
+    if ($list == ':icon.url') {
+        return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/'.$currentCategory['icon_name'];
+    }
+    if ($list == ':icon.width') {
+        return intval($currentCategory['icon_width']);
+    }
+    if ($list == ':icon.height') {
+        return intval($currentCategory['icon_height']);
+    }
+    if ($list == ':icon.preview') {
+        return ($currentCategory['image_id'] && $currentCategory['icon_id'] && $currentCategory['icon_preview']) ? 1 : 0;
+    }
+    if ($list == ':icon.preview.url') {
+        return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/thumb/'.$currentCategory['icon_name'];
+    }
+    if ($list == ':icon.preview.width') {
+        return intval($currentCategory['icon_pwidth']);
+    }
+    if ($list == ':icon.preview.height') {
+        return intval($currentCategory['icon_pheight']);
+    }
 
-            <head>
-                <title>NGCMS Runtime error: <?php echo $title; ?></title>
-                <style type="text/css">
-                    body {
-                        font: 1em Georgia, "Times New Roman", serif;
-                    }
-
-                    .dmsg {
-                        border: 1px #EEEEEE solid;
-                        padding: 10px;
-                        background-color: yellow;
-                    }
-
-                    .dtrace TBODY TD {
-                        padding: 3px;
-                        /*border: 1px #EEEEEE solid;*/
-                        background-color: #EEEEEE;
-                    }
-
-                    .dtrace THEAD TD {
-                        padding: 3px;
-                        background-color: #EEEEEE;
-                        font-weight: bold;
-                    }
-                </style>
-            </head>
-
-            <body>
-                <div id="hdrSpanItem"></div>
-                <script language="Javascript">
-                    {
-                        var i = 0;
-                        var cnt = 0;
-                        while (i < document.body.childNodes.length) {
-                            var node = document.body.childNodes[i];
-                            if (node.tagName == 'DIV') {
-                                document.body.removeChild(document.body.childNodes[i]);
-                                break;
-                            }
-                            if ((node.tagName == 'TITLE') || (node.tagName == 'STYLE')) {
-                                i++;
-                            } else {
-                                document.body.removeChild(document.body.childNodes[i]);
-                            }
-                        }
-                    }
-                </script>
-            <?php
-            echo '<h1>NGCMS Software generated fatal error: '.$title."</h1>\n";
-            echo "<div class='dmsg'>[ Software error ]: ".$title.'</div><br/>';
-            if ($description) {
-                echo '<p><i>'.$description.'</i></p>';
-            }
-            echo '<h2>Stack trace</h2>';
-            echo "<table class='dtrace'><thead><td>Line #</td><td>Function</td><td>File name</td></tr></thead><tbody>";
-
-            $trace = debug_backtrace();
-            $num = 0;
-            foreach ($trace as $k => $v) {
-                $num++;
-                echo '<tr><td>'.$v['line'].'</td><td>'.$v['function'].'<td>'.$v['file'].'</td></tr>';
-                if ($num > 3) {
-                    echo "<tr><td colspan='3'>...</td></tr>";
-                    break;
-                }
-            }
-            echo '</tbody></table></body></html>';
-            exit;
+    foreach (preg_split('# *, *#', $list) as $key) {
+        if ($key == '') {
+            continue;
         }
 
-        function twigIsLang($lang)
-        {
-            global $config;
-
-            return $config['default_lang'] == $lang;
-        }
-
-        function twigGetLang()
-        {
-            global $config;
-
-            return $config['default_lang'];
-        }
-
-        // Allow to have specific template configuration for different locations ($CurrentHandler global array)
-        // RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
-        // ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
-        function twigIsHandler($rules)
-        {
-            global $config, $CurrentHandler;
-
-            $ruleCatched = false;
-            foreach (preg_split("#\|#", $rules) as $rule) {
-                if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
-                    // Specified: Plugin + Handler
-                    if (($pt[1] == $CurrentHandler['pluginName']) && ($pt[2] == $CurrentHandler['handlerName'])) {
-                        $ruleCatched = true;
-                        break;
-                    }
-                } elseif ($rule == $CurrentHandler['pluginName']) {
-                    $ruleCatched = true;
-                    break;
-                }
-            }
-
-            return $ruleCatched;
-        }
-
-        function twigIsCategory($list)
-        {
-            global $currentCategory, $catz, $catmap, $config, $CurrentHandler;
-            //print "twigCall isCategory($list):<pre>".var_export($currentCategory, true)."</pre>";
-
-            // Return if user is not reading any news
-            if ($CurrentHandler['pluginName'] != 'news') {
-                return false;
-            }
-            if (($CurrentHandler['handlerName'] == 'news') || ($CurrentHandler['handlerName'] == 'print')) {
-                return false;
-            }
-
-            // Return false if we're not in category now
-            if (!isset($currentCategory)) {
-                return false;
-            }
-
-            // ****** Process modifiers ******
-            if ($list == '') {
+        if (ctype_digit($key)) {
+            if (isset($catmap[$key]) && is_array($currentCategory) && ($currentCategory['id'] == $key)) {
                 return true;
             }
-            if ($list == ':id') {
-                return $currentCategory['id'];
+        } else {
+            if (isset($catz[$key]) && is_array($catz[$key]) && is_array($currentCategory) && ($currentCategory['alt'] == $key)) {
+                return true;
             }
-            if ($list == ':alt') {
-                return secure_html($currentCategory['alt']);
-            }
-            if ($list == ':name') {
-                return secure_html($currentCategory['name']);
-            }
-            if ($list == ':icon') {
-                return ($currentCategory['image_id'] && $currentCategory['icon_id']) ? 1 : 0;
-            }
-            if ($list == ':icon.url') {
-                return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/'.$currentCategory['icon_name'];
-            }
-            if ($list == ':icon.width') {
-                return intval($currentCategory['icon_width']);
-            }
-            if ($list == ':icon.height') {
-                return intval($currentCategory['icon_height']);
-            }
-            if ($list == ':icon.preview') {
-                return ($currentCategory['image_id'] && $currentCategory['icon_id'] && $currentCategory['icon_preview']) ? 1 : 0;
-            }
-            if ($list == ':icon.preview.url') {
-                return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/thumb/'.$currentCategory['icon_name'];
-            }
-            if ($list == ':icon.preview.width') {
-                return intval($currentCategory['icon_pwidth']);
-            }
-            if ($list == ':icon.preview.height') {
-                return intval($currentCategory['icon_pheight']);
-            }
+        }
+    }
 
-            foreach (preg_split('# *, *#', $list) as $key) {
-                if ($key == '') {
-                    continue;
+    return false;
+}
+
+function twigIsNews($rules)
+{
+    global $catz, $catmap, $CurrentHandler, $SYSTEM_FLAGS, $CurrentCategory;
+    //print "twigCall isNews($list):<pre>".var_export($SYSTEM_FLAGS['news'], true)."</pre>";
+
+    // Return if user is not in news
+    if ($CurrentHandler['pluginName'] != 'news') {
+        return false;
+    }
+    if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print')) {
+        return false;
+    }
+    if (!isset($SYSTEM_FLAGS['news']['db.id'])) {
+        return false;
+    }
+
+    $ruleList = ['news' => [], 'cat' => [], 'mastercat' => []];
+    $ruleCatched = false;
+
+    // Pre-scan incoming data
+    foreach (preg_split("#\|#", $rules) as $rule) {
+        if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
+            $ruleList[$pt[1]] = $ruleList[$pt[1]] + preg_split('# *, *#', $pt[2]);
+        } else {
+            $ruleList['news'] = $ruleList['news'] + preg_split('# *, *#', $rule);
+        }
+    }
+    //print "isNews debug rules: <pre>".var_export($ruleList, true)."</pre>";
+    foreach ($ruleList as $rType => $rVal) {
+        //print "[SCAN TYPE: '$rType' with val: (".var_export($rVal, true).")]<br/>";
+        switch ($rType) {
+            // -- NEWS
+            case 'news':
+                if (!isset($SYSTEM_FLAGS['news']['db.id'])) {
+                    continue 2;
                 }
 
-                if (ctype_digit($key)) {
-                    if (isset($catmap[$key]) && is_array($currentCategory) && ($currentCategory['id'] == $key)) {
-                        return true;
-                    }
-                } else {
-                    if (isset($catz[$key]) && is_array($catz[$key]) && is_array($currentCategory) && ($currentCategory['alt'] == $key)) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        function twigIsNews($rules)
-        {
-            global $catz, $catmap, $CurrentHandler, $SYSTEM_FLAGS, $CurrentCategory;
-            //print "twigCall isNews($list):<pre>".var_export($SYSTEM_FLAGS['news'], true)."</pre>";
-
-            // Return if user is not in news
-            if ($CurrentHandler['pluginName'] != 'news') {
-                return false;
-            }
-            if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print')) {
-                return false;
-            }
-            if (!isset($SYSTEM_FLAGS['news']['db.id'])) {
-                return false;
-            }
-
-            $ruleList = ['news' => [], 'cat' => [], 'mastercat' => []];
-            $ruleCatched = false;
-
-            // Pre-scan incoming data
-            foreach (preg_split("#\|#", $rules) as $rule) {
-                if (preg_match("#^(.+?)\:(.+?)$#", $rule, $pt)) {
-                    $ruleList[$pt[1]] = $ruleList[$pt[1]] + preg_split('# *, *#', $pt[2]);
-                } else {
-                    $ruleList['news'] = $ruleList['news'] + preg_split('# *, *#', $rule);
-                }
-            }
-            //print "isNews debug rules: <pre>".var_export($ruleList, true)."</pre>";
-            foreach ($ruleList as $rType => $rVal) {
-                //print "[SCAN TYPE: '$rType' with val: (".var_export($rVal, true).")]<br/>";
-                switch ($rType) {
-                        // -- NEWS
-                    case 'news':
-                        if (!isset($SYSTEM_FLAGS['news']['db.id'])) {
-                            continue 2;
+                foreach ($rVal as $key) {
+                    if (ctype_digit($key)) {
+                        if ($SYSTEM_FLAGS['news']['db.id'] == $key) {
+                            return true;
                         }
-
-                        foreach ($rVal as $key) {
-                            if (ctype_digit($key)) {
-                                if ($SYSTEM_FLAGS['news']['db.id'] == $key) {
-                                    return true;
-                                }
-                            } else {
-                                if ($SYSTEM_FLAGS['news']['db.alt'] == $key) {
-                                    return true;
-                                }
-                            }
-                        }
-                        break;
-
-                        // -- CATEGORY (master or any)
-                    case 'mastercat':
-                    case 'cat':
-                        if ((!isset($SYSTEM_FLAGS['news']['db.categories'])) || ($SYSTEM_FLAGS['news']['db.categories'] == '')) {
-                            continue 2;
-                        }
-
-                        // List of categories from news
-                        foreach ($rVal as $key) {
-                            if (ctype_digit($key)) {
-                                if (($rType == 'mastercat') && ($SYSTEM_FLAGS['news']['db.categories'][0] == $key)) {
-                                    return true;
-                                }
-                                if (($rType == 'cat') && (in_array($key, $SYSTEM_FLAGS['news']['db.categories']))) {
-                                    return true;
-                                }
-                            } else {
-                                if (($rType == 'mastercat') && (is_array($catz[$key])) && ($SYSTEM_FLAGS['news']['db.categories'][0] == $catz[$key]['id'])) {
-                                    return true;
-                                }
-                                if (($rType == 'cat') && (is_array($catz[$key])) && (in_array($catz[$key]['id'], $SYSTEM_FLAGS['news']['db.categories']))) {
-                                    return true;
-                                }
-                            }
-                        }
-                        break;
-                }
-            }
-
-            return false;
-        }
-
-        // Check if current user has specified permissions
-        // RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
-        // ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
-        function twigIsPerm($rules)
-        {
-        }
-
-        function twigIsSet($context, $val)
-        {
-
-            //print "call TWIG::isSet(".var_export($context, true)." || ".var_export($val, true).");<br/>";
-            //print "call TWIG::isSet(".var_export($val, true).");<br/>";
-            if ((!isset($val)) || (is_array($val) && (count($val) == 0))) {
-                return false;
-            }
-
-            return true;
-        }
-
-        function twigDebugValue($val)
-        {
-            return '<b>debugValue:</b><pre>'.var_export($val, true).'</pre>';
-        }
-
-        function twigDebugContext($context)
-        {
-            return '<b>debugContext:</b><pre>'.var_export($context, true).'</pre>';
-        }
-
-        // Notify kernel about script termination, used for statistics calculation
-        function coreNormalTerminate($mode = 0)
-        {
-            global $mysql, $timer, $config, $userROW, $systemAccessURL;
-
-            $exectime = $timer->stop();
-            $now = localtime(time(), true);
-            $now_str = sprintf('%04u-%02u-%02u %02u:%02u:00', ($now['tm_year'] + 1900), ($now['tm_mon'] + 1), $now['tm_mday'], $now['tm_hour'], (intval($now['tm_min'] / 15) * 15));
-
-            // Common analytics
-            if ($config['load_analytics']) {
-                $cvar = ($mode == 0) ? 'core' : (($mode == 1) ? 'plugin' : 'ppage');
-                $mysql->query('insert into '.prefix.'_load (dt, hit_core, hit_plugin, hit_ppage, exec_core, exec_plugin, exec_ppage) values ('.db_squote($now_str).', '.(($mode == 0) ? 1 : 0).', '.(($mode == 1) ? 1 : 0).' , '.(($mode == 2) ? 1 : 0).', '.(($mode == 0) ? $exectime : 0).', '.(($mode == 1) ? $exectime : 0).', '.(($mode == 2) ? $exectime : 0).') on duplicate key update hit_'.$cvar.' = hit_'.$cvar.' + 1, exec_'.$cvar.' = exec_'.$cvar.' + '.$exectime);
-            }
-
-            // DEBUG profiler
-            if ($config['load_profiler'] > time()) {
-                $trace = [
-                    'queries' => $mysql->query_list,
-                    'events'  => $timer->printEvents(1),
-                ];
-                $mysql->query('insert into '.prefix.'_profiler (dt, userid, exectime, memusage, url, tracedata) values (now(), '.((isset($userROW) && is_array($userROW)) ? $userROW['id'] : 0).', '.$exectime.', '.sprintf('%7.3f', (memory_get_peak_usage() / 1024 / 1024)).', '.db_squote($systemAccessURL).', '.db_squote(serialize($trace)).')');
-            }
-        }
-
-        // Generate user redirect call and terminate execution of CMS
-        function coreRedirectAndTerminate($location)
-        {
-            @header('Location: '.$location);
-            coreNormalTerminate();
-            exit;
-        }
-
-        // Update delayed news counters
-        function newsUpdateDelayedCounters()
-        {
-            global $mysql;
-
-            // Lock tables
-            $mysql->query('lock tables '.prefix.'_news_view write, '.prefix.'_news write');
-
-            // Read data and update counters
-            foreach ($mysql->select('select * from '.prefix.'_news_view') as $vrec) {
-                $mysql->query('update '.prefix.'_news set views = views + '.intval($vrec['cnt']).' where id = '.intval($vrec['id']));
-            }
-
-            // Truncate view table
-            //$mysql->query("truncate table ".prefix."_news_view");
-            // DUE TO BUG IN MYSQL - USE DELETE + OPTIMIZE
-            $mysql->query('delete from '.prefix.'_news_view');
-            $mysql->query('optimize table '.prefix.'_news_view');
-
-            // Unlock tables
-            $mysql->query('unlock tables');
-
-            return true;
-        }
-
-        // Delete old LOAD information, SYSLOG logging
-        function sysloadTruncate()
-        {
-            global $mysql;
-
-            // Store LOAD data only for 1 week
-            $mysql->query('delete from '.prefix.'_load where dt < from_unixtime(unix_timestamp(now()) - 7*86400)');
-            $mysql->query('optimize table '.prefix.'_load');
-
-            // Store SYSLOG data only for 1 month
-            $mysql->query('delete from '.prefix.'_syslog where dt < from_unixtime(unix_timestamp(now()) - 30*86400)');
-            $mysql->query('optimize table '.prefix.'_syslog');
-        }
-
-        // Process CRON job calls
-        function core_cron($isSysCron, $handler)
-        {
-            global $config;
-
-            // Execute DB backup if automatic backup is enabled
-            if (($handler == 'db_backup') && (isset($config['auto_backup'])) && $config['auto_backup']) {
-                AutoBackup($isSysCron, false);
-            }
-
-            if ($handler == 'news_views') {
-                newsUpdateDelayedCounters();
-            }
-
-            if ($handler == 'load_truncate') {
-                sysloadTruncate();
-            }
-        }
-
-        function coreUserMenu()
-        {
-            global $lang, $userROW, $PFILTERS, $lang, $twigLoader, $twig, $template, $config, $SYSTEM_FLAGS, $TemplateCache;
-
-            // Preload template configuration variables
-            templateLoadVariables();
-
-            // Use default <noavatar> file
-            // - Check if noavatar is defined on template level
-            $tplVars = $TemplateCache['site']['#variables'];
-            $noAvatarURL = (isset($tplVars['configuration']) && is_array($tplVars['configuration']) && isset($tplVars['configuration']['noAvatarImage']) && $tplVars['configuration']['noAvatarImage']) ? (tpl_url.'/'.$tplVars['configuration']['noAvatarImage']) : (avatars_url.'/noavatar.png');
-
-            // Preload plugins for usermenu
-            loadActionHandlers('usermenu');
-
-            // Load language file
-            $lang = LoadLang('usermenu', 'site');
-
-            // Prepare global params for TWIG
-            $tVars = [];
-            $tVars['flags']['isLogged'] = is_array($userROW) ? 1 : 0;
-
-            // Prepare REGEX conversion table
-            $conversionConfigRegex = [
-                "#\[login\](.*?)\[/login\]#si"               => '{% if (not flags.isLogged) %}$1{% endif %}',
-                "#\[isnt-logged\](.*?)\[/isnt-logged\]#si"   => '{% if (not flags.isLogged) %}$1{% endif %}',
-                "#\[is-logged\](.*?)\[/is-logged\]#si"       => '{% if (flags.isLogged) %}$1{% endif %}',
-                "#\[login-err\](.*?)\[/login-err\]#si"       => '{% if (flags.loginError) %}$1{% endif %}',
-                "#\[if-have-perm\](.*?)\[/if-have-perm\]#si" => "{% if (global.flags.isLogged and (global.user['status'] <= 3)) %}$1{% endif %}",
-                //		"#\{l_([0-9a-zA-Z\-\_\.\#]+)}#"					=> "{{ lang['$1'] }}",
-            ];
-
-            // Prepare conversion table
-            $conversionConfig = [
-                '{avatar_url}'   => '{{ avatar_url }}',
-                '{profile_link}' => '{{ profile_link }}',
-                '{addnews_link}' => '{{ addnews_link }}',
-                '{logout_link}'  => '{{ logout_link }}',
-                '{phtumb_url}'   => '{{ phtumb_url }}',
-                '{name}'         => '{{ name }}',
-                '{result}'       => '{{ result }}',
-                '{home_url}'     => '{{ home_url }}',
-                '{redirect}'     => '{{ redirect }}',
-                '{reg_link}'     => '{{ reg_link }}',
-                '{lost_link}'    => '{{ lost_link }}',
-                '{form_action}'  => '{{ form_action }}',
-            ];
-
-            // If not logged in
-            if (!is_array($userROW)) {
-                $tVars['flags']['loginError'] = ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '';
-                $tVars['redirect'] = isset($SYSTEM_FLAGS['module.usermenu']['redirect']) ? $SYSTEM_FLAGS['module.usermenu']['redirect'] : $_SERVER['REQUEST_URI'];
-                $tVars['reg_link'] = generateLink('core', 'registration');
-                $tVars['lost_link'] = generateLink('core', 'lostpassword');
-                $tVars['form_action'] = generateLink('core', 'login');
-            } else {
-                // User is logged in
-                $tVars['profile_link'] = generateLink('uprofile', 'edit');
-                $tVars['addnews_link'] = $config['admin_url'].'/admin.php?mod=news&amp;action=add';
-                $tVars['logout_link'] = generateLink('core', 'logout');
-                $tVars['name'] = $userROW['name'];
-                $tVars['phtumb_url'] = photos_url.'/'.(($userROW['photo'] != '') ? 'thumb/'.$userROW['photo'] : 'nophoto.png');
-                $tVars['home_url'] = home;
-
-                // Generate avatar link
-                $userAvatar = '';
-
-                if ($config['use_avatars']) {
-                    if ($userROW['avatar']) {
-                        $userAvatar = avatars_url.'/'.$userROW['avatar'];
                     } else {
-                        // If gravatar integration is active, show avatar from GRAVATAR.COM
-                        if ($config['avatars_gravatar']) {
-                            $userAvatar = 'http://www.gravatar.com/avatar/'.md5(mb_strtolower($userROW['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode($noAvatarURL);
-                        } else {
-                            $userAvatar = $noAvatarURL;
+                        if ($SYSTEM_FLAGS['news']['db.alt'] == $key) {
+                            return true;
                         }
                     }
                 }
-                $tVars['avatar_url'] = $userAvatar;
-            }
+                break;
 
-            // Execute filters - add additional variables
-            if (isset($PFILTERS['core.userMenu']) && is_array($PFILTERS['core.userMenu'])) {
-                foreach ($PFILTERS['core.userMenu'] as $k => $v) {
-                    $v->showUserMenu($tVars);
+            // -- CATEGORY (master or any)
+            case 'mastercat':
+            case 'cat':
+                if ((!isset($SYSTEM_FLAGS['news']['db.categories'])) || ($SYSTEM_FLAGS['news']['db.categories'] == '')) {
+                    continue 2;
                 }
-            }
 
-            $twigLoader->setConversion('usermenu.tpl', $conversionConfig, $conversionConfigRegex);
-            $xt = $twig->loadTemplate('usermenu.tpl');
-            $template['vars']['personal_menu'] = $xt->render($tVars);
-
-            // Add special variables `personal_menu:logged` and `personal_menu:not.logged`
-            $template['vars']['personal_menu:logged'] = is_array($userROW) ? $template['vars']['personal_menu'] : '';
-            $template['vars']['personal_menu:not.logged'] = is_array($userROW) ? '' : $template['vars']['personal_menu'];
-        }
-
-        function coreSearchForm()
-        {
-            global $tpl, $template, $lang;
-
-            LoadLang('search', 'site');
-
-            $tpl->template('search.form', tpl_site);
-            $tpl->vars('search.form', ['vars' => ['form_url' => generateLink('search', '', [])]]);
-            $template['vars']['search_form'] = $tpl->show('search.form');
-        }
-
-        // Return current news category
-        function getCurrentNewsCategory()
-        {
-            global $currentCategory, $catz, $catmap, $config, $CurrentHandler, $SYSTEM_FLAGS;
-
-            // Return if user is not reading any news
-            if (($CurrentHandler['pluginName'] != 'news') || (!isset($SYSTEM_FLAGS['news']['currentCategory.id']))) {
-                return false;
-            }
-
-            // Return if user is not reading short/full news from categories
-            if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print') && ($CurrentHandler['handlerName'] != 'by.category')) {
-                return false;
-            }
-
-            return [($CurrentHandler['handlerName'] == 'by.category') ? 'short' : 'full', $SYSTEM_FLAGS['news']['currentCategory.id'], $SYSTEM_FLAGS['news']['db.id']];
-        }
-
-        // Call plugin execution via TWIG
-        function twigCallPlugin($funcName, $params)
-        {
-            global $TWIGFUNC;
-
-            // Try to preload function if required
-            if (!isset($TWIGFUNC[$funcName])) {
-                if (preg_match("#^(.+?)\.(.+?)$#", $funcName, $m)) {
-                    loadPlugin($m[1], 'twig');
-                }
-            }
-
-            if (!isset($TWIGFUNC[$funcName])) {
-                echo "ERROR :: callPlugin - no function [$funcName]<br/>\n";
-
-                return;
-            }
-
-            return call_user_func($TWIGFUNC[$funcName], $params);
-        }
-
-        // Truncate HTML
-        function twigTruncateHTML($string, $len = 70, $finisher = '')
-        {
-            global $parse;
-
-            return $parse->truncateHTML($string, $len, $finisher);
-        }
-
-        function jsonFormatter($json)
-        {
-            $result = '';
-            $pos = 0;
-            $strLen = mb_strlen($json);
-            $indentStr = '  ';
-            $newLine = "\n";
-            $prevChar = '';
-            $outOfQuotes = true;
-
-            for ($i = 0; $i <= $strLen; $i++) {
-
-                // Grab the next character in the string.
-                $char = mb_substr($json, $i, 1);
-
-                // Are we inside a quoted string?
-                if ($char == '"' && $prevChar != '\\') {
-                    $outOfQuotes = !$outOfQuotes;
-
-                    // If this character is the end of an element,
-                    // output a new line and indent the next line.
-                } elseif (($char == '}' || $char == ']') && $outOfQuotes) {
-                    $result .= $newLine;
-                    $pos--;
-                    for ($j = 0; $j < $pos; $j++) {
-                        $result .= $indentStr;
+                // List of categories from news
+                foreach ($rVal as $key) {
+                    if (ctype_digit($key)) {
+                        if (($rType == 'mastercat') && ($SYSTEM_FLAGS['news']['db.categories'][0] == $key)) {
+                            return true;
+                        }
+                        if (($rType == 'cat') && (in_array($key, $SYSTEM_FLAGS['news']['db.categories']))) {
+                            return true;
+                        }
+                    } else {
+                        if (($rType == 'mastercat') && (is_array($catz[$key])) && ($SYSTEM_FLAGS['news']['db.categories'][0] == $catz[$key]['id'])) {
+                            return true;
+                        }
+                        if (($rType == 'cat') && (is_array($catz[$key])) && (in_array($catz[$key]['id'], $SYSTEM_FLAGS['news']['db.categories']))) {
+                            return true;
+                        }
                     }
                 }
-
-                // Add the character to the result string.
-                $result .= $char;
-
-                // If the last character was the beginning of an element,
-                // output a new line and indent the next line.
-                if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
-                    $result .= $newLine;
-                    if ($char == '{' || $char == '[') {
-                        $pos++;
-                    }
-
-                    for ($j = 0; $j < $pos; $j++) {
-                        $result .= $indentStr;
-                    }
-                }
-
-                $prevChar = $char;
-            }
-
-            return $result;
+                break;
         }
+    }
 
-        function ngLoadCategories()
-        {
-            global $mysql, $catz, $catmap;
+    return false;
+}
 
-            if (($result = cacheRetrieveFile('LoadCategories.dat', 86400)) === false) {
-                $result = $mysql->select('select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `'.prefix.'_category` as nc left join `'.prefix.'_images` ni on nc.image_id = ni.id order by nc.posorder asc', 1);
-                cacheStoreFile('LoadCategories.dat', serialize($result));
+// Check if current user has specified permissions
+// RULE is: <ENTRY1>[|<ENTRY2>[|<ENTRY3>...]]
+// ENTRY1,2,.. is: <PLUGIN>[:<HANDLER>]
+function twigIsPerm($rules)
+{
+}
+
+function twigIsSet($context, $val)
+{
+
+    //print "call TWIG::isSet(".var_export($context, true)." || ".var_export($val, true).");<br/>";
+    //print "call TWIG::isSet(".var_export($val, true).");<br/>";
+    if ((!isset($val)) || (is_array($val) && (count($val) == 0))) {
+        return false;
+    }
+
+    return true;
+}
+
+function twigDebugValue($val)
+{
+    return '<b>debugValue:</b><pre>'.var_export($val, true).'</pre>';
+}
+
+function twigDebugContext($context)
+{
+    return '<b>debugContext:</b><pre>'.var_export($context, true).'</pre>';
+}
+
+// Notify kernel about script termination, used for statistics calculation
+function coreNormalTerminate($mode = 0)
+{
+    global $mysql, $timer, $config, $userROW, $systemAccessURL;
+
+    $exectime = $timer->stop();
+    $now = localtime(time(), true);
+    $now_str = sprintf('%04u-%02u-%02u %02u:%02u:00', ($now['tm_year'] + 1900), ($now['tm_mon'] + 1), $now['tm_mday'], $now['tm_hour'], (intval($now['tm_min'] / 15) * 15));
+
+    // Common analytics
+    if ($config['load_analytics']) {
+        $cvar = ($mode == 0) ? 'core' : (($mode == 1) ? 'plugin' : 'ppage');
+        $mysql->query('insert into '.prefix.'_load (dt, hit_core, hit_plugin, hit_ppage, exec_core, exec_plugin, exec_ppage) values ('.db_squote($now_str).', '.(($mode == 0) ? 1 : 0).', '.(($mode == 1) ? 1 : 0).' , '.(($mode == 2) ? 1 : 0).', '.(($mode == 0) ? $exectime : 0).', '.(($mode == 1) ? $exectime : 0).', '.(($mode == 2) ? $exectime : 0).') on duplicate key update hit_'.$cvar.' = hit_'.$cvar.' + 1, exec_'.$cvar.' = exec_'.$cvar.' + '.$exectime);
+    }
+
+    // DEBUG profiler
+    if ($config['load_profiler'] > time()) {
+        $trace = [
+            'queries' => $mysql->query_list,
+            'events'  => $timer->printEvents(1),
+        ];
+        $mysql->query('insert into '.prefix.'_profiler (dt, userid, exectime, memusage, url, tracedata) values (now(), '.((isset($userROW) && is_array($userROW)) ? $userROW['id'] : 0).', '.$exectime.', '.sprintf('%7.3f', (memory_get_peak_usage() / 1024 / 1024)).', '.db_squote($systemAccessURL).', '.db_squote(serialize($trace)).')');
+    }
+}
+
+// Generate user redirect call and terminate execution of CMS
+function coreRedirectAndTerminate($location)
+{
+    @header('Location: '.$location);
+    coreNormalTerminate();
+    exit;
+}
+
+// Update delayed news counters
+function newsUpdateDelayedCounters()
+{
+    global $mysql;
+
+    // Lock tables
+    $mysql->query('lock tables '.prefix.'_news_view write, '.prefix.'_news write');
+
+    // Read data and update counters
+    foreach ($mysql->select('select * from '.prefix.'_news_view') as $vrec) {
+        $mysql->query('update '.prefix.'_news set views = views + '.intval($vrec['cnt']).' where id = '.intval($vrec['id']));
+    }
+
+    // Truncate view table
+    //$mysql->query("truncate table ".prefix."_news_view");
+    // DUE TO BUG IN MYSQL - USE DELETE + OPTIMIZE
+    $mysql->query('delete from '.prefix.'_news_view');
+    $mysql->query('optimize table '.prefix.'_news_view');
+
+    // Unlock tables
+    $mysql->query('unlock tables');
+
+    return true;
+}
+
+// Delete old LOAD information, SYSLOG logging
+function sysloadTruncate()
+{
+    global $mysql;
+
+    // Store LOAD data only for 1 week
+    $mysql->query('delete from '.prefix.'_load where dt < from_unixtime(unix_timestamp(now()) - 7*86400)');
+    $mysql->query('optimize table '.prefix.'_load');
+
+    // Store SYSLOG data only for 1 month
+    $mysql->query('delete from '.prefix.'_syslog where dt < from_unixtime(unix_timestamp(now()) - 30*86400)');
+    $mysql->query('optimize table '.prefix.'_syslog');
+}
+
+// Process CRON job calls
+function core_cron($isSysCron, $handler)
+{
+    global $config;
+
+    // Execute DB backup if automatic backup is enabled
+    if (($handler == 'db_backup') && (isset($config['auto_backup'])) && $config['auto_backup']) {
+        AutoBackup($isSysCron, false);
+    }
+
+    if ($handler == 'news_views') {
+        newsUpdateDelayedCounters();
+    }
+
+    if ($handler == 'load_truncate') {
+        sysloadTruncate();
+    }
+}
+
+function coreUserMenu()
+{
+    global $lang, $userROW, $PFILTERS, $lang, $twigLoader, $twig, $template, $config, $SYSTEM_FLAGS, $TemplateCache;
+
+    // Preload template configuration variables
+    templateLoadVariables();
+
+    // Use default <noavatar> file
+    // - Check if noavatar is defined on template level
+    $tplVars = $TemplateCache['site']['#variables'];
+    $noAvatarURL = (isset($tplVars['configuration']) && is_array($tplVars['configuration']) && isset($tplVars['configuration']['noAvatarImage']) && $tplVars['configuration']['noAvatarImage']) ? (tpl_url.'/'.$tplVars['configuration']['noAvatarImage']) : (avatars_url.'/noavatar.gif');
+
+    // Preload plugins for usermenu
+    loadActionHandlers('usermenu');
+
+    // Load language file
+    $lang = LoadLang('usermenu', 'site');
+
+    // Prepare global params for TWIG
+    $tVars = [];
+    $tVars['flags']['isLogged'] = is_array($userROW) ? 1 : 0;
+
+    // Prepare REGEX conversion table
+    $conversionConfigRegex = [
+        "#\[login\](.*?)\[/login\]#si"               => '{% if (not flags.isLogged) %}$1{% endif %}',
+        "#\[isnt-logged\](.*?)\[/isnt-logged\]#si"   => '{% if (not flags.isLogged) %}$1{% endif %}',
+        "#\[is-logged\](.*?)\[/is-logged\]#si"       => '{% if (flags.isLogged) %}$1{% endif %}',
+        "#\[login-err\](.*?)\[/login-err\]#si"       => '{% if (flags.loginError) %}$1{% endif %}',
+        "#\[if-have-perm\](.*?)\[/if-have-perm\]#si" => "{% if (global.flags.isLogged and (global.user['status'] <= 3)) %}$1{% endif %}",
+        //		"#\{l_([0-9a-zA-Z\-\_\.\#]+)}#"					=> "{{ lang['$1'] }}",
+    ];
+
+    // Prepare conversion table
+    $conversionConfig = [
+        '{avatar_url}'   => '{{ avatar_url }}',
+        '{profile_link}' => '{{ profile_link }}',
+        '{addnews_link}' => '{{ addnews_link }}',
+        '{logout_link}'  => '{{ logout_link }}',
+        '{phtumb_url}'   => '{{ phtumb_url }}',
+        '{name}'         => '{{ name }}',
+        '{result}'       => '{{ result }}',
+        '{home_url}'     => '{{ home_url }}',
+        '{redirect}'     => '{{ redirect }}',
+        '{reg_link}'     => '{{ reg_link }}',
+        '{lost_link}'    => '{{ lost_link }}',
+        '{form_action}'  => '{{ form_action }}',
+    ];
+
+    // If not logged in
+    if (!is_array($userROW)) {
+        $tVars['flags']['loginError'] = ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '';
+        $tVars['redirect'] = isset($SYSTEM_FLAGS['module.usermenu']['redirect']) ? $SYSTEM_FLAGS['module.usermenu']['redirect'] : $_SERVER['REQUEST_URI'];
+        $tVars['reg_link'] = generateLink('core', 'registration');
+        $tVars['lost_link'] = generateLink('core', 'lostpassword');
+        $tVars['form_action'] = generateLink('core', 'login');
+    } else {
+        // User is logged in
+        $tVars['profile_link'] = generateLink('uprofile', 'edit');
+        $tVars['addnews_link'] = $config['admin_url'].'/admin.php?mod=news&amp;action=add';
+        $tVars['logout_link'] = generateLink('core', 'logout');
+        $tVars['name'] = $userROW['name'];
+        $tVars['phtumb_url'] = photos_url.'/'.(($userROW['photo'] != '') ? 'thumb/'.$userROW['photo'] : 'nophoto.gif');
+        $tVars['home_url'] = home;
+
+        // Generate avatar link
+        $userAvatar = '';
+
+        if ($config['use_avatars']) {
+            if ($userROW['avatar']) {
+                $userAvatar = avatars_url.'/'.$userROW['avatar'];
             } else {
-                $result = unserialize($result);
-            }
-
-            if (is_array($result)) {
-                foreach ($result as $row) {
-                    $catz[$row['alt']] = $row;
-                    $catmap[$row['id']] = $row['alt'];
+                // If gravatar integration is active, show avatar from GRAVATAR.COM
+                if ($config['avatars_gravatar']) {
+                    $userAvatar = 'http://www.gravatar.com/avatar/'.md5(mb_strtolower($userROW['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode($noAvatarURL);
+                } else {
+                    $userAvatar = $noAvatarURL;
                 }
             }
         }
+        $tVars['avatar_url'] = $userAvatar;
+    }
 
-        // Function for detection of UTF-8 charset
-        function detectUTF8($string)
-        {
-            return preg_match('%(?:
+    // Execute filters - add additional variables
+    if (isset($PFILTERS['core.userMenu']) && is_array($PFILTERS['core.userMenu'])) {
+        foreach ($PFILTERS['core.userMenu'] as $k => $v) {
+            $v->showUserMenu($tVars);
+        }
+    }
+
+    $twigLoader->setConversion('usermenu.tpl', $conversionConfig, $conversionConfigRegex);
+    $xt = $twig->loadTemplate('usermenu.tpl');
+    $template['vars']['personal_menu'] = $xt->render($tVars);
+
+    // Add special variables `personal_menu:logged` and `personal_menu:not.logged`
+    $template['vars']['personal_menu:logged'] = is_array($userROW) ? $template['vars']['personal_menu'] : '';
+    $template['vars']['personal_menu:not.logged'] = is_array($userROW) ? '' : $template['vars']['personal_menu'];
+}
+
+function coreSearchForm()
+{
+    global $tpl, $template, $lang;
+
+    LoadLang('search', 'site');
+
+    $tpl->template('search.form', tpl_site);
+    $tpl->vars('search.form', ['vars' => ['form_url' => generateLink('search', '', [])]]);
+    $template['vars']['search_form'] = $tpl->show('search.form');
+}
+
+// Return current news category
+function getCurrentNewsCategory()
+{
+    global $currentCategory, $catz, $catmap, $config, $CurrentHandler, $SYSTEM_FLAGS;
+
+    // Return if user is not reading any news
+    if (($CurrentHandler['pluginName'] != 'news') || (!isset($SYSTEM_FLAGS['news']['currentCategory.id']))) {
+        return false;
+    }
+
+    // Return if user is not reading short/full news from categories
+    if (($CurrentHandler['handlerName'] != 'news') && ($CurrentHandler['handlerName'] != 'print') && ($CurrentHandler['handlerName'] != 'by.category')) {
+        return false;
+    }
+
+    return [($CurrentHandler['handlerName'] == 'by.category') ? 'short' : 'full', $SYSTEM_FLAGS['news']['currentCategory.id'], $SYSTEM_FLAGS['news']['db.id']];
+}
+
+// Call plugin execution via TWIG
+function twigCallPlugin($funcName, $params)
+{
+    global $TWIGFUNC;
+
+    // Try to preload function if required
+    if (!isset($TWIGFUNC[$funcName])) {
+        if (preg_match("#^(.+?)\.(.+?)$#", $funcName, $m)) {
+            loadPlugin($m[1], 'twig');
+        }
+    }
+
+    if (!isset($TWIGFUNC[$funcName])) {
+        echo "ERROR :: callPlugin - no function [$funcName]<br/>\n";
+
+        return;
+    }
+
+    return call_user_func($TWIGFUNC[$funcName], $params);
+}
+
+// Truncate HTML
+function twigTruncateHTML($string, $len = 70, $finisher = '')
+{
+    global $parse;
+
+    return $parse->truncateHTML($string, $len, $finisher);
+}
+
+function jsonFormatter($json)
+{
+    $result = '';
+    $pos = 0;
+    $strLen = mb_strlen($json);
+    $indentStr = '  ';
+    $newLine = "\n";
+    $prevChar = '';
+    $outOfQuotes = true;
+
+    for ($i = 0; $i <= $strLen; $i++) {
+
+        // Grab the next character in the string.
+        $char = mb_substr($json, $i, 1);
+
+        // Are we inside a quoted string?
+        if ($char == '"' && $prevChar != '\\') {
+            $outOfQuotes = !$outOfQuotes;
+
+        // If this character is the end of an element,
+            // output a new line and indent the next line.
+        } elseif (($char == '}' || $char == ']') && $outOfQuotes) {
+            $result .= $newLine;
+            $pos--;
+            for ($j = 0; $j < $pos; $j++) {
+                $result .= $indentStr;
+            }
+        }
+
+        // Add the character to the result string.
+        $result .= $char;
+
+        // If the last character was the beginning of an element,
+        // output a new line and indent the next line.
+        if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
+            $result .= $newLine;
+            if ($char == '{' || $char == '[') {
+                $pos++;
+            }
+
+            for ($j = 0; $j < $pos; $j++) {
+                $result .= $indentStr;
+            }
+        }
+
+        $prevChar = $char;
+    }
+
+    return $result;
+}
+
+function ngLoadCategories()
+{
+    global $mysql, $catz, $catmap;
+
+    if (($result = cacheRetrieveFile('LoadCategories.dat', 86400)) === false) {
+        $result = $mysql->select('select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `'.prefix.'_category` as nc left join `'.prefix.'_images` ni on nc.image_id = ni.id order by nc.posorder asc', 1);
+        cacheStoreFile('LoadCategories.dat', serialize($result));
+    } else {
+        $result = unserialize($result);
+    }
+
+    if (is_array($result)) {
+        foreach ($result as $row) {
+            $catz[$row['alt']] = $row;
+            $catmap[$row['id']] = $row['alt'];
+        }
+    }
+}
+
+// Function for detection of UTF-8 charset
+function detectUTF8($string)
+{
+    return preg_match('%(?:
         [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
         |\xE0[\xA0-\xBF][\x80-\xBF]               # excluding overlongs
         |[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}      # straight 3-byte
@@ -3268,45 +3265,45 @@ function ngExceptionHandler($exception)
         |[\xF1-\xF3][\x80-\xBF]{3}                  # planes 4-15
         |\xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
         )+%xs', $string);
-        }
+}
 
-        // Collect backtrace for debug analysis
-        // $style:
-        //		0 - print output in <pre>..</pre>
-        //		1 - return array
-        function ngCollectTrace($style = 0)
-        {
-            $bt = debug_backtrace();
-            $list = [];
-            foreach ($bt as $b) {
-                $list[] = ['file' => $b['file'], 'line' => $b['line'], 'function' => $b['function']];
-            }
+// Collect backtrace for debug analysis
+// $style:
+//		0 - print output in <pre>..</pre>
+//		1 - return array
+function ngCollectTrace($style = 0)
+{
+    $bt = debug_backtrace();
+    $list = [];
+    foreach ($bt as $b) {
+        $list[] = ['file' => $b['file'], 'line' => $b['line'], 'function' => $b['function']];
+    }
 
-            if ($style == 1) {
-                return $list;
-            }
+    if ($style == 1) {
+        return $list;
+    }
 
-            echo "<pre>ngCollectTrace() debug output:\n";
-            foreach ($list as $b) {
-                printf("[ %-40s ] (%5u) %s\n", $b['function'], $b['line'], $b['file']);
-            }
-            echo '</pre>';
+    echo "<pre>ngCollectTrace() debug output:\n";
+    foreach ($list as $b) {
+        printf("[ %-40s ] (%5u) %s\n", $b['function'], $b['line'], $b['file']);
+    }
+    echo '</pre>';
 
-            return true;
-        }
+    return true;
+}
 
-        /**
-         * debug.
-         *
-         * @param mixed $obj
-         *
-         * @return string
-         */
-        function dd($obj)
-        {
-            if (is_array($obj) || is_object($obj)) {
-                $obj = print_r($obj, true);
-            }
+/**
+ * debug.
+ *
+ * @param mixed $obj
+ *
+ * @return string
+ */
+function dd($obj)
+{
+    if (is_array($obj) || is_object($obj)) {
+        $obj = print_r($obj, true);
+    }
 
-            echo '<pre>'.htmlentities($obj, ENT_QUOTES)."</pre><br>\n";
-        }
+    echo '<pre>'.htmlentities($obj, ENT_QUOTES)."</pre><br>\n";
+}
