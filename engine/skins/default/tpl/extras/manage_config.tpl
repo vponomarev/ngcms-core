@@ -5,7 +5,7 @@
 	  </div><!-- /.col -->
 	  <div class="col-sm-6">
 		<ol class="breadcrumb float-sm-right">
-			<li class="breadcrumb-item"><a href="{php_self}"><i class="fa fa-home"></i></a></li>
+			<li class="breadcrumb-item"><a href="admin.php"><i class="fa fa-home"></i></a></li>
 		<li class="breadcrumb-item"><a href="href="?mod=configuration"">{{ lang['manage_vars'] }}</a></li>
 
 		</ol>

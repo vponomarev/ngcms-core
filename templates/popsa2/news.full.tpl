@@ -32,7 +32,7 @@
 								войти</b></a> на сайт под своим именем.</p>
 					{% if pluginIsActive('auth_loginza') %}
 						<a href="http://loginza.ru/api/widget?token_url={{ home }}" class="loginza">
-							<img src="/engine/plugins/auth_loginza/tpl/img/sign_in_button_gray.gif" alt="Войти через loginza"/>
+							<img src="/engine/plugins/auth_loginza/tpl/img/sign_in_button_gray.png" alt="Войти через loginza"/>
 						</a>
 					{% endif %}
 				</div>

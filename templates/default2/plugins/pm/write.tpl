@@ -83,7 +83,7 @@
 						<small>{{ lang['pm:to'] }}</small>
 					</td>
 					<td>
-						<input type="text" class="input" name="to_username" id="to_username" tabindex="3" autocomplete="off" value="{{ username }}"/><span id="suggestLoader" style="width: 20px; visibility: hidden;"><img src="{{ skins_url }}/images/loading.gif"/></span>
+						<input type="text" class="input" name="to_username" id="to_username" tabindex="3" autocomplete="off" value="{{ username }}"/><span id="suggestLoader" style="width: 20px; visibility: hidden;"><img src="{{ skins_url }}/images/loading.png"/></span>
 					</td>
 				</tr>
 				<tr>

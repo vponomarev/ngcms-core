@@ -13,7 +13,7 @@ if (!defined('NGCMS')) {
 }
 
 // Load library
-@include_once root.'includes/classes/upload.class.php';
+@include_once root . 'includes/classes/upload.class.php';
 $lang = LoadLang('categories', 'admin');
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ function admCategoryList($retMode = 0)
     $permDetails = checkPermission(['plugin' => '#admin', 'item' => 'categories'], null, 'details');
 
     // Fetch list of categories
-    $cList = $mysql->select('select * from '.prefix.'_category order by posorder');
+    $cList = $mysql->select('select * from ' . prefix . '_category order by posorder');
     $cLen = count($cList);
 
     // Prepare list of categories
@@ -67,7 +67,7 @@ function admCategoryList($retMode = 0)
             'alt'       => $row['alt'],
             'alt_url'   => $row['alt_url'],
             'info'      => $row['info'],
-            'show_main' => intval(substr($row['flags'], 0, 1)) ? ('<img src="'.skins_url.'/images/yes.png" alt="'.$lang['yesa'].'" title="'.$lang['yesa'].'"/>') : ('<img src="'.skins_url.'/images/no.png" alt="'.$lang['noa'].'"/>'),
+            'show_main' => intval(substr($row['flags'], 0, 1)) ? ('<img src="' . skins_url . '/images/yes.png" alt="' . $lang['yesa'] . '" title="' . $lang['yesa'] . '"/>') : ('<img src="' . skins_url . '/images/no.png" alt="' . $lang['noa'] . '"/>'),
             'template'  => ($row['tpl'] != '') ? $row['tpl'] : '--',
             'news'      => ($row['posts'] > 0) ? $row['posts'] : '--',
             'linkView'  => (checkLinkAvailable('news', 'by.category') ?
@@ -80,12 +80,12 @@ function admCategoryList($retMode = 0)
 
         // Prepare position
         if ($row['poslevel'] > 0) {
-            $tEntry['level'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
+            $tEntry['level'] = str_repeat('<img alt="-" height="18" width="18" src="' . skins_url . '/images/catmenu/line.png" />', ($row['poslevel']));
         } else {
             $tEntry['level'] = '';
         }
-        $tEntry['level'] = $tEntry['level'].
-            '<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '').'.gif" />';
+        $tEntry['level'] = $tEntry['level'] .
+            '<img alt="-" height="18" width="18" src="' . skins_url . '/images/catmenu/join' . ((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '') . '.png" />';
         $tvars['regx']['#\[news\](.*?)\[\/news\]#is'] = ($row['posts'] > 0) ? '$1' : '';
 
         $tEntries[] = $tEntry;
@@ -121,7 +121,7 @@ function admCategoryReorder($params = [])
     $moveResult = 0;
 
     $tree[0] = ['parent' => 0, 'children' => [], 'poslevel' => 0];
-    foreach ($mysql->select('select * from '.prefix.'_category order by posorder', 1) as $v) {
+    foreach ($mysql->select('select * from ' . prefix . '_category order by posorder', 1) as $v) {
         $ncat[$v['id']] = $v;
         $tree[$v['id']] = ['children' => [], 'parent' => $v['parent'], 'poslevel' => $v['poslevel']];
     }
@@ -207,7 +207,7 @@ function admCategoryReorder($params = [])
     foreach ($ordr as $k => $v) {
         list($catID, $level) = $v;
         if (($ncat[$catID]['posorder'] != $num) || ($ncat[$catID]['poslevel'] != $level) || ($ncat[$catID]['parent'] != $tree[$catID]['parent'])) {
-            $mysql->query('update '.prefix.'_category set posorder = '.db_squote($num).', poslevel = '.db_squote($level).', parent = '.db_squote($tree[$catID]['parent']).' where id = '.db_squote($catID));
+            $mysql->query('update ' . prefix . '_category set posorder = ' . db_squote($num) . ', poslevel = ' . db_squote($level) . ', parent = ' . db_squote($tree[$catID]['parent']) . ' where id = ' . db_squote($catID));
         }
         $num++;
     }
@@ -242,23 +242,23 @@ function admCategoriesRPCmodify($params)
     $row = $catz[$catmap[$params['id']]];
 
     switch ($params['mode']) {
-        // Delete category
+            // Delete category
         case 'del':
             // Check if category have children
-            $refCCount = $mysql->record('select count(*) as cnt from '.prefix.'_category where parent = '.intval($params['id']));
+            $refCCount = $mysql->record('select count(*) as cnt from ' . prefix . '_category where parent = ' . intval($params['id']));
             if ($refCCount['cnt'] > 0) {
                 return ['status' => 0, 'errorCode' => 11, 'errorText' => 'Category have children, please delete news from this category first'];
             }
 
             // Check for news in category
-            $refNCount = $mysql->record('select count(*) as cnt from '.prefix.'_news_map where categoryID = '.intval($params['id']));
+            $refNCount = $mysql->record('select count(*) as cnt from ' . prefix . '_news_map where categoryID = ' . intval($params['id']));
             if ($refNCount['cnt'] > 0) {
                 return ['status' => 0, 'errorCode' => 12, 'errorText' => 'Category have news, please delete news from this category first'];
             }
 
             // Fine, now we can delete category!
             // * Delete
-            $mysql->query('delete from '.prefix.'_category where id = '.intval($params['id']));
+            $mysql->query('delete from ' . prefix . '_category where id = ' . intval($params['id']));
 
             // Delete attached files (if any)
             if ($row['image_id']) {
@@ -276,7 +276,7 @@ function admCategoriesRPCmodify($params)
 
             return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => 1, 'infoText' => 'Category was deleted', 'content' => $data];
 
-        // Move category UP/DOWN
+            // Move category UP/DOWN
         case 'up':
         case 'down':
             $moveResult = admCategoryReorder(['mode' => $params['mode'], 'id' => intval($params['id'])]);
@@ -284,11 +284,10 @@ function admCategoriesRPCmodify($params)
             // * Rewrite page content
             $data = admCategoryList(2);
 
-            return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => intval($moveResult), 'infoText' => '<img src="/engine/skins/default/images/'.$params['mode'].'.gif"/> '.$catz[$catmap[$params['id']]]['name'], 'content' => $data];
-
+            return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => intval($moveResult), 'infoText' => '<img src="/engine/skins/default/images/' . $params['mode'] . '.png"/> ' . $catz[$catmap[$params['id']]]['name'], 'content' => $data];
     }
 
-    return ['status' => 0, 'errorCode' => 999, 'errorText' => 'Params: '.var_export($params, true)];
+    return ['status' => 0, 'errorCode' => 999, 'errorText' => 'Params: ' . var_export($params, true)];
 }
 
 if (function_exists('rpcRegisterAdminFunction')) {

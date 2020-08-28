@@ -1294,7 +1294,7 @@ select {
 }
 
 .spoiler .sp-head b {
-	background: url('../img/spoiler-plus.gif') no-repeat;
+	background: url('../img/spoiler-plus.png') no-repeat;
 	float: left;
 	width: 9px;
 	height: 9px;
@@ -1302,7 +1302,7 @@ select {
 }
 
 .spoiler .sp-head b.expanded {
-	background: url('../img/spoiler-minus.gif') no-repeat;
+	background: url('../img/spoiler-minus.png') no-repeat;
 	float: left;
 	width: 9px;
 	height: 9px;

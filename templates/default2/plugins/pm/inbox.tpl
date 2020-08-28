@@ -32,8 +32,8 @@
 						</td>
 						<td class="pm_list">{{ entry.link }}</td>
 						<td class="pm_list">{% if (entry.viewed == 1) %}
-								<img src="/engine/plugins/pm/img/viewed.yes.gif"/>{% else %}
-								<img src="/engine/plugins/pm/img/viewed.no.gif"/>{% endif %}</td>
+								<img src="/engine/plugins/pm/img/viewed.yes.png"/>{% else %}
+								<img src="/engine/plugins/pm/img/viewed.no.png"/>{% endif %}</td>
 						<td class="pm_list"><input name="selected_pm[]" value="{{ entry.pmid }}" type="checkbox"/></td>
 					</tr>
 				{% endfor %}

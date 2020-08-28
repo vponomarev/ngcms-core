@@ -47,7 +47,7 @@ class parse
 
         // Add leading "http://" if needed
         if (!preg_match("#^(http|ftp|https|news)\://#iu", $url)) {
-            $url = 'http://'.$url;
+            $url = 'http://' . $url;
         }
 
         return $url;
@@ -179,13 +179,13 @@ class parse
 
         // Special BB tag [code] - blocks all other tags inside
         while (preg_match("#\[code\](.+?)\[/code\]#iesu", $content, $res)) {
-            $content = str_replace($res[0], '<pre>'.str_replace(['[', '<'], ['&#91;', '&lt;'], $res[1]).'</pre>', $content);
+            $content = str_replace($res[0], '<pre>' . str_replace(['[', '<'], ['&#91;', '&lt;'], $res[1]) . '</pre>', $content);
         }
 
         //$content	=	preg_replace("#\[code\](.+?)\[/code\]#is", "<pre>$1</pre>",$content);
 
-        $content = preg_replace("#\[quote\]\s*(.*?)\s*\[/quote\]#is", '<blockquote><b>'.$lang['bb_quote'].'</b><br />$1</blockquote>', $content);
-        $content = preg_replace("#\[quote=(.*?)\]\s*(.*?)\s*\[/quote\]#is", '<blockquote><b>$1 '.$lang['bb_wrote'].'</b><br />$2</blockquote>', $content);
+        $content = preg_replace("#\[quote\]\s*(.*?)\s*\[/quote\]#is", '<blockquote><b>' . $lang['bb_quote'] . '</b><br />$1</blockquote>', $content);
+        $content = preg_replace("#\[quote=(.*?)\]\s*(.*?)\s*\[/quote\]#is", '<blockquote><b>$1 ' . $lang['bb_wrote'] . '</b><br />$2</blockquote>', $content);
 
         $content = preg_replace("#\[acronym\]\s*(.*?)\s*\[/acronym\]#is", '<acronym>$1</acronym>', $content);
         $content = preg_replace('#\[acronym=([^\"]+?)\]\s*(.*?)\s*\[/acronym\]#is', '<acronym title="$1">$2</acronym>', $content);
@@ -209,7 +209,7 @@ class parse
 
         // Process spoilers
         while (preg_match("#\[spoiler\](.*?)\[/spoiler\]#isu", $content, $null)) {
-            $content = preg_replace("#\[spoiler\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>'.$lang['bb_spoiler'].'</div><div class="sp-body">$1</div></div>', $content);
+            $content = preg_replace("#\[spoiler\](.*?)\[/spoiler\]#is", '<div class="spoiler"><div class="sp-head" onclick="toggleSpoiler(this.parentNode, this);"><b></b>' . $lang['bb_spoiler'] . '</div><div class="sp-body">$1</div></div>', $content);
         }
 
         while (preg_match("#\[spoiler=\"(.+?)\"\](.*?)\[/spoiler\]#isu", $content, $null)) {
@@ -245,7 +245,7 @@ class parse
                 // Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
                 if ((mb_strpos($alt, ']') !== false) && (mb_strpos($alt, '"') !== false)) {
                     // Possible bracket error. Make deep analysis
-                    $jline = $paramLine.']'.$alt;
+                    $jline = $paramLine . ']' . $alt;
                     $brk = 0;
                     $jlen = mb_strlen($jline);
                     for ($ji = 0; $ji < $jlen; $ji++) {
@@ -268,7 +268,7 @@ class parse
                 // Make a parametric line with url
                 if (trim($paramLine)) {
                     // Parse params
-                    $keys = $this->parseBBCodeParams((($null == '=') ? 'src=' : '').$paramLine);
+                    $keys = $this->parseBBCodeParams((($null == '=') ? 'src=' : '') . $paramLine);
                 } else {
                     // No params to scan
                     $keys = [];
@@ -286,7 +286,7 @@ class parse
                 $keys['alt'] = $alt;
 
                 // Now let's compose a resulting URL
-                $outkeys[] = 'src="'.$urlREF.'"';
+                $outkeys[] = 'src="' . $urlREF . '"';
 
                 // Now parse allowed tags and add it into output line
                 foreach ($keys as $kn => $kv) {
@@ -296,26 +296,26 @@ class parse
                         case 'hspace':
                         case 'vspace':
                         case 'border':
-                            $outkeys[] = $kn.'="'.intval($kv).'"';
+                            $outkeys[] = $kn . '="' . intval($kv) . '"';
                             break;
                         case 'align':
                             if (in_array(mb_strtolower($kv), ['left', 'right', 'middle', 'top', 'bottom'])) {
-                                $outkeys[] = $kn.'="'.mb_strtolower($kv).'"';
+                                $outkeys[] = $kn . '="' . mb_strtolower($kv) . '"';
                             }
                             break;
                         case 'class':
                             $v = str_replace([ord(0), ord(9), ord(10), ord(13), ' ', "'", '"', ';', ':', '<', '>', '&', '[', ']'], '', $kv);
-                            $outkeys[] = $kn.'="'.$v.'"';
+                            $outkeys[] = $kn . '="' . $v . '"';
                             break;
                         case 'alt':
                         case 'title':
                             $v = str_replace(['"', '[', ']', ord(0), ord(9), ord(10), ord(13), ':', '<', '>', '&'], ["'", '%5b', '%5d', ''], $kv);
-                            $outkeys[] = $kn.'="'.$v.'"';
+                            $outkeys[] = $kn . '="' . $v . '"';
                             break;
                     }
                 }
                 // Fill an output replacing array
-                array_push($rdest, '<img '.(implode(' ', $outkeys)).' />');
+                array_push($rdest, '<img ' . (implode(' ', $outkeys)) . ' />');
             }
             $content = str_replace($rsrc, $rdest, $content);
         }
@@ -347,7 +347,7 @@ class parse
                 // Ex: [url="file[my][super].avi" target="_blank"]F[I]LE[/url] is parsed incorrectly
                 if ((mb_strpos($alt, ']') !== false) && (mb_strpos($alt, '"') !== false)) {
                     // Possible bracket error. Make deep analysis
-                    $jline = $paramLine.']'.$alt;
+                    $jline = $paramLine . ']' . $alt;
                     $brk = 0;
                     $jlen = mb_strlen($jline);
                     for ($ji = 0; $ji < $jlen; $ji++) {
@@ -370,7 +370,7 @@ class parse
                 // Make a parametric line with url
                 if (trim($paramLine)) {
                     // Parse params
-                    $keys = $this->parseBBCodeParams((($null == '=') ? 'href=' : '').$paramLine);
+                    $keys = $this->parseBBCodeParams((($null == '=') ? 'href=' : '') . $paramLine);
                 } else {
                     // No params to scan
                     $keys = [];
@@ -392,7 +392,7 @@ class parse
                 }
 
                 // Now let's compose a resulting URL
-                $outkeys[] = 'href="'.$urlREF.'"';
+                $outkeys[] = 'href="' . $urlREF . '"';
 
                 // Check if we have external URL
                 $flagExternalURL = false;
@@ -418,16 +418,16 @@ class parse
                         case 'class':
                         case 'target':
                             $v = str_replace([ord(0), ord(9), ord(10), ord(13), ' ', "'", '"', ';', ':', '<', '>', '&', '[', ']'], '', $kv);
-                            $outkeys[] = $kn.'="'.$v.'"';
+                            $outkeys[] = $kn . '="' . $v . '"';
                             break;
                         case 'title':
                             $v = str_replace(['"', '[', ']', ord(0), ord(9), ord(10), ord(13), ':', '<', '>', '&'], ["'", '%5b', '%5d', ''], $kv);
-                            $outkeys[] = $kn.'="'.$v.'"';
+                            $outkeys[] = $kn . '="' . $v . '"';
                             break;
                     }
                 }
                 // Fill an output replacing array
-                array_push($rdest, '<a '.(implode(' ', $outkeys)).'>'.$alt.'</a>');
+                array_push($rdest, '<a ' . (implode(' ', $outkeys)) . '>' . $alt . '</a>');
             }
             $content = str_replace($rsrc, $rdest, $content);
         }
@@ -453,12 +453,12 @@ class parse
 
         // Make replacement of dangerous symbols
         if (preg_match('#^(http|https|ftp)://(.+)$#u', $url, $mresult)) {
-            return $mresult[1].'://'.str_replace([':', "'", '"', '[', ']'], ['%3A', '%27', '%22', '%5b', '%5d'], $mresult[2]);
+            return $mresult[1] . '://' . str_replace([':', "'", '"', '[', ']'], ['%3A', '%27', '%22', '%5b', '%5d'], $mresult[2]);
         }
 
         // Process special `magnet` links
         if (preg_match('#^(magnet\:\?)(.+)$#u', $url, $mresult)) {
-            return $mresult[1].str_replace([' ', "'", '"'], ['%20', '%27', '%22'], $mresult[2]);
+            return $mresult[1] . str_replace([' ', "'", '"'], ['%20', '%27', '%22'], $mresult[2]);
         }
 
         return str_replace([':', "'", '"'], ['%3A', '%27', '%22'], $url);
@@ -509,7 +509,7 @@ class parse
         foreach ($smilies_arr as $null => $smile) {
             $smile = trim($smile);
             $find[] = "':$smile:'";
-            $replace[] = "<img class=\"smilies\" alt=\"$smile\" src=\"".skins_url."/smilies/$smile.gif\" />";
+            $replace[] = "<img class=\"smilies\" alt=\"$smile\" src=\"" . skins_url . "/smilies/$smile.png\" />";
         }
 
         return preg_replace($find, $replace, $content);
@@ -536,7 +536,7 @@ class parse
         $content = preg_replace("/\s+/ms", '-', $content);
         $content = preg_replace('/[ ]+/', '-', $content);
 
-        $content = preg_replace("/[^a-z0-9_\-\.".($allowSlash ? '\/' : '').']+/mi', '', $content);
+        $content = preg_replace("/[^a-z0-9_\-\." . ($allowSlash ? '\/' : '') . ']+/mi', '', $content);
         $content = preg_replace('#-(-)+#', '-', $content);
 
         return $content;
@@ -550,7 +550,7 @@ class parse
         $style = preg_replace("/[&\(\)\.\%\[\]<>\'\"]/", '', preg_replace('#^(.+?)(?:;|$)#', '$1', $style));
         $style = preg_replace("/[^\d\w\#\s]/s", '', $style);
 
-        return '<span style="color:'.$style.'">'.$text.'</span>';
+        return '<span style="color:' . $style . '">' . $text . '</span>';
     }
 
     // Functions for HTML truncator
@@ -559,7 +559,7 @@ class parse
         $alist = [];
         foreach ($attributes as $aname => $aval) {
             $mark = (mb_strpos($aval, '"') === false) ? '"' : "'";
-            $alist[] = $aname.'='.$mark.$aval.$mark;
+            $alist[] = $aname . '=' . $mark . $aval . $mark;
         }
 
         return implode(' ', $alist);
@@ -601,7 +601,7 @@ class parse
             //	printf("%03u[%u][%03u][%02u] %s\n", $position, $state, $textLen, count($openTagList), $char);
 
             switch ($state) {
-                // Scanning text
+                    // Scanning text
                 case 0:
                     // '<' - way to starting tag
                     if ($char == '<') {
@@ -733,11 +733,11 @@ class parse
             }
         }
 
-        $output = mb_substr($text, 0, $position + 1).((($position + 1) != $len) ? $finisher : '');
+        $output = mb_substr($text, 0, $position + 1) . ((($position + 1) != $len) ? $finisher : '');
 
         // Check if we have opened tags
         while ($tag = array_pop($openTagList)) {
-            $output .= '</'.$tag.'>';
+            $output .= '</' . $tag . '>';
         }
 
         return $output;
@@ -769,18 +769,18 @@ class parse
                     if (is_array($dataCache[$uid])) {
                         $rec = $dataCache[$uid];
                     } else {
-                        $rec = $db->record('select * from '.prefix.'_files where id = '.db_squote($uid));
+                        $rec = $db->record('select * from ' . prefix . '_files where id = ' . db_squote($uid));
                         if (is_array($rec)) {
                             $dataCache[$uid] = $rec;
                         }
                     }
                     if (is_array($rec)) {
                         // Generate file ULR
-                        $fname = ($rec['storage'] ? $config['attach_dir'] : $config['files_dir']).$rec['folder'].'/'.$rec['name'];
+                        $fname = ($rec['storage'] ? $config['attach_dir'] : $config['files_dir']) . $rec['folder'] . '/' . $rec['name'];
                         $fsize = (file_exists($fname) && ($fsize = @filesize($fname))) ? Formatsize($fsize) : 'n/a';
 
                         $params = [
-                            'url'   => ($rec['storage'] ? $config['attach_url'] : $config['files_url']).'/'.$rec['folder'].'/'.$rec['name'],
+                            'url'   => ($rec['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $rec['folder'] . '/' . $rec['name'],
                             'title' => ($title == '') ? $rec['orig_name'] : $title,
                             'size'  => $fsize,
                         ];
@@ -805,19 +805,19 @@ class parse
                     if (is_array($dataCache[$uid])) {
                         $rec = $dataCache[$uid];
                     } else {
-                        $rec = $db->record('select * from '.prefix.'_files where id = '.db_squote($uid));
+                        $rec = $db->record('select * from ' . prefix . '_files where id = ' . db_squote($uid));
                         if (is_array($rec)) {
                             $dataCache[$uid] = $rec;
                         }
                     }
                     if (is_array($rec)) {
                         // Generate file ULR
-                        $fname = ($rec['storage'] ? $config['attach_dir'] : $config['files_dir']).$rec['folder'].'/'.$rec['name'];
+                        $fname = ($rec['storage'] ? $config['attach_dir'] : $config['files_dir']) . $rec['folder'] . '/' . $rec['name'];
 
                         // Decide what to do
                         switch ($catch[2]) {
                             case 'url':
-                                array_push($rdest, ($rec['storage'] ? $config['attach_url'] : $config['files_url']).'/'.$rec['folder'].'/'.$rec['name']);
+                                array_push($rdest, ($rec['storage'] ? $config['attach_url'] : $config['files_url']) . '/' . $rec['folder'] . '/' . $rec['name']);
                                 break;
                             case 'size':
                                 array_push($rdest, (file_exists($fname) && ($fsize = @filesize($fname))) ? Formatsize($fsize) : 'n/a');

@@ -12,7 +12,7 @@ if (!defined('NGCMS')) {
     exit('HAL');
 }
 
-@include_once root.'includes/classes/upload.class.php';
+@include_once root . 'includes/classes/upload.class.php';
 
 LoadLang('editnews', 'admin');
 LoadLang('editnews', 'admin', 'editnews');
@@ -67,7 +67,7 @@ function editNewsForm()
     $id = intval($_REQUEST['id']);
 
     // Try to find news that we're trying to edit
-    if (!is_array($row = $mysql->record('select * from '.prefix.'_news where id = '.db_squote($id), 1))) {
+    if (!is_array($row = $mysql->record('select * from ' . prefix . '_news where id = ' . db_squote($id), 1))) {
         msg(['type' => 'error', 'text' => $lang['msge_not_found']]);
 
         return;
@@ -77,15 +77,15 @@ function editNewsForm()
     $permGroupMode = $isOwn ? 'personal' : 'other';
 
     // Check permissions
-    if (!$perm[$permGroupMode.'.view']) {
+    if (!$perm[$permGroupMode . '.view']) {
         msg(['type' => 'error', 'text' => $lang['perm.denied']]);
 
         return;
     }
 
     // Load attached files/images
-    $row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_files where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')', 1);
-    $row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_images where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')', 1);
+    $row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from " . prefix . '_files where (linked_ds = 1) and (linked_id = ' . db_squote($row['id']) . ')', 1);
+    $row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from " . prefix . '_images where (linked_ds = 1) and (linked_id = ' . db_squote($row['id']) . ')', 1);
 
     $cats = (mb_strlen($row['catid']) > 0) ? explode(',', $row['catid']) : [];
     $content = $row['content'];
@@ -93,8 +93,8 @@ function editNewsForm()
         'php_self'    => $PHP_SELF,
         'cdate'       => date('d.m.Y H:i', $row['postdate']),
         'changedate'  => ChangeDate($row['postdate'], 1),
-        'mastercat'   => makeCategoryList(['doempty' => ($perm[$permGroupMode.'.nocat'] || !count($cats)) ? 1 : 0, 'greyempty' => !$perm['personal.nocat'], 'nameval' => 0, 'selected' => count($cats) ? $cats[0] : 0]),
-        'extcat'      => makeCategoryList(['nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats) > 1) ? array_slice($cats, 1) : [], 'disabledarea' => !$perm[$permGroupMode.'.multicat']]),
+        'mastercat'   => makeCategoryList(['doempty' => ($perm[$permGroupMode . '.nocat'] || !count($cats)) ? 1 : 0, 'greyempty' => !$perm['personal.nocat'], 'nameval' => 0, 'selected' => count($cats) ? $cats[0] : 0]),
+        'extcat'      => makeCategoryList(['nameval' => 0, 'checkarea' => 1, 'selected' => (count($cats) > 1) ? array_slice($cats, 1) : [], 'disabledarea' => !$perm[$permGroupMode . '.multicat']]),
         'allcats'     => resolveCatNames($cats),
         'id'          => $row['id'],
         'title'       => secure_html($row['title']),
@@ -121,31 +121,31 @@ function editNewsForm()
             'favorite'            => $row['favorite'] ? true : false,
             'pinned'              => $row['pinned'] ? true : false,
             'catpinned'           => $row['catpinned'] ? true : false,
-            'can_mainpage'        => $perm[$permGroupMode.'.mainpage'] ? true : false,
-            'can_pinned'          => $perm[$permGroupMode.'.pinned'] ? true : false,
-            'can_catpinned'       => $perm[$permGroupMode.'.catpinned'] ? true : false,
+            'can_mainpage'        => $perm[$permGroupMode . '.mainpage'] ? true : false,
+            'can_pinned'          => $perm[$permGroupMode . '.pinned'] ? true : false,
+            'can_catpinned'       => $perm[$permGroupMode . '.catpinned'] ? true : false,
             'raw'                 => ($row['flags'] & 1),
             'html'                => ($row['flags'] & 2),
             'extended_more'       => ($config['extended_more'] || ($tvars['vars']['content.delimiter'] != '')) ? true : false,
-            'editable'            => (($perm[$permGroupMode.'.modify'.(($row['approve'] == 1) ? '.published' : '')]) || ($perm[$permGroupMode.'.unpublish'])) ? true : false,
-            'deleteable'          => ($perm[$permGroupMode.'.delete'.(($row['approve'] == 1) ? '.published' : '')]) ? true : false,
-            'html.lost'           => (($row['flags'] & 2) && (!$perm[$permGroupMode.'.html'])) ? 1 : 0,
-            'mainpage.lost'       => (($row['mainpage']) && (!$perm[$permGroupMode.'.mainpage'])) ? true : false,
-            'pinned.lost'         => (($row['pinned']) && (!$perm[$permGroupMode.'.pinned'])) ? true : false,
-            'catpinned.lost'      => (($row['catpinned']) && (!$perm[$permGroupMode.'.catpinned'])) ? true : false,
-            'publish.lost'        => (($row['approve'] == 1) && (!$perm[$permGroupMode.'.modify.published'])) ? true : false,
-            'favorite.lost'       => (($row['favorite']) && (!$perm[$permGroupMode.'.favorite'])) ? true : false,
-            'multicat.lost'       => ((count($cats) > 1) && (!$perm[$permGroupMode.'.multicat'])) ? true : false,
-            'html.disabled'       => (!$perm[$permGroupMode.'.html']) ? true : false,
-            'customdate.disabled' => (!$perm[$permGroupMode.'.customdate']) ? true : false,
-            'mainpage.disabled'   => (!$perm[$permGroupMode.'.mainpage']) ? true : false,
-            'pinned.disabled'     => (!$perm[$permGroupMode.'.pinned']) ? true : false,
-            'catpinned.disabled'  => (!$perm[$permGroupMode.'.catpinned']) ? true : false,
-            'favorite.disabled'   => (!$perm[$permGroupMode.'.favorite']) ? true : false,
-            'setviews.disabled'   => (!$perm[$permGroupMode.'.setviews']) ? true : false,
-            'multicat.disabled'   => (!$perm[$permGroupMode.'.multicat']) ? true : false,
-            'altname.disabled'    => (!$perm[$permGroupMode.'.altname']) ? true : false,
-            'mondatory_cat'       => (!$perm[$permGroupMode.'.nocat']) ? true : false,
+            'editable'            => (($perm[$permGroupMode . '.modify' . (($row['approve'] == 1) ? '.published' : '')]) || ($perm[$permGroupMode . '.unpublish'])) ? true : false,
+            'deleteable'          => ($perm[$permGroupMode . '.delete' . (($row['approve'] == 1) ? '.published' : '')]) ? true : false,
+            'html.lost'           => (($row['flags'] & 2) && (!$perm[$permGroupMode . '.html'])) ? 1 : 0,
+            'mainpage.lost'       => (($row['mainpage']) && (!$perm[$permGroupMode . '.mainpage'])) ? true : false,
+            'pinned.lost'         => (($row['pinned']) && (!$perm[$permGroupMode . '.pinned'])) ? true : false,
+            'catpinned.lost'      => (($row['catpinned']) && (!$perm[$permGroupMode . '.catpinned'])) ? true : false,
+            'publish.lost'        => (($row['approve'] == 1) && (!$perm[$permGroupMode . '.modify.published'])) ? true : false,
+            'favorite.lost'       => (($row['favorite']) && (!$perm[$permGroupMode . '.favorite'])) ? true : false,
+            'multicat.lost'       => ((count($cats) > 1) && (!$perm[$permGroupMode . '.multicat'])) ? true : false,
+            'html.disabled'       => (!$perm[$permGroupMode . '.html']) ? true : false,
+            'customdate.disabled' => (!$perm[$permGroupMode . '.customdate']) ? true : false,
+            'mainpage.disabled'   => (!$perm[$permGroupMode . '.mainpage']) ? true : false,
+            'pinned.disabled'     => (!$perm[$permGroupMode . '.pinned']) ? true : false,
+            'catpinned.disabled'  => (!$perm[$permGroupMode . '.catpinned']) ? true : false,
+            'favorite.disabled'   => (!$perm[$permGroupMode . '.favorite']) ? true : false,
+            'setviews.disabled'   => (!$perm[$permGroupMode . '.setviews']) ? true : false,
+            'multicat.disabled'   => (!$perm[$permGroupMode . '.multicat']) ? true : false,
+            'altname.disabled'    => (!$perm[$permGroupMode . '.altname']) ? true : false,
+            'mondatory_cat'       => (!$perm[$permGroupMode . '.nocat']) ? true : false,
         ],
     ];
 
@@ -154,9 +154,9 @@ function editNewsForm()
         $tVars['link'] = newsGenerateLink($row, false, 0, true);
     }
 
-    $tVars['flags']['can_publish'] = ((($row['approve'] == 1) && ($perm[$permGroupMode.'.modify.published'])) || (($row['approve'] < 1) && $perm[$permGroupMode.'.publish'])) ? 1 : 0;
-    $tVars['flags']['can_unpublish'] = (($row['approve'] < 1) || ($perm[$permGroupMode.'.unpublish'])) ? 1 : 0;
-    $tVars['flags']['can_draft'] = (($row['approve'] == -1) || ($perm[$permGroupMode.'.unpublish'])) ? 1 : 0;
+    $tVars['flags']['can_publish'] = ((($row['approve'] == 1) && ($perm[$permGroupMode . '.modify.published'])) || (($row['approve'] < 1) && $perm[$permGroupMode . '.publish'])) ? 1 : 0;
+    $tVars['flags']['can_unpublish'] = (($row['approve'] < 1) || ($perm[$permGroupMode . '.unpublish'])) ? 1 : 0;
+    $tVars['flags']['can_draft'] = (($row['approve'] == -1) || ($perm[$permGroupMode . '.unpublish'])) ? 1 : 0;
 
     $tVars['flags']['params.lost'] = ($tVars['flags']['publish.lost'] || $tVars['flags']['html.lost'] || $tVars['flags']['mainpage.lost'] || $tVars['flags']['pinned.lost'] || $tVars['flags']['catpinned.lost'] || $tVars['flags']['multicat.lost']) ? 1 : 0;
 
@@ -199,10 +199,10 @@ function editNewsForm()
             ];
 
             // Check if file exists
-            $fname = ($arow['storage'] ? $config['attach_dir'] : $config['files_dir']).$arow['folder'].'/'.$arow['name'];
+            $fname = ($arow['storage'] ? $config['attach_dir'] : $config['files_dir']) . $arow['folder'] . '/' . $arow['name'];
             if (file_exists($fname) && ($fsize = @filesize($fname))) {
                 $attachEntry['filesize'] = Formatsize($fsize);
-                $attachEntry['url'] = (($arow['storage']) ? ($config['attach_url']) : ($config['files_url'])).'/'.$arow['folder'].'/'.$arow['name'];
+                $attachEntry['url'] = (($arow['storage']) ? ($config['attach_url']) : ($config['files_url'])) . '/' . $arow['folder'] . '/' . $arow['name'];
             } else {
                 $attachEntry['filesize'] = '<font color="red">n/a</font>';
             }
@@ -258,7 +258,7 @@ function massCommentDelete()
         list($comid, $author, $add_ip, $postid) = explode('-', $delid);
 
         // Let's delete using only comment id ( $comid )
-        if (!is_array($crow = $mysql->record('select (select status from '.uprefix.'_users u where u.id=c.author_id) as castatus, (select author_id from '.prefix.'_news n where n.id=c.post) as naid, c.* from '.prefix.'_comments c where c.id = '.db_squote($comid)))) {
+        if (!is_array($crow = $mysql->record('select (select status from ' . uprefix . '_users u where u.id=c.author_id) as castatus, (select author_id from ' . prefix . '_news n where n.id=c.post) as naid, c.* from ' . prefix . '_comments c where c.id = ' . db_squote($comid)))) {
             $countLost++;
             continue;
         }
@@ -280,18 +280,18 @@ function massCommentDelete()
         }
 
         $countDeleted++;
-        $mysql->query('update '.prefix.'_news set com=com-1 where id='.db_squote($crow['post']));
+        $mysql->query('update ' . prefix . '_news set com=com-1 where id=' . db_squote($crow['post']));
         if ($crow['author_id']) {
-            $mysql->query('update '.uprefix.'_users set com=com-1 where id='.db_squote($crow['author_id']));
+            $mysql->query('update ' . uprefix . '_users set com=com-1 where id=' . db_squote($crow['author_id']));
         }
 
-        $mysql->query('delete from '.prefix.'_comments where id='.db_squote($comid));
+        $mysql->query('delete from ' . prefix . '_comments where id=' . db_squote($comid));
     }
     //
     if ($countRequested == $countDeleted) {
-        msg(['text' => $lang['msg.comdel.ok'], 'info' => str_replace(['{cnt_req}', '{edit_link}'], [$countRequested, $PHP_SELF.'?mod=news&action=edit&id='.$postid], $lang['msg.comdel.ok#descr'])]);
+        msg(['text' => $lang['msg.comdel.ok'], 'info' => str_replace(['{cnt_req}', '{edit_link}'], [$countRequested, $PHP_SELF . '?mod=news&action=edit&id=' . $postid], $lang['msg.comdel.ok#descr'])]);
     } else {
-        msg(['text' => $lang['msg.comdel.fail'], 'info' => str_replace(['{cnt_req}', '{cnt_deleted}', '{cnt_blocked}', '{cnt_lost}', '{edit_link}'], [$countRequested, $countDeleted, $countBlocked, $countLost, $PHP_SELF.'?mod=news&action=edit&id='.$postid], $lang['msg.comdel.fail#descr'])]);
+        msg(['text' => $lang['msg.comdel.fail'], 'info' => str_replace(['{cnt_req}', '{cnt_deleted}', '{cnt_blocked}', '{cnt_lost}', '{edit_link}'], [$countRequested, $countDeleted, $countBlocked, $countLost, $PHP_SELF . '?mod=news&action=edit&id=' . $postid], $lang['msg.comdel.fail#descr'])]);
     }
 }
 
@@ -329,12 +329,12 @@ function makeSortList($selected)
 {
     global $lang;
 
-    return '<option value="id_desc"'.($selected == 'id_desc' ? ' selected' : '').'>'.$lang['sort_postid_desc'].'</option>'.
-        '<option value="id"'.($selected == 'id' ? ' selected' : '').'>'.$lang['sort_postid'].'</option>'.
-        '<option value="postdate_desc"'.($selected == 'postdate_desc' ? ' selected' : '').'>'.$lang['sort_postdate_desc'].'</option>'.
-        '<option value="postdate"'.($selected == 'postdate' ? ' selected' : '').'>'.$lang['sort_postdate'].'</option>'.
-        '<option value="title_desc"'.($selected == 'title_desc' ? ' selected' : '').'>'.$lang['sort_title_desc'].'</option>'.
-        '<option value="title"'.($selected == 'title' ? ' selected' : '').'>'.$lang['sort_title'].'</option>';
+    return '<option value="id_desc"' . ($selected == 'id_desc' ? ' selected' : '') . '>' . $lang['sort_postid_desc'] . '</option>' .
+        '<option value="id"' . ($selected == 'id' ? ' selected' : '') . '>' . $lang['sort_postid'] . '</option>' .
+        '<option value="postdate_desc"' . ($selected == 'postdate_desc' ? ' selected' : '') . '>' . $lang['sort_postdate_desc'] . '</option>' .
+        '<option value="postdate"' . ($selected == 'postdate' ? ' selected' : '') . '>' . $lang['sort_postdate'] . '</option>' .
+        '<option value="title_desc"' . ($selected == 'title_desc' ? ' selected' : '') . '>' . $lang['sort_title_desc'] . '</option>' .
+        '<option value="title"' . ($selected == 'title' ? ' selected' : '') . '>' . $lang['sort_title'] . '</option>';
 }
 
 // ======================================================================================================
@@ -423,13 +423,13 @@ function listNewsForm()
             $fSort = 'title desc';
             break;
     }
-    $fSort = ' order by '.($fSort ? $fSort : 'id desc');
+    $fSort = ' order by ' . ($fSort ? $fSort : 'id desc');
 
     // Check if user selected personal filter
     $fAuthorId = 0;
     if (getIsSet($_REQUEST['aid'])) {
         // Try to fetch userName
-        if ($urow = $mysql->record('select id, name from '.uprefix.'_users where id = '.db_squote(getIsSet($_REQUEST['aid'])))) {
+        if ($urow = $mysql->record('select id, name from ' . uprefix . '_users where id = ' . db_squote(getIsSet($_REQUEST['aid'])))) {
             $fAuthorId = $urow['id'];
             $fAuthorName = $urow['name'];
         }
@@ -461,43 +461,43 @@ function listNewsForm()
 
     $conditions = [];
     if (!is_null($fCategoryId)) {
-        array_push($conditions, 'catid '.($fCategoryId ? ("regexp '[[:<:]](".intval($fCategoryId).")[[:>:]]'") : (' = ""')));
+        array_push($conditions, 'catid ' . ($fCategoryId ? ("regexp '[[:<:]](" . intval($fCategoryId) . ")[[:>:]]'") : (' = ""')));
     }
 
     if ($fDateStart) {
-        array_push($conditions, 'postdate >= '.intval($fDateStart));
+        array_push($conditions, 'postdate >= ' . intval($fDateStart));
     }
 
     if ($fDateStop) {
-        array_push($conditions, 'postdate <= '.intval($fDateStop));
+        array_push($conditions, 'postdate <= ' . intval($fDateStop));
     }
 
     if ($fAuthorId) {
-        array_push($conditions, 'author_id = '.$fAuthorId);
+        array_push($conditions, 'author_id = ' . $fAuthorId);
     } elseif ($fAuthorName) {
-        array_push($conditions, 'author = '.db_squote($fAuthorName));
+        array_push($conditions, 'author = ' . db_squote($fAuthorName));
     }
 
     if (!$perm['other.list']) {
-        array_push($conditions, 'author_id = '.intval($userROW['id']));
+        array_push($conditions, 'author_id = ' . intval($userROW['id']));
     }
 
     if (!$perm['personal.list']) {
-        array_push($conditions, 'author_id <> '.intval($userROW['id']));
+        array_push($conditions, 'author_id <> ' . intval($userROW['id']));
     }
 
     if ($fStatus) {
-        array_push($conditions, 'approve = '.(intval($fStatus) - 2));
+        array_push($conditions, 'approve = ' . (intval($fStatus) - 2));
     }
 
     // Perform search
     if ($fSearchLine != '') {
-        array_push($conditions, ($fSearchType ? 'content' : 'title').' like '.db_squote('%'.$fSearchLine.'%'));
+        array_push($conditions, ($fSearchType ? 'content' : 'title') . ' like ' . db_squote('%' . $fSearchLine . '%'));
     }
 
-    $sqlQPart = 'from '.prefix.'_news '.(count($conditions) ? 'where '.implode(' AND ', $conditions) : '').' '.$fSort;
-    $sqlQCount = 'select count(id) as cid '.$sqlQPart;
-    $sqlQ = 'select * '.$sqlQPart;
+    $sqlQPart = 'from ' . prefix . '_news ' . (count($conditions) ? 'where ' . implode(' AND ', $conditions) : '') . ' ' . $fSort;
+    $sqlQCount = 'select count(id) as cid ' . $sqlQPart;
+    $sqlQ = 'select * ' . $sqlQPart;
 
     // print "SQL: $sqlQ";
 
@@ -512,7 +512,7 @@ function listNewsForm()
 
     $newsEntries = [];
 
-    $sqlResult = $sqlQ.' LIMIT '.(($pageNo - 1) * $fRPP).','.$fRPP;
+    $sqlResult = $sqlQ . ' LIMIT ' . (($pageNo - 1) * $fRPP) . ',' . $fRPP;
     foreach ($mysql->select($sqlResult) as $row) {
         $cats = explode(',', $row['catid']);
 
@@ -527,8 +527,8 @@ function listNewsForm()
             'attach_count' => $row['num_files'],
             'images_count' => $row['num_images'],
             'itemdate'     => date('d.m.Y', $row['postdate']),
-            'allcats'      => resolveCatNames($cats).' &nbsp;',
-            'title'        => secure_html((mb_strlen($row['title']) > 70) ? mb_substr($row['title'], 0, 70).' ...' : $row['title']),
+            'allcats'      => resolveCatNames($cats) . ' &nbsp;',
+            'title'        => secure_html((mb_strlen($row['title']) > 70) ? mb_substr($row['title'], 0, 70) . ' ...' : $row['title']),
             'link'         => newsGenerateLink($row, false, 0, true),
             'state'        => $row['approve'],
             'flags'        => [
@@ -552,9 +552,9 @@ function listNewsForm()
         'rpp'        => $fRPP,
         'entries'    => $newsEntries,
         'sortlist'   => makeSortList($_REQUEST['sort']),
-        'statuslist' => '<option value="1"'.(($fStatus == 1) ? ' selected' : '').'>'.$lang['smode_draft'].'</option>'.
-            '<option value="2"'.(($fStatus == 2) ? ' selected' : '').'>'.$lang['smode_unpublished'].'</option>'.
-            '<option value="3"'.(($fStatus == 3) ? ' selected' : '').'>'.$lang['smode_published'].'</option>',
+        'statuslist' => '<option value="1"' . (($fStatus == 1) ? ' selected' : '') . '>' . $lang['smode_draft'] . '</option>' .
+            '<option value="2"' . (($fStatus == 2) ? ' selected' : '') . '>' . $lang['smode_unpublished'] . '</option>' .
+            '<option value="3"' . (($fStatus == 3) ? ' selected' : '') . '>' . $lang['smode_published'] . '</option>',
         'flags'      => [
             'comments'     => getPluginStatusInstalled('comments') ? true : false,
             'allow_modify' => ($userROW['status'] <= 2) ? true : false,
@@ -571,16 +571,16 @@ function listNewsForm()
                 'maxNavigations' => $maxNavigations,
                 'current'        => $pageNo,
                 'count'          => $countPages,
-                'url'            => admin_url.
-                    '/admin.php?mod=news'.
-                    ($fRPP ? '&rpp='.$fRPP : '').
-                    ($fAuthorName != '' ? '&an='.$fAuthorName : '').
-                    ($fSearchLine != '' ? '&sl='.$fSearchLine : '').
-                    ($fSearchType != '' ? '&st='.$fSearchType : '').
-                    ($fDateStartText != '' ? '&dr1='.$fDateStartText : '').
-                    ($fDateStopText != '' ? '&dr2='.$fDateStopText : '').
-                    ($fCategoryId != '' ? '&category='.$fCategoryId : '').
-                    ($fStatus != '' ? '&status='.$fStatus : '').
+                'url'            => admin_url .
+                    '/admin.php?mod=news' .
+                    ($fRPP ? '&rpp=' . $fRPP : '') .
+                    ($fAuthorName != '' ? '&an=' . $fAuthorName : '') .
+                    ($fSearchLine != '' ? '&sl=' . $fSearchLine : '') .
+                    ($fSearchType != '' ? '&st=' . $fSearchType : '') .
+                    ($fDateStartText != '' ? '&dr1=' . $fDateStartText : '') .
+                    ($fDateStopText != '' ? '&dr2=' . $fDateStopText : '') .
+                    ($fCategoryId != '' ? '&category=' . $fCategoryId : '') .
+                    ($fStatus != '' ? '&status=' . $fStatus : '') .
                     '&page=%page%',
             ]
         );
@@ -596,7 +596,7 @@ function listNewsForm()
 
     // Prepare category menu
 
-    $cList = $mysql->select('select * from '.prefix.'_category order by posorder');
+    $cList = $mysql->select('select * from ' . prefix . '_category order by posorder');
     $cLen = count($cList);
 
     $tcRecs = [];
@@ -617,12 +617,12 @@ function listNewsForm()
         // Prepare position
         $tcRec['cutter'] = '';
         if ($row['poslevel'] > 0) {
-            $tcRec['cutter'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
+            $tcRec['cutter'] = str_repeat('<img alt="-" height="18" width="18" src="' . skins_url . '/images/catmenu/line.png" />', ($row['poslevel']));
         } else {
             $tcRec['cutter'] = '';
         }
-        $tcRec['cutter'] = $tcRec['cutter'].
-            '<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '').'.gif" />';
+        $tcRec['cutter'] = $tcRec['cutter'] .
+            '<img alt="-" height="18" width="18" src="' . skins_url . '/images/catmenu/join' . ((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '') . '.png" />';
 
         $tcRecs[] = $tcRec;
     }

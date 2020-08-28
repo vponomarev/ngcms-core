@@ -20,7 +20,7 @@
 </head>
 <body>
 {% block body %}
-<div id="loading-layer"><img src="{{ tpl_url }}/images/ajax-loader.gif" alt="Гружусь"/></div>
+<div id="loading-layer"><img src="{{ tpl_url }}/images/ajax-loader.png" alt="Гружусь"/></div>
 <!--Панель-->
 <div id="userpanel" class="hidden">
 	{{ personal_menu }}
