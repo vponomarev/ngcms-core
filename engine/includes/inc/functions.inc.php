@@ -22,7 +22,7 @@ function db_squote($string)
         return false;
     }
 
-    return "'" . $mysql->db_quote($string) . "'";
+    return "'".$mysql->db_quote($string)."'";
 }
 
 function db_dquote($string)
@@ -32,7 +32,7 @@ function db_dquote($string)
         return false;
     }
 
-    return '"' . $mysql->db_quote($string) . '"';
+    return '"'.$mysql->db_quote($string).'"';
 }
 
 //
@@ -50,13 +50,13 @@ function secure_html($string)
 function Formatsize($file_size)
 {
     if ($file_size >= 1073741824) {
-        $file_size = round($file_size / 1073741824 * 100) / 100 . ' Gb';
+        $file_size = round($file_size / 1073741824 * 100) / 100.' Gb';
     } elseif ($file_size >= 1048576) {
-        $file_size = round($file_size / 1048576 * 100) / 100 . ' Mb';
+        $file_size = round($file_size / 1048576 * 100) / 100.' Mb';
     } elseif ($file_size >= 1024) {
-        $file_size = round($file_size / 1024 * 100) / 100 . ' Kb';
+        $file_size = round($file_size / 1024 * 100) / 100.' Kb';
     } else {
-        $file_size = $file_size . ' b';
+        $file_size = $file_size.' b';
     }
 
     return $file_size;
@@ -88,8 +88,8 @@ function AutoBackup($delayed = false, $force = false)
 {
     global $config;
 
-    $backupFlagFile = root . 'cache/last_backup.tmp';
-    $backupMarkerFile = root . 'cache/last_backup_marker.tmp';
+    $backupFlagFile = root.'cache/last_backup.tmp';
+    $backupMarkerFile = root.'cache/last_backup_marker.tmp';
 
     // Load `Last Backup Date` from $backupFlagFile
     $last_backup = intval(@file_get_contents($backupFlagFile));
@@ -138,10 +138,10 @@ function AutoBackup($delayed = false, $force = false)
         // Try to open temp file for writing
         $fx = is_file($backupFlagFile) ? @fopen($backupFlagFile, 'r+') : @fopen($backupFlagFile, 'w+');
         if ($fx) {
-            $filename = root . 'backups/backup_' . date('Y_m_d_H_i', $time_now) . '.gz';
+            $filename = root.'backups/backup_'.date('Y_m_d_H_i', $time_now).'.gz';
 
             // Load library
-            require_once root . '/includes/inc/lib_admin.php';
+            require_once root.'/includes/inc/lib_admin.php';
 
             // We need to create file with backup
             dbBackup($filename, 1);
@@ -205,7 +205,7 @@ function InsertSmilies($insert_location, $break_location = false, $area = false)
         $smilies = explode(',', $config['smilies']);
 
         // For smilies in comments, try to use 'smilies.tpl' from site template
-        $templateDir = (($insert_location == 'comments') && is_readable(tpl_dir . $config['theme'] . '/smilies.tpl')) ? tpl_dir . $config['theme'] : tpl_actions;
+        $templateDir = (($insert_location == 'comments') && is_readable(tpl_dir.$config['theme'].'/smilies.tpl')) ? tpl_dir.$config['theme'] : tpl_actions;
 
         $i = 0;
         $output = '';
@@ -256,7 +256,7 @@ function QuickTags($area = false, $template = false)
         return false;
     }
 
-    $tplname = 'qt_' . $template;
+    $tplname = 'qt_'.$template;
 
     $tpl->template($tplname, tpl_actions);
     $tpl->vars($tplname, $tvars);
@@ -325,7 +325,7 @@ function checkBanned($ip, $act, $subact, $userRec, $name)
     $check_ip = sprintf('%u', ip2long($ip));
 
     // Currently we use limited mode. Try to find row
-    if ($ban_row = $mysql->record('select * from ' . prefix . '_ipban where addr_start <= ' . db_squote($check_ip) . ' and addr_stop >= ' . db_squote($check_ip) . ' order by netlen limit 1')) {
+    if ($ban_row = $mysql->record('select * from '.prefix.'_ipban where addr_start <= '.db_squote($check_ip).' and addr_stop >= '.db_squote($check_ip).' order by netlen limit 1')) {
         // Row is found. Let's check for event type. STATIC CONVERSION
         $mode = 0;
         if (($act == 'users') && ($subact == 'register')) {
@@ -336,7 +336,7 @@ function checkBanned($ip, $act, $subact, $userRec, $name)
             $mode = 3;
         }
         if (($locktype = intval(mb_substr($ban_row['flags'], $mode, 1))) > 0) {
-            $mysql->query('update ' . prefix . '_ipban set hitcount=hitcount+1 where id=' . db_squote($ban_row['id']));
+            $mysql->query('update '.prefix.'_ipban set hitcount=hitcount+1 where id='.db_squote($ban_row['id']));
 
             return $locktype;
         }
@@ -367,16 +367,16 @@ function checkFlood($mode, $ip, $act, $subact, $userRec, $name)
     // If UPDATE mode is used - update data
     if ($mode) {
         $this_time = time() + ($config['date_adjust'] * 60);
-        $mysql->query('insert into ' . prefix . '_flood (ip, id) values (' . db_squote($ip) . ', ' . db_squote($this_time) . ') on duplicate key update id=' . db_squote($this_time));
+        $mysql->query('insert into '.prefix.'_flood (ip, id) values ('.db_squote($ip).', '.db_squote($this_time).') on duplicate key update id='.db_squote($this_time));
 
         return 0;
     }
 
     // Delete expired records
-    $mysql->query('DELETE FROM ' . prefix . '_flood WHERE id < ' . db_squote($this_time));
+    $mysql->query('DELETE FROM '.prefix.'_flood WHERE id < '.db_squote($this_time));
 
     // Check if we have record
-    if ($mysql->record('SELECT * FROM ' . prefix . '_flood WHERE id > ' . db_squote($this_time) . ' AND ip = ' . db_squote($ip) . ' limit 1')) {
+    if ($mysql->record('SELECT * FROM '.prefix.'_flood WHERE id > '.db_squote($this_time).' AND ip = '.db_squote($ip).' limit 1')) {
         // Flood found
         return 1;
     }
@@ -408,7 +408,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
     } elseif ($config['mailfrom']) {
         $mail->From = $config['mailfrom'];
     } else {
-        $mail->From = 'mailbot@' . str_replace('www.', '', $_SERVER['SERVER_NAME']);
+        $mail->From = 'mailbot@'.str_replace('www.', '', $_SERVER['SERVER_NAME']);
     }
 
     $mail->Subject = $subject;
@@ -460,7 +460,7 @@ function templateLoadVariables($die = false, $loadMode = 0)
         return true;
     }
 
-    $filename = ($loadMode ? tpl_actions : tpl_site) . 'variables.ini';
+    $filename = ($loadMode ? tpl_actions : tpl_site).'variables.ini';
     if (!is_file($filename)) {
         if ($die) {
             exit('Internal error: cannot locate Template Variables file');
@@ -494,20 +494,20 @@ function msg($params, $mode = 0, $disp = -1)
     }
 
     if (!templateLoadVariables(false, $mode)) {
-        exit('Internal system error: ' . var_export($params, true));
+        exit('Internal system error: '.var_export($params, true));
     }
 
     // Choose working mode
     $type = 'msg.common';
     switch (getIsSet($params['type'])) {
         case 'error':
-            $type = 'msg.error' . (isset($params['info']) ? '_info' : '');
+            $type = 'msg.error'.(isset($params['info']) ? '_info' : '');
             break;
         case 'info':
             $type = 'msg.info';
             break;
         default:
-            $type = 'msg.common' . (isset($params['info']) ? '_info' : '');
+            $type = 'msg.common'.(isset($params['info']) ? '_info' : '');
             break;
     }
     $tmvars = [
@@ -555,13 +555,13 @@ function msgSticker($msg, $type = '', $disp = -1)
     if (is_array($msg)) {
         foreach ($msg as $x) {
             $txt = (isset($x[2]) && ($x[2])) ? $x[0] : htmlspecialchars($x[0], ENT_COMPAT | ENT_HTML401, 'UTF-8');
-            $lines[] = (isset($x[1]) && ($x[1] == 'title')) ? ('<b>' . $txt . '</b>') : $txt;
+            $lines[] = (isset($x[1]) && ($x[1] == 'title')) ? ('<b>'.$txt.'</b>') : $txt;
         }
     } else {
         $lines[] = htmlspecialchars($msg, ENT_COMPAT | ENT_HTML401, 'UTF-8');
     }
 
-    $notify .= $twig->render(tpl_actions . 'sticker.tpl', [
+    $notify .= $twig->render(tpl_actions.'sticker.tpl', [
         'message' => implode('<br/>', $lines),
         'type'    => $type,
 
@@ -590,13 +590,13 @@ function DirSize($directory)
 
     if ($dir = opendir($directory)) {
         while (($dirfile = readdir($dir)) !== false) {
-            if (is_link($directory . '/' . $dirfile) || $dirfile == '.' || $dirfile == '..') {
+            if (is_link($directory.'/'.$dirfile) || $dirfile == '.' || $dirfile == '..') {
                 continue;
             }
-            if (is_file($directory . '/' . $dirfile)) {
-                $size += filesize($directory . '/' . $dirfile);
-            } elseif (is_dir($directory . '/' . $dirfile)) {
-                $dirSize = dirsize($directory . '/' . $dirfile);
+            if (is_file($directory.'/'.$dirfile)) {
+                $size += filesize($directory.'/'.$dirfile);
+            } elseif (is_dir($directory.'/'.$dirfile)) {
+                $dirSize = dirsize($directory.'/'.$dirfile);
                 if ($dirSize >= 0) {
                     $size += $dirSize;
                 } else {
@@ -641,19 +641,19 @@ function directoryWalk($dir, $blackmask = null, $whitemask = null, $returnFiles 
         $sd = implode('/', $path);
         $wsd = implode('/', $wpath);
         while (($dfile[$level] = readdir($od[$level])) !== false) {
-            if (is_link($sd . '/' . $dfile[$level]) || $dfile[$level] == '.' || $dfile[$level] == '..') {
+            if (is_link($sd.'/'.$dfile[$level]) || $dfile[$level] == '.' || $dfile[$level] == '..') {
                 continue;
             }
 
-            if (is_file($sd . '/' . $dfile[$level])) {
+            if (is_file($sd.'/'.$dfile[$level])) {
                 // Check for black list
 
-                $size += filesize($sd . '/' . $dfile[$level]);
+                $size += filesize($sd.'/'.$dfile[$level]);
                 if ($returnFiles) {
-                    $files[] = ($wsd ? $wsd . '/' : '') . $dfile[$level];
+                    $files[] = ($wsd ? $wsd.'/' : '').$dfile[$level];
                 }
                 $count++;
-            } elseif (is_dir($sd . '/' . $dfile[$level])) {
+            } elseif (is_dir($sd.'/'.$dfile[$level])) {
                 array_push($path, $dfile[$level]);
                 array_push($wpath, $dfile[$level]);
                 $od[$level + 1] = opendir(implode('/', $path));
@@ -709,26 +709,26 @@ function makeCategoryList($params = [])
     if (!isset($params['checkarea']) || !$params['checkarea']) {
         if (empty($params['noHeader'])) {
             $out = "<select name=\"$name\" id=\"catmenu\"" .
-                ((isset($params['style']) && ($params['style'] != '')) ? ' style="' . $params['style'] . '"' : '') .
-                ((isset($params['class']) && ($params['class'] != '')) ? ' class="' . $params['class'] . '"' : '') .
+                ((isset($params['style']) && ($params['style'] != '')) ? ' style="'.$params['style'].'"' : '') .
+                ((isset($params['class']) && ($params['class'] != '')) ? ' class="'.$params['class'].'"' : '') .
                 ">\n";
         }
         if (isset($params['doempty']) && $params['doempty']) {
-            $out .= '<option ' . (((isset($params['greyempty']) && $params['greyempty'])) ? 'style="background: #c41e3a;" ' : '') . 'value="0">' . $lang['no_cat'] . "</option>\n";
+            $out .= '<option '.(((isset($params['greyempty']) && $params['greyempty'])) ? 'style="background: #c41e3a;" ' : '').'value="0">'.$lang['no_cat']."</option>\n";
             $optList[] = ['k' => 0, 'v' => $lang['no_cat']];
         }
         if (isset($params['doall']) && $params['doall']) {
-            $out .= '<option value="' . (isset($params['allmarker']) ? $params['allmarker'] : '') . '">' . $lang['sh_all'] . "</option>\n";
+            $out .= '<option value="'.(isset($params['allmarker']) ? $params['allmarker'] : '').'">'.$lang['sh_all']."</option>\n";
             $optList[] = ['k' => (isset($params['allmarker']) ? $params['allmarker'] : ''), 'v' => $lang['sh_all']];
         }
         if (isset($params['dowithout']) && $params['dowithout']) {
-            $out .= '<option value="0"' . (((!is_null($params['selected'])) && ($params['selected'] == 0)) ? ' selected="selected"' : '') . '>' . $lang['sh_empty'] . "</option>\n";
+            $out .= '<option value="0"'.(((!is_null($params['selected'])) && ($params['selected'] == 0)) ? ' selected="selected"' : '').'>'.$lang['sh_empty']."</option>\n";
             $optList[] = ['k' => 0, 'v' => $lang['sh_empty']];
         }
     }
     if (isset($params['resync']) && $params['resync']) {
         $catz = [];
-        foreach ($mysql->select('select * from `' . prefix . '_category` order by posorder asc', 1) as $row) {
+        foreach ($mysql->select('select * from `'.prefix.'_category` order by posorder asc', 1) as $row) {
             $catz[$row['alt']] = $row;
             $catmap[$row['id']] = $row['alt'];
         }
@@ -754,8 +754,8 @@ function makeCategoryList($params = [])
                 $v['name'] .
                 "</label><br/>\n";
         } else {
-            $out .= '<option value="' . ((isset($params['nameval']) && $params['nameval']) ? $v['name'] : $v['id']) . '"' . ((isset($params['selected']) && ($v['id'] == $params['selected'])) ? ' selected="selected"' : '') . ($v['alt_url'] != '' ? ' disabled="disabled" style="background: #c41e3a;"' : '') . '>' . str_repeat('&#8212; ', $v['poslevel']) . $v['name'] . "</option>\n";
-            $optList[] = ['k' => ((isset($params['nameval']) && $params['nameval']) ? $v['name'] : $v['id']), 'v' => str_repeat('&#8212; ', $v['poslevel']) . $v['name']];
+            $out .= '<option value="'.((isset($params['nameval']) && $params['nameval']) ? $v['name'] : $v['id']).'"'.((isset($params['selected']) && ($v['id'] == $params['selected'])) ? ' selected="selected"' : '').($v['alt_url'] != '' ? ' disabled="disabled" style="background: #c41e3a;"' : '').'>'.str_repeat('&#8212; ', $v['poslevel']).$v['name']."</option>\n";
+            $optList[] = ['k' => ((isset($params['nameval']) && $params['nameval']) ? $v['name'] : $v['id']), 'v' => str_repeat('&#8212; ', $v['poslevel']).$v['name']];
         }
     }
     if (!isset($params['checkarea']) || !$params['checkarea']) {
@@ -777,11 +777,11 @@ function OrderList($value, $showDefault = false)
 
     $output = "<select name=\"orderby\">\n";
     if ($showDefault) {
-        $output .= '<option value="">' . $lang['order_default'];
+        $output .= '<option value="">'.$lang['order_default'];
     }
     foreach (['id desc', 'id asc', 'postdate desc', 'postdate asc', 'title desc', 'title asc', 'rating desc', 'rating asc'] as $v) {
         $vx = str_replace(' ', '_', $v);
-        $output .= '<option value="' . $v . '"' . (($value == $v) ? ' selected="selected"' : '') . '>' . $lang["order_$vx"] . "</option>\n";
+        $output .= '<option value="'.$v.'"'.(($value == $v) ? ' selected="selected"' : '').'>'.$lang["order_$vx"]."</option>\n";
     }
     $output .= "</select>\n";
 
@@ -799,19 +799,19 @@ function ChangeDate($time = 0, $nodiv = 0)
     $result = $nodiv ? '' : '<div id="cdate">';
     $result .= '<select name="c_day">';
     for ($i = 1; $i <= 31; $i++) {
-        $result .= '<option value="' . $i . '"' . ((date('j', $time) == $i) ? ' selected="selected"' : '') . '>' . $i . '</option>';
+        $result .= '<option value="'.$i.'"'.((date('j', $time) == $i) ? ' selected="selected"' : '').'>'.$i.'</option>';
     }
 
     $result .= '</select><select id="c_month" name="c_month">';
 
     foreach ($langShortMonths as $k => $v) {
-        $result .= '<option value="' . ($k + 1) . '"' . ((date('n', $time) == ($k + 1)) ? ' selected="selected"' : '') . '>' . $v . '</option>';
+        $result .= '<option value="'.($k + 1).'"'.((date('n', $time) == ($k + 1)) ? ' selected="selected"' : '').'>'.$v.'</option>';
     }
 
     $result .= '</select>
-	<input type="text" id="c_year" name="c_year" size="4" maxlength="4" value="' . date('Y', $time) . '" />
-	<input type="text" id="c_hour" name="c_hour" size="2" maxlength="2" value="' . date('H', $time) . '" /> :
-	<input type="text" id="c_minute" name="c_minute" size="2" maxlength="2" value="' . date('i', $time) . '" />';
+	<input type="text" id="c_year" name="c_year" size="4" maxlength="4" value="'.date('Y', $time).'" />
+	<input type="text" id="c_hour" name="c_hour" size="2" maxlength="2" value="'.date('H', $time).'" /> :
+	<input type="text" id="c_minute" name="c_minute" size="2" maxlength="2" value="'.date('i', $time).'" />';
     if (!$nodiv) {
         $result .= '</div>';
     }
@@ -858,7 +858,7 @@ function ListFiles($path, $ext, $showExt = 0, $silentError = 0, $returnNullOnErr
                     break;
                 }
             } else {
-                if (preg_match('#^(.+?)\.' . $e . '$#', $file, $m)) {
+                if (preg_match('#^(.+?)\.'.$e.'$#', $file, $m)) {
                     $list[($showExt == 2) ? $file : $m[1]] = $showExt ? $file : $m[1];
                     break;
                 }
@@ -886,7 +886,7 @@ function ListDirs($folder, $category = false, $alllink = true, $elementID = '')
             return fase;
     }
 
-    $select = '<select ' . ($elementID ? 'id="' . $elementID . '" ' : '') . 'name="category">' . ($alllink ? '<option value="">- ' . $lang['all'] . ' -</option>' : '');
+    $select = '<select '.($elementID ? 'id="'.$elementID.'" ' : '').'name="category">'.($alllink ? '<option value="">- '.$lang['all'].' -</option>' : '');
 
     if (($dir = @opendir($wdir)) === false) {
         msg(
@@ -918,8 +918,8 @@ function ListDirs($folder, $category = false, $alllink = true, $elementID = '')
     reset($filelist);
 
     foreach ($filelist as $file) {
-        if (is_dir($wdir . '/' . $file) && $file != '.' && $file != '..') {
-            $select .= '<option value="' . $file . '"' . ($category == $file ? ' selected="selected"' : '') . '>' . $file . "</option>\n";
+        if (is_dir($wdir.'/'.$file) && $file != '.' && $file != '..') {
+            $select .= '<option value="'.$file.'"'.($category == $file ? ' selected="selected"' : '').'>'.$file."</option>\n";
         }
     }
     $select .= '</select>';
@@ -929,9 +929,9 @@ function ListDirs($folder, $category = false, $alllink = true, $elementID = '')
 
 function MakeDropDown($options, $name, $selected = 'FALSE')
 {
-    $output = '<select size=1 name="' . $name . '">';
+    $output = '<select size=1 name="'.$name.'">';
     foreach ($options as $k => $v) {
-        $output .= '<option value="' . $k . '"' . (($selected == $k) ? ' selected="selected"' : '') . '>' . $v . '</option>';
+        $output .= '<option value="'.$k.'"'.(($selected == $k) ? ' selected="selected"' : '').'>'.$v.'</option>';
     }
     $output .= '</select>';
 
@@ -942,10 +942,10 @@ function LoadLang($what, $where = '', $area = '')
 {
     global $config, $lang;
 
-    $where = ($where) ? '/' . $where : '';
+    $where = ($where) ? '/'.$where : '';
 
-    if (!file_exists($toinc = root . 'lang/' . $config['default_lang'] . $where . '/' . $what . '.ini')) {
-        $toinc = root . 'lang/english/' . $where . '/' . $what . '.ini';
+    if (!file_exists($toinc = root.'lang/'.$config['default_lang'].$where.'/'.$what.'.ini')) {
+        $toinc = root.'lang/english/'.$where.'/'.$what.'.ini';
     }
     if (file_exists($toinc)) {
         $content = parse_ini_file($toinc, true);
@@ -966,7 +966,7 @@ function LoadLangTheme()
 {
     global $config, $lang;
 
-    $dir_lang = tpl_dir . $config['theme'] . '/lang/' . $config['default_lang'] . '.ini';
+    $dir_lang = tpl_dir.$config['theme'].'/lang/'.$config['default_lang'].'.ini';
 
     if (file_exists($dir_lang)) {
         $lang['theme'] = parse_ini_file($dir_lang, true);
@@ -985,22 +985,22 @@ function GetPluginDir($name)
         return 0;
     }
 
-    return extras_dir . '/' . $extras[$name]['dir'];
+    return extras_dir.'/'.$extras[$name]['dir'];
 }
 
 function GetPluginLangDir($name)
 {
     global $config;
-    $lang_dir = GetPluginDir($name) . '/lang';
+    $lang_dir = GetPluginDir($name).'/lang';
     if (!$lang_dir) {
         return 0;
     }
-    if (is_dir($lang_dir . '/' . $config['default_lang'])) {
-        $lang_dir = $lang_dir . '/' . $config['default_lang'];
-    } elseif (is_dir($lang_dir . '/english')) {
-        $lang_dir = $lang_dir . '/english';
-    } elseif (is_dir($lang_dir . '/russian')) {
-        $lang_dir = $lang_dir . '/russian';
+    if (is_dir($lang_dir.'/'.$config['default_lang'])) {
+        $lang_dir = $lang_dir.'/'.$config['default_lang'];
+    } elseif (is_dir($lang_dir.'/english')) {
+        $lang_dir = $lang_dir.'/english';
+    } elseif (is_dir($lang_dir.'/russian')) {
+        $lang_dir = $lang_dir.'/russian';
     }
 
     return $lang_dir;
@@ -1025,9 +1025,9 @@ function LoadPluginLang($plugin, $file, $group = '', $prefix = '', $delimiter = 
         if (!$extras[$plugin]) {
             return 0;
         }
-        $lang_dir = extras_dir . '/' . $extras[$plugin]['dir'] . '/lang';
+        $lang_dir = extras_dir.'/'.$extras[$plugin]['dir'].'/lang';
     } else {
-        $lang_dir = extras_dir . '/' . $active['active'][$plugin] . '/lang';
+        $lang_dir = extras_dir.'/'.$active['active'][$plugin].'/lang';
     }
 
     // Exit if no lang dir
@@ -1038,24 +1038,24 @@ function LoadPluginLang($plugin, $file, $group = '', $prefix = '', $delimiter = 
     // find if we have 'lang' dir in plugin directory
     // Try to load langs in order: default / english / russian
 
-    $lfn = ($group ? $group . '/' : '') . $file . '.ini';
+    $lfn = ($group ? $group.'/' : '').$file.'.ini';
 
     // * Default language
-    if (is_dir($lang_dir . '/' . $config['default_lang']) && is_file($lang_dir . '/' . $config['default_lang'] . '/' . $lfn)) {
-        $lang_dir = $lang_dir . '/' . $config['default_lang'];
-    } elseif (is_dir($lang_dir . '/english') && is_file($lang_dir . '/english/' . $lfn)) {
+    if (is_dir($lang_dir.'/'.$config['default_lang']) && is_file($lang_dir.'/'.$config['default_lang'].'/'.$lfn)) {
+        $lang_dir = $lang_dir.'/'.$config['default_lang'];
+    } elseif (is_dir($lang_dir.'/english') && is_file($lang_dir.'/english/'.$lfn)) {
         //print "<b>LANG></b> No default lang file for `$plugin` (name: `$file`), using ENGLISH</br>\n";
-        $lang_dir = $lang_dir . '/english';
-    } elseif (is_dir($lang_dir . '/russian') && is_file($lang_dir . '/russian/' . $lfn)) {
+        $lang_dir = $lang_dir.'/english';
+    } elseif (is_dir($lang_dir.'/russian') && is_file($lang_dir.'/russian/'.$lfn)) {
         //print "<b>LANG></b> No default lang file for `$plugin` (name: `$file`), using RUSSIAN</br>\n";
-        $lang_dir = $lang_dir . '/russian';
+        $lang_dir = $lang_dir.'/russian';
     } else {
         //print "<b>LANG></b> No default lang file for `$plugin` (name: `$file`), using <b><u>NOthING</u></b></br>\n";
         return 0;
     }
 
     // load file
-    $plugin_lang = parse_ini_file($lang_dir . '/' . $lfn);
+    $plugin_lang = parse_ini_file($lang_dir.'/'.$lfn);
 
     // merge values
     if (is_array($plugin_lang)) {
@@ -1066,7 +1066,7 @@ function LoadPluginLang($plugin, $file, $group = '', $prefix = '', $delimiter = 
             $lang = $lang + $plugin_lang;
         } else {
             foreach ($plugin_lang as $p => $v) {
-                $lang[$prefix . $delimiter . $p] = $v;
+                $lang[$prefix.$delimiter.$p] = $v;
             }
         }
     }
@@ -1092,7 +1092,7 @@ function MakeRandomPassword()
 {
     global $config;
 
-    return mb_substr(md5($config['crypto_salt'] . uniqid(rand(), 1)), 0, 10);
+    return mb_substr(md5($config['crypto_salt'].uniqid(rand(), 1)), 0, 10);
 }
 
 function EncodePassword($pass)
@@ -1235,7 +1235,7 @@ function GetCategories($catid, $plain = false, $firstOnly = false)
     foreach ($cats as $v) {
         if (isset($catmap[$v])) {
             $row = $catz[$catmap[$v]];
-            $catline[] = ($plain) ? $row['name'] : '<a href="' . generateLink('news', 'by.category', ['category' => $row['alt'], 'catid' => $row['id']]) . '">' . $row['name'] . '</a>';
+            $catline[] = ($plain) ? $row['name'] : '<a href="'.generateLink('news', 'by.category', ['category' => $row['alt'], 'catid' => $row['id']]).'">'.$row['name'].'</a>';
         }
     }
 
@@ -1260,12 +1260,12 @@ function makeCategoryInfo($ctext)
                 'name'  => $row['name'],
                 'info'  => $row['info'],
                 'url'   => $url,
-                'text'  => '<a href="' . $url . '">' . $row['name'] . '</a>',
+                'text'  => '<a href="'.$url.'">'.$row['name'].'</a>',
             ];
             if ($row['icon_id'] && $row['icon_folder']) {
                 $record['icon'] = [
-                    'url'        => $config['attach_url'] . '/' . $row['icon_folder'] . '/' . $row['icon_name'],
-                    'purl'       => $row['icon_preview'] ? ($config['attach_url'] . '/' . $row['icon_folder'] . '/thumb/' . $row['icon_name']) : '',
+                    'url'        => $config['attach_url'].'/'.$row['icon_folder'].'/'.$row['icon_name'],
+                    'purl'       => $row['icon_preview'] ? ($config['attach_url'].'/'.$row['icon_folder'].'/thumb/'.$row['icon_name']) : '',
                     'width'      => $row['icon_width'],
                     'height'     => $row['icon_height'],
                     'pwidth'     => $row['icon_pwidth'],
@@ -1312,7 +1312,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = [])
 
     // Determine working mode - old or new
     // If template 'news.categories' exists - use `new way`, else - old
-    if (file_exists(tpl_site . 'news.categories.tpl') || (isset($flags['returnData']) && $flags['returnData'])) {
+    if (file_exists(tpl_site.'news.categories.tpl') || (isset($flags['returnData']) && $flags['returnData'])) {
         $tVars = [];
         $tEntries = [];
         $tIDs = [];
@@ -1360,7 +1360,7 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = [])
                 'id'      => $v['id'],
                 'cat'     => $v['name'],
                 'link'    => ($v['alt_url'] == '') ? generateLink('news', 'by.category', ['category' => $v['alt'], 'catid' => $v['id']]) : $v['alt_url'],
-                'mark'    => isset($markers['mark.level.' . $v['poslevel']]) ? $markers['mark.level.' . $v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
+                'mark'    => isset($markers['mark.level.'.$v['poslevel']]) ? $markers['mark.level.'.$v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
                 'level'   => $v['poslevel'],
                 'info'    => $v['info'],
                 'counter' => $v['posts'],
@@ -1385,11 +1385,11 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = [])
                 // Mark all levels that are closed after this item
                 if ($i == (count($tEntries) - 1)) {
                     for ($x = 0; $x <= $tEntries[$i]['level']; $x++) {
-                        $tEntries[$i]['flags']['closeLevel_' . $x] = true;
+                        $tEntries[$i]['flags']['closeLevel_'.$x] = true;
                     }
                 } else {
                     for ($x = $tEntries[$i + 1]['level']; $x <= $tEntries[$i]['level']; $x++) {
-                        $tEntries[$i]['flags']['closeLevel_' . $x] = true;
+                        $tEntries[$i]['flags']['closeLevel_'.$x] = true;
                     }
                 }
                 if ($tEntries[$i]['level'] > $tEntries[$i + 1]['level']) {
@@ -1445,10 +1445,10 @@ function generateCategoryMenu($treeMasterCategory = null, $flags = [])
         $tvars['vars'] = [
             'if_active' => (isset($SYSTEM_FLAGS['news']['currentCategory.id']) && ($v['id'] == $SYSTEM_FLAGS['news']['currentCategory.id'])) ? $markers['class.active'] : $markers['class.inactive'],
             'link'      => ($v['alt_url'] == '') ? generateLink('news', 'by.category', ['category' => $v['alt'], 'catid' => $v['id']]) : $v['alt_url'],
-            'mark'      => isset($markers['mark.level.' . $v['poslevel']]) ? $markers['mark.level.' . $v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
+            'mark'      => isset($markers['mark.level.'.$v['poslevel']]) ? $markers['mark.level.'.$v['poslevel']] : str_repeat($markers['mark.default'], $v['poslevel']),
             'level'     => $v['poslevel'],
             'cat'       => $v['name'],
-            'counter'   => ($config['category_counters'] && $v['posts']) ? ('[' . $v['posts'] . ']') : '',
+            'counter'   => ($config['category_counters'] && $v['posts']) ? ('['.$v['posts'].']') : '',
             'icon'      => $v['icon'],
         ];
         $tvars['regx']['[\[icon\](.*)\[/icon\]]'] = trim($v['icon']) ? '$1' : '';
@@ -1589,7 +1589,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
         $tvars['vars']['p']['comments']['count'] = $row['com'];
     }
 
-    $tvars['vars']['author'] = '<a href="' . $alink . '" target="_blank">' . $row['author'] . '</a>';
+    $tvars['vars']['author'] = '<a href="'.$alink.'" target="_blank">'.$row['author'].'</a>';
     $tvars['vars']['author_link'] = $alink;
     $tvars['vars']['author_name'] = $row['author'];
 
@@ -1740,10 +1740,10 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
     // Activities for short mode
     if (!$fullMode) {
         // Make link for full news
-        $tvars['vars']['[full-link]'] = '<a href="' . $nlink . '">';
+        $tvars['vars']['[full-link]'] = '<a href="'.$nlink.'">';
         $tvars['vars']['[/full-link]'] = '</a>';
 
-        $tvars['vars']['[link]'] = '<a href="' . $nlink . '">';
+        $tvars['vars']['[link]'] = '<a href="'.$nlink.'">';
         $tvars['vars']['[/link]'] = '</a>';
 
         $tvars['vars']['full-link'] = $nlink;
@@ -1786,7 +1786,7 @@ function newsFillVariables($row, $fullMode, $page = 0, $disablePagination = 0, $
 
     $tvars['vars']['news']['categories']['text'] = implode(', ', $tCTextList);
 
-    $tvars['vars']['[print-link]'] = '<a href="' . newsGenerateLink($row, true, $page) . '">';
+    $tvars['vars']['[print-link]'] = '<a href="'.newsGenerateLink($row, true, $page).'">';
     $tvars['vars']['print-link'] = newsGenerateLink($row, true, $page);
     $tvars['vars']['print_link'] = newsGenerateLink($row, true, $page);
     $tvars['vars']['[/print-link]'] = '</a>';
@@ -1868,8 +1868,8 @@ function GetMetatags()
         $meta['keywords'] = $SYSTEM_FLAGS['meta']['keywords'];
     }
 
-    $result = ($meta['description'] != '') ? '<meta name="description" content="' . secure_html($meta['description']) . "\" />\r\n" : '';
-    $result .= ($meta['keywords'] != '') ? '<meta name="keywords" content="' . secure_html($meta['keywords']) . "\" />\r\n" : '';
+    $result = ($meta['description'] != '') ? '<meta name="description" content="'.secure_html($meta['description'])."\" />\r\n" : '';
+    $result .= ($meta['keywords'] != '') ? '<meta name="keywords" content="'.secure_html($meta['keywords'])."\" />\r\n" : '';
 
     return $result;
 }
@@ -1946,7 +1946,7 @@ function ngSitePagination($currentPage, $totalPages, $paginationParams, $navigat
 
     templateLoadVariables(true);
     $navigations = $TemplateCache['site']['#variables']['navigation'];
-    $tpl->template('pages', tpl_dir . $config['theme']);
+    $tpl->template('pages', tpl_dir.$config['theme']);
 
     // Prev page link
     if ($currentPage > 1) {
@@ -1985,7 +1985,7 @@ function ngSitePagination($currentPage, $totalPages, $paginationParams, $navigat
 function locateUser($login)
 {
     global $mysql;
-    if ($row = $mysql->record('select * from ' . uprefix . '_users where name = ' . db_squote($login))) {
+    if ($row = $mysql->record('select * from '.uprefix.'_users where name = '.db_squote($login))) {
         return $row;
     }
 
@@ -1995,7 +1995,7 @@ function locateUser($login)
 function locateUserById($id)
 {
     global $mysql;
-    if ($row = $mysql->record('select * from ' . uprefix . '_users where id = ' . db_squote($id))) {
+    if ($row = $mysql->record('select * from '.uprefix.'_users where id = '.db_squote($id))) {
         return $row;
     }
 
@@ -2139,7 +2139,7 @@ function printHTTPheaders()
     global $SYSTEM_FLAGS;
 
     foreach ($SYSTEM_FLAGS['http.headers'] as $hkey => $hvalue) {
-        @header($hkey . ': ' . $hvalue);
+        @header($hkey.': '.$hvalue);
     }
 }
 
@@ -2150,7 +2150,7 @@ function error404()
 {
     global $config, $tpl, $template, $SYSTEM_FLAGS, $lang;
 
-    @header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+    @header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
     switch ($config['404_mode']) {
             // HTTP error 404
         case 2:
@@ -2183,7 +2183,7 @@ function genUToken($identity = '')
 
     $line = $identity;
     if (isset($userROW)) {
-        $line .= $userROW['id'] . $userROW['authcookie'];
+        $line .= $userROW['id'].$userROW['authcookie'];
     }
 
     if (isset($config['UUID'])) {
@@ -2234,7 +2234,7 @@ function checkPermission($identity, $user = null, $mode = '', $way = '')
     $xDEBUG = false;
 
     if ($xDEBUG) {
-        echo 'checkPermission[' . $identity['plugin'] . ',' . $identity['item'] . ',' . $mode . '] = ';
+        echo 'checkPermission['.$identity['plugin'].','.$identity['item'].','.$mode.'] = ';
     }
 
     // Determine user's groups
@@ -2316,7 +2316,7 @@ function checkPermission($identity, $user = null, $mode = '', $way = '')
     }
 
     if ($xDEBUG) {
-        echo ' => ' . var_export($mStatus, true) . "<br/>\n";
+        echo ' => '.var_export($mStatus, true)."<br/>\n";
     }
 
     // Now check return mode and return
@@ -2329,8 +2329,8 @@ function loadGroups()
     global $UGROUP, $config;
 
     $UGROUP = [];
-    if (is_file(confroot . 'ugroup.php')) {
-        include confroot . 'ugroup.php';
+    if (is_file(confroot.'ugroup.php')) {
+        include confroot.'ugroup.php';
         $UGROUP = $confUserGroup;
     }
 
@@ -2387,8 +2387,8 @@ function loadPermissions()
     // 1. Load DEFAULT permission file.
     // * if not exists - allow everything for group = 1, other's are restricted
     $PERM = [];
-    if (is_file(confroot . 'perm.default.php')) {
-        include confroot . 'perm.default.php';
+    if (is_file(confroot.'perm.default.php')) {
+        include confroot.'perm.default.php';
         $PERM = $confPerm;
     } else {
         $PERM = ['1' => ['*' => ['*' => ['*' => true]]]];
@@ -2397,9 +2397,9 @@ function loadPermissions()
     // 2. Load user specific config file
     // If configuration file exists
     $confPermUser = [];
-    if (is_file(confroot . 'perm.php')) {
+    if (is_file(confroot.'perm.php')) {
         // Try to load it
-        include confroot . 'perm.php';
+        include confroot.'perm.php';
     }
 
     // Scan user's permissions
@@ -2427,10 +2427,10 @@ function saveUserPermissions()
 {
     global $confPermUser;
 
-    $line = '<?php' . "\n// NGCMS User defined permissions ()\n";
-    $line .= '$confPermUser = ' . var_export($confPermUser, true) . "\n;\n?>";
+    $line = '<?php'."\n// NGCMS User defined permissions ()\n";
+    $line .= '$confPermUser = '.var_export($confPermUser, true)."\n;\n?>";
 
-    $fcHandler = @fopen(confroot . 'perm.php', 'w');
+    $fcHandler = @fopen(confroot.'perm.php', 'w');
     if ($fcHandler) {
         fwrite($fcHandler, $line);
         fclose($fcHandler);
@@ -2477,7 +2477,7 @@ function ngSYSLOG($identity, $action, $user, $status)
         'stext'    => db_squote($status[1]),
     ];
     //print "<pre>".var_export($sVars, true)."</pre>";
-    $mysql->query('insert into ' . prefix . '_syslog (' . implode(',', array_keys($sVars)) . ') values (' . implode(',', array_values($sVars)) . ')');
+    $mysql->query('insert into '.prefix.'_syslog ('.implode(',', array_keys($sVars)).') values ('.implode(',', array_values($sVars)).')');
     //$mysql->query("insert into ".prefix."_syslog (dt, ip, plugin, item, ds, ds_id, action, alist, userid, username, status, stext) values (now(), ".db_squote($ip).",");
     //print "<pre>ngSYSLOG: ".var_export($identity, true)."\n".var_export($action, true)."\n".var_export($user, true)."\n".var_export($status, true)."</pre>";
 }
@@ -2518,13 +2518,13 @@ function ngExceptionHandler($exception)
 
     <body>
         <?php
-        echo '<h1>NGCMS Runtime exception: ' . get_class($exception) . "</h1>\n";
-        echo "<div class='dmsg'>" . $exception->getMessage() . '</div><br/>';
+        echo '<h1>NGCMS Runtime exception: '.get_class($exception)."</h1>\n";
+        echo "<div class='dmsg'>".$exception->getMessage().'</div><br/>';
         echo '<h2>Stack trace</h2>';
         echo "<table class='dtrace'><thead><tr><td>#</td><td>Line #</td><td><i>Class</i>/Function</td><td>File name</td></tr></thead><tbody>";
-        echo '<tr><td>X</td><td>' . $exception->getLine() . '</td><td>' . $exception->getCode() . '</td><td>' . $exception->getFile() . '</td></tr>';
+        echo '<tr><td>X</td><td>'.$exception->getLine().'</td><td>'.$exception->getCode().'</td><td>'.$exception->getFile().'</td></tr>';
         foreach ($exception->getTrace() as $k => $v) {
-            echo '<tr><td>' . $k . '</td><td>' . $v['line'] . '</td><td>' . (isset($v['class']) ? ('<i>' . $v['class'] . '</i>') : $v['function']) . '</td><td>' . $v['file'] . "</td></tr>\n";
+            echo '<tr><td>'.$k.'</td><td>'.$v['line'].'</td><td>'.(isset($v['class']) ? ('<i>'.$v['class'].'</i>') : $v['function']).'</td><td>'.$v['file']."</td></tr>\n";
         }
         echo '</tbody></table>';
     }
@@ -2602,11 +2602,11 @@ function ngExceptionHandler($exception)
         <body>
             <?php
             echo '<div id="ngErrorInformer">';
-            echo '<h1>NGCMS Runtime error: ' . $lastError['message'] . "</h1>\n";
-            echo "<div class='dmsg'>[ " . $lastError['type'] . ']: ' . $lastError['message'] . '</div><br/>';
+            echo '<h1>NGCMS Runtime error: '.$lastError['message']."</h1>\n";
+            echo "<div class='dmsg'>[ ".$lastError['type'].']: '.$lastError['message'].'</div><br/>';
             echo '<h2>Stack trace</h2>';
             echo "<table class='dtrace'><thead><td>Line #</td><td>File name</td></tr></thead><tbody>";
-            echo '<tr><td>' . $lastError['line'] . '</td><td>' . $lastError['file'] . '</td></tr></tbody></table>';
+            echo '<tr><td>'.$lastError['line'].'</td><td>'.$lastError['file'].'</td></tr></tbody></table>';
             echo '</div>'; ?>
             <div id="hdrSpanItem"></div>
             <script language="Javascript">
@@ -2635,7 +2635,7 @@ function ngExceptionHandler($exception)
 
     function twigLocalPath($templateName)
     {
-        return dirname($templateName) . DIRECTORY_SEPARATOR;
+        return dirname($templateName).DIRECTORY_SEPARATOR;
     }
 
     //
@@ -2693,10 +2693,10 @@ function ngExceptionHandler($exception)
                     }
                 </script>
             <?php
-            echo '<h1>NGCMS Software generated fatal error: ' . $title . "</h1>\n";
-            echo "<div class='dmsg'>[ Software error ]: " . $title . '</div><br/>';
+            echo '<h1>NGCMS Software generated fatal error: '.$title."</h1>\n";
+            echo "<div class='dmsg'>[ Software error ]: ".$title.'</div><br/>';
             if ($description) {
-                echo '<p><i>' . $description . '</i></p>';
+                echo '<p><i>'.$description.'</i></p>';
             }
             echo '<h2>Stack trace</h2>';
             echo "<table class='dtrace'><thead><td>Line #</td><td>Function</td><td>File name</td></tr></thead><tbody>";
@@ -2705,7 +2705,7 @@ function ngExceptionHandler($exception)
             $num = 0;
             foreach ($trace as $k => $v) {
                 $num++;
-                echo '<tr><td>' . $v['line'] . '</td><td>' . $v['function'] . '<td>' . $v['file'] . '</td></tr>';
+                echo '<tr><td>'.$v['line'].'</td><td>'.$v['function'].'<td>'.$v['file'].'</td></tr>';
                 if ($num > 3) {
                     echo "<tr><td colspan='3'>...</td></tr>";
                     break;
@@ -2788,7 +2788,7 @@ function ngExceptionHandler($exception)
                 return ($currentCategory['image_id'] && $currentCategory['icon_id']) ? 1 : 0;
             }
             if ($list == ':icon.url') {
-                return $config['attach_url'] . '/' . $currentCategory['icon_folder'] . '/' . $currentCategory['icon_name'];
+                return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/'.$currentCategory['icon_name'];
             }
             if ($list == ':icon.width') {
                 return intval($currentCategory['icon_width']);
@@ -2800,7 +2800,7 @@ function ngExceptionHandler($exception)
                 return ($currentCategory['image_id'] && $currentCategory['icon_id'] && $currentCategory['icon_preview']) ? 1 : 0;
             }
             if ($list == ':icon.preview.url') {
-                return $config['attach_url'] . '/' . $currentCategory['icon_folder'] . '/thumb/' . $currentCategory['icon_name'];
+                return $config['attach_url'].'/'.$currentCategory['icon_folder'].'/thumb/'.$currentCategory['icon_name'];
             }
             if ($list == ':icon.preview.width') {
                 return intval($currentCategory['icon_pwidth']);
@@ -2931,12 +2931,12 @@ function ngExceptionHandler($exception)
 
         function twigDebugValue($val)
         {
-            return '<b>debugValue:</b><pre>' . var_export($val, true) . '</pre>';
+            return '<b>debugValue:</b><pre>'.var_export($val, true).'</pre>';
         }
 
         function twigDebugContext($context)
         {
-            return '<b>debugContext:</b><pre>' . var_export($context, true) . '</pre>';
+            return '<b>debugContext:</b><pre>'.var_export($context, true).'</pre>';
         }
 
         // Notify kernel about script termination, used for statistics calculation
@@ -2951,7 +2951,7 @@ function ngExceptionHandler($exception)
             // Common analytics
             if ($config['load_analytics']) {
                 $cvar = ($mode == 0) ? 'core' : (($mode == 1) ? 'plugin' : 'ppage');
-                $mysql->query('insert into ' . prefix . '_load (dt, hit_core, hit_plugin, hit_ppage, exec_core, exec_plugin, exec_ppage) values (' . db_squote($now_str) . ', ' . (($mode == 0) ? 1 : 0) . ', ' . (($mode == 1) ? 1 : 0) . ' , ' . (($mode == 2) ? 1 : 0) . ', ' . (($mode == 0) ? $exectime : 0) . ', ' . (($mode == 1) ? $exectime : 0) . ', ' . (($mode == 2) ? $exectime : 0) . ') on duplicate key update hit_' . $cvar . ' = hit_' . $cvar . ' + 1, exec_' . $cvar . ' = exec_' . $cvar . ' + ' . $exectime);
+                $mysql->query('insert into '.prefix.'_load (dt, hit_core, hit_plugin, hit_ppage, exec_core, exec_plugin, exec_ppage) values ('.db_squote($now_str).', '.(($mode == 0) ? 1 : 0).', '.(($mode == 1) ? 1 : 0).' , '.(($mode == 2) ? 1 : 0).', '.(($mode == 0) ? $exectime : 0).', '.(($mode == 1) ? $exectime : 0).', '.(($mode == 2) ? $exectime : 0).') on duplicate key update hit_'.$cvar.' = hit_'.$cvar.' + 1, exec_'.$cvar.' = exec_'.$cvar.' + '.$exectime);
             }
 
             // DEBUG profiler
@@ -2960,14 +2960,14 @@ function ngExceptionHandler($exception)
                     'queries' => $mysql->query_list,
                     'events'  => $timer->printEvents(1),
                 ];
-                $mysql->query('insert into ' . prefix . '_profiler (dt, userid, exectime, memusage, url, tracedata) values (now(), ' . ((isset($userROW) && is_array($userROW)) ? $userROW['id'] : 0) . ', ' . $exectime . ', ' . sprintf('%7.3f', (memory_get_peak_usage() / 1024 / 1024)) . ', ' . db_squote($systemAccessURL) . ', ' . db_squote(serialize($trace)) . ')');
+                $mysql->query('insert into '.prefix.'_profiler (dt, userid, exectime, memusage, url, tracedata) values (now(), '.((isset($userROW) && is_array($userROW)) ? $userROW['id'] : 0).', '.$exectime.', '.sprintf('%7.3f', (memory_get_peak_usage() / 1024 / 1024)).', '.db_squote($systemAccessURL).', '.db_squote(serialize($trace)).')');
             }
         }
 
         // Generate user redirect call and terminate execution of CMS
         function coreRedirectAndTerminate($location)
         {
-            @header('Location: ' . $location);
+            @header('Location: '.$location);
             coreNormalTerminate();
             exit;
         }
@@ -2978,18 +2978,18 @@ function ngExceptionHandler($exception)
             global $mysql;
 
             // Lock tables
-            $mysql->query('lock tables ' . prefix . '_news_view write, ' . prefix . '_news write');
+            $mysql->query('lock tables '.prefix.'_news_view write, '.prefix.'_news write');
 
             // Read data and update counters
-            foreach ($mysql->select('select * from ' . prefix . '_news_view') as $vrec) {
-                $mysql->query('update ' . prefix . '_news set views = views + ' . intval($vrec['cnt']) . ' where id = ' . intval($vrec['id']));
+            foreach ($mysql->select('select * from '.prefix.'_news_view') as $vrec) {
+                $mysql->query('update '.prefix.'_news set views = views + '.intval($vrec['cnt']).' where id = '.intval($vrec['id']));
             }
 
             // Truncate view table
             //$mysql->query("truncate table ".prefix."_news_view");
             // DUE TO BUG IN MYSQL - USE DELETE + OPTIMIZE
-            $mysql->query('delete from ' . prefix . '_news_view');
-            $mysql->query('optimize table ' . prefix . '_news_view');
+            $mysql->query('delete from '.prefix.'_news_view');
+            $mysql->query('optimize table '.prefix.'_news_view');
 
             // Unlock tables
             $mysql->query('unlock tables');
@@ -3003,12 +3003,12 @@ function ngExceptionHandler($exception)
             global $mysql;
 
             // Store LOAD data only for 1 week
-            $mysql->query('delete from ' . prefix . '_load where dt < from_unixtime(unix_timestamp(now()) - 7*86400)');
-            $mysql->query('optimize table ' . prefix . '_load');
+            $mysql->query('delete from '.prefix.'_load where dt < from_unixtime(unix_timestamp(now()) - 7*86400)');
+            $mysql->query('optimize table '.prefix.'_load');
 
             // Store SYSLOG data only for 1 month
-            $mysql->query('delete from ' . prefix . '_syslog where dt < from_unixtime(unix_timestamp(now()) - 30*86400)');
-            $mysql->query('optimize table ' . prefix . '_syslog');
+            $mysql->query('delete from '.prefix.'_syslog where dt < from_unixtime(unix_timestamp(now()) - 30*86400)');
+            $mysql->query('optimize table '.prefix.'_syslog');
         }
 
         // Process CRON job calls
@@ -3040,7 +3040,7 @@ function ngExceptionHandler($exception)
             // Use default <noavatar> file
             // - Check if noavatar is defined on template level
             $tplVars = $TemplateCache['site']['#variables'];
-            $noAvatarURL = (isset($tplVars['configuration']) && is_array($tplVars['configuration']) && isset($tplVars['configuration']['noAvatarImage']) && $tplVars['configuration']['noAvatarImage']) ? (tpl_url . '/' . $tplVars['configuration']['noAvatarImage']) : (avatars_url . '/noavatar.png');
+            $noAvatarURL = (isset($tplVars['configuration']) && is_array($tplVars['configuration']) && isset($tplVars['configuration']['noAvatarImage']) && $tplVars['configuration']['noAvatarImage']) ? (tpl_url.'/'.$tplVars['configuration']['noAvatarImage']) : (avatars_url.'/noavatar.png');
 
             // Preload plugins for usermenu
             loadActionHandlers('usermenu');
@@ -3088,10 +3088,10 @@ function ngExceptionHandler($exception)
             } else {
                 // User is logged in
                 $tVars['profile_link'] = generateLink('uprofile', 'edit');
-                $tVars['addnews_link'] = $config['admin_url'] . '/admin.php?mod=news&amp;action=add';
+                $tVars['addnews_link'] = $config['admin_url'].'/admin.php?mod=news&amp;action=add';
                 $tVars['logout_link'] = generateLink('core', 'logout');
                 $tVars['name'] = $userROW['name'];
-                $tVars['phtumb_url'] = photos_url . '/' . (($userROW['photo'] != '') ? 'thumb/' . $userROW['photo'] : 'nophoto.png');
+                $tVars['phtumb_url'] = photos_url.'/'.(($userROW['photo'] != '') ? 'thumb/'.$userROW['photo'] : 'nophoto.png');
                 $tVars['home_url'] = home;
 
                 // Generate avatar link
@@ -3099,11 +3099,11 @@ function ngExceptionHandler($exception)
 
                 if ($config['use_avatars']) {
                     if ($userROW['avatar']) {
-                        $userAvatar = avatars_url . '/' . $userROW['avatar'];
+                        $userAvatar = avatars_url.'/'.$userROW['avatar'];
                     } else {
                         // If gravatar integration is active, show avatar from GRAVATAR.COM
                         if ($config['avatars_gravatar']) {
-                            $userAvatar = 'http://www.gravatar.com/avatar/' . md5(mb_strtolower($userROW['mail'])) . '.jpg?s=' . $config['avatar_wh'] . '&d=' . urlencode($noAvatarURL);
+                            $userAvatar = 'http://www.gravatar.com/avatar/'.md5(mb_strtolower($userROW['mail'])).'.jpg?s='.$config['avatar_wh'].'&d='.urlencode($noAvatarURL);
                         } else {
                             $userAvatar = $noAvatarURL;
                         }
@@ -3242,7 +3242,7 @@ function ngExceptionHandler($exception)
             global $mysql, $catz, $catmap;
 
             if (($result = cacheRetrieveFile('LoadCategories.dat', 86400)) === false) {
-                $result = $mysql->select('select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `' . prefix . '_category` as nc left join `' . prefix . '_images` ni on nc.image_id = ni.id order by nc.posorder asc', 1);
+                $result = $mysql->select('select nc.*, ni.id as icon_id, ni.name as icon_name, ni.storage as icon_storage, ni.folder as icon_folder, ni.preview as icon_preview, ni.width as icon_width, ni.height as icon_height, ni.p_width as icon_pwidth, ni.p_height as icon_pheight from `'.prefix.'_category` as nc left join `'.prefix.'_images` ni on nc.image_id = ni.id order by nc.posorder asc', 1);
                 cacheStoreFile('LoadCategories.dat', serialize($result));
             } else {
                 $result = unserialize($result);
@@ -3308,5 +3308,5 @@ function ngExceptionHandler($exception)
                 $obj = print_r($obj, true);
             }
 
-            echo '<pre>' . htmlentities($obj, ENT_QUOTES) . "</pre><br>\n";
+            echo '<pre>'.htmlentities($obj, ENT_QUOTES)."</pre><br>\n";
         }

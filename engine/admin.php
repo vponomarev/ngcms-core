@@ -52,7 +52,7 @@ $PHP_SELF = 'admin.php';
 // Handle LOGIN
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
-    include_once root . 'cmodules.php';
+    include_once root.'cmodules.php';
     coreLogin();
 }
 
@@ -60,7 +60,7 @@ if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'login')) {
 // Handle LOGOUT
 //
 if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'logout')) {
-    include_once root . 'cmodules.php';
+    include_once root.'cmodules.php';
     coreLogout();
 }
 
@@ -77,7 +77,7 @@ if (!is_array($userROW)) {
         'is_error'   => ($SYSTEM_FLAGS['auth_fail']) ? '$1' : '',
     ];
 
-    $xt = $twig->loadTemplate(tpl_actions . 'login.tpl');
+    $xt = $twig->loadTemplate(tpl_actions.'login.tpl');
     echo $xt->render($tVars);
     exit;
 }
@@ -85,7 +85,7 @@ if (!is_array($userROW)) {
 // Check if visitor has permissions to view admin panel
 if (!checkPermission(['plugin' => '#admin', 'item' => 'system'], null, 'admpanel.view')) {
     ngSYSLOG(['plugin' => '#admin', 'item' => 'system'], ['action' => 'admpanel.view'], null, [0, 'SECURITY.PERM']);
-    @header('Location: ' . home);
+    @header('Location: '.home);
     exit;
 }
 
@@ -143,8 +143,8 @@ if (!$mod) {
 // Check requested module exists
 if (isset($permissions[$mod]) && $permissions[$mod]) {
     // Load plugins, that need to make any changes in this mod
-    load_extras('admin:mod:' . $mod);
-    require './actions/' . $mod . '.php';
+    load_extras('admin:mod:'.$mod);
+    require './actions/'.$mod.'.php';
 } else {
     $notify = msg(['type' => 'error', 'text' => $lang['msge_mod']]);
 }
@@ -156,30 +156,30 @@ if (is_array($userROW)) {
     $unapp1 = '';
     $unapp2 = '';
 
-    $newpm = $mysql->result("SELECT count(pmid) FROM " . prefix . "_users_pm WHERE to_id = " . db_squote($userROW['id']) . " AND viewed = '0'");
-    $newpmText = ($newpm != "0") ? $newpm . ' ' . Padeg($newpm, $lang['head_pm_skl']) : $lang['head_pm_no'];
+    $newpm = $mysql->result("SELECT count(pmid) FROM ".prefix."_users_pm WHERE to_id = ".db_squote($userROW['id'])." AND viewed = '0'");
+    $newpmText = ($newpm != "0") ? $newpm.' '.Padeg($newpm, $lang['head_pm_skl']) : $lang['head_pm_no'];
 
     // Calculate number of un-approved news
     if ($userROW['status'] == 1 || $userROW['status'] == 2) {
-        $unapp1 = $mysql->result("SELECT count(id) FROM " . prefix . "_news WHERE approve = '-1'");
-        $unapp2 = $mysql->result("SELECT count(id) FROM " . prefix . "_news WHERE approve = '0'");
-        $unapp3 = $mysql->result("SELECT count(id) FROM " . prefix . "_static WHERE approve = '0'");
+        $unapp1 = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '-1'");
+        $unapp2 = $mysql->result("SELECT count(id) FROM ".prefix."_news WHERE approve = '0'");
+        $unapp3 = $mysql->result("SELECT count(id) FROM ".prefix."_static WHERE approve = '0'");
         if ($unapp1)
-            $unapproved1 = '<a class="dropdown-item" href="' . $PHP_SELF . '?mod=news&status=1"><i class="fa fa-ban"></i> ' . $unapp1 . ' ' . Padeg($unapp1, $lang['head_news_draft_skl']) . '</a>';
+            $unapproved1 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=news&status=1"><i class="fa fa-ban"></i> '.$unapp1.' '.Padeg($unapp1, $lang['head_news_draft_skl']).'</a>';
         if ($unapp2)
-            $unapproved2 = '<a class="dropdown-item" href="' . $PHP_SELF . '?mod=news&status=2"><i class="fa fa-times"></i> ' . $unapp2 . ' ' . Padeg($unapp2, $lang['head_news_pending_skl']) . '</a>';
+            $unapproved2 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=news&status=2"><i class="fa fa-times"></i> '.$unapp2.' '.Padeg($unapp2, $lang['head_news_pending_skl']).'</a>';
         if ($unapp3)
-            $unapproved3 = '<a class="dropdown-item" href="' . $PHP_SELF . '?mod=static"><i class="fa fa-times"></i> ' . $unapp3 . ' ' . Padeg($unapp3, $lang['head_stat_pending_skl']) . '</a>';
+            $unapproved3 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=static"><i class="fa fa-times"></i> '.$unapp3.' '.Padeg($unapp3, $lang['head_stat_pending_skl']).'</a>';
     }
 
     $unnAppCount = (int)$newpm + (int)$unapp1 + (int)$unapp2 + (int)$unapp3;
-    $unnAppLabel = ($unnAppCount != "0") ? '<span class="label label-danger">' . $unnAppCount . '</span>' : '';
-    $unnAppText = $lang['head_notify'] . (($unnAppCount != "0") ? $unnAppCount . ' ' . Padeg($unnAppCount, $lang['head_notify_skl']) : $lang['head_notify_no']);
+    $unnAppLabel = ($unnAppCount != "0") ? '<span class="label label-danger">'.$unnAppCount.'</span>' : '';
+    $unnAppText = $lang['head_notify'].(($unnAppCount != "0") ? $unnAppCount.' '.Padeg($unnAppCount, $lang['head_notify_skl']) : $lang['head_notify_no']);
 }
 
 $datetimepicker_lang_default = "
-$.datepicker.setDefaults($.datepicker.regional['" . $lang['langcode'] . "']);
-$.timepicker.setDefaults($.timepicker.regional['" . $lang['langcode'] . "']);
+$.datepicker.setDefaults($.datepicker.regional['".$lang['langcode']."']);
+$.timepicker.setDefaults($.timepicker.regional['".$lang['langcode']."']);
 ";
 $datetimepicker_lang = ($lang['langcode'] == 'ru') ? $datetimepicker_lang_default : '';
 
@@ -225,11 +225,11 @@ $twigGlobal['subaction'] = $subaction;
 $twigGlobal['mod'] = $mod;
 
 if (!$mod || ($mod && $mod != 'preview')) {
-    $xt = $twig->loadTemplate(dirname(tpl_actions) . '/index.tpl');
+    $xt = $twig->loadTemplate(dirname(tpl_actions).'/index.tpl');
     echo $xt->render($tVars);
 }
 if (defined('DEBUG')) {
-    echo "SQL queries:<br />\n-------<br />\n " . implode("<br />\n", $mysql->query_list);
+    echo "SQL queries:<br />\n-------<br />\n ".implode("<br />\n", $mysql->query_list);
 }
 
 exec_acts('admin_footer');
