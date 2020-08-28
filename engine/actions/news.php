@@ -329,11 +329,11 @@ function makeSortList($selected)
 {
     global $lang;
 
-    return '<option value="id_desc"'.($selected == 'id_desc' ? ' selected' : '').'>'.$lang['sort_postid_desc'].'</option>' .
-        '<option value="id"'.($selected == 'id' ? ' selected' : '').'>'.$lang['sort_postid'].'</option>' .
-        '<option value="postdate_desc"'.($selected == 'postdate_desc' ? ' selected' : '').'>'.$lang['sort_postdate_desc'].'</option>' .
-        '<option value="postdate"'.($selected == 'postdate' ? ' selected' : '').'>'.$lang['sort_postdate'].'</option>' .
-        '<option value="title_desc"'.($selected == 'title_desc' ? ' selected' : '').'>'.$lang['sort_title_desc'].'</option>' .
+    return '<option value="id_desc"'.($selected == 'id_desc' ? ' selected' : '').'>'.$lang['sort_postid_desc'].'</option>'.
+        '<option value="id"'.($selected == 'id' ? ' selected' : '').'>'.$lang['sort_postid'].'</option>'.
+        '<option value="postdate_desc"'.($selected == 'postdate_desc' ? ' selected' : '').'>'.$lang['sort_postdate_desc'].'</option>'.
+        '<option value="postdate"'.($selected == 'postdate' ? ' selected' : '').'>'.$lang['sort_postdate'].'</option>'.
+        '<option value="title_desc"'.($selected == 'title_desc' ? ' selected' : '').'>'.$lang['sort_title_desc'].'</option>'.
         '<option value="title"'.($selected == 'title' ? ' selected' : '').'>'.$lang['sort_title'].'</option>';
 }
 
@@ -552,8 +552,8 @@ function listNewsForm()
         'rpp'        => $fRPP,
         'entries'    => $newsEntries,
         'sortlist'   => makeSortList($_REQUEST['sort']),
-        'statuslist' => '<option value="1"'.(($fStatus == 1) ? ' selected' : '').'>'.$lang['smode_draft'].'</option>' .
-            '<option value="2"'.(($fStatus == 2) ? ' selected' : '').'>'.$lang['smode_unpublished'].'</option>' .
+        'statuslist' => '<option value="1"'.(($fStatus == 1) ? ' selected' : '').'>'.$lang['smode_draft'].'</option>'.
+            '<option value="2"'.(($fStatus == 2) ? ' selected' : '').'>'.$lang['smode_unpublished'].'</option>'.
             '<option value="3"'.(($fStatus == 3) ? ' selected' : '').'>'.$lang['smode_published'].'</option>',
         'flags'      => [
             'comments'     => getPluginStatusInstalled('comments') ? true : false,
@@ -571,16 +571,16 @@ function listNewsForm()
                 'maxNavigations' => $maxNavigations,
                 'current'        => $pageNo,
                 'count'          => $countPages,
-                'url'            => admin_url .
-                    '/admin.php?mod=news' .
-                    ($fRPP ? '&rpp='.$fRPP : '') .
-                    ($fAuthorName != '' ? '&an='.$fAuthorName : '') .
-                    ($fSearchLine != '' ? '&sl='.$fSearchLine : '') .
-                    ($fSearchType != '' ? '&st='.$fSearchType : '') .
-                    ($fDateStartText != '' ? '&dr1='.$fDateStartText : '') .
-                    ($fDateStopText != '' ? '&dr2='.$fDateStopText : '') .
-                    ($fCategoryId != '' ? '&category='.$fCategoryId : '') .
-                    ($fStatus != '' ? '&status='.$fStatus : '') .
+                'url'            => admin_url.
+                    '/admin.php?mod=news'.
+                    ($fRPP ? '&rpp='.$fRPP : '').
+                    ($fAuthorName != '' ? '&an='.$fAuthorName : '').
+                    ($fSearchLine != '' ? '&sl='.$fSearchLine : '').
+                    ($fSearchType != '' ? '&st='.$fSearchType : '').
+                    ($fDateStartText != '' ? '&dr1='.$fDateStartText : '').
+                    ($fDateStopText != '' ? '&dr2='.$fDateStopText : '').
+                    ($fCategoryId != '' ? '&category='.$fCategoryId : '').
+                    ($fStatus != '' ? '&status='.$fStatus : '').
                     '&page=%page%',
             ]
         );
@@ -621,7 +621,7 @@ function listNewsForm()
         } else {
             $tcRec['cutter'] = '';
         }
-        $tcRec['cutter'] = $tcRec['cutter'] .
+        $tcRec['cutter'] = $tcRec['cutter'].
             '<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '').'.png" />';
 
         $tcRecs[] = $tcRec;
