@@ -19,7 +19,7 @@
 	</div>
 </div>
 
-<ul class="nav nav-pills mb-3 d-md-flex d-block">
+<ul class="nav nav-tabs nav-fill mb-3 d-md-flex d-block">
 	<li class="nav-item"><a href="#" class="nav-link active" data-filter="pluginEntryActive">{{ lang['list.active'] }} <span class="badge badge-light">{{ cntActive }}</span></a></li>
 	<li class="nav-item"><a href="#" class="nav-link" data-filter="pluginEntryInactive">{{ lang['list.inactive'] }} <span class="badge badge-light">{{ cntInactive }}</span></a></li>
 	<li class="nav-item"><a href="#" class="nav-link" data-filter="pluginEntryUninstalled">{{ lang['list.needinstall'] }} <span class="badge badge-light">{{ cntUninstalled }}</span></a></li>
@@ -61,7 +61,7 @@
 
 <script language="javascript" type="text/javascript">
 	function tabsSwitch(pill) {
-		$(".nav-pills li>a").removeClass('active');
+		$(".nav-tabs li>a").removeClass('active');
 
 		const newSelection = $(pill).addClass('active')
 			.attr('data-filter');
@@ -70,16 +70,16 @@
 	}
 
 	$(document).ready(function() {
-		$(".nav-pills").on('click', 'li>a:not(.active)', function() {
+		$(".nav-tabs").on('click', 'li>a:not(.active)', function() {
 			$("#searchInput").val('');
 			tabsSwitch($(this));
 		});
 
 		// Default plugin list display: active plugins
-		tabsSwitch($(".nav-pills li>a[data-filter=pluginEntryActive]"));
+		tabsSwitch($(".nav-tabs li>a[data-filter=pluginEntryActive]"));
 
 		$("#searchInput").on('keyup', function(event) {
-			tabsSwitch($('.nav-pills li>a').eq(0));
+			tabsSwitch($('.nav-tabs li>a').eq(0));
 
 			const filter = $('#searchInput').val().toUpperCase();
 
