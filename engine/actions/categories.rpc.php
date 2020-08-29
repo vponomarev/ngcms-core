@@ -84,7 +84,7 @@ function admCategoryList($retMode = 0)
         } else {
             $tEntry['level'] = '';
         }
-        $tEntry['level'] = $tEntry['level'] .
+        $tEntry['level'] = $tEntry['level'].
             '<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '').'.png" />';
         $tvars['regx']['#\[news\](.*?)\[\/news\]#is'] = ($row['posts'] > 0) ? '$1' : '';
 
