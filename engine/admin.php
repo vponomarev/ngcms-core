@@ -164,15 +164,15 @@ if (is_array($userROW)) {
         $unapp1 = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '-1'");
         $unapp2 = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '0'");
         $unapp3 = $mysql->result('SELECT count(id) FROM '.prefix."_static WHERE approve = '0'");
-        if ($unapp1){
+        if ($unapp1) {
             $unapproved1 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=news&status=1"><i class="fa fa-ban"></i> '.$unapp1.' '.Padeg($unapp1, $lang['head_news_draft_skl']).'</a>';
 		}
-        if ($unapp2){
+        if ($unapp2) {
             $unapproved2 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=news&status=2"><i class="fa fa-times"></i> '.$unapp2.' '.Padeg($unapp2, $lang['head_news_pending_skl']).'</a>';
 		}
-        if ($unapp3){
+        if ($unapp3) {
             $unapproved3 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=static"><i class="fa fa-times"></i> '.$unapp3.' '.Padeg($unapp3, $lang['head_stat_pending_skl']).'</a>';
-    }
+        }
 	}
 
     $unnAppCount = (int) $newpm + (int) $unapp1 + (int) $unapp2 + (int) $unapp3;
