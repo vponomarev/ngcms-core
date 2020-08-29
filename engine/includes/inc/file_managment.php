@@ -322,11 +322,11 @@ function manage_showlist($type)
 
             $tvars['vars']['view_file'] = '<a target="_blank" href="'.$fileurl.'"><img src="'.skins_url.'/images/insert_image.png" border="0"/></a>';
             $tvars['vars']['view_thumb'] = $row['preview'] ? '<a target="_blank" href="'.$thumburl.'"><img src="'.skins_url.'/images/insert_thumb.png" border="0"/></a>' : '';
-            $tvars['vars']['edit_link'] = '?mod=images&subaction=editForm&id='.$row['id'] .
-                ($_REQUEST['author'] ? '&author='.$_REQUEST['author'] : '') .
-                ($_REQUEST['category'] ? '&category='.$_REQUEST['category'] : '') .
-                ($_REQUEST['postdate'] ? '&postdate='.$_REQUEST['postdate'] : '') .
-                ($_REQUEST['page'] ? '&page='.$_REQUEST['page'] : '') .
+            $tvars['vars']['edit_link'] = '?mod=images&subaction=editForm&id='.$row['id'].
+                ($_REQUEST['author'] ? '&author='.$_REQUEST['author'] : '').
+                ($_REQUEST['category'] ? '&category='.$_REQUEST['category'] : '').
+                ($_REQUEST['postdate'] ? '&postdate='.$_REQUEST['postdate'] : '').
+                ($_REQUEST['page'] ? '&page='.$_REQUEST['page'] : '').
                 ($_REQUEST['npp'] ? '&npp='.$_REQUEST['npp'] : '');
         } else {
             $tvars['vars']['insert_file'] = '<a href="javascript:insertimage(\''.$html_file.'\', \''.$_REQUEST['ifield'].'\')">'.$lang['insert'].'</a>';
@@ -501,11 +501,11 @@ function manage_editForm($type, $id)
                     'r_page'         => $_REQUEST['page'],
                     'r_npp'          => $_REQUEST['npp'],
 
-                    'link_back' => '?mod=images&action=list' .
-                        ($_REQUEST['author'] ? '&author='.$_REQUEST['author'] : '') .
-                        ($_REQUEST['category'] ? '&category='.$_REQUEST['category'] : '') .
-                        ($_REQUEST['postdate'] ? '&postdate='.$_REQUEST['postdate'] : '') .
-                        ($_REQUEST['page'] ? '&page='.$_REQUEST['page'] : '') .
+                    'link_back' => '?mod=images&action=list'.
+                        ($_REQUEST['author'] ? '&author='.$_REQUEST['author'] : '').
+                        ($_REQUEST['category'] ? '&category='.$_REQUEST['category'] : '').
+                        ($_REQUEST['postdate'] ? '&postdate='.$_REQUEST['postdate'] : '').
+                        ($_REQUEST['page'] ? '&page='.$_REQUEST['page'] : '').
                         ($_REQUEST['npp'] ? '&npp='.$_REQUEST['npp'] : ''),
 
                 ];
