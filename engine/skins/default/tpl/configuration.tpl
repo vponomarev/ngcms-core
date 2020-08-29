@@ -19,7 +19,7 @@
 	<input type="hidden" name="save" value="" />
 	<input id="selectedOption" type="hidden" name="selectedOption" />
 
-	<ul class="nav nav-tabs mb-3 d-md-flex d-block" role="tablist">
+	<ul class="nav nav-tabs nav-fill mb-3 d-md-flex d-block" role="tablist">
 		<li class="nav-item"><a href="#userTabs-db" class="nav-link active" data-toggle="tab">{{ lang['db'] }}</a></li>
 		<li class="nav-item"><a href="#userTabs-security" class="nav-link" data-toggle="tab">{{ lang['security'] }}</a></li>
 		<li class="nav-item"><a href="#userTabs-system" class="nav-link" data-toggle="tab">{{ lang['syst'] }}</a></li>
