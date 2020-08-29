@@ -172,8 +172,8 @@ if (is_array($userROW)) {
 		 }
         if ($unapp3) {
             $unapproved3 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=static"><i class="fa fa-times"></i> '.$unapp3.' '.Padeg($unapp3, $lang['head_stat_pending_skl']).'</a>';
-         }
-	}
+        }
+   }
 
     $unnAppCount = (int) $newpm + (int) $unapp1 + (int) $unapp2 + (int) $unapp3;
     $unnAppLabel = ($unnAppCount != '0') ? '<span class="label label-danger">'.$unnAppCount.'</span>' : '';
