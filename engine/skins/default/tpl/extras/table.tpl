@@ -59,7 +59,7 @@
 	</table>
 </div>
 
-<script language="javascript" type="text/javascript">
+<script>
 	function tabsSwitch(pill) {
 		$(".nav-tabs li>a").removeClass('active');
 
