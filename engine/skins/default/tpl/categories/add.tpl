@@ -1,13 +1,13 @@
 <div class="container-fluid">
 	<div class="row mb-2">
 	  <div class="col-sm-6">
-		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{{ lang.addnews['addnews_title'] }}</h1>
+		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{{ lang['addnew'] }}</h1>
 	  </div><!-- /.col -->
 	  <div class="col-sm-6">
 		<ol class="breadcrumb float-sm-right">
-			<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
-			<li class="breadcrumb-item"><a href="{{ php_self }}?mod=news">{{ lang.addnews['news_title'] }}</a></li>
-			<li class="breadcrumb-item active" aria-current="page">{{ lang.addnews['addnews_title'] }}</li>
+			<li class="breadcrumb-item"><a href="admin.php"><i class="fa fa-home"></i></a></li>
+			<li class="breadcrumb-item"><a href="?mod=categories">{{ lang['categories_title'] }}</a></li>
+			<li class="breadcrumb-item active" aria-current="page">{{ lang['addnew'] }}</li>
 		</ol>
 	  </div><!-- /.col -->
 	</div><!-- /.row -->

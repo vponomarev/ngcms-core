@@ -28,49 +28,49 @@
 
 На данном шаге Вам нужно ознакомиться с лицензионным соглашением NGCMS и принять его, поставиь соответствующую галочку внизу страницы. (рис 2.1)
 
-![](images/screenshots/install_1.png)
+![](images/screenshots/install_1.png){.img-fluid}
 рис 2.1
 
 Шаг 2: Настройка БД
 
 На данной странице Вам необходимо ввести параметры подключения к БД. (рис 2.2)
 
-![](images/screenshots/install_2.png)
+![](images/screenshots/install_2.png){.img-fluid}
 рис 2.2
 
 Шаг 3: Проверка доступов
 
 На данном шаге выполняется проверка на соответствие характеристик сервера к минимальные требования скрипта. Также проверяется правильно ли выставлены права доступа (chmod) к директориями. (рис 2.3)
 
-![](images/screenshots/install_3.png)
+![](images/screenshots/install_3.png){.img-fluid}
 рис 2.3
 
 Шаг 4: Активация плагинов
 
 На данной странице отображается список плагинов, входящих в поставку NGCMS. Некоторые из них вы можете активировать прямо здесь. (рис 2.4)
 
-![](images/screenshots/install_4.png)
+![](images/screenshots/install_4.png){.img-fluid}
 рис 2.4
 
 Шаг 5: Выбор шаблона
 
 На данной странице вам предстоит выбрать шаблон для NGCMS. (рис 2.5)
 
-![](images/screenshots/install_5.png)
+![](images/screenshots/install_5.png){.img-fluid}
 рис 2.5
 
 Шаг 6: Общие параметры
 
 На данном шаге требуется ввести общие параметры сайта, такие как URL сайта, заголовок, а также логин и пароль для администратора. (рис 2.6)
 
-![](images/screenshots/install_6.png)
+![](images/screenshots/install_6.png){.img-fluid}
 рис 2.6
 
 Шаг 7: Завершение установки
 
 Это заключительный этап установки. Здесь отображаются все, выполненные во время установки, действия. (рис 2.7)
 
-![](images/screenshots/install_7.png)
+![](images/screenshots/install_7.png){.img-fluid}
 рис 2.7
 
 © 2008-2020 Next Generation CMS

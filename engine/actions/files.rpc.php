@@ -64,8 +64,8 @@ function admRPCFilesUpload($params)
     $mkShadow = (($config['shadow_mode'] == 2) || (!$config['shadow_mode'] && $_REQUEST['shadow'])) ? 1 : 0;
 
     $stampFileName = '';
-    if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
-        $stampFileName = root.'trash/'.$config['wm_image'].'.gif';
+    if (file_exists(root.'trash/'.$config['wm_image'].'.png')) {
+        $stampFileName = root.'trash/'.$config['wm_image'].'.png';
     } elseif (file_exists(root.'trash/'.$config['wm_image'])) {
         $stampFileName = root.'trash/'.$config['wm_image'];
     }

@@ -20,8 +20,34 @@
 			<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#menu-content" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-
-			<ul class="navbar-nav px-3">
+			<div class="btn-group ml-auto" role="group" aria-label="Button group with nested dropdown">
+			<div class="btn-group">
+				<button type="button" class="btn btn-outline-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-bell-o fa-lg"></i>
+					<span class="badge badge-danger">{{ unnAppLabel }}</span>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right">
+					<a class="dropdown-item" href="#">{{ unnAppText }}</a>
+						   <div class="dropdown-divider"></div>
+							{{ unapproved1 }}
+							{{ unapproved2 }}
+							{{ unapproved3 }}
+							<a class="dropdown-item" href="{{ php_self }}?mod=pm" title="{{ lang['pm_t'] }}"><i class="fa fa-envelope-o"></i> {{ newpmText }}</a>
+				</div>
+			  </div>
+			<div class="btn-group">
+				<button type="button" class="btn btn-outline-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-plus fa-lg"></i>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right">
+					<a class="dropdown-item" href="{{ php_self }}?mod=news&action=add"><i class="fa fa-plus"></i> {{ lang['head_add_news'] }}</a>
+					<a class="dropdown-item" href="{{ php_self }}?mod=categories&action=add"><i class="fa fa-plus"></i> {{ lang['head_add_cat'] }}</a>
+					<a class="dropdown-item" href="{{ php_self }}?mod=static&action=addForm"><i class="fa fa-plus"></i> {{ lang['head_add_stat'] }}</a>
+					<a class="dropdown-item" href="{{ php_self }}?mod=users" class="add_form"><i class="fa fa-plus"></i> {{ lang['head_add_user'] }}</a>
+				</div>
+			  </div>
+			</div>
+		 	<ul class="navbar-nav px-3">
 				<li class="nav-item text-nowrap">
 					<a href="{{ php_self }}?action=logout" title="{{ lang['logout_t'] }}"
 						class="nav-link">{{ lang['logout'] }}</a>
@@ -112,16 +138,11 @@
 								<li><a href="{{ php_self }}?mod=statistics">{{ lang['statistics'] }} </a></li>
 							</ul>
 
-
 							<li class="{{ h_active_extras ? 'active' : '' }} "><a href="{{ php_self }}?mod=extras"><i
 										class="fa fa-puzzle-piece"></i>{{ lang['extras'] }}</a></li>
 							{% if (perm.templates) %}<li class="{{ h_active_templates ? 'active' : '' }} "><a href="{{ php_self }}?mod=templates"><i
 										class="fa fa-th-large"></i>{{ lang['templates_m'] }}</a></li>{% endif %}
-							<li class="{{ h_active_pm ? 'active' : '' }} "><a href="{{ php_self }}?mod=pm"
-									title="{{ lang['pm_t'] }}">
-									<i class="fa fa-envelope"></i> {{ lang['pm'] }} <span
-										class="badge badge-dark">{{ newpm }}</span></a>
-							</li>
+
 							<hr>
 							<li><a href="{{ php_self }}?mod=docs"><i class="fa fa-book"
 										aria-hidden="true"></i> Документация</a></li>
@@ -156,8 +177,8 @@
 					skins_url: '{{ skins_url }}'
 		};
 		$('#menu-content .sub-menu').on('show.bs.collapse', function () {
-                    $('#menu-content .sub-menu.show').not(this).removeClass('show');
-                });
+            $('#menu-content .sub-menu.show').not(this).removeClass('show');
+        });
 		</script>
 	</body>
 </html>

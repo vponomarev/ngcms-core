@@ -5,7 +5,7 @@
 	  </div><!-- /.col -->
 	  <div class="col-sm-6">
 		<ol class="breadcrumb float-sm-right">
-			<li class="breadcrumb-item"><a href="{{ php_self }}"><i class="fa fa-home"></i></a></li>
+			<li class="breadcrumb-item"><a href="admin.php"><i class="fa fa-home"></i></a></li>
 			<li class="breadcrumb-item active" aria-current="page">{{ lang['configuration_title'] }}</li>
 		</ol>
 	  </div><!-- /.col -->
@@ -19,7 +19,7 @@
 	<input type="hidden" name="save" value="" />
 	<input id="selectedOption" type="hidden" name="selectedOption" />
 
-	<ul class="nav nav-pills mb-3 d-md-flex d-block" role="tablist">
+	<ul class="nav nav-tabs nav-fill mb-3 d-md-flex d-block" role="tablist">
 		<li class="nav-item"><a href="#userTabs-db" class="nav-link active" data-toggle="tab">{{ lang['db'] }}</a></li>
 		<li class="nav-item"><a href="#userTabs-security" class="nav-link" data-toggle="tab">{{ lang['security'] }}</a></li>
 		<li class="nav-item"><a href="#userTabs-system" class="nav-link" data-toggle="tab">{{ lang['syst'] }}</a></li>

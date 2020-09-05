@@ -509,7 +509,7 @@ class parse
         foreach ($smilies_arr as $null => $smile) {
             $smile = trim($smile);
             $find[] = "':$smile:'";
-            $replace[] = "<img class=\"smilies\" alt=\"$smile\" src=\"".skins_url."/smilies/$smile.gif\" />";
+            $replace[] = "<img class=\"smilies\" alt=\"$smile\" src=\"".skins_url."/smilies/$smile.png\" />";
         }
 
         return preg_replace($find, $replace, $content);
@@ -601,7 +601,7 @@ class parse
             //	printf("%03u[%u][%03u][%02u] %s\n", $position, $state, $textLen, count($openTagList), $char);
 
             switch ($state) {
-                // Scanning text
+                    // Scanning text
                 case 0:
                     // '<' - way to starting tag
                     if ($char == '<') {

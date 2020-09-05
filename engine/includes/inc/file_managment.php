@@ -139,11 +139,11 @@ function manage_upload($type)
             // Make thumb if required
             $thumb = 0;
 
-            // Prepare params for STAMP. In older versions we don't store extension and support only .gif files, in
-            // newer - store stampFileName with extension and support .gif and .png
+            // Prepare params for STAMP. In older versions we don't store extension and support only .png files, in
+            // newer - store stampFileName with extension and support .png and .png
             $stampFileName = '';
-            if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
-                $stampFileName = root.'trash/'.$config['wm_image'].'.gif';
+            if (file_exists(root.'trash/'.$config['wm_image'].'.png')) {
+                $stampFileName = root.'trash/'.$config['wm_image'].'.png';
             } elseif (file_exists(root.'trash/'.$config['wm_image'])) {
                 $stampFileName = root.'trash/'.$config['wm_image'];
             }
@@ -290,7 +290,7 @@ function manage_showlist($type)
         );
 
         $addtime = LangDate('d.m.Y', $row['date']);
-        $rename = ($userROW['status'] == 1 || $userROW['status'] == 2 || (is_array($userROW) && ($row['ownerID'] == $userROW['id']))) ? '<a href="?mod='.($type == 'image' ? 'images' : 'files')."&amp;subaction=rename&amp;of=$row[name]&amp;category=$row[folder]&amp;id=$row[id]\" onclick=\"if(ren=window.prompt('$lang[name]:','$row[name]')){ window.location.href=this.href+'&rf='+ren; } return false;\">".'<img src="'.skins_url.'/images/rename.gif" border="0"/></a>' : '';
+        $rename = ($userROW['status'] == 1 || $userROW['status'] == 2 || (is_array($userROW) && ($row['ownerID'] == $userROW['id']))) ? '<a href="?mod='.($type == 'image' ? 'images' : 'files')."&amp;subaction=rename&amp;of=$row[name]&amp;category=$row[folder]&amp;id=$row[id]\" onclick=\"if(ren=window.prompt('$lang[name]:','$row[name]')){ window.location.href=this.href+'&rf='+ren; } return false;\">".'<img src="'.skins_url.'/images/rename.png" border="0"/></a>' : '';
         if ($type == 'image') {
         } else {
             $file_link = '<a href="'.$fileurl.'" title="'.$row['name'].'" target="_blank">'.$row['orig_name'].'</a> ';
@@ -554,8 +554,8 @@ function manage_editApply($type, $id)
     if ($_POST['createStamp'] && !$irow['stamp']) {
         $stampFileName = '';
 
-        if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
-            $stampFileName = root.'trash/'.$config['wm_image'].'.gif';
+        if (file_exists(root.'trash/'.$config['wm_image'].'.png')) {
+            $stampFileName = root.'trash/'.$config['wm_image'].'.png';
         } elseif (file_exists(root.'trash/'.$config['wm_image'])) {
             $stampFileName = root.'trash/'.$config['wm_image'];
         }
@@ -567,8 +567,7 @@ function manage_editApply($type, $id)
                 'stamp_transparency' => $config['wm_image_transition'],
                 'stampfile' => $stampFileName,
             ]
-        )
-        ) {
+        )) {
             $tsx = $stamp[0];
             $tsy = $stamp[1];
 
@@ -608,8 +607,8 @@ function manage_editApply($type, $id)
                 //print "call transform: `".$config['images_dir'].$irow['folder'].'/thumb/'.$irow['name']."`<br/>\n";
 
                 $stampFileName = '';
-                if (file_exists(root.'trash/'.$config['wm_image'].'.gif')) {
-                    $stampFileName = root.'trash/'.$config['wm_image'].'.gif';
+                if (file_exists(root.'trash/'.$config['wm_image'].'.png')) {
+                    $stampFileName = root.'trash/'.$config['wm_image'].'.png';
                 } elseif (file_exists(root.'trash/'.$config['wm_image'])) {
                     $stampFileName = root.'trash/'.$config['wm_image'];
                 }
@@ -622,8 +621,7 @@ function manage_editApply($type, $id)
                         'shadow' => $shadowThumb,
                         'stampfile' => $stampFileName,
                     ]
-                )
-                ) {
+                )) {
                     $tsx = $stamp[0];
                     $tsy = $stamp[1];
                     //	print "TRANSFORM: OK<br/>\n";

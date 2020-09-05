@@ -80,12 +80,12 @@ function admCategoryList($retMode = 0)
 
         // Prepare position
         if ($row['poslevel'] > 0) {
-            $tEntry['level'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.gif" />', ($row['poslevel']));
+            $tEntry['level'] = str_repeat('<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/line.png" />', ($row['poslevel']));
         } else {
             $tEntry['level'] = '';
         }
         $tEntry['level'] = $tEntry['level'].
-            '<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '').'.gif" />';
+            '<img alt="-" height="18" width="18" src="'.skins_url.'/images/catmenu/join'.((($num == ($cLen - 1) || ($cList[$num]['poslevel'] > $cList[$num + 1]['poslevel']))) ? 'bottom' : '').'.png" />';
         $tvars['regx']['#\[news\](.*?)\[\/news\]#is'] = ($row['posts'] > 0) ? '$1' : '';
 
         $tEntries[] = $tEntry;
@@ -242,7 +242,7 @@ function admCategoriesRPCmodify($params)
     $row = $catz[$catmap[$params['id']]];
 
     switch ($params['mode']) {
-        // Delete category
+            // Delete category
         case 'del':
             // Check if category have children
             $refCCount = $mysql->record('select count(*) as cnt from '.prefix.'_category where parent = '.intval($params['id']));
@@ -276,7 +276,7 @@ function admCategoriesRPCmodify($params)
 
             return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => 1, 'infoText' => 'Category was deleted', 'content' => $data];
 
-        // Move category UP/DOWN
+            // Move category UP/DOWN
         case 'up':
         case 'down':
             $moveResult = admCategoryReorder(['mode' => $params['mode'], 'id' => intval($params['id'])]);
@@ -284,8 +284,7 @@ function admCategoriesRPCmodify($params)
             // * Rewrite page content
             $data = admCategoryList(2);
 
-            return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => intval($moveResult), 'infoText' => '<img src="/engine/skins/default/images/'.$params['mode'].'.gif"/> '.$catz[$catmap[$params['id']]]['name'], 'content' => $data];
-
+            return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Ok', 'infoCode' => intval($moveResult), 'infoText' => '<img src="/engine/skins/default/images/'.$params['mode'].'.png"/> '.$catz[$catmap[$params['id']]]['name'], 'content' => $data];
     }
 
     return ['status' => 0, 'errorCode' => 999, 'errorText' => 'Params: '.var_export($params, true)];

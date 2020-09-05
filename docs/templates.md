@@ -3,7 +3,7 @@
 
 Данный раздел админ-панели позволяет прямо из браузера редактировать файлы-шаблоны определённой темы оформления.
 
-![](images/screenshots/templates_1.png)
+![](images/screenshots/templates_1.png){.img-fluid}
 рис 14.1
 
 © 2008-2020 Next Generation CMS
