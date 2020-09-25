@@ -2,10 +2,6 @@
 <script type="text/javascript" src="{{ home }}/lib/ajax.js"></script>
 <script type="text/javascript" src="{{ home }}/lib/libsuggest.js"></script>
 
-<!-- Preload JS/CSS for plugins -->
-{{ preloadRAW }}
-<!-- /end preload -->
-
 <!-- Hidden SUGGEST div -->
 <!-- <div id="suggestWindow" class="suggestWindow">
 	<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
@@ -475,6 +471,10 @@
 		</div>
 	</div>
 {% endif %}
+
+<!-- Preload JS/CSS for plugins -->
+{{ preloadRAW }}
+<!-- /end preload -->
 
 <script type="text/javascript">
 	// Global variable: ID of current active input area
