@@ -23,19 +23,25 @@ jobs:
       - name: Download source code
         run: |
           mkdir ~/build
-          git clone -vv https://github.com/vponomarev/ngcms-core ~/build/
-          git clone -vv https://github.com/vponomarev/ngcms-plugins ~/build/engine/plugins/
-          cd ~/build
-          ls -lA
+          git clone https://github.com/vponomarev/ngcms-core ~/build/
+          git clone https://github.com/vponomarev/ngcms-plugins ~/build/engine/plugins/
 
       - name: Install libraries via composer
         run: |
           cd ~/build
-          ls -lA
           composer install
+
+      - name: Cleanup
+        run: |
+          cd ~/build
+          rm -rf .git
+          rm -rf .github
+          rm -rf engine/plugins/.git
+          mkdir ~/package
+          tar -czf ~/package/ngcms-current-build.tgz .
 
       - name: Make package
         uses: actions/upload-artifact@master
         with:
           name: ngcms-current-build
-          path: ~/build
+          path: ~/package
