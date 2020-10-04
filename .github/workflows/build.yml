@@ -23,8 +23,8 @@ jobs:
       - name: Download source code
         run: |
           mkdir ~/build
-          git clone -vv https://github.com/vponomarev/ngcms-core build/
-          git clone -vv https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
+          git clone -vv https://github.com/vponomarev/ngcms-core ~/build/
+          git clone -vv https://github.com/vponomarev/ngcms-plugins ~/build/engine/plugins/
           cd ~/build
           ls -lA
 
@@ -38,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ngcms-current-build
-          path: build
+          path: ~/build
