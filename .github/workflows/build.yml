@@ -1,0 +1,33 @@
+name: Build source code
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Download source code
+        run: |
+          mkdir ~/build
+          git clone https://github.com/vponomarev/ngcms-core build/
+          git clone https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
+
+      - name: Install deps
+        run: |
+          apt-get install php73
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          cd ~/build
+          composer install
+
+      - name: Make package
+        uses: actions/upload-artifact@master
+        with:
+          name: ngcms-current-build
+          path: build
