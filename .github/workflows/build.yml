@@ -28,6 +28,7 @@ jobs:
       - name: Install libraries via composer
         run: |
           cd ~/build
+          ls -lA
           composer install
 
       - name: Make package
