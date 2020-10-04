@@ -21,7 +21,7 @@ jobs:
 
       - name: Install deps
         run: |
-          sudo apt-get update && sudo apt-cache search php && sudo apt-get install php73
+          sudo apt-get update && sudo apt-cache search php && sudo apt-get install php7.3
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           cd ~/build
           composer install
