@@ -23,8 +23,8 @@ jobs:
       - name: Download source code
         run: |
           mkdir ~/build
-          git clone https://github.com/vponomarev/ngcms-core build/
-          git clone https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
+          git clone -v https://github.com/vponomarev/ngcms-core build/
+          git clone -v https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
           cd ~/build
           ls -lA
 
