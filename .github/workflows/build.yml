@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Install deps
         run: |
-          sudo apt-get update && sudo apt-cache search php && sudo apt-get install php7.3
+          sudo apt-get update && sudo apt-cache search php && sudo apt-get install php7.3 git
 
       - name: Install composer
         run: |
@@ -23,8 +23,8 @@ jobs:
       - name: Download source code
         run: |
           mkdir ~/build
-          git clone -v https://github.com/vponomarev/ngcms-core build/
-          git clone -v https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
+          git clone -vv https://github.com/vponomarev/ngcms-core build/
+          git clone -vv https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
           cd ~/build
           ls -lA
 
