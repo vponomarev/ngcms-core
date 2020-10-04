@@ -12,19 +12,22 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Install deps
+        run: |
+          sudo apt-get update && sudo apt-cache search php && sudo apt-get install php7.3
+
+      - name: Install composer
+        run: |
+          curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 
       - name: Download source code
         run: |
           mkdir ~/build
           git clone https://github.com/vponomarev/ngcms-core build/
           git clone https://github.com/vponomarev/ngcms-plugins build/engine/plugins/
+          cd ~/build
+          ls -lA
 
-      - name: Install deps
-        run: |
-          sudo apt-get update && sudo apt-cache search php && sudo apt-get install php7.3
-      - name: Install composer
-        run: |
-          curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
       - name: Install libraries via composer
         run: |
           cd ~/build
