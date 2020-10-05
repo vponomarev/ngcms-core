@@ -30,6 +30,7 @@ jobs:
         run: |
           cd ~/build
           composer install
+          echo ${{ github.sha }} > engine/cache/build
 
       - name: Cleanup
         run: |
