@@ -178,7 +178,7 @@ class parse
         }
 
         // Special BB tag [code] - blocks all other tags inside
-        while (preg_match("#\[code\](.+?)\[/code\]#iesu", $content, $res)) {
+        while (preg_match("#\[code\](.+?)\[/code\]#isu", $content, $res)) {
             $content = str_replace($res[0], '<pre>'.str_replace(['[', '<'], ['&#91;', '&lt;'], $res[1]).'</pre>', $content);
         }
 
@@ -435,7 +435,7 @@ class parse
         // Обработка кириллических символов для украинского языка
         $content = str_replace(['[CYR_I]', '[CYR_i]', '[CYR_E]', '[CYR_e]', '[CYR_II]', '[CYR_ii]'], ['&#1030;', '&#1110;', '&#1028;', '&#1108;', '&#1031;', '&#1111;'], $content);
 
-        while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#iesu", $content, $res)) {
+        while (preg_match("#\[color=([^\]]+)\](.+?)\[/color\]#isu", $content, $res)) {
             $nl = $this->color(['style' => $res[1], 'text' => $res[2]]);
             $content = str_replace($res[0], $nl, $content);
         }
