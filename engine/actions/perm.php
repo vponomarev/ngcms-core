@@ -167,7 +167,7 @@ function updateConfig()
     global $userROW, $lang, $PERM, $confPerm, $confPermUser, $pManager, $twig, $grp;
     //print "Incoming POST: <pre>".var_export($_POST, true)."</pre>";
     // ACCESS ONLY FOR ADMIN
-    if (checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'modify')) {
+    if (!checkPermission(['plugin' => '#admin', 'item' => 'perm'], null, 'modify')) {
         msg(['type' => 'error', 'text' => $lang['perm.denied']]);
 
         return;
