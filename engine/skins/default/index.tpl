@@ -20,39 +20,62 @@
 			<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#menu-content" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="btn-group ml-auto" role="group" aria-label="Button group with nested dropdown">
-			<div class="btn-group">
-				<button type="button" class="btn btn-outline-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="fa fa-bell-o fa-lg"></i>
-					<span class="badge badge-danger">{{ unnAppLabel }}</span>
-				</button>
-				<div class="dropdown-menu dropdown-menu-right">
-					<a class="dropdown-item" href="#">{{ unnAppText }}</a>
-						   <div class="dropdown-divider"></div>
-							{{ unapproved1 }}
-							{{ unapproved2 }}
-							{{ unapproved3 }}
-							<a class="dropdown-item" href="{{ php_self }}?mod=pm" title="{{ lang['pm_t'] }}"><i class="fa fa-envelope-o"></i> {{ newpmText }}</a>
+
+			<div class="btn-group ml-auto mr-2 py-1 " role="group" aria-label="Button group with nested dropdown">
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-danger dropdown-toggle btn-sm" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						<i class="fa fa-bell-o fa-lg"></i>
+						<span class="badge badge-danger">{{ unnAppLabel }}</span>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right">
+						<a class="dropdown-item" href="#">{{ unnAppText }}</a>
+						<div class="dropdown-divider"></div>
+						{{ unapproved1 }}
+						{{ unapproved2 }}
+						{{ unapproved3 }}
+						<a class="dropdown-item" href="{{ php_self }}?mod=pm" title="{{ lang['pm_t'] }}"><i
+								class="fa fa-envelope-o"></i> {{ newpmText }}</a>
+					</div>
 				</div>
-			  </div>
-			<div class="btn-group">
-				<button type="button" class="btn btn-outline-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="fa fa-plus fa-lg"></i>
-				</button>
-				<div class="dropdown-menu dropdown-menu-right">
-					<a class="dropdown-item" href="{{ php_self }}?mod=news&action=add"><i class="fa fa-plus"></i> {{ lang['head_add_news'] }}</a>
-					<a class="dropdown-item" href="{{ php_self }}?mod=categories&action=add"><i class="fa fa-plus"></i> {{ lang['head_add_cat'] }}</a>
-					<a class="dropdown-item" href="{{ php_self }}?mod=static&action=addForm"><i class="fa fa-plus"></i> {{ lang['head_add_stat'] }}</a>
-					<a class="dropdown-item" href="{{ php_self }}?mod=users" class="add_form"><i class="fa fa-plus"></i> {{ lang['head_add_user'] }}</a>
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-success dropdown-toggle btn-sm" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						<i class="fa fa-plus fa-lg"></i>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right">
+						<a class="dropdown-item" href="{{ php_self }}?mod=news&action=add"><i class="fa fa-plus"></i> {{
+							lang['head_add_news'] }}</a>
+						<a class="dropdown-item" href="{{ php_self }}?mod=categories&action=add"><i class="fa fa-plus"></i> {{
+							lang['head_add_cat'] }}</a>
+						<a class="dropdown-item" href="{{ php_self }}?mod=static&action=addForm"><i class="fa fa-plus"></i> {{
+							lang['head_add_stat'] }}</a>
+						<a class="dropdown-item" href="{{ php_self }}?mod=users" class="add_form"><i class="fa fa-plus"></i> {{
+							lang['head_add_user'] }}</a>
+					</div>
 				</div>
-			  </div>
+				<div class="btn-group">
+					<button type="button" class="btn btn-outline-primary dropdown-toggle btn-sm" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false">
+						<i class="fa fa-user-o fa-lg"></i>
+					</button>
+					<div class="dropdown-menu dropdown-menu-right">
+						<span class="dropdown-item dropdown-header"> <img src="{{ skin_UAvatar }}" class="mr-2" alt="User Image"
+							style="width: 16px;"> {{ user.name }}</span>
+						<div class="dropdown-divider"></div>
+						<a href="#" class="dropdown-item">
+							<i class="fa fa-address-card-o mr-2"></i> {{ skin_UStatus }}
+						</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="?mod=users&action=editForm&id={{ user.id }}"><i class="fa fa-user-o"></i> {{
+							lang['loc_profile'] }}</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="{{ php_self }}?action=logout"><i class="fa fa-sign-out"></i> {{
+							lang['logout'] }}</a>
+					</div>
+				</div>
 			</div>
-		 	<ul class="navbar-nav px-3">
-				<li class="nav-item text-nowrap">
-					<a href="{{ php_self }}?action=logout" title="{{ lang['logout_t'] }}"
-						class="nav-link">{{ lang['logout'] }}</a>
-				</li>
-			</ul>
+
 		</nav>
 		<div class="container-fluid">
 			<div class="row">
@@ -155,7 +178,7 @@
 							</ul>
 					</div>
 				</div>
-				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 my-4">
 					{{ notify }}
 					{{ main_admin }}
 				</main>
