@@ -104,11 +104,7 @@ if (dbCheckUpgradeRequired()) {
 
     return;
 }
-//////////////
-LoadPluginLibrary('uprofile', 'lib');
-$skin_UAvatar = (isset($userROW['avatar']) and !empty($userROW['avatar']) and function_exists('userGetAvatar')) ? userGetAvatar($userROW)[1] : $skins_url.'/assets/img/default-avatar.jpg';
-$skin_UStatus = $UGROUP[$userROW['status']]['langName'][$config['default_lang']];
-///////////////////
+
 // Load plugins, that need to make any changes during user in admin panel
 load_extras('admin:init');
 
@@ -160,23 +156,23 @@ if (is_array($userROW)) {
     $unapp1 = '';
     $unapp2 = '';
 
-    $newpm = $mysql->result('SELECT count(pmid) FROM '.prefix.'_users_pm WHERE to_id = '.db_squote($userROW['id']).' AND viewed = '0'');
+    $newpm = $mysql->result('SELECT count(pmid) FROM '.prefix.'_users_pm WHERE to_id = '.db_squote($userROW['id']).' AND viewed = "0"');
     $newpmText = ($newpm != '0') ? $newpm.' '.Padeg($newpm, $lang['head_pm_skl']) : $lang['head_pm_no'];
 
     // Calculate number of un-approved news
     if ($userROW['status'] == 1 || $userROW['status'] == 2) {
-        $unapp1 = $mysql->result('SELECT count(id) FROM '.prefix.'_news WHERE approve = '-1'');
-        $unapp2 = $mysql->result('SELECT count(id) FROM '.prefix.'_news WHERE approve = '0'');
-        $unapp3 = $mysql->result('SELECT count(id) FROM '.prefix.'_static WHERE approve = '0'');
-        if ($unapp1){
+        $unapp1 = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '-1'");
+        $unapp2 = $mysql->result('SELECT count(id) FROM '.prefix."_news WHERE approve = '0'");
+        $unapp3 = $mysql->result('SELECT count(id) FROM '.prefix."_static WHERE approve = '0'");
+        if ($unapp1) {
             $unapproved1 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=news&status=1"><i class="fa fa-ban"></i> '.$unapp1.' '.Padeg($unapp1, $lang['head_news_draft_skl']).'</a>';
-		}
-        if ($unapp2){
+        }
+        if ($unapp2) {
             $unapproved2 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=news&status=2"><i class="fa fa-times"></i> '.$unapp2.' '.Padeg($unapp2, $lang['head_news_pending_skl']).'</a>';
-		}
-        if ($unapp3){
+        }
+        if ($unapp3) {
             $unapproved3 = '<a class="dropdown-item" href="'.$PHP_SELF.'?mod=static"><i class="fa fa-times"></i> '.$unapp3.' '.Padeg($unapp3, $lang['head_stat_pending_skl']).'</a>';
-		}
+        }
     }
 
     $unnAppCount = (int) $newpm + (int) $unapp1 + (int) $unapp2 + (int) $unapp3;
@@ -223,17 +219,6 @@ $tVars = [
         'templates'     => checkPermission(['plugin' => '#admin', 'item' => 'templates'], null, 'details'),
         'ipban'         => checkPermission(['plugin' => '#admin', 'item' => 'ipban'], null, 'view'),
         'users'         => checkPermission(['plugin' => '#admin', 'item' => 'users'], null, 'view'),
-    ],
-    'skin_UAvatar'          => $skin_UAvatar,
-    'skin_UStatus'          => $skin_UStatus,
-    'user'                  => [
-        'id'     => $userROW['id'],
-        'name'   => $userROW['name'],
-        'status' => $status,
-        'avatar' => $userAvatar,
-        'flags'  => [
-            'hasAvatar' => $config['use_avatars'] and $userAvatar,
-        ],
     ],
 ];
 
