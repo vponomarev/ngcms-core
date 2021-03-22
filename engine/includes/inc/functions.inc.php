@@ -497,6 +497,28 @@ function msg($params, $mode = 0, $disp = -1)
         exit('Internal system error: '.var_export($params, true));
     }
 
+    // Use msgSticker in admin mode
+    if ($mode === 1) {
+        $stickerText = '';
+        $stickerType = '';
+
+        if (isset($params['text']) && !empty($params['text'])) {
+            $stickerText = $params['text'];
+        } elseif (isset($params['info']) && !empty($params['info'])) {
+            $stickerText = $params['info'];
+        }
+
+        if (isset($params['type']) && in_array($params['type'], ['error', 'info'])) {
+            $stickerType = $params['type'];
+        }
+
+        return msgSticker(
+            $stickerText,
+            $stickerType,
+            $disp
+        );
+    }
+
     // Choose working mode
     $type = 'msg.common';
     switch (getIsSet($params['type'])) {
