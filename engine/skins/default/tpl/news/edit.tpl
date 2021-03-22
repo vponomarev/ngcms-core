@@ -2,6 +2,10 @@
 <script type="text/javascript" src="{{ home }}/lib/ajax.js"></script>
 <script type="text/javascript" src="{{ home }}/lib/libsuggest.js"></script>
 
+<!-- Preload JS/CSS for plugins -->
+{{ preloadRAW }}
+<!-- /end preload -->
+
 <!-- Hidden SUGGEST div -->
 <!-- <div id="suggestWindow" class="suggestWindow">
 	<table id="suggestBlock" cellspacing="0" cellpadding="0" width="100%"></table>
@@ -14,8 +18,8 @@
 
 <div class="container-fluid">
 	<div class="row mb-2">
-	  <div class="col-sm-6">
-		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{{ lang['extras'] }}</h1>
+	  <div class="col-sm-6 d-none d-md-block ">
+			<h1 class="m-0 text-dark">{{ lang['extras'] }}</h1>
 	  </div><!-- /.col -->
 	  <div class="col-sm-6">
 		<ol class="breadcrumb float-sm-right">
@@ -471,10 +475,6 @@
 		</div>
 	</div>
 {% endif %}
-
-<!-- Preload JS/CSS for plugins -->
-{{ preloadRAW }}
-<!-- /end preload -->
 
 <script type="text/javascript">
 	// Global variable: ID of current active input area

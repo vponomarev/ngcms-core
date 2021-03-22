@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row mb-2">
-	  <div class="col-sm-6">
-		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{l_files_title}</h1>
+	  <div class="col-sm-6 d-none d-md-block ">
+			<h1 class="m-0 text-dark">{l_files_title}</h1>
 	  </div><!-- /.col -->
 	  <div class="col-sm-6">
 		<ol class="breadcrumb float-sm-right">

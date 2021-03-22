@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row mb-2">
-	  <div class="col-sm-6">
-		<h1 class="m-0 text-dark"  style="padding: 20px 0 0 0;">{{ lang['admin_panel'] }}</h1>
+	  <div class="col-sm-6 d-none d-md-block ">
+			<h1 class="m-0 text-dark">{{ lang['admin_panel'] }}</h1>
 	  </div><!-- /.col -->
 	  <div class="col-sm-6">
 		<ol class="breadcrumb float-sm-right">
@@ -247,10 +247,6 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	{{ versionNotify }}
-</script>
-
 <!-- Не понятно, что это и откуда. -->
 <style>
 	#modalmsgDialog {
@@ -327,4 +323,56 @@
 				});
 		return false;
 	}
+</script>
+<script>
+	$(function () {
+		var reqReleas = "https://api.github.com/repos/vponomarev/ngcms-core/releases/latest";
+		requestJSON(reqReleas, function (json) {
+			if (json.message == "Not Found") {
+				$('#syncLastVersion').html("No Info Found");
+			} else {
+				var currentVersion = '{{ currentVersion }}';
+				var engineVersionBuild = '{{ engineVersionBuild }}';
+				var publish = json.published_at;
+				if (currentVersion >= json.tag_name && engineVersionBuild >= publish.split('T')[0]) {
+					$('#needUpdate').html('Обновление не требуется');
+				} else {
+					$('#needUpdate').html('Обновите CMS');
+				}
+				$('#syncLastVersion').html('<a href="' + json.zipball_url + '">' + json.tag_name + '</a> [ ' + json.published_at.slice(0, 10) + ' ]');
+			}
+		});
+		var reqCommit = "https://api.github.com/repos/vponomarev/ngcms-core/commits";
+		requestJSON(reqCommit, function (json) {
+			if (json.message == "Not Found") {
+				$('#syncSVNVersion').html("No Info Found");
+			} else {
+				$('#syncSVNVersion').html('<a href="' + json[0].html_url + '" target="_blank">' + json[0].sha.slice(0, 7) + '</a> \
+                <b>@</b> <a href="'+ json[0].committer.html_url + '" target="_blank">' + json[0].committer.login + '</a> [ ' +
+					json[0].commit.author.date.slice(0, 10) + ' ]');
+				/*$('#syncSVNVersion').html('<a href="#" id="compare">Обновить до Git</a> [ '+json[0].commit.author.date.slice(0, 10) + ' ]');*/
+			}
+		});
+		function requestJSON(url, callback) {
+			$.ajax({
+				url: url,
+				beforeSend: function (jqXHR) {
+					jqXHR.overrideMimeType("application/json; charset=UTF-8");
+					// Repeat send header ajax
+					jqXHR.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+				},
+			})
+				.done(function (data, textStatus, jqXHR) {
+					if (typeof (data) == 'object') {
+						callback.call(null, data);
+					} else {
+						$.notify({ message: '<i><b>Bad reply from server</b></i>' }, { type: 'danger' });
+					}
+				})
+				.catch(function (jqXHR) {
+					if (0 === jqXHR.status || jqXHR.status >= 400)
+						$.notify({ message: '<i><b>Bad reply from server</b></i>' }, { type: 'danger' });
+				});
+		}
+	});
 </script>
