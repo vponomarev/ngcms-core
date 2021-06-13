@@ -26,7 +26,7 @@
 class urlLibrary
 {
     // Constructor
-    public function urlLibrary()
+    public function __construct()
     {
         global $config;
 
@@ -246,7 +246,7 @@ class urlLibrary
 class urlHandler
 {
     // constructor
-    public function urlHandler($options = [])
+    public function __construct($options = [])
     {
         global $config;
 
@@ -496,7 +496,7 @@ class urlHandler
     {
 
         // Try to read config file
-        if (is_file($this->configFileName)) {
+        if (isset($this->configFileName) && is_file($this->configFileName)) {
             // Include REC
             include $this->configFileName;
             if (!isset($handlerList) || !isset($handlerPrimary)) {

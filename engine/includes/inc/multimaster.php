@@ -81,7 +81,7 @@ function multi_multidomains()
 
     // Анализируем параметр конфига mydomains
     $domlist = null;
-    if ($config['mydomains']) {
+    if (isset($config['mydomains'])) {
         $domlist = explode("\n", $config['mydomains']);
         if (!is_array($domlist)) {
             return 0;
