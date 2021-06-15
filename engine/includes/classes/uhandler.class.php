@@ -496,7 +496,7 @@ class urlHandler
     {
 
         // Try to read config file
-        if (isset($this->configFileName) && is_file($this->configFileName)) {
+        if (is_file($this->configFileName)) {
             // Include REC
             include $this->configFileName;
             if (!isset($handlerList) || !isset($handlerPrimary)) {
