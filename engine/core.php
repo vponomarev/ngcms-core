@@ -169,7 +169,7 @@ $predefinedUnsetArray = [
 ];
 foreach ($confArray['predefined'] as $key => $value) {
     foreach ($predefinedUnsetArray as $arr) {
-        if (isset($$arr) && isset($$arr[$key])) {
+        if (isset($$arr[$key])) {
             unset($$arr[$key]);
         }
     }
