@@ -27,9 +27,8 @@ function get_item_dir($type)
 class file_managment
 {
     // CONSTRUCTOR
-    public function file_managment()
+    public function __construct()
     {
-
         // Load additional LANG file
         $lang = loadLang('files');
     }
@@ -831,10 +830,6 @@ class file_managment
 // ======================================================================= //
 class image_managment
 {
-    public function image_managment()
-    {
-    }
-
     // Get image size. Return an array with params:
     // index 0 - image type (same as in getimagesize())
     // index 1 - image width

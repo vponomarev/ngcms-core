@@ -160,8 +160,19 @@ $confArray = [
 ];
 
 // Load pre-defined variables
+$predefinedUnsetArray = [
+    '_GET',
+    '_POST',
+    '_SESSION',
+    '_COOKIE',
+    '_ENV',
+];
 foreach ($confArray['predefined'] as $key => $value) {
-    unset($_GET[$key], $_POST[$key], $_SESSION[$key], $_COOKIE[$key], $_ENV[$key]);
+    foreach ($predefinedUnsetArray as $arr) {
+        if (isset($$arr[$key])) {
+            unset($$arr[$key]);
+        }
+    }
     $$key = $value;
 }
 
@@ -193,7 +204,7 @@ if (!isset($config['uprefix'])) {
 }
 
 // Set up default timezone [ default: Europe/Moscow ]
-date_default_timezone_set($config['timezone'] ? $config['timezone'] : 'Europe/Moscow');
+date_default_timezone_set($config['timezone'] ?? 'Europe/Moscow');
 
 // [[MARKER]] Configuration file is loaded
 $timer->registerEvent('Config file is loaded');

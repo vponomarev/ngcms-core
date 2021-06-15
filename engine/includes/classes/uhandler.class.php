@@ -26,7 +26,7 @@
 class urlLibrary
 {
     // Constructor
-    public function urlLibrary()
+    public function __construct()
     {
         global $config;
 
@@ -246,7 +246,7 @@ class urlLibrary
 class urlHandler
 {
     // constructor
-    public function urlHandler($options = [])
+    public function __construct($options = [])
     {
         global $config;
 
