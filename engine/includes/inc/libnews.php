@@ -610,7 +610,7 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
         // $query['result'] = "SELECT * FROM " . prefix . "_news WHERE " . $query['filter'] . $query['orderby'];
 
         // Optimize query
-        $query['result'] = 'SELECT * FROM '.prefix.'_news N JOIN (SELECT ID FROM '.prefix.'_news WHERE '.$query['filter'].$query['orderby'].') as NT on NT.id=N.id';
+        $query['result'] = 'SELECT * FROM '.prefix.'_news N JOIN (SELECT ID FROM '.prefix.'_news WHERE '.$query['filter'].') as NT on NT.id=N.id'.$query['orderby'];
     }
 
     $selectResult = $mysql->select($query['result'], 1);
