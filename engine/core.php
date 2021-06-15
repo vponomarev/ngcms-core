@@ -204,7 +204,7 @@ if (!isset($config['uprefix'])) {
 }
 
 // Set up default timezone [ default: Europe/Moscow ]
-date_default_timezone_set(isset($config['timezone']) ? $config['timezone'] : 'Europe/Moscow');
+date_default_timezone_set($config['timezone'] ?? 'Europe/Moscow');
 
 // [[MARKER]] Configuration file is loaded
 $timer->registerEvent('Config file is loaded');
