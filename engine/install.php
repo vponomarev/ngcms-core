@@ -20,15 +20,14 @@ if (version_compare(PHP_VERSION, '7.2.0') < 0) {
 define('NGCMS', 1);
 
 // Basic variables
-@define('root', dirname(__FILE__).'/');
+@define('root', __DIR__ .'/');
 @include_once root.'includes/inc/multimaster.php';
-@include_once root.'includes/inc/DBLoad.php';
 
 // ============================================================================
 // Define global directory constants
 // ============================================================================
-define('NGCoreDir', dirname(__FILE__).'/');               // Location of Core directory
-define('NGRootDir', dirname(dirname(__FILE__)).'/');      // Location of SiteRoot
+define('NGCoreDir', __DIR__ .'/');               // Location of Core directory
+define('NGRootDir', dirname(__DIR__).'/');      // Location of SiteRoot
 define('NGClassDir', NGCoreDir.'classes/');                     // Location of AutoLoaded classes
 
 // Autoloader for NEW STYLE Classes
@@ -341,7 +340,7 @@ function doConfig_db($check)
         }
 
         if (isset($mysql) != null) {
-            $mysql->close($link);
+            $mysql->close();
         }
 
         if (!$error) {
@@ -738,12 +737,6 @@ function doInstall()
                 $sx = NGEngine::getInstance();
 
                 switch ($_POST['reg_dbtype']) {
-                    case 'mysql':
-                        $sx->set('db', new NGMYSQL(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass']]));
-                        break;
-                    case 'mysqli':
-                        $sx->set('db', new NGMYSQLi(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass']]));
-                        break;
                     case 'pdo':
                         $sx->set('db', new NGPDO(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbadminuser'], 'pass' => $_POST['reg_dbadminpass']]));
                         break;
@@ -794,7 +787,7 @@ function doInstall()
             }
             // Отключаемся от сервера
             if (isset($mysql) != null) {
-                $mysql->close($link);
+                $mysql->close();
             }
         }
 
@@ -802,12 +795,6 @@ function doInstall()
             $sx = NGEngine::getInstance();
 
             switch ($_POST['reg_dbtype']) {
-                case 'mysql':
-                    $sx->set('db', new NGMYSQL(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass']]));
-                    break;
-                case 'mysqli':
-                    $sx->set('db', new NGMYSQLi(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass']]));
-                    break;
                 case 'pdo':
                     $sx->set('db', new NGPDO(['host' => $_POST['reg_dbhost'], 'user' => $_POST['reg_dbuser'], 'pass' => $_POST['reg_dbpass']]));
                     break;

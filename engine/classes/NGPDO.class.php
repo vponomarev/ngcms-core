@@ -1,6 +1,6 @@
 <?php
 
-class NGPDO extends NGDB
+class NGPDO
 {
     protected $db = null;
     protected $qCount = 0;
@@ -11,12 +11,8 @@ class NGPDO extends NGDB
     protected $errorHandler = null;
     protected $dbCharset = 'UTF8';
 
-    public function __construct($params)
+    public function __construct(array $params)
     {
-        if (!is_array($params)) {
-            throw new Exception('NG_PDO: Parameters lost for constructor');
-        }
-
         // Init params
         if (isset($params['softErrors'])) {
             $this->softErrors = $params['softErrors'];
@@ -80,11 +76,9 @@ class NGPDO extends NGDB
         }
 
         $this->eventLogger->registerEvent('NG_PDO', '', '* DB Connection established', $this->eventLogger->tickStop($tStart));
-
-        return true;
     }
 
-    public function query($sql, $params = [])
+    public function query(string $sql, array $params = [])
     {
         $tStart = $this->eventLogger->tickStart();
         $this->qCount++;
@@ -109,7 +103,7 @@ class NGPDO extends NGDB
         return $r;
     }
 
-    public function record($sql, $params = [])
+    public function record(string $sql, array $params = [])
     {
         $tStart = $this->eventLogger->tickStart();
         $this->qCount++;
@@ -135,7 +129,7 @@ class NGPDO extends NGDB
         return $r;
     }
 
-    public function exec($sql, $params = [])
+    public function exec(string $sql, array $params = [])
     {
         $tStart = $this->eventLogger->tickStart();
         $this->qCount++;
@@ -162,7 +156,7 @@ class NGPDO extends NGDB
         return $r;
     }
 
-    public function result($sql, $params = [])
+    public function result(string $sql, array $params = [])
     {
         $tStart = $this->eventLogger->tickStart();
         $this->qCount++;
@@ -192,61 +186,63 @@ class NGPDO extends NGDB
         return null;
     }
 
-    public function num_rows($st)
+    public function num_rows(PDOStatement $st)
     {
         try {
             $r = $st->fetchColumn();
         } catch (PDOException $e) {
-            $this->errorReport('num_rows', $sql, $e);
+            $this->errorReport('num_rows', $st->queryString, $e);
             $r = null;
         }
 
         return $r;
     }
 
-    public function fetch_row($st)
+    public function fetch_row(PDOStatement $st)
     {
         try {
             $r = $st->fetch(PDO::FETCH_NUM);
         } catch (PDOException $e) {
-            $this->errorReport('fetch_row', $sql, $e);
+            $this->errorReport('fetch_row', $st->queryString, $e);
         }
 
         return $r;
     }
 
-    public function lastid($table = '')
+    public function lastid(string $table = '')
     {
         try {
             if (empty($table)) {
-                return $id = $this->db->lastInsertId();
+                return $this->db->lastInsertId();
             } else {
                 $r = $this->record('SHOW TABLE STATUS LIKE \''.prefix.'_'.$table.'\'');
 
                 return $r['Auto_increment'] - 1;
             }
         } catch (PDOException $e) {
-            $this->errorReport('lastid', $sql, $e);
+            $this->errorReport('lastid', 'lastid', $e);
         }
     }
 
-    public function affected_rows()
+    public function affected_rows(PDOStatement $st)
     {
         try {
-            return $id = $this->db->rowCount();
+            $r = $st->rowCount();
         } catch (PDOException $e) {
-            $this->errorReport('affected_rows', $sql, $e);
+            $this->errorReport('affected_rows', 'affected_rows', $e);
         }
+
+        return $r;
     }
 
-    public function close($query)
+    public function close()
     {
         try {
             if ($this->db != null) {
                 $this->db = null;
             }
         } catch (PDOException $e) {
-            $this->errorReport('close', $sql, $e);
+            $this->errorReport('close', 'close', $e);
         }
     }
 
@@ -254,8 +250,8 @@ class NGPDO extends NGDB
     {
         try {
             $this->db->errorInfo()[0];
-        } catch (mysqli_sql_exception $e) {
-            $this->errorReport('close', $sql, $e);
+        } catch (PDOException $e) {
+            $this->errorReport('db_errno', 'db_errno', $e);
         }
     }
 
@@ -264,7 +260,7 @@ class NGPDO extends NGDB
      *
      * @return string
      */
-    public function quote($string)
+    public function quote(string $string)
     {
         return mb_substr($this->db->quote($string), 1, -1);
     }
@@ -286,7 +282,7 @@ class NGPDO extends NGDB
     }
 
     /**
-     * @return version PDO
+     * @return string
      */
     public function getVersion()
     {
@@ -300,11 +296,11 @@ class NGPDO extends NGDB
      * @param $query string Query content
      * @param PDOException $e
      */
-    public function errorReport($type, $query, PDOException $e)
+    public function errorReport(string $type, string $query, PDOException $e)
     {
         $errNo = 'n/a';
         $errMsg = 'n/a';
-        if (get_class($e) == 'PDOException') {
+        if ($e instanceof \PDOException) {
             $errNo = $e->getCode();
             $errMsg = $e->getMessage();
         }
@@ -329,7 +325,7 @@ class NGPDO extends NGDB
      *
      * @return PDOStatement
      */
-    public function createCursor($query, array $params = [])
+    public function createCursor(string $query, array $params = [])
     {
         $cursor = $this->db->prepare($query);
         if (is_array($params)) {
@@ -347,18 +343,18 @@ class NGPDO extends NGDB
      *
      * @return mixed
      */
-    public function fetchCursor($cursor)
+    public function fetchCursor(PDOStatement $cursor)
     {
         return $cursor->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function closeCursor($cursor)
+    public function closeCursor(PDOStatement $cursor)
     {
         return $cursor->closeCursor();
     }
 
-    public function tableExists($name)
+    public function tableExists(string $name)
     {
-        return is_array($this->record('show tables like :name', ['name' => $name])) ? true : false;
+        return is_array($this->record('show tables like :name', ['name' => $name]));
     }
 }

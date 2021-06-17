@@ -9,7 +9,7 @@ class NGEngine
     /**
      * @return NGEngine Return instance of NGEngine singleton
      */
-    public static function getInstance()
+    public static function getInstance(): NGEngine
     {
         if (static::$instance === false) {
             static::$instance = new static();
@@ -41,9 +41,9 @@ class NGEngine
     /**
      * @throws Exception
      *
-     * @return NGDB Current DB connection instance
+     * @return NGPDO Current DB connection instance
      */
-    public function getDB()
+    public function getDB(): NGPDO
     {
         if (!isset(static::$items['db'])) {
             throw new Exception('NGEngine: getDB(): DB class is not initalized.');
@@ -53,7 +53,7 @@ class NGEngine
     }
 
     // Get Legacy DB connection
-    public function getLegacyDB()
+    public function getLegacyDB(): NGLegacyDB
     {
         if (!isset(static::$items['legacyDB'])) {
             throw new Exception('NGEngine: getLegacyDB(): DB class is not initalized.');
@@ -69,7 +69,7 @@ class NGEngine
      *
      * @return NGEvents Return instance of NGEvents
      */
-    public function getEvents()
+    public function getEvents(): NGEvents
     {
         if (!isset(static::$items['events'])) {
             throw new Exception('NGEngine: getEvents(): Event handler is not loaded.');
@@ -85,7 +85,7 @@ class NGEngine
      *
      * @return NGErrorHandler Return instance of NGErrorHandler
      */
-    public function getErrorHandler()
+    public function getErrorHandler(): NGErrorHandler
     {
         if (!isset(static::$items['errorHandler'])) {
             throw new Exception('NGEngine: getErrorHandler(): Error handler is not loaded.');
@@ -110,17 +110,17 @@ class NGEngine
         return $defaultValue;
     }
 
-    public function hasCurrentUser()
+    public function hasCurrentUser(): bool
     {
-        return isset(static::$items['currentUser']) ? true : false;
+        return isset(static::$items['currentUser']);
     }
 
     /**
-     * @return NGUser Return instance of NGUser for current user
+     * @return NGUser|null Return instance of NGUser for current user
      */
-    public function getCurrentUser()
+    public function getCurrentUser(): ?NGUser
     {
-        return isset(static::$items['currentUser']) ? static::$items['currentUser'] : null;
+        return static::$items['currentUser'] ?? null;
     }
 
     // protect against creating new instance of class or creating a clone

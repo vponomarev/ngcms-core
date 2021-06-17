@@ -286,11 +286,6 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match)) {
 
 // ** Load cache engine
 include_once root.'includes/classes/cache.class.php';
-include_once root.'includes/inc/DBLoad.php';
-
-// OLD :: MySQLi driver
-// $mysql = DBLoad();
-// $mysql->connect($config['dbhost'], $config['dbuser'], $config['dbpasswd'], $config['dbname']);
 
 // NEW :: PDO driver with global classes handler
 NGRun(function () {

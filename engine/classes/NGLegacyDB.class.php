@@ -73,9 +73,9 @@ class NGLegacyDB
         return $this->db->fetch_row($query);
     }
 
-    public function affected_rows()
+    public function affected_rows($query)
     {
-        return $this->db->affected_rows();
+        return $this->db->affected_rows($query);
     }
 
     public function lastid($table = '')
@@ -88,9 +88,9 @@ class NGLegacyDB
         return $this->db->getVersion();
     }
 
-    public function close($query)
+    public function close()
     {
-        return $this->db->close($query);
+        return $this->db->close();
     }
 
     public function db_errno()
@@ -100,7 +100,7 @@ class NGLegacyDB
 
     public function __get($name)
     {
-        if ($name == 'query_list') {
+        if ($name === 'query_list') {
             $qList = [];
             foreach ($this->db->getQueryList() as $r) {
                 $qList[] = sprintf('%6.2f %6.2f %s', $r['start'], $r['duration'], $r['query']);
