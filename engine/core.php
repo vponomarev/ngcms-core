@@ -125,7 +125,7 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 // Define global constants "root", "site_root"
-define('root', __DIR__ .'/');
+define('root', __DIR__.'/');
 define('site_root', dirname(__DIR__).'/');
 
 // Define domain name for cookies
@@ -370,7 +370,7 @@ if ((is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD
         $username = $xrow['name'];
         $userROW = $xrow;
         if ($config['x_ng_headers']) {
-            header('X-NG-UserID: '. (int)$userROW['id']);
+            header('X-NG-UserID: '.(int) $userROW['id']);
             header('X-NG-Login: '.htmlentities($username));
         }
 
