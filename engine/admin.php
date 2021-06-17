@@ -12,7 +12,18 @@ $AFILTERS = [];
 
 // Load core
 @header('content-type: text/html; charset=utf-8');
-@include_once 'core.php';
+include_once 'core.php';
+
+/**
+ * @var $userROW
+ * @var $lang
+ * @var $SYSTEM_FLAGS
+ * @var $twig
+ * @var $config
+ * @var $mysql
+ * @var $unapproved
+ * @var $main_admin
+ */
 
 // Protect against hack attempts
 if (!defined('NGCMS')) {

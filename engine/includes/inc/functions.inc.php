@@ -8,6 +8,8 @@
 //
 
 // Protect against hack attempts
+use PHPMailer\PHPMailer\PHPMailer;
+
 if (!defined('NGCMS')) {
     exit('HAL');
 }
@@ -394,7 +396,7 @@ function sendEmailMessage($to, $subject, $message, $filename = false, $mail_from
     global $lang, $config;
 
     // Include new PHP mailer class
-    $mail = new \PHPMailer\PHPMailer\PHPMailer();
+    $mail = new PHPMailer();
 
     $mail->CharSet = 'UTF-8';
 

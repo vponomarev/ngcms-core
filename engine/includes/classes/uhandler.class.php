@@ -25,7 +25,26 @@
 
 class urlLibrary
 {
-    // Constructor
+    /**
+     * @var array
+     */
+    public $CMD;
+
+    /**
+     * @var bool
+     */
+    protected $configLoaded;
+
+    /**
+     * @var bool
+     */
+    protected $fatalError;
+
+    /**
+     * @var string
+     */
+    protected $configFileName;
+
     public function __construct()
     {
         global $config;
@@ -245,7 +264,26 @@ class urlLibrary
 
 class urlHandler
 {
-    // constructor
+    /**
+     * @var array
+     */
+    public $hList;
+
+    /**
+     * @var bool
+     */
+    protected $configLoaded;
+
+    /**
+     * @var string
+     */
+    protected $configFileName;
+
+    /**
+     * @var array
+     */
+    protected $options;
+
     public function __construct($options = [])
     {
         global $config;

@@ -8,6 +8,8 @@
 //
 
 // Protect against hack attempts
+use PHPMailer\PHPMailer\PHPMailer;
+
 if (!defined('NGCMS')) {
     exit('HAL');
 }
@@ -134,7 +136,7 @@ function admConfigurationTestEMail($params)
     }
 
     // Init $mail client
-    $mail = new \PHPMailer\PHPMailer\PHPMailer();
+    $mail = new PHPMailer();
 
     $fromName = ($params['from']['name'] ? $params['from']['name'] : 'NGCMS Mail Agent');
 

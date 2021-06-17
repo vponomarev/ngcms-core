@@ -20,8 +20,6 @@ define('NGClassDir', NGCoreDir.'classes/');      // Location of AutoLoaded class
 define('NGVendorDir', NGRootDir.'vendor/');      // Location of Vendor classes
 $loader = require NGVendorDir.'autoload.php';
 
-use PHPMailer\PHPMailer\Exception;
-
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function ($className) {
     if (file_exists($fName = NGClassDir.$className.'.class.php')) {
@@ -127,8 +125,8 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 // Define global constants "root", "site_root"
-define('root', dirname(__FILE__).'/');
-define('site_root', dirname(dirname(__FILE__)).'/');
+define('root', __DIR__ .'/');
+define('site_root', dirname(__DIR__).'/');
 
 // Define domain name for cookies
 $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $mHost[1] : $_SERVER['HTTP_HOST'];
@@ -169,7 +167,7 @@ $predefinedUnsetArray = [
 ];
 foreach ($confArray['predefined'] as $key => $value) {
     foreach ($predefinedUnsetArray as $arr) {
-        if (isset($$arr[$key])) {
+        if (isset($$arr, $$arr[$key])) {
             unset($$arr[$key]);
         }
     }
@@ -191,13 +189,17 @@ $timer = new microTimer();
 $timer->start();
 
 // ** Multisite engine
-@include_once root.'includes/inc/multimaster.php';
+include_once root.'includes/inc/multimaster.php';
 
 multi_multisites();
-@define('confroot', root.'conf/'.($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/'.$multiDomainName.'/' : ''));
+/**
+ * @var $multiDomainName
+ * @var $multimaster
+ */
+define('confroot', root.'conf/'.($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/'.$multiDomainName.'/' : ''));
 
 // ** Load system config
-@include_once confroot.'config.php';
+include_once confroot.'config.php';
 // [[FIX config variables]]
 if (!isset($config['uprefix'])) {
     $config['uprefix'] = $config['prefix'];
@@ -219,14 +221,14 @@ multi_multidomains();
 @session_start();
 
 // ** Load system libraries
-@include_once root.'includes/inc/consts.inc.php';
-@include_once root.'includes/inc/functions.inc.php';
-@include_once root.'includes/inc/extras.inc.php';
+include_once root.'includes/inc/consts.inc.php';
+include_once root.'includes/inc/functions.inc.php';
+include_once root.'includes/inc/extras.inc.php';
 
-@include_once 'includes/classes/templates.class.php';
-@include_once 'includes/classes/parse.class.php';
+include_once 'includes/classes/templates.class.php';
+include_once 'includes/classes/parse.class.php';
 
-@include_once 'includes/classes/uhandler.class.php';
+include_once 'includes/classes/uhandler.class.php';
 
 // [[MARKER]] All system libraries are loaded
 $timer->registerEvent('Core files are included');
@@ -283,8 +285,8 @@ if (preg_match('#^http\:\/\/([^\/])+(\/.+)#', $config['home_url'], $match)) {
 }
 
 // ** Load cache engine
-@include_once root.'includes/classes/cache.class.php';
-@include_once root.'includes/inc/DBLoad.php';
+include_once root.'includes/classes/cache.class.php';
+include_once root.'includes/inc/DBLoad.php';
 
 // OLD :: MySQLi driver
 // $mysql = DBLoad();
@@ -368,7 +370,7 @@ if ((is_object($AUTH_METHOD[$config['auth_module']])) && (is_object($AUTH_METHOD
         $username = $xrow['name'];
         $userROW = $xrow;
         if ($config['x_ng_headers']) {
-            header('X-NG-UserID: '.intval($userROW['id']));
+            header('X-NG-UserID: '. (int)$userROW['id']);
             header('X-NG-Login: '.htmlentities($username));
         }
 
@@ -400,8 +402,8 @@ executeActionHandler('core');
 $timer->registerEvent('ALL core-related plugins are executed');
 
 // Define last consts
-@define('tpl_site', site_root.'templates/'.$config['theme'].'/');
-@define('tpl_url', home.'/templates/'.$config['theme']);
+define('tpl_site', site_root.'templates/'.$config['theme'].'/');
+define('tpl_url', home.'/templates/'.$config['theme']);
 
 // - TWIG: Reconfigure allowed template paths - site template is also available
 $twigLoader->setPaths([tpl_site, root]);

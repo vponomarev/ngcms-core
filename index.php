@@ -18,7 +18,22 @@ if (version_compare(PHP_VERSION, '7.2.0') < 0) {
 }
 
 // Load CORE module
-@include_once 'engine/core.php';
+include_once 'engine/core.php';
+
+/**
+ * @var $config
+ * @var $userROW
+ * @var $twig
+ * @var $timer
+ * @var $systemAccessURL
+ * @var $UHANDLER
+ * @var $EXTRA_CSS
+ * @var $mysql
+ * @var $tpl
+ * @var $SUPRESS_TEMPLATE_SHOW
+ * @var $SUPRESS_MAINBLOCK_SHOW
+ * @var $cron
+ */
 
 // Init GZip handler
 initGZipHandler();
