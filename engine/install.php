@@ -20,13 +20,13 @@ if (version_compare(PHP_VERSION, '7.2.0') < 0) {
 define('NGCMS', 1);
 
 // Basic variables
-@define('root', __DIR__ .'/');
+@define('root', __DIR__.'/');
 @include_once root.'includes/inc/multimaster.php';
 
 // ============================================================================
 // Define global directory constants
 // ============================================================================
-define('NGCoreDir', __DIR__ .'/');               // Location of Core directory
+define('NGCoreDir', __DIR__.'/');               // Location of Core directory
 define('NGRootDir', dirname(__DIR__).'/');      // Location of SiteRoot
 define('NGClassDir', NGCoreDir.'classes/');                     // Location of AutoLoaded classes
 
