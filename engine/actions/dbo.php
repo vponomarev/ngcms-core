@@ -153,6 +153,7 @@ function systemDboModify()
             $qRowCount = 0;
 
             while ($row = $db->fetchCursor($cursor)) {
+                $qRowCount++;
                 $db->exec('update '.uprefix.'_users set news= :nCount where id = :id', ['nCount' => $row['cnt'], 'id' => $row['author_id']]);
             }
         } while ($qRowCount > 0);

@@ -30,7 +30,8 @@
         "ext-pdo": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "lib-iconv": "*",
+        "ext-memcached": "*",
+        "ext-iconv": "*",
         "phpmailer/phpmailer": "6.*",
         "twig/twig": "^3.0",
         "michelf/php-markdown": "^1.9"
