@@ -14,10 +14,10 @@
 // Define global directory constants
 // ============================================================================
 
-define('NGCoreDir', __DIR__.'/');                // Location of Core directory
-define('NGRootDir', dirname(__DIR__).'/');       // Location of SiteRoot
-define('NGClassDir', NGCoreDir.'classes/');      // Location of AutoLoaded classes
-define('NGVendorDir', NGRootDir.'vendor/');      // Location of Vendor classes
+@define('NGCoreDir', __DIR__.'/');                // Location of Core directory
+@define('NGRootDir', dirname(__DIR__).'/');       // Location of SiteRoot
+@define('NGClassDir', NGCoreDir.'classes/');      // Location of AutoLoaded classes
+@define('NGVendorDir', NGRootDir.'vendor/');      // Location of Vendor classes
 $loader = require NGVendorDir.'autoload.php';
 
 // Autoloader for NEW STYLE Classes
@@ -62,6 +62,7 @@ global $timer, $mysql, $ip, $parse, $tpl, $lang, $config;
 global $TemplateCache, $siteDomainName;
 global $currentHandler, $ngTrackID, $ngCookieDomain;
 global $twigGlobal, $twig, $twigLoader, $twigStringLoader;
+global $multiDomainName;
 
 // ============================================================================
 // Initialize global variables
@@ -125,8 +126,8 @@ mb_internal_encoding('UTF-8');
 mb_http_output('UTF-8');
 
 // Define global constants "root", "site_root"
-define('root', __DIR__.'/');
-define('site_root', dirname(__DIR__).'/');
+@define('root', __DIR__.'/');
+@define('site_root', dirname(__DIR__).'/');
 
 // Define domain name for cookies
 $ngCookieDomain = preg_match('#^www\.(.+)$#', $_SERVER['HTTP_HOST'], $mHost) ? $mHost[1] : $_SERVER['HTTP_HOST'];
@@ -196,7 +197,7 @@ multi_multisites();
  * @var $multiDomainName
  * @var $multimaster
  */
-define('confroot', root.'conf/'.($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/'.$multiDomainName.'/' : ''));
+@define('confroot', root.'conf/'.($multiDomainName && $multimaster && ($multiDomainName != $multimaster) ? 'multi/'.$multiDomainName.'/' : ''));
 
 // ** Load system config
 include_once confroot.'config.php';
