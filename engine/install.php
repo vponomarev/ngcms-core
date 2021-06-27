@@ -357,7 +357,7 @@ function doConfig_db($check)
         'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass',
     ] as $k) {
         if ($k == 'reg_dbtype') {
-            foreach (['mysql', 'mysqli', 'pdo'] as $s) {
+            foreach (['pdo'] as $s) {
                 $tvars['vars'][$k.'_'.$s] = isset($_POST[$k]) && $_POST[$k] == $s ? ' selected' : '';
             }
         } else {
