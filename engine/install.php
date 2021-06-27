@@ -304,7 +304,7 @@ function doConfig_db($check)
     if ($check) {
         // Check passed parameters. Check for required params
         $error = 0;
-        $ac = false; // это вроде автокриейт базы/пользователя
+        $ac = 0;
         foreach (['reg_dbtype', 'reg_dbhost', 'reg_dbname', 'reg_dbuser'] as $k) {
             if (!strlen($_POST[$k])) {
                 $tvars['vars']['err:'.$k] = $lang['error.notfilled'];
