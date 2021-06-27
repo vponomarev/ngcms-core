@@ -78,8 +78,8 @@ if ((@fopen(confroot.'config.php', 'r')) && (filesize(confroot.'config.php'))) {
 // =============================================================
 
 // Determine user's language (support only RUSSIAN/ENGLISH)
-$currentLanguage = 'russian';
-if ($_REQUEST['language'] == 'english') {
+$currentLanguage = $_REQUEST['language'] ?? 'russian';
+if ($currentLanguage !== 'russian') {
     $currentLanguage = 'english';
 }
 
@@ -117,7 +117,10 @@ foreach (['begin', 'db', 'plugins', 'template', 'perm', 'common', 'install'] as 
 }
 
 // If action is specified, but license is not accepted - stop installation
-if ($_POST['action'] && !$_POST['agree']) {
+$action = $_POST['action'] ?? 'welcome';
+$agree = $_POST['agree'] ?? false;
+
+if ($action !== 'welcome' && !$agree) {
     notAgree();
 }
 
@@ -127,14 +130,14 @@ $flagPendingChanges = false;
 //
 // Determine required action
 //
-
-switch ($_POST['action']) {
+switch ($action) {
     case 'config':
         doConfig();
         break;
     case 'install':
         $flagPendingChanges = doInstall();
         break;
+    case 'welcome':
     default:
         doWelcome();
         break;
@@ -301,6 +304,7 @@ function doConfig_db($check)
     if ($check) {
         // Check passed parameters. Check for required params
         $error = 0;
+        $ac = 0;
         foreach (['reg_dbtype', 'reg_dbhost', 'reg_dbname', 'reg_dbuser'] as $k) {
             if (!strlen($_POST[$k])) {
                 $tvars['vars']['err:'.$k] = $lang['error.notfilled'];
@@ -309,7 +313,7 @@ function doConfig_db($check)
         }
 
         // Check for autocreate mode
-        if ($_POST['reg_autocreate']) {
+        if (isset($_POST['reg_autocreate'])) {
             // Check for user filled
             if (!strlen($_POST['reg_dbadminuser'])) {
                 $tvars['vars']['err:reg_dbadminuser'] = '<span style="color: red;">'.$lang['err.reg_dbadminuser'].'</span>';
@@ -353,17 +357,17 @@ function doConfig_db($check)
         'reg_autocreate', 'reg_dbadminuser', 'reg_dbadminpass',
     ] as $k) {
         if ($k == 'reg_dbtype') {
-            foreach (['mysql', 'mysqli', 'pdo'] as $s) {
-                $tvars['vars'][$k.'_'.$s] = $_POST[$k] == $s ? ' selected' : '';
+            foreach (['pdo'] as $s) {
+                $tvars['vars'][$k.'_'.$s] = isset($_POST[$k]) && $_POST[$k] == $s ? ' selected' : '';
             }
         } else {
-            $tvars['vars'][$k] = htmlspecialchars(isset($_POST[$k]) ? $_POST[$k] : $DEFAULT[$k], ENT_COMPAT | ENT_HTML401, 'UTF-8');
+            $tvars['vars'][$k] = htmlspecialchars($_POST[$k] ?? $DEFAULT[$k] ?? '', ENT_COMPAT | ENT_HTML401, 'UTF-8');
         }
         if (!isset($tvars['vars']['err:'.$k])) {
             $tvars['vars']['err:'.$k] = '';
         }
     }
-    if ($_POST['reg_autocreate']) {
+    if (isset($_POST['reg_autocreate'])) {
         $tvars['vars']['reg_autocreate'] = 'checked="checked"';
     }
 
@@ -545,18 +549,18 @@ function doConfig_plugins()
         $tv = [
             'id'          => $plugin['id'],
             'title'       => $plugin['title'],
-            'information' => $plugin['information'],
-            'enable'      => (in_array(strtolower($plugin['preinstall']), ['yes', 'no'])) ? ' disabled="disabled"' : '',
+            'information' => $plugin['information'] ?? '',
+            'enable'      => (in_array(strtolower($plugin['preinstall'] ?? 'no'), ['yes', 'no'])) ? ' disabled="disabled"' : '',
         ];
         // Add hidden field for DISABLED plugins
-        if (strtolower($plugin['preinstall']) == 'yes') {
+        if (strtolower($plugin['preinstall'] ?? 'no') == 'yes') {
             $output .= '<input type="hidden" name="plugin:'.$plugin['id'].'" value="1"/>'."\n";
         }
 
         if (isset($_POST['plugin:'.$plugin['id']])) {
             $tv['check'] = $_POST['plugin:'.$plugin['id']] ? ' checked="checked"' : '';
         } else {
-            $tv['check'] = (in_array(strtolower($plugin['preinstall']), ['default_yes', 'yes'])) ? ' checked="checked"' : '';
+            $tv['check'] = (in_array(strtolower($plugin['preinstall'] ?? 'no'), ['default_yes', 'yes'])) ? ' checked="checked"' : '';
         }
 
         //$hinput[] = '<input type="hidden" name="plugin:'.$plugin['id'].'" value="0"/>';
@@ -732,7 +736,7 @@ function doInstall()
 
         // Stage #02 - Connect to DB
         // Если заказали автосоздание, то подключаемся рутом
-        if ($_POST['reg_autocreate']) {
+        if (isset($_POST['reg_autocreate'])) {
             try {
                 $sx = NGEngine::getInstance();
 
@@ -841,7 +845,9 @@ function doInstall()
 
         $SQL_table = [];
         foreach ($mysql->select('show tables', -1) as $item) {
-            $SQL_table[$item[0]] = 1;
+            foreach ($item as $tablename) {
+                $SQL_table[$tablename] = 1;
+            }
         }
 
         // 1.2. Парсим список таблиц
@@ -859,7 +865,7 @@ function doInstall()
             // Получаем имя таблицы
             if (preg_match('/CREATE TABLE `(.+?)`/', $dbCreateString, $match)) {
                 $tname = str_replace('XPREFIX_', $_POST['reg_dbprefix'].'_', $match[1]);
-                if ($SQL_table[$tname]) {
+                if (isset($SQL_table[$tname])) {
                     array_push($ERROR, 'В БД "'.$_POST['reg_dbname'].'" уже существует таблица "'.$tname.'"<br/>Используйте другой префикс для создания таблиц!');
                     $error = 1;
                     break;
