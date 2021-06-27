@@ -374,8 +374,6 @@ function doConfig_db($check)
     $tvars['vars']['menu_db'] = ' class="hover"';
     printHeader();
 
-    $tvars['regx']["'\[mysql\](.*?)\[/mysql\]'si"] = (extension_loaded('mysql')) ? '$1' : '';
-    $tvars['regx']["'\[mysqli\](.*?)\[/mysqli\]'si"] = (extension_loaded('mysqli')) ? '$1' : '';
     $tvars['regx']["'\[pdo\](.*?)\[/pdo\]'si"] = (extension_loaded('pdo') || extension_loaded('pdo_mysql')) ? '$1' : '';
 
     // Выводим форму проверки
@@ -844,7 +842,7 @@ function doInstall()
         }
 
         $SQL_table = [];
-        foreach ($mysql->select('show tables', -1) as $item) {
+        foreach ($mysql->select('show tables') as $item) {
             foreach ($item as $tablename) {
                 $SQL_table[$tablename] = 1;
             }

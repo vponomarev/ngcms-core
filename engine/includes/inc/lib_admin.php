@@ -962,8 +962,8 @@ function editNews($mode = [])
     }
 
     // Load list of attached images/files
-    $row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_files where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')', 1);
-    $row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_images where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')', 1);
+    $row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_files where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')');
+    $row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_images where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')');
 
     // Dummy parameter for API call
     $tvars = [];

@@ -752,7 +752,7 @@ function makeCategoryList($params = [])
     }
     if (isset($params['resync']) && $params['resync']) {
         $catz = [];
-        foreach ($mysql->select('select * from `'.prefix.'_category` order by posorder asc', 1) as $row) {
+        foreach ($mysql->select('select * from `'.prefix.'_category` order by posorder asc') as $row) {
             $catz[$row['alt']] = $row;
             $catmap[$row['id']] = $row['alt'];
         }

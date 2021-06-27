@@ -67,7 +67,7 @@ function editNewsForm()
     $id = intval($_REQUEST['id']);
 
     // Try to find news that we're trying to edit
-    if (!is_array($row = $mysql->record('select * from '.prefix.'_news where id = '.db_squote($id), 1))) {
+    if (!is_array($row = $mysql->record('select * from '.prefix.'_news where id = '.db_squote($id)))) {
         msg(['type' => 'error', 'text' => $lang['msge_not_found']]);
 
         return;
@@ -84,8 +84,8 @@ function editNewsForm()
     }
 
     // Load attached files/images
-    $row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_files where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')', 1);
-    $row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_images where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')', 1);
+    $row['#files'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_files where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')');
+    $row['#images'] = $mysql->select("select *, date_format(from_unixtime(date), '%d.%m.%Y') as date from ".prefix.'_images where (linked_ds = 1) and (linked_id = '.db_squote($row['id']).')');
 
     $cats = (mb_strlen($row['catid']) > 0) ? explode(',', $row['catid']) : [];
     $content = $row['content'];

@@ -121,7 +121,7 @@ function admCategoryReorder($params = [])
     $moveResult = 0;
 
     $tree[0] = ['parent' => 0, 'children' => [], 'poslevel' => 0];
-    foreach ($mysql->select('select * from '.prefix.'_category order by posorder', 1) as $v) {
+    foreach ($mysql->select('select * from '.prefix.'_category order by posorder') as $v) {
         $ncat[$v['id']] = $v;
         $tree[$v['id']] = ['children' => [], 'parent' => $v['parent'], 'poslevel' => $v['poslevel']];
     }

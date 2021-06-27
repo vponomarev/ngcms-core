@@ -613,7 +613,7 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
         $query['result'] = 'SELECT N.* FROM '.prefix.'_news N JOIN (SELECT id FROM '.prefix.'_news WHERE '.$query['filter'].') as NT on NT.id=N.id'.$query['orderby'];
     }
 
-    $selectResult = $mysql->select($query['result'], 1);
+    $selectResult = $mysql->select($query['result']);
 
     if (isset($callingParams['disablePagination']) && ($callingParams['disablePagination'])) {
         $newsCount = count($selectResult);
@@ -670,7 +670,7 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
     // Load linked images
     $linkedImages = [];
     if (count($nilink)) {
-        foreach ($mysql->select('select * from '.prefix.'_images where (linked_ds = 1) and (linked_id in ('.implode(', ', $nilink).'))', 1) as $nirow) {
+        foreach ($mysql->select('select * from '.prefix.'_images where (linked_ds = 1) and (linked_id in ('.implode(', ', $nilink).'))') as $nirow) {
             $linkedImages['ids'][] = $nirow['id'];
             $linkedImages['data'][$nirow['id']] = $nirow;
         }
@@ -679,7 +679,7 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
     // Load linked files
     $linkedFiles = [];
     if (count($nflink)) {
-        foreach ($mysql->select('select * from '.prefix.'_files where (linked_ds = 1) and (linked_id in ('.implode(', ', $nflink).'))', 1) as $nirow) {
+        foreach ($mysql->select('select * from '.prefix.'_files where (linked_ds = 1) and (linked_id in ('.implode(', ', $nflink).'))') as $nirow) {
             $linkedFiles['ids'][] = $nirow['id'];
             $linkedFiles['data'][$nirow['id']] = $nirow;
         }
