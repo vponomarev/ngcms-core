@@ -19,7 +19,7 @@
 @define('NGClassDir', NGCoreDir.'classes/');      // Location of AutoLoaded classes
 @define('NGVendorDir', NGRootDir.'vendor/');      // Location of Vendor classes
 $loader = require NGVendorDir.'autoload.php';
-
+session_start();
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function ($className) {
     if (file_exists($fName = NGClassDir.$className.'.class.php')) {
