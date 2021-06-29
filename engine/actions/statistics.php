@@ -46,10 +46,10 @@ function coreVersionSync()
 {
     global $config;
     if (($vms = cacheRetrieveFile('coreversion.dat', 86400)) === false) {
-        $paramList = ['ver' => urlencode(engineVersion), 'type' => urlencode(engineVersionType), 'build' => urlencode(engineVersionBuild), 'uuid' => $config['UUID'], 'pdo' => ((extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) ? 'yes' : 'no')];
-        $req = new http_get();
-        $vms = $req->get('http://ngcms.ru/sync/versionInfo.php'.'?'.http_build_query($paramList), 3, 1);
-        cacheStoreFile('coreversion.dat', $vms);
+       // $paramList = ['ver' => urlencode(engineVersion), 'type' => urlencode(engineVersionType), 'build' => urlencode(engineVersionBuild), 'uuid' => $config['UUID'], 'pdo' => ((extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) ? 'yes' : 'no')];
+       // $req = new http_get();
+       //$vms = $req->get('http://ngcms.ru/sync/versionInfo.php'.'?'.http_build_query($paramList), 3, 1);
+       // cacheStoreFile('coreversion.dat', $vms);
     }
 
     return $vms;
