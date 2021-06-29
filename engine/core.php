@@ -219,7 +219,6 @@ multi_multidomains();
 // Initiate session - take care about right domain name for sites with/without www. prefix
 //print "<pre>".var_export($_SERVER, true).var_export($_COOKIE, true)."</pre>";
 @session_set_cookie_params(86400, '/', $ngCookieDomain);
-@session_start();
 
 // ** Load system libraries
 include_once root.'includes/inc/consts.inc.php';
