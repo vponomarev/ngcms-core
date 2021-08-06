@@ -404,7 +404,7 @@ function generate_restorepw_page($params, $values = [], $msg = '')
 function coreLoginAction($row = null, $redirect = null)
 {
     global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
-    global $tpl, $template, $config, $lang, $ip;
+    global $twig, $template, $config, $lang, $ip;
 
     $lang = LoadLang('login', 'site');
     $SYSTEM_FLAGS['info']['title']['group'] = $lang['loc_login'];
@@ -431,27 +431,32 @@ function coreLoginAction($row = null, $redirect = null)
         $is_logged_cookie = false;
 
         // Show login template
-        $tvars = [];
-        $tvars['vars']['form_action'] = generateLink('core', 'login');
-        $tvars['vars']['redirect'] = isset($_POST['redirect']) ? $_POST['redirect'] : $HTTP_REFERER;
+        $tvars = [
+            'form_action' => generateLink('core', 'login'),
+            'redirect' => isset($_POST['redirect']) ? $_POST['redirect'] : $HTTP_REFERER,
+        ];
 
         if (preg_match('#^ERR:NEED.ACTIVATE#', $row, $null)) {
-            $tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '$1';
-            $tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
-            $tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
+            $tvars['flags'] = [
+                'need_activate' => true,
+                'error' => false,
+                'banned' => false,
+            ];
         } elseif ($row == 'ERR:NOT_ENTERED') {
-            $tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '';
-            $tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
-            $tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
+            $tvars['flags'] = [
+                'need_activate' => false,
+                'error' => false,
+                'banned' => false,
+            ];
         } else {
-            $tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($ban_mode != 1) ? '$1' : '';
-            $tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = ($ban_mode == 1) ? '$1' : '';
-            $tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '';
+            $tvars['flags'] = [
+                'need_activate' => false,
+                'error' => $ban_mode != 1,
+                'banned' => $ban_mode == 1,
+            ];
         }
 
-        $tpl->template('login', tpl_site);
-        $tpl->vars('login', $tvars);
-        $template['vars']['mainblock'] = $tpl->show('login');
+        $template['vars']['mainblock'] = $twig->render('login.tpl', $tvars);
     }
 }
 

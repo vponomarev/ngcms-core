@@ -1,5 +1,5 @@
-<form name="login" method="post" action="{form_action}">
-	<input type="hidden" name="redirect" value="{redirect}"/>
+<form name="login" method="post" action="{{ form_action }}">
+	<input type="hidden" name="redirect" value="{{ redirect }}"/>
 	<div class="post">
 		<div class="post-header">
 			<div class="post-title">{{ lang['login.title'] }}</div>
@@ -8,27 +8,27 @@
 		<div class="post-text">
 			<p>
 			<table border="0" width="100%">
-				[error]
+				{% if (flags.error) %}
 				<tr>
 					<td colspan="2" align="center" style="background-color: red; color: white; font-weight: bold;">
 						{{ lang['login.error'] }}
 					</td>
 				</tr>
-				[/error]
-				[banned]
+				{% endif %}
+				{% if (flags.banned) %}
 				<tr>
 					<td colspan="2" align="center" style="background-color: red; color: white; font-weight: bold;">
 						{{ lang['login.banned'] }}
 					</td>
 				</tr>
-				[/banned]
-				[need.activate]
+				{% endif %}
+				{% if (flags.need_activate) %}
 				<tr>
 					<td colspan="2" align="center" style="background-color: red; color: white; font-weight: bold;">
-						{{ lang['login.need.activate'] }}
+						{{ lang['login.need_activate'] }}
 					</td>
 				</tr>
-				[/need.activate]
+				{% endif %}
 				<tr>
 					<td width="50%">{{ lang['login.name'] }}:</td>
 					<td width="50%"><input type="text" name="username" class="input"/></td>
