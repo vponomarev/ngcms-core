@@ -266,20 +266,17 @@ function QuickTags($area = false, $template = false)
     return $tpl->show($tplname);
 }
 
-function BBCodes($area = false)
+function BBCodes(string $area = '')
 {
-    global $config, $lang, $tpl, $PHP_SELF;
+    global $config, $lang, $twig, $PHP_SELF;
 
-    if ($config['use_bbcodes'] == '1') {
-        $tvars['vars'] = [
+    if ($config['use_bbcodes']) {
+        $tvars = [
             'php_self' => $PHP_SELF,
-            'area'     => $area,
+            'area'     => empty($area) ? "''" : $area,
         ];
 
-        $tpl->template('bbcodes', tpl_site);
-        $tpl->vars('bbcodes', $tvars);
-
-        return $tpl->show('bbcodes');
+        return $twig->render('bbcodes.tpl', $tvars);
     }
 }
 
