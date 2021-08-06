@@ -6,5 +6,5 @@
 	<div class="post-text">
 		<p>{content}</p>
 	</div>
-	[print-link]{l_print}[/print-link]
+	[print-link]{{ lang['print'] }}[/print-link]
 </div>

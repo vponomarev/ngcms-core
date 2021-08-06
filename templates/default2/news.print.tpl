@@ -1,6 +1,6 @@
 <html>
 <head>
-	<meta content="text/html; charset={l_encoding}" http-equiv=Content-Type>
+	<meta content="text/html; charset={{ lang['encoding'] }}" http-equiv=Content-Type>
 	<style>
 		body, td {
 			font-family: verdana, arial, sans-serif;
@@ -23,7 +23,7 @@
 		<td width="100%">
 			{category} &raquo; {title}<br/><br/>
 			<div style="border-top: 1px solid #ccc; width: 100%;"><br/>
-				<small>{date} {l_by} {author}</small>
+				<small>{date} {{ lang['by'] }} {author}</small>
 			</div>
 		</td>
 	</tr>

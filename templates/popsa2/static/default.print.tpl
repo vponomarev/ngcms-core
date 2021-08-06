@@ -1,6 +1,6 @@
 <html>
 <head>
-	<meta content="text/html; charset={l_encoding}" http-equiv=Content-Type>
+	<meta content="text/html; charset={{ lang['encoding'] }}" http-equiv=Content-Type>
 	<style>
 		body, td {
 			font-family: verdana, arial, sans-serif;

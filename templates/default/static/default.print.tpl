@@ -1,6 +1,6 @@
 <html>
 <head>
-	<meta content="text/html; charset={l_encoding}" http-equiv=Content-Type>
+	<meta content="text/html; charset={{ lang['encoding'] }}" http-equiv=Content-Type>
 	<style>
 		body, td {
 			font-family: verdana, arial, sans-serif;
@@ -15,19 +15,19 @@
 			margin: 0px;
 		}
 	</style>
-	<title>{l_print_version} > {title}</title>
+	<title>{{ lang['print_version'] }} > {title}</title>
 </head>
 <body bgcolor="#ffffff" text="#000000">
 <table border="0" width="100%" cellspacing="1" cellpadding="3">
 	<tr>
-		<td width="100%"><a href="/">{l_mainpage}</a> > {title}
+		<td width="100%"><a href="/">{{ lang['mainpage'] }}</a> > {title}
 			<hr>
 		</td>
 	</tr>
 	<tr>
 		<td width="100%">{content}
 			<hr>
-			<a href="javascript:history.go(-1)">{l_go_back}</a></td>
+			<a href="javascript:history.go(-1)">{{ lang['go_back'] }}</a></td>
 	</tr>
 </table>
 </body>

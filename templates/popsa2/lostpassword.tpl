@@ -1,7 +1,7 @@
 <form name="lostpassword" action="{form_action}" method="post">
 	<input type="hidden" name="type" value="send"/>
 	<div class="full">
-		<h1>{l_lostpassword}</h1>
+		<h1>{{ lang['lostpassword'] }}</h1>
 		<div class="pad20_f">
 			{entries}
 			[captcha]
@@ -12,7 +12,7 @@
 				<div class="clear10"></div>
 			</div>
 			[/captcha]
-			<div><input type="submit" class="btn btn-primary btn-large" value="{l_send_pass}"/></div>
+			<div><input type="submit" class="btn btn-primary btn-large" value="{{ lang['send_pass'] }}"/></div>
 		</div>
 	</div>
 </form>
