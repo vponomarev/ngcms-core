@@ -2167,32 +2167,31 @@ function printHTTPheaders()
     }
 }
 
-//
-// Generate error "PAGE NOT FOUND"
-//
-function error404()
+/**
+ * Generate error "PAGE NOT FOUND".
+ *
+ * @return void
+ */
+function error404(): void
 {
-    global $config, $tpl, $template, $SYSTEM_FLAGS, $lang;
+    global $config, $twig, $template, $SYSTEM_FLAGS, $lang;
 
     @header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+
     switch ($config['404_mode']) {
-        // HTTP error 404
+        // HTTP error 404.
         case 2:
             exit;
 
-        // External error template
+        // External error template.
         case 1:
-            $tpl->template('404.external', tpl_site);
-            $tpl->vars('404.external', []);
-            echo $tpl->show('404.external');
+            echo $twig->render('404.external.tpl', []);
             exit;
 
-        // Internal error template
+        // Internal error template.
         case 0:
         default:
-            $tpl->template('404.internal', tpl_site);
-            $tpl->vars('404.internal', []);
-            $template['vars']['mainblock'] = $tpl->show('404.internal');
+            $template['vars']['mainblock'] = $twig->render('404.internal.tpl', []);
 
             $SYSTEM_FLAGS['info']['title']['group'] = $lang['404.title'];
     }
