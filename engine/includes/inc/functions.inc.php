@@ -199,15 +199,16 @@ function LangDate($format, $timestamp)
 
 //
 // Generate a list of smilies to show
-function InsertSmilies($insert_location, $break_location = false, $area = false)
+function InsertSmilies(string $insert_location, int $break_location = 0, string $area = '')
 {
-    global $config, $tpl;
+    global $config, $twig;
 
     if ($config['use_smilies']) {
         $smilies = explode(',', $config['smilies']);
 
         // For smilies in comments, try to use 'smilies.tpl' from site template
         $templateDir = (($insert_location == 'comments') && is_readable(tpl_dir.$config['theme'].'/smilies.tpl')) ? tpl_dir.$config['theme'] : tpl_actions;
+        $templateDir = trim($templateDir, '/');
 
         $i = 0;
         $output = '';
@@ -215,14 +216,12 @@ function InsertSmilies($insert_location, $break_location = false, $area = false)
             $i++;
             $smile = trim($smile);
 
-            $tvars['vars'] = [
-                'area'  => $area ? $area : "''",
+            $tvars = [
+                'area'  => empty($area) ? "''" : $area,
                 'smile' => $smile,
             ];
 
-            $tpl->template('smilies', $templateDir);
-            $tpl->vars('smilies', $tvars);
-            $output .= $tpl->show('smilies');
+            $output .= $twig->render($templateDir.'/smilies.tpl', $tvars);
 
             if (($break_location > 0) && (!$i % $break_location)) {
                 $output .= '<br />';

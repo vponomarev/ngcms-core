@@ -47,6 +47,7 @@
 	-  [search.form.tpl](templates/search.form.tpl.md)
 	-  [search.table.tpl](templates/search.table.tpl.md)
 	-  [sitelock.tpl](templates/sitelock.tpl.md)
+	-  [smilies.tpl](templates/smilies.tpl.md)
 	-  [usermenu.tpl](templates/usermenu.tpl.md)
 	-  [variables.ini](templates/variables.ini.md)
 	-  [version](templates/version.md)
