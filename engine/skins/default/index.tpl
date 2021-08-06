@@ -9,6 +9,11 @@
 		<script src="{{ skins_url }}/public/js/manifest.js" type="text/javascript"></script>
 		<script src="{{ skins_url }}/public/js/vendor.js" type="text/javascript"></script>
 		<script src="{{ skins_url }}/public/js/app.js" type="text/javascript"></script>
+		<style>
+			body {
+				font-weight: 300;
+			}
+		</style>
 	</head>
 
 	<body>

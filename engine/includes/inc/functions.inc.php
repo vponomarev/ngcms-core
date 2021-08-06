@@ -244,25 +244,23 @@ function phphighlight($content = '')
     return $content;
 }
 
-function QuickTags($area = false, $template = false)
+function QuickTags(string $area = '', string $template = '')
 {
-    global $tpl, $PHP_SELF;
+    global $twig, $PHP_SELF;
 
-    $tvars['vars'] = [
+    $tvars = [
         'php_self' => $PHP_SELF,
-        'area'     => $area ? $area : "''",
+        'area'     => empty($area) ? "''" : $area,
     ];
 
     if (!in_array($template, ['pmmes', 'editcom', 'news', 'static'])) {
         return false;
     }
 
-    $tplname = 'qt_'.$template;
-
-    $tpl->template($tplname, tpl_actions);
-    $tpl->vars($tplname, $tvars);
-
-    return $tpl->show($tplname);
+    return $twig->render(
+        tpl_actions."/qt_{$template}.tpl",
+        $tvars
+    );
 }
 
 function BBCodes(string $area = '')

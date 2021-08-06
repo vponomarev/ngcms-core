@@ -72,7 +72,7 @@ if ($subaction != 'deletecomment') {
 
         $tvars['vars'] = [
             'php_self'  => $PHP_SELF,
-            'quicktags' => QuickTags(false, 'editcom'),
+            'quicktags' => QuickTags('', 'editcom'),
             'ip'        => $row['ip'],
             'author'    => $row['author'],
             'mail'      => $row['mail'],
