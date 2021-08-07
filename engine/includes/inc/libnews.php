@@ -944,42 +944,12 @@ function news_showlist($filterConditions = [], $paginationParams = [], $callingP
     // Generate pagination/navigation if it's not disabled
     $paginationOutput = '';
     if (!(isset($callingParams['disablePagination']) && ($callingParams['disablePagination']))) {
-        templateLoadVariables(true);
-        $navigations = $TemplateCache['site']['#variables']['navigation'];
-        $tpl->template('pages', tpl_dir.$config['theme']);
+        if ($nCount > 0) {
+            $paginationOutput = ngSitePagination($cstart, $pages_count, $paginationParams);
 
-        // Prev page link
-        if ($limit_start && $nCount) {
-            $prev = floor($limit_start / $showNumber);
-            $tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%', '$1', str_replace('%link%', generatePageLink($paginationParams, $prev), $navigations['prevlink']));
-        } else {
-            $tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = '';
-            $prev = 0;
-            $no_prev = true;
-        }
-
-        $maxNavigations = $config['newsNavigationsCount'];
-        if ($maxNavigations < 1) {
-            $maxNavigations = 10;
-        }
-
-        $tvars['vars']['pages'] = generatePagination($cstart, 1, $pages_count, $maxNavigations, $paginationParams, $navigations);
-
-        // Next page link
-        if (($prev + 2 <= $pages_count) && $nCount) {
-            $tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%', '$1', str_replace('%link%', generatePageLink($paginationParams, $prev + 2), $navigations['nextlink']));
-        } else {
-            $tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = '';
-            $no_next = true;
-        }
-
-        if ($nCount && ($pages_count > 1)) {
-            $tpl->vars('pages', $tvars);
-            $paginationOutput = $tpl->show('pages');
-        }
-
-        if (!isset($callingParams['entendedReturnPagination']) && !$callingParams['extendedReturnPagination']) {
-            $output .= $paginationOutput;
+            if (!isset($callingParams['entendedReturnPagination']) && !$callingParams['extendedReturnPagination']) {
+                $output .= $paginationOutput;
+            }
         }
     }
 

@@ -901,7 +901,7 @@ function ListDirs($folder, $category = false, $alllink = true, $elementID = '')
             break;
 
         default:
-            return fase;
+            return false;
     }
 
     $select = '<select '.($elementID ? 'id="'.$elementID.'" ' : '').'name="category">'.($alllink ? '<option value="">- '.$lang['all'].' -</option>' : '');
@@ -1954,9 +1954,14 @@ function generatePagination($current, $start, $end, $maxnav, $paginationParams, 
 }
 
 // Generate block with pages [ 1, 2, [3], 4, ..., 25, 26, 27 ] using default configuration of template
-function ngSitePagination($currentPage, $totalPages, $paginationParams, $navigationsCount = 0, $flagIntLink = false)
-{
-    global $config, $TemplateCache, $tpl;
+function ngSitePagination(
+    int $currentPage,
+    int $totalPages,
+    array $paginationParams,
+    int $navigationsCount = 0,
+    bool $flagIntLink = false
+): string {
+    global $config, $lang, $TemplateCache, $twig;
 
     if ($totalPages < 2) {
         return '';
@@ -1964,37 +1969,54 @@ function ngSitePagination($currentPage, $totalPages, $paginationParams, $navigat
 
     templateLoadVariables(true);
     $navigations = $TemplateCache['site']['#variables']['navigation'];
-    $tpl->template('pages', tpl_dir.$config['theme']);
 
     // Prev page link
+    $tvars['flags']['previous_page'] = false;
+    $previousPage = 0;
+
     if ($currentPage > 1) {
-        $prev = $currentPage - 1;
-        $tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%', '$1', str_replace('%link%', generatePageLink($paginationParams, $prev), $navigations['prevlink']));
-    } else {
-        $tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = '';
-        $prev = 0;
-        $no_prev = true;
+        $previousPage = $currentPage - 1;
+        $tvars['flags']['previous_page'] = true;
+        $tvars['previous_page_url'] = generatePageLink($paginationParams, $previousPage);
+        $tvars['previous_page'] = str_replace(
+            '%page%',
+            $lang['previous_page'],
+            str_replace(
+                '%link%',
+                $tvars['previous_page_url'],
+                $navigations['prevlink']
+            )
+        );
     }
 
-    $maxNavigations = $config['newsNavigationsCount'];
-    if ($navigationsCount < 1) {
-        $navigationsCount = ($config['newsNavigationsCount'] > 2) ? $config['newsNavigationsCount'] : 10;
-    }
-
-    $tvars['vars']['pages'] = generatePagination($currentPage, 1, $totalPages, $navigationsCount, $paginationParams, $navigations);
+    $tvars['pages'] = generatePagination(
+        $currentPage,
+        1,
+        $totalPages,
+        $config['newsNavigationsCount'] > 2 ? $config['newsNavigationsCount'] : 10,
+        $paginationParams,
+        $navigations
+    );
 
     // Next page link
-    if (($prev + 2 <= $totalPages)) {
-        $tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%', '$1', str_replace('%link%', generatePageLink($paginationParams, $prev + 2), $navigations['nextlink']));
-    } else {
-        $tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = '';
-        $no_next = true;
+    $tvars['flags']['next_page'] = false;
+    $nextPage = $previousPage + 2;
+
+    if ($nextPage <= $totalPages) {
+        $tvars['flags']['next_page'] = true;
+        $tvars['next_page_url'] = generatePageLink($paginationParams, $nextPage);
+        $tvars['next_page'] = str_replace(
+            '%page%',
+            $lang['next_page'],
+            str_replace(
+                '%link%',
+                $tvars['next_page_url'],
+                $navigations['nextlink']
+            )
+        );
     }
 
-    $tpl->vars('pages', $tvars);
-    $paginationOutput = $tpl->show('pages');
-
-    return $paginationOutput;
+    return $twig->render('pages.tpl', $tvars);
 }
 
 //
