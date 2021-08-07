@@ -21,9 +21,7 @@ include_once root.'includes/news.php';
 
 function search_news()
 {
-    global $catz, $catmap, $mysql, $config, $userROW, $tpl, $parse, $template, $lang, $PFILTERS, $SYSTEM_FLAGS, $TemplateCache;
-
-    $SYSTEM_FLAGS['info']['title']['group'] = $lang['search.title'];
+    global $catz, $catmap, $mysql, $config, $userROW, $twig, $parse, $template, $lang, $PFILTERS, $SYSTEM_FLAGS, $TemplateCache;
 
     // PREPARE FILTER RULES FOR NEWS SHOWER
     $filter = [];
@@ -83,60 +81,82 @@ function search_news()
     }
 
     //print "FILTER: <pre>".var_export($filter, true)."</pre>\n";
-    load_extras('news');
-    load_extras('news:search');
+    loadActionHandlers('news');
+    loadActionHandlers('news:search');
 
     // Configure pagination
     $paginationParams = ['pluginName' => 'search', 'xparams' => ['search' => $_REQUEST['search'], 'author' => $_REQUEST['author'], 'catid' => $_REQUEST['catid'], 'postdate' => $_REQUEST['postdate']], 'paginator' => ['page', 1, false]];
 
     // Configure display params
     $callingParams = ['style' => 'short', 'searchFlag' => true, 'extendedReturn' => true, 'customCategoryTemplate' => true];
+
     if ($_REQUEST['page']) {
-        $callingParams['page'] = intval($_REQUEST['page']);
+        $callingParams['page'] = (int) $_REQUEST['page'];
     }
 
     // Preload template configuration variables
     templateLoadVariables();
-    // Check if template requires extracting embedded images
     $tplVars = $TemplateCache['site']['#variables'];
-    if (isset($tplVars['configuration']) && is_array($tplVars['configuration']) && isset($tplVars['configuration']['extractEmbeddedItems']) && $tplVars['configuration']['extractEmbeddedItems']) {
-        $callingParams['extractEmbeddedItems'] = true;
+
+    // Check if template requires extracting embedded images
+    $callingParams['extractEmbeddedItems'] = false;
+
+    if (isset($tplVars['configuration']['extractEmbeddedItems'])) {
+        $callingParams['extractEmbeddedItems'] = (bool) $tplVars['configuration']['extractEmbeddedItems'];
     }
 
     // Call SEARCH only if search words are entered
+    $founded = ['count' => 0, 'data' => false];
+
     if (count($search_words)) {
-        $found = news_showlist($filter, $paginationParams, $callingParams);
-    } else {
-        $found = ['count' => 0, 'data' => false];
+        $founded = news_showlist($filter, $paginationParams, $callingParams);
     }
 
     // Now let's show SEARCH basic template
-    $tpl->template('search.table', tpl_dir.$config['theme']);
     $tvars = [];
-    $tvars['vars']['author'] = secure_html($_REQUEST['author']);
-    $tvars['vars']['search'] = secure_html($_REQUEST['search']);
+    $tvars['author'] = secure_html($_REQUEST['author']);
+    $tvars['search'] = secure_html($_REQUEST['search']);
 
-    $tvars['vars']['count'] = $found['count'];
-    $tvars['vars']['form_url'] = generateLink('search', '', []);
+    $tvars['count'] = $founded['count'];
+    $tvars['form_url'] = generateLink('search', '', []);
 
-    $tvars['regx']['#\[found\](.+?)\[/found\]#is'] = (isset($_REQUEST['search']) && count($search_words) && $found['count']) ? '$1' : '';
-    $tvars['regx']['#\[notfound\](.+?)\[/notfound\]#is'] = (isset($_REQUEST['search']) && count($search_words) && !$found['count']) ? '$1' : '';
-    $tvars['regx']['#\[error\](.+?)\[/error\]#is'] = (isset($_REQUEST['search']) && !count($search_words)) ? '$1' : '';
+    $tvars['flags'] = [
+        'found' => isset($_REQUEST['search']) && count($search_words) && $founded['count'],
+        'notfound' => isset($_REQUEST['search']) && count($search_words) && !$founded['count'],
+        'error' => isset($_REQUEST['search']) && !count($search_words),
+    ];
 
     // Make category list
-    $tvars['vars']['catlist'] = makeCategoryList(['name' => 'catid', 'selected' => $_REQUEST['catid'], 'doempty' => 1]);
+    $tvars['catlist'] = makeCategoryList(['name' => 'catid', 'selected' => $_REQUEST['catid'], 'doempty' => 1]);
 
     // Results of search
-    $tvars['vars']['entries'] = $found['data'];
-    // Make month list
-    $mnth_list = explode(',', $lang['months']);
-    foreach ($mysql->select('SELECT month(from_unixtime(postdate)) as month, year(from_unixtime(postdate)) as year, COUNT(id) AS cnt FROM '.prefix."_news WHERE approve = '1' GROUP BY year, month ORDER BY year DESC, month DESC") as $row) {
-        $pd_value = sprintf('%04u%02u', $row['year'], $row['month']);
-        $pd_text = $mnth_list[$row['month'] - 1].' '.$row['year'];
+    $tvars['entries'] = $founded['data'];
 
-        $tvars['vars']['datelist'] .= '<option value="'.$pd_value.'"'.(($pd_value == $_REQUEST['postdate']) ? ' selected' : '').'>'.$pd_text.'</option>';
+    // Make month list
+    $monthsList = explode(',', $lang['months']);
+    $rows = $mysql->select(
+        "SELECT
+            month(from_unixtime(postdate)) as month,
+            year(from_unixtime(postdate)) as year,
+            COUNT(id) AS cnt
+        FROM ".prefix."_news
+        WHERE approve = '1'
+        GROUP BY year, month
+        ORDER BY year DESC, month DESC"
+    );
+
+    foreach ($rows as $row) {
+        $pd_value = sprintf('%04u%02u', $row['year'], $row['month']);
+        $pd_text = $monthsList[$row['month'] - 1].' '.$row['year'].' '.$row['cnt'];
+
+        $tvars['datelist'] .= '
+            <option value="'.$pd_value.'"'.(($pd_value == $_REQUEST['postdate']) ? ' selected' : '').'>'
+                .$pd_text
+            .'</option>';
     }
 
-    $tpl->vars('search.table', $tvars);
-    $template['vars']['mainblock'] .= $tpl->show('search.table');
+    // Set meta tags for search page
+    $SYSTEM_FLAGS['info']['title']['group'] = $lang['search.title'];
+
+    $template['vars']['mainblock'] .= $twig->render('search.table.tpl', $tvars);
 }
