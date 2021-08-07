@@ -3166,13 +3166,13 @@ function coreUserMenu()
 
 function coreSearchForm()
 {
-    global $tpl, $template, $lang;
+    global $twig, $template, $lang;
 
     LoadLang('search', 'site');
 
-    $tpl->template('search.form', tpl_site);
-    $tpl->vars('search.form', ['vars' => ['form_url' => generateLink('search', '', [])]]);
-    $template['vars']['search_form'] = $tpl->show('search.form');
+    $template['vars']['search_form'] = $twig->render('search.form.tpl', [
+        'form_url' => generateLink('search', '', []),
+    ]);
 }
 
 // Return current news category
