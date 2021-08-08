@@ -42,7 +42,6 @@
 	-  [news.table.tpl](templates/news.table.tpl.md)
 	-  [pages.tpl](templates/pages.tpl.md)
 	-  [redirect.tpl](templates/redirect.tpl.md)
-	-  [registration.entries.tpl](templates/registration.entries.tpl.md)
 	-  [registration.tpl](templates/registration.tpl.md)
 	-  [search.form.tpl](templates/search.form.tpl.md)
 	-  [search.table.tpl](templates/search.table.tpl.md)
