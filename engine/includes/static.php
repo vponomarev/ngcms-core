@@ -19,12 +19,12 @@ $lang = LoadLang('static', 'site');
 // * altname	- alt. name of the page
 function showStaticPage($params)
 {
-    global $config, $tpl, $mysql, $userROW, $parse, $template, $lang, $SYSTEM_FLAGS, $PFILTERS, $SUPRESS_TEMPLATE_SHOW;
+    global $config, $twig, $mysql, $userROW, $parse, $template, $lang, $SYSTEM_FLAGS, $PFILTERS, $SUPRESS_TEMPLATE_SHOW;
 
-    load_extras('static');
+    loadActionHandlers('static');
 
     $limit = '';
-    if (intval($params['id'])) {
+    if ((int) $params['id']) {
         $limit = 'id = '.db_squote($params['id']);
     } elseif ($params['altname']) {
         $limit = 'alt_name = '.db_squote($params['altname']);
@@ -67,10 +67,7 @@ function showStaticPage($params)
         $content = $parse->smilies($content);
     }
 
-    $SYSTEM_FLAGS['info']['title']['item'] = secure_html($row['title']);
-
-    $template['vars']['titles'] .= ' : '.$row['title'];
-    $tvars['vars'] = [
+    $tvars = [
         'title'    => $row['title'],
         'content'  => $content,
         'postdate' => ($row['postdate'] > 0) ? strftime('%d.%m.%Y %H:%M', $row['postdate']) : '',
@@ -89,18 +86,14 @@ function showStaticPage($params)
                             && $staticPerms['view']
                             && $staticPerms['modify'];
 
+    $tvars['flags']['canEdit'] = false;
+
     if ($showModifyButtons) {
-        $tvars['vars']['[edit-static]'] = '<a href="'.admin_url.'/admin.php?mod=static&action=edit&id='.$row['id'].'" target="_blank">';
-        $tvars['vars']['[/edit-static]'] = '</a>';
-        $tvars['vars']['[del-static]'] = "<a onclick=\"confirmit('".admin_url.'/admin.php?mod=static&subaction=do_mass_delete&selected[]='.$row['id']."', '".$lang['sure_del']."')\" target=\"_blank\" style=\"cursor: pointer;\">";
-        $tvars['vars']['[/del-static]'] = '</a>';
-    } else {
-        $tvars['regx']["'\\[edit-static\\].*?\\[/edit-static\\]'si"] = '';
-        $tvars['regx']["'\\[del-static\\].*?\\[/del-static\\]'si"] = '';
+        $tvars['flags']['canEdit'] = true;
+        $tvars['edit_static_url'] = admin_url.'/admin.php?mod=static&action=editForm&id='.$row['id'];
     }
 
-    $tvars['vars']['[print-link]'] = '<a href="'.generatePluginLink('static', 'print', ['id' => $row['id'], 'altname' => $params['altname']], [], true).'">';
-    $tvars['vars']['[/print-link]'] = '</a>';
+    $tvars['print_static_url'] = generatePluginLink('static', 'print', ['id' => $row['id'], 'altname' => $params['altname']], [], true);
 
     if (is_array($PFILTERS['static'])) {
         foreach ($PFILTERS['static'] as $k => $v) {
@@ -108,7 +101,7 @@ function showStaticPage($params)
         }
     }
 
-    exec_acts('static', $row);
+    executeActionHandler('static', $row);
 
     if (!$row['template']) {
         $templateName = 'static/default';
@@ -128,13 +121,13 @@ function showStaticPage($params)
         $SYSTEM_FLAGS['template.main.path'] = tpl_dir.$config['theme'].'/static';
     }
 
-    $tpl->template($templateName, tpl_dir.$config['theme']);
-    $tpl->vars($templateName, $tvars);
-    $template['vars']['mainblock'] .= $tpl->show($templateName);
-
     // Set meta tags for news page
+    $SYSTEM_FLAGS['info']['title']['item'] = secure_html($row['title']);
     $SYSTEM_FLAGS['meta']['description'] = $row['description'];
     $SYSTEM_FLAGS['meta']['keywords'] = $row['keywords'];
+
+    $template['vars']['titles'] .= ' : '.$row['title'];
+    $template['vars']['mainblock'] .= $twig->render($templateName.'.tpl', $tvars);
 
     return true;
 }
