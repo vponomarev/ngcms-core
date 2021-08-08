@@ -199,15 +199,16 @@ function LangDate($format, $timestamp)
 
 //
 // Generate a list of smilies to show
-function InsertSmilies($insert_location, $break_location = false, $area = false)
+function InsertSmilies(string $insert_location, int $break_location = 0, string $area = '')
 {
-    global $config, $tpl;
+    global $config, $twig;
 
     if ($config['use_smilies']) {
         $smilies = explode(',', $config['smilies']);
 
         // For smilies in comments, try to use 'smilies.tpl' from site template
         $templateDir = (($insert_location == 'comments') && is_readable(tpl_dir.$config['theme'].'/smilies.tpl')) ? tpl_dir.$config['theme'] : tpl_actions;
+        $templateDir = trim($templateDir, '/');
 
         $i = 0;
         $output = '';
@@ -215,14 +216,12 @@ function InsertSmilies($insert_location, $break_location = false, $area = false)
             $i++;
             $smile = trim($smile);
 
-            $tvars['vars'] = [
-                'area'  => $area ? $area : "''",
+            $tvars = [
+                'area'  => empty($area) ? "''" : $area,
                 'smile' => $smile,
             ];
 
-            $tpl->template('smilies', $templateDir);
-            $tpl->vars('smilies', $tvars);
-            $output .= $tpl->show('smilies');
+            $output .= $twig->render($templateDir.'/smilies.tpl', $tvars);
 
             if (($break_location > 0) && (!$i % $break_location)) {
                 $output .= '<br />';
@@ -245,41 +244,36 @@ function phphighlight($content = '')
     return $content;
 }
 
-function QuickTags($area = false, $template = false)
+function QuickTags(string $area = '', string $template = '')
 {
-    global $tpl, $PHP_SELF;
+    global $twig, $PHP_SELF;
 
-    $tvars['vars'] = [
+    $tvars = [
         'php_self' => $PHP_SELF,
-        'area'     => $area ? $area : "''",
+        'area'     => empty($area) ? "''" : $area,
     ];
 
     if (!in_array($template, ['pmmes', 'editcom', 'news', 'static'])) {
         return false;
     }
 
-    $tplname = 'qt_'.$template;
-
-    $tpl->template($tplname, tpl_actions);
-    $tpl->vars($tplname, $tvars);
-
-    return $tpl->show($tplname);
+    return $twig->render(
+        tpl_actions."/qt_{$template}.tpl",
+        $tvars
+    );
 }
 
-function BBCodes($area = false)
+function BBCodes(string $area = '')
 {
-    global $config, $lang, $tpl, $PHP_SELF;
+    global $config, $lang, $twig, $PHP_SELF;
 
-    if ($config['use_bbcodes'] == '1') {
-        $tvars['vars'] = [
+    if ($config['use_bbcodes']) {
+        $tvars = [
             'php_self' => $PHP_SELF,
-            'area'     => $area,
+            'area'     => empty($area) ? "''" : $area,
         ];
 
-        $tpl->template('bbcodes', tpl_site);
-        $tpl->vars('bbcodes', $tvars);
-
-        return $tpl->show('bbcodes');
+        return $twig->render('bbcodes.tpl', $tvars);
     }
 }
 
@@ -907,7 +901,7 @@ function ListDirs($folder, $category = false, $alllink = true, $elementID = '')
             break;
 
         default:
-            return fase;
+            return false;
     }
 
     $select = '<select '.($elementID ? 'id="'.$elementID.'" ' : '').'name="category">'.($alllink ? '<option value="">- '.$lang['all'].' -</option>' : '');
@@ -1960,9 +1954,14 @@ function generatePagination($current, $start, $end, $maxnav, $paginationParams, 
 }
 
 // Generate block with pages [ 1, 2, [3], 4, ..., 25, 26, 27 ] using default configuration of template
-function ngSitePagination($currentPage, $totalPages, $paginationParams, $navigationsCount = 0, $flagIntLink = false)
-{
-    global $config, $TemplateCache, $tpl;
+function ngSitePagination(
+    int $currentPage,
+    int $totalPages,
+    array $paginationParams,
+    int $navigationsCount = 0,
+    bool $flagIntLink = false
+): string {
+    global $config, $lang, $TemplateCache, $twig;
 
     if ($totalPages < 2) {
         return '';
@@ -1970,37 +1969,54 @@ function ngSitePagination($currentPage, $totalPages, $paginationParams, $navigat
 
     templateLoadVariables(true);
     $navigations = $TemplateCache['site']['#variables']['navigation'];
-    $tpl->template('pages', tpl_dir.$config['theme']);
 
     // Prev page link
+    $tvars['flags']['previous_page'] = false;
+    $previousPage = 0;
+
     if ($currentPage > 1) {
-        $prev = $currentPage - 1;
-        $tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = str_replace('%page%', '$1', str_replace('%link%', generatePageLink($paginationParams, $prev), $navigations['prevlink']));
-    } else {
-        $tvars['regx']["'\[prev-link\](.*?)\[/prev-link\]'si"] = '';
-        $prev = 0;
-        $no_prev = true;
+        $previousPage = $currentPage - 1;
+        $tvars['flags']['previous_page'] = true;
+        $tvars['previous_page_url'] = generatePageLink($paginationParams, $previousPage);
+        $tvars['previous_page'] = str_replace(
+            '%page%',
+            $lang['previous_page'],
+            str_replace(
+                '%link%',
+                $tvars['previous_page_url'],
+                $navigations['prevlink']
+            )
+        );
     }
 
-    $maxNavigations = $config['newsNavigationsCount'];
-    if ($navigationsCount < 1) {
-        $navigationsCount = ($config['newsNavigationsCount'] > 2) ? $config['newsNavigationsCount'] : 10;
-    }
-
-    $tvars['vars']['pages'] = generatePagination($currentPage, 1, $totalPages, $navigationsCount, $paginationParams, $navigations);
+    $tvars['pages'] = generatePagination(
+        $currentPage,
+        1,
+        $totalPages,
+        $config['newsNavigationsCount'] > 2 ? $config['newsNavigationsCount'] : 10,
+        $paginationParams,
+        $navigations
+    );
 
     // Next page link
-    if (($prev + 2 <= $totalPages)) {
-        $tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = str_replace('%page%', '$1', str_replace('%link%', generatePageLink($paginationParams, $prev + 2), $navigations['nextlink']));
-    } else {
-        $tvars['regx']["'\[next-link\](.*?)\[/next-link\]'si"] = '';
-        $no_next = true;
+    $tvars['flags']['next_page'] = false;
+    $nextPage = $previousPage + 2;
+
+    if ($nextPage <= $totalPages) {
+        $tvars['flags']['next_page'] = true;
+        $tvars['next_page_url'] = generatePageLink($paginationParams, $nextPage);
+        $tvars['next_page'] = str_replace(
+            '%page%',
+            $lang['next_page'],
+            str_replace(
+                '%link%',
+                $tvars['next_page_url'],
+                $navigations['nextlink']
+            )
+        );
     }
 
-    $tpl->vars('pages', $tvars);
-    $paginationOutput = $tpl->show('pages');
-
-    return $paginationOutput;
+    return $twig->render('pages.tpl', $tvars);
 }
 
 //
@@ -2167,32 +2183,31 @@ function printHTTPheaders()
     }
 }
 
-//
-// Generate error "PAGE NOT FOUND"
-//
-function error404()
+/**
+ * Generate error "PAGE NOT FOUND".
+ *
+ * @return void
+ */
+function error404(): void
 {
-    global $config, $tpl, $template, $SYSTEM_FLAGS, $lang;
+    global $config, $twig, $template, $SYSTEM_FLAGS, $lang;
 
     @header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+
     switch ($config['404_mode']) {
-        // HTTP error 404
+        // HTTP error 404.
         case 2:
             exit;
 
-        // External error template
+        // External error template.
         case 1:
-            $tpl->template('404.external', tpl_site);
-            $tpl->vars('404.external', []);
-            echo $tpl->show('404.external');
+            echo $twig->render('404.external.tpl', []);
             exit;
 
-        // Internal error template
+        // Internal error template.
         case 0:
         default:
-            $tpl->template('404.internal', tpl_site);
-            $tpl->vars('404.internal', []);
-            $template['vars']['mainblock'] = $tpl->show('404.internal');
+            $template['vars']['mainblock'] = $twig->render('404.internal.tpl', []);
 
             $SYSTEM_FLAGS['info']['title']['group'] = $lang['404.title'];
     }
@@ -3151,13 +3166,13 @@ function coreUserMenu()
 
 function coreSearchForm()
 {
-    global $tpl, $template, $lang;
+    global $twig, $template, $lang;
 
     LoadLang('search', 'site');
 
-    $tpl->template('search.form', tpl_site);
-    $tpl->vars('search.form', ['vars' => ['form_url' => generateLink('search', '', [])]]);
-    $template['vars']['search_form'] = $tpl->show('search.form');
+    $template['vars']['search_form'] = $twig->render('search.form.tpl', [
+        'form_url' => generateLink('search', '', []),
+    ]);
 }
 
 // Return current news category

@@ -171,7 +171,7 @@ function pm_reply()
             'id'        => $row['pmid'],
             'title'     => $reTitle,
             'token'     => genUToken('pm.token'),
-            'quicktags' => QuickTags(false, 'pmmes'),
+            'quicktags' => QuickTags('', 'pmmes'),
             'smilies'   => ($config['use_smilies'] == '1') ? InsertSmilies('content', 10) : '',
             'toID'      => $row['from_id'],
             'fromID'    => $row['to_id'],
@@ -200,7 +200,7 @@ function pm_write()
     global $config, $twig;
 
     $tVars = [
-        'quicktags' => QuickTags(false, 'pmmes'),
+        'quicktags' => QuickTags('', 'pmmes'),
         'smilies'   => ($config['use_smilies'] == '1') ? InsertSmilies('content', 10) : '',
         'token'     => genUToken('pm.token'),
     ];

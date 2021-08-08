@@ -1,4 +1,4 @@
 <div class="alert alert-info">
-	<strong>{l_404.title}</strong>
-	{l_404.description}
+	<strong>{{ lang['404.title'] }}</strong>
+	{{ lang['404.description'] }}
 </div>

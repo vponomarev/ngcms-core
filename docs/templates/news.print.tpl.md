@@ -1,41 +1,70 @@
-Шаблон news.print.tpl
----------------------
+# Шаблон news.print.tpl
 
 Шаблон отвечает за вывод версии для печати полной новости.
 
-Данный шаблонфункционально абсолютно идентичен шаблону <a href="news.full.tpl.html">news.full.tpl</a>, для генерации версии для печати всегда используется тот же набор функций, которые используются и для генерации полной страницы новости.
-Единственное отличие - при генерации версии для печати отключаются обработчики новостей onBeforeShow() и onAfterShow(). К примеру, эти обработчики испльзуются плагином comments для генерации формы добавления нового комментария и для показа списка комментариев к новости.
+Данный шаблон функционально абсолютно идентичен шаблону <a href="news.full.tpl.html">news.full.tpl</a>, для генерации версии для печати всегда используется тот же набор функций, которые используются и для генерации полной страницы новости.
 
+Единственное отличие - при генерации версии для печати отключаются обработчики новостей `onBeforeShow()` и `onAfterShow()`. К примеру, эти обработчики испльзуются плагином `comments` для генерации формы добавления нового комментария и для показа списка комментариев к новости.
 
-Пример заполнения шаблона
--------------------------
+## Пример заполнения шаблона
 
+```html
+[TWIG]
+<html>
+<head>
+    <title>{{ news.title }}</title>
+    <meta charset="{{ lang['encoding'] }}" />
 
-<pre >
-&lt;html>
-&lt;head>
-&lt;meta content-"text/html; charset-utf-8" http-equiv-Content-Type>
-&lt;style>
-body,td { font-family: verdana, arial, sans-serif; color: #666; font-size: 80%; }
-h1,h2,h3,h4 { font-family: verdana, arial, sans-serif; color: #666; font-size: 100%; margin: 0px; }
-&lt;/style>
-&lt;title>{title}&lt;/title>
-&lt;/head>
-&lt;body bgcolor-"#ffffff" text-"#000000">
-&lt;table border-"0" width-"100%" cellspacing-"1" cellpadding-"3">
-&lt;tr>
-&lt;td width-"100%">
-{category} &raquo; {title}&lt;br />&lt;br />
-&lt;div style-"border-top: 1px solid #ccc; width: 100%;">&lt;br />&lt;small>{date} {l_by} {author}&lt;/small>&lt;/div>
-&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td width-"100%">
-{short-story}
-{full-story}
-&lt;/td>
-&lt;/tr>
-&lt;/table>
-&lt;/body>
-&lt;/html>
-</pre>
+    <style>
+        body,
+        td {
+            font-family: verdana, arial, sans-serif;
+            color: #666;
+            font-size: 80%;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: verdana, arial, sans-serif;
+            color: #666;
+            font-size: 100%;
+            margin: 0px;
+        }
+    </style>
+</head>
+
+<body bgcolor="#ffffff" text="#000000">
+    <table border="0" width="100%" cellspacing="1" cellpadding="3">
+        <tbody>
+            <tr>
+                <td width="100%">
+                    {{ news.categories.masterText }} &raquo; {{ news.title }}
+                    <br />
+                    <br />
+                    <div style="border-top: 1px solid #ccc; width: 100%;">
+                        <br />
+                        <small>
+							{{ news.date }}
+							{{ lang['by'] }}
+							{% if pluginIsActive('uprofile') %}<a href="{{ news.author.url }}">{% endif %}
+								{{ news.author.name }}
+							{% if pluginIsActive('uprofile') %}</a>{% endif %}
+						</small>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="100%">
+                    {{ news.short }}
+                    {{ news.full }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
+[/TWIG]
+```

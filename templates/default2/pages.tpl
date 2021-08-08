@@ -1,5 +1,13 @@
 <div class="paginator">
 	<ul>
-		[prev-link]{l_previous_page}[/prev-link] {pages} [next-link]{l_next_page}[/next-link]
+		{% if (flags.previous_page) %}
+			{{ previous_page }}
+		{% endif %}
+
+		{{ pages }}
+
+		{% if (flags.next_page) %}
+			{{ next_page }}
+		{% endif %}
 	</ul>
 </div>

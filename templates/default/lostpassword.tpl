@@ -1,27 +1,37 @@
-[TWIG]
-<div class="block-title">{{ lang['lostpassword_title'] }}</div>
+<div class="block-title">{{ lang['lostpassword'] }}</div>
+
 <form name="lostpassword" action="{{ form_action }}" method="post">
-	<input type="hidden" name="type" value="send"/>
+	<input type="hidden" name="type" value="send" />
+
 	{{ entries }}
-	[captcha]
-	<div class="label label-table captcha pull-left">
-		<label>{{ lang['captcha'] }}:</label>
-		<input type="text" name="vcode" class="input">
-		<img src="{{ admin_url }}/captcha.php" onclick="reload_captcha();" id="img_captcha" style="cursor: pointer;" alt="{{ lang['captcha'] }}"/>
-		<div class="label-desc">{{ lang['captcha_desc'] }}</div>
-	</div>
+
+	{% if flags.hasCaptcha %}
+		<div class="label label-table captcha pull-left">
+			<label>{{ lang['captcha'] }}:</label>
+			<input type="text" name="vcode" class="input" />
+
+			<img
+				id="img_captcha"
+				onclick="reload_captcha();"
+				src="{{ captcha_source_url }}"
+				alt="{{ lang['captcha'] }}"
+				style="cursor: pointer;" />
+
+			<div class="label-desc">{{ lang['captcha_desc'] }}</div>
+		</div>
+	{% endif %}
+
 	<div class="clearfix"></div>
+
 	<div class="label">
-		<input type="submit" value="{{ lang['send_pass'] }}" class="button">
+		<input type="submit" value="{{ lang['send_pass'] }}" class="button" />
 	</div>
-	[/captcha]
 </form>
+
 <script type="text/javascript">
 	function reload_captcha() {
-		var captc = document.getElementById('img_captcha');
-		if (captc != null) {
-			captc.src = "{{ admin_url }}/captcha.php?rand=" + Math.random();
-		}
+		var captcha = document.getElementById('img_captcha');
+
+		captcha && (captcha.src = "{{ captcha_source_url }}?rand=" + Math.random());
 	}
 </script>
-[/TWIG]

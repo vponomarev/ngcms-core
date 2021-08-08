@@ -1,1 +1,1 @@
-<div class="msge">{text}</div>
+<div class="msge">{{ text }}</div>

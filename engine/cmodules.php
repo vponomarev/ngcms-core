@@ -142,7 +142,7 @@ function coreRegisterUser()
 // Registration page generation
 function generate_reg_page($params, $values = [], $msg = '')
 {
-    global $tpl, $template, $PHP_SELF, $config, $PFILTERS, $twig, $twigLoader, $lang;
+    global $template, $PHP_SELF, $config, $PFILTERS, $twig, $twigLoader, $lang;
 
     $tVars = [
         'entries' => [],
@@ -330,18 +330,23 @@ function coreRestorePassword()
 }
 
 // Registration page generation
-function generate_restorepw_page($params, $values = [], $msg = '')
-{
-    global $tpl, $template, $PHP_SELF, $config, $lang;
-    $tpl->template('lostpassword.entries', tpl_site);
-    $tpl->template('lostpassword.entry-full', tpl_site);
+function generate_restorepw_page(
+    array $params,
+    array $values = [],
+    string $msg = ''
+): void {
+    global $twig, $template, $PHP_SELF, $config, $lang;
 
-    if ($msg) {
-        msg(['text' => $msg]);
+    if (! empty($msg)) {
+        msg([
+            'text' => $msg,
+        ]);
     }
 
+    $entries = '';
+
     foreach ($params as $param) {
-        $tvars['vars'] = [
+        $tvars = [
             'name'  => $param['name'],
             'title' => $param['title'],
             'descr' => $param['descr'],
@@ -351,50 +356,49 @@ function generate_restorepw_page($params, $values = [], $msg = '')
         ];
 
         if ($param['error']) {
-            $tvars['vars']['error'] = str_replace('%error%', $param['error'], $lang['param_error']);
+            $tvars['error'] = str_replace('%error%', $param['error'], $lang['param_error']);
         }
         if ($values[$param['name']]) {
             $param['value'] = $values[$param['name']];
         }
 
         if ($param['type'] == 'text') {
-            $tvars['vars']['input'] = '<textarea name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
+            $tvars['input'] = '<textarea name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>'.secure_html($param['value']).'</textarea>';
         } elseif (($param['type'] == 'input') || ($param['type'] == 'password') || ($param['type'] == 'hidden')) {
-            $tvars['vars']['input'] = '<input name="'.$param['name'].'" type="'.(($param['type'] == 'input') ? 'text' : $param['type']).'" title="'.secure_html($param['title']).'" '.$param['html_flags'].' value="'.secure_html($param['value']).'" />';
+            $tvars['input'] = '<input name="'.$param['name'].'" type="'.(($param['type'] == 'input') ? 'text' : $param['type']).'" title="'.secure_html($param['title']).'" '.$param['html_flags'].' value="'.secure_html($param['value']).'" />';
         } elseif ($param['type'] == 'select') {
-            $tvars['vars']['input'] = '<select name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>';
+            $tvars['input'] = '<select name="'.$param['name'].'" title="'.secure_html($param['title']).'" '.$param['html_flags'].'>';
             foreach ($param['values'] as $oid => $oval) {
-                $tvars['vars']['input'] .= '<option value="'.secure_html($oid).'"'.($param['value'] == $oid ? ' selected' : '').'>'.secure_html($oval).'</option>';
+                $tvars['input'] .= '<option value="'.secure_html($oid).'"'.($param['value'] == $oid ? ' selected' : '').'>'.secure_html($oval).'</option>';
             }
-            $tvars['vars']['input'] .= '</select>';
+            $tvars['input'] .= '</select>';
         } elseif ($param['type'] == 'manual') {
-            $tvars['vars']['input'] = $param['manual'];
+            $tvars['input'] = $param['manual'];
         }
 
-        if ($param['text']) {
-            $tpl->vars('lostpassword.entry-full', $tvars);
-            $entries .= $tpl->show('lostpassword.entry-full');
-        } else {
-            $tpl->vars('lostpassword.entries', $tvars);
-            $entries .= $tpl->show('lostpassword.entries');
-        }
+        $entries .= $param['text']
+            ? $twig->render('lostpassword.entry-full.tpl', $tvars)
+            : $twig->render('lostpassword.entries.tpl', $tvars);
     }
+
+    $tvars = [
+        'entries' => $entries,
+        'captcha_source_url' => admin_url.'/captcha.php',
+        'flags' => [
+            'hasCaptcha' => false,
+        ],
+    ];
 
     if ($config['use_captcha']) {
         $_SESSION['captcha'] = rand(00000, 99999);
-        $tvars['vars']['captcha'] = '';
-        $tvars['regx']["'\[captcha\](.*?)\[/captcha\]'si"] = '$1';
-    } else {
-        $tvars['regx']["'\[captcha\](.*?)\[/captcha\]'si"] = '';
+        $tvars['flags']['hasCaptcha'] = true;
     }
 
-    $tvars['vars']['form_action'] = checkLinkAvailable('core', 'lostpassword') ?
+    $tvars['form_action'] = checkLinkAvailable('core', 'lostpassword') ?
         generateLink('core', 'lostpassword', []) :
         generateLink('core', 'plugin', ['plugin' => 'core', 'handler' => 'lostpassword']);
-    $tvars['vars']['entries'] = $entries;
-    $tpl->template('lostpassword', tpl_site);
-    $tpl->vars('lostpassword', $tvars);
-    $template['vars']['mainblock'] .= $tpl->show('lostpassword');
+
+    $template['vars']['mainblock'] .= $twig->render('lostpassword.tpl', $tvars);
 }
 
 //
@@ -404,7 +408,7 @@ function generate_restorepw_page($params, $values = [], $msg = '')
 function coreLoginAction($row = null, $redirect = null)
 {
     global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
-    global $tpl, $template, $config, $lang, $ip;
+    global $twig, $template, $config, $lang, $ip;
 
     $lang = LoadLang('login', 'site');
     $SYSTEM_FLAGS['info']['title']['group'] = $lang['loc_login'];
@@ -431,34 +435,39 @@ function coreLoginAction($row = null, $redirect = null)
         $is_logged_cookie = false;
 
         // Show login template
-        $tvars = [];
-        $tvars['vars']['form_action'] = generateLink('core', 'login');
-        $tvars['vars']['redirect'] = isset($_POST['redirect']) ? $_POST['redirect'] : $HTTP_REFERER;
+        $tvars = [
+            'form_action' => generateLink('core', 'login'),
+            'redirect' => isset($_POST['redirect']) ? $_POST['redirect'] : $HTTP_REFERER,
+        ];
 
         if (preg_match('#^ERR:NEED.ACTIVATE#', $row, $null)) {
-            $tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '$1';
-            $tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
-            $tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
+            $tvars['flags'] = [
+                'need_activate' => true,
+                'error' => false,
+                'banned' => false,
+            ];
         } elseif ($row == 'ERR:NOT_ENTERED') {
-            $tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '';
-            $tvars['regx']['#\[error\](.+?)\[/error\]#is'] = '';
-            $tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = '';
+            $tvars['flags'] = [
+                'need_activate' => false,
+                'error' => false,
+                'banned' => false,
+            ];
         } else {
-            $tvars['regx']['#\[error\](.+?)\[/error\]#is'] = ($ban_mode != 1) ? '$1' : '';
-            $tvars['regx']['#\[banned\](.+?)\[/banned\]#is'] = ($ban_mode == 1) ? '$1' : '';
-            $tvars['regx']['#\[need\.activate\](.+?)\[/need\.activate\]#is'] = '';
+            $tvars['flags'] = [
+                'need_activate' => false,
+                'error' => $ban_mode != 1,
+                'banned' => $ban_mode == 1,
+            ];
         }
 
-        $tpl->template('login', tpl_site);
-        $tpl->vars('login', $tvars);
-        $template['vars']['mainblock'] = $tpl->show('login');
+        $template['vars']['mainblock'] = $twig->render('login.tpl', $tvars);
     }
 }
 
 function coreLogin()
 {
     global $auth, $auth_db, $username, $userROW, $is_logged, $is_logged_cookie, $SYSTEM_FLAGS, $HTTP_REFERER;
-    global $tpl, $template, $config, $lang, $ip;
+    global $template, $config, $lang, $ip;
 
     // If user ALREADY logged in - redirect to main page
     if (is_array($userROW)) {

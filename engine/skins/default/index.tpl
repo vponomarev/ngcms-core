@@ -9,6 +9,11 @@
 		<script src="{{ skins_url }}/public/js/manifest.js" type="text/javascript"></script>
 		<script src="{{ skins_url }}/public/js/vendor.js" type="text/javascript"></script>
 		<script src="{{ skins_url }}/public/js/app.js" type="text/javascript"></script>
+		<style>
+			body {
+				font-weight: 300;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -94,12 +99,12 @@
 									or global.mod == 'files'
 							%}
 
-							<li data-toggle="collapse" data-target="#content"
+							<li data-toggle="collapse" data-target="#nav-content"
 								class="collapsed {{ h_active_options ? 'active' : '' }} ">
 								<a href="#"><i class="fa fa-newspaper-o"></i>{{ lang['news_a'] }} <span
 										class="arrow"></span></a>
 							</li>
-							<ul class="sub-menu collapse {{ showContent ? 'show' : ''}}" id="content">
+							<ul class="sub-menu collapse {{ showContent ? 'show' : ''}}" id="nav-content">
 								{% if (perm.editnews) %}<li><a
 										href="{{ php_self }}?mod=news">{{ lang['news.edit'] }}</a></li>{% endif %}
 								{% if (perm.categories) %}<li><a
@@ -121,12 +126,12 @@
 									or global.mod == 'perm'
 							%}
 
-							<li data-toggle="collapse" data-target="#users"
+							<li data-toggle="collapse" data-target="#nav-users"
 								class="collapsed {{ h_active_userman ? 'active' : '' }}">
 								<a href="#"><i class="fa fa-users"></i> {{ lang['userman'] }} <span
 										class="arrow"></span></a>
 							</li>
-							<ul class="sub-menu collapse {{ showUsers ? 'show' : '' }}" id="users">
+							<ul class="sub-menu collapse {{ showUsers ? 'show' : '' }}" id="nav-users">
 								{% if (perm.users) %}<li><a href="{{ php_self }}?mod=users">{{ lang['users'] }}</a></li>
 								{% endif %}
 								{% if (perm.ipban) %}<li><a href="{{ php_self }}?mod=ipban">{{ lang['ipban_m'] }}</a></li>
@@ -143,12 +148,12 @@
 									or global.mod == 'statistics'
 							%}
 
-							<li data-toggle="collapse" data-target="#service"
+							<li data-toggle="collapse" data-target="#nav-service"
 								class="collapsed {{ h_active_system ? 'active' : '' }}">
 								<a href="#"><i class="fa fa-cog"></i> {{ lang['system'] }} <span
 										class="arrow"></span></a>
 							</li>
-							<ul class="sub-menu collapse {{ showService ? 'show' : '' }}" id="service">
+							<ul class="sub-menu collapse {{ showService ? 'show' : '' }}" id="nav-service">
 								{% if (perm.configuration) %}<li><a
 										href="{{ php_self }}?mod=configuration">{{ lang['configuration'] }}</a></li>
 								{% endif %}

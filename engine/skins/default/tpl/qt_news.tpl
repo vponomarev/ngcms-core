@@ -6,7 +6,7 @@
 	</div>
 
 	<div class="btn-group btn-group-sm mr-2">
-		<button type="button" class="btn btn-outline-dark" onclick="insertext('[p]','[/p]', {area})"><i class="fa fa-paragraph"></i></button>
+		<button type="button" class="btn btn-outline-dark" onclick="insertext('[p]','[/p]', {{ area }})"><i class="fa fa-paragraph"></i></button>
 	</div>
 
 	<div class="btn-group btn-group-sm mr-2">
@@ -14,10 +14,10 @@
 			<i class="fa fa-font"></i>
 		</button>
 		<div class="dropdown-menu" aria-labelledby="tags-font">
-			<a href="#" class="dropdown-item" onclick="insertext('[b]','[/b]', {area})"><i class="fa fa-bold"></i> {l_tags.bold}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[i]','[/i]', {area})"><i class="fa fa-italic"></i> {l_tags.italic}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[u]','[/u]', {area})"><i class="fa fa-underline"></i> {l_tags.underline}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[s]','[/s]', {area})"><i class="fa fa-strikethrough"></i> {l_tags.crossline}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[b]','[/b]', {{ area }})"><i class="fa fa-bold"></i> {{ lang['tags.bold'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[i]','[/i]', {{ area }})"><i class="fa fa-italic"></i> {{ lang['tags.italic'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[u]','[/u]', {{ area }})"><i class="fa fa-underline"></i> {{ lang['tags.underline'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[s]','[/s]', {{ area }})"><i class="fa fa-strikethrough"></i> {{ lang['tags.crossline'] }}</a>
 		</div>
 	</div>
 
@@ -26,10 +26,10 @@
 			<i class="fa fa-align-left"></i>
 		</button>
 		<div class="dropdown-menu" aria-labelledby="tags-align">
-			<a href="#" class="dropdown-item" onclick="insertext('[left]','[/left]', {area})"><i class="fa fa-align-left"></i> {l_tags.left}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[center]','[/center]', {area})"><i class="fa fa-align-center"></i> {l_tags.center}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[right]','[/right]', {area})"><i class="fa fa-align-right"></i> {l_tags.right}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[justify]','[/justify]', {area})"><i class="fa fa-align-justify"></i> {l_tags.justify}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[left]','[/left]', {{ area }})"><i class="fa fa-align-left"></i> {{ lang['tags.left'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[center]','[/center]', {{ area }})"><i class="fa fa-align-center"></i> {{ lang['tags.center'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[right]','[/right]', {{ area }})"><i class="fa fa-align-right"></i> {{ lang['tags.right'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[justify]','[/justify]', {{ area }})"><i class="fa fa-align-justify"></i> {{ lang['tags.justify'] }}</a>
 		</div>
 	</div>
 
@@ -38,14 +38,14 @@
 			<i class="fa fa-quote-left"></i>
 		</button>
 		<div class="dropdown-menu" aria-labelledby="tags-block">
-			<a href="#" class="dropdown-item" onclick="insertext('[ul]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ul]','', {area})"><i class="fa fa-list-ul"></i> {l_tags.bulllist}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ol]','', {area})"><i class="fa fa-list-ol"></i> {l_tags.numlist}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[ul]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ul]','', {{ area }})"><i class="fa fa-list-ul"></i> {{ lang['tags.bulllist'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[ol]\n[li][/li]\n[li][/li]\n[li][/li]\n[/ol]','', {{ area }})"><i class="fa fa-list-ol"></i> {{ lang['tags.numlist'] }}</a>
 			<div class="dropdown-divider"></div>
-			<a href="#" class="dropdown-item" onclick="insertext('[code]','[/code]', {area})"><i class="fa fa-code"></i> {l_tags.code}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[quote]','[/quote]', {area})"><i class="fa fa-quote-left"></i> {l_tags.comment}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[spoiler]','[/spoiler]', {area})"><i class="fa fa-list-alt"></i> {l_tags.spoiler}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[acronym=]','[/acronym]', {area})"><i class="fa fa-tags"></i> {l_tags.acronym}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[hide]','[/hide]', {area})"><i class="fa fa-shield"></i> {l_tags.hide}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[code]','[/code]', {{ area }})"><i class="fa fa-code"></i> {{ lang['tags.code'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[quote]','[/quote]', {{ area }})"><i class="fa fa-quote-left"></i> {{ lang['tags.comment'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[spoiler]','[/spoiler]', {{ area }})"><i class="fa fa-list-alt"></i> {{ lang['tags.spoiler'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[acronym=]','[/acronym]', {{ area }})"><i class="fa fa-tags"></i> {{ lang['tags.acronym'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[hide]','[/hide]', {{ area }})"><i class="fa fa-shield"></i> {{ lang['tags.hide'] }}</a>
 		</div>
 	</div>
 
@@ -54,28 +54,28 @@
 			<i class="fa fa-link"></i>
 		</button>
 		<div class="dropdown-menu" aria-labelledby="tags-link">
-			<a href="#" class="dropdown-item" onclick="insertext('[url]','[/url]', {area})"><i class="fa fa-link"></i> {l_tags.link}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[email]','[/email]', {area})"><i class="fa fa-envelope-o"></i> {l_tags.email}</a>
-			<a href="#" class="dropdown-item" onclick="insertext('[img]','[/img]', {area})"><i class="fa fa-file-image-o"></i> {l_tags.image}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[url]','[/url]', {{ area }})"><i class="fa fa-link"></i> {{ lang['tags.link'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[email]','[/email]', {{ area }})"><i class="fa fa-envelope-o"></i> {{ lang['tags.email'] }}</a>
+			<a href="#" class="dropdown-item" onclick="insertext('[img]','[/img]', {{ area }})"><i class="fa fa-file-image-o"></i> {{ lang['tags.image'] }}</a>
 		</div>
 	</div>
 
 	<div class="btn-group btn-group-sm mr-2">
-		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=files&amp;ifield='+{area}, '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" type="button" class="btn btn-outline-dark" title="{l_tags.file}">
+		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={{ area }};} catch(err){;} window.open('{php_self}?mod=files&amp;ifield='+{{ area }}, '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" type="button" class="btn btn-outline-dark" title="{{ lang['tags.file'] }}">
 			<i class="fa fa-file-text-o"></i>
 		</button>
 
-		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={area};} catch(err){;} window.open('{php_self}?mod=images&amp;ifield='+{area}, '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" type="button" class="btn btn-outline-dark" title="{l_tags.image}">
+		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={{ area }};} catch(err){;} window.open('{php_self}?mod=images&amp;ifield='+{{ area }}, '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" type="button" class="btn btn-outline-dark" title="{{ lang['tags.image'] }}">
 			<i class="fa fa-file-image-o"></i>
 		</button>
 	</div>
 
 	<div class="btn-group btn-group-sm mr-2">
-		<button type="button" class="btn btn-outline-dark" title="{l_tags.nextpage}" onclick="insertext('<!--nextpage-->','', {area})">
+		<button type="button" class="btn btn-outline-dark" title="{{ lang['tags.nextpage'] }}" onclick="insertext('<!--nextpage-->','', {{ area }})">
 			<i class="fa fa-files-o"></i>
 		</button>
 
-		<button type="button" class="btn btn-outline-dark" title="{l_tags.more}" onclick="insertext('<!--more-->','', {area})">
+		<button type="button" class="btn btn-outline-dark" title="{{ lang['tags.more'] }}" onclick="insertext('<!--more-->','', {{ area }})">
 			<i class="fa fa-ellipsis-h"></i>
 		</button>
 

@@ -1,1 +1,1 @@
-<div class="alert alert-info">{text}</div>
+<div class="alert alert-info">{{ text }}</div>

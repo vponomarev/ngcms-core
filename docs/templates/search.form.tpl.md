@@ -1,32 +1,36 @@
-Шаблон search.form.tpl
-----------------------
+# Шаблон `search.form.tpl`
 
 Шаблон отвечает за генерацию краткой поисковой формы, отображаемой на всех страницах сайта.
-Фактически этот шаблон - часть шаблона mail.tpl, но для удобства работы поисковая форма была вынесена в отдельный .tpl файл.
-Шаблон должен содержать форму (тег &lt;form>, метод запроса - GET или POST), которая позволит вводить параметры поиска.
-В форме поддерживаюся следующие переменные (для более детального описания см. шаблон search.table.tpl):
 
-search (тип: text) - строка для поиска
+Фактически этот шаблон – часть шаблона [main.tpl](templates/main.tpl.md), но для удобства работы поисковая форма была вынесена в отдельный `.tpl` файл.
 
+Шаблон должен содержать форму (тег `<form>`, метод запроса – *GET* или *POST*), которая позволит вводить параметры поиска.
 
-Доступные блоки/переменные
---------------------------
+## Доступные блоки / переменные
 
-Переменные:
+### Поля ввода
 
-{form_url} - URL поисковой формы.
+В форме поддерживаются следующие поля ввода с именами:
 
+- `search` (тип: `text`) – строка для поиска;
 
-Пример заполнения шаблона
--------------------------
+### Переменные:
+
+- `form_url` – URL поисковой формы.
+
+Для более детального описания см. шаблон [search.table.tpl](templates/search.table.tpl.md).
+
+## Пример заполнения шаблона
 
 В примере показан минимально набор для полнофункциональной работы:
 
-<pre >
-&lt;form name-"short_search" action-"{form_url}" method-"GET">
-&lt;input type-"hidden" name-"category" value-"" />
-&lt;input type-"hidden" name-"postdate" value-"" />
-&lt;input type-"text" name-"search"/>
-&lt;input type-"submit" class-"button" value-"Search" />
-&lt;/form>
-</pre>
+```html
+<form name="short_search" action="{{ form_url }}" method="GET">
+    <input type="hidden" name="category" value="" />
+    <input type="hidden" name="postdate" value="" />
+
+    <input type="text" name="search"/>
+
+    <input type="submit" class="button" value="Search" />
+</form>
+```
