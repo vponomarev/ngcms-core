@@ -38,8 +38,8 @@ final class NGEngine implements ContainerInterface
     /**
      * Define an entry in the container.
      *
-     * @param  string  $id
-     * @param  mixed  $value
+     * @param string $id
+     * @param mixed  $value
      *
      * @return void
      */
@@ -67,9 +67,9 @@ final class NGEngine implements ContainerInterface
     /**
      * Get DB connection.
      *
-     * @return NGPDO Current DB connection instance.
-     *
      * @throws Exception Init error.
+     *
+     * @return NGPDO Current DB connection instance.
      */
     public function getDB(): NGPDO
     {
@@ -83,9 +83,9 @@ final class NGEngine implements ContainerInterface
     /**
      * Get Legacy DB connection.
      *
-     * @return NGLegacyDB Legacy DB connection instance.
-     *
      * @throws Exception Init error.
+     *
+     * @return NGLegacyDB Legacy DB connection instance.
      */
     public function getLegacyDB(): NGLegacyDB
     {
@@ -99,9 +99,9 @@ final class NGEngine implements ContainerInterface
     /**
      * Get event handler.
      *
-     * @return NGEvents Return instance of NGEvents.
-     *
      * @throws Exception Init error.
+     *
+     * @return NGEvents Return instance of NGEvents.
      */
     public function getEvents(): NGEvents
     {
@@ -115,9 +115,9 @@ final class NGEngine implements ContainerInterface
     /**
      * Get error handler.
      *
-     * @return NGErrorHandler Return instance of NGErrorHandler.
-     *
      * @throws Exception Init error.
+     *
+     * @return NGErrorHandler Return instance of NGErrorHandler.
      */
     public function getErrorHandler(): NGErrorHandler
     {
@@ -131,16 +131,16 @@ final class NGEngine implements ContainerInterface
     /**
      * Get configuration parameter.
      *
-     * @param  string  $param
-     * @param  mixed  $defaultValue
-     *
-     * @return mixed
+     * @param string $param
+     * @param mixed  $defaultValue
      *
      * @throws Exception Init error.
+     *
+     * @return mixed
      */
     public function getConfigParam(string $param = null, $defaultValue = null)
     {
-        if (! $this->has('config') || ! is_array($config = $this->get('config'))) {
+        if (!$this->has('config') || !is_array($config = $this->get('config'))) {
             throw new Exception('NGEngine: getConfigParam(): Configuration is not loaded.');
         }
 
