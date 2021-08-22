@@ -34,7 +34,8 @@
         "ext-iconv": "*",
         "phpmailer/phpmailer": "6.*",
         "twig/twig": "^3.0",
-        "michelf/php-markdown": "^1.9"
+        "michelf/php-markdown": "^1.9",
+        "psr/container": "^2.0"
     },
     "require-dev": {},
     "autoload": {},
