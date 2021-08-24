@@ -3193,25 +3193,32 @@ function getCurrentNewsCategory()
     return [($CurrentHandler['handlerName'] == 'by.category') ? 'short' : 'full', $SYSTEM_FLAGS['news']['currentCategory.id'], $SYSTEM_FLAGS['news']['db.id']];
 }
 
-// Call plugin execution via TWIG
-function twigCallPlugin($funcName, $params)
+/**
+ * Call plugin execution via TWIG.
+ *
+ * @param string $alias
+ * @param array $params
+ *
+ * @return mixed
+ */
+function twigCallPlugin(string $alias, array $params = []): mixed
 {
     global $TWIGFUNC;
 
     // Try to preload function if required
-    if (!isset($TWIGFUNC[$funcName])) {
-        if (preg_match("#^(.+?)\.(.+?)$#", $funcName, $m)) {
+    if (!isset($TWIGFUNC[$alias])) {
+        if (preg_match("#^(.+?)\.(.+?)$#", $alias, $m)) {
             loadPlugin($m[1], 'twig');
         }
     }
 
-    if (!isset($TWIGFUNC[$funcName])) {
-        echo "ERROR :: callPlugin - no function [$funcName]<br/>\n";
+    if (!isset($TWIGFUNC[$alias])) {
+        echo "ERROR :: callPlugin - no function [{$alias}]<br/>\n";
 
-        return;
+        return null;
     }
 
-    return call_user_func($TWIGFUNC[$funcName], $params);
+    return call_user_func($TWIGFUNC[$alias], $params);
 }
 
 // Truncate HTML

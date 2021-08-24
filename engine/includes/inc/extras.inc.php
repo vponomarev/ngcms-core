@@ -548,10 +548,23 @@ function add_act($item, $function, $arguments = 0, $priority = 5)
     return true;
 }
 
-// * New Style function name for `add_act`
-function registerActionHandler($action, $function, $priority = 5)
-{
-    return add_act($action, $function, 0, $priority);
+/**
+ * Register handler's action.
+ *
+ * New Style function name for `add_act`.
+ *
+ * @param string $action
+ * @param string $handler
+ * @param integer $priority
+ *
+ * @return boolean
+ */
+function registerActionHandler(
+    string $action,
+    string $handler,
+    int $priority = 5
+): bool {
+    return add_act($action, $handler, 0, $priority);
 }
 
 // * New Style function name for 'exec_acts'
@@ -907,17 +920,32 @@ function pluginsGetList()
     return $extras;
 }
 
-//
-// Add plugin's page
-//
-function register_plugin_page($pname, $mode, $func_name, $show_template = 1)
-{
+/**
+ * Register plugin's page.
+ *
+ * @param string $plugin
+ * @param string $page
+ * @param string $handler
+ * @param boolean $show_template Not used.
+ *
+ * @return void
+ */
+function register_plugin_page(
+    string $plugin,
+    string $page,
+    string $handler,
+    bool $show_template = true
+): void {
     global $PPAGES;
 
-    if (!isset($PPAGES[$pname]) || !is_array($PPAGES[$pname])) {
-        $PPAGES[$pname] = [];
+    if (!isset($PPAGES[$plugin]) || !is_array($PPAGES[$plugin])) {
+        $PPAGES[$plugin] = [];
     }
-    $PPAGES[$pname][$mode] = ['func' => $func_name, 'mode' => $mode];
+
+    $PPAGES[$plugin][$page] = [
+        'func' => $handler,
+        'mode' => $page,
+    ];
 }
 
 //
@@ -1202,11 +1230,23 @@ function rpcRegisterFunction($name, $instance, $permanent = false)
     $RPCFUNC[$name] = $instance;
 }
 
-// Register TWIG function call
-function twigRegisterFunction($pluginName, $funcName, $instance)
-{
+/**
+ * Register function call TWIG.
+ *
+ * @param string $plugin
+ * @param string $action
+ * @param string $handler
+ *
+ * @return void
+ */
+function twigRegisterFunction(
+    string $plugin,
+    string $action,
+    string $handler
+): void {
     global $TWIGFUNC;
-    $TWIGFUNC[$pluginName.'.'.$funcName] = $instance;
+
+    $TWIGFUNC[$plugin.'.'.$action] = $handler;
 }
 
 //
