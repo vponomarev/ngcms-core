@@ -554,14 +554,14 @@ function add_act($item, $function, $arguments = 0, $priority = 5)
  * New Style function name for `add_act`.
  *
  * @param string $action
- * @param string $handler
+ * @param callable|string $handler
  * @param integer $priority
  *
  * @return boolean
  */
 function registerActionHandler(
     string $action,
-    string $handler,
+    callable|string $handler,
     int $priority = 5
 ): bool {
     return add_act($action, $handler, 0, $priority);
@@ -925,7 +925,7 @@ function pluginsGetList()
  *
  * @param string $plugin
  * @param string $page
- * @param string $handler
+ * @param callable|string $handler
  * @param boolean $show_template Not used.
  *
  * @return void
@@ -933,7 +933,7 @@ function pluginsGetList()
 function register_plugin_page(
     string $plugin,
     string $page,
-    string $handler,
+    callable|string $handler,
     bool $show_template = true
 ): void {
     global $PPAGES;
@@ -1235,14 +1235,14 @@ function rpcRegisterFunction($name, $instance, $permanent = false)
  *
  * @param string $plugin
  * @param string $action
- * @param string $handler
+ * @param callable|string $handler
  *
  * @return void
  */
 function twigRegisterFunction(
     string $plugin,
     string $action,
-    string $handler
+    callable|string $handler
 ): void {
     global $TWIGFUNC;
 
@@ -1329,7 +1329,7 @@ function _MASTER_defaultRUN($pluginName, $handlerName, $params, &$skip, $handler
 
     $pcall = $PPAGES[$pluginName][$handlerName];
 
-    if (is_array($pcall) && function_exists($pcall['func'])) {
+    if (is_array($pcall) && is_callable($pcall['func'])) {
         // Make page title
         $SYSTEM_FLAGS['info']['title']['group'] = $lang['loc_plugin'];
 
