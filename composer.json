@@ -30,7 +30,6 @@
         "ext-pdo": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "ext-memcached": "*",
         "ext-iconv": "*",
         "phpmailer/phpmailer": "6.*",
         "twig/twig": "^3.0",
@@ -38,6 +37,9 @@
         "psr/container": "^2.0"
     },
     "require-dev": {},
+    "suggest": {
+        "ext-memcached": "Required to use the Memcached."
+    },
     "autoload": {},
     "autoload-dev": {},
     "minimum-stability": "dev",
