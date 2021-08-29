@@ -207,8 +207,7 @@ function InsertSmilies(string $insert_location, int $break_location = 0, string 
         $smilies = explode(',', $config['smilies']);
 
         // For smilies in comments, try to use 'smilies.tpl' from site template
-        $templateDir = (($insert_location == 'comments') && is_readable(tpl_dir.$config['theme'].'/smilies.tpl')) ? tpl_dir.$config['theme'] : tpl_actions;
-        $templateDir = trim($templateDir, '/');
+        $templateDir = (($insert_location === 'comments') && is_readable(tpl_dir.$config['theme'].'/smilies.tpl')) ? tpl_dir.$config['theme'] : tpl_actions;
 
         $i = 0;
         $output = '';
