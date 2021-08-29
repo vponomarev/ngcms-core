@@ -31,11 +31,14 @@ class http_get
         if (!function_exists('fsockopen')) {
             return false;
         }
+
         $fp = @fsockopen($host, $port, $errno, $errstr, $timeout);
         if (!$fp) {
             return false;
         }
-        socket_set_timeout($fp, $timeout);
+
+        // Set stream timeout
+        stream_set_timeout($fp, $timeout);
 
         // Manage params
         $ext = '';
@@ -73,8 +76,6 @@ class http_get
             );
         }
 
-        // Set stream timeout
-        stream_set_timeout($fp, $timeout);
         $fi = stream_get_meta_data($fp);
 
         // Try to read data, not more than 1 Mb
@@ -83,7 +84,12 @@ class http_get
         $dsize = 0;
         $dmaxsize = 1024 * 1024;
         $data = '';
-        while ((!feof($fp)) && (!$fi['timed_out'])) {
+        while ((!feof($fp))) {
+            $fi = stream_get_meta_data($fp);
+            if ($fi['timed_out']) {
+                break;
+            }
+
             $in = fread($fp, 128 * 1024);
 
             $dsize += mb_strlen($in);

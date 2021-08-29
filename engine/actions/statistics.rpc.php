@@ -12,6 +12,11 @@ if (!defined('NGCMS')) {
     exit('HAL');
 }
 
+// ==============================================================
+//  Module functions
+// ==============================================================
+@include_once root.'includes/inc/httpget.inc.php';
+
 // Calculate cache size
 function getCacheSize($params)
 {
@@ -106,7 +111,28 @@ function cleanCache($params)
     return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Done'];
 }
 
+function getVersionInfo()
+{
+    global $config;
+    if (($vms = cacheRetrieveFile('coreversion.dat', 86400)) === false) {
+        $paramList = ['ver' => urlencode(engineVersion), 'type' => urlencode(engineVersionType), 'build' => urlencode(engineVersionBuild), 'uuid' => $config['UUID'], 'pdo' => ((extension_loaded('PDO') && extension_loaded('pdo_mysql') && class_exists('PDO')) ? 'yes' : 'no')];
+        $req = new http_get();
+        $vms = $req->get('http://ngcms.ru/sync/versionInfo.php'.'?'.http_build_query($paramList), 1, 1);
+        cacheStoreFile('coreversion.dat', $vms);
+    }
+
+    return $vms;
+}
+
+function coreVersionSync($params)
+{
+    getVersionInfo();
+
+    return ['status' => 1, 'errorCode' => 0, 'errorText' => 'Done'];
+}
+
 if (function_exists('rpcRegisterAdminFunction')) {
     rpcRegisterAdminFunction('admin.statistics.getCacheSize', 'getCacheSize');
     rpcRegisterAdminFunction('admin.statistics.cleanCache', 'cleanCache');
+    rpcRegisterAdminFunction('admin.statistics.coreVersionSync', 'coreVersionSync');
 }

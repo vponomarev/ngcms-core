@@ -323,6 +323,13 @@
 				});
 		return false;
 	}
+
+	function coreVersionSync() {
+		post('admin.statistics.coreVersionSync', {'token':'{{ token }}'}, false)
+				.then(function(response) {
+				});
+		return false;
+	}
 </script>
 <script>
 	$(function () {
@@ -342,6 +349,7 @@
 				$('#syncLastVersion').html('<a href="' + json.zipball_url + '">' + json.tag_name + '</a> [ ' + json.published_at.slice(0, 10) + ' ]');
 			}
 		});
+
 		var reqCommit = "https://api.github.com/repos/vponomarev/ngcms-core/commits";
 		requestJSON(reqCommit, function (json) {
 			if (json.message == "Not Found") {
@@ -353,6 +361,9 @@
 				/*$('#syncSVNVersion').html('<a href="#" id="compare">Обновить до Git</a> [ '+json[0].commit.author.date.slice(0, 10) + ' ]');*/
 			}
 		});
+
+		coreVersionSync();
+
 		function requestJSON(url, callback) {
 			$.ajax({
 				url: url,
