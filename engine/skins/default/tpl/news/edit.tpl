@@ -19,7 +19,7 @@
 <div class="container-fluid">
 	<div class="row mb-2">
 	  <div class="col-sm-6 d-none d-md-block ">
-			<h1 class="m-0 text-dark">{{ lang['extras'] }}</h1>
+			<h1 class="m-0 text-dark">{{ lang['editnews_title'] }}</h1>
 	  </div><!-- /.col -->
 	  <div class="col-sm-6">
 		<ol class="breadcrumb float-sm-right">
