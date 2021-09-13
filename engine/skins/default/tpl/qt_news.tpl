@@ -61,11 +61,11 @@
 	</div>
 
 	<div class="btn-group btn-group-sm mr-2">
-		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={{ area }};} catch(err){;} window.open('{php_self}?mod=files&amp;ifield='+{{ area }}, '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" type="button" class="btn btn-outline-dark" title="{{ lang['tags.file'] }}">
+		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={{ area }};} catch(err){;} window.open('{{ php_self }}?mod=files&amp;ifield='+{{ area }}, '_Addfile', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addfile" type="button" class="btn btn-outline-dark" title="{{ lang['tags.file'] }}">
 			<i class="fa fa-file-text-o"></i>
 		</button>
 
-		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={{ area }};} catch(err){;} window.open('{php_self}?mod=images&amp;ifield='+{{ area }}, '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" type="button" class="btn btn-outline-dark" title="{{ lang['tags.image'] }}">
+		<button onclick="try{document.forms['DATA_tmp_storage'].area.value={{ area }};} catch(err){;} window.open('{{ php_self }}?mod=images&amp;ifield='+{{ area }}, '_Addimage', 'height=600,resizable=yes,scrollbars=yes,width=800');return false;" target="DATA_Addimage" type="button" class="btn btn-outline-dark" title="{{ lang['tags.image'] }}">
 			<i class="fa fa-file-image-o"></i>
 		</button>
 	</div>
