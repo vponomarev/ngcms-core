@@ -29,6 +29,8 @@ define('NGCMS', 1);
 define('NGCoreDir', __DIR__.'/');               // Location of Core directory
 define('NGRootDir', dirname(__DIR__).'/');      // Location of SiteRoot
 define('NGClassDir', NGCoreDir.'classes/');                     // Location of AutoLoaded classes
+@define('NGVendorDir', NGRootDir.'vendor/');      // Location of Vendor classes
+$loader = include_once NGVendorDir.'autoload.php';
 
 // Autoloader for NEW STYLE Classes
 spl_autoload_register(function ($className) {
