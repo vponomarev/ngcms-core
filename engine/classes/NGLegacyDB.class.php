@@ -55,7 +55,7 @@ class NGLegacyDB
 
     public function db_quote($string)
     {
-        return $this->db->quote($string);
+        return $this->db->quote((string) $string);
     }
 
     public function qcnt()
